@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 import de.applejuicenet.client.fassade.entity.Share;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DateiListeTableModel.java,v 1.4 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DateiListeTableModel.java,v 1.5 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,8 +25,8 @@ public class DateiListeTableModel
 	final static String[] COL_NAMES = {
         "Name", "Groesze"};
 
-    private Map dateien = new HashMap();
-    private Object[] sortedChildren;
+    private Map<String, Share> dateien = new HashMap<String, Share>();
+    private Share[] sortedChildren;
 
     public Object getRow(int row) {
         if (row < dateien.size()) {
@@ -35,9 +35,9 @@ public class DateiListeTableModel
         return null;
     }
 
-    private Object[] sortChildren(){
-        Object[] children = dateien.values().toArray();
-        Object tmp;
+    private Share[] sortChildren(){
+        Share[] children = dateien.values().toArray(new Share[dateien.size()]);
+        Share tmp;
         int n = children.length;
         for (int i = 0; i < n - 1; i++) {
             int k = i;
@@ -60,7 +60,7 @@ public class DateiListeTableModel
             return "";
         }
 
-        Share share = (Share) sortedChildren[row];
+        Share share = sortedChildren[row];
         if (share == null) {
             return "";
         }
@@ -116,7 +116,7 @@ public class DateiListeTableModel
     }
 
     public Share[] getShares() {
-        return (Share[]) dateien.values().toArray(new Share[dateien.values().
+        return dateien.values().toArray(new Share[dateien.values().
             size()]);
     }
 }

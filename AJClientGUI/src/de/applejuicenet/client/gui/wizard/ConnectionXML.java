@@ -13,7 +13,7 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.shared.XMLDecoder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/ConnectionXML.java,v 1.8 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/ConnectionXML.java,v 1.9 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,7 +39,7 @@ public class ConnectionXML
             ConnectionXML connectionXML = new ConnectionXML(path);
 
             Element e = null;
-            ArrayList connectionKinds = new ArrayList();
+            ArrayList<ConnectionKind> connectionKinds = new ArrayList<ConnectionKind>();
             String bezeichnung;
             int maxUpload;
             int maxDownload;

@@ -24,7 +24,7 @@ import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/DirectoryNode.java,v 1.6 2005/02/21 17:37:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/DirectoryNode.java,v 1.7 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -50,7 +50,7 @@ public class DirectoryNode
     private static boolean initialized = false;
 
     private Directory directory;
-    private List children = null;
+    private List<DirectoryNode> children = null;
     private DirectoryNode parent;
 
     public DirectoryNode(DirectoryNode parent, Directory directory) {
@@ -62,7 +62,7 @@ public class DirectoryNode
         this.parent = null;
         this.directory = null;
         try {
-        	children = new ArrayList();
+        	children = new ArrayList<DirectoryNode>();
 			List<Directory> directories = AppleJuiceClient.getAjFassade().getDirectories(null);
 			for (Directory curDirectory : directories){
 				children.add(new DirectoryNode(this, curDirectory));
@@ -186,7 +186,7 @@ public class DirectoryNode
 
     public ApplejuiceNode addChild(Directory childDirectory) {
         if (children == null) {
-            children = new ArrayList();
+            children = new ArrayList<DirectoryNode>();
         }
         DirectoryNode childNode = new DirectoryNode(this, childDirectory);
         children.add(childNode);
@@ -210,7 +210,7 @@ public class DirectoryNode
                     k = j;
                 }
             }
-            Object tmp = children.get(i);
+            DirectoryNode tmp = children.get(i);
             children.set(i, children.get(k));
             children.set(k, tmp);
         }
@@ -218,7 +218,7 @@ public class DirectoryNode
 
     protected Object[] getChildren() {
         if (children == null) {
-            children = new ArrayList();
+            children = new ArrayList<DirectoryNode>();
             try {
     			List<Directory> directories = AppleJuiceClient.getAjFassade().
 					getDirectories(directory.getPath());

@@ -21,7 +21,7 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.24 2005/01/24 18:32:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.25 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -75,7 +75,7 @@ public class PluginJarClassLoader
 
         JarFile jf = new JarFile(jar);
         String entryName;
-        Vector classes = new Vector();
+        Vector<String> classes = new Vector<String>();
 
         for (Enumeration e = jf.entries(); e.hasMoreElements(); ) {
             ZipEntry entry = (ZipEntry) e.nextElement();

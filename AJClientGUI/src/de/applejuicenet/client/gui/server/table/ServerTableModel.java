@@ -1,7 +1,6 @@
 package de.applejuicenet.client.gui.server.table;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,7 @@ import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.5 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.6 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,7 +29,7 @@ public class ServerTableModel
         "Name", "DynIP", "Port", "Verbindungsversuche", "Letztes mal online"};
 
     private TableSorter sorter;
-    private List servers = new ArrayList();
+    private List<Server> servers = new ArrayList<Server>();
 
     public List getContent() {
         return servers;
@@ -56,7 +55,7 @@ public class ServerTableModel
             return "";
         }
 
-        Server server = (Server) servers.get(row);
+        Server server = servers.get(row);
         if (server == null) {
             return "";
         }
@@ -101,25 +100,23 @@ public class ServerTableModel
         }
     }
 
-    public void setTable(Map changedContent) {
+    public void setTable(Map<String, Server> changedContent) {
         //alte Server entfernen
         String suchKey = null;
-        ArrayList toRemove = new ArrayList();
-        for (int i = 0; i < servers.size(); i++) {
-            suchKey = Integer.toString( ( (Server) servers.get(i)).getID());
+        ArrayList<Server> toRemove = new ArrayList<Server>();
+        for (Server curServer : servers ) {
+            suchKey = Integer.toString( curServer.getID());
             if (!changedContent.containsKey(suchKey)) {
-                toRemove.add(servers.get(i));
+                toRemove.add(curServer);
             }
         }
         for (int x = 0; x < toRemove.size(); x++) {
             servers.remove(toRemove.get(x));
         }
-        Iterator it = changedContent.values().iterator();
-        while (it.hasNext()) {
-            Server server = (Server) it.next();
-            int index = servers.indexOf(server);
+        for (Server curServer : servers ) {
+            int index = servers.indexOf(curServer);
             if (index == -1) { // Der Server ist neu
-                servers.add(server);
+                servers.add(curServer);
             }
         }
         this.fireTableDataChanged();
@@ -133,7 +130,7 @@ public class ServerTableModel
             if ( (servers == null) || (row >= servers.size())) {
                return "";
            }
-           Server server = (Server) servers.get(row);
+           Server server = servers.get(row);
            if (server == null) {
                return "";
            }

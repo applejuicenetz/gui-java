@@ -61,9 +61,9 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 
 	private static Logger logger;
 
-	private Set settingsListener = new HashSet();
+	private Set<DataUpdateListener> settingsListener = new HashSet<DataUpdateListener>();
 
-	private Set connectionSettingsListener = new HashSet();
+	private Set<DataUpdateListener> connectionSettingsListener = new HashSet<DataUpdateListener>();
 
 	private Point mainXY;
 
@@ -217,7 +217,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 
 	public LookAFeel[] getLookAndFeels() {
 		try {
-			ArrayList lookAndFeels = new ArrayList();
+			ArrayList<LookAFeel> lookAndFeels = new ArrayList<LookAFeel>();
 			String temp = ".";
 			String temp2;
 			int i = 1;

@@ -15,7 +15,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.util.DownloadCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadRootNode.java,v 1.7 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadRootNode.java,v 1.8 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -38,18 +38,18 @@ public class DownloadRootNode
     public static int SORT_GESCHWINDIGKEIT = 7;
     public static int SORT_STATUS = 8;
 
-    private Map downloads;
+    private Map<String, Download> downloads;
 
     private static boolean initialized = false;
 
-    private Map childrenPath = new HashMap();
-    private List children = new ArrayList();
+    private Map<String, PathEntry> childrenPath = new HashMap<String, PathEntry>();
+    private List<DownloadNode> children = new ArrayList<DownloadNode>();
 
     private int sort = SORT_DOWNLOADNAME;
     private boolean isAscent = true;
 
     private Object[] sortedChildNodes;
-    private Map targetDirs = new HashMap();
+    private Map<String, DownloadNode> targetDirs = new HashMap<String, DownloadNode>();
 
     public static boolean isInitialized() {
         return initialized;
@@ -324,7 +324,7 @@ public class DownloadRootNode
         }
     }
 
-    public void setDownloadMap(Map downloadMap) {
+    public void setDownloadMap(Map<String, Download> downloadMap) {
         if (downloads == null) {
             initialized = true;
             downloads = downloadMap;

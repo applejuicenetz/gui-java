@@ -11,7 +11,7 @@ import javax.swing.tree.TreePath;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/ShareSelectionTreeModel.java,v 1.1 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/ShareSelectionTreeModel.java,v 1.2 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,7 +24,7 @@ import java.util.List;
 public class ShareSelectionTreeModel
     implements TreeModel {
     private DirectoryNode root;
-    private List listener = new Vector();
+    private List<TreeModelListener> listener = new Vector<TreeModelListener>();
 
     public ShareSelectionTreeModel() {
         root = new DirectoryNode();
@@ -51,14 +51,14 @@ public class ShareSelectionTreeModel
 
     public void valueForPathChanged(TreePath path, Object obj) {
         for (int i = 0; i < listener.size(); i++) {
-            TreeModelListener ml = (TreeModelListener) listener.get(i);
+            TreeModelListener ml = listener.get(i);
             ml.treeNodesChanged(new TreeModelEvent(obj, path));
         }
     }
 
     public void fireStructureChangedEvent() {
         for (int i = 0; i < listener.size(); i++) {
-            TreeModelListener ml = (TreeModelListener) listener.get(i);
+            TreeModelListener ml = listener.get(i);
             ml.treeStructureChanged(new TreeModelEvent(this, new TreePath(root)));
         }
     }
@@ -66,7 +66,7 @@ public class ShareSelectionTreeModel
     public void fireNodeInsertedEvent(TreePath path, Object obj, int ind,
                                       Object child) {
         for (int i = 0; i < listener.size(); i++) {
-            TreeModelListener ml = (TreeModelListener) listener.get(i);
+            TreeModelListener ml = listener.get(i);
             ml.treeNodesInserted(new TreeModelEvent(obj, path, new int[] {ind}
                 , new Object[] {child}));
         }

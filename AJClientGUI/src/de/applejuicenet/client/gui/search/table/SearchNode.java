@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/table/Attic/SearchNode.java,v 1.4 2005/01/19 16:22:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/table/Attic/SearchNode.java,v 1.5 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,7 +37,7 @@ public class SearchNode
     public static int ROOT_NODE = 0;
     public static int ENTRY_NODE = 1;
     private int type;
-    private Map children;
+    private Map<String, SearchNode> children;
     private Object[] sortedChildNodes;
     private boolean forceSort = false;
 
@@ -106,7 +106,7 @@ public class SearchNode
             if (forceSort || children == null){
                 forceSort = false;
                 if (children == null){
-                    children = new HashMap();
+                    children = new HashMap<String, SearchNode>();
                 }
                 else{
                     children.clear();
@@ -136,7 +136,7 @@ public class SearchNode
                 }
             }
             if (sort || (sortedChildNodes == null)) {
-                return sort( (Object[]) children.values().toArray(new
+                return sort( children.values().toArray(new
                     SearchNode[children.size()]));
             }
             else {

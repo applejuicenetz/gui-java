@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadMainNode.java,v 1.3 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadMainNode.java,v 1.4 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,7 +29,7 @@ public class UploadMainNode
     public static final int LOADING_UPLOADS = 0;
     public static final int WAITING_UPLOADS = 1;
     public static final int REST_UPLOADS = 2;
-    private static Map uploads = null;
+    private static Map<String, Upload> uploads = null;
 
     private String text;
 
@@ -55,7 +55,7 @@ public class UploadMainNode
         }
     }
 
-    public static void setUploads(Map uploadMap){
+    public static void setUploads(Map<String, Upload> uploadMap){
         uploads = uploadMap;
     }
 
@@ -94,7 +94,7 @@ public class UploadMainNode
             return null;
         }
         else {
-            ArrayList children = new ArrayList();
+            ArrayList<Upload> children = new ArrayList<Upload>();
             Upload[] uploadsForThread = (Upload[]) uploads.values().
                 toArray(new Upload[uploads.size()]);
             for (int i = 0; i < uploadsForThread.length; i++) {

@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.plaf.metal.MetalToolTipUI;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.11 2004/11/22 16:25:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.12 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -60,7 +60,7 @@ public class MultiLineToolTip
             }
             StringTokenizer st = new StringTokenizer(tipText, "|");
             int maxWidth = 0;
-            Vector v = new Vector();
+            Vector<String> v = new Vector<String>();
             while (st.hasMoreTokens()) {
                 String token = st.nextToken();
                 int width = SwingUtilities.computeStringWidth(metrics, token);

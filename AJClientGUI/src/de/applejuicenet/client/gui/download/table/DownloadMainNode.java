@@ -18,7 +18,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.7 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.8 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -158,7 +158,7 @@ public class DownloadMainNode
                 }
             }
             case LOADING_DOWNLOADS: {
-                ArrayList kinder = new ArrayList();
+                ArrayList<DownloadSource> kinder = new ArrayList<DownloadSource>();
                 DownloadSource[] downloadSource = download.getSources();
                 for (int i = 0; i < downloadSource.length; i++) {
                     if (downloadSource[i].getStatus() ==
@@ -170,7 +170,7 @@ public class DownloadMainNode
                     kinder.size()]);
             }
             case WAITING_DOWNLOADS: {
-                ArrayList kinder = new ArrayList();
+                ArrayList<DownloadSource> kinder = new ArrayList<DownloadSource>();
                 DownloadSource[] downloadSource = download.getSources();
                 for (int i = 0; i < downloadSource.length; i++) {
                     if (downloadSource[i].getStatus() == DownloadSource.IN_WARTESCHLANGE
@@ -182,7 +182,7 @@ public class DownloadMainNode
                     kinder.size()]);
             }
             case REST_DOWNLOADS: {
-                ArrayList kinder = new ArrayList();
+                ArrayList<DownloadSource> kinder = new ArrayList<DownloadSource>();
                 DownloadSource[] downloadSource = download.getSources();
                 for (int i = 0; i < downloadSource.length; i++) {
                     if (downloadSource[i].getStatus() !=

@@ -19,7 +19,7 @@ import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PolicyJarClassLoader.java,v 1.5 2005/02/15 11:03:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PolicyJarClassLoader.java,v 1.6 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -76,7 +76,7 @@ public class PolicyJarClassLoader
 
         JarFile jf = new JarFile(jar);
         String entryName;
-        Vector classes = new Vector();
+        Vector<String> classes = new Vector<String>();
 
         for (Enumeration e = jf.entries(); e.hasMoreElements(); ) {
             ZipEntry entry = (ZipEntry) e.nextElement();

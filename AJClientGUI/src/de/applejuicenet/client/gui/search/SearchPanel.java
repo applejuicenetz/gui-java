@@ -34,7 +34,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.8 2005/01/19 16:22:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.9 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -56,7 +56,7 @@ public class SearchPanel
     private String bearbeitung;
     private JLabel label2 = new JLabel();
     private Logger logger;
-    private Map searchIds = null;
+    private Map<String, SearchResultPanel> searchIds = null;
     private boolean panelSelected = false;
 
     public static synchronized SearchPanel getInstance() {
@@ -213,14 +213,14 @@ public class SearchPanel
 					try {
 			            synchronized (content) {
 			            	if (searchIds == null){
-			            		searchIds = new HashMap();
+			            		searchIds = new HashMap<String, SearchResultPanel>();
 			            	}
 			                Iterator it = ( (HashMap) content).keySet().iterator();
-			                Object key;
+			                String key;
 			                Search aSearch;
 			                SearchResultPanel searchResultPanel;
 			                while (it.hasNext()) {
-			                    key = it.next();
+			                    key = (String)it.next();
 			                    if (!searchIds.containsKey(key)) {
 			                        aSearch = (Search) ( (HashMap) content).get(key);
 			                        searchResultPanel = new SearchResultPanel(aSearch);
@@ -231,8 +231,7 @@ public class SearchPanel
 			                        searchIds.put(key, searchResultPanel);
 			                    }
 			                    else {
-			                        searchResultPanel = (SearchResultPanel) searchIds.
-			                            get(key);
+			                        searchResultPanel = searchIds.get(key);
 			                        aSearch = (Search) ( (HashMap) content).get(key);
 			                        if (panelSelected) {
 			                            searchResultPanel.updateSearchContent();
@@ -261,9 +260,7 @@ public class SearchPanel
 			            }
 			        }
 			        catch (Exception e) {
-			            if (logger.isEnabledFor(Level.ERROR)) {
-			                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-			            }
+		                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 			        }
 				}});
         }

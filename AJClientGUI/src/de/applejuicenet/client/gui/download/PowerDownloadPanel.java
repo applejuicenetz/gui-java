@@ -56,7 +56,7 @@ import de.tklsoft.gui.controls.TKLTextField;
 import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.12 2005/02/21 17:37:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.13 2005/02/28 14:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -509,7 +509,8 @@ public class PowerDownloadPanel
             }
             String[] tempListe = policyPath.list();
             PolicyJarClassLoader jarLoader = null;
-            ArrayList policies = new ArrayList();
+            ArrayList<AutomaticPowerdownloadPolicy> policies = 
+                new ArrayList<AutomaticPowerdownloadPolicy>();
             for (int i = 0; i < tempListe.length; i++) {
                 if (tempListe[i].toLowerCase().endsWith(".jar")) {
                     URL url = null;

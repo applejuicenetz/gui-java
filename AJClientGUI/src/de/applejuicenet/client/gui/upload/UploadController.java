@@ -6,7 +6,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -215,7 +214,7 @@ public class UploadController extends GuiController {
 					int[] widths = pm.getUploadWidths();
 					boolean[] visibilies = pm.getUploadColumnVisibilities();
 					int[] indizes = pm.getUploadColumnIndizes();
-					ArrayList visibleColumns = new ArrayList();
+					ArrayList<TableColumn> visibleColumns = new ArrayList<TableColumn>();
 					for (int i = 0; i < columns.length; i++) {
 						columns[i].setPreferredWidth(widths[i]);
 						uploadPanel.getTable().removeColumn(columns[i]);
@@ -301,7 +300,7 @@ public class UploadController extends GuiController {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {
-						uploadPanel.getTableModel().setTable((HashMap) content);
+						uploadPanel.getTableModel().setTable((Map<String, Upload>) content);
 						if (componentSelected) {
 							uploadPanel.getTable().updateUI();
 						}
