@@ -1,7 +1,9 @@
 package de.applejuicenet.client.shared;
 
+import java.io.*;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZeichenErsetzer.java,v 1.8 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZeichenErsetzer.java,v 1.9 2004/01/19 16:30:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +12,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ZeichenErsetzer.java,v $
+ * Revision 1.9  2004/01/19 16:30:19  maj0r
+ * Nun unicode-kompatibel.
+ *
  * Revision 1.8  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -65,6 +70,17 @@ public abstract class ZeichenErsetzer {
         }
         while ((index = temp.indexOf("&gt;")) != -1) {
             temp.replace(index, index + 4, ">");
+        }
+        while ((index = temp.indexOf("#&")) != -1) {
+            try{
+                int decimal = Integer.parseInt(temp.substring(index + 2,
+                    index + 6));
+                String test = new String(new char[] { (char) decimal});
+                temp.replace(index, index + 7, test);
+            }
+            catch(Exception e){
+                temp.replace(index, index + 7, "!Fehler!");
+            }
         }
         return temp.toString();
     }
