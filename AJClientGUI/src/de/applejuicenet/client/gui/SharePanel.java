@@ -26,15 +26,18 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.31 2003/08/28 06:11:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.32 2003/08/28 06:55:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.32  2003/08/28 06:55:06  maj0r
+ * NullPointer behoben.
+ *
  * Revision 1.31  2003/08/28 06:11:02  maj0r
  * DragNDrop vervollstaendigt.
  *
@@ -43,7 +46,7 @@ import java.io.File;
  *
  * Revision 1.29  2003/08/27 11:19:30  maj0r
  * Prioritaet setzen und aufheben vollstaendig implementiert.
- * Button für 'Share erneuern' eingefuehrt.
+ * Button fï¿½r 'Share erneuern' eingefuehrt.
  *
  * Revision 1.28  2003/08/26 19:46:34  maj0r
  * Sharebereich weiter vervollstaendigt.
@@ -89,22 +92,22 @@ import java.io.File;
  * An neue Schnittstelle angepasst.
  *
  * Revision 1.14  2003/07/04 11:32:18  maj0r
- * Anzeige der Anzahl der Dateien und Gesamtgöße des Shares hinzugefügt.
+ * Anzeige der Anzahl der Dateien und Gesamtgï¿½ï¿½e des Shares hinzugefï¿½gt.
  *
  * Revision 1.13  2003/07/02 13:54:34  maj0r
- * JTreeTable komplett überarbeitet.
+ * JTreeTable komplett ï¿½berarbeitet.
  *
  * Revision 1.12  2003/07/01 18:41:39  maj0r
- * Struktur verändert.
+ * Struktur verï¿½ndert.
  *
  * Revision 1.11  2003/07/01 18:33:53  maj0r
  * Sprachauswahl eingearbeitet.
  *
  * Revision 1.10  2003/06/22 19:01:55  maj0r
- * Laden des Shares nun erst nach Betätigen des Buttons "Erneut laden".
+ * Laden des Shares nun erst nach Betï¿½tigen des Buttons "Erneut laden".
  *
  * Revision 1.9  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefï¿½gt.
  *
  *
  */
@@ -605,6 +608,8 @@ public class SharePanel
             if (e.isPopupTrigger())
             {
                 DirectoryNode node = (DirectoryNode) folderTree.getLastSelectedPathComponent();
+                if (node==null)
+                    return;
                 popup.removeAll();
                 int nodeShareMode = node.getShareMode();
                 if (nodeShareMode == DirectoryNode.NOT_SHARED
