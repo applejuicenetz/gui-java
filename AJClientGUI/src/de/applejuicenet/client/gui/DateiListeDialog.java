@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.6 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.7 2004/01/19 16:59:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +37,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DateiListeDialog.java,v $
+ * Revision 1.7  2004/01/19 16:59:15  maj0r
+ * Dateiname bei Dateilistengenerierung korrigiert.
+ *
  * Revision 1.6  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -217,7 +220,11 @@ public class DateiListeDialog extends JDialog {
                 File file = fileChooser.getSelectedFile();
                 StringBuffer text = new StringBuffer();
                 ShareDO[] shareDO = ((DateiListeTableModel)table.getModel()).getShareDOs();
-                if (source!=speicherTxt){
+                if (source != speicherTxt){
+                    if (!file.getPath().toLowerCase().endsWith(".htm")
+                        && !file.getPath().toLowerCase().endsWith(".html")){
+                        file = new File(file.getPath() + ".html");
+                    }
                     text.append("<html><head><title>appleJuice Linklist</title></head><body bgcolor=#000080 text=#ffffff "
                         + "link=#ffffff vlink=#ffffff><table align=center border=0><tr><td><b>appleJuice Dateien</b></td></tr><br>" + "\r\n");
                     for (int x=0; x<shareDO.length; x++){
@@ -229,6 +236,9 @@ public class DateiListeDialog extends JDialog {
                     text.append("</table></body></html>");
                 }
                 else{
+                    if (!file.getPath().toLowerCase().endsWith(".ajl")){
+                        file = new File(file.getPath() + ".ajl");
+                    }
                     text.append("\r\n" + "Du benoetigst ein appleJuice-GUI, um diese Datei zu oeffnen. Das gibts z.B. hier "
                         + "http://developer.berlios.de/projects/applejuicejava/" + "\r\n\r\n");
                     text.append("Diese Datei darf nicht modifiziert werden!" + "\r\n" + "-----\r\n100\r\n");
