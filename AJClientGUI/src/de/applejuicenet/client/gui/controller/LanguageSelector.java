@@ -2,7 +2,7 @@ package de.applejuicenet.client.gui.controller;
 
 import java.io.CharArrayWriter;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,10 +18,9 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.listener.LanguageListener;
-import java.io.FileInputStream;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.15 2004/02/26 13:58:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.16 2004/02/27 13:17:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +29,9 @@ import java.io.FileInputStream;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.16  2004/02/27 13:17:14  maj0r
+ * Logging verbessert und Muell entfernt.
+ *
  * Revision 1.15  2004/02/26 13:58:19  maj0r
  * Unicodefehler behoben.
  *
@@ -73,12 +75,11 @@ public class LanguageSelector
     private HashMap words = new HashMap();
     private XMLReader xr = null;
     private CharArrayWriter contents = new CharArrayWriter();
-    private Logger logger;
+    private static Logger logger = Logger.getLogger(LanguageSelector.class);
     private StringBuffer key = new StringBuffer();
 
     private LanguageSelector(String path) {
         try {
-            logger = Logger.getLogger(getClass());
             Class parser = SAXParser.class;
             xr = XMLReaderFactory.createXMLReader(parser.getName());
             xr.setContentHandler(this);
@@ -127,7 +128,14 @@ public class LanguageSelector
         else {
             File sprachDatei = new File(path);
             if (!sprachDatei.isFile()) {
-                AppleJuiceDialog.closeWithErrormessage("Die in der settings.xml hinterlegte Sprachdatei wurde nicht gefunden.\r\nappleJuice wird beendet.", false);
+                if (logger.isEnabledFor(Level.INFO)) {
+                    logger.info(
+                        "Die in der settings.xml hinterlegte Sprachdatei wurde nicht gefunden." +
+                        "\r\nappleJuice wird beendet.");
+                }
+                AppleJuiceDialog.closeWithErrormessage
+                    ("Die in der settings.xml hinterlegte Sprachdatei wurde nicht gefunden." +
+                     "\r\nappleJuice wird beendet.", false);
             }
             instance.init(sprachDatei);
             instance.informLanguageListener();
