@@ -48,7 +48,7 @@ import java.util.Date;
 import javax.swing.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.2 2003/11/05 10:20:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.3 2003/11/05 15:46:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -58,6 +58,9 @@ import javax.swing.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MemoryMonitor.java,v $
+ * Revision 1.3  2003/11/05 15:46:48  maj0r
+ * Klammerung korrigiert.
+ *
  * Revision 1.2  2003/11/05 10:20:29  maj0r
  * Max.RAM-Anzeige eingebaut.
  *
@@ -109,7 +112,7 @@ public class MemoryMonitor extends JPanel implements Runnable {
                 }
             }
         });
-        maxMem = String.valueOf((int) runtime.maxMemory() / 1024);
+        maxMem = String.valueOf((int) (runtime.maxMemory() / 1024));
     }
 
     public Dimension getMinimumSize() {
