@@ -1,9 +1,14 @@
 package de.applejuicenet.client.shared.dac;
 
+import java.awt.Component;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+
+import de.applejuicenet.client.gui.tables.upload.UploadColumnComponent;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.15 2004/02/24 08:49:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.16 2004/02/24 15:38:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +17,9 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.16  2004/02/24 15:38:11  maj0r
+ * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
+ *
  * Revision 1.15  2004/02/24 08:49:32  maj0r
  * Bug #240 gefixt (Danke an computer.ist.org)
  * Bug behoben, der im VersionChecker zu einer NoSuchElementException fuehrte.
@@ -52,7 +60,7 @@ import de.applejuicenet.client.shared.Version;
  *
  */
 
-public class UploadDO {
+public class UploadDO implements UploadColumnComponent{
     public static final int AKTIVE_UEBERTRAGUNG = 1;
     public static final int WARTESCHLANGE = 2;
     public static final int VERSUCHE_ZU_VERBINDEN = 5;
@@ -77,8 +85,13 @@ public class UploadDO {
     private int prioritaet;
     private int directstate;
 
+    private JProgressBar progress;
+    private JLabel progressbarLabel;
+    private JLabel versionLabel;
+
     public UploadDO(int uploadID){
         this.uploadID = uploadID;
+        init();
     }
 
     public UploadDO(int uploadID, int shareFileID, Version version, int status,
@@ -95,6 +108,7 @@ public class UploadDO {
         this.speed = speed;
         this.prioritaet = prioritaet;
         this.directstate = directstate;
+        init();
     }
 
     public UploadDO(int uploadID, int shareFileID, Version version,
@@ -112,6 +126,16 @@ public class UploadDO {
         this.speed = speed;
         this.prioritaet = prioritaet;
         this.directstate = directstate;
+        init();
+    }
+
+    private void init(){
+        progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
+        progress.setStringPainted(true);
+        progressbarLabel = new JLabel();
+        progressbarLabel.setOpaque(true);
+        versionLabel = new JLabel();
+        versionLabel.setOpaque(true);
     }
 
     public int getUploadID() {
@@ -241,4 +265,32 @@ public class UploadDO {
         return uploadTo - uploadFrom;
     }
 
+    public Component getProgressbarComponent(Object value) {
+        if (status == UploadDO.AKTIVE_UEBERTRAGUNG) {
+            String prozent = getDownloadPercentAsString();
+            int pos = prozent.indexOf('.');
+            String balken = prozent;
+            if (pos != -1) {
+                balken = balken.substring(0, pos);
+            }
+            progress.setValue(Integer.parseInt(balken));
+            progress.setString(prozent + " %");
+            return progress;
+        }
+        else {
+            return progressbarLabel;
+        }
+    }
+
+    public Component getVersionComponent(Object value) {
+        if (getVersion() == null) {
+            versionLabel.setIcon(null);
+            versionLabel.setText("");
+        }
+        else {
+            versionLabel.setIcon(getVersion().getVersionIcon());
+            versionLabel.setText(getVersion().getVersion());
+        }
+        return versionLabel;
+    }
 }

@@ -59,49 +59,25 @@ public class DownloadTablePercentCellRenderer
                                              boolean hasFocus,
                                              int row,
                                              int column) {
+        Component c = downloadMainNode.getProgressbarComponent(value);
         DownloadDO downloadDO = downloadMainNode.getDownloadDO();
-        if (downloadMainNode.getType() == DownloadMainNode.ROOT_NODE
-            && (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
-                || downloadDO.getStatus() == DownloadDO.PAUSIERT)) {
-            String prozent = downloadDO.getProzentGeladenAsString();
-            String wert = null;
-            int i;
-            if ( (i = prozent.indexOf(".")) != -1) {
-                wert = prozent.substring(0, i);
-            }
-            else {
-                wert = prozent;
-            }
-            JProgressBar progress = new JProgressBar(JProgressBar.HORIZONTAL, 0,
-                100);
-            progress.setValue(Integer.parseInt(wert));
-            progress.setString(prozent + " %");
-            progress.setStringPainted(true);
-            return progress;
+        if (isSelected) {
+            c.setBackground(table.getSelectionBackground());
+            c.setForeground(table.getSelectionForeground());
         }
         else {
-            JLabel label1 = new JLabel();
-            label1.setOpaque(true);
-            label1.setFont(table.getFont());
-            label1.setText( (String) value);
-            if (isSelected) {
-                label1.setBackground(table.getSelectionBackground());
-                label1.setForeground(table.getSelectionForeground());
+            if (downloadMainNode.getType() == DownloadMainNode.ROOT_NODE &&
+                downloadDO.getStatus() == DownloadDO.FERTIG &&
+                settings.isFarbenAktiv()) {
+                c.setBackground(settings.
+                                     getDownloadFertigHintergrundColor());
             }
             else {
-                if (downloadMainNode.getType() == DownloadMainNode.ROOT_NODE &&
-                    downloadDO.getStatus() == DownloadDO.FERTIG &&
-                    settings.isFarbenAktiv()) {
-                    label1.setBackground(settings.
-                                         getDownloadFertigHintergrundColor());
-                }
-                else {
-                    label1.setBackground(table.getBackground());
-                }
-                label1.setForeground(table.getForeground());
+                c.setBackground(table.getBackground());
             }
-            return label1;
+            c.setForeground(table.getForeground());
         }
+        return c;
     }
 
     public Component getComponentForSource(DownloadSourceDO downloadSourceDO,
@@ -111,63 +87,40 @@ public class DownloadTablePercentCellRenderer
                                            boolean hasFocus,
                                            int row,
                                            int column) {
-        Color foreground = table.getForeground();
-        if (downloadSourceDO.getStatus() == DownloadSourceDO.UEBERTRAGUNG) {
-            String prozent = downloadSourceDO.getDownloadPercentAsString();
-            JProgressBar progress = new JProgressBar(JProgressBar.HORIZONTAL, 0,
-                100);
-            int pos = prozent.indexOf('.');
-            String balken = prozent;
-            if (pos != -1) {
-                balken = balken.substring(0, pos);
-            }
-            progress.setValue(Integer.parseInt(balken));
-            progress.setString(prozent + " %");
-            progress.setStringPainted(true);
-            return progress;
+        Component c = downloadSourceDO.getProgressbarComponent(value);
+        if (isSelected) {
+            c.setBackground(table.getSelectionBackground());
+            c.setForeground(table.getSelectionForeground());
         }
         else {
-            JLabel label1 = new JLabel();
-            label1.setText( (String) value);
-            label1.setFont(table.getFont());
-            label1.setOpaque(true);
-            if (isSelected) {
-                label1.setBackground(table.getSelectionBackground());
-                label1.setForeground(table.getSelectionForeground());
+            if (settings.isFarbenAktiv()) {
+                c.setBackground(settings.getQuelleHintergrundColor());
             }
             else {
-                if (settings.isFarbenAktiv()) {
-                    label1.setBackground(settings.getQuelleHintergrundColor());
-                }
-                else {
-                    label1.setBackground(table.getBackground());
-                }
-                label1.setForeground(foreground);
+                c.setBackground(table.getBackground());
             }
-            return label1;
+            c.setForeground(table.getForeground());
         }
+        return c;
     }
 
-    public Component getComponentForDirectory(DownloadDirectoryNode node,
+    public Component getComponentForDirectory(DownloadDirectoryNode downloadDirectoryNode,
                                               JTable table,
                                               Object value,
                                               boolean isSelected,
                                               boolean hasFocus,
                                               int row,
                                               int column) {
-        JLabel label1 = new JLabel();
-        label1.setText( (String) value);
-        label1.setFont(table.getFont());
-        label1.setOpaque(true);
+        Component c = downloadDirectoryNode.getProgressbarComponent(value);
         if (isSelected) {
-            label1.setBackground(table.getSelectionBackground());
-            label1.setForeground(table.getSelectionForeground());
+            c.setBackground(table.getSelectionBackground());
+            c.setForeground(table.getSelectionForeground());
         }
         else {
-            label1.setBackground(table.getBackground());
-            label1.setForeground(table.getForeground());
+            c.setBackground(table.getBackground());
+            c.setForeground(table.getForeground());
         }
-        return label1;
+        return c;
     }
 
     public void fireContentChanged(int type, Object content) {

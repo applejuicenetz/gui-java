@@ -1,9 +1,7 @@
 package de.applejuicenet.client.gui.tables.server;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
@@ -11,7 +9,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableCellRenderer.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableCellRenderer.java,v 1.5 2004/02/24 15:38:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +18,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerTableCellRenderer.java,v $
+ * Revision 1.5  2004/02/24 15:38:11  maj0r
+ * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
+ *
  * Revision 1.4  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -33,7 +34,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * Struktur verändert.
  *
  * Revision 1.3  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -49,48 +50,35 @@ public class ServerTableCellRenderer
         ServerDO server = (ServerDO) ( (ServerTableModel) table.getModel()).
             getRow(
             row);
-        JPanel returnPanel = new JPanel(new BorderLayout());
-        JLabel image = null;
         long aktuelleZeit = System.currentTimeMillis();
         long tag = 24 * 60 * 60 * 1000;
-
+        JLabel serverLabel = new JLabel();
         if (server.isConnected()) {
-            image = new JLabel(IconManager.getInstance().getIcon(
+            serverLabel.setIcon(IconManager.getInstance().getIcon(
                 "serververbunden"));
         }
         else if (server.isTryConnect()) {
-            image = new JLabel(IconManager.getInstance().getIcon(
+            serverLabel.setIcon(IconManager.getInstance().getIcon(
                 "serverversuche"));
         }
         else if (server.getTimeLastSeen() == 0 ||
                  server.getTimeLastSeen() < aktuelleZeit - tag) {
-            image = new JLabel(IconManager.getInstance().getIcon("aelter24h"));
+            serverLabel.setIcon(IconManager.getInstance().getIcon("aelter24h"));
         }
         else {
-            image = new JLabel(IconManager.getInstance().getIcon("juenger24h"));
+            serverLabel.setIcon(IconManager.getInstance().getIcon("juenger24h"));
             //mehr Icons kommen, wenn der Core mehr kann
-
         }
-        JLabel serverName = new JLabel("  " + (String) value);
-        serverName.setFont(table.getFont());
-        returnPanel.add(image, BorderLayout.WEST);
-        returnPanel.add(serverName, BorderLayout.CENTER);
+        serverLabel.setText((String) value);
+        serverLabel.setOpaque(true);
         if (isSelected) {
-            returnPanel.setBackground(table.getSelectionBackground());
-            returnPanel.setForeground(table.getSelectionForeground());
-            image.setBackground(table.getSelectionBackground());
-            serverName.setBackground(table.getSelectionBackground());
-            image.setForeground(table.getSelectionForeground());
-            serverName.setBackground(table.getSelectionForeground());
+            serverLabel.setBackground(table.getSelectionBackground());
+            serverLabel.setForeground(table.getSelectionForeground());
         }
         else {
-            returnPanel.setBackground(table.getBackground());
-            returnPanel.setForeground(table.getForeground());
-            image.setBackground(table.getBackground());
-            serverName.setBackground(table.getBackground());
-            image.setForeground(table.getForeground());
-            serverName.setBackground(table.getForeground());
+            serverLabel.setBackground(table.getBackground());
+            serverLabel.setForeground(table.getForeground());
         }
-        return returnPanel;
+        return serverLabel;
     }
 }

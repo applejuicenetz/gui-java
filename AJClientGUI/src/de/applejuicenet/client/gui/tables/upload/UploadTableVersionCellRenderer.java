@@ -19,49 +19,23 @@ public class UploadTableVersionCellRenderer
         boolean hasFocus,
         int row,
         int column) {
-        Object obj = ( (TreeTableModelAdapter) table.getModel()).nodeForRow(row);
 
+        Object obj = ( (TreeTableModelAdapter) table.getModel()).nodeForRow(row);
         if (obj.getClass() == MainNode.class) {
             return super.getTableCellRendererComponent(table, value,
                 isSelected, hasFocus, row, column);
         }
         else {
-            UploadDO uploadDO = (UploadDO) obj;
-            Color background = table.getBackground();
-            Color foreground = table.getForeground();
-            JPanel returnPanel = new JPanel(new BorderLayout());
-            JLabel image = new JLabel();
-
-            JLabel serverName = new JLabel();
-
+            Component c = ((UploadDO)obj).getVersionComponent(value);
             if (isSelected) {
-                returnPanel.setBackground(table.getSelectionBackground());
-                returnPanel.setForeground(table.getSelectionForeground());
-                image.setBackground(table.getSelectionBackground());
-                serverName.setBackground(table.getSelectionBackground());
-                image.setForeground(table.getSelectionForeground());
-                serverName.setBackground(table.getSelectionForeground());
+                c.setBackground(table.getSelectionBackground());
+                c.setForeground(table.getSelectionForeground());
             }
             else {
-                returnPanel.setBackground(background);
-                returnPanel.setForeground(foreground);
-                image.setBackground(table.getBackground());
-                serverName.setBackground(table.getBackground());
-                image.setForeground(table.getForeground());
-                serverName.setBackground(table.getForeground());
+                c.setBackground(table.getBackground());
+                c.setForeground(table.getForeground());
             }
-
-            if (uploadDO.getVersion() == null) {
-                return returnPanel;
-            }
-            else {
-                image.setIcon(uploadDO.getVersion().getVersionIcon());
-            }
-            serverName.setText("  " + uploadDO.getVersion().getVersion());
-            serverName.setFont(table.getFont());
-            returnPanel.add(image, BorderLayout.WEST);
-            returnPanel.add(serverName, BorderLayout.CENTER);
-            return returnPanel;
+            return c;
         }
     }
 }

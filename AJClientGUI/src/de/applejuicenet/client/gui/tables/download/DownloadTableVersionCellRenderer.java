@@ -1,10 +1,7 @@
 package de.applejuicenet.client.gui.tables.download;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
@@ -61,26 +58,23 @@ public class DownloadTableVersionCellRenderer
                                              int row,
                                              int column) {
         DownloadDO downloadDO = downloadMainNode.getDownloadDO();
-        JLabel label1 = new JLabel();
-        label1.setOpaque(true);
-        label1.setFont(table.getFont());
-        label1.setText( (String) value);
+        Component c = downloadMainNode.getVersionComponent(value);
         if (isSelected) {
-            label1.setBackground(table.getSelectionBackground());
-            label1.setForeground(table.getSelectionForeground());
+            c.setBackground(table.getSelectionBackground());
+            c.setForeground(table.getSelectionForeground());
         }
         else {
             if (downloadMainNode.getType() == DownloadMainNode.ROOT_NODE &&
                 downloadDO.getStatus() == DownloadDO.FERTIG &&
                 settings.isFarbenAktiv()) {
-                label1.setBackground(settings.getDownloadFertigHintergrundColor());
+                c.setBackground(settings.getDownloadFertigHintergrundColor());
             }
             else {
-                label1.setBackground(table.getBackground());
+                c.setBackground(table.getBackground());
             }
-            label1.setForeground(table.getForeground());
+            c.setForeground(table.getForeground());
         }
-        return label1;
+        return c;
     }
 
     public Component getComponentForSource(DownloadSourceDO downloadSourceDO,
@@ -90,68 +84,40 @@ public class DownloadTableVersionCellRenderer
                                            boolean hasFocus,
                                            int row,
                                            int column) {
-        Color foreground = table.getForeground();
-        JPanel returnPanel = new JPanel(new BorderLayout());
-        JLabel image = new JLabel();
-
-        JLabel versionText = new JLabel();
-
+        Component c = downloadSourceDO.getVersionComponent(value);
         if (isSelected) {
-            returnPanel.setBackground(table.getSelectionBackground());
-            returnPanel.setForeground(table.getSelectionForeground());
-            image.setBackground(table.getSelectionBackground());
-            versionText.setBackground(table.getSelectionBackground());
-            image.setForeground(table.getSelectionForeground());
-            versionText.setBackground(table.getSelectionForeground());
+            c.setBackground(table.getSelectionBackground());
+            c.setForeground(table.getSelectionForeground());
         }
         else {
+            c.setForeground(table.getForeground());
             if (settings.isFarbenAktiv()) {
-                returnPanel.setBackground(settings.getQuelleHintergrundColor());
-                returnPanel.setForeground(foreground);
+                c.setBackground(settings.getQuelleHintergrundColor());
             }
             else {
-                returnPanel.setBackground(table.getBackground());
-                returnPanel.setForeground(table.getForeground());
+                c.setBackground(table.getBackground());
             }
-            image.setBackground(table.getBackground());
-            versionText.setBackground(table.getBackground());
-            image.setForeground(table.getForeground());
-            versionText.setBackground(table.getForeground());
         }
-
-        if (downloadSourceDO.getVersion() == null) {
-            return returnPanel;
-        }
-        else {
-            image.setIcon(downloadSourceDO.getVersion().getVersionIcon());
-        }
-        versionText.setText("  " + downloadSourceDO.getVersion().getVersion());
-        versionText.setFont(table.getFont());
-        returnPanel.add(image, BorderLayout.WEST);
-        returnPanel.add(versionText, BorderLayout.CENTER);
-        return returnPanel;
+        return c;
     }
 
-    public Component getComponentForDirectory(DownloadDirectoryNode node,
+    public Component getComponentForDirectory(DownloadDirectoryNode downloadDirectoryNode,
                                               JTable table,
                                               Object value,
                                               boolean isSelected,
                                               boolean hasFocus,
                                               int row,
                                               int column) {
-        JLabel label1 = new JLabel();
-        label1.setText( (String) value);
-        label1.setFont(table.getFont());
-        label1.setOpaque(true);
+        Component c = downloadDirectoryNode.getVersionComponent(value);
         if (isSelected) {
-            label1.setBackground(table.getSelectionBackground());
-            label1.setForeground(table.getSelectionForeground());
+            c.setBackground(table.getSelectionBackground());
+            c.setForeground(table.getSelectionForeground());
         }
         else {
-            label1.setBackground(table.getBackground());
-            label1.setForeground(table.getForeground());
+            c.setBackground(table.getBackground());
+            c.setForeground(table.getForeground());
         }
-        return label1;
+        return c;
     }
 
     public void fireContentChanged(int type, Object content) {

@@ -1,13 +1,18 @@
 package de.applejuicenet.client.shared.dac;
 
+import java.awt.Component;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.tables.download.DownloadColumnComponent;
 import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.20 2004/02/24 08:49:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.21 2004/02/24 15:38:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +21,9 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.21  2004/02/24 15:38:11  maj0r
+ * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
+ *
  * Revision 1.20  2004/02/24 08:49:32  maj0r
  * Bug #240 gefixt (Danke an computer.ist.org)
  * Bug behoben, der im VersionChecker zu einer NoSuchElementException fuehrte.
@@ -67,7 +75,7 @@ import de.applejuicenet.client.shared.Version;
  */
 
 public class DownloadSourceDO
-    implements DownloadColumnValue {
+    implements DownloadColumnValue, DownloadColumnComponent {
 
     private static Logger logger;
 
@@ -121,8 +129,13 @@ public class DownloadSourceDO
     private int oldNochZuLaden;
     private String nochZuLadenAsString;
 
+    private JProgressBar progress;
+    private JLabel progressbarLabel;
+    private JLabel versionLabel;
+
     public DownloadSourceDO(int id){
         this.id = id;
+        init();
     }
 
     public DownloadSourceDO(int id, int status, int directstate,
@@ -144,6 +157,16 @@ public class DownloadSourceDO
         this.filename = filename;
         this.nickname = nickname;
         this.downloadId = downloadId;
+        init();
+    }
+
+    private void init(){
+        progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
+        progress.setStringPainted(true);
+        progressbarLabel = new JLabel();
+        progressbarLabel.setOpaque(true);
+        versionLabel = new JLabel();
+        versionLabel.setOpaque(true);
     }
 
     public int getStatus() {
@@ -440,5 +463,34 @@ public class DownloadSourceDO
         else {
             return "";
         }
+    }
+
+    public Component getProgressbarComponent(Object value) {
+        if (status == DownloadSourceDO.UEBERTRAGUNG) {
+            String prozent = getDownloadPercentAsString();
+            int pos = prozent.indexOf('.');
+            String balken = prozent;
+            if (pos != -1) {
+                balken = balken.substring(0, pos);
+            }
+            progress.setValue(Integer.parseInt(balken));
+            progress.setString(prozent + " %");
+            return progress;
+        }
+        else {
+            return progressbarLabel;
+        }
+    }
+
+    public Component getVersionComponent(Object value) {
+        if (getVersion() == null) {
+            versionLabel.setIcon(null);
+            versionLabel.setText("");
+        }
+        else {
+            versionLabel.setIcon(getVersion().getVersionIcon());
+            versionLabel.setText(getVersion().getVersion());
+        }
+        return versionLabel;
     }
 }

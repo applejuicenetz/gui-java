@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import java.awt.Component;
 import javax.swing.Icon;
+import javax.swing.JLabel;
 
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.8 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.9 2004/02/24 15:38:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +22,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDirectoryNode.java,v $
+ * Revision 1.9  2004/02/24 15:38:11  maj0r
+ * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
+ *
  * Revision 1.8  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -49,7 +54,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  */
 
 public class DownloadDirectoryNode
-    implements Node, DownloadNode, DownloadColumnValue {
+    implements Node, DownloadNode, DownloadColumnValue, DownloadColumnComponent {
 
     public static int SORT_NO_SORT = -1;
     public static int SORT_DOWNLOADNAME = 0;
@@ -74,8 +79,15 @@ public class DownloadDirectoryNode
     private String verzeichnis;
     private ArrayList children = new ArrayList();
 
+    private JLabel progressbarLabel;
+    private JLabel versionLabel;
+
     public DownloadDirectoryNode(String targetDir) {
         verzeichnis = targetDir;
+        progressbarLabel = new JLabel();
+        progressbarLabel.setOpaque(true);
+        versionLabel = new JLabel();
+        versionLabel.setOpaque(true);
     }
 
     public static void setDownloads(HashMap downloadsMap) {
@@ -339,5 +351,15 @@ public class DownloadDirectoryNode
         else {
             return -1;
         }
+    }
+
+    public Component getProgressbarComponent(Object value) {
+        progressbarLabel.setText( (String) value);
+        return progressbarLabel;
+    }
+
+    public Component getVersionComponent(Object value) {
+        versionLabel.setText( (String) value);
+        return versionLabel;
     }
 }

@@ -2,7 +2,10 @@ package de.applejuicenet.client.gui.tables.download;
 
 import java.util.ArrayList;
 
+import java.awt.Component;
 import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
@@ -13,7 +16,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.6 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.7 2004/02/24 15:38:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +25,9 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadMainNode.java,v $
+ * Revision 1.7  2004/02/24 15:38:11  maj0r
+ * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
+ *
  * Revision 1.6  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -44,7 +50,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  */
 
 public class DownloadMainNode
-    implements Node, DownloadNode, LanguageListener {
+    implements Node, DownloadNode, LanguageListener, DownloadColumnComponent {
     public static final int ROOT_NODE = -1;
     public static final int LOADING_DOWNLOADS = 0;
     public static final int WAITING_DOWNLOADS = 1;
@@ -55,6 +61,9 @@ public class DownloadMainNode
 
     private DownloadMainNode[] children;
     private DownloadDO downloadDO;
+    private JProgressBar progress;
+    private JLabel progressbarLabel;
+    private JLabel versionLabel;
 
     private static Icon waitingIcon = IconManager.getInstance().getIcon("cool");
     private static Icon loadingIcon = IconManager.getInstance().getIcon(
@@ -69,6 +78,7 @@ public class DownloadMainNode
         children[0] = new DownloadMainNode(downloadDO, LOADING_DOWNLOADS);
         children[1] = new DownloadMainNode(downloadDO, WAITING_DOWNLOADS);
         children[2] = new DownloadMainNode(downloadDO, REST_DOWNLOADS);
+        init();
     }
 
     public DownloadMainNode(DownloadDO downloadDO, int type) {
@@ -87,6 +97,16 @@ public class DownloadMainNode
             LanguageSelector.getInstance().addLanguageListener(this);
             fireLanguageChanged();
         }
+        init();
+    }
+
+    private void init(){
+        progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
+        progress.setStringPainted(true);
+        progressbarLabel = new JLabel();
+        progressbarLabel.setOpaque(true);
+        versionLabel = new JLabel();
+        versionLabel.setOpaque(true);
     }
 
     public Icon getConvenientIcon() {
@@ -218,5 +238,33 @@ public class DownloadMainNode
             text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.downloadform.dreckigerrest"));
         }
+    }
+
+    public Component getProgressbarComponent(Object value) {
+        if (type == DownloadMainNode.ROOT_NODE
+            && (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
+                || downloadDO.getStatus() == DownloadDO.PAUSIERT)) {
+            String prozent = downloadDO.getProzentGeladenAsString();
+            String wert = null;
+            int i;
+            if ( (i = prozent.indexOf(".")) != -1) {
+                wert = prozent.substring(0, i);
+            }
+            else {
+                wert = prozent;
+            }
+            progress.setValue(Integer.parseInt(wert));
+            progress.setString(prozent + " %");
+            return progress;
+        }
+        else {
+            progressbarLabel.setText( (String) value);
+            return progressbarLabel;
+        }
+    }
+
+    public Component getVersionComponent(Object value) {
+        versionLabel.setText( (String) value);
+        return versionLabel;
     }
 }
