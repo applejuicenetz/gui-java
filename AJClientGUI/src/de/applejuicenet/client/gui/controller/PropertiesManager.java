@@ -29,7 +29,7 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.48 2004/07/02 13:51:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.49 2004/07/09 11:34:00 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -591,6 +591,7 @@ class PropertiesManager
             boolean farbenAktiv;
             boolean downloadUebersicht;
             boolean loadPlugins;
+            boolean enableToolTip;
             String temp;
             farbenAktiv = getFirstAttrbuteByTagName(new String[] {"options", "farben",
                                              "aktiv"}).equals("true");
@@ -610,11 +611,14 @@ class PropertiesManager
                                              "uebersicht"}).equals("true");
             loadPlugins = getFirstAttrbuteByTagName(new String[] {"options",
                                              "loadplugins"}).equals("true");
+            enableToolTip = getFirstAttrbuteByTagName(new String[] {"options",
+                                             "enableToolTip"}).equals("true");
             settings.setFarbenAktiv(farbenAktiv);
             settings.setDownloadFertigHintergrundColor(downloadFertigHintergrundColor);
             settings.setQuelleHintergrundColor(quelleHintergrundColor);
             settings.setDownloadUebersicht(downloadUebersicht);
             settings.loadPluginsOnStartup(loadPlugins);
+            settings.enableToolTipEnabled(enableToolTip);
             return settings;
         }
         catch (Exception e) {
@@ -649,6 +653,9 @@ class PropertiesManager
                               ,
                               Boolean.toString(settings.
                                                shouldLoadPluginsOnStartup()));
+        setAttributeByTagName(new String[] {"options", "enableToolTip"}
+                              ,
+                              Boolean.toString(settings.isToolTipEnabled()));
         informSettingsListener(settings);
     }
 
@@ -717,6 +724,11 @@ class PropertiesManager
 
     private boolean isVeralteteXML() {
         String xmlTest = getFirstAttrbuteByTagName(new String[] {"options", "lookandfeels", "default", "name"});
+        if (xmlTest.length() == 0) {
+            return true;
+        }
+
+        xmlTest = getFirstAttrbuteByTagName(new String[] {"options", "enableToolTip"});
         if (xmlTest.length() == 0) {
             return true;
         }

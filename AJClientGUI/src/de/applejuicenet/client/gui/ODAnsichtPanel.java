@@ -32,9 +32,10 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.gui.components.AJLabel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.18 2004/07/08 14:48:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.19 2004/07/09 11:34:00 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -52,6 +53,7 @@ public class ODAnsichtPanel
     private Settings settings;
     JCheckBox cmbAktiv = new JCheckBox();
     JCheckBox cmbDownloadUebersicht = new JCheckBox();
+    private JCheckBox enableToolTip = new JCheckBox("Tooltipp anzeigen (Neustart erforderlich)");
     private JCheckBox cmbStartscreenZeigen = new JCheckBox();
     private Logger logger;
     private Icon menuIcon;
@@ -109,18 +111,26 @@ public class ODAnsichtPanel
         });
         cmbAktiv.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
+                dirty = true;
                 settings.setFarbenAktiv(cmbAktiv.isSelected());
             }
         });
+        enableToolTip.setSelected(settings.isToolTipEnabled());
+        enableToolTip.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                dirty = true;
+                settings.enableToolTipEnabled(enableToolTip.isSelected());
+            }
+        });
         ImageIcon icon = im.getIcon("hint");
-        JLabel hint1 = new JLabel(icon) {
+        AJLabel hint1 = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
-        JLabel hint2 = new JLabel(icon) {
+        AJLabel hint2 = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
@@ -187,7 +197,7 @@ public class ODAnsichtPanel
         constraints.weightx = 0;
         constraints.gridx = 2;
         panel4.add(selectProgram, constraints);
-                
+
         JPanel panel1 = new JPanel();
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -232,6 +242,8 @@ public class ODAnsichtPanel
         panel3.add(cmbStartscreenZeigen, constraints);
         constraints.gridy = 2;
         panel3.add(cmbDownloadUebersicht, constraints);
+        constraints.gridy = 3;
+        panel3.add(enableToolTip, constraints);
         panel2.add(panel3, BorderLayout.SOUTH);
 
         add(panel2, BorderLayout.WEST);
@@ -239,8 +251,20 @@ public class ODAnsichtPanel
 
     public boolean save() {
         try {
-            settings.save();
-            return true;
+            boolean bRet = false;
+            OptionsManager om = OptionsManagerImpl.getInstance();
+            if (om.shouldShowConnectionDialogOnStartup() != shouldShowStartcreen()) {
+                om.showConnectionDialogOnStartup(shouldShowStartcreen());
+                bRet = true;
+            }
+            if (!om.getOpenProgram().equals(getProgramPfad())) {
+                om.setOpenProgram(getProgramPfad());
+                bRet = true;
+            }
+            if (settings.save()) {
+                bRet = true;
+            }
+        return bRet;
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {

@@ -39,9 +39,10 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.gui.components.AJLabel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.28 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.29 2004/07/09 11:34:00 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -71,12 +72,12 @@ public class ODStandardPanel
     private JTextField xmlPort = new JTextField();
     private JTextField nick = new JTextField();
     private JTextField browser = new JTextField();
-    private JLabel hint1;
-    private JLabel hint2;
-    private JLabel hint3;
-    private JLabel hint4;
-    private JLabel hint5;
-    private JLabel hint6;
+    private AJLabel hint1;
+    private AJLabel hint2;
+    private AJLabel hint3;
+    private AJLabel hint4;
+    private AJLabel hint5;
+    private AJLabel hint6;
     private JDialog parent;
     private AJSettings ajSettings;
     private JComboBox cmbLog;
@@ -292,42 +293,42 @@ public class ODStandardPanel
         loadPlugins.setSelected(optionsManager.shouldLoadPluginsOnStartup());
 
         ImageIcon icon = im.getIcon("hint");
-        hint1 = new JLabel(icon) {
+        hint1 = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
-        hint2 = new JLabel(icon) {
+        hint2 = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
-        hint3 = new JLabel(icon) {
+        hint3 = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
-        hint4 = new JLabel(icon) {
+        hint4 = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
-        hint5 = new JLabel(icon) {
+        hint5 = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
-        hint6 = new JLabel(icon) {
+        hint6 = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);

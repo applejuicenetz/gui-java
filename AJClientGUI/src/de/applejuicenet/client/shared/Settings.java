@@ -5,7 +5,7 @@ import java.awt.Color;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.9 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.10 2004/07/09 11:34:00 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,13 +22,14 @@ public class Settings {
     private boolean farbenAktiv = true;
     private boolean downloadUebersicht = true;
     private boolean loadPlugins = true;
+    private boolean enableToolTip = true;
 
     public Settings(){
     }
 
     public Settings(Boolean farbenAktiv, Color downloadFertigHintergrundColor,
                     Color quelleHintergrundColor,
-                    Boolean downloadUebersicht, Boolean loadPlugins) {
+                    Boolean downloadUebersicht, Boolean loadPlugins, Boolean enableToolTip) {
         if (farbenAktiv != null) {
             this.farbenAktiv = farbenAktiv.booleanValue();
         }
@@ -43,7 +44,10 @@ public class Settings {
             this.downloadUebersicht = downloadUebersicht.booleanValue();
         }
         if (loadPlugins != null) {
-            this.loadPlugins = downloadUebersicht.booleanValue();
+            this.loadPlugins = loadPlugins.booleanValue();
+        }
+        if (enableToolTip != null) {
+            this.enableToolTip = enableToolTip.booleanValue();
         }
     }
 
@@ -51,11 +55,13 @@ public class Settings {
         return OptionsManagerImpl.getInstance().getSettings();
     }
 
-    public void save() {
+    public boolean save() {
         if (dirty) {
             OptionsManagerImpl.getInstance().saveSettings(this);
             dirty = false;
+            return true;
         }
+        return false;
     }
 
     public Color getDownloadFertigHintergrundColor() {
@@ -119,5 +125,14 @@ public class Settings {
             dirty = true;
             loadPlugins = loadPluginsOnStartup;
         }
+    }
+
+    public boolean isToolTipEnabled() {
+        return enableToolTip;
+    }
+
+    public void enableToolTipEnabled(boolean enable) {
+        this.enableToolTip = enable;
+        dirty = true;
     }
 }

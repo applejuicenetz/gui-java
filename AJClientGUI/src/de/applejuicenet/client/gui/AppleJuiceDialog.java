@@ -84,12 +84,13 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import de.applejuicenet.client.gui.components.AJMenuItem;
 
 /**
  * $Header:
  * /cvsroot/applejuicejava/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v
  * 1.125 2004/06/23 14:56:12 maj0r Exp $
- * 
+ *
  * <p>
  * Titel: AppleJuice Client-GUI
  * </p>
@@ -100,9 +101,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * <p>
  * Copyright: General Public License
  * </p>
- * 
+ *
  * @author: Maj0r [maj0r@applejuicenet.de]
- *  
+ *
  */
 
 public class AppleJuiceDialog extends JFrame implements LanguageListener,
@@ -124,27 +125,27 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 
 	private Set plugins;
 
-	private JMenuItem menuItemOptionen = new JMenuItem();
+	private AJMenuItem menuItemOptionen = new AJMenuItem();
 
-	private JMenuItem menuItemDateiliste = new JMenuItem();
+	private AJMenuItem menuItemDateiliste = new AJMenuItem();
 
-	private JMenuItem menuItemCheckUpdate = new JMenuItem();
+	private AJMenuItem menuItemCheckUpdate = new AJMenuItem();
 
-	private JMenuItem menuItemCoreBeenden = new JMenuItem();
+	private AJMenuItem menuItemCoreBeenden = new AJMenuItem();
 
-	private JMenuItem menuItemUeber = new JMenuItem();
+	private AJMenuItem menuItemUeber = new AJMenuItem();
 
-	private JMenuItem menuItemDeaktivieren = new JMenuItem();
+	private AJMenuItem menuItemDeaktivieren = new AJMenuItem();
 
-	private JMenuItem menuItemAktivieren = new JMenuItem();
+	private AJMenuItem menuItemAktivieren = new AJMenuItem();
 
-	private JMenuItem popupOptionenMenuItem = new JMenuItem("Optionen");
+	private AJMenuItem popupOptionenMenuItem = new AJMenuItem("Optionen");
 
-	private JMenuItem popupAboutMenuItem = new JMenuItem("&Info");
+	private AJMenuItem popupAboutMenuItem = new AJMenuItem("&Info");
 
-	private JMenuItem popupShowHideMenuItem = new JMenuItem("%Show");
+	private AJMenuItem popupShowHideMenuItem = new AJMenuItem("%Show");
 
-	private JMenuItem popupCheckUpdateMenuItem = new JMenuItem("Update");
+	private AJMenuItem popupCheckUpdateMenuItem = new AJMenuItem("Update");
 
 	private JButton sound = new JButton();
 
@@ -1251,7 +1252,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		xmlData
 				.append("    <options dialogzeigen=\"true\" firststart=\"true\" sound=\"true\" sprache=\"deutsch\" ");
 		xmlData
-				.append("themes=\"false\" defaulttheme=\"toxicthemepack\" loadplugins=\"true\" ");
+				.append("themes=\"false\" defaulttheme=\"toxicthemepack\" loadplugins=\"true\" enableToolTip=\"true\" ");
 		xmlData.append("linklistenerport=\"8768\" versionsinfo=\"1\" >\r\n");
 		xmlData
 				.append("        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>\r\n");

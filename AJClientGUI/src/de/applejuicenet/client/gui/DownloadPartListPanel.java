@@ -19,9 +19,10 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
+import de.applejuicenet.client.gui.components.AJPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.31 2004/06/23 12:39:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.32 2004/07/09 11:34:00 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,7 +33,7 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  */
 
 public class DownloadPartListPanel
-    extends JPanel implements MouseMotionListener, LanguageListener{
+    extends AJPanel implements MouseMotionListener, LanguageListener{
     private PartListDO partListDO;
     private Logger logger;
     private BufferedImage image = null;

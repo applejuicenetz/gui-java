@@ -50,9 +50,10 @@ import de.applejuicenet.client.shared.PolicyJarClassLoader;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.gui.components.AJLabel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.48 2004/06/18 11:38:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.49 2004/07/09 11:34:00 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -70,9 +71,9 @@ public class PowerDownloadPanel
     private JRadioButton btnAktiv = new JRadioButton();
     private JRadioButton btnAutoInaktiv = new JRadioButton();
     private JRadioButton btnAutoAktiv = new JRadioButton();
-    private JLabel btnHint;
-    private JLabel btnHint2;
-    private JLabel btnHint3;
+    private AJLabel btnHint;
+    private AJLabel btnHint2;
+    private AJLabel btnHint3;
     private JLabel btnPdlUp;
     private JLabel btnPdlDown;
     private float ratioWert = 2.2f;
@@ -178,7 +179,7 @@ public class PowerDownloadPanel
         IconManager im = IconManager.getInstance();
         ImageIcon icon = im.getIcon("hint");
 
-        btnHint = new JLabel(icon) {
+        btnHint = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
@@ -258,7 +259,7 @@ public class PowerDownloadPanel
         label9.setOpaque(true);
         label9.setBackground(BLUE_BACKGROUND);
         tempPanel2.add(label9, BorderLayout.CENTER);
-        btnHint2 = new JLabel(icon) {
+        btnHint2 = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
@@ -267,7 +268,7 @@ public class PowerDownloadPanel
         };
         btnHint2.setOpaque(true);
         btnHint2.setBackground(BLUE_BACKGROUND);
-        btnHint3 = new JLabel(icon) {
+        btnHint3 = new AJLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);

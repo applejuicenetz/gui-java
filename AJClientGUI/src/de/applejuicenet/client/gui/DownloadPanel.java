@@ -64,12 +64,13 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import de.applejuicenet.client.gui.components.AJButton;
 
 /**
  * $Header:
  * /cvsroot/applejuicejava/AJClientGUI/src/de/applejuicenet/client/gui/DownloadPanel.java,v
  * 1.109 2004/06/23 12:39:15 maj0r Exp $
- * 
+ *
  * <p>
  * Titel: AppleJuice Client-GUI
  * </p>
@@ -80,9 +81,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * <p>
  * Copyright: General Public License
  * </p>
- * 
+ *
  * @author: Maj0r <aj@tkl-soft.de>
- *  
+ *
  */
 
 public class DownloadPanel extends JPanel implements LanguageListener,
@@ -94,7 +95,7 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 
 	private JTextField downloadLink = new JTextField();
 
-	private JButton btnStartDownload = new JButton("Download");
+	private AJButton btnStartDownload = new AJButton("Download");
 
 	private PowerDownloadPanel powerDownloadPanel;
 

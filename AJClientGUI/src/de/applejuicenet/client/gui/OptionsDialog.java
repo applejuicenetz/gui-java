@@ -35,7 +35,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.42 2004/07/02 13:51:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.43 2004/07/09 11:34:00 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -133,8 +133,11 @@ public class OptionsDialog
     private void speichern() {
         try {
             OptionsManager om = OptionsManagerImpl.getInstance();
-            boolean etwasGeaendert;
-            etwasGeaendert = ( (ODAnsichtPanel) optionPanels[4]).save();
+            boolean etwasGeaendert = false;
+            if ( ( (ODAnsichtPanel) optionPanels[4]).isDirty()) {
+                etwasGeaendert = ( (ODAnsichtPanel) optionPanels[4]).save();
+                etwasGeaendert = true;
+            }
             if ( ( (ODStandardPanel) optionPanels[0]).isDirty() ||
                 ( (ODVerbindungPanel) optionPanels[1]).isDirty()) {
                 om.saveAJSettings(ajSettings);
@@ -172,13 +175,6 @@ public class OptionsDialog
             if ( ( (ODProxyPanel) optionPanels[3]).isDirty()) {
                 ProxyManagerImpl.getInstance().saveProxySettings( ( (
                     ODProxyPanel) optionPanels[3]).getProxySettings());
-                etwasGeaendert = true;
-            }
-            if ( ( (ODAnsichtPanel) optionPanels[4]).isDirty()) {
-                om.showConnectionDialogOnStartup( ( (ODAnsichtPanel)
-                    optionPanels[4]).shouldShowStartcreen());
-                om.setOpenProgram( ( (ODAnsichtPanel)
-                        optionPanels[4]).getProgramPfad());
                 etwasGeaendert = true;
             }
             if (etwasGeaendert) {
