@@ -11,7 +11,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.22 2003/09/02 16:08:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.23 2003/10/13 19:13:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.23  2003/10/13 19:13:21  maj0r
+ * Wert fuer Powerdownload kann nun auch manuell eingetragen werden.
+ *
  * Revision 1.22  2003/09/02 16:08:12  maj0r
  * Downloadbaum komplett umgebaut.
  *
@@ -119,7 +122,6 @@ public class PowerDownloadPanel
     ratio.setBackground(Color.white);
     ratio.setMinimumSize(new Dimension(50, 21));
     ratio.setPreferredSize(new Dimension(50, 21));
-    ratio.setEditable(false);
     ratio.setHorizontalAlignment(SwingConstants.RIGHT);
     btnPdl.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -180,6 +182,29 @@ public class PowerDownloadPanel
         btnAktiv.setSelected(true);
         alterRatio(false);
       }
+    });
+    ratio.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent fe){
+            try{
+                String temp = ratio.getText();
+                temp = temp.replaceAll(",", ".");
+                int pos = temp.lastIndexOf('.');
+                if (pos!=-1){
+                    temp = temp.substring(0, pos+2);
+                }
+                double pwdl = new Double(temp).doubleValue();
+                if (pwdl<2.2 || pwdl>50){
+                    ratio.setText("2.2");
+                }
+                else{
+                    ratio.setText(temp);
+                }
+                btnAktiv.setSelected(true);
+            }
+            catch (Exception ex){
+                ratio.setText("2.2");
+            }
+        }
     });
     constraints2.gridx = 1;
     tempPanel3.add(btnPdlUp, constraints2);
