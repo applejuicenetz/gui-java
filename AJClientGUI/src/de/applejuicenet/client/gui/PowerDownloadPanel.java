@@ -1,24 +1,58 @@
 package de.applejuicenet.client.gui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
-import javax.swing.*;
-
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
-import de.applejuicenet.client.gui.powerdownload.StandardAutomaticPwdlPolicy;
-import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
-import de.applejuicenet.client.shared.*;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToolTip;
+import javax.swing.SwingConstants;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
+import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.Information;
+import de.applejuicenet.client.shared.MultiLineToolTip;
+import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.applejuicenet.client.shared.PolicyJarClassLoader;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.36 2004/01/12 07:26:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.37 2004/01/31 08:49:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +61,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.37  2004/01/31 08:49:04  maj0r
+ * PwdlPolicies werden jetzt wie Plugins als jars eingebunden.
+ *
  * Revision 1.36  2004/01/12 07:26:44  maj0r
  * Auf JSplitPane umgebaut.
  *
@@ -100,7 +137,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * Sourcestil verbessert.
  *
  * Revision 1.13  2003/06/10 12:31:03  maj0r
- * Historie eingef�gt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -437,9 +474,13 @@ public class PowerDownloadPanel
         try {
             policy = (AutomaticPowerdownloadPolicy)selectedPolicy.getClass().newInstance();
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", e);
+            }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", e);
+            }
         }
         autoPwdlThread = policy;
         autoPwdlThread.setPaused(true);
@@ -447,9 +488,63 @@ public class PowerDownloadPanel
     }
 
     private void fillPwdlPolicies(){
-        AutomaticPowerdownloadPolicy standardAutomaticPwdlPolicy = new StandardAutomaticPwdlPolicy();
-        pwdlPolicies.addItem(standardAutomaticPwdlPolicy);
-        pwdlPolicies.setSelectedItem(standardAutomaticPwdlPolicy);
+        AutomaticPowerdownloadPolicy[] policies = loadPolicies();
+        for (int i=0; i<policies.length; i++){
+            pwdlPolicies.addItem(policies[i]);
+        }
+        if (pwdlPolicies.getItemCount()>0){
+            pwdlPolicies.setSelectedIndex(0);
+        }
+    }
+
+    private AutomaticPowerdownloadPolicy[] loadPolicies() {
+        try{
+            String path = System.getProperty("user.dir") + File.separator +
+                "pwdlpolicies" +
+                File.separator;
+            File policyPath = new File(path);
+            if (!policyPath.isDirectory()) {
+                if (logger.isEnabledFor(Level.INFO)) {
+                    logger.info(
+                        "Warnung: Kein Verzeichnis 'pwdlpolicies' vorhanden!");
+                }
+                return new AutomaticPowerdownloadPolicy[0];
+            }
+            String[] tempListe = policyPath.list();
+            PolicyJarClassLoader jarLoader = null;
+            ArrayList policies = new ArrayList();
+            for (int i = 0; i < tempListe.length; i++) {
+                if (tempListe[i].toLowerCase().endsWith(".jar")) {
+                    URL url = null;
+                    try {
+                        url = new URL("file://" + path + tempListe[i]);
+                        jarLoader = new PolicyJarClassLoader(url);
+                        AutomaticPowerdownloadPolicy aPolicy = jarLoader.
+                            getPolicy(path + tempListe[i]);
+                        if (aPolicy != null) {
+                            policies.add(aPolicy);
+                        }
+                    }
+                    catch (Exception e) {
+                        //Von einer Policy lassen wir uns nicht beirren! ;-)
+                        if (logger.isEnabledFor(Level.ERROR))
+                            logger.error(
+                                "Eine PowerdownloadPolicy konnte nicht instanziert werden",
+                                e);
+                        continue;
+                    }
+                }
+            }
+            return (AutomaticPowerdownloadPolicy[]) policies.toArray(new
+                AutomaticPowerdownloadPolicy[policies.size()]);
+        }
+        catch (Exception ex)
+        {
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", ex);
+            }
+            return new AutomaticPowerdownloadPolicy[0];
+        }
     }
 
     private void alterRatio(boolean increase) {

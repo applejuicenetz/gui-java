@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/Attic/StandardAutomaticPwdlPolicy.java,v 1.8 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.1 2004/01/31 08:48:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StandardAutomaticPwdlPolicy.java,v $
+ * Revision 1.1  2004/01/31 08:48:04  maj0r
+ * PwdlPolicies werden jetzt wie Plugins als jars eingebunden.
+ *
  * Revision 1.8  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *

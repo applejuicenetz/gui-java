@@ -1,0 +1,1 @@
+In dieses Verzeichnis kommen die AutomaticPowerdownloadPolicies als jar-Archive rein.
