@@ -45,7 +45,7 @@ import javax.swing.JOptionPane;
 import de.applejuicenet.client.shared.Information;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.46 2004/01/08 07:48:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.47 2004/01/21 14:16:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -54,6 +54,9 @@ import de.applejuicenet.client.shared.Information;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.47  2004/01/21 14:16:35  maj0r
+ * Icons ins Kontextmenue eingebaut.
+ *
  * Revision 1.46  2004/01/08 07:48:22  maj0r
  * Wenn das Panel nicht selektiert ist, wird die Tabelle nun nicht mehr aktualisiert.
  *
@@ -201,12 +204,19 @@ public class ServerPanel
         LanguageSelector.getInstance().addLanguageListener(this);
 
         sucheServer.setForeground(Color.BLUE);
+        IconManager im = IconManager.getInstance();
         item1 = new JMenuItem("Verbinden");
+        item1.setIcon(im.getIcon("serververbinden"));
         item5 = new JMenuItem("Hinzufügen");
+        item5.setIcon(im.getIcon("serverneu"));
         item2 = new JMenuItem("Löschen");
+        item2.setIcon(im.getIcon("serverloeschen"));
         item3 = new JMenuItem("Hinzufügen");
+        item3.setIcon(im.getIcon("serverneu"));
         item4 = new JMenuItem("Hinzufügen");
+        item4.setIcon(im.getIcon("serverneu"));
         item6 = new JMenuItem("Löschen");
+        item6.setIcon(im.getIcon("serverloeschen"));
         popup.add(item1);
         popup.add(item4);
         popup.add(item2);
@@ -374,7 +384,6 @@ public class ServerPanel
         serverTable.addMouseListener(popupMouseAdapter);
         add(aScrollPane, BorderLayout.CENTER);
         JPanel legende = new JPanel(new FlowLayout());
-        IconManager im = IconManager.getInstance();
         ImageIcon icon1 = im.getIcon("serververbunden");
         ImageIcon icon2 = im.getIcon("serverversuche");
         ImageIcon icon3 = im.getIcon("aelter24h");
