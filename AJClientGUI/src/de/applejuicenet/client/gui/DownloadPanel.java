@@ -1,23 +1,56 @@
 package de.applejuicenet.client.gui;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 
-import org.apache.log4j.*;
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.shared.*;
-import de.applejuicenet.client.gui.tables.*;
-import de.applejuicenet.client.gui.tables.download.*;
-import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.dac.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.shared.SortButtonRenderer;
+import de.applejuicenet.client.gui.tables.JTreeTable;
+import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.tables.download.DownloadDirectoryNode;
+import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
+import de.applejuicenet.client.gui.tables.download.DownloadModel;
+import de.applejuicenet.client.gui.tables.download.DownloadRootNode;
+import de.applejuicenet.client.gui.tables.download.DownloadTableCellRenderer;
+import de.applejuicenet.client.shared.Settings;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.64 2003/12/17 11:24:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.65 2003/12/17 14:54:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +59,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.65  2003/12/17 14:54:06  maj0r
+ * Reaktion des Popupmenues durch Threads beschleunigt.
+ *
  * Revision 1.64  2003/12/17 11:24:28  maj0r
  * Frischen NullPointer behoben.
  *
@@ -259,15 +295,19 @@ public class DownloadPanel
                         }
                         int size = indizesAbbrechen.size();
                         if (size > 0) {
-                            int[] abbrechen = new int[size];
+                            final int[] abbrechen = new int[size];
                             for (int i = 0; i < size; i++) {
                                 abbrechen[i] = ( (Integer) indizesAbbrechen.get(
                                     i)).intValue();
                             }
-                            ApplejuiceFassade.getInstance().cancelDownload(
-                                abbrechen);
-                            SoundPlayer.getInstance().playSound(SoundPlayer.
-                                ABGEBROCHEN);
+                            new Thread(){
+                                public void run(){
+                                    ApplejuiceFassade.getInstance().cancelDownload(
+                                        abbrechen);
+                                    SoundPlayer.getInstance().playSound(SoundPlayer.
+                                        ABGEBROCHEN);
+                                }
+                            }.start();
                         }
                     }
                 }
@@ -297,22 +337,30 @@ public class DownloadPanel
                     }
                     int size = indizesPausieren.size();
                     if (size > 0) {
-                        int[] pausieren = new int[size];
+                        final int[] pausieren = new int[size];
                         for (int i = 0; i < size; i++) {
                             pausieren[i] = ( (Integer) indizesPausieren.get(i)).
                                 intValue();
                         }
-                        ApplejuiceFassade.getInstance().pauseDownload(pausieren);
+                        new Thread(){
+                            public void run(){
+                                ApplejuiceFassade.getInstance().pauseDownload(pausieren);
+                            }
+                        }.start();
                     }
                     size = indizesFortsetzen.size();
                     if (size > 0) {
-                        int[] fortsetzen = new int[size];
+                        final int[] fortsetzen = new int[size];
                         for (int i = 0; i < size; i++) {
                             fortsetzen[i] = ( (Integer) indizesFortsetzen.get(i)).
                                 intValue();
                         }
-                        ApplejuiceFassade.getInstance().resumeDownload(
-                            fortsetzen);
+                        new Thread(){
+                            public void run(){
+                                ApplejuiceFassade.getInstance().resumeDownload(
+                                    fortsetzen);
+                            }
+                        }.start();
                     }
                 }
             }
@@ -399,6 +447,21 @@ public class DownloadPanel
                             expandOrCollapseRow(selectedRow);
                     }
                 }
+                if (node.getClass() == DownloadMainNode.class
+                    &&
+                    ( (DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
+                    if (!powerDownloadPanel.isAutomaticPwdlActive()) {
+                        powerDownloadPanel.btnPdl.setEnabled(true);
+                    }
+                }
+                else if (node.getClass() == DownloadSourceDO.class) {
+                    if (!powerDownloadPanel.isAutomaticPwdlActive()) {
+                        powerDownloadPanel.btnPdl.setEnabled(true);
+                    }
+                }
+                else{
+                    powerDownloadPanel.btnPdl.setEnabled(false);
+                }
             }
 
             public void mousePressed(MouseEvent me) {
@@ -415,8 +478,17 @@ public class DownloadPanel
                 if (e.isPopupTrigger()) {
                     Point p = e.getPoint();
                     int selectedRow = downloadTable.rowAtPoint(p);
-                    downloadTable.setRowSelectionInterval(selectedRow,
-                        selectedRow);
+                    int[] currentSelectedRows = downloadTable.getSelectedRows();
+                    for (int i=0; i<currentSelectedRows.length; i++){
+                        if (currentSelectedRows[i]==selectedRow){
+                            selectedRow = -1;
+                            break;
+                        }
+                    }
+                    if (selectedRow!=-1){
+                        downloadTable.setRowSelectionInterval(selectedRow,
+                            selectedRow);
+                    }
                     Object[] selectedItems = getSelectedDownloadItems();
                     item7.setVisible(false);
                     if (isDownloadUebersicht && selectedItems != null &&
@@ -458,11 +530,15 @@ public class DownloadPanel
     }
 
     private void startDownload() {
-        String link = downloadLink.getText();
+        final String link = downloadLink.getText();
         if (link.length() != 0) {
-            ApplejuiceFassade.getInstance().processLink(link);
+            new Thread(){
+                public void run(){
+                    ApplejuiceFassade.getInstance().processLink(link);
+                    SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
+                }
+            }.start();
             downloadLink.setText("");
-            SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
         }
     }
 
@@ -755,9 +831,9 @@ public class DownloadPanel
         private Object nodeObject = null;
 
         public void setDownloadNode(Object node) {
-            if (node==null){
+            if (node == null) {
                 nodeObject = null;
-                if (worker != null){
+                if (worker != null) {
                     worker.interrupt();
                     worker = null;
                 }
@@ -781,30 +857,16 @@ public class DownloadPanel
                                         ( (DownloadMainNode) nodeObject).
                                         getType() ==
                                         DownloadMainNode.ROOT_NODE) {
-                                        if (!powerDownloadPanel.
-                                            isAutomaticPwdlActive()) {
-                                            powerDownloadPanel.btnPdl.
-                                                setEnabled(true);
-                                        }
-                                        else {
-                                            powerDownloadPanel.btnPdl.
-                                                setEnabled(false);
-                                        }
+                                        powerDownloadPanel.btnPdl.
+                                            setEnabled(false);
                                         downloadDOOverviewPanel.setDownloadDO( ( (
                                             DownloadMainNode) nodeObject).
                                             getDownloadDO());
                                     }
                                     else if (nodeObject.getClass() ==
                                              DownloadSourceDO.class) {
-                                        if (!powerDownloadPanel.
-                                            isAutomaticPwdlActive()) {
-                                            powerDownloadPanel.btnPdl.
-                                                setEnabled(true);
-                                        }
-                                        else {
-                                            powerDownloadPanel.btnPdl.
-                                                setEnabled(false);
-                                        }
+                                        powerDownloadPanel.btnPdl.
+                                            setEnabled(false);
                                         if ( ( (DownloadSourceDO) nodeObject).
                                             getQueuePosition() <= 20) {
                                             downloadDOOverviewPanel.
