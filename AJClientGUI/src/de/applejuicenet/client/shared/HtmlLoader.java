@@ -1,21 +1,32 @@
 package de.applejuicenet.client.shared;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.SocketException;
 
-import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.19 2004/01/28 07:59:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.20 2004/02/02 15:12:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.20  2004/02/02 15:12:32  maj0r
+ * Kommunikation GUI<->Core erfolgt nun gezipped.
+ *
  * Revision 1.19  2004/01/28 07:59:47  maj0r
  * Holen von xmls beschleunigt.
  *
@@ -146,9 +157,8 @@ public abstract class HtmlLoader {
           if (!withResult){
               return "ok";
           }
-          BufferedReader in = new BufferedReader(
-              new InputStreamReader(
-              socket.getInputStream()));
+
+          DataInputStream in = new DataInputStream(socket.getInputStream());
           String inputLine = in.readLine();
           if (method == HtmlLoader.GET) {
             if (inputLine == null) {
@@ -166,25 +176,39 @@ public abstract class HtmlLoader {
               }
             }
             long laenge = Long.parseLong(inputLine.substring(inputLine.indexOf(" ")+1));
-            in.skip(1);
-            char[] toRead = null;
-            int gelesen = 0;
-            while (laenge>0){
-                if (laenge>Integer.MAX_VALUE){
-                    toRead = new char[Integer.MAX_VALUE];
-                }
-                else{
-                    toRead = new char[(int)laenge];
-                }
-                gelesen = in.read(toRead);
-                if (gelesen < toRead.length){
-                    urlContent.append(toRead, 0, gelesen);
-                    laenge -= gelesen;
-                }
-                else{
-                    urlContent.append(toRead);
-                    laenge -= toRead.length;
-                }
+            if (command.indexOf("mode=zip") != -1) {
+                DataInputStream in_data = new DataInputStream(socket.getInputStream());
+                in_data.skip(1);
+		byte[] allRead = new byte[(int)laenge];
+                byte[] toRead = new byte[1];
+                int pos = 0;
+		while (in_data.read(toRead) != -1) {
+                    allRead[pos] = toRead[0];
+                    pos ++;
+		}
+                urlContent.append(ZLibUtils.uncompress(allRead));
+            }
+            else{
+	      in.skip(1);
+	      byte[] toRead = null;
+	      int gelesen = 0;
+	      while (laenge > 0) {
+		  if (laenge > Integer.MAX_VALUE) {
+		      toRead = new byte[Integer.MAX_VALUE];
+		  }
+		  else {
+		      toRead = new byte[ (int) laenge];
+		  }
+		  gelesen = in.read(toRead);
+		  if (gelesen < toRead.length) {
+		      urlContent.append(new String(toRead, 0, gelesen));
+		      laenge -= gelesen;
+		  }
+		  else {
+		      urlContent.append(new String(toRead));
+		      laenge -= toRead.length;
+		  }
+	      }
             }
           }
           else {

@@ -22,7 +22,7 @@ import de.applejuicenet.client.shared.exception.PartlistException;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.23 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.24 2004/02/02 15:13:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.24  2004/02/02 15:13:47  maj0r
+ * Kommunikation GUI<->Core erfolgt nun gezipped.
+ *
  * Revision 1.23  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -152,17 +155,17 @@ public abstract class WebXMLParser
         try {
             if (useTimestamp) {
                 xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                    xmlCommand + "?password=" + password + "&timestamp=" +
+                    xmlCommand + "?mode=zip&password=" + password + "&timestamp=" +
                     timestamp + parameters);
             }
             else {
                 if (parameters.length() != 0) {
                     xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                        xmlCommand + "?password=" + password + "&" + parameters);
+                        xmlCommand + "?mode=zip&password=" + password + "&" + parameters);
                 }
                 else {
                     xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                        xmlCommand + "?password=" + password);
+                        xmlCommand + "?mode=zip&password=" + password);
                 }
             }
             if (xmlData.length()==0){
