@@ -21,7 +21,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.29 2004/04/14 09:48:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.30 2004/04/30 14:32:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -198,13 +198,16 @@ public class DownloadPartListPanel
                 image = null;
                 savedMouseEvent = null;
             }
-            updateUI();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            partListDO = null;
+            image = null;
+            savedMouseEvent = null;
+            if (logger.isEnabledFor(Level.DEBUG)) {
+                logger.debug(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
+        updateUI();
     }
 
     private void drawPart(boolean forceDraw, boolean isMainList, Graphics graphics, int pixelSize, int partType,
