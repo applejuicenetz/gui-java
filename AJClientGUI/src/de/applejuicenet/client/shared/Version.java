@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared;
 import javax.swing.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.11 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.12 2004/01/28 13:04:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import javax.swing.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Version.java,v $
+ * Revision 1.12  2004/01/28 13:04:48  maj0r
+ * Fehlende Symbole eingefuegt.
+ *
  * Revision 1.11  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -111,6 +114,14 @@ public class Version {
               {
                   return IconManager.getInstance().getIcon("sunossymbol");
               }
+          case Version.NETWARE:
+          {
+              return IconManager.getInstance().getIcon("netwaresymbol");
+          }
+          case Version.OS2:
+          {
+              return IconManager.getInstance().getIcon("os2symbol");
+          }
           default:
               {
                   return IconManager.getInstance().getIcon("unbekanntsymbol");
