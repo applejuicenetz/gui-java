@@ -58,7 +58,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.65 2004/04/14 09:53:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.66 2004/04/14 10:08:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -136,6 +136,10 @@ public class SharePanel
         itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
         itemCopyToClipboardAsUBBCode.setIcon(im.getIcon("clipboard"));
         itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
+        prioritaetAufheben.setEnabled(false);
+        prioritaetSetzen.setEnabled(false);
+        neuLaden.setEnabled(false);
+        refresh.setEnabled(false);
 
         popup2.add(itemCopyToClipboard);
         popup2.add(itemCopyToClipboardWithSources);
@@ -319,7 +323,6 @@ public class SharePanel
                         }
                     }
                 }
-
                 .start();
             }
         });
@@ -601,6 +604,10 @@ public class SharePanel
                         ajSettings = ApplejuiceFassade.getInstance().
                             getAJSettings();
                         DirectoryNode.setShareDirs(ajSettings.getShareDirs());
+                        prioritaetAufheben.setEnabled(true);
+                        prioritaetSetzen.setEnabled(true);
+                        neuLaden.setEnabled(true);
+                        refresh.setEnabled(true);
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
                                 initShareSelectionTree();
@@ -608,7 +615,6 @@ public class SharePanel
                         });
                     }
                 }
-
                 .start();
             }
         }
