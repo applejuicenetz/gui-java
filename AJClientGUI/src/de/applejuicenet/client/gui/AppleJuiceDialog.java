@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -125,10 +124,10 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 		DataUpdateListener {
 
 	//CVS-Beispiel 0.60.0-1-CVS
-    public static final String GUI_VERSION = "0.70.0-8-CVS";
+    public static final String GUI_VERSION = "0.70.0-9-CVS";
 	
 	private static Logger logger = Logger.getLogger(AppleJuiceDialog.class);
-	private static Map themes = null;
+	private static Map<String, Skin> themes = null;
 	public static boolean rewriteProperties = false;
 	private static AppleJuiceDialog theApp;
     
@@ -140,7 +139,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 	private JMenu optionenMenu;
 	private JMenu themesMenu = null;
 	private JMenu coreMenu;
-	private Set plugins;
+	private Set<PluginConnector> plugins;
 	private JMenuItem menuItemOptionen = new JMenuItem();
 	private JMenuItem menuItemDateiliste = new JMenuItem();
 	private JMenuItem menuItemCheckUpdate = new JMenuItem();
@@ -192,7 +191,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 		try {
 			themesInitialized = true;
 			if (OptionsManagerImpl.getInstance().isThemesSupported()) {
-				HashSet themesDateien = new HashSet();
+				HashSet<URL> themesDateien = new HashSet<URL>();
 				File themesPath = new File(System.getProperty("user.dir")
 						+ File.separator + "themes");
 				if (!themesPath.isDirectory()) {
@@ -219,24 +218,22 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 						}
 					}
 				}
-				Iterator it = themesDateien.iterator();
 				Skin standardSkin = null;
 				Skin aSkin = null;
 				String temp;
 				String shortName = "";
 				String defaultTheme = OptionsManagerImpl.getInstance()
 						.getDefaultTheme();
-				themes = new HashMap();
-				while (it.hasNext()) {
-					URL skinUrl = (URL) it.next();
-					temp = skinUrl.getFile();
+				themes = new HashMap<String, Skin>();
+				for (URL curSkinURL : themesDateien) {
+					temp = curSkinURL.getFile();
 					int index1 = temp.lastIndexOf('/');
 					int index2 = temp.lastIndexOf(".zip");
 					if (index1 == -1 || index2 == -1) {
 						continue;
 					}
 					shortName = temp.substring(index1 + 1, index2);
-					aSkin = SkinLookAndFeel.loadThemePack(skinUrl);
+					aSkin = SkinLookAndFeel.loadThemePack(curSkinURL);
 					themes.put(shortName, aSkin);
 					if (shortName.compareToIgnoreCase(defaultTheme) == 0) {
 						standardSkin = aSkin;
@@ -295,7 +292,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
         Image image = im.getIcon("applejuice").getImage();
 		setTitle(titel);
 		String osName = System.getProperty("os.name");
-		plugins = new HashSet();
+		plugins = new HashSet<PluginConnector>();
 		setIconImage(image);
 		menuItemOptionen.setIcon(im.getIcon("optionen"));
 		menuItemUeber.setIcon(im.getIcon("info"));
@@ -617,7 +614,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 								+ "\r\nappleJuice wird beendet.", false);
 			}
 			String[] tempListe = languagePath.list();
-			HashSet sprachDateien = new HashSet();
+			HashSet<String> sprachDateien = new HashSet<String>();
 			for (int i = 0; i < tempListe.length; i++) {
 				if (tempListe[i].indexOf(".xml") != -1) {
 					sprachDateien.add(tempListe[i]);
@@ -680,10 +677,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 			menuBar.add(sprachMenu);
 			ButtonGroup lafGroup = new ButtonGroup();
 
-			Iterator it = sprachDateien.iterator();
-			while (it.hasNext()) {
+			for (String curSprachDatei : sprachDateien) {
 				String sprachText = LanguageSelector.getInstance(
-						path + (String) it.next()).getFirstAttrbuteByTagName(
+						path + curSprachDatei).getFirstAttrbuteByTagName(
 						".root.Languageinfo.name");
 				JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
 				if (OptionsManagerImpl.getInstance().getSprache()
@@ -715,7 +711,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 			}
 			themesMenu = new JMenu();
 			if (OptionsManagerImpl.getInstance().isThemesSupported()) {
-				HashSet themesDateien = new HashSet();
+				HashSet<URL> themesDateien = new HashSet<URL>();
 				File themesPath = new File(System.getProperty("user.dir")
 						+ File.separator + "themes");
 				if (!themesPath.isDirectory()) {
@@ -744,15 +740,13 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 						}
 					}
 				}
-				it = themesDateien.iterator();
 				ButtonGroup lafGroup2 = new ButtonGroup();
 				String temp;
 				String shortName;
 				String defaultTheme = OptionsManagerImpl.getInstance()
 						.getDefaultTheme();
-				while (it.hasNext()) {
-					URL skinUrl = (URL) it.next();
-					temp = skinUrl.getFile();
+				for (URL curSkinURL : themesDateien) {
+					temp = curSkinURL.getFile();
 					int index1 = temp.lastIndexOf('/');
 					int index2 = temp.lastIndexOf(".zip");
 					if (index1 == -1 || index2 == -1) {
