@@ -64,7 +64,7 @@ import de.applejuicenet.client.fassade.tools.MD5Encoder;
  */
 
 public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
-	public static final String FASSADE_VERSION = "F-1.04";
+	public static final String FASSADE_VERSION = "F-1.05";
 	
 	public static final String MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
 	public static final String ERROR_MESSAGE = "Unbehandelte Exception";
