@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<general>
-		<title value="VersionChecker"/>
-		<version value="1.2"/>
-		<author value="Maj0r"/>
-		<contact value="Maj0r@applejuicenet.de"/>
+	<language value="deutsch">
 		<description value="Welche Core-Versionen sind zurzeit im Einsatz? Welche Betriebssysteme werden eingesetzt? Dieses Plugin beantwortet Deine Fragen. GUI ab 0.56.1 wird benötigt."/><istab value="true"/>
-		<classname value="de.applejuicenet.client.gui.plugins.VersionChecker"/>
-	</general>
+	</language>
 </root>
