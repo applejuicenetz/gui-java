@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.util.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.2 2003/10/27 16:01:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.3 2003/10/27 18:26:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.util.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SortedListModel.java,v $
+ * Revision 1.3  2003/10/27 18:26:58  maj0r
+ * Bugs behoben...
+ *
  * Revision 1.2  2003/10/27 16:01:24  maj0r
  * Benutzerliste wird nun bei Veränderung aktualisiert und halbwegs richtig sortiert (Status wird noch nicht berücksichtigt).
  *
@@ -37,21 +40,21 @@ public class SortedListModel extends AbstractListModel {
         return model.size();
     }
 
-    public Object getElementAt(int index) {
+    public synchronized Object getElementAt(int index) {
         if (index < model.size())
             return model.toArray()[index];
         else
             return null;
     }
 
-    public void add(Object element) {
+    public synchronized void add(Object element) {
         if (model.add(element))
         {
             fireIntervalAdded(this, 0, getSize());
         }
     }
 
-    public void clear() {
+    public synchronized void clear() {
         model.clear();
         fireIntervalRemoved(this, 0, getSize());
     }
@@ -68,7 +71,7 @@ public class SortedListModel extends AbstractListModel {
         return model.last();
     }
 
-    public boolean remove(Object element) {
+    public synchronized boolean remove(Object element) {
         boolean removed = model.remove(element);
         if (removed)
         {

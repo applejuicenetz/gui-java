@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.5 2003/10/27 16:06:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.6 2003/10/27 18:26:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import de.applejuicenet.client.shared.SwingWorker;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: XdccIrc.java,v $
+ * Revision 1.6  2003/10/27 18:26:58  maj0r
+ * Bugs behoben...
+ *
  * Revision 1.5  2003/10/27 16:06:21  maj0r
  * "Command not found" entfernt.
  *
@@ -442,6 +445,9 @@ public class XdccIrc
                 {
                     while (!isInterrupted())
                     {
+                        if (fromServer==null){
+                            continue;
+                        }
                         String line = fromServer.readLine();
                         if (line != null)
                         {
