@@ -62,21 +62,64 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 		fassade.verify();
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void testDoFourAction() throws Exception
 	{
 		Map<String,Download> downloads = new HashMap();
-		downloads.put(Integer.toString(1), new DownloadDummy(new Integer(1), "bla1", 1.1, Download.SUCHEN_LADEN, 1));
-		downloads.put(Integer.toString(2), new DownloadDummy(new Integer(2), "bla2", 1.2, Download.SUCHEN_LADEN, 1));
+		downloads.put(Integer.toString(1), new DownloadDummy(new Integer(1), "bla1", 0.0, Download.SUCHEN_LADEN, 1));
+		downloads.put(Integer.toString(2), new DownloadDummy(new Integer(2), "bla2", 0.0, Download.SUCHEN_LADEN, 1));
 		downloads.put(Integer.toString(3), new DownloadDummy(new Integer(3), "bla3", 1.3, Download.SUCHEN_LADEN, 1));
 		downloads.put(Integer.toString(4), new DownloadDummy(new Integer(4), "bla4", 1.4, Download.SUCHEN_LADEN, 1));
 
 		fassade = new ApplejuiceFassadeDummy(downloads);
 		policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3);
 
-		fassade.addExpectedDownload(new DownloadDummy(new Integer(1), "bla1", 1.1, Download.PAUSIERT, 1));
-		fassade.addExpectedDownload(new DownloadDummy(new Integer(2), "bla2", 1.2, Download.PAUSIERT, 1)); 
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(1), "bla1", 0.0, Download.PAUSIERT, 1));
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(2), "bla2", 0.0, Download.PAUSIERT, 1)); 
 		fassade.addExpectedDownload(new DownloadDummy(new Integer(3), "bla3", 1.3, Download.PAUSIERT, 1)); 
 		fassade.addExpectedDownload(new DownloadDummy(new Integer(4), "bla4", 1.4, Download.SUCHEN_LADEN, 3)); 
+		
+		policy.doAction();
+		fassade.verify();
+	}
+
+	public void testDoActionGroesse() throws Exception
+	{
+		Map<String,Download> downloads = new HashMap();
+		downloads.put(Integer.toString(1), new DownloadDummy(new Integer(1), "bla1", 10.0, Download.SUCHEN_LADEN, 1, 10));
+		downloads.put(Integer.toString(2), new DownloadDummy(new Integer(2), "bla2", 10.0, Download.SUCHEN_LADEN, 1, 20));
+		downloads.put(Integer.toString(3), new DownloadDummy(new Integer(3), "bla3", 1.3, Download.SUCHEN_LADEN, 1, 30));
+		downloads.put(Integer.toString(4), new DownloadDummy(new Integer(4), "bla4", 1.4, Download.SUCHEN_LADEN, 1, 40));
+
+		fassade = new ApplejuiceFassadeDummy(downloads);
+		policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3);
+
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(1), "bla1", 10.0, Download.PAUSIERT, 1, 10));
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(2), "bla2", 10.0, Download.SUCHEN_LADEN, 3, 20)); 
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(3), "bla3", 1.3, Download.PAUSIERT, 1, 30)); 
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(4), "bla4", 1.4, Download.PAUSIERT, 1, 40)); 
+		
+		policy.doAction();
+		fassade.verify();
+	}
+
+	public void testDoActionGroesseUndId() throws Exception
+	{
+		Map<String,Download> downloads = new HashMap();
+		downloads.put(Integer.toString(1), new DownloadDummy(new Integer(1), "bla1", 10.0, Download.SUCHEN_LADEN, 1, 100));
+		downloads.put(Integer.toString(2), new DownloadDummy(new Integer(2), "bla2", 10.0, Download.SUCHEN_LADEN, 1, 20));
+		downloads.put(Integer.toString(3), new DownloadDummy(new Integer(3), "bla3", 1.3, Download.SUCHEN_LADEN, 1, 30));
+		downloads.put(Integer.toString(4), new DownloadDummy(new Integer(4), "bla4", 1.4, Download.SUCHEN_LADEN, 1, 40));
+
+		fassade = new ApplejuiceFassadeDummy(downloads);
+		policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3);
+
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(1), "bla1", 10.0, Download.SUCHEN_LADEN, 3, 100));
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(2), "bla2", 10.0, Download.PAUSIERT, 1, 20)); 
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(3), "bla3", 1.3, Download.PAUSIERT, 1, 30)); 
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(4), "bla4", 1.4, Download.PAUSIERT, 1, 40)); 
 		
 		policy.doAction();
 		fassade.verify();

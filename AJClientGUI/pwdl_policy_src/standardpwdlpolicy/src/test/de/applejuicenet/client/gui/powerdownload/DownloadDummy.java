@@ -16,6 +16,7 @@ public class DownloadDummy implements Download
 	private double bereitsGeladen; 
 	private int status;
 	private int powerdwl;
+	private long groesse;
 	
 	public DownloadDummy(Integer id, String bezeichnung, double bereitsGeladen, int status, int powerdwl)
 	{
@@ -25,6 +26,18 @@ public class DownloadDummy implements Download
 		this.bereitsGeladen = bereitsGeladen;
 		this.status = status;
 		this.powerdwl = powerdwl;
+		this.groesse = 0;
+	}
+
+	public DownloadDummy(Integer id, String bezeichnung, double bereitsGeladen, int status, int powerdwl, long groesse)
+	{
+		super();
+		this.id = id;
+		this.bezeichnung = bezeichnung;
+		this.bereitsGeladen = bereitsGeladen;
+		this.status = status;
+		this.powerdwl = powerdwl;
+		this.groesse = groesse;
 	}
 
 	public String getProzentGeladenAsString()
@@ -63,8 +76,7 @@ public class DownloadDummy implements Download
 
 	public long getGroesse()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return groesse;
 	}
 
 	public int getStatus()

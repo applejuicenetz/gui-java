@@ -15,7 +15,7 @@ import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.8 2005/02/15 14:00:46 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.9 2005/02/15 15:37:39 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,7 +82,7 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         }
         synchronized (downloads)
         {
-          TreeMap<Double,Download> naechsteDownloads = new TreeMap(new ProzentGeladenComparator());
+          TreeMap<Sortierkriterium,Download> naechsteDownloads = new TreeMap(new ProzentGeladenComparator());
         	if (downloadSize <= anzahlDownloads) {
         		// alle auf pd setzen und resuemen...
         		List power = new Vector(downloads.values());
@@ -94,7 +94,7 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         		while (it.hasNext()) {
         			Download current = it.next();
         			if (current.getStatus() == Download.PAUSIERT || current.getStatus() == Download.SUCHEN_LADEN) {
-        				naechsteDownloads.put(new Double(current.getProzentGeladen()), current);
+        				naechsteDownloads.put(new Sortierkriterium(current), current);
         			}
         		}
         		int pos = 0;
@@ -201,11 +201,41 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         return 2;
     }
     
-    private class ProzentGeladenComparator implements Comparator {
+    private class Sortierkriterium {
+    	private Double bereitsGeladen;
+    	private Long groesse;
+    	private Integer id;
+    	
+    	public Sortierkriterium(Double bereitsGeladen, Long groesse, Integer id) {
+    		this.bereitsGeladen = bereitsGeladen;
+    		this.groesse = groesse;
+    		this.id = id;
+    	}
 
+    	public Sortierkriterium(Download current)
+			{
+    		this.bereitsGeladen = new Double(current.getBereitsGeladen());
+    		this.groesse = current.getGroesse();
+    		this.id = current.getId();
+			}
+
+			public int compareTo(Sortierkriterium comparable)
+			{
+				int compareResult = this.bereitsGeladen.compareTo(comparable.bereitsGeladen);
+				if (compareResult == 0) {
+					compareResult = this.groesse.compareTo(comparable.groesse);
+				}
+				if (compareResult == 0) {
+					compareResult = this.id.compareTo(comparable.id);
+				}
+				return compareResult;
+			}
+    }
+    
+    private class ProzentGeladenComparator implements Comparator {
 			public int compare(Object arg0, Object arg1)
 			{
-				return ((Double)arg1).compareTo((Double)arg0);
+				return ((Sortierkriterium)arg1).compareTo((Sortierkriterium)arg0);
 			}
     }
 }

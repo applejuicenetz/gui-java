@@ -76,6 +76,7 @@ public class ApplejuiceFassadeDummy extends ApplejuiceFassade
 			Assert.assertEquals("Status nicht gleich", cur.getStatus(), download.getStatus());
 			Assert.assertEquals("BereitsGeladen nicht gleich", cur.getBereitsGeladen(), download.getBereitsGeladen());
 			Assert.assertEquals("Powerdownload nicht gleich", cur.getPowerDownload(), download.getPowerDownload());
+			Assert.assertEquals("Groesse nicht gleich", cur.getGroesse(), download.getGroesse());
 		}
 	}
 }
