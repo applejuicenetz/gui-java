@@ -53,7 +53,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.93 2005/01/24 18:32:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.94 2005/02/14 16:03:52 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -71,7 +71,7 @@ public class AppleJuiceClient {
     private static HTMLLayout layout;
     private static ApplejuiceFassade ajFassade = null;
     
-    public static ApplejuiceFassade getAjFassade() {
+    public static synchronized ApplejuiceFassade getAjFassade() {
     	if (ajFassade == null){
         	ConnectionSettings rm = OptionsManagerImpl.getInstance().getRemoteSettings();
         	try {
