@@ -235,7 +235,7 @@ public class ServerPanel extends JPanel implements LanguageListener,
 					final String link = newServerDialog.getLink();
 					new Thread() {
 						public void run() {
-							ApplejuiceFassade.getInstance().processLink(link);
+							ApplejuiceFassade.getInstance().processLink(link, "");
 						}
 					}.start();
 				}
@@ -263,7 +263,7 @@ public class ServerPanel extends JPanel implements LanguageListener,
 							return;
 						}
 						for (int i = 0; i < server.length; i++) {
-							af.processLink(server[i]);
+							af.processLink(server[i], "");
 						}
 					}
 				};

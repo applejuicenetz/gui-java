@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ShareDO.java,v 1.11 2004/10/15 13:34:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ShareDO.java,v 1.12 2004/12/03 17:31:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,19 +18,26 @@ public class ShareDO {
     private long size;
     private String checksum;
     private int prioritaet;
+    private long lastAsked;
+    private long askCount;
+    private long searchCount;
 
     public ShareDO(int id) {
         this.id = id;
     }
 
     public ShareDO(int id, String filename, String shortfilename, long size,
-                   String checksum, int prioritaet) {
+                   String checksum, int prioritaet, long lastAsked, long askCount, 
+				   long searchCount) {
         this.id = id;
         this.filename = filename;
         this.shortfilename = shortfilename;
         this.size = size;
         this.checksum = checksum;
         this.prioritaet = prioritaet;
+        this.lastAsked = lastAsked;
+        this.askCount = askCount;
+        this.searchCount = searchCount;
     }
 
     public void setFilename(String filename) {
@@ -76,4 +83,28 @@ public class ShareDO {
     public void setPrioritaet(int prioritaet) {
         this.prioritaet = prioritaet;
     }
+
+	public long getAskCount() {
+		return askCount;
+	}
+	
+	public void setAskCount(long askCount) {
+		this.askCount = askCount;
+	}
+	
+	public long getLastAsked() {
+		return lastAsked;
+	}
+	
+	public void setLastAsked(long lastAsked) {
+		this.lastAsked = lastAsked;
+	}
+	
+	public long getSearchCount() {
+		return searchCount;
+	}
+
+	public void setSearchCount(long searchCount) {
+		this.searchCount = searchCount;
+	}
 }

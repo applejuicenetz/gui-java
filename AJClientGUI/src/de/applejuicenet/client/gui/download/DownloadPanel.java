@@ -1,6 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -11,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -97,6 +99,8 @@ public class DownloadPanel extends TklPanel {
 	private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[columns.length];
 	private JPopupMenu menu;
 	private JMenuItem einfuegen;
+	private JTextField targetDir = new JTextField();
+	private JLabel txtTargetDir = new JLabel();
 	
 	public JTreeTable getDownloadTable(){
 		return downloadTable;
@@ -108,6 +112,14 @@ public class DownloadPanel extends TklPanel {
 	
 	public JTextField getDownloadLinkField(){
 		return downloadLink;
+	}
+
+	public JTextField getTargetDirField(){
+		return targetDir;
+	}
+
+	public JLabel getLblTargetDir(){
+		return txtTargetDir;
 	}
 	
 	public JCheckBoxMenuItem[] getColumnPopupItems(){
@@ -224,6 +236,8 @@ public class DownloadPanel extends TklPanel {
 	}
 
 	private void init() throws Exception {
+		targetDir.setMinimumSize(new Dimension(120, targetDir.getMinimumSize().height));
+		targetDir.setPreferredSize(new Dimension(120, targetDir.getPreferredSize().height));
 		setLayout(new BorderLayout());
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new GridBagLayout());
@@ -280,11 +294,26 @@ public class DownloadPanel extends TklPanel {
 		constraints.gridy = 0;
 		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
-		JPanel tempPanel = new JPanel();
-		tempPanel.setLayout(new BorderLayout());
-		tempPanel.add(linkLabel, BorderLayout.WEST);
-		tempPanel.add(downloadLink, BorderLayout.CENTER);
-		tempPanel.add(btnStartDownload, BorderLayout.EAST);
+
+		
+		GridBagConstraints constraints2 = new GridBagConstraints();
+		constraints2.anchor = GridBagConstraints.NORTH;
+		constraints2.fill = GridBagConstraints.BOTH;
+		constraints2.gridx = 0;
+		constraints2.gridy = 0;
+		
+		JPanel tempPanel = new JPanel(new GridBagLayout());
+		tempPanel.add(linkLabel, constraints2);
+		constraints2.gridx = 1;
+		constraints2.weightx = 1;
+		tempPanel.add(downloadLink, constraints2);
+		constraints2.gridx = 2;
+		constraints2.weightx = 0;
+		tempPanel.add(txtTargetDir, constraints2);
+		constraints2.gridx = 3;
+		tempPanel.add(targetDir, constraints2);
+		constraints2.gridx = 4;
+		tempPanel.add(btnStartDownload, constraints2);
 		topPanel.add(tempPanel, constraints);
 		constraints.gridwidth = 3;
 		constraints.gridx = 0;
@@ -292,13 +321,15 @@ public class DownloadPanel extends TklPanel {
 		constraints.weighty = 1;
 		constraints.weightx = 1;
 
-		downloadLink.addKeyListener(new KeyAdapter() {
+		KeyListener keyListener = new KeyAdapter() {
 			public void keyPressed(KeyEvent ke) {
 				if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
 					btnStartDownload.doClick();
 				}
 			}
-		});
+		};
+		downloadLink.addKeyListener(keyListener);
+		targetDir.addKeyListener(keyListener);
 		downloadLink.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON3) {

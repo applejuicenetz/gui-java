@@ -134,7 +134,7 @@ public class DownloadController extends GuiController {
 					break;
 				}
 				case KeyEvent.VK_F3: {
-					changeIncomingDir();
+					changeTargetDir();
 					break;
 				}
 				case KeyEvent.VK_F5: {
@@ -199,7 +199,7 @@ public class DownloadController extends GuiController {
 				break;
 			}
 			case ZIELORDNER_AENDERN:{
-				changeIncomingDir();
+				changeTargetDir();
 				break;
 			}
 			case FERTIGE_ENTFERNEN:{
@@ -245,12 +245,6 @@ public class DownloadController extends GuiController {
 	}
 	
 	private synchronized void downloadPropertyChanged(DataPropertyChangeEvent evt){
-	    if (firstUpdate){
-	        firstUpdate = false;
-			Map downloads = ApplejuiceFassade.getInstance().getDownloadsSnapshot();
-			((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
-			DownloadDirectoryNode.setDownloads(downloads);
-	    }
 		boolean tmpSort = false;
 		if (evt.isEventContainer()){
 			DataPropertyChangeEvent[] events = evt.getNestedEvents();
@@ -584,10 +578,11 @@ public class DownloadController extends GuiController {
 
 	private void startDownload() {
 		final String link = downloadPanel.getDownloadLinkField().getText();
+		final String targetDir = downloadPanel.getTargetDirField().getText();
 		if (link.length() != 0) {
 			new Thread() {
 				public void run() {
-					ApplejuiceFassade.getInstance().processLink(link);
+					ApplejuiceFassade.getInstance().processLink(link, targetDir);
 					SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
 				}
 			}.start();
@@ -595,7 +590,7 @@ public class DownloadController extends GuiController {
 		}
 	}
 
-	private void changeIncomingDir() {
+	private void changeTargetDir() {
 		Object[] selectedItems = getSelectedDownloadItems();
 		if (selectedItems == null || selectedItems.length == 0) {
 			return;
@@ -798,6 +793,7 @@ public class DownloadController extends GuiController {
 			panelSelected = true;
 			if (!initialized) {
 				initialized = true;
+		        firstUpdate = false;
 				int width = downloadPanel.getScrollPane().getWidth() - 18;
 				PositionManager pm = PositionManagerImpl.getInstance();
 				TableColumn[] columns = downloadPanel.getDownloadTableColumns();
@@ -835,6 +831,9 @@ public class DownloadController extends GuiController {
 						- downloadPanel.getSplitPane().getDividerSize() - downloadPanel.getPowerDownloadPanel()
 						.getPreferredSize().height));
 				downloadPanel.getSplitPane().setDividerLocation(loc);
+				Map downloads = ApplejuiceFassade.getInstance().getDownloadsSnapshot();
+				((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
+				DownloadDirectoryNode.setDownloads(downloads);
 			}
 			downloadPanel.getDownloadTable().updateUI();
 		} catch (Exception e) {
@@ -951,6 +950,9 @@ public class DownloadController extends GuiController {
 						.korrigiereUmlaute(languageSelector
 								.getFirstAttrbuteByTagName(".root.javagui.downloadform.einfuegen")));
 		downloadPanel.getMnuOpenWithProgram().setText("VLC");
+		downloadPanel.getLblTargetDir().setText(ZeichenErsetzer
+				.korrigiereUmlaute(languageSelector
+						.getFirstAttrbuteByTagName(".root.javagui.downloadform.zielverzeichnis")));
 	}
 
 	protected void contentChanged(int type, final Object content) {

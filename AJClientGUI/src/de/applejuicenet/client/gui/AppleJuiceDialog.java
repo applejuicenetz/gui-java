@@ -908,7 +908,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 								if (size != null && checksum != null) {
 									link = "ajfsp://file|" + filename + "|"
 											+ checksum + "|" + size + "/";
-									af.processLink(link);
+									af.processLink(link, "");
 								}
 							}
 						} catch (FileNotFoundException ex) {

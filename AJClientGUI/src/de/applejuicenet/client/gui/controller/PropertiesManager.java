@@ -841,7 +841,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 						"options_columns_server_column" + i + "_width")
 						.intValue();
 			}
-			shareWidths = new int[3];
+			shareWidths = new int[6];
 			for (int i = 0; i < shareWidths.length; i++) {
 				shareWidths[i] = propertyHandler.getAsInt(
 						"options_columns_share_column" + i + "_width")

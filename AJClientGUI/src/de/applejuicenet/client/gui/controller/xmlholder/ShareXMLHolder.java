@@ -20,7 +20,7 @@ import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.11 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.12 2004/12/03 17:31:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -105,6 +105,15 @@ public class ShareXMLHolder
             }
             else if (attr.getLocalName(i).equals("priority")){
                 shareDO.setPrioritaet(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("lastasked")){
+                shareDO.setLastAsked(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("askcount")){
+                shareDO.setAskCount(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("searchcount")){
+                shareDO.setSearchCount(Long.parseLong(attr.getValue(i)));
             }
         }
     }

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.11 2004/10/11 18:18:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.12 2004/12/03 17:31:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -50,8 +50,11 @@ public class GetObjectXMLHolder
         size = Long.parseLong(e.getAttribute("size"));
         checksum = e.getAttribute("checksum");
         prioritaet = Integer.parseInt(e.getAttribute("priority"));
+        long lastAsked = Integer.parseInt(e.getAttribute("lastasked"));
+        long askCount = Integer.parseInt(e.getAttribute("askcount"));
+        long searchCount = Integer.parseInt(e.getAttribute("searchcount"));
         shareDO = new ShareDO(id_key, filename, shortfilename, size, checksum,
-                              prioritaet);
+                              prioritaet, lastAsked, askCount, searchCount);
         return shareDO;
     }
 
@@ -194,10 +197,12 @@ public class GetObjectXMLHolder
         nickname = e.getAttribute("nickname");
         temp = e.getAttribute("downloadid");
         downloadId = Integer.parseInt(temp);
+        temp = e.getAttribute("source");
+        int herkunft = Integer.parseInt(temp);
         DownloadSourceDO downloadSourceDO = new DownloadSourceDO(id, status,
             directstate, downloadFrom, downloadTo,
             actualDownloadPosition, speed, version, queuePosition,
-            powerDownload, filename, nickname, downloadId);
+            powerDownload, filename, nickname, downloadId, herkunft);
         return downloadSourceDO;
     }
 

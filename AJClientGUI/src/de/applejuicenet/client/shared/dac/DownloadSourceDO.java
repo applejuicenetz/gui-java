@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.29 2004/10/15 15:54:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.30 2004/12/03 17:31:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -55,6 +55,14 @@ public class DownloadSourceDO
     public static final int DIREKTE_VERBINDUNG = 1;
     public static final int INDIREKTE_VERBINDUNG_UNBESTAETIGT = 2;
     public static final int INDIREKTE_VERBINDUNG = 3;
+    
+    // herkunft
+    public static final int SOURCE_AJFSP = 1;
+    public static final int SOURCE_CLIENT2CLIENT = 2;
+    public static final int SOURCE_UPLOADLIST = 3;
+    public static final int SOURCE_LAST_START = 4;
+    public static final int SOURCE_TEXTSEARCH = 5;
+    public static final int SOURCE_SERVER_SOURCE_SEARCH = 6;
 
     private final int id;
     private int status;
@@ -69,6 +77,7 @@ public class DownloadSourceDO
     private String filename;
     private String nickname;
     private int downloadId;
+    private int herkunft;
 
     private int oldSize;
     private String sizeAsString;
@@ -94,7 +103,7 @@ public class DownloadSourceDO
                             int actualDownloadPosition, int speed,
                             Version version, int queuePosition,
                             int powerDownload, String filename, String nickname,
-                            int downloadId) {
+                            int downloadId, int herkunft) {
         this.id = id;
         this.status = status;
         this.directstate = directstate;
@@ -110,6 +119,7 @@ public class DownloadSourceDO
         this.downloadId = downloadId;
         progressChanged = true;
         versionChanged = true;
+        this.herkunft = herkunft;
     }
 
     public int getStatus() {
@@ -309,6 +319,14 @@ public class DownloadSourceDO
         this.downloadId = downloadId;
     }
 
+    public int getHerkunft() {
+        return herkunft;
+    }
+
+    public void setHerkunft(int herkunft) {
+        this.herkunft = herkunft;
+    }
+    
     public String getColumn0() {
         return getFilename();
     }

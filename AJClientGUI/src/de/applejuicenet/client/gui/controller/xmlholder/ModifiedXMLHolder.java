@@ -39,7 +39,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.51 2004/12/01 15:28:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.52 2004/12/03 17:31:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -370,6 +370,7 @@ public class ModifiedXMLHolder
         downloadSourceDO.setPowerDownload(Integer.parseInt((String)userAttributes.get("powerdownload")));
         downloadSourceDO.setFilename((String)userAttributes.get("filename"));
         downloadSourceDO.setNickname((String)userAttributes.get("nickname"));
+        downloadSourceDO.setHerkunft(Integer.parseInt((String)userAttributes.get("source")));
         String versionNr = (String)userAttributes.get("version");
         int os = Integer.parseInt((String)userAttributes.get("operatingsystem"));
         if (!versionNr.equals("0.0.0.0") && os != -1) {

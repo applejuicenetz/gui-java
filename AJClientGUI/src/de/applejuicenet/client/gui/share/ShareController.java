@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.9 2004/10/29 13:59:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.10 2004/12/03 17:31:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -614,7 +614,7 @@ public class ShareController extends GuiController {
         sharePanel.getBtnPrioritaetAufheben().setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.getFirstAttrbuteByTagName(".root.mainform.clearprio.hint")));
 
-        String[] tableColumns = new String[3];
+        String[] tableColumns = new String[6];
         tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
             getFirstAttrbuteByTagName(".root.mainform.sfiles.col0caption"));
@@ -624,9 +624,15 @@ public class ShareController extends GuiController {
         tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
             getFirstAttrbuteByTagName(".root.mainform.sfiles.col2caption"));
+        tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.letzteanfrage"));
+        tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.downloadanfragen"));
+        tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.suchanfragen"));
 
         TableColumnModel tcm = sharePanel.getShareTable().getColumnModel();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < tableColumns.length; i++) {
             tcm.getColumn(i).setHeaderValue(tableColumns[i]);
         }
         eintraege = ZeichenErsetzer.korrigiereUmlaute(languageSelector.

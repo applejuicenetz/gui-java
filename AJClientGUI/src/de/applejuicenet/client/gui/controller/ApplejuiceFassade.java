@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.169 2004/12/01 15:34:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.170 2004/12/03 17:31:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -49,8 +49,8 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 public class ApplejuiceFassade {
 	//CVS-Beispiel 0.60.0-1-CVS
-    public static final String GUI_VERSION = "0.60.0-9-CVS";
-    public static final String MIN_NEEDED_CORE_VERSION = "0.30.145.610";
+    public static final String GUI_VERSION = "0.60.0-10-CVS";
+    public static final String MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
 
     public static final String ERROR_MESSAGE = "Unbehandelte Exception";
 
@@ -920,7 +920,7 @@ public class ApplejuiceFassade {
         }
     }
 
-    public synchronized void processLink(final String link) {
+    public synchronized void processLink(final String link, String subdir) {
         try {
             if (link == null || link.length() == 0) {
                 if (logger.isEnabledFor(Level.INFO)) {
@@ -934,6 +934,16 @@ public class ApplejuiceFassade {
                 }
                 links.add(link);
             }
+    		if (subdir == null) {
+    			subdir = "";
+    		} else {
+    			subdir = subdir.trim();
+    			if (subdir.indexOf(File.separator) == 0
+    					|| subdir.indexOf(ApplejuiceFassade.separator) == 0) {
+    				subdir = subdir.substring(1);
+    			}
+    		}
+
             String password = OptionsManagerImpl.getInstance().
                 getRemoteSettings().getOldPassword();
             String encodedLink = link;
@@ -953,7 +963,8 @@ public class ApplejuiceFassade {
             }
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                          "/function/processlink?password=" +
-                                         password + "&link=" + encodedLink, false);
+                                         password + "&link=" + encodedLink + "&subdir=" + subdir, 
+										 false);
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -1026,7 +1037,7 @@ public class ApplejuiceFassade {
             Iterator it = links.iterator();
             while (it.hasNext()){
                 String link = (String)it.next();
-                processLink(link);
+                processLink(link, "");
             }
             links.clear();
             links = null;

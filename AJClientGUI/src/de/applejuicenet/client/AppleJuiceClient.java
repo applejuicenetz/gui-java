@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.87 2004/11/29 10:50:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.88 2004/12/03 17:31:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -199,7 +199,7 @@ public class AppleJuiceClient {
                             System.exit(1);
                         }
                         else{
-                            ApplejuiceFassade.getInstance().processLink(link);
+                            ApplejuiceFassade.getInstance().processLink(link, "");
                         }
                     }
                 }
@@ -413,7 +413,7 @@ public class AppleJuiceClient {
             System.out.println(nachricht);
             splash.dispose();
             if (processLink) {
-                ApplejuiceFassade.getInstance().processLink(link);
+                ApplejuiceFassade.getInstance().processLink(link, "");
             }
             if (OptionsManagerImpl.getInstance().isErsterStart()) {
                 showConnectionWizard(theApp);
