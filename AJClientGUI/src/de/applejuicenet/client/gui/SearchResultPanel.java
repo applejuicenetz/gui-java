@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 
 import de.applejuicenet.client.gui.tables.search.SearchResultTableModel;
+import de.applejuicenet.client.gui.tables.JTreeTable;
+import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.Search;
@@ -14,7 +16,7 @@ import de.applejuicenet.client.shared.Search;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.1 2003/09/30 16:35:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.2 2003/10/01 07:25:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +25,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.2  2003/10/01 07:25:44  maj0r
+ * Suche weiter gefuehrt.
+ *
  * Revision 1.1  2003/09/30 16:35:11  maj0r
  * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
  *
@@ -31,7 +36,7 @@ import java.awt.*;
 
 public class SearchResultPanel extends JPanel{
     private Logger logger;
-    private JTable searchResultTable = new JTable();
+    private JTreeTable searchResultTable;
     private SearchResultTableModel tableModel;
     private Search search;
 
@@ -50,13 +55,12 @@ public class SearchResultPanel extends JPanel{
     private void init() throws Exception {
         setLayout(new BorderLayout());
         tableModel = new SearchResultTableModel(search);
-        searchResultTable.setModel(tableModel);
+        searchResultTable = new JTreeTable(tableModel);
         add(new JScrollPane(searchResultTable), BorderLayout.CENTER);
         searchResultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
 
     public void updateSearchContent(){
-        tableModel.updateTable();
-        searchResultTable.repaint();
+        searchResultTable.updateUI();
     }
 }

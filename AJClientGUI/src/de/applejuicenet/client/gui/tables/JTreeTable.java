@@ -11,6 +11,7 @@ import de.applejuicenet.client.gui.trees.share.DirectoryNode;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.Settings;
+import de.applejuicenet.client.shared.Search;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -24,7 +25,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.15 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.16 2003/10/01 07:25:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +34,9 @@ import java.util.EventObject;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.16  2003/10/01 07:25:44  maj0r
+ * Suche weiter gefuehrt.
+ *
  * Revision 1.15  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -334,6 +338,10 @@ public class JTreeTable extends JTable{
       }
       else if (value.getClass()==DownloadDirectoryNode.class){
           c = super.getTreeCellRendererComponent(tree, ((DownloadDirectoryNode)value).getVerzeichnis(),
+                                       sel, expanded, leaf, row, hasFocus);
+      }
+      else if (value.getClass()==Search.SearchEntry.FileName.class){
+          c = super.getTreeCellRendererComponent(tree, ((Search.SearchEntry.FileName)value).getDateiName(),
                                        sel, expanded, leaf, row, hasFocus);
       }
       else{

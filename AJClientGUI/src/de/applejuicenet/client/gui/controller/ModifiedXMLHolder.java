@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.35 2003/09/30 16:35:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.36 2003/10/01 07:25:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.36  2003/10/01 07:25:44  maj0r
+ * Suche weiter gefuehrt.
+ *
  * Revision 1.35  2003/09/30 16:35:11  maj0r
  * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
  *
@@ -435,7 +438,7 @@ public class ModifiedXMLHolder
                     aSearch = (Search) searchMap.get(key);
                     if (aSearch!=null){
                         searchEntry = aSearch.new SearchEntry(id, checksum, groesse);
-                        childNodes = nodes.item(0).getChildNodes();
+                        childNodes = nodes.item(i).getChildNodes();
                         int nodesSize = childNodes.getLength();
                         for (int y = 0; y < nodesSize; y++) {
                             if (childNodes.item(y).getNodeType()==Node.ELEMENT_NODE){
