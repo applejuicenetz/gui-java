@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.22 2003/08/18 17:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.23 2003/08/19 15:57:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.23  2003/08/19 15:57:21  maj0r
+ * Gesamtgeschwindigkeit wird nun angezeigt.
+ *
  * Revision 1.22  2003/08/18 17:11:26  maj0r
  * Alte Uploads wurden nicht entfernt. Korrigiert.
  *
@@ -87,7 +90,7 @@ public class ModifiedXMLHolder
     private HashMap downloadMap = new HashMap();
     private HashMap uploadMap = new HashMap();
     private NetworkInfo netInfo;
-    private String[] status = new String[5];
+    private String[] status = new String[6];
     int i = 0;
 
     private int connectedWithServerId = -1;
@@ -152,23 +155,34 @@ public class ModifiedXMLHolder
         {
             ex.printStackTrace();
         }
-        status[3] = netInfo.getExterneIP();
+        status[4] = netInfo.getExterneIP();
         if (nodes.getLength() == 0)
         {
             return status; //Keine Ver�nderung seit dem letzten Abrufen
         }
         Element e = (Element) nodes.item(0); //Es gibt nur ein information-Element
         long credits = Long.parseLong(e.getAttribute("credits"));
-        long up = Long.parseLong(e.getAttribute("sessionupload"));
-        long down = Long.parseLong(e.getAttribute("sessiondownload"));
-        status[2] = "in: " + creditsUmrechnen(down) + " out: " + creditsUmrechnen(up);
-        status[3] = netInfo.getExterneIP();
-        status[4] = "Credits: " + creditsUmrechnen(credits);
+        long up = Long.parseLong(e.getAttribute("uploadspeed"));
+        long down = Long.parseLong(e.getAttribute("downloadspeed"));
+        status[2] = " in: " + getBytesSpeed(down) + " out: " + getBytesSpeed(up);
+        long uptotal = Long.parseLong(e.getAttribute("sessionupload"));
+        long downtotal = Long.parseLong(e.getAttribute("sessiondownload"));
+        status[3] = " in: " + bytesUmrechnen(downtotal) + " out: " + bytesUmrechnen(uptotal);
+        status[4] = netInfo.getExterneIP();
+        status[5] = " Credits: " + bytesUmrechnen(credits);
 
         return status;
     }
 
-    private String creditsUmrechnen(long bytes) {
+    private String getBytesSpeed(long bytes){
+        if (bytes==0){
+            return "0 KB/s";
+        }
+        String result = bytesUmrechnen(bytes) + "/s";
+        return result;
+    }
+
+    private String bytesUmrechnen(long bytes) {
         boolean minus = false;
         if (bytes < 0)
         {

@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.28 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.29 2003/08/19 15:57:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.29  2003/08/19 15:57:21  maj0r
+ * Gesamtgeschwindigkeit wird nun angezeigt.
+ *
  * Revision 1.28  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -62,7 +65,7 @@ public class AppleJuiceDialog
   public static final String GUI_VERSION = "0.1 Alpha";
 
   RegisterPanel registerPane;
-  JLabel[] statusbar = new JLabel[5];
+  JLabel[] statusbar = new JLabel[6];
   private JMenu sprachMenu;
   private JMenu optionenMenu;
   private HashSet plugins;
@@ -154,6 +157,8 @@ public class AppleJuiceDialog
     constraints.gridx = 4;
     panel.add(statusbar[4], constraints);
     constraints.gridx = 5;
+    panel.add(statusbar[5], constraints);
+    constraints.gridx = 6;
     panel.add(pause, constraints);
     getContentPane().add(panel, BorderLayout.SOUTH);
 
@@ -300,6 +305,7 @@ public class AppleJuiceDialog
             statusbar[2].setText(status[2]);
             statusbar[3].setText(status[3]);
             statusbar[4].setText(status[4]);
+            statusbar[5].setText(status[5]);
         }
     }
 }
