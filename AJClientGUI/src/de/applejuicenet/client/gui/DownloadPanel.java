@@ -10,7 +10,7 @@ import javax.swing.JSplitPane;
 import java.awt.*;
 import javax.swing.table.TableColumn;
 import de.applejuicenet.client.gui.tablerenderer.JTreeTable;
-import de.applejuicenet.client.shared.DownloadSourceDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import java.util.HashSet;
 import de.applejuicenet.client.shared.Version;
 import de.applejuicenet.client.gui.tablerenderer.DownloadModel;
