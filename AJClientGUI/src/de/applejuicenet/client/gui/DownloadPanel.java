@@ -68,7 +68,7 @@ import java.io.*;
 import java.awt.datatransfer.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.102 2004/04/01 12:26:56 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.103 2004/04/05 10:08:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -77,6 +77,11 @@ import java.awt.datatransfer.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.103  2004/04/05 10:08:13  maj0r
+ * [Maj0r] Kontextmenue im Downloadbereich überarbeitet
+ * F-Tasten eingebaut.
+ * Pausieren und Fortsetzen auf vielfachen Wunsch getrennt.
+ *
  * Revision 1.102  2004/04/01 12:26:56  loevenwong
  * Popupmenü erscheint jetzt neben dem Cursor.
  *
@@ -361,6 +366,7 @@ public class DownloadPanel
     private JScrollPane aScrollPane;
     private JMenuItem item1;
     private JMenuItem item2;
+    private JMenuItem item8;
     private JMenuItem item4;
     private JMenuItem item5;
     private JMenuItem item6;
@@ -418,7 +424,8 @@ public class DownloadPanel
         bottomPanel.setLayout(new BorderLayout());
 
         item1 = new JMenuItem("Abbrechen");
-        item2 = new JMenuItem("Pause/Fortsetzen");
+        item2 = new JMenuItem("Pause");
+        item8 = new JMenuItem("Fortsetzen");
         item4 = new JMenuItem("Umbenennen");
         item5 = new JMenuItem("Zielordner ändern");
         item6 = new JMenuItem("Fertige Übertragungen entfernen");
@@ -434,12 +441,14 @@ public class DownloadPanel
         item5.setIcon(im.getIcon("zielordner"));
         item6.setIcon(im.getIcon("bereinigen"));
         item7.setIcon(im.getIcon("partliste"));
+        item8.setIcon(im.getIcon("pause"));
         itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
         itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
         einfuegen.setIcon(im.getIcon("clipboard"));
 
         popup.add(item1);
         popup.add(item2);
+        popup.add(item8);
         popup.add(item4);
         popup.add(item5);
         popup.add(item6);
@@ -597,7 +606,6 @@ public class DownloadPanel
                                         ABGEBROCHEN);
                                 }
                             }
-
                             .start();
                         }
                     }
@@ -607,58 +615,13 @@ public class DownloadPanel
 
         item2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                Object[] selectedItems = getSelectedDownloadItems();
-                if (selectedItems != null && selectedItems.length != 0 &&
-                    !powerDownloadPanel.isAutomaticPwdlActive()) {
-                    ArrayList indizesPausieren = new ArrayList();
-                    ArrayList indizesFortsetzen = new ArrayList();
-                    for (int i = 0; i < selectedItems.length; i++) {
-                        if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                            DownloadDO downloadDO = ( (DownloadMainNode)
-                                selectedItems[i]).getDownloadDO();
-                            if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
-                                indizesFortsetzen.add(new Integer(downloadDO.
-                                    getId()));
-                            }
-                            else {
-                                indizesPausieren.add(new Integer(downloadDO.
-                                    getId()));
-                            }
-                        }
-                    }
-                    int size = indizesPausieren.size();
-                    if (size > 0) {
-                        final int[] pausieren = new int[size];
-                        for (int i = 0; i < size; i++) {
-                            pausieren[i] = ( (Integer) indizesPausieren.get(i)).
-                                intValue();
-                        }
-                        new Thread() {
-                            public void run() {
-                                ApplejuiceFassade.getInstance().pauseDownload(
-                                    pausieren);
-                            }
-                        }
+                pausieren();
+            }
+        });
 
-                        .start();
-                    }
-                    size = indizesFortsetzen.size();
-                    if (size > 0) {
-                        final int[] fortsetzen = new int[size];
-                        for (int i = 0; i < size; i++) {
-                            fortsetzen[i] = ( (Integer) indizesFortsetzen.get(i)).
-                                intValue();
-                        }
-                        new Thread() {
-                            public void run() {
-                                ApplejuiceFassade.getInstance().resumeDownload(
-                                    fortsetzen);
-                            }
-                        }
-
-                        .start();
-                    }
-                }
+        item8.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                fortsetzen();
             }
         });
 
@@ -670,46 +633,7 @@ public class DownloadPanel
 
         item5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                Object[] selectedItems = getSelectedDownloadItems();
-                if (selectedItems == null ||
-                    selectedItems.length == 0) {
-                    return;
-                }
-                String[] dirs = ApplejuiceFassade.getInstance().
-                    getCurrentIncomingDirs();
-                IncomingDirSelectionDialog incomingDirSelectionDialog =
-                    new IncomingDirSelectionDialog(AppleJuiceDialog.getApp(),
-                    dirs);
-                incomingDirSelectionDialog.show();
-                String neuerName = incomingDirSelectionDialog.
-                    getSelectedIncomingDir();
-
-                if (neuerName == null) {
-                    return;
-                }
-                else {
-                    neuerName = neuerName.trim();
-                    if (neuerName.indexOf(File.separator) == 0 ||
-                        neuerName.indexOf(ApplejuiceFassade.separator) == 0) {
-                        neuerName = neuerName.substring(1);
-                    }
-                }
-                DownloadDO downloadDO;
-                for (int i = 0; i < selectedItems.length; i++) {
-                    if (selectedItems[i].getClass() == DownloadMainNode.class
-                        &&
-                        ( (DownloadMainNode) selectedItems[i]).getType() ==
-                        DownloadMainNode.ROOT_NODE) {
-                        downloadDO = ( (DownloadMainNode) selectedItems[i]).
-                            getDownloadDO();
-                        if (downloadDO.getTargetDirectory().compareTo(
-                            neuerName) != 0) {
-                            ApplejuiceFassade.getInstance().
-                                setTargetDir(
-                                downloadDO.getId(), neuerName);
-                        }
-                    }
-                }
+                changeIncomingDir();
             }
         });
 
@@ -779,8 +703,26 @@ public class DownloadPanel
         downloadTable = new JTreeTable(downloadModel);
         downloadTable.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
-                if (ke.getKeyCode() == KeyEvent.VK_F2) {
-                    renameDownload();
+                switch (ke.getKeyCode()){
+                    case KeyEvent.VK_F2:{
+                        renameDownload();
+                        break;
+                    }
+                    case KeyEvent.VK_F3:{
+                        changeIncomingDir();
+                        break;
+                    }
+                    case KeyEvent.VK_F5:{
+                        pausieren();
+                        break;
+                    }
+                    case KeyEvent.VK_F6:{
+                        fortsetzen();
+                        break;
+                    }
+                    default:{
+                        break;
+                    }
                 }
             }
         });
@@ -959,6 +901,8 @@ public class DownloadPanel
                     item4.setVisible(false);
                     item5.setVisible(false);
                     item7.setVisible(false);
+                    boolean pausiert = false;
+                    boolean laufend = false;
                     if (selectedItems != null) {
                         if (selectedItems.length == 1) {
                             if ( (selectedItems[0].getClass() ==
@@ -971,10 +915,23 @@ public class DownloadPanel
                                 (selectedItems[0].getClass() ==
                                  DownloadSourceDO.class)) {
                                 item7.setVisible(true);
-                                if (selectedItems[0].getClass() !=
-                                    DownloadSourceDO.class) {
-                                    item4.setVisible(true);
-                                    item5.setVisible(true);
+                            }
+                            if (selectedItems[0].getClass() !=
+                                DownloadSourceDO.class) {
+                                item4.setVisible(true);
+                                item5.setVisible(true);
+                            }
+                            if (selectedItems[0].getClass() ==
+                                DownloadMainNode.class) {
+                                DownloadDO downloadDO = ( (DownloadMainNode)
+                                    selectedItems[0]).getDownloadDO();
+                                if (downloadDO.getStatus() ==
+                                    DownloadDO.SUCHEN_LADEN) {
+                                    laufend = true;
+                                }
+                                else if (downloadDO.getStatus() ==
+                                         DownloadDO.PAUSIERT) {
+                                    pausiert = true;
                                 }
                             }
                         }
@@ -988,14 +945,39 @@ public class DownloadPanel
                                       DownloadMainNode.ROOT_NODE)) {
                                     item5.setVisible(true);
                                 }
+                                DownloadDO downloadDO;
+                                if (selectedItems[i].getClass() ==
+                                    DownloadMainNode.class) {
+                                    downloadDO = ( (DownloadMainNode)
+                                        selectedItems[i]).getDownloadDO();
+                                    if (downloadDO.getStatus() ==
+                                        DownloadDO.SUCHEN_LADEN) {
+                                        laufend = true;
+                                    }
+                                    else if (downloadDO.getStatus() ==
+                                             DownloadDO.PAUSIERT) {
+                                        pausiert = true;
+                                    }
+                                }
                             }
                         }
+                    }
+                    if (laufend){
+                        item2.setEnabled(true);
+                    }
+                    else{
+                        item2.setEnabled(false);
+                    }
+                    if (pausiert){
+                        item8.setEnabled(true);
+                    }
+                    else{
+                        item8.setEnabled(false);
                     }
                     popup.show(downloadTable, e.getX(), e.getY());
                 }
             }
         });
-
         topPanel.add(aScrollPane, constraints);
 
         constraints.gridx = 0;
@@ -1065,6 +1047,72 @@ public class DownloadPanel
                             downloadDO.getId(), neuerName);
                     }
                 }
+            }
+        }
+    }
+
+    private void pausieren(){
+        Object[] selectedItems = getSelectedDownloadItems();
+        if (selectedItems != null && selectedItems.length != 0 &&
+            !powerDownloadPanel.isAutomaticPwdlActive()) {
+            ArrayList indizesPausieren = new ArrayList();
+            for (int i = 0; i < selectedItems.length; i++) {
+                if (selectedItems[i].getClass() == DownloadMainNode.class) {
+                    DownloadDO downloadDO = ( (DownloadMainNode)
+                        selectedItems[i]).getDownloadDO();
+                    if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
+                        indizesPausieren.add(new Integer(downloadDO.
+                            getId()));
+                    }
+                }
+            }
+            int size = indizesPausieren.size();
+            if (size > 0) {
+                final int[] pausieren = new int[size];
+                for (int i = 0; i < size; i++) {
+                    pausieren[i] = ( (Integer) indizesPausieren.get(i)).
+                        intValue();
+                }
+                new Thread() {
+                    public void run() {
+                        ApplejuiceFassade.getInstance().pauseDownload(
+                            pausieren);
+                    }
+                }
+                .start();
+            }
+        }
+    }
+
+    private void fortsetzen(){
+        Object[] selectedItems = getSelectedDownloadItems();
+        if (selectedItems != null && selectedItems.length != 0 &&
+            !powerDownloadPanel.isAutomaticPwdlActive()) {
+            ArrayList indizesFortsetzen = new ArrayList();
+            for (int i = 0; i < selectedItems.length; i++) {
+                if (selectedItems[i].getClass() == DownloadMainNode.class) {
+                    DownloadDO downloadDO = ( (DownloadMainNode)
+                        selectedItems[i]).getDownloadDO();
+                    if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
+                        indizesFortsetzen.add(new Integer(downloadDO.
+                            getId()));
+                    }
+                }
+            }
+            int size = indizesFortsetzen.size();
+            if (size > 0) {
+                final int[] fortsetzen = new int[size];
+                for (int i = 0; i < size; i++) {
+                    fortsetzen[i] = ( (Integer) indizesFortsetzen.get(i)).
+                        intValue();
+                }
+                new Thread() {
+                    public void run() {
+                        ApplejuiceFassade.getInstance().resumeDownload(
+                            fortsetzen);
+                    }
+                }
+                .start();
             }
         }
     }
@@ -1162,6 +1210,49 @@ public class DownloadPanel
         }
     }
 
+    private void changeIncomingDir(){
+        Object[] selectedItems = getSelectedDownloadItems();
+        if (selectedItems == null ||
+            selectedItems.length == 0) {
+            return;
+        }
+        String[] dirs = ApplejuiceFassade.getInstance().
+            getCurrentIncomingDirs();
+        IncomingDirSelectionDialog incomingDirSelectionDialog =
+            new IncomingDirSelectionDialog(AppleJuiceDialog.getApp(),
+            dirs);
+        incomingDirSelectionDialog.show();
+        String neuerName = incomingDirSelectionDialog.
+            getSelectedIncomingDir();
+
+        if (neuerName == null) {
+            return;
+        }
+        else {
+            neuerName = neuerName.trim();
+            if (neuerName.indexOf(File.separator) == 0 ||
+                neuerName.indexOf(ApplejuiceFassade.separator) == 0) {
+                neuerName = neuerName.substring(1);
+            }
+        }
+        DownloadDO downloadDO;
+        for (int i = 0; i < selectedItems.length; i++) {
+            if (selectedItems[i].getClass() == DownloadMainNode.class
+                &&
+                ( (DownloadMainNode) selectedItems[i]).getType() ==
+                DownloadMainNode.ROOT_NODE) {
+                downloadDO = ( (DownloadMainNode) selectedItems[i]).
+                    getDownloadDO();
+                if (downloadDO.getTargetDirectory().compareTo(
+                    neuerName) != 0) {
+                    ApplejuiceFassade.getInstance().
+                        setTargetDir(
+                        downloadDO.getId(), neuerName);
+                }
+            }
+        }
+    }
+
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
@@ -1216,16 +1307,14 @@ public class DownloadPanel
 
             item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.canceldown.caption")));
-            String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.pausedown.caption"));
-            temp += "/" +
-                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.resumedown.caption"));
-            item2.setText(temp);
+            item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.pausedown.caption")) + " [F5]");
+            item8.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.resumedown.caption")) + " [F6]");
             item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.renamefile.caption")));
+                getFirstAttrbuteByTagName(".root.mainform.renamefile.caption")) + " [F2]");
             item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.changetarget.caption")));
+                getFirstAttrbuteByTagName(".root.mainform.changetarget.caption")) + " [F3]");
             item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.Clearfinishedentries1.caption")));
             item7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
