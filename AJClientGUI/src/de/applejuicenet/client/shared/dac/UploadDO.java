@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadColumnComponent;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.22 2004/06/11 09:24:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.23 2004/06/11 10:02:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -89,6 +89,7 @@ public class UploadDO implements UploadColumnComponent{
         wholeLoadedProgressbarLabel = new JLabel();
         wholeLoadedProgressbarLabel.setOpaque(true);
         progress.setOpaque(false);
+        wholeLoadedProgress.setOpaque(false);
         versionLabel = new JLabel();
         versionLabel.setOpaque(true);
     }
