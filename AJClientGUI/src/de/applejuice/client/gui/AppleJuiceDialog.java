@@ -38,6 +38,11 @@ public class AppleJuiceDialog extends JDialog {
         });
     this.getContentPane().setLayout(new BorderLayout());
     getContentPane().add(registerPane,  BorderLayout.CENTER);
+    Dimension systemDimension = getToolkit().getScreenSize();
+    setBounds(new Rectangle(0, 0, systemDimension.width/4*3, systemDimension.height/4*3));
+    Dimension dialogDimension = getSize();
+    setLocation((systemDimension.width - dialogDimension.width)/2,
+                        (systemDimension.height - dialogDimension.height)/2);
     show();
   }
 

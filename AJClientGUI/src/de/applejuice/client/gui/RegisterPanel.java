@@ -1,6 +1,10 @@
 package de.applejuice.client.gui;
 
 import javax.swing.JTabbedPane;
+import java.net.URL;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -22,7 +26,15 @@ public class RegisterPanel extends JTabbedPane {
   private void init() {
     startPanel = new StartPanel();
     downloadPanel = new DownloadPanel();
-    addTab("Start", startPanel);
-    addTab("Download", downloadPanel);
+    URL url = getClass().getResource("start.gif");
+    Image img=Toolkit.getDefaultToolkit().getImage(url);
+    ImageIcon icon = new ImageIcon();
+    icon.setImage(img);
+    addTab("Start", icon, startPanel);
+    url = getClass().getResource("download.gif");
+    img=Toolkit.getDefaultToolkit().getImage(url);
+    ImageIcon icon2 = new ImageIcon();
+    icon2.setImage(img);
+    addTab("Download", icon2, downloadPanel);
   }
 }

@@ -7,6 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.BorderLayout;
+import javax.swing.JScrollPane;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -21,6 +23,7 @@ public class DownloadPanel extends JPanel {
   private JTextField downloadLink = new JTextField();
   private JButton btnStartDownload = new JButton("Download");
   private PowerDownloadPanel powerDownloadPanel = new PowerDownloadPanel();
+  private JTable downloadTable;
 
   public DownloadPanel() {
     try {
@@ -38,20 +41,25 @@ public class DownloadPanel extends JPanel {
     constraints.fill = GridBagConstraints.BOTH;
     constraints.gridx=0;
     constraints.gridy=0;
-    constraints.gridwidth=1;
+    constraints.gridwidth=3;
     constraints.gridheight=1;
-    add(new JLabel("ajfsp-Link hinzufügen"), constraints);
-    constraints.gridx=1;
-    constraints.weightx=1;
-    add(downloadLink, constraints);
-    constraints.weightx=0;
-    constraints.gridx=2;
-    add(btnStartDownload, constraints);
+    JPanel tempPanel = new JPanel();
+    tempPanel.setLayout(new BorderLayout());
+    tempPanel.add(new JLabel("ajfsp-Link hinzufügen"), BorderLayout.WEST);
+    tempPanel.add(downloadLink, BorderLayout.CENTER);
+    tempPanel.add(btnStartDownload, BorderLayout.EAST);
+    add(tempPanel, constraints);
     constraints.gridwidth=3;
     constraints.gridx=0;
     constraints.gridy=1;
     constraints.weighty=1;
-    add(new JTable(), constraints);
+    constraints.weightx=1;
+    downloadTable = new JTable();
+    downloadTable.setModel(new DownloadDataTableModel());
+    JScrollPane aScrollPane = new JScrollPane();
+    aScrollPane.getViewport().add(downloadTable);
+    add(aScrollPane, constraints);
+    constraints.weightx=0;
     constraints.gridwidth=1;
     constraints.weighty=0;
     constraints.gridy=2;
