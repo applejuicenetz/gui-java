@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.47 2004/06/15 15:32:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.48 2004/06/18 11:38:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -671,6 +671,9 @@ public class PowerDownloadPanel
             btnHint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.tooltipps.autopowerdownload")));
+            autoPwdlEinstellungen.setText(ZeichenErsetzer.korrigiereUmlaute(
+                    languageSelector.
+		            getFirstAttrbuteByTagName(".root.javagui.options.plugins.einstellungen")));
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
