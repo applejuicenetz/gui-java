@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.78 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.79 2003/12/30 09:01:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.79  2003/12/30 09:01:59  maj0r
+ * Bug #10 fixed (Danke an muhviestarr)
+ * Wenn man keine Downloads hat, steht nun nicht mehr "bitte warten" in der Downloadtabelle.
+ *
  * Revision 1.78  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -230,7 +234,7 @@ import org.apache.log4j.Level;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String GUI_VERSION = "0.51.1";
+    public static final String GUI_VERSION = "0.51.2";
 
     private HashSet downloadListener;
     private HashSet searchListener;
@@ -738,10 +742,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 case DataUpdateListener.DOWNLOAD_CHANGED:
                     {
                         HashMap content = modifiedXML.getDownloads();
-                        if (content.size() == 0)
-                        {
-                            return;
-                        }
                         Iterator it = downloadListener.iterator();
                         while (it.hasNext())
                         {
@@ -753,10 +753,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 case DataUpdateListener.UPLOAD_CHANGED:
                     {
                         HashMap content = modifiedXML.getUploads();
-                        if (content.size() == 0)
-                        {
-                            return;
-                        }
                         Iterator it = uploadListener.iterator();
                         while (it.hasNext())
                         {
@@ -768,10 +764,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 case DataUpdateListener.SERVER_CHANGED:
                     {
                         HashMap content = modifiedXML.getServer();
-                        if (content.size() == 0)
-                        {
-                            return;
-                        }
                         Iterator it = serverListener.iterator();
                         while (it.hasNext())
                         {
@@ -783,10 +775,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 case DataUpdateListener.SHARE_CHANGED:
                     {
                         HashMap content = shareXML.getShare();
-                        if (content.size() == 0)
-                        {
-                            return;
-                        }
                         Iterator it = shareListener.iterator();
                         while (it.hasNext())
                         {

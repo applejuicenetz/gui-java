@@ -12,7 +12,7 @@ import java.util.Iterator;
 import de.applejuicenet.client.gui.trees.WaitNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.14 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.15 2003/12/30 09:01:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,10 @@ import de.applejuicenet.client.gui.trees.WaitNode;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.15  2003/12/30 09:01:59  maj0r
+ * Bug #10 fixed (Danke an muhviestarr)
+ * Wenn man keine Downloads hat, steht nun nicht mehr "bitte warten" in der Downloadtabelle.
+ *
  * Revision 1.14  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -297,8 +301,8 @@ public class DownloadRootNode implements Node, DownloadNode {
     }
 
     public void setDownloadMap(HashMap downloadMap) {
-        initialized = true;
         if (downloads == null) {
+            initialized = true;
             downloads = downloadMap;
         }
     }
