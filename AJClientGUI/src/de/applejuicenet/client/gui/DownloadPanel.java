@@ -68,7 +68,7 @@ import java.io.*;
 import java.awt.datatransfer.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.103 2004/04/05 10:08:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.104 2004/04/05 15:59:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -77,6 +77,9 @@ import java.awt.datatransfer.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.104  2004/04/05 15:59:00  maj0r
+ * Umbennendialog bietet nun eine Auswahl der gefundenen Namen an.
+ *
  * Revision 1.103  2004/04/05 10:08:13  maj0r
  * [Maj0r] Kontextmenue im Downloadbereich überarbeitet
  * F-Tasten eingebaut.
@@ -1030,17 +1033,20 @@ public class DownloadPanel
                 &&
                 ( (DownloadMainNode) selectedItems[0]).getType() ==
                 DownloadMainNode.ROOT_NODE) {
+
                 DownloadDO downloadDO = ( (DownloadMainNode)
                                          selectedItems[0]).
                     getDownloadDO();
-                String neuerName = JOptionPane.showInputDialog(
-                    AppleJuiceDialog.getApp(), neuerDateiname + ":",
-                    downloadDO.getFilename());
+                RenameDownloadDialog renameDownloadDialog =
+                    new RenameDownloadDialog(AppleJuiceDialog.getApp(),
+                    downloadDO);
+                renameDownloadDialog.show();
+                String neuerName = renameDownloadDialog.getNewName();
+
                 if (neuerName == null) {
                     return;
                 }
-                neuerName = neuerName.trim();
-                if (neuerName.length() != 0) {
+                else {
                     if (downloadDO.getFilename().compareTo(neuerName) !=
                         0) {
                         ApplejuiceFassade.getInstance().renameDownload(
