@@ -18,7 +18,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.3 2004/11/30 18:03:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.4 2004/12/08 21:13:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -248,7 +248,12 @@ public class DownloadMainNode
             else {
                 wert = prozent;
             }
-            progress.setValue(Integer.parseInt(wert));
+            try{
+                progress.setValue(Integer.parseInt(wert));
+            }
+            catch(NumberFormatException nfE){
+                progress.setValue(0);
+            }
             progress.setString(prozent + " %");
             return progress;
         }
