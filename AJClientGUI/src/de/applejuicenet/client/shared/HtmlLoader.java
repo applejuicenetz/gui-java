@@ -7,6 +7,9 @@ import java.util.*;
 import org.apache.xerces.impl.dv.util.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.exception.*;
+import javax.xml.parsers.DocumentBuilder;
+import org.xml.sax.XMLReader;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -49,6 +52,8 @@ public abstract class HtmlLoader {
 
       String inputLine="" ;
       inputLine = in.readLine();
+      if (inputLine==null)
+        throw new WebSiteNotFoundException(WebSiteNotFoundException.UNKNOWN_HOST);
       while (inputLine.indexOf("xml version")==-1) {
         inputLine = in.readLine();
       }
@@ -57,8 +62,11 @@ public abstract class HtmlLoader {
         urlContent += inputLine;
       }
     }
-    catch (Exception ex) {
-      ex.printStackTrace();
+    catch (SocketException sex) {
+      throw new WebSiteNotFoundException(WebSiteNotFoundException.AUTHORIZATION_REQUIRED);
+    }
+    catch (IOException sex) {
+      throw new WebSiteNotFoundException(WebSiteNotFoundException.AUTHORIZATION_REQUIRED);
     }
    return urlContent;
   }

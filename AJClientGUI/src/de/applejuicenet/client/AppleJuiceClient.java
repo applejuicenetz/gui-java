@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.io.OutputStreamWriter;
 import java.io.FileInputStream;
 import java.io.BufferedWriter;
+import de.applejuicenet.client.gui.controller.WebXMPParser;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -33,14 +34,14 @@ import java.io.BufferedWriter;
 
 public class AppleJuiceClient {
   public static void main(String[] args) {
+    WebXMPParser xmlP = new WebXMPParser("localhost", "/xml/information.xml", "");
     if (OptionsManager.getInstance().getRemoteSettings().isRemoteUsed()) {
 
       try {
         //dummy
-        System.out.println(HtmlLoader.getHtmlContent("maj0r.dyndns.org", HtmlLoader.GET, "/xml/information.xml"));
+        System.out.println(HtmlLoader.getHtmlContent("localhost", HtmlLoader.GET, "/xml/information.xml"));
       }
       catch (WebSiteNotFoundException ex) {
-        ex.printStackTrace();
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));

@@ -2,7 +2,6 @@
 <root>
     <options sprache="deutsch">
         <remote host="" passwort="" use="0"/>
-        <proxy ip="" pass="" port=""
-            use="0" user=""/>
+        <proxy ip="" pass="" port="0" use="0" user=""/>
     </options>
 </root>

@@ -7,16 +7,18 @@ import org.apache.xml.serialize.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 
-public class XMLDecoder {
-  private Document document;
+public abstract class XMLDecoder {
+  protected Document document;
   private String filePath;
 
-  public XMLDecoder(String filePath) {
+  protected XMLDecoder(){}
+
+  protected XMLDecoder(String filePath) {
     File xmlFile = new File(filePath);
     reload(xmlFile);
   }
 
-  public XMLDecoder(File xmlFile) {
+  protected XMLDecoder(File xmlFile) {
     reload(xmlFile);
   }
 
