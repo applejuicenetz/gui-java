@@ -28,7 +28,7 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import javax.swing.JOptionPane;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.39 2004/01/05 14:13:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.40 2004/01/05 17:08:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +37,9 @@ import javax.swing.JOptionPane;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.40  2004/01/05 17:08:05  maj0r
+ * Ungueltige URLs abfangen.
+ *
  * Revision 1.39  2004/01/05 14:13:13  maj0r
  * Links im Startbereich sind jetzt anklickbar, sofern ein Standardbrowser ausgewaehlt ist.
  *
@@ -342,9 +345,11 @@ public class StartPanel
                     nachrichten.addHyperlinkListener(new HyperlinkListener (){
                         public void hyperlinkUpdate(HyperlinkEvent e) {
                            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                               String url = e.getURL().toString();
-                               if (url.length() != 0){
-                                   executeLink(url);
+                               if (e.getURL() != null){
+                                   String url = e.getURL().toString();
+                                   if (url.length() != 0) {
+                                       executeLink(url);
+                                   }
                                }
                            }
                        }
