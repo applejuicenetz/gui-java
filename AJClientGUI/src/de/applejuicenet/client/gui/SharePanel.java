@@ -32,7 +32,7 @@ import java.net.URLEncoder;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.47 2003/12/18 13:26:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.48 2003/12/18 14:24:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.48  2003/12/18 14:24:24  maj0r
+ * Leerzeichen bekommen bei UBB-Code nun eine Sonderbehandlung.
+ *
  * Revision 1.47  2003/12/18 13:26:51  maj0r
  * Es kann nun der Link einer gesharten Datei über das Popupmenue der Sharetabelle als UBB-Code in die Ablage kopiert werden.
  *
@@ -250,10 +253,15 @@ public class SharePanel
                     ShareDO shareDO = ((ShareNode)obj[0]).getDO();
                     Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
                     StringBuffer toCopy = new StringBuffer();
+                    StringBuffer tempFilename = new StringBuffer(shareDO.getShortfilename());
+                    for (int i=0; i<tempFilename.length(); i++){
+                        if (tempFilename.charAt(i)==' '){
+                            tempFilename.setCharAt(i, '.');
+                        }
+                    }
                     String encodedFilename = "";
                     try {
-                        encodedFilename = URLEncoder.encode(shareDO.
-                            getShortfilename(), "ISO-8859-1");
+                        encodedFilename = URLEncoder.encode(tempFilename.toString(), "ISO-8859-1");
                     }
                     catch (UnsupportedEncodingException ex) {
                         //gibbet, also nix zu behandeln...
