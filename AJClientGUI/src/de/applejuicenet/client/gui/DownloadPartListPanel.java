@@ -90,9 +90,7 @@ public class DownloadPartListPanel extends JPanel implements
 		if (partListDO != null && image != null) {
 			if (height != (int) getSize().getHeight()
 					|| width != (int) getSize().getWidth()) {
-				synchronized (partListDO) {
-					setPartList(partListDO);
-				}
+				setPartList(partListDO);
 			}
 			g.setColor(getBackground());
 			g.fillRect(0, 0, width, height);
@@ -104,114 +102,112 @@ public class DownloadPartListPanel extends JPanel implements
 		}
 	}
 
-	public void setPartList(PartListDO newPartListDO) {
+	public synchronized void setPartList(PartListDO newPartListDO) {
 		try {
 			if (partListDO != null && partListDO != newPartListDO) {
 				partListDO.removeAllParts();
 			}
-			synchronized (partListDO) {
-				partListDO = newPartListDO;
-				height = (int) getSize().getHeight();
-				width = (int) getSize().getWidth();
-				if (partListDO != null && partListDO.getParts().length > 0) {
-					Part[] parts = partListDO.getParts();
-					int zeilenHoehe = 15;
-					int zeilen = height / zeilenHoehe;
-					miniFile = false;
-					int pixelSize = (int) (partListDO.getGroesse() / (zeilen * width));
-					if (pixelSize == 0) {
-						pixelSize = (int) ((zeilen * width) / partListDO
-								.getGroesse());
-						miniFile = true;
-					}
-					BufferedImage tempImage = new BufferedImage(width * zeilen,
-							15, BufferedImage.TYPE_INT_ARGB);
-					Graphics graphics = tempImage.getGraphics();
-					int obenLinks = 0;
-					int breite = 0;
-					fertigSeit = -1;
-					for (int i = 0; i < parts.length - 1; i++) {
-						drawPart(
-								false,
-								(partListDO.getPartListType() == PartListDO.MAIN_PARTLIST),
-								graphics, pixelSize, parts[i].getType(),
-								zeilenHoehe, parts[i].getFromPosition(),
-								parts[i + 1].getFromPosition());
-					}
+			partListDO = newPartListDO;
+			height = (int) getSize().getHeight();
+			width = (int) getSize().getWidth();
+			if (partListDO != null && partListDO.getParts().length > 0) {
+				Part[] parts = partListDO.getParts();
+				int zeilenHoehe = 15;
+				int zeilen = height / zeilenHoehe;
+				miniFile = false;
+				int pixelSize = (int) (partListDO.getGroesse() / (zeilen * width));
+				if (pixelSize == 0) {
+					pixelSize = (int) ((zeilen * width) / partListDO
+							.getGroesse());
+					miniFile = true;
+				}
+				BufferedImage tempImage = new BufferedImage(width * zeilen,
+						15, BufferedImage.TYPE_INT_ARGB);
+				Graphics graphics = tempImage.getGraphics();
+				int obenLinks = 0;
+				int breite = 0;
+				fertigSeit = -1;
+				for (int i = 0; i < parts.length - 1; i++) {
 					drawPart(
-							true,
+							false,
 							(partListDO.getPartListType() == PartListDO.MAIN_PARTLIST),
-							graphics, pixelSize, parts[parts.length - 1]
-									.getType(), zeilenHoehe,
-							parts[parts.length - 1].getFromPosition(),
-							partListDO.getGroesse());
-					if (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST) {
-						DownloadDO downloadDO = (DownloadDO) partListDO
-								.getValueDO();
-						if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
-							DownloadSourceDO[] sources = downloadDO
-									.getSources();
-							for (int i = 0; i < sources.length; i++) {
-								if (sources[i].getStatus() == DownloadSourceDO.UEBERTRAGUNG) {
-									if (!miniFile) {
-										obenLinks = sources[i]
-												.getDownloadFrom()
-												/ pixelSize;
-										breite = (sources[i].getDownloadTo() / pixelSize)
-												- obenLinks;
-									} else {
-										obenLinks = sources[i]
-												.getDownloadFrom()
-												* pixelSize;
-										breite = (sources[i].getDownloadTo() * pixelSize)
-												- obenLinks;
-									}
-									graphics
-											.setColor(getColorByPercent(sources[i]
-													.getReadyPercent()));
-									graphics.fillRect(obenLinks, 0, breite,
-											zeilenHoehe);
+							graphics, pixelSize, parts[i].getType(),
+							zeilenHoehe, parts[i].getFromPosition(),
+							parts[i + 1].getFromPosition());
+				}
+				drawPart(
+						true,
+						(partListDO.getPartListType() == PartListDO.MAIN_PARTLIST),
+						graphics, pixelSize, parts[parts.length - 1]
+								.getType(), zeilenHoehe,
+						parts[parts.length - 1].getFromPosition(),
+						partListDO.getGroesse());
+				if (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST) {
+					DownloadDO downloadDO = (DownloadDO) partListDO
+							.getValueDO();
+					if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
+						DownloadSourceDO[] sources = downloadDO
+								.getSources();
+						for (int i = 0; i < sources.length; i++) {
+							if (sources[i].getStatus() == DownloadSourceDO.UEBERTRAGUNG) {
+								if (!miniFile) {
+									obenLinks = sources[i]
+											.getDownloadFrom()
+											/ pixelSize;
+									breite = (sources[i].getDownloadTo() / pixelSize)
+											- obenLinks;
+								} else {
+									obenLinks = sources[i]
+											.getDownloadFrom()
+											* pixelSize;
+									breite = (sources[i].getDownloadTo() * pixelSize)
+											- obenLinks;
 								}
+								graphics
+										.setColor(getColorByPercent(sources[i]
+												.getReadyPercent()));
+								graphics.fillRect(obenLinks, 0, breite,
+										zeilenHoehe);
 							}
 						}
-					} else {
-						DownloadSourceDO downloadSourceDO = (DownloadSourceDO) partListDO
-								.getValueDO();
-						if (downloadSourceDO.getStatus() == DownloadSourceDO.UEBERTRAGUNG) {
-							if (!miniFile) {
-								obenLinks = downloadSourceDO.getDownloadFrom()
-										/ pixelSize;
-								breite = (downloadSourceDO.getDownloadTo() / pixelSize)
-										- obenLinks;
-							} else {
-								obenLinks = downloadSourceDO.getDownloadFrom()
-										* pixelSize;
-								breite = (downloadSourceDO.getDownloadTo() * pixelSize)
-										- obenLinks;
-							}
-							graphics
-									.setColor(getColorByPercent(downloadSourceDO
-											.getReadyPercent()));
-							graphics
-									.fillRect(obenLinks, 0, breite, zeilenHoehe);
-						}
-					}
-					image = new BufferedImage(width, height,
-							BufferedImage.TYPE_INT_ARGB);
-					Graphics g = image.getGraphics();
-					int x = 0;
-					for (int i = 0; i < zeilen; i++) {
-						g.drawImage(tempImage.getSubimage(x, 0, width,
-								zeilenHoehe), 0, i * zeilenHoehe, null);
-						x += width;
-					}
-					if (savedMouseEvent != null) {
-						processMouseMotionEvent(savedMouseEvent);
 					}
 				} else {
-					image = null;
-					savedMouseEvent = null;
+					DownloadSourceDO downloadSourceDO = (DownloadSourceDO) partListDO
+							.getValueDO();
+					if (downloadSourceDO.getStatus() == DownloadSourceDO.UEBERTRAGUNG) {
+						if (!miniFile) {
+							obenLinks = downloadSourceDO.getDownloadFrom()
+									/ pixelSize;
+							breite = (downloadSourceDO.getDownloadTo() / pixelSize)
+									- obenLinks;
+						} else {
+							obenLinks = downloadSourceDO.getDownloadFrom()
+									* pixelSize;
+							breite = (downloadSourceDO.getDownloadTo() * pixelSize)
+									- obenLinks;
+						}
+						graphics
+								.setColor(getColorByPercent(downloadSourceDO
+										.getReadyPercent()));
+						graphics
+								.fillRect(obenLinks, 0, breite, zeilenHoehe);
+					}
 				}
+				image = new BufferedImage(width, height,
+						BufferedImage.TYPE_INT_ARGB);
+				Graphics g = image.getGraphics();
+				int x = 0;
+				for (int i = 0; i < zeilen; i++) {
+					g.drawImage(tempImage.getSubimage(x, 0, width,
+							zeilenHoehe), 0, i * zeilenHoehe, null);
+					x += width;
+				}
+				if (savedMouseEvent != null) {
+					processMouseMotionEvent(savedMouseEvent);
+				}
+			} else {
+				image = null;
+				savedMouseEvent = null;
 			}
 		} catch (Exception e) {
 			partListDO = null;
