@@ -34,9 +34,10 @@ import de.applejuicenet.client.shared.Splash;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+import de.applejuicenet.client.gui.ConnectFrame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.43 2003/12/29 09:49:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.44 2003/12/29 10:31:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,6 +46,10 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.44  2003/12/29 10:31:58  maj0r
+ * Bug #2 gefixt (Danke an muhviestarr).
+ * Wenn das Gui nicht zur Core verbinden kann, hat das GUI nun einen Taskbareintrag.
+ *
  * Revision 1.43  2003/12/29 09:49:35  maj0r
  * Bug #1 gefixt (Danke an muhviestarr).
  * Look and Feel beim Verbindungsdialog korrigiert.
@@ -292,8 +297,13 @@ public class AppleJuiceClient {
             QuickConnectionSettingsDialog remoteDialog = null;
             int versuche = 0;
             AppleJuiceDialog.initThemes();
+            ConnectFrame connectFrame = null;
             while (!ApplejuiceFassade.istCoreErreichbar()) {
                 versuche++;
+                if (connectFrame == null){
+                    connectFrame = new ConnectFrame();
+                }
+                connectFrame.show();
                 titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                     getFirstAttrbuteByTagName(new String[] {"mainform",
                                               "caption"}));
@@ -303,9 +313,9 @@ public class AppleJuiceClient {
                                               "fehlversuch"}));
                 SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
                 splash.setVisible(false);
-                JOptionPane.showMessageDialog(dummyFrame, nachricht, titel,
+                JOptionPane.showMessageDialog(connectFrame, nachricht, titel,
                                               JOptionPane.ERROR_MESSAGE);
-                remoteDialog = new QuickConnectionSettingsDialog(dummyFrame);
+                remoteDialog = new QuickConnectionSettingsDialog(connectFrame);
                 remoteDialog.show();
                 if (remoteDialog.getResult() ==
                     QuickConnectionSettingsDialog.ABGEBROCHEN) {
@@ -318,12 +328,13 @@ public class AppleJuiceClient {
                         PropertiesManager.getOptionsManager().
                         getRemoteSettings().
                         getHost());
-                    JOptionPane.showMessageDialog(dummyFrame, nachricht, titel,
+                    JOptionPane.showMessageDialog(connectFrame, nachricht, titel,
                                                   JOptionPane.OK_OPTION);
                     logger.fatal(nachricht);
                     System.out.println("Fehler: " + nachricht);
                     System.exit( -1);
                 }
+                connectFrame.dispose();
                 splash.setVisible(true);
             }
             if (versuche > 0) {
