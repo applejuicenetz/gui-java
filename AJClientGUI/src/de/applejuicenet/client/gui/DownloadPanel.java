@@ -55,7 +55,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.78 2004/01/05 15:42:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.79 2004/01/06 20:00:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,6 +64,10 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.79  2004/01/06 20:00:22  maj0r
+ * Bug #67 gefixt (Danke an dsp2004)
+ * Probleme mit der Funktion automatisch Partliste anzeigen korrigiert
+ *
  * Revision 1.78  2004/01/05 15:42:51  maj0r
  * Partlistenfreischaltung korrigiert.
  *
@@ -1124,16 +1128,12 @@ public class DownloadPanel
                                     ( (DownloadMainNode) nodeObject).
                                     getType() ==
                                     DownloadMainNode.ROOT_NODE) {
-                                    powerDownloadPanel.btnPdl.
-                                        setEnabled(false);
                                     downloadDOOverviewPanel.setDownloadDO( ( (
                                         DownloadMainNode) nodeObject).
                                         getDownloadDO());
                                 }
                                 else if (nodeObject.getClass() ==
                                          DownloadSourceDO.class) {
-                                    powerDownloadPanel.btnPdl.
-                                        setEnabled(false);
                                     if ( ( (DownloadSourceDO) nodeObject).
                                         getStatus() ==
                                         DownloadSourceDO.IN_WARTESCHLANGE &&
