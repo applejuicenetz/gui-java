@@ -38,7 +38,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/OptionsDialog.java,v 1.3 2005/01/18 17:35:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/OptionsDialog.java,v 1.4 2005/01/25 12:08:08 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -83,13 +83,14 @@ public class OptionsDialog
 
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.einstform.caption")));
-        optionPanels = new OptionsRegister[6];
-        optionPanels[0] = new ODStandardPanel(this, ajSettings, remote);
-        optionPanels[1] = new ODVerbindungPanel(this, ajSettings);
-        optionPanels[2] = new ODConnectionPanel(remote, null);
-        optionPanels[3] = new ODProxyPanel();
-        optionPanels[4] = new ODAnsichtPanel();
-        optionPanels[5] = new ODPluginPanel(this);
+        optionPanels = new OptionsRegister[] {
+	        new ODStandardPanel(this, ajSettings, remote),
+	        new ODVerbindungPanel(this, ajSettings),
+	        new ODConnectionPanel(remote, null),
+	        new ODProxyPanel(),
+	        new ODAnsichtPanel(),
+	        new ODPluginPanel(this)
+        };
 
         menuList = new JList(optionPanels);
         menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
