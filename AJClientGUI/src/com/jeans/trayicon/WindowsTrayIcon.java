@@ -450,8 +450,8 @@ public class WindowsTrayIcon {
             else {
                 evt = new ActionEvent(this, 0, "Middle");
             }
-            for (Enumeration enum = m_ActList.elements(); enum.hasMoreElements(); ) {
-                ActionListener listener = (ActionListener) enum.nextElement();
+            for (Enumeration enumeration = m_ActList.elements(); enumeration.hasMoreElements(); ) {
+                ActionListener listener = (ActionListener) enumeration.nextElement();
                 listener.actionPerformed(evt);
             }
         }

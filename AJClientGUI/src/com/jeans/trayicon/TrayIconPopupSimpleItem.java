@@ -141,9 +141,9 @@ public class TrayIconPopupSimpleItem
         boolean selected = menuId == m_MenuId;
         if (selected && m_Listeners != null) {
             ActionEvent evt = new ActionEvent(this, 0, "");
-            for (Enumeration enum = m_Listeners.elements();
-                 enum.hasMoreElements(); ) {
-                ActionListener listener = (ActionListener) enum.nextElement();
+            for (Enumeration enumeration = m_Listeners.elements();
+            enumeration.hasMoreElements(); ) {
+                ActionListener listener = (ActionListener) enumeration.nextElement();
                 listener.actionPerformed(evt);
             }
         }

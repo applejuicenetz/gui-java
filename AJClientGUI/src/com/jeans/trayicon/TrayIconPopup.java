@@ -88,8 +88,8 @@ public class TrayIconPopup
      */
     public int getNbLevels() {
         int nb = 0;
-        for (Enumeration enum = mVector.elements(); enum.hasMoreElements(); ) {
-            TrayIconPopupItem item = (TrayIconPopupItem) enum.nextElement();
+        for (Enumeration enumeration = mVector.elements(); enumeration.hasMoreElements(); ) {
+            TrayIconPopupItem item = (TrayIconPopupItem) enumeration.nextElement();
             nb = Math.max(nb, item.getNbLevels());
         }
         return nb + 1;
