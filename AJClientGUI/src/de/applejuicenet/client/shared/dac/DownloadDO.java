@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.MapSetStringKey;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.15 2004/01/12 07:23:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.16 2004/01/12 13:17:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,10 @@ import de.applejuicenet.client.shared.MapSetStringKey;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.16  2004/01/12 13:17:49  maj0r
+ * Bug #92 gefixt (Danke an daa803)
+ * Ein paar Synchronized() eingebaut.
+ *
  * Revision 1.15  2004/01/12 07:23:46  maj0r
  * Caching, Logging eingebaut.
  * Wiedergabe der Tabellenwerte vom Model ins Node umgebaut.
@@ -306,9 +310,11 @@ public class DownloadDO
     public long getSpeedInBytes() {
         long speed = 0;
         try {
-            Iterator it = sourcen.values().iterator();
-            while (it.hasNext()) {
-                speed += ( (DownloadSourceDO) it.next()).getSpeed();
+            synchronized (sourcen){
+                Iterator it = sourcen.values().iterator();
+                while (it.hasNext()) {
+                    speed += ( (DownloadSourceDO) it.next()).getSpeed();
+                }
             }
         }
         catch (Exception e) {
@@ -322,9 +328,12 @@ public class DownloadDO
     public long getBereitsGeladen() {
         long geladen = ready;
         try {
-            Iterator it = sourcen.values().iterator();
-            while (it.hasNext()) {
-                geladen += ( (DownloadSourceDO) it.next()).getBereitsGeladen();
+            synchronized (sourcen){
+                Iterator it = sourcen.values().iterator();
+                while (it.hasNext()) {
+                    geladen += ( (DownloadSourceDO) it.next()).
+                        getBereitsGeladen();
+                }
             }
         }
         catch (Exception e) {
