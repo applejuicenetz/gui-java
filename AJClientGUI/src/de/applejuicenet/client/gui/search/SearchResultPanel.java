@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.search.table.SearchNode;
 import de.applejuicenet.client.gui.search.table.SearchResultTableModel;
+import de.applejuicenet.client.gui.search.table.SearchResultTreeTableCellRenderer;
 import de.applejuicenet.client.gui.shared.SortButtonRenderer;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
@@ -34,7 +35,7 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
 import javax.swing.JToggleButton;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.2 2004/10/28 15:02:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.3 2004/10/29 11:16:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -103,7 +104,9 @@ public class SearchResultPanel
         setLayout(new BorderLayout());
         updateZahlen();
         tableModel = new SearchResultTableModel(search);
-        searchResultTable = new JTreeTable(tableModel);
+        SearchResultTreeTableCellRenderer searchResultTreeTableCellRenderer = 
+        	new SearchResultTreeTableCellRenderer(tableModel);
+        searchResultTable = new JTreeTable(tableModel, searchResultTreeTableCellRenderer);
         searchResultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton all = new JButton(IconManager.getInstance().getIcon("abbrechen"));

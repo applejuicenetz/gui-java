@@ -42,7 +42,9 @@ import de.applejuicenet.client.gui.download.table.DownloadRootNode;
 import de.applejuicenet.client.gui.download.table.DownloadTableCellRenderer;
 import de.applejuicenet.client.gui.download.table.DownloadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.download.table.DownloadTableVersionCellRenderer;
+import de.applejuicenet.client.gui.download.table.DownloadTreeTableCellRenderer;
 import de.applejuicenet.client.gui.shared.SortButtonRenderer;
+import de.applejuicenet.client.gui.tables.DefaultTreeTableCellRenderer;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.shared.IconManager;
 
@@ -307,7 +309,9 @@ public class DownloadPanel extends TklPanel {
 		});
 
 		downloadModel = new DownloadModel();
-		downloadTable = new JTreeTable(downloadModel);
+		DefaultTreeTableCellRenderer defaultTreeTableCellRenderer =
+			new DownloadTreeTableCellRenderer(downloadModel);
+		downloadTable = new JTreeTable(downloadModel, defaultTreeTableCellRenderer);
 
 		TableColumnModel model = downloadTable.getColumnModel();
 		for (int i = 0; i < columns.length; i++) {

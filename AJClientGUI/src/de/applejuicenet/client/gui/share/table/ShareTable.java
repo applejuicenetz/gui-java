@@ -6,6 +6,7 @@ import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceDropEvent;
 
+import de.applejuicenet.client.gui.tables.DefaultTreeTableCellRenderer;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.dnd.DndSourceAdapter;
@@ -17,7 +18,7 @@ public class ShareTable
     private boolean dragEnabled = false;
 
     public ShareTable(ShareModel treeTableModel) {
-        super(treeTableModel);
+        super(treeTableModel, new DefaultTreeTableCellRenderer(treeTableModel));
         dragSource.createDefaultDragGestureRecognizer(this,
             DnDConstants.ACTION_COPY_OR_MOVE,
             new DragGestureListener() {

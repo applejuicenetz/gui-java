@@ -12,7 +12,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.JToolTip;
@@ -20,33 +19,21 @@ import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.metal.MetalToolTipUI;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeSelectionModel;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.gui.download.table.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
-import de.applejuicenet.client.gui.download.table.IconGetter;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.upload.table.MainNode;
 import de.applejuicenet.client.shared.MultiLineToolTip;
-import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.33 2004/10/28 15:02:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.34 2004/10/29 11:16:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -60,14 +47,15 @@ public class JTreeTable
     extends JTable {
     private static final long serialVersionUID = -2358030317266014942L;
 
-	protected TreeTableCellRenderer tree;
+	protected DefaultTreeTableCellRenderer tree;
 
     protected JTable thisTable;
 
-    public JTreeTable(TreeTableModel treeTableModel) {
+    public JTreeTable(TreeTableModel treeTableModel, DefaultTreeTableCellRenderer treeTableCellRenderer) {
         super();
         thisTable = this;
-        tree = new TreeTableCellRenderer(treeTableModel);
+        treeTableCellRenderer.setTreeTable(this);
+        tree = treeTableCellRenderer;
 
         super.setModel(new TreeTableModelAdapter(treeTableModel, tree));
 
@@ -201,96 +189,6 @@ public class JTreeTable
         return tree;
     }
 
-    public class TreeTableCellRenderer
-        extends JTree
-        implements
-        TableCellRenderer, DataUpdateListener {
-
-        private static final long serialVersionUID = -461045856373187978L;
-		protected int visibleRow;
-        private Settings settings;
-
-        public TreeTableCellRenderer(TreeModel model) {
-            super(model);
-            settings = Settings.getSettings();
-            this.setCellRenderer(new IconNodeRenderer());
-            OptionsManagerImpl.getInstance().addSettingsListener(this);
-        }
-
-        public void updateUI() {
-            super.updateUI();
-            TreeCellRenderer tcr = getCellRenderer();
-            if (tcr instanceof DefaultTreeCellRenderer) {
-                DefaultTreeCellRenderer dtcr = ( (DefaultTreeCellRenderer) tcr);
-                dtcr.setTextSelectionColor(UIManager.getColor
-                                           ("Table.selectionForeground"));
-                dtcr.setBackgroundSelectionColor(UIManager.getColor
-                                                 ("Table.selectionBackground"));
-            }
-        }
-
-        public void setRowHeight(int rowHeight) {
-            if (rowHeight > 0) {
-                super.setRowHeight(rowHeight);
-                if (JTreeTable.this != null &&
-                    JTreeTable.this.getRowHeight() != rowHeight) {
-                    JTreeTable.this.setRowHeight(getRowHeight());
-                }
-            }
-        }
-
-        public void setBounds(int x, int y, int w, int h) {
-            super.setBounds(x, 0, w, JTreeTable.this.getHeight());
-        }
-
-        public void paint(Graphics g) {
-            g.translate(0, -visibleRow * getRowHeight());
-            super.paint(g);
-        }
-
-        public Component getTableCellRendererComponent(JTable table,
-            Object value,
-            boolean isSelected,
-            boolean hasFocus,
-            int row, int column) {
-            Object node = ( (TreeTableModelAdapter) table.getModel()).
-                nodeForRow(row);
-            if (isSelected) {
-                setBackground(table.getSelectionBackground());
-            }
-            else {
-                if (settings.isFarbenAktiv()) {
-                    if (node.getClass() == DownloadSourceDO.class) {
-                        setBackground(settings.getQuelleHintergrundColor());
-                    }
-                    else if (node.getClass() == DownloadMainNode.class &&
-                             ( (DownloadMainNode) node).getType() ==
-                             DownloadMainNode.ROOT_NODE &&
-                             ( (DownloadMainNode) node).getDownloadDO().
-                             getStatus() == DownloadDO.FERTIG) {
-                        setBackground(settings.
-                                      getDownloadFertigHintergrundColor());
-                    }
-                    else {
-                        setBackground(table.getBackground());
-                    }
-                }
-                else {
-                    setBackground(table.getBackground());
-                }
-            }
-
-            visibleRow = row;
-            return this;
-        }
-
-        public void fireContentChanged(int type, Object content) {
-            if (type == DataUpdateListener.SETTINGS_CHANGED) {
-                settings = (Settings) content;
-            }
-        }
-    }
-
     public class TreeTableCellEditor
         extends AbstractCellEditor
         implements
@@ -385,106 +283,6 @@ public class JTreeTable
             implements ListSelectionListener {
             public void valueChanged(ListSelectionEvent e) {
                 updateSelectedPathsFromSelectedRows();
-            }
-        }
-    }
-
-    public class IconNodeRenderer
-        extends DefaultTreeCellRenderer
-        implements DataUpdateListener {
-
-        private static final long serialVersionUID = 4819527202533954019L;
-		private Settings settings;
-
-        public IconNodeRenderer() {
-            super();
-            settings = Settings.getSettings();
-            OptionsManagerImpl.getInstance().addSettingsListener(this);
-        }
-
-        public Component getTreeCellRendererComponent(JTree tree, Object value,
-            boolean sel, boolean expanded,
-            boolean leaf,
-            int row, boolean hasFocus) {
-
-            Component c = null;
-            if (value.getClass() == DownloadSourceDO.class) {
-                c = super.getTreeCellRendererComponent(tree,
-                    ( (DownloadSourceDO) value).getNickname()
-                    + " (" + ( (DownloadSourceDO) value).getFilename() + ")",
-                    sel, expanded, leaf, row, hasFocus);
-            }
-            else if (value.getClass() == DownloadMainNode.class) {
-                c = super.getTreeCellRendererComponent(tree, value.toString(),
-                    sel, expanded, leaf, row, hasFocus);
-            }
-            else if (value.getClass() == DownloadDirectoryNode.class) {
-                c = super.getTreeCellRendererComponent(tree,
-                    ( (DownloadDirectoryNode) value).getVerzeichnis(),
-                    sel, expanded, leaf, row, hasFocus);
-            }
-            else if (value.getClass() == FileName.class) {
-                c = super.getTreeCellRendererComponent(tree,
-                    ( (FileName) value).getDateiName(),
-                    sel, expanded, leaf, row, hasFocus);
-            }
-            else if (value.getClass() == MainNode.class) {
-                c = super.getTreeCellRendererComponent(tree,
-                    ( (MainNode) value).toString() + " (" + ( (MainNode) value).getChildCount() + ")",
-                    sel, expanded, leaf, row, hasFocus);
-            }
-            else if (value.getClass() == UploadDO.class) {
-                c = super.getTreeCellRendererComponent(tree,
-                    ( (UploadDO) value).getDateiName(),
-                    sel, expanded, leaf, row, hasFocus);
-            }
-            else {
-                c = super.getTreeCellRendererComponent(tree, value,
-                    sel, expanded, leaf, row, hasFocus);
-            }
-            if (c.getClass() == IconNodeRenderer.class) {
-                ( (IconNodeRenderer) c).setOpaque(true);
-                if (sel) {
-                    c.setBackground(thisTable.getSelectionBackground());
-                    c.setForeground(thisTable.getSelectionForeground());
-                }
-                else {
-                    if (settings.isFarbenAktiv()) {
-                        if (value.getClass() == DownloadSourceDO.class) {
-                            c.setBackground(settings.getQuelleHintergrundColor());
-                        }
-                        else if (value.getClass() == DownloadMainNode.class &&
-                                 ( (DownloadMainNode) value).getType() ==
-                                 DownloadMainNode.ROOT_NODE &&
-                                 ( (DownloadMainNode) value).getDownloadDO().
-                                 getStatus() == DownloadDO.FERTIG) {
-                            c.setBackground(settings.
-                                            getDownloadFertigHintergrundColor());
-                        }
-                        else {
-                            c.setBackground(tree.getBackground());
-                        }
-                    }
-                }
-            }
-            if (value instanceof Node) {
-                Icon icon = ( (Node) value).getConvenientIcon();
-                if (icon != null) {
-                    setIcon(icon);
-                }
-            }
-            else {
-                Icon icon = IconGetter.getConvenientIcon(value);
-                if (icon != null) {
-                    setIcon(icon);
-                }
-            }
-            return this;
-        }
-
-        public void fireContentChanged(int type, Object content) {
-            if (type == DataUpdateListener.SETTINGS_CHANGED) {
-                settings = (Settings) content;
             }
         }
     }

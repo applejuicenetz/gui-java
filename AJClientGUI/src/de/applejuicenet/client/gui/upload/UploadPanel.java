@@ -39,6 +39,7 @@ import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.tables.DefaultTreeTableCellRenderer;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.NormalHeaderRenderer;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
@@ -46,6 +47,7 @@ import de.applejuicenet.client.gui.upload.table.UploadDataTableModel;
 import de.applejuicenet.client.gui.upload.table.UploadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.upload.table.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.gui.upload.table.UploadTableWholeLoadedPercentCellRenderer;
+import de.applejuicenet.client.gui.upload.table.UploadTreeTableCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ShareDO;
@@ -128,7 +130,9 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI,
 		setLayout(new BorderLayout());
 		LanguageSelector.getInstance().addLanguageListener(this);
 		uploadDataTableModel = new UploadDataTableModel();
-		uploadDataTable = new JTreeTable(uploadDataTableModel);
+		DefaultTreeTableCellRenderer uploadTreeTableCellRenderer =
+			new UploadTreeTableCellRenderer(uploadDataTableModel);
+		uploadDataTable = new JTreeTable(uploadDataTableModel, uploadTreeTableCellRenderer);
 		uploadDataTable.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
 				super.mousePressed(me);
