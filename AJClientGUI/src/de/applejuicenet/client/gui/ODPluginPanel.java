@@ -48,12 +48,12 @@ public class ODPluginPanel extends JPanel {
       }
     }
     Dimension parentSize = theApp.getSize();
-    beschreibung.setBackground(new Color(212, 208, 200));
+    beschreibung.setBackground(label1.getBackground());
     Dimension dim1 = beschreibung.getPreferredSize();
-    beschreibung.setPreferredSize(new Dimension(parentSize.width/3, dim1.height));
+    beschreibung.setPreferredSize(new Dimension(parentSize.width/3, beschreibung.getPreferredSize().height));
     beschreibung.setEditable(false);
     pluginList = new JList(v);
-    pluginList.setPreferredSize(new Dimension(190,parentSize.height/2));
+    pluginList.setPreferredSize(new Dimension(190, pluginList.getPreferredSize().height));
     pluginList.addListSelectionListener(new ListSelectionListener(){
       public void valueChanged(ListSelectionEvent e){
         pluginList_valueChanged(e);
@@ -69,7 +69,8 @@ public class ODPluginPanel extends JPanel {
 
     add(label1, BorderLayout.NORTH);
     add(pluginList, BorderLayout.WEST);
-    add(beschreibung, BorderLayout.CENTER);
+    JScrollPane sp = new JScrollPane(beschreibung);
+    add(sp, BorderLayout.CENTER);
   }
 
   class PluginContainer{

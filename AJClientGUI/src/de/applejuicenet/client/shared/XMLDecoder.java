@@ -63,7 +63,36 @@ public abstract class XMLDecoder {
   }
 
   public void setAttributeByTagName(String[] attributePath, String newValue) {
-    Element ele = document.getDocumentElement();
+    NodeList nodes = document.getChildNodes();
+    Node rootNode = nodes.item(0);   //Element "root"
+    nodes = rootNode.getChildNodes();
+    for (int i=0; i<attributePath.length-1; i++){
+      for (int x=0; x<nodes.getLength(); x++){
+        String test = nodes.item(x).getNodeName();
+        if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])){
+          if (i == attributePath.length-2){
+            Element e = (Element) nodes.item(x);
+            e.setAttribute(attributePath[attributePath.length - 1], ZeichenErsetzer.korrigiereUmlaute(newValue, true));
+            try {
+              XMLSerializer xs = new XMLSerializer(new FileWriter(filePath),
+                                                   new OutputFormat(document,
+                  "UTF-8", true));
+              xs.serialize(document);
+            }
+            catch (IOException ioE) {
+              ioE.printStackTrace();
+            }
+          }
+          else{
+            nodes = nodes.item(x).getChildNodes();
+            break;
+          }
+        }
+      }
+    }
+    return ;  //Nicht gefunden
+
+/*    Element ele = document.getDocumentElement();
     NodeList nl = ele.getElementsByTagName(attributePath[0]);
     if (attributePath.length > 2) {
       for (int i = 1; i < attributePath.length - 1; i++) {
@@ -87,7 +116,7 @@ public abstract class XMLDecoder {
       catch (DOMException ex) {
         ex.printStackTrace();
       }
-    }
+    }*/
   }
 
 }

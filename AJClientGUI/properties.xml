@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <options sprache="deutsch">
-        <proxy ip="" pass="" port="" user=""/>
-    </options>
+	<options sprache="deutsch">
+		<proxy ip="" pass="" port="" use="0" user="100krallt"/></options>
 </root>

@@ -21,19 +21,16 @@ public abstract class HtmlLoader {
 
   public static String getHtmlContent(String urlPath) throws
       WebSiteNotFoundException {
-    boolean proxy = false;
-    String[] proxySettings = OptionsManager.getInstance().getProxySettings();
-    if (proxySettings != null) {
-      proxy = true;
-    }
-    if (proxy) {
+    ProxyConfiguration proxy = OptionsManager.getInstance().getProxySettings();
+
+    if (proxy.isProxyUsed()) {
       Properties systemSettings = System.getProperties();
       systemSettings.put("proxySet", "true");
       systemSettings.put("firewallSet", "true");
-      systemSettings.put("firewallHost", proxySettings[0]);
-      systemSettings.put("firewallPort", proxySettings[1]);
-      systemSettings.put("http.proxyHost", proxySettings[0]);
-      systemSettings.put("http.proxyPort", proxySettings[1]);
+      systemSettings.put("firewallHost", proxy.getIP());
+      systemSettings.put("firewallPort", Integer.toString(proxy.getPort()));
+      systemSettings.put("http.proxyHost", proxy.getIP());
+      systemSettings.put("http.proxyPort", Integer.toString(proxy.getPort()));
       System.setProperties(systemSettings);
     }
 
@@ -55,9 +52,9 @@ public abstract class HtmlLoader {
       throw new WebSiteNotFoundException(ex1);
     }
 
-    if (proxy) {
-      String encoded = new String(Base64.encode( (proxySettings[2] + ":" +
-                                                  Base64.decode(proxySettings[3])).
+    if (proxy.isProxyUsed()) {
+      String encoded = new String(Base64.encode( (proxy.getUsername() + ":" +
+                                                  proxy.getPassword()).
                                                 getBytes()));
       uc.setRequestProperty("Proxy-Authorization", "Basic " + encoded);
     }

@@ -92,15 +92,14 @@
 		<reluser caption="&amp;amp;reload user"/>
 		<downl caption="&amp;amp;download"/>
 	</mainform><einstform caption="Options">
-		<standardsheet caption="Standard"/>
+		<Label18 caption="Break even time in ms"/><Label19 caption="URL to ping"/><standardsheet caption="Standard"/>
 		<Label8 caption="Nick"/>
 		<Label3 caption="Port"/>
 		<Label7 caption="Incoming Dir"/>
 		<Label2 caption="Temp Dir"/>
 		<connectionsheet caption="Connection"/>
 		<Label4 caption="MaxConnections"/>
-		<Label5 caption="MaxUpload"/>
-		<Label6 caption="Simultaneous Uploads"/>
+		<Label5 caption="MaxUpload in kb/s"/><Label6 caption="Simultaneous Uploads"/>
 		<Label9 caption="Simultaneous Downloads"/>
 		<autoconn caption="Autoconnect after Start"/>
 		<securitysheet caption="Security"/>
@@ -112,8 +111,7 @@
 		<Label10 caption="Language"/>
 		<Button1 caption="OK"/>
 		<Button2 caption="Cancel"/>
-		<Label13 caption="MaxDownload (0 = machine limit)"/>
-		<visualsheet caption="Visual"/>
+		<Label13 caption="MaxDownload in kb/s (0 = machine limit)"/><visualsheet caption="Visual"/>
 		<dwncol1 caption="Transfered bytes"/>
 		<dwncol2 caption="Percent ready loaded"/>
 		<dwncol3 caption="Bytes to load"/>
@@ -123,8 +121,7 @@
 		<Label14 caption="Uploadpriority for your downloads"/>
 		<downcolumns caption="Columns in Downloadlist"/>
 		<graphicview caption="graphical view what we have"/>
-		<pwsheet caption="password"/>
-		<Label15 caption="old password"/>
+		<pwsheet caption="Password"/><Label15 caption="old password"/>
 		<Label16 caption="new password"/>
 		<Label17 caption="re-enter password"/>
 		<Button3 caption="change password"/>
@@ -194,7 +191,11 @@
 		<Label7 caption="Please specify your nick name shown to other. &quot;nonick&quot; is not a valid nick name."/>
 		<Label4 caption="For optimum perfomance, appleJuice  needs to know a little bit more about your connection to the Internet."/>
 		<Label5 caption="Select the type of your connection:"/>
-		<Label6 caption="That&amp;apos;s it! appleJuice has been configured to work with your computer.&#xA;&#xA;If you ever need to change these settings, you can re-run this Wizard by clicking on the link at the Hometab.&#xA;&#xA;Enjoy using appleJuice"/>
+		<Label6 caption="That&amp;apos;s it! appleJuice has been configured to work with your computer.
+
+If you ever need to change these settings, you can re-run this Wizard by clicking on the link at the Hometab.
+
+Enjoy using appleJuice"/>
 	</assistant>
 	<targetdirform caption="change Targetdirectory">
 		<Label1 caption="Please Enter a Subdirectory of your Incoming. This directory does not have to exist. Empty directory mean you want to save the file directly in the incoming directory."/>
@@ -213,4 +214,4 @@
 		<Button1 caption="&amp;amp;download"/>
 		<Button2 caption="&amp;amp;cancel"/>
 	</newversionform>
-	<javagui><options><plugins name="Name" autor="Author" version="Version" beschreibung="Description"/></options><menu extras="Extras"/><tooltipps powerdownload="Activation of powerdownload increases your chances to download.|The more credits you spend, the higher you slip in the queue." autopowerdownload="By activation of the automatic power download you can fix, from which count of|credits the power download is activated and when it switches|off itself again. The power download always considers the mostly loaded files.|The GUI must run."/><downloadtab label1="Automatic Powerdownload" rbInaktiv="inactive" rbAktiv="active" pdlAb="from" pdlBis="to" btnOK="Apply"/></javagui></root>
+	<javagui><options><proxy caption="Proxy" benutzername="Username" passwort="Password" verwenden="use proxy"/><verbindung label3="kb per uploadslot"/><standard ttipp_temp="Only changeable if you have nothing in|downloadqueue. Please do not use a|subdirectory of incoming and not a directory|used by an other application." ttipp_port="Change this will kick all current|chatsessions, uploads and maybe some|current downloads. You have to reconnect to the|server after changing this setting." ttipp_nick="This setting will take effect after reconnect|to a server."/><plugins name="Name" autor="Author" version="Version" beschreibung="Description"/></options><menu extras="Extras"/><tooltipps powerdownload="Activation of powerdownload increases your chances to download.|The more credits you spend, the higher you slip in the queue." autopowerdownload="By activation of the automatic power download you can fix, from which count of|credits the power download is activated and when it switches|off itself again. The power download always considers the mostly loaded files.|The GUI must run."/><downloadtab label1="Automatic Powerdownload" rbInaktiv="inactive" rbAktiv="active" pdlAb="from" pdlBis="to" btnOK="Apply"/></javagui></root>

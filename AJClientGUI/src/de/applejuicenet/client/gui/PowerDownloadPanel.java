@@ -248,16 +248,16 @@ public class PowerDownloadPanel
         btnAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "poweractive", "caption"})));
         label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label7", "caption"})));
         label8.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label8", "caption"})));
-        label9.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "label1"})));
-        btnAutoInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "rbInaktiv"})));
-        btnAutoAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "rbAktiv"})));
-        label10.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "pdlAb"})));
-        label11.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "pdlBis"})));
-        String ok = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "btnOK"}));
+        label9.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "label1"})));
+        btnAutoInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "rbInaktiv"})));
+        btnAutoAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "rbAktiv"})));
+        label10.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "pdlAb"})));
+        label11.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "pdlBis"})));
+        String ok = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "btnOK"}));
         btnAutoPdl.setText(ok);
         btnPdl.setText(ok);
-        btnHint.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "tooltipps", "powerdownload"})));
-        btnHint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "tooltipps", "autopowerdownload"})));
+        btnHint.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "tooltipps", "powerdownload"})));
+        btnHint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "tooltipps", "autopowerdownload"})));
       }
       catch (LanguageSelectorNotInstanciatedException ex) {
         ex.printStackTrace();
