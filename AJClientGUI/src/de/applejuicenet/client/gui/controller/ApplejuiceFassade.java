@@ -38,7 +38,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.shared.Search;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.109 2004/02/12 21:16:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.110 2004/02/12 21:26:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -692,27 +692,27 @@ public class ApplejuiceFassade {
                     System.currentTimeMillis() - 10000) {
                     sleep(10000);
                 }
-                innerThread = new Thread() {
-                    public void run() {
-                        try {
-                            String password = PropertiesManager.
-                                getOptionsManager().
-                                getRemoteSettings().getOldPassword();
-                            HtmlLoader.getHtmlXMLContent(getHost(),
-                                HtmlLoader.POST,
-                                "/function/cancelsearch?password=" +
-                                password + "&id=" + search.getId(), true);
-                            cancel = true;
-                        }
-                        catch (Exception e) {
-                            if (logger.isEnabledFor(Level.ERROR)) {
-                                logger.error("Unbehandelte Exception", e);
-                            }
-                        }
-
-                    }
-                };
                 while(!cancel){
+                    innerThread = new Thread() {
+                        public void run() {
+                            try {
+                                String password = PropertiesManager.
+                                    getOptionsManager().
+                                    getRemoteSettings().getOldPassword();
+                                HtmlLoader.getHtmlXMLContent(getHost(),
+                                    HtmlLoader.POST,
+                                    "/function/cancelsearch?password=" +
+                                    password + "&id=" + search.getId(), true);
+                                cancel = true;
+                            }
+                            catch (Exception e) {
+                                if (logger.isEnabledFor(Level.ERROR)) {
+                                    logger.error("Unbehandelte Exception", e);
+                                }
+                            }
+
+                        }
+                    };
                     innerThread.start();
                     sleep(4000);
                     innerThread.interrupt();
