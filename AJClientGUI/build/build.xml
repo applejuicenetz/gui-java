@@ -91,6 +91,7 @@
 		<fileset dir="${basedir}" includes="properties.xml"/>
 		<fileset dir="${basedir}" includes="wizard.xml"/>
 		<fileset dir="${basedir}" includes="changelog.htm"/>
+		<fileset dir="${basedir}" includes="WICHTIG_LESEN.txt"/>
 		<fileset dir="${basedir}" includes="*.reg"/>
 		<fileset dir="${basedir}" includes="language/*.xml language/*.gif"/>
 		<fileset dir="${basedir}" includes="plugins/*.jar plugins/*.txt"/>

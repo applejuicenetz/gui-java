@@ -1,0 +1,13 @@
+WICHTIG!!!
+
+Um die Link-Catche-Funktion zu nutzen, muss die .reg-Datei an die eigene Umgebung angepasst und importiert werden.
+
+
+Beispiel:
+
+
+Original:
+@="\"C:\\AJClientGUI\\AJCoreGUI.exe\" \"%1\" \"C:\\AJClientGUI\""
+
+Wenn Du die exe in "c:\programme\aj" liegen hast, würde die Zeile so aussehen:
+@="\"c:\\programme\\aj\\AJCoreGUI.exe\" \"%1\" \"c:\\programme\\aj\""
