@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.84 2004/01/23 20:22:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.85 2004/01/25 08:30:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.85  2004/01/25 08:30:39  maj0r
+ * NullPointer behoben.
+ *
  * Revision 1.84  2004/01/23 20:22:49  maj0r
  * Formataenderung.
  *
@@ -756,7 +759,7 @@ public class AppleJuiceDialog
                 public void actionPerformed(ActionEvent e) {
                     OptionsDialog od = new OptionsDialog(_this);
                     Dimension appDimension = od.getSize();
-                    Dimension screenSize = _this.getSize();
+                    Dimension screenSize = getApp().getSize();
                     od.setLocation( (screenSize.width - appDimension.width) / 4,
                                    (screenSize.height - appDimension.height) /
                                    4);
