@@ -11,13 +11,14 @@ import javax.swing.JTable;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.tables.Node;
+import de.applejuicenet.client.shared.FileTypeHelper;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.11 2004/04/15 16:06:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.12 2004/07/23 13:04:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -49,7 +50,7 @@ public class DownloadMainNode
     private static Icon loadingIcon = IconManager.getInstance().getIcon(
         "download");
     private static Icon restIcon = IconManager.getInstance().getIcon("eek");
-    private static Icon rootIcon = IconManager.getInstance().getIcon("treeRoot");
+    private Icon rootIcon = null;
 
     public DownloadMainNode(DownloadDO downloadDO) {
         type = ROOT_NODE;
@@ -109,7 +110,11 @@ public class DownloadMainNode
             return restIcon;
         }
         else if (type == ROOT_NODE) {
-            return rootIcon;
+        	if (rootIcon == null){
+        		String fileType = FileTypeHelper.calculatePossibleFileType(downloadDO.getFilename());
+        		rootIcon = IconManager.getInstance().getIcon(fileType);
+        	}
+        	return rootIcon;
         }
         else {
             return null;

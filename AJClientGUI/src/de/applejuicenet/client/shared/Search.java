@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.17 2004/06/18 11:48:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.18 2004/07/23 13:04:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,19 +39,7 @@ public class Search {
     public static int currentSearchCount = 0;
 
     private Set filter = new HashSet();
-
-    public static final String TYPE_PDF = "pdf";
-    public static final String TYPE_IMAGE = "image";
-    public static final String TYPE_MOVIE = "movie";
-    public static final String TYPE_ISO = "iso";
-    public static final String TYPE_TEXT = "text";
-    public static final String TYPE_SOUND = "sound";
-    public static final String TYPE_ARCHIVE = "archive";
-    public static final String TYPE_UNKNOWN = "treeRoot";
-
-    public static final String[] allTypes = new String[]
-        {TYPE_PDF, TYPE_IMAGE, TYPE_MOVIE, TYPE_ISO, TYPE_TEXT, TYPE_SOUND, TYPE_ARCHIVE, TYPE_UNKNOWN};
-
+    
     public Search(int id) {
         this.id = id;
         creationTime = System.currentTimeMillis();
@@ -107,13 +95,14 @@ public class Search {
 
     public void addFilter(String newFilter){
         filter.add(newFilter);
-        if (filter.size()==allTypes.length){
+        if (filter.size()==FileTypeHelper.getAllTypes().length){
             clearFilter();
         }
     }
 
     public void removeFilter(String newFilter){
         if (filter.size()==0){
+        	String[] allTypes = FileTypeHelper.getAllTypes();
             for (int i=0; i<allTypes.length; i++){
                 filter.add(allTypes[i]);
             }
@@ -186,7 +175,7 @@ public class Search {
         private List fileNames = new ArrayList();
         private Set keys = new HashSet();
 
-        private String type = TYPE_UNKNOWN;
+        private String type = FileTypeHelper.TYPE_UNKNOWN;
 
         public SearchEntry(int id, int searchId, String checksumme, long groesse) {
             this.id = id;
@@ -238,62 +227,62 @@ public class Search {
             int currentMax = 0;
             for (int i=0; i<fileNames.length; i++){
                 String fileNameType = fileNames[i].getFileType();
-                if (fileNameType.equals(TYPE_UNKNOWN)){
+                if (fileNameType.equals(FileTypeHelper.TYPE_UNKNOWN)){
                     continue;
                 }
-                else if (fileNameType.equals(TYPE_PDF)){
+                else if (fileNameType.equals(FileTypeHelper.TYPE_PDF)){
                     pdf++;
                     if (pdf>currentMax){
                         currentMax = pdf;
-                        type = TYPE_PDF;
+                        type = FileTypeHelper.TYPE_PDF;
                     }
                 }
-                else if (fileNameType.equals(TYPE_IMAGE)){
+                else if (fileNameType.equals(FileTypeHelper.TYPE_IMAGE)){
                     image++;
                     if (image>currentMax){
                         currentMax = image;
-                        type = TYPE_IMAGE;
+                        type = FileTypeHelper.TYPE_IMAGE;
                     }
                 }
-                else if (fileNameType.equals(TYPE_MOVIE)){
+                else if (fileNameType.equals(FileTypeHelper.TYPE_MOVIE)){
                     movie++;
                     if (movie>currentMax){
                         currentMax = movie;
-                        type = TYPE_MOVIE;
+                        type = FileTypeHelper.TYPE_MOVIE;
                     }
                 }
-                else if (fileNameType.equals(TYPE_ISO)){
+                else if (fileNameType.equals(FileTypeHelper.TYPE_ISO)){
                     iso++;
                     if (iso>currentMax){
                         currentMax = iso;
-                        type = TYPE_ISO;
+                        type = FileTypeHelper.TYPE_ISO;
                     }
                 }
-                else if (fileNameType.equals(TYPE_TEXT)){
+                else if (fileNameType.equals(FileTypeHelper.TYPE_TEXT)){
                     text++;
                     if (text>currentMax){
                         currentMax = text;
-                        type = TYPE_TEXT;
+                        type = FileTypeHelper.TYPE_TEXT;
                     }
                 }
-                else if (fileNameType.equals(TYPE_SOUND)){
+                else if (fileNameType.equals(FileTypeHelper.TYPE_SOUND)){
                     sound++;
                     if (sound>currentMax){
                         currentMax = sound;
-                        type = TYPE_SOUND;
+                        type = FileTypeHelper.TYPE_SOUND;
                     }
                 }
-                else if (fileNameType.equals(TYPE_ARCHIVE)){
+                else if (fileNameType.equals(FileTypeHelper.TYPE_ARCHIVE)){
                     archive++;
                     if (archive>currentMax){
                         currentMax = archive;
-                        type = TYPE_ARCHIVE;
+                        type = FileTypeHelper.TYPE_ARCHIVE;
                     }
                 }
             }
             if (pdf == image && movie == iso && image == movie
                 && movie == text && text == sound && text == archive){
-                    type = TYPE_UNKNOWN;
+                    type = FileTypeHelper.TYPE_UNKNOWN;
             }
         }
 
@@ -325,12 +314,12 @@ public class Search {
         public class FileName implements Node{
             private String dateiName;
             private int haeufigkeit;
-            private String fileType = TYPE_UNKNOWN;
+            private String fileType = FileTypeHelper.TYPE_UNKNOWN;
 
             public FileName(String dateiName, int haeufigkeit) {
                 this.dateiName = dateiName;
                 this.haeufigkeit = haeufigkeit;
-                calculatePossibleFileType();
+                fileType = FileTypeHelper.calculatePossibleFileType(dateiName);
             }
 
             public String getDateiName() {
@@ -351,54 +340,6 @@ public class Search {
 
             public Icon getConvenientIcon() {
                 return IconManager.getInstance().getIcon(fileType);
-            }
-
-            private void calculatePossibleFileType(){
-                String lower = dateiName.toLowerCase();
-                if (lower.endsWith(".pdf")){
-                    fileType = TYPE_PDF;
-                }
-                else if (lower.endsWith(".bmp") || lower.endsWith(".jpg")
-                         || lower.endsWith(".tif") || lower.endsWith(".png")
-                         || lower.endsWith(".pcx") || lower.endsWith(".jpeg")
-                         || lower.endsWith(".jpe")){
-                    fileType = TYPE_IMAGE;
-                }
-                else if (lower.endsWith(".mpg") || lower.endsWith(".avi")
-                         || lower.endsWith(".mov") || lower.endsWith(".mpeg")
-                         || lower.endsWith(".dat") || lower.endsWith(".ra")
-                         || lower.endsWith(".vob") || lower.endsWith(".rm")
-                         || lower.endsWith(".divx")){
-                    fileType = TYPE_MOVIE;
-                }
-                else if (lower.endsWith(".iso") || lower.endsWith(".bin")
-                         || lower.endsWith(".cue") || lower.endsWith(".dao")
-                         || lower.endsWith(".img") || lower.endsWith(".cif")
-                         || lower.endsWith(".nrg") || lower.endsWith(".c2d")
-                         || lower.endsWith(".bwt") || lower.endsWith(".pdi")
-                         || lower.endsWith(".b5t") || lower.endsWith(".cdi")
-                         || lower.endsWith(".ccd") || lower.endsWith(".tao")){
-                    fileType = TYPE_ISO;
-                }
-                else if (lower.endsWith(".txt") || lower.endsWith(".nfo")
-                         || lower.endsWith(".doc")){
-                    fileType = TYPE_TEXT;
-                }
-                else if (lower.endsWith(".mp3") || lower.endsWith(".wav")
-                         || lower.endsWith(".mid") || lower.endsWith(".mp2")
-                         || lower.endsWith(".m2v") || lower.endsWith(".wma")
-                         || lower.endsWith(".midi") || lower.endsWith(".ogg")
-                         || lower.endsWith(".mmf")){
-                    fileType = TYPE_SOUND;
-                }
-                else if (lower.endsWith(".zip") || lower.endsWith(".rar")
-                         || lower.endsWith(".ace") || lower.endsWith(".arj")
-                         || lower.endsWith(".gz2") || lower.endsWith(".cab")
-                         || lower.endsWith(".lzh") || lower.endsWith(".tag")
-                         || lower.endsWith(".gzip") || lower.endsWith(".uue")
-                         || lower.endsWith(".bz2") || lower.endsWith(".jar")){
-                    fileType = TYPE_ARCHIVE;
-                }
             }
         }
     }

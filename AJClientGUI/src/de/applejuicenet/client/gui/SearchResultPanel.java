@@ -27,13 +27,14 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.search.SearchNode;
 import de.applejuicenet.client.gui.tables.search.SearchResultTableModel;
+import de.applejuicenet.client.shared.FileTypeHelper;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.Search.SearchEntry;
 import javax.swing.JToggleButton;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.20 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.21 2004/07/23 13:04:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -42,6 +43,10 @@ import javax.swing.JToggleButton;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.21  2004/07/23 13:04:05  maj0r
+ * [Maj0r] Featurerequest #472 (Danke an clickweg)
+ * Downloads werden nun mit passenden Icons dargestellt (vgl. Suche).
+ *
  * Revision 1.20  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -173,11 +178,12 @@ public class SearchResultPanel
         JButton all = new JButton(IconManager.getInstance().getIcon("abbrechen"));
         buttonPanel.add(all);
 
-        filterButtons = new JToggleButton[Search.allTypes.length];
-        for (int i=0; i<Search.allTypes.length; i++){
+        String[] allTypes = FileTypeHelper.getAllTypes();
+        filterButtons = new JToggleButton[allTypes.length];
+        for (int i=0; i<allTypes.length; i++){
             filterButtons[i] = new JToggleButton(
-                IconManager.getInstance().getIcon(Search.allTypes[i]));
-            filterButtons[i].addActionListener(new FilterAdapter(Search.allTypes[i]));
+                IconManager.getInstance().getIcon(allTypes[i]));
+            filterButtons[i].addActionListener(new FilterAdapter(allTypes[i]));
             buttonPanel.add(filterButtons[i]);
         }
 
