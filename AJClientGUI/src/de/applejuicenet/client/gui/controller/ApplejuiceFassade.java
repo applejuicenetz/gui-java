@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.36 2003/09/10 15:30:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.37 2003/09/11 06:54:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.37  2003/09/11 06:54:15  maj0r
+ * Auf neues Sessions-Prinzip umgebaut.
+ * Sprachenwechsel korrigert, geht nun wieder flott.
+ *
  * Revision 1.36  2003/09/10 15:30:48  maj0r
  * Begonnen auf neue Session-Struktur umzubauen.
  *
@@ -304,13 +308,17 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                             String sessionId = session.getFirstAttrbuteByTagName(new String[]{
                                 "applejuice", "session", "id" }, false);
                             long time = System.currentTimeMillis();
+                            if (logger.isEnabledFor(Level.DEBUG))
+                                logger.debug("SessionID = " + sessionId);
                             while (!isInterrupted()){
                                 if (System.currentTimeMillis() > time + 20000){
                                     session.reload("");
                                     sessionId = session.getFirstAttrbuteByTagName(new String[]{
                                         "applejuice", "session", "id" }, false);
-                                    time = System.currentTimeMillis();
+                                    if (logger.isEnabledFor(Level.DEBUG))
+                                        logger.debug("SessionID = " + sessionId);
                                 }
+                                time = System.currentTimeMillis();
                                 updateModifiedXML(sessionId);
                                 try{
                                     sleep(2000);

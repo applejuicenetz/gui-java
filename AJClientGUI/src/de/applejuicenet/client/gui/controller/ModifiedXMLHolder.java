@@ -7,9 +7,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
+import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.30 2003/09/10 15:30:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.31 2003/09/11 06:54:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,10 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.31  2003/09/11 06:54:15  maj0r
+ * Auf neues Sessions-Prinzip umgebaut.
+ * Sprachenwechsel korrigert, geht nun wieder flott.
+ *
  * Revision 1.30  2003/09/10 15:30:48  maj0r
  * Begonnen auf neue Session-Struktur umzubauen.
  *
@@ -104,11 +109,7 @@ import de.applejuicenet.client.shared.dac.*;
  */
 
 public class ModifiedXMLHolder
-        extends WebXMLParser {
-    private HashSet serverIDs = new HashSet();
-    private HashSet downloadIDs = new HashSet();
-    private HashSet uploadIDs = new HashSet();
-
+        extends WebXMLParser implements LanguageListener {
     private HashMap sourcenZuDownloads = new HashMap();
 
     private HashMap serverMap = new HashMap();
@@ -120,11 +121,17 @@ public class ModifiedXMLHolder
     private int connectedWithServerId = -1;
     private int tryConnectToServer = -1;
 
+    private String verbunden;
+    private String nichtVerbunden;
+    private String verbinden;
+    private String keinServer;
+
     private boolean reloadInProgress = false;
     private Logger logger;
 
     public ModifiedXMLHolder() {
         super("/xml/modified.xml", "");
+        LanguageSelector.getInstance().addLanguageListener(this);
         logger = Logger.getLogger(getClass());
     }
 
@@ -153,10 +160,10 @@ public class ModifiedXMLHolder
         updateUploads();
     }
 
-    public void reload(String parameters){
+    public void reload(String parameters) {
         if (reloadInProgress)
             return;
-        else{
+        else {
             reloadInProgress = true;
             super.reload(parameters);
             reloadInProgress = false;
@@ -169,32 +176,27 @@ public class ModifiedXMLHolder
 
     public String[] getStatusBar() {
         NodeList nodes = document.getElementsByTagName("information");
-        try
-        {
-            if (tryConnectToServer != -1)
-            {
+        try {
+            if (tryConnectToServer != -1) {
                 ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
-                if (serverDO!=null){
-                    status[0] = "Verbinde...";
+                if (serverDO != null) {
+                    status[0] = verbinden;
                     status[1] = serverDO.getName();
                 }
             }
-            else if (connectedWithServerId != -1)
-            {
+            else if (connectedWithServerId != -1) {
                 ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(connectedWithServerId)));
-                if (serverDO!=null){
-                    status[0] = "Verbunden...";
+                if (serverDO != null) {
+                    status[0] = verbunden;
                     status[1] = serverDO.getName();
                 }
             }
-            else
-            {
-                status[0] = "Nicht verbunden";
-                status[1] = "<Kein Server>";
+            else {
+                status[0] = nichtVerbunden;
+                status[1] = keinServer;
             }
             status[4] = netInfo.getExterneIP();
-            if (nodes.getLength() == 0)
-            {
+            if (nodes.getLength() == 0) {
                 return status; //Keine Ver�nderung seit dem letzten Abrufen
             }
             Element e = (Element) nodes.item(0); //Es gibt nur ein information-Element
@@ -208,16 +210,15 @@ public class ModifiedXMLHolder
             status[4] = netInfo.getExterneIP();
             status[5] = " Credits: " + bytesUmrechnen(credits);
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", ex);
         }
         return status;
     }
 
-    private String getBytesSpeed(long bytes){
-        if (bytes==0){
+    private String getBytesSpeed(long bytes) {
+        if (bytes == 0) {
             return "0 KB/s";
         }
         String result = bytesUmrechnen(bytes) + "/s";
@@ -226,192 +227,104 @@ public class ModifiedXMLHolder
 
     private String bytesUmrechnen(long bytes) {
         boolean minus = false;
-        if (bytes < 0)
-        {
+        if (bytes < 0) {
             minus = true;
             bytes *= -1;
         }
-        if (bytes == 0)
-        {
+        if (bytes == 0) {
             return "0 MB";
         }
         long faktor = 1;
-        if (bytes < 1024l)
-        {
+        if (bytes < 1024l) {
             faktor = 1;
         }
-        else if (bytes / 1024l < 1024l)
-        {
+        else if (bytes / 1024l < 1024l) {
             faktor = 1024l;
         }
-        else if (bytes / 1048576l < 1024l)
-        {
+        else if (bytes / 1048576l < 1024l) {
             faktor = 1048576l;
         }
-        else if (bytes / 1073741824l < 1024l)
-        {
+        else if (bytes / 1073741824l < 1024l) {
             faktor = 1073741824l;
         }
-        else
-        {
+        else {
             faktor = 1099511627776l;
         }
-        if (minus)
-        {
+        if (minus) {
             bytes *= -1;
         }
         double umgerechnet = (double) bytes / (double) faktor;
         String result = Double.toString(umgerechnet);
         int pos = result.indexOf(".");
-        if (pos != -1)
-        {
+        if (pos != -1) {
             if (pos + 2 < result.length())
                 result = result.substring(0, pos + 3);
             result = result.replace('.', ',');
         }
-        if (faktor == 1)
-        {
+        if (faktor == 1) {
             result += " Bytes";
         }
-        else if (faktor == 1024l)
-        {
+        else if (faktor == 1024l) {
             result += " kb";
         }
-        else if (faktor == 1048576l)
-        {
+        else if (faktor == 1048576l) {
             result += " MB";
         }
-        else if (faktor == 1073741824l)
-        {
+        else if (faktor == 1073741824l) {
             result += " GB";
         }
-        else
-        {
+        else {
             result += " TB";
         }
         return result;
     }
 
     private void updateIDs() {
-        try{
-            serverIDs.clear();
-            uploadIDs.clear();
-            downloadIDs.clear();
-            sourcenZuDownloads.clear();
+        try {
             Element e = null;
             String id = null;
-            NodeList nodes = document.getElementsByTagName("serverid");
+            NodeList nodes = document.getElementsByTagName("removed");
+            nodes = nodes.item(0).getChildNodes();
             int size = nodes.getLength();
-            for (int i = 0; i < size; i++)
-            {
+            MapSetStringKey toRemoveKey;
+            DownloadDO downloadDO;
+            for (int i = 0; i < size; i++) {
                 e = (Element) nodes.item(i);
                 id = e.getAttribute("id");
-                serverIDs.add(new MapSetStringKey(id));
-            }
-            nodes = document.getElementsByTagName("uploadid");
-            size = nodes.getLength();
-            for (int i = 0; i < size; i++)
-            {
-                e = (Element) nodes.item(i);
-                id = e.getAttribute("id");
-                uploadIDs.add(new MapSetStringKey(id));
-            }
-            MapSetStringKey suchKey = null;
-            ArrayList toRemove = new ArrayList();
-            synchronized(this){
-                Iterator it = uploadMap.keySet().iterator();
-                while (it.hasNext())
-                {
-                    suchKey = (MapSetStringKey) it.next();
-                    if (!uploadIDs.contains(suchKey))
-                    {
-                        toRemove.add(suchKey);
+                toRemoveKey = new MapSetStringKey(id);
+                if (uploadMap.containsKey(toRemoveKey)) {
+                    uploadMap.remove(toRemoveKey);
+                    continue;
+                }
+                else if (downloadMap.containsKey(toRemoveKey)) {
+                    downloadDO = (DownloadDO) downloadMap.get(sourcenZuDownloads.get(toRemoveKey));
+                    DownloadSourceDO[] sourcen = downloadDO.getSources();
+                    for (int y = 0; y < sourcen.length; y++) {
+                        sourcenZuDownloads.remove(new MapSetStringKey(sourcen[y].getId()));
                     }
+                    downloadMap.remove(toRemoveKey);
+                    continue;
                 }
-                for (int x = 0; x < toRemove.size(); x++)
-                {
-                    uploadMap.remove(toRemove.get(x));
+                else if (serverMap.containsKey(toRemoveKey)) {
+                    serverMap.remove(toRemoveKey);
+                    continue;
                 }
-            }
-            nodes = document.getElementsByTagName("downloadid");
-            NodeList userNodes;
-            size = nodes.getLength();
-            int userSize;
-            Element userElement = null;
-            MapSetStringKey downloadKey;
-            String userId;
-            for (int i = 0; i < size; i++)
-            {
-                e = (Element) nodes.item(i);
-                id = e.getAttribute("id");
-                downloadKey = new MapSetStringKey(id);
-                downloadIDs.add(downloadKey);
-                userNodes = e.getElementsByTagName("userid");
-                userSize = userNodes.getLength();
-                for (int x = 0; x < userSize; x++)
-                {
-                    userElement = (Element) userNodes.item(x);
-                    userId = userElement.getAttribute("id");
-                    sourcenZuDownloads.put(new MapSetStringKey(userId), downloadKey);
-                }
-            }
-            synchronized(this){
-                Iterator it = downloadMap.keySet().iterator();
-                MapSetStringKey key;
-                ArrayList toRemoveDownload = new ArrayList();
-                ArrayList toRemoveSources = new ArrayList();
-                DownloadDO downloadDO = null;
-                DownloadSourceDO[] sources = null;
-                while (it.hasNext())
-                {
-                    key = (MapSetStringKey) it.next();
-                    if (!downloadIDs.contains(key))
-                    {
-                        toRemoveDownload.add(key);
-                    }
-                    else
-                    {
-                        downloadDO = (DownloadDO) downloadMap.get(key);
-                        sources = downloadDO.getSources();
-                        if (sources != null)
-                        {
-                            for (int x = 0; x < sources.length; x++)
-                            {
-                                key = new MapSetStringKey(sources[x].getId());
-                                if (!sourcenZuDownloads.containsKey(key))
-                                {
-                                    toRemoveSources.add(key);
-                                }
-                            }
-                        }
-                    }
-                }
-                size = toRemoveDownload.size();
-                for (int i = 0; i < size; i++)
-                {
-                    downloadMap.remove(toRemoveDownload.get(i));
-                }
-                size = toRemoveSources.size();
-                for (int i = 0; i < size; i++)
-                {
-                    key = (MapSetStringKey) toRemoveSources.get(i);
-                    downloadDO = (DownloadDO) sourcenZuDownloads.get(key);
-                    if (downloadDO != null)
-                    {
-                        downloadDO.removeSource(
-                                key.getValue());
-                    }
+                else if (sourcenZuDownloads.containsKey(toRemoveKey)) {
+                    downloadDO = (DownloadDO) sourcenZuDownloads.get(toRemoveKey);
+                    downloadDO.removeSource(id);
+                    sourcenZuDownloads.remove(toRemoveKey);
+                    continue;
                 }
             }
         }
-        catch(Exception e){
+        catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
     }
 
     private void updateDownloads() {
-        try{
+        try {
             Element e = null;
             int id;
             int shareid;
@@ -428,14 +341,12 @@ public class ModifiedXMLHolder
             int size = nodes.getLength();
             DownloadDO downloadDO = null;
             MapSetStringKey key;
-            synchronized(this){
-                for (int i = 0; i < size; i++)
-                {
+            synchronized (downloadMap) {
+                for (int i = 0; i < size; i++) {
                     e = (Element) nodes.item(i);
                     id = Integer.parseInt(e.getAttribute("id"));
                     key = new MapSetStringKey(id);
-                    if (downloadMap.containsKey(key))
-                    {
+                    if (downloadMap.containsKey(key)) {
                         downloadDO = (DownloadDO) downloadMap.get(key);
                         downloadDO.setShareId(Integer.parseInt(e.getAttribute("shareid")));
                         downloadDO.setHash(e.getAttribute("hash"));
@@ -450,8 +361,7 @@ public class ModifiedXMLHolder
                         temp = e.getAttribute("temporaryfilenumber");
                         downloadDO.setTemporaryFileNumber(Integer.parseInt(temp));
                     }
-                    else
-                    {
+                    else {
                         shareid = Integer.parseInt(e.getAttribute("shareid"));
                         hash = e.getAttribute("hash");
                         fileSize = Long.parseLong(e.getAttribute("size"));
@@ -466,7 +376,7 @@ public class ModifiedXMLHolder
                         temporaryFileNumber = Integer.parseInt(temp);
 
                         downloadDO = new DownloadDO(id, shareid, hash, fileSize, sizeReady, status, filename,
-                                                    targetDirectory, powerDownload, temporaryFileNumber);
+                                targetDirectory, powerDownload, temporaryFileNumber);
 
                         downloadMap.put(new MapSetStringKey(id), downloadDO);
                     }
@@ -486,16 +396,14 @@ public class ModifiedXMLHolder
             int queuePosition;
             int os;
             DownloadSourceDO downloadSourceDO = null;
-            for (int i = 0; i < size; i++)
-            {
+            for (int i = 0; i < size; i++) {
                 e = (Element) nodes.item(i);
                 id = Integer.parseInt(e.getAttribute("id"));
                 temp = e.getAttribute("status");
                 status = Integer.parseInt(temp);
                 temp = e.getAttribute("directstate");
                 directstate = Integer.parseInt(temp);
-                if (status == DownloadSourceDO.UEBERTRAGUNG)
-                {
+                if (status == DownloadSourceDO.UEBERTRAGUNG) {
                     temp = e.getAttribute("downloadfrom");
                     downloadFrom = Integer.parseInt(temp);
                     temp = e.getAttribute("downloadto");
@@ -505,20 +413,17 @@ public class ModifiedXMLHolder
                     temp = e.getAttribute("speed");
                     speed = Integer.parseInt(temp);
                 }
-                else
-                {
+                else {
                     downloadFrom = -1;
                     downloadTo = -1;
                     actualDownloadPosition = -1;
                     speed = 0;
                 }
                 versionNr = e.getAttribute("version");
-                if (versionNr.compareToIgnoreCase("0.0.0.0") == 0)
-                {
+                if (versionNr.compareToIgnoreCase("0.0.0.0") == 0) {
                     version = null;
                 }
-                else
-                {
+                else {
                     temp = e.getAttribute("operatingsystem");
                     os = Integer.parseInt(temp);
                     version = new Version(versionNr, os);
@@ -532,23 +437,23 @@ public class ModifiedXMLHolder
                 temp = e.getAttribute("downloadid");
                 downloadId = Integer.parseInt(temp);
                 downloadSourceDO = new DownloadSourceDO(id, status, directstate, downloadFrom, downloadTo, actualDownloadPosition,
-                                                        speed, version, queuePosition, powerDownload, filename, nickname, downloadId);
-                key = (MapSetStringKey) sourcenZuDownloads.get(new MapSetStringKey(id));
+                        speed, version, queuePosition, powerDownload, filename, nickname, downloadId);
+                key = new MapSetStringKey(downloadId);
                 downloadDO = (DownloadDO) downloadMap.get(key);
-                if (downloadDO != null)
-                {
+                if (downloadDO != null) {
                     downloadDO.addOrAlterSource(downloadSourceDO);
+                    sourcenZuDownloads.put(new MapSetStringKey(id), downloadDO);
                 }
             }
         }
-        catch(Exception e){
+        catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
     }
 
     private void updateUploads() {
-        try{
+        try {
             NodeList nodes = document.getElementsByTagName("upload");
             int size = nodes.getLength();
             Element e = null;
@@ -566,16 +471,14 @@ public class ModifiedXMLHolder
             long actualUploadPos;
             int speed;
             MapSetStringKey idKey = null;
-            synchronized(this){
+            synchronized (uploadMap) {
                 HashMap share = ApplejuiceFassade.getInstance().getShare(false);
                 ShareDO shareDO;
-                for (int i = 0; i < size; i++)
-                {
+                for (int i = 0; i < size; i++) {
                     e = (Element) nodes.item(i);
                     id = Integer.parseInt(e.getAttribute("id"));
                     idKey = new MapSetStringKey(id);
-                    if (uploadMap.containsKey(idKey))
-                    {
+                    if (uploadMap.containsKey(idKey)) {
                         upload = (UploadDO) uploadMap.get(idKey);
                         upload.setShareFileID(Integer.parseInt(e.getAttribute("shareid")));
                         upload.setPrioritaet(Integer.parseInt(e.getAttribute("priority")));
@@ -586,16 +489,13 @@ public class ModifiedXMLHolder
                         upload.setActualUploadPosition(Long.parseLong(e.getAttribute("actualuploadposition")));
                         upload.setSpeed(Integer.parseInt(e.getAttribute("speed")));
                     }
-                    else
-                    {
+                    else {
                         shareId = Integer.parseInt(e.getAttribute("shareid"));
                         versionsNr = e.getAttribute("version");
-                        if (versionsNr.compareToIgnoreCase("0.0.0.0") == 0)
-                        {
+                        if (versionsNr.compareToIgnoreCase("0.0.0.0") == 0) {
                             version = null;
                         }
-                        else
-                        {
+                        else {
                             os = Integer.parseInt(e.getAttribute("operatingsystem"));
                             version = new Version(versionsNr, os);
                         }
@@ -607,10 +507,10 @@ public class ModifiedXMLHolder
                         actualUploadPos = Long.parseLong(e.getAttribute("actualuploadposition"));
                         speed = Integer.parseInt(e.getAttribute("speed"));
                         upload = new UploadDO(id, shareId, version, status, nick,
-                                              uploadFrom, uploadTo, actualUploadPos,
-                                              speed, prioritaet);
+                                uploadFrom, uploadTo, actualUploadPos,
+                                speed, prioritaet);
                         shareDO = (ShareDO) share.get(new MapSetStringKey(shareId));
-                        if (upload!=null && shareDO!=null){
+                        if (upload != null && shareDO != null) {
                             /*wenns die passende Sharedatei aus irgendeinem Grund nicht geben sollte,
                             wird dieser Upload auch nicht angezeigt*/
                             upload.setDateiName(shareDO.getShortfilename());
@@ -620,32 +520,15 @@ public class ModifiedXMLHolder
                 }
             }
         }
-        catch(Exception e){
+        catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
     }
 
     private void updateServer() {
-        try{
+        try {
             NodeList nodes = document.getElementsByTagName("server");
-            synchronized(this){
-                Iterator it = serverMap.keySet().iterator();
-                MapSetStringKey idKey = null;
-                ArrayList toRemove = new ArrayList();
-                while (it.hasNext())
-                {
-                    idKey = (MapSetStringKey) it.next();
-                    if (!serverIDs.contains(idKey))
-                    {
-                        toRemove.add(idKey);
-                    }
-                }
-                for (int i = 0; i < toRemove.size(); i++)
-                {
-                    serverMap.remove(toRemove.get(i));
-                }
-            }
             int size = nodes.getLength();
             Element e = null;
             String id_key = null;
@@ -655,30 +538,40 @@ public class ModifiedXMLHolder
             long lastseen;
             String port = null;
             ServerDO server = null;
-            for (int i = 0; i < size; i++)
-            {
+            MapSetStringKey key;
+            ServerDO serverDO;
+            for (int i = 0; i < size; i++) {
                 e = (Element) nodes.item(i);
                 id_key = e.getAttribute("id");
-                id = Integer.parseInt(id_key);
-                name = e.getAttribute("name");
-                host = e.getAttribute("host");
-                lastseen = Long.parseLong(e.getAttribute("lastseen"));
-                port = e.getAttribute("port");
-                server = new ServerDO(id, name, host, port, lastseen);
-                serverMap.put(new MapSetStringKey(id_key), server);
+                key = new MapSetStringKey(id_key);
+                if (serverMap.containsKey(key)) {
+                    serverDO = (ServerDO) serverMap.get(key);
+                    serverDO.setName(e.getAttribute("name"));
+                    serverDO.setHost(e.getAttribute("host"));
+                    serverDO.setTimeLastSeen(Long.parseLong(e.getAttribute("lastseen")));
+                    serverDO.setPort(e.getAttribute("port"));
+                }
+                else {
+                    id = Integer.parseInt(id_key);
+                    name = e.getAttribute("name");
+                    host = e.getAttribute("host");
+                    lastseen = Long.parseLong(e.getAttribute("lastseen"));
+                    port = e.getAttribute("port");
+                    server = new ServerDO(id, name, host, port, lastseen);
+                    serverMap.put(new MapSetStringKey(id_key), server);
+                }
             }
         }
-        catch(Exception e){
+        catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
     }
 
     private void updateNetworkInfo() {
-        try{
+        try {
             NodeList nodes = document.getElementsByTagName("networkinfo");
-            if (nodes.getLength() == 0)
-            {
+            if (nodes.getLength() == 0) {
                 return; //Keine Ver�nderung seit dem letzten Abrufen
             }
             Element e = (Element) nodes.item(0); //Es gibt nur ein Netzerkinfo-Element
@@ -690,15 +583,12 @@ public class ModifiedXMLHolder
             boolean firewalled = (e.getAttribute("firewalled").compareToIgnoreCase(
                     "true") == 0) ? true : false;
             String externeIP = e.getAttribute("ip");
-            if (this.tryConnectToServer != tryConnectToServer)
-            {
+            if (this.tryConnectToServer != tryConnectToServer) {
                 Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.tryConnectToServer)));
-                if (alterServer != null)
-                {
+                if (alterServer != null) {
                     ((ServerDO) alterServer).setTryConnect(false);
                 }
-                if (tryConnectToServer != -1)
-                {
+                if (tryConnectToServer != -1) {
                     ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
                     serverDO.setTryConnect(true);
                 }
@@ -706,21 +596,37 @@ public class ModifiedXMLHolder
             }
             //if (this.connectedWithServerId != connectedWithServerId){
             Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.connectedWithServerId)));
-            if (alterServer != null)
-            {
+            if (alterServer != null) {
                 ((ServerDO) alterServer).setConnected(false);
             }
-            if (connectedWithServerId != -1)
-            {
+            if (connectedWithServerId != -1) {
                 ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(connectedWithServerId)));
                 serverDO.setConnected(true);
             }
             this.connectedWithServerId = connectedWithServerId;
             //}
             netInfo = new NetworkInfo(users, dateien, dateigroesse, firewalled,
-                                      externeIP, tryConnectToServer, connectedWithServerId);
+                    externeIP, tryConnectToServer, connectedWithServerId);
         }
-        catch(Exception e){
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    public void fireLanguageChanged() {
+        try {
+            LanguageSelector languageSelector = LanguageSelector.getInstance();
+            verbunden = languageSelector.getFirstAttrbuteByTagName(new String[]{
+                "javagui", "mainform", "verbunden"});
+            verbinden = languageSelector.getFirstAttrbuteByTagName(new String[]{
+                "javagui", "mainform", "verbinden"});
+            keinServer = languageSelector.getFirstAttrbuteByTagName(new String[]{
+                "javagui", "mainform", "keinserver"});
+            nichtVerbunden = languageSelector.getFirstAttrbuteByTagName(new String[]{
+                "javagui", "mainform", "nichtverbunden"});
+        }
+        catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }

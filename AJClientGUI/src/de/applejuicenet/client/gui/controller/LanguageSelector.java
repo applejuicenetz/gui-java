@@ -7,8 +7,10 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
+import javax.swing.*;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.9 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.10 2003/09/11 06:54:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +19,10 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.10  2003/09/11 06:54:15  maj0r
+ * Auf neues Sessions-Prinzip umgebaut.
+ * Sprachenwechsel korrigert, geht nun wieder flott.
+ *
  * Revision 1.9  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *

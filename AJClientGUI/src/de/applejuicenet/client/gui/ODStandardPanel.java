@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.10 2003/09/10 13:15:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.11 2003/09/11 06:54:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,10 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.11  2003/09/11 06:54:15  maj0r
+ * Auf neues Sessions-Prinzip umgebaut.
+ * Sprachenwechsel korrigert, geht nun wieder flott.
+ *
  * Revision 1.10  2003/09/10 13:15:47  maj0r
  * Veraltete Option "Browsen erlauben" entfernt.
  *
@@ -122,12 +126,9 @@ public class ODStandardPanel
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         Level logLevel = PropertiesManager.getOptionsManager().getLogLevel();
 
-        LevelItem[] levelItems = new LevelItem[5];//{ "kein Logging", "alles", "Warnungen", "Fehler"};
-        levelItems[0] = new LevelItem(Level.OFF, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "off"})));
-        levelItems[1] = new LevelItem(Level.INFO, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "info"})));
-        levelItems[2] = new LevelItem(Level.DEBUG, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "debug"})));
-        levelItems[3] = new LevelItem(Level.WARN, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "warn"})));
-        levelItems[4] = new LevelItem(Level.FATAL, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "fatal"})));
+        LevelItem[] levelItems = new LevelItem[2];//{ "Info", "Debug"};
+        levelItems[0] = new LevelItem(Level.INFO, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "info"})));
+        levelItems[1] = new LevelItem(Level.DEBUG, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "debug"})));
 
         cmbLog = new JComboBox(levelItems);
         cmbLog.addItemListener(new ItemListener() {
@@ -138,13 +139,9 @@ public class ODStandardPanel
 
         int index = 0;
         if (logLevel == Level.INFO)
-            index = 1;
+            index = 0;
         else if (logLevel == Level.DEBUG)
-            index = 2;
-        else if (logLevel == Level.WARN)
-            index = 3;
-        else if (logLevel == Level.FATAL)
-            index = 4;
+            index = 1;
         cmbLog.setSelectedIndex(index);
 
         panel8.add(cmbLog);

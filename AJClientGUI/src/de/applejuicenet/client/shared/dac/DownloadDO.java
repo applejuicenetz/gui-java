@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.7 2003/09/10 15:30:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.8 2003/09/11 06:54:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,10 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.8  2003/09/11 06:54:15  maj0r
+ * Auf neues Sessions-Prinzip umgebaut.
+ * Sprachenwechsel korrigert, geht nun wieder flott.
+ *
  * Revision 1.7  2003/09/10 15:30:48  maj0r
  * Begonnen auf neue Session-Struktur umzubauen.
  *
@@ -118,7 +122,9 @@ public class DownloadDO {
 
     public void removeSource(String id){
         MapSetStringKey key = new MapSetStringKey(id);
-        sourcen.remove(key);
+        if (sourcen.containsKey(key)){
+            sourcen.remove(key);
+        }
     }
 
     public int getShareId() {

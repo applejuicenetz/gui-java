@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.22 2003/09/06 16:25:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.23 2003/09/11 06:54:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.23  2003/09/11 06:54:15  maj0r
+ * Auf neues Sessions-Prinzip umgebaut.
+ * Sprachenwechsel korrigert, geht nun wieder flott.
+ *
  * Revision 1.22  2003/09/06 16:25:39  maj0r
  * Newsanfrage an neue Domain angepasst.
  * HtmlLoader korrigiert.
@@ -91,6 +95,7 @@ public class StartPanel
     private JLabel netzwerk;
     private JLabel label6;
     private JLabel label9;
+    private JLabel version;
 
     private String label9Text;
     private String label6Text;
@@ -150,10 +155,8 @@ public class StartPanel
 
         constraints.gridy = 1;
         constraints.insets.left = 15;
-        String coreVersion = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
-        panel3.add(new JLabel("GUI: " + ApplejuiceFassade.GUI_VERSION + " Core: " +
-                              coreVersion),
-                   constraints);
+        version = new JLabel();
+        panel3.add(version, constraints);
 
         constraints.gridy = 2;
         constraints.insets.left = 5;
@@ -223,6 +226,35 @@ public class StartPanel
         add(panel4, BorderLayout.CENTER);
         languageSelector = LanguageSelector.getInstance();
         languageSelector.addLanguageListener(this);
+        Thread informer = new Thread(){
+            public void run(){
+                try{
+                    String coreVersion = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
+                    version.setText("GUI: " + ApplejuiceFassade.GUI_VERSION + " Core: " +
+                              coreVersion);
+                    String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.org", 80, HtmlLoader.GET,
+                                "/inprog/news.php?version=" + ApplejuiceFassade.getInstance().
+                                getCoreVersion().getVersion());
+                    int pos = htmlText.toLowerCase().indexOf("<html>");
+                    if (pos!=-1){
+                        htmlText = htmlText.substring(pos);
+                    }
+                    else{
+                        htmlText = "<html>" + htmlText + "</html>";
+                    }
+                    nachrichten.setText(htmlText);
+                }
+                catch (WebSiteNotFoundException e){
+                    if (logger.isEnabledFor(Level.INFO))
+                        logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Proxy?");
+                }
+                catch (Exception e){
+                    if (logger.isEnabledFor(Level.INFO))
+                        logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Server down?");
+                }
+            }
+        };
+        SwingUtilities.invokeLater(informer);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
                                                               DataUpdateListener.NETINFO_CHANGED);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
@@ -289,26 +321,6 @@ public class StartPanel
                               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                 getFirstAttrbuteByTagName(new String[]{"mainform", "html15"})) +
                               "</h2></font></html>");
-            try{
-                String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.org", 80, HtmlLoader.GET,
-                                                            "/inprog/news.php?version=" + ApplejuiceFassade.getInstance().getCoreVersion().getVersion());
-                int pos = htmlText.toLowerCase().indexOf("<html>");
-                if (pos!=-1){
-                    htmlText = htmlText.substring(pos);
-                }
-                else{
-                    htmlText = "<html>" + htmlText + "</html>";
-                }
-                nachrichten.setText(htmlText);
-            }
-            catch (WebSiteNotFoundException e){
-                if (logger.isEnabledFor(Level.INFO))
-                    logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Proxy?");
-            }
-            catch (Exception e){
-                if (logger.isEnabledFor(Level.INFO))
-                    logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Server down?");
-            }
         }
         catch (Exception e){
             if (logger.isEnabledFor(Level.ERROR))
