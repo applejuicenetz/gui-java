@@ -3,15 +3,19 @@ package de.applejuicenet.client.gui.tables.upload;
 import java.util.*;
 
 import javax.swing.table.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
+import de.applejuicenet.client.gui.tables.TreeTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.5 2003/08/18 17:37:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.6 2003/08/30 19:44:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +24,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDataTableModel.java,v $
+ * Revision 1.6  2003/08/30 19:44:32  maj0r
+ * Auf JTreeTable umgebaut.
+ *
  * Revision 1.5  2003/08/18 17:37:08  maj0r
  * UploadTabelle wesentlich vereinfacht.
  *
@@ -42,7 +49,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  */
 
 public class UploadDataTableModel
-        extends AbstractTableModel implements LanguageListener {
+        extends AbstractTreeTableModel implements LanguageListener {
     final static String[] COL_NAMES = {
         "Dateiname", "Status", "Wer", "Geschwindigkeit", "Prozent geladen", "Priorität", "Client"};
 
@@ -55,7 +62,7 @@ public class UploadDataTableModel
     HashMap uploads = null;
 
     public UploadDataTableModel() {
-        super();
+        super(new MainNode());
         LanguageSelector.getInstance().addLanguageListener(this);
     }
 
@@ -67,77 +74,80 @@ public class UploadDataTableModel
         return null;
     }
 
-    public Object getValueAt(int row, int column) {
-        if ((uploads == null) || (row >= uploads.size()))
-        {
-            return "";
-        }
-
-        UploadDO upload = (UploadDO) uploads.values().toArray()[row];
-        if (upload == null)
-        {
-            return "";
-        }
-
-        switch (column)
-        {
-            case 0:
-                return upload.getDateiName();
-            case 1:
-                switch (upload.getStatus())
-                {
-                    case UploadDO.AKTIVE_UEBERTRAGUNG:
-                        return uebertragung;
-                    case UploadDO.KEINE_VERBINDUNG_MOEGLICH:
-                        return keineVerbindungMoeglich;
-                    case UploadDO.VERSUCHE_INDIREKTE_VERBINDUNG:
-                        return versucheIndirekteVerbindung;
-                    case UploadDO.VERSUCHE_ZU_VERBINDEN:
-                        return versucheZuVerbinden;
-                    case UploadDO.WARTESCHLANGE:
-                        return warteschlange;
-                    default:
-                        return "";
-                }
-            case 2:
-                return upload.getNick();
-            case 3:
-                {
-                    if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG)
-                    {
-                        return getSpeedAsString(upload.getSpeed().intValue());
-                    }
-                    else
-                    {
-                        return "";
-                    }
-                }
-            case 4:
-                {
-                    if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG)
-                    {
-                        return getSpeedAsString(upload.getSpeed().intValue());
-                    }
-                    else
-                    {
-                        return "";
-                    }
-                }
-            case 5:
-                return upload.getPrioritaet();
-            case 6:
-                return upload.getVersion().getVersion();
-            default:
-                return "Fehler";
-        }
-    }
-
     public int getColumnCount() {
         return COL_NAMES.length;
     }
 
     public String getColumnName(int index) {
         return COL_NAMES[index];
+    }
+
+    public Object getValueAt(Object node, int column) {
+        if (node.getClass()==MainNode.class && ( ((MainNode)node).getType()==MainNode.LOADING_UPLOADS
+            || ((MainNode)node).getType()==MainNode.WAITING_UPLOADS
+            || ((MainNode)node).getType()==MainNode.REST_UPLOADS)) {
+            if (column==0){
+                return node.toString() + " (" + getChildCount(node) + ")";
+            }
+            else{
+                return "";
+            }
+        }
+        else if (node.getClass()==UploadDO.class){
+            UploadDO upload = (UploadDO) node;
+            switch (column)
+            {
+                case 0:
+                    return upload.getDateiName();
+                case 1:
+                    switch (upload.getStatus())
+                    {
+                        case UploadDO.AKTIVE_UEBERTRAGUNG:
+                            return uebertragung;
+                        case UploadDO.KEINE_VERBINDUNG_MOEGLICH:
+                            return keineVerbindungMoeglich;
+                        case UploadDO.VERSUCHE_INDIREKTE_VERBINDUNG:
+                            return versucheIndirekteVerbindung;
+                        case UploadDO.VERSUCHE_ZU_VERBINDEN:
+                            return versucheZuVerbinden;
+                        case UploadDO.WARTESCHLANGE:
+                            return warteschlange;
+                        default:
+                            return "";
+                    }
+                case 2:
+                    return upload.getNick();
+                case 3:
+                    {
+                        if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG)
+                        {
+                            return getSpeedAsString(upload.getSpeed().intValue());
+                        }
+                        else
+                        {
+                            return "";
+                        }
+                    }
+                case 4:
+                    {
+                        if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG)
+                        {
+                            return getSpeedAsString(upload.getSpeed().intValue());
+                        }
+                        else
+                        {
+                            return "";
+                        }
+                    }
+                case 5:
+                    return upload.getPrioritaet();
+                case 6:
+                    return upload.getVersion().getVersion();
+                default:
+                    return "Fehler";
+            }
+        }
+        return null;
     }
 
     public int getRowCount() {
@@ -149,16 +159,11 @@ public class UploadDataTableModel
     }
 
     public Class getClass(int column) {
-        if (column == 5)
+        if (column == 0)
+            return TreeTableModel.class;
+        else if (column == 5)
             return Integer.class;
         return String.class;
-    }
-
-    public void setTable(HashMap changedContent) {
-        if (uploads==null){
-            uploads = changedContent;
-        }
-        this.fireTableDataChanged();
     }
 
     private String getSpeedAsString(long speed) {
@@ -195,5 +200,76 @@ public class UploadDataTableModel
         versucheIndirekteVerbindung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform", "uploads", "uplstat7"}));
         versucheZuVerbinden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform", "uploads", "uplstat6"}));
         warteschlange = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform", "uploads", "uplstat3"}));
+    }
+
+    public Object getChild(Object parent, int index) {
+        Object[] obj = getChildren(parent);
+        if (obj!=null && obj.length>index)
+            return obj[index];
+        else
+            return null;
+    }
+
+    public int getChildCount(Object parent) {
+        Object[] obj = getChildren(parent);
+        if (obj!=null)
+            return obj.length;
+        else
+            return 0;
+    }
+
+    private Object[] getChildren(Object parent){
+        if (parent.getClass()==MainNode.class){
+            MainNode mainNode = (MainNode)parent;
+            if (mainNode.getType()==MainNode.ROOT_NODE)
+                return mainNode.getChildren();
+            else if (mainNode.getType()==MainNode.LOADING_UPLOADS){
+                if (uploads==null)
+                    return null;
+                else{
+                    ArrayList children = new ArrayList();
+                    UploadDO[] uploadsForThread = (UploadDO[])uploads.values().toArray(new UploadDO[uploads.size()]);
+                    for (int i=0; i<uploadsForThread.length; i++){
+                        if (uploadsForThread[i].getStatus()==UploadDO.AKTIVE_UEBERTRAGUNG)
+                            children.add(uploadsForThread[i]);
+                    }
+                    return (UploadDO[]) children.toArray(new UploadDO[children.size()]);
+                }
+            }
+            else if (mainNode.getType()==MainNode.WAITING_UPLOADS){
+                if (uploads==null)
+                    return null;
+                else{
+                    ArrayList children = new ArrayList();
+                    UploadDO[] uploadsForThread = (UploadDO[])uploads.values().toArray(new UploadDO[uploads.size()]);
+                    for (int i=0; i<uploadsForThread.length; i++){
+                        if (uploadsForThread[i].getStatus()==UploadDO.WARTESCHLANGE)
+                            children.add(uploadsForThread[i]);
+                    }
+                    return (UploadDO[]) children.toArray(new UploadDO[children.size()]);
+                }
+            }
+            else if (mainNode.getType()==MainNode.REST_UPLOADS){
+                if (uploads==null)
+                    return null;
+                else{
+                    ArrayList children = new ArrayList();
+                    UploadDO[] uploadsForThread = (UploadDO[])uploads.values().toArray(new UploadDO[uploads.size()]);
+                    for (int i=0; i<uploadsForThread.length; i++){
+                        if (uploadsForThread[i].getStatus()!=UploadDO.AKTIVE_UEBERTRAGUNG &&
+                                uploadsForThread[i].getStatus()!=UploadDO.WARTESCHLANGE)
+                            children.add(uploadsForThread[i]);
+                    }
+                    return (UploadDO[]) children.toArray(new UploadDO[children.size()]);
+                }
+            }
+        }
+        return null;
+    }
+
+    public void setTable(HashMap content){
+        if (uploads==null){
+            uploads = content;
+        }
     }
 }

@@ -6,11 +6,12 @@ import javax.swing.table.*;
 
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadTableCellRenderer.java,v 1.2 2003/08/11 14:42:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadTableCellRenderer.java,v 1.3 2003/08/30 19:44:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadTableCellRenderer.java,v $
+ * Revision 1.3  2003/08/30 19:44:32  maj0r
+ * Auf JTreeTable umgebaut.
+ *
  * Revision 1.2  2003/08/11 14:42:13  maj0r
  * Versions-Icon-Beschaffung in die Klasse Version verschoben.
  *
@@ -57,12 +61,55 @@ public class UploadTableCellRenderer
                                                    boolean hasFocus,
                                                    int row,
                                                    int column) {
-
-        UploadDO uploadDO = (UploadDO) ((UploadDataTableModel) table.getModel()).getRow(row);
-
+        Object obj = ( (TreeTableModelAdapter) table.getModel()).nodeForRow(row);
         Color background = table.getBackground();
         Color foreground = table.getForeground();
+        if (obj.getClass()==MainNode.class){
+            if (column==0){
+                JPanel returnPanel = new JPanel(new BorderLayout());
+                JLabel image = new JLabel();
+                JLabel text = new JLabel();
+                if (isSelected) {
+                    returnPanel.setBackground(table.getSelectionBackground());
+                    returnPanel.setForeground(table.getSelectionForeground());
+                    image.setBackground(table.getSelectionBackground());
+                    text.setBackground(table.getSelectionBackground());
+                    image.setForeground(table.getSelectionForeground());
+                    text.setBackground(table.getSelectionForeground());
+                }
+                else {
+                    returnPanel.setBackground(background);
+                    returnPanel.setForeground(foreground);
+                    image.setBackground(table.getBackground());
+                    text.setBackground(table.getBackground());
+                    image.setForeground(table.getForeground());
+                    text.setBackground(table.getForeground());
+                }
+                image.setIcon(((MainNode)obj).getConvenientIcon());
+                text.setText(" " + (String)value);
+                text.setFont(table.getFont());
+                returnPanel.add(image, BorderLayout.WEST);
+                returnPanel.add(text, BorderLayout.CENTER);
+                return returnPanel;
+            }
+            else
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+        UploadDO uploadDO = (UploadDO) obj;
         switch (column){
+            case 0:{
+                JLabel text = new JLabel();
+                text.setOpaque(true);
+                if (isSelected) {
+                    text.setBackground(table.getSelectionBackground());
+                }
+                else {
+                    text.setBackground(table.getBackground());
+                }
+                text.setText("   " + (String)value);
+                text.setFont(table.getFont());
+                return text;
+            }
             case 4:{
                 String prozent = uploadDO.getDownloadPercentAsString();
                 JProgressBar progress = new JProgressBar(JProgressBar.HORIZONTAL, 0,
@@ -112,13 +159,7 @@ public class UploadTableCellRenderer
                 return returnPanel;
             }
             default:{
-                return super.getTableCellRendererComponent(table,
-                                                       value,
-                                                       isSelected,
-                                                       hasFocus,
-                                                       row,
-                                                       column);
-
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         }
     }

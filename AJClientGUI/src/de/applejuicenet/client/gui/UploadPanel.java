@@ -3,6 +3,8 @@ package de.applejuicenet.client.gui;
 import java.util.*;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -10,10 +12,13 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.tables.upload.UploadDataTableModel;
 import de.applejuicenet.client.gui.tables.upload.UploadTableCellRenderer;
+import de.applejuicenet.client.gui.tables.JTreeTable;
+import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.18 2003/08/22 14:16:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.19 2003/08/30 19:45:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +27,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.19  2003/08/30 19:45:20  maj0r
+ * Auf JTreeTable umgebaut.
+ *
  * Revision 1.18  2003/08/22 14:16:00  maj0r
  * Threadverwendung korrigiert.
  *
@@ -55,10 +63,11 @@ import de.applejuicenet.client.shared.*;
 public class UploadPanel
         extends JPanel
         implements LanguageListener, RegisterI, DataUpdateListener {
-    private JTable uploadDataTable;
+    private JTreeTable uploadDataTable;
     private int anzahlClients = 0;
     private JLabel label1 = new JLabel("0 Clients in Deiner Uploadliste");
     private String clientText;
+    private UploadDataTableModel uploadDataTableModel;
 
     public UploadPanel() {
         try {
@@ -72,15 +81,24 @@ public class UploadPanel
     private void jbInit() throws Exception {
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
-        uploadDataTable = new JTable();
-        uploadDataTable.setModel(new UploadDataTableModel());
-        uploadDataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        uploadDataTableModel = new UploadDataTableModel();
+        uploadDataTable = new JTreeTable(uploadDataTableModel);
+        uploadDataTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                Point p = e.getPoint();
+                int selectedRow = uploadDataTable.rowAtPoint(p);
+                if (e.getClickCount() == 2) {
+                    ((TreeTableModelAdapter) uploadDataTable.getModel()).expandOrCollapseRow(selectedRow);
+                }
+            }
+        });
+//        uploadDataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         UploadTableCellRenderer renderer = new UploadTableCellRenderer();
-        for (int i = 1; i < uploadDataTable.getColumnModel().getColumnCount(); i++) {
+        for (int i = 0; i < uploadDataTable.getColumnModel().getColumnCount(); i++) {
             uploadDataTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
-        JScrollPane aScrollPane = new JScrollPane();
-        aScrollPane.getViewport().add(uploadDataTable);
+        JScrollPane aScrollPane = new JScrollPane(uploadDataTable);
         add(aScrollPane, BorderLayout.CENTER);
 
         JPanel panel = new JPanel();
@@ -130,13 +148,13 @@ public class UploadPanel
     public void fireContentChanged(int type, Object content) {
         if (type == DataUpdateListener.UPLOAD_CHANGED ||
                 !(content instanceof HashMap)) {
-            int selected = uploadDataTable.getSelectedRow();
-            UploadDataTableModel model = (UploadDataTableModel) uploadDataTable.getModel();
-            model.setTable((HashMap)content);
-            if (selected != -1 && selected < uploadDataTable.getRowCount()) {
+//            int selected = uploadDataTable.getSelectedRow();
+            uploadDataTableModel.setTable((HashMap)content);
+            uploadDataTable.updateUI();
+/*            if (selected != -1 && selected < uploadDataTable.getRowCount()) {
               uploadDataTable.setRowSelectionInterval(selected, selected);
-            }
-            anzahlClients = model.getRowCount();
+            }*/
+            anzahlClients = uploadDataTableModel.getRowCount();
             label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
         }
     }
