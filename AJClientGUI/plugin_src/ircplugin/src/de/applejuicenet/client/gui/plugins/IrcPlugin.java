@@ -22,11 +22,11 @@ import javax.swing.JTextField;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
 import javax.swing.JCheckBox;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.15 2004/11/22 16:25:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.16 2004/12/07 16:03:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -99,6 +99,7 @@ public class IrcPlugin extends PluginConnector {
         final JTextField nick = new JTextField();
         nick.setMinimumSize(new Dimension(200, nick.getPreferredSize().height));
         nick.setPreferredSize(new Dimension(200, nick.getPreferredSize().height));
+        final JTextField passwort = new JTextField();
         final JTextField onJoinMessage = new JTextField();
         final JTextField channels = new JTextField();
         final JCheckBox rules = new JCheckBox();
@@ -111,8 +112,10 @@ public class IrcPlugin extends PluginConnector {
         constraints.insets.left = 5;
         panel1.add(new JLabel("Nickname: "), constraints);
         constraints.gridy = 1;
-        panel1.add(new JLabel("OnJoinMessage: "), constraints);
+        panel1.add(new JLabel("Passwort: "), constraints);
         constraints.gridy = 2;
+        panel1.add(new JLabel("OnJoinMessage: "), constraints);
+        constraints.gridy = 3;
         panel1.add(new JLabel("Channels: "), constraints);
         constraints.insets.right = 5;
         constraints.gridx = 1;
@@ -121,12 +124,14 @@ public class IrcPlugin extends PluginConnector {
         panel1.add(nick, constraints);
         constraints.weightx = 0;
         constraints.gridy = 1;
-        panel1.add(onJoinMessage, constraints);
+        panel1.add(passwort, constraints);
         constraints.gridy = 2;
+        panel1.add(onJoinMessage, constraints);
+        constraints.gridy = 3;
         panel1.add(channels, constraints);
         constraints.gridx = 0;
         constraints.gridwidth = 2;
-        constraints.gridy = 3;
+        constraints.gridy = 4;
         rules.setText(getLanguageString(".root.language.disablerules.value"));
         panel1.add(rules, constraints);
         String propNick = properties.getProperty("nick");
@@ -140,10 +145,6 @@ public class IrcPlugin extends PluginConnector {
         String propChannels = properties.getProperty("channels");
         if (propChannels != null){
             channels.setText(propChannels);
-        }
-        String propRules = properties.getProperty("norules");
-        if (propRules != null && propRules.compareToIgnoreCase("true")==0){
-            rules.setSelected(true);
         }
         nick.addFocusListener(new FocusAdapter(){
             public void focusLost(FocusEvent fe){
@@ -163,11 +164,17 @@ public class IrcPlugin extends PluginConnector {
                 saveProperties();
             }
         });
+        passwort.addFocusListener(new FocusAdapter(){
+            public void focusLost(FocusEvent fe){
+                properties.put("passwort", passwort.getText());
+                saveProperties();
+            }
+        });
         rules.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e){
                 properties.put("norules", new Boolean(rules.isSelected()).toString());
             }
-        });
+        });        
         return panel1;
     }
 }

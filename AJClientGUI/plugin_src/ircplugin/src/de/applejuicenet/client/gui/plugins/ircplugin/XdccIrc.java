@@ -36,7 +36,7 @@ import de.applejuicenet.client.gui.plugins.IrcPlugin;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.28 2004/12/07 14:40:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.29 2004/12/07 16:03:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -93,20 +93,6 @@ public class XdccIrc
         logger = Logger.getLogger(getClass());
         try {
             setLayout(new BorderLayout());
-            String propHost = parent.getProperties().getProperty("host");
-            if (propHost != null && propHost.length() > 0) {
-                host = propHost;
-            }
-            String propPort = parent.getProperties().getProperty("port");
-            if (propPort != null && propPort.length() > 0) {
-                try {
-                    int tmpPort = Integer.parseInt(propPort);
-                    port = tmpPort;
-                }
-                catch (NumberFormatException nfE) {
-                    //ungueltiger Port
-                }
-            }
             IconManager im = IconManager.getInstance();
             createConnection = new JButton("Connect");
             createConnection.setIcon(im.getIcon("irc_login", true));
@@ -351,6 +337,20 @@ public class XdccIrc
     }
 
     private void connect() throws IOException {
+        String propHost = parent.getProperties().getProperty("host");
+        if (propHost != null && propHost.length() > 0) {
+            host = propHost;
+        }
+        String propPort = parent.getProperties().getProperty("port");
+        if (propPort != null && propPort.length() > 0) {
+            try {
+                int tmpPort = Integer.parseInt(propPort);
+                port = tmpPort;
+            }
+            catch (NumberFormatException nfE) {
+                //ungueltiger Port
+            }
+        }
         chatSocket = new Socket(host, port);
         fromServer = new BufferedReader(new InputStreamReader(
             chatSocket.getInputStream()));
@@ -367,7 +367,11 @@ public class XdccIrc
 
         realname = nickname;
 
-        parseSendToCommand("PASS test");
+        String propPass = parent.getProperties().getProperty("passwort");
+        if (propPass != null && propPass.length() > 0) {
+            parseSendToCommand("PASS " + propPass);
+        }
+
         parseSendToCommand("NICK " + nickname);
         parseSendToCommand("USER " + nickname + " 0 * :" + realname);
 
