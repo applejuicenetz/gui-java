@@ -51,9 +51,10 @@ import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ShareDO;
+import javax.swing.JSplitPane;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.56 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.57 2004/02/09 20:11:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -62,6 +63,9 @@ import de.applejuicenet.client.shared.dac.ShareDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.57  2004/02/09 20:11:57  maj0r
+ * SplitPane eingebaut.
+ *
  * Revision 1.56  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -530,8 +534,12 @@ public class SharePanel
         JPanel panelWest = new JPanel(new BorderLayout());
         panelWest.add(aScrollPane, BorderLayout.CENTER);
         panelWest.add(refresh, BorderLayout.SOUTH);
-        add(panelWest, BorderLayout.WEST);
-        add(panelCenter, BorderLayout.CENTER);
+        JSplitPane splitPane = new JSplitPane();
+        splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setLeftComponent(panelWest);
+        splitPane.setRightComponent(panelCenter);
+        splitPane.setBorder(null);
+        add(splitPane, BorderLayout.CENTER);
 
         treeMouseAdapter = new TreeMouseAdapter();
 
