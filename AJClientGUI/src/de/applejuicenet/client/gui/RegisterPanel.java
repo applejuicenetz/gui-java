@@ -14,7 +14,7 @@ import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.27 2004/01/05 19:17:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.28 2004/01/14 15:19:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.28  2004/01/14 15:19:59  maj0r
+ * Laden von Plugins verbessert.
+ * Muell oder nicht standardkonforme Plugins im Plugin-Ordner werden nun korrekt behandelt.
+ *
  * Revision 1.27  2004/01/05 19:17:18  maj0r
  * Bug #56 gefixt (Danke an MeineR)
  * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
@@ -161,8 +165,7 @@ public class RegisterPanel
         PluginJarClassLoader jarLoader = null;
         for (int i = 0; i < tempListe.length; i++)
         {
-            int pos = tempListe[i].indexOf(".jar");
-            if (pos != -1)
+            if (tempListe[i].toLowerCase().endsWith(".jar"))
             {
                 URL url = null;
                 try
@@ -178,11 +181,11 @@ public class RegisterPanel
                             addTab(aPlugin.getTitle(), icon, aPlugin);
                         }
                         parent.addPluginToHashSet(aPlugin);
+                        String nachricht = "Plugin " + aPlugin.getTitle() + " geladen...";
+                        if (logger.isEnabledFor(Level.INFO))
+                            logger.info(nachricht);
+                        System.out.println(nachricht);
                     }
-                    String nachricht = "Plugin " + aPlugin.getTitle() + " geladen...";
-                    if (logger.isEnabledFor(Level.INFO))
-                        logger.info(nachricht);
-                    System.out.println(nachricht);
                 }
                 catch (Exception e)
                 {

@@ -8,9 +8,10 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 
 import de.applejuicenet.client.gui.plugins.*;
+import java.util.Vector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.10 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.11 2004/01/14 15:19:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,10 @@ import de.applejuicenet.client.gui.plugins.*;
  * @author: Maj0r aj@tkl-soft.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.11  2004/01/14 15:19:59  maj0r
+ * Laden von Plugins verbessert.
+ * Muell oder nicht standardkonforme Plugins im Plugin-Ordner werden nun korrekt behandelt.
+ *
  * Revision 1.10  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -55,11 +60,18 @@ public class PluginJarClassLoader
 
     public PluginConnector getPlugin(String jar) throws Exception {
         File aJar = new File(jar);
-        String theClassName = jar.substring(jar.lastIndexOf(File.separatorChar) + 1, jar.lastIndexOf(".jar"));
-        loadClassBytesFromJar(aJar);
-        Class cl = loadClass("de.applejuicenet.client.gui.plugins." + theClassName);
-        Object aPlugin = cl.newInstance();
-        return (PluginConnector) aPlugin;
+        try{
+            String theClassName = jar.substring(jar.lastIndexOf(File.
+                separatorChar) + 1, jar.lastIndexOf(".jar"));
+            loadClassBytesFromJar(aJar);
+            Class cl = loadClass("de.applejuicenet.client.gui.plugins." +
+                                 theClassName);
+            Object aPlugin = cl.newInstance();
+            return (PluginConnector) aPlugin;
+        }
+        catch(Exception e){
+            return null;
+        }
     }
 
     private void loadClassBytesFromJar(File jar) throws Exception {
@@ -68,6 +80,7 @@ public class PluginJarClassLoader
 
         JarFile jf = new JarFile(jar);
         String entryName;
+        Vector classes = new Vector();
 
         for (Enumeration e = jf.entries(); e.hasMoreElements();)
         {
@@ -90,6 +103,7 @@ public class PluginJarClassLoader
             String name = entryName.replace('/', '.');
             name = name.replaceAll(".class", "");
             defineClass(name, buf, 0, buf.length);
+            classes.add(name);
         }
     }
 }
