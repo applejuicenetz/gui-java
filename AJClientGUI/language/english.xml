@@ -86,8 +86,7 @@
 	</mainform><einstform caption="Options">
 		<Label18 caption="Break even time in ms"/><Label19 caption="URL to ping"/><standardsheet caption="Standard"/>
 		<Label8 caption="Nick"/>
-		<Label3 caption="Port"/>
-		<Label7 caption="Incoming Dir"/>
+		<Label3 caption="Core-Port"/><Label7 caption="Incoming Dir"/>
 		<Label2 caption="Temp Dir"/>
 		<connectionsheet caption="Connection"/>
 		<Label4 caption="MaxConnections"/>
