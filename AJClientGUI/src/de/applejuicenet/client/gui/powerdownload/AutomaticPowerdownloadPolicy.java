@@ -16,7 +16,7 @@ import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.download.PowerDownloadPanel;
 	
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.19 2005/02/15 11:04:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.20 2005/02/15 14:00:46 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,7 @@ public abstract class AutomaticPowerdownloadPolicy
                 while (!isInterrupted()) {
                     if (!paused) {
                         doAction();
+                        sleep(getSleeptime());
                     }
                     sleep(1000);
                 }
@@ -72,6 +73,10 @@ public abstract class AutomaticPowerdownloadPolicy
             threads.clear();
         }
         logger = null;
+    }
+    
+    protected int getSleeptime() {
+    	return 30000;
     }
 
     public final void setParentToInform(PowerDownloadPanel parentToInformEnde){

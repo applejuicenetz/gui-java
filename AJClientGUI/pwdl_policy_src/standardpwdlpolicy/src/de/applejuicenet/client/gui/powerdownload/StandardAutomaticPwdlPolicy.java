@@ -1,17 +1,21 @@
 package de.applejuicenet.client.gui.powerdownload;
 
+import java.awt.Frame;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import java.awt.Dialog;
-import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.7 2004/10/15 13:34:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.8 2005/02/15 14:00:46 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,13 +26,21 @@ import javax.swing.JDialog;
  */
 
 public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
-    private Map downloads = null;
-    private int[] maxProzentId = new int[]{-1, -1};
-    double[] maxProzent = new double[]{-1, -1};
-    private DownloadDO[] downloadDO = new DownloadDO[2];
     private int pwdlValue;
+    private int anzahlDownloads;
+    private List<Download> resumedDownloads = new Vector();
+    private List<Download> pausedDownloads = new Vector();
 
-    public StandardAutomaticPwdlPolicy() {}
+    public StandardAutomaticPwdlPolicy(ApplejuiceFassade applejuiceFassade) {
+    	super(applejuiceFassade);
+    	anzahlDownloads = 2;
+    }
+
+    public StandardAutomaticPwdlPolicy(ApplejuiceFassade applejuiceFassade, int anzahlDownloads, int pwdlValue) {
+    	super(applejuiceFassade);
+    	this.pwdlValue = pwdlValue;
+    	this.anzahlDownloads = anzahlDownloads;
+    }
 
     public boolean initAction() {
         shouldPause = false;
@@ -57,126 +69,143 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
                     continue;
                 }
             }
+            anzahlDownloads = getAnzahlDownloads(AppleJuiceDialog.getApp());
         }
         return true;
     }
 
     public void doAction() throws Exception {
-        downloads = applejuiceFassade.getDownloadsSnapshot();
+    		Map downloads = applejuiceFassade.getDownloadsSnapshot();
+        int downloadSize = downloads.size();
+        if (downloadSize == 0) {
+        	return;
+        }
         synchronized (downloads)
         {
-            if (maxProzentId[0] != -1 || maxProzentId[1] != -1)
-            {
-                if (maxProzentId[0]==maxProzentId[1]){
-                    maxProzentId[0]=-1;
-                }
-                String key = Integer.toString(maxProzentId[0]);
-                String key2 = Integer.toString(maxProzentId[1]);
-                downloadDO[0] = (DownloadDO) downloads.get(key);
-                downloadDO[1] = (DownloadDO) downloads.get(key2);
-                for (int i=0; i<maxProzentId.length; i++){
-                    if (downloadDO[i] == null || (downloadDO[i].getStatus() != DownloadDO.SUCHEN_LADEN)
-                        && downloadDO[i].getStatus() != DownloadDO.PAUSIERT)
-                    {
-                        maxProzentId[i] = -1;
-                        maxProzent[i] = -1;
-                    }
-                }
-                if (maxProzentId[0] == -1 && maxProzentId[1] != -1){
-                    maxProzent[0] = maxProzent[1];
-                    maxProzentId[0] = maxProzentId[1];
-                    maxProzent[1] = -1;
-                    maxProzentId[1] = -1;
-                }
-            }
-            if (maxProzentId[0] == -1 || (
-                maxProzentId[1] == -1 && downloads.size()!=1))
-            {
-                int downloadSize = downloads.size();
-                int[] ids = new int[downloadSize];
-                Iterator it = downloads.values().iterator();
-                DownloadDO tmpDownloadDO;
-                if (downloadSize==0){
-                    maxProzent[0] = -1;
-                    maxProzentId[0] = -1;
-                    maxProzent[1] = -1;
-                    maxProzentId[1] = -1;
-                }
-                else if (downloadSize==1){
-                    tmpDownloadDO = (DownloadDO) it.next();
-                    maxProzent[0] = tmpDownloadDO.getProzentGeladen();
-                    maxProzentId[0] = tmpDownloadDO.getId();
-                    maxProzent[1] = -1;
-                    maxProzentId[1] = -1;
-                    applejuiceFassade.setPowerDownload(new int[] {
-                        maxProzentId[0]}, pwdlValue);
-                    applejuiceFassade.resumeDownload(new int[] {
-                        maxProzentId[0]});
-                }
-                else{
-                    int temp = 0;
-                    while (it.hasNext()) {
-                        tmpDownloadDO = (DownloadDO) it.next();
-                        if (tmpDownloadDO.getProzentGeladen() > maxProzent[1]
-                            &&
-                            (tmpDownloadDO.getStatus() == DownloadDO.PAUSIERT
-                             ||
-                             tmpDownloadDO.getStatus() == DownloadDO.SUCHEN_LADEN)) {
-                            if (tmpDownloadDO.getProzentGeladen() >
-                                maxProzent[0]) {
-                                maxProzent[1] = maxProzent[0];
-                                maxProzentId[1] = maxProzentId[0];
-                                maxProzent[0] = tmpDownloadDO.getProzentGeladen();
-                                maxProzentId[0] = tmpDownloadDO.getId();
-                            }
-                            else {
-                                maxProzent[1] = tmpDownloadDO.getProzentGeladen();
-                                maxProzentId[1] = tmpDownloadDO.getId();
-                            }
-                        }
-                        ids[temp] = tmpDownloadDO.getId();
-                        temp++;
-                    }
-                    if (ids.length != 0) {
-                        applejuiceFassade.setPowerDownload(ids, 0);
-                        applejuiceFassade.setPowerDownload(new int[] {
-                            maxProzentId[
-                            0], maxProzentId[1]}
-                            , pwdlValue);
-                        applejuiceFassade.resumeDownload(new int[] {
-                            maxProzentId[0],
-                            maxProzentId[1]});
-                    }
-                }
-            }
+          TreeMap<Double,Download> naechsteDownloads = new TreeMap(new ProzentGeladenComparator());
+        	if (downloadSize <= anzahlDownloads) {
+        		// alle auf pd setzen und resuemen...
+        		List power = new Vector(downloads.values());
+        		applejuiceFassade.setPowerDownload(power, new Integer(pwdlValue));
+        		applejuiceFassade.resumeDownload(power);
+        	}
+        	else {
+        		Iterator<Download> it = downloads.values().iterator();
+        		while (it.hasNext()) {
+        			Download current = it.next();
+        			if (current.getStatus() == Download.PAUSIERT || current.getStatus() == Download.SUCHEN_LADEN) {
+        				naechsteDownloads.put(new Double(current.getProzentGeladen()), current);
+        			}
+        		}
+        		int pos = 0;
+        		List<Download> downloads2Start = new Vector();
+        		List<Download> downloads2Stop = new Vector();
+        		for (Download cur : naechsteDownloads.values()) {
+        			if (pos < anzahlDownloads) {
+        				downloads2Start.add(cur);
+        			}
+        			else {
+        				downloads2Stop.add(cur);
+        			}
+      				pos++;
+        		}
+        		if (changed(downloads2Start, downloads2Stop)) {
+        			applejuiceFassade.setPowerDownload(downloads2Start, pwdlValue);
+        			applejuiceFassade.resumeDownload(downloads2Start);
+        			applejuiceFassade.pauseDownload(downloads2Stop);
+        		}
+        	}
         }
-        sleep(30000);
     }
 
-    public void informPaused() {
-        maxProzentId[0] = -1;
-        maxProzentId[1] = -1;
-        maxProzent[0] = -1;
-        maxProzent[1] = -1;
+		private boolean changed(List<Download> downloads2Start, List<Download> downloads2Stop)
+		{
+			boolean changed = false;
+			if (downloads2Start.size() != resumedDownloads.size()) {
+				changed = true;
+			}
+			if (downloads2Stop.size() != pausedDownloads.size()) {
+				changed = true;
+			}
+			if (!changed) {
+				if (!listsEquals(downloads2Start, resumedDownloads)) {
+					changed = true;
+				}
+			}
+			if (!changed) {
+				if (!listsEquals(downloads2Stop, pausedDownloads)) {
+					changed = true;
+				}
+			}
+			resumedDownloads = downloads2Start;
+			pausedDownloads = downloads2Stop;
+			return changed;
+		}
+
+		private boolean listsEquals(List<Download> erste, List<Download> zweite)
+		{
+			for (int i=0; i<erste.size(); i++) {
+				if (!downloadEquals(erste.get(i), zweite.get(i))) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		private boolean downloadEquals(Download download, Download download2)
+		{
+			if (download.getId() != download2.getId()) {
+				return false;
+			}
+			if (download.getPowerDownload() != download2.getPowerDownload()) {
+				return false;
+			}
+			return true;
+		}
+
+		public void informPaused() {
     }
 
     public String getVersion() {
-        return "1.2";
+        return "1.3";
     }
 
     public String getDescription() {
         String description =
-                "Powerdownload wird fuer die beiden prozentual weitesten Downloads aktiviert." +
+                "Powerdownload wird fuer die prozentual weitesten Downloads aktiviert." +
                 "Wenn einer fertig ist, wird der Naechste aktiviert." +
                 "Der Pwdl-Wert ist frei einstellbar.";
         return description;
     }
 
     public String getAuthor() {
-        return "Maj0r";
+        return "Maj0r & loevenwong";
     }
 
     public String toString() {
         return "StandardPwdlPolicy Vers. " + getVersion();
+    }
+    
+    public int getAnzahlDownloads(Frame parent){ 
+        String result = JOptionPane.showInputDialog(AppleJuiceDialog.getApp(), "Anzahl gleichzeitiger Downloads:", new Integer(anzahlDownloads));
+        if (result != null) {
+        	try {
+        		Integer ret = new Integer(result);
+        		return ret.intValue();
+        	}
+        	catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), "Fehlerhafte Zahl. Eingabe wird verworfen!");
+        	}
+        	
+        }
+        return 2;
+    }
+    
+    private class ProzentGeladenComparator implements Comparator {
+
+			public int compare(Object arg0, Object arg1)
+			{
+				return ((Double)arg1).compareTo((Double)arg0);
+			}
     }
 }
