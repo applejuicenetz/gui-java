@@ -53,7 +53,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.92 2005/01/24 10:41:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.93 2005/01/24 18:32:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -324,7 +324,7 @@ public class AppleJuiceClient {
             if (logger.isEnabledFor(Level.INFO)) {
                 nachricht = "erkanntes GUI-OS: " + System.getProperty("os.name");
                 logger.info(nachricht);
-                nachricht = "erkannte Java-VersionDO: " + System.getProperty("java.version");
+                nachricht = "erkannte Java-Version: " + System.getProperty("java.version");
                 logger.info(nachricht);
             }
             String titel = null;

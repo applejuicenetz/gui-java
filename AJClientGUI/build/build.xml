@@ -88,7 +88,7 @@
       </jar>
 	  <jar destfile="${basedir}/plugins/versionchecker.zip">
 		<fileset dir="${basedir}/plugins/" includes="versionchecker.jar"/>
-		<fileset dir="${basedir}/plugin_src/versionchecker/icons/" includes="*.gif"/>
+<!--		<fileset dir="${basedir}/plugin_src/versionchecker/icons/" includes="*.gif"/>-->
       </jar>
    </target>
 
