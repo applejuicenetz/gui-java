@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project []>
-<project name="aj_java_gui" default="help" basedir=".."> 
+<project name="aj_java_gui" default="help" basedir="..">
 
    <taskdef name="pack" classname="org.sadun.util.ant.Pack" classpath="${basedir}/tools/pack.jar"/>
 
@@ -59,8 +59,8 @@
 
    <target name="create-jar" depends="gui-compile" description="builds appleJuice-jar">
 	<pack classes="de.applejuicenet.client.AppleJuiceClient"
-	      targetJar="${basedir}/AJCoreGUI.jar" 
-	      excludePkg="java,javax,sun,com.l2fprod,com.sixlegs" 
+	      targetJar="${basedir}/AJCoreGUI.jar"
+	      excludePkg="java,javax,sun,com.l2fprod,com.sixlegs"
 	      manifestClassPath="./needed_jars/skinlf.jar"
 	      manifestMainClass="de.applejuicenet.client.AppleJuiceClient">
            <classpath>
@@ -104,15 +104,15 @@
    <target name="build-plugin" description="builds plugin - build.xml needs to be modified">
       <delete includeEmptyDirs="true">
          <fileset dir="${basedir}/plugins" casesensitive="false">
-            <include name="**/SpeedGraphPlugin.jar"/>
+            <include name="**/VersionChecker.jar"/>
          </fileset>
       </delete>
-	<jar destfile="${basedir}/plugins/SpeedGraphPlugin.jar">
-		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*" 
+	<jar destfile="${basedir}/plugins/VersionChecker.jar">
+		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
 							  		excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
          </jar>
    </target>
 
    <target name="complete" depends="create-jar" description="builds complete appleJuice">
-   </target>  
+   </target>
 </project>
