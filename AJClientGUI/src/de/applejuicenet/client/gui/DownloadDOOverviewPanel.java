@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.25 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.26 2004/02/12 16:36:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.26  2004/02/12 16:36:38  maj0r
+ * Aktualisierungintervall auf 2 Sekunden geändert.
+ *
  * Revision 1.25  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -233,7 +236,7 @@ public class DownloadDOOverviewPanel
                             else {
                                 actualDlOverviewTable.setPartList(partList);
                                 try {
-                                    sleep(15000);
+                                    sleep(2000);
                                 }
                                 catch (InterruptedException iE) {
                                     interrupt();
