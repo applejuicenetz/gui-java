@@ -40,7 +40,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.69 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.70 2004/05/24 10:17:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -55,6 +55,7 @@ public class AppleJuiceClient {
     private static String fileAppenderPath;
     private static HTMLLayout layout;
     public static Splash splash = null;
+    private static LinkListener linkListener;
 
     public static HTMLLayout getLoggerHtmlLayout() {
         return layout;
@@ -106,6 +107,14 @@ public class AppleJuiceClient {
 
         boolean processLink = false;
         String link = "";
+        boolean doubleInstance = false;
+        try {
+            linkListener = new LinkListener();
+        }
+        catch (IOException ex) {
+            //bereits ein GUI vorhanden, also GUI schliessen
+            doubleInstance = true;
+        }
         if (args != null && args.length > 0) {
             try {
                 for (int i = 0; i < args.length; i++) {
@@ -132,16 +141,22 @@ public class AppleJuiceClient {
                     }
                     if (args[i].indexOf("-link=") != -1) {
                         link = args[i].substring(6);
-                        int PORT = OptionsManagerImpl.getInstance().
-                            getLinkListenerPort();
-                        String passwort = OptionsManagerImpl.getInstance().
-                            getRemoteSettings().getOldPassword();
-                        Socket socket = new Socket("localhost", PORT);
-                        PrintStream out = new PrintStream(socket.
-                            getOutputStream());
-                        out.println(passwort + "|" + link);
-                        socket.close();
-                        System.exit(0);
+                        if (doubleInstance){
+                            int PORT = OptionsManagerImpl.getInstance().
+                                getLinkListenerPort();
+                            String passwort = OptionsManagerImpl.getInstance().
+                                getRemoteSettings().getOldPassword();
+                            Socket socket = new Socket("localhost", PORT);
+                            PrintStream out = new PrintStream(socket.
+                                getOutputStream());
+                            out.println(passwort + "|" + link);
+                            socket.close();
+                            //war nur Linkprocessing, also GUI schliessen
+                            System.exit(1);
+                        }
+                        else{
+                            ApplejuiceFassade.getInstance().processLink(link);
+                        }
                     }
                 }
             }
@@ -153,18 +168,13 @@ public class AppleJuiceClient {
                 System.exit(1);
             }
         }
-        else {
-            try {
-                new LinkListener();
-            }
-            catch (IOException ex) {
-                //bereits ein GUI vorhanden, also GUI schliessen
-                JOptionPane.showMessageDialog(new Frame(),
-                    "Eine Instanz des GUIs ist bereits in Verwendung.",
-                                              "appleJuice Client",
-                                              JOptionPane.ERROR_MESSAGE);
-                System.exit(1);
-            }
+        if (doubleInstance) {
+            //bereits ein GUI vorhanden, also GUI schliessen
+            JOptionPane.showMessageDialog(new Frame(),
+                "Eine Instanz des GUIs ist bereits in Verwendung.",
+                "appleJuice Client",
+                JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         }
         Logger rootLogger = Logger.getRootLogger();
         logger = Logger.getLogger(AppleJuiceClient.class.getName());
@@ -250,7 +260,8 @@ public class AppleJuiceClient {
             splash.setProgress(10, "Teste Verbindung...");
             boolean showDialog = OptionsManagerImpl.getInstance().
                 shouldShowConnectionDialogOnStartup();
-            while (showDialog || !ApplejuiceFassade.istCoreErreichbar()) {
+            ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.getInstance();
+            while (showDialog || !applejuiceFassade.istCoreErreichbar()) {
                 splash.setVisible(false);
                 if (!showDialog) {
                     titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.

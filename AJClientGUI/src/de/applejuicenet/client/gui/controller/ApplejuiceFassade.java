@@ -35,9 +35,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
+import java.util.HashSet;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.134 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.135 2004/05/24 10:17:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -66,6 +67,9 @@ public class ApplejuiceFassade {
     private PartListXMLHolder partlistXML = null;
 
     private static ApplejuiceFassade instance = null;
+
+    private boolean coreErreichbar = false;
+    private HashSet links;
 
     //Thread
     private Thread workerThread;
@@ -766,6 +770,12 @@ public class ApplejuiceFassade {
                 }
                 return;
             }
+            if (!coreErreichbar){
+                if (links == null){
+                    links = new HashSet();
+                }
+                links.add(link);
+            }
             String password = OptionsManagerImpl.getInstance().
                 getRemoteSettings().getOldPassword();
             String encodedLink = link;
@@ -830,7 +840,7 @@ public class ApplejuiceFassade {
         return savedHost;
     }
 
-    public static boolean istCoreErreichbar() {
+    public synchronized boolean istCoreErreichbar() {
         try {
             String password = OptionsManagerImpl.getInstance().
                 getRemoteSettings().getOldPassword();
@@ -843,6 +853,16 @@ public class ApplejuiceFassade {
         }
         catch (WebSiteNotFoundException ex) {
             return false;
+        }
+        coreErreichbar = true;
+        if (links != null){
+            Iterator it = links.iterator();
+            while (it.hasNext()){
+                String link = (String)it.next();
+                processLink(link);
+            }
+            links.clear();
+            links = null;
         }
         return true;
     }
