@@ -11,7 +11,7 @@ import javax.swing.JTabbedPane;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultTabbedPane.java,v 1.1 2004/02/10 16:05:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultTabbedPane.java,v 1.2 2004/02/12 21:16:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import de.applejuicenet.client.shared.IconManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultTabbedPane.java,v $
+ * Revision 1.2  2004/02/12 21:16:51  maj0r
+ * Bug #23 gefixt (Danke an computer.ist.org)
+ * Suche abbrechen korrigiert.
+ *
  * Revision 1.1  2004/02/10 16:05:05  maj0r
  * Suchdarstellung verschoenert.
  *

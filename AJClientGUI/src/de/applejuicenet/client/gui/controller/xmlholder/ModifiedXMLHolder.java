@@ -23,7 +23,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.15 2004/02/09 07:28:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.16 2004/02/12 21:16:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,10 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.16  2004/02/12 21:16:51  maj0r
+ * Bug #23 gefixt (Danke an computer.ist.org)
+ * Suche abbrechen korrigiert.
+ *
  * Revision 1.15  2004/02/09 07:28:24  maj0r
  * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
  *
@@ -268,6 +272,7 @@ public class ModifiedXMLHolder
                     updateUploads();
                     updateServer();
                     updateNetworkInfo();
+                    updateSuche();
                     getInformation(true);
                     break;
                 }
@@ -277,6 +282,7 @@ public class ModifiedXMLHolder
                     updateUploads();
                     updateServer();
                     updateNetworkInfo();
+                    updateSuche();
                     getInformation(true);
                     break;
                 }
@@ -307,12 +313,12 @@ public class ModifiedXMLHolder
                 case 0: {
                     count++;
                     filter =
-                        "&filter=ids;down;uploads;server;informations&mode=zip";
+                        "&filter=ids;down;uploads;server;informations;search&mode=zip";
                     break;
                 }
                 case 1: {
                     count++;
-                    filter = "&filter=ids;informations;user&mode=zip";
+                    filter = "&filter=ids;informations;user;search&mode=zip";
                     break;
                 }
                 case 2: {

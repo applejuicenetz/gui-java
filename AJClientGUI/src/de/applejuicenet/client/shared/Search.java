@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.7 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.8 2004/02/12 21:16:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,10 @@ import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
+ * Revision 1.8  2004/02/12 21:16:51  maj0r
+ * Bug #23 gefixt (Danke an computer.ist.org)
+ * Suche abbrechen korrigiert.
+ *
  * Revision 1.7  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -51,11 +55,17 @@ public class Search {
     private HashMap mapping = new HashMap();
     private ArrayList entries = new ArrayList();
     private boolean changed = true;
+    private long creationTime;
 
     public static int currentSearchCount = 0;
 
     public Search(int id) {
         this.id = id;
+        creationTime = System.currentTimeMillis();
+    }
+
+    public long getCreationTime(){
+        return creationTime;
     }
 
     public boolean isChanged() {

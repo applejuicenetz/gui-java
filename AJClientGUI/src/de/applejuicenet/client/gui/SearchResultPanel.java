@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.Search.SearchEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.14 2004/02/10 16:03:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.15 2004/02/12 21:16:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,10 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.15  2004/02/12 21:16:51  maj0r
+ * Bug #23 gefixt (Danke an computer.ist.org)
+ * Suche abbrechen korrigiert.
+ *
  * Revision 1.14  2004/02/10 16:03:42  maj0r
  * Suchdarstellung verschoenert.
  *
@@ -107,14 +111,12 @@ public class SearchResultPanel
     private JLabel label3 = new JLabel();
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem item1 = new JMenuItem();
-    private SearchPanel parentSearchPanel;
     private int searchHitsCount;
 
     private TableColumn[] tableColumns = new TableColumn[3];
 
-    public SearchResultPanel(Search aSearch, SearchPanel parent) {
+    public SearchResultPanel(Search aSearch) {
         search = aSearch;
-        parentSearchPanel = parent;
         logger = Logger.getLogger(getClass());
         try {
             init();
@@ -138,7 +140,7 @@ public class SearchResultPanel
         sucheAbbrechen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 sucheAbbrechen.setEnabled(false);
-                ApplejuiceFassade.getInstance().cancelSearch(search.getId());
+                ApplejuiceFassade.getInstance().cancelSearch(search);
             }
         });
         popup.add(item1);

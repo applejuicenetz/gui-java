@@ -28,7 +28,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.24 2004/02/10 16:05:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.25 2004/02/12 21:16:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +37,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.25  2004/02/12 21:16:51  maj0r
+ * Bug #23 gefixt (Danke an computer.ist.org)
+ * Suche abbrechen korrigiert.
+ *
  * Revision 1.24  2004/02/10 16:05:16  maj0r
  * Importfehler behoben.
  *
@@ -273,7 +277,7 @@ public class SearchPanel
                         key = it.next();
                         if (!searchIds.containsKey(key)) {
                             aSearch = (Search) ( (HashMap) content).get(key);
-                            searchResultPanel = new SearchResultPanel(aSearch, this);
+                            searchResultPanel = new SearchResultPanel(aSearch);
                             resultPanel.addTab(aSearch.getSuchText(),
                                                searchResultPanel);
                             resultPanel.setSelectedComponent(searchResultPanel);
