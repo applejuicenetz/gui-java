@@ -34,7 +34,7 @@ import org.apache.xerces.parsers.SAXParser;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.24 2004/02/19 17:13:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.25 2004/02/21 20:37:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +43,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.25  2004/02/21 20:37:28  maj0r
+ * Beim ersten Abrufen der Userliste muss Timestamp=0 verwendet werden.
+ *
  * Revision 1.24  2004/02/19 17:13:46  maj0r
  * Serververwendung korrigiert.
  *
@@ -92,6 +95,7 @@ public class ModifiedXMLHolder
     private String zipMode = "";
     private String xmlCommand;
     private long timestamp = 0;
+    private int checkCount = 0;
     private CharArrayWriter contents = new CharArrayWriter();
     private static ModifiedXMLHolder instance = null;
 
@@ -422,69 +426,75 @@ public class ModifiedXMLHolder
         }
         String downloadKey = Integer.toString(downloadId);
         DownloadDO downloadDO = (DownloadDO) downloadMap.get(downloadKey);
+        DownloadSourceDO downloadSourceDO = null;
         if (downloadDO != null) {
-            DownloadSourceDO downloadSourceDO = downloadDO.getSourceById(id);
+            downloadSourceDO = downloadDO.getSourceById(id);
             if (downloadSourceDO == null) {
                 downloadSourceDO = new DownloadSourceDO(id);
                 downloadDO.addSource(downloadSourceDO);
                 sourcenZuDownloads.put(Integer.toString(id),
                                        downloadDO);
-                downloadSourceDO.setDownloadId(downloadId);
             }
-            String versionNr = "";
-            int os = -1;
-            for (int i = 0; i < attr.getLength(); i++) {
-                if (attr.getLocalName(i).equals("id")) {
-                    continue;
-                }
-                else if (attr.getLocalName(i).equals("downloadid")) {
-                    continue;
-                }
-                else if (attr.getLocalName(i).equals("status")) {
-                    downloadSourceDO.setStatus(Integer.parseInt(attr.getValue(i)));
-                }
-                else if (attr.getLocalName(i).equals("directstate")) {
-                    downloadSourceDO.setDirectstate(Integer.parseInt(attr.getValue(i)));
-                }
-                else if (attr.getLocalName(i).equals("downloadfrom")) {
-                    downloadSourceDO.setDownloadFrom(Integer.parseInt(attr.getValue(i)));
-                }
-                else if (attr.getLocalName(i).equals("downloadto")) {
-                    downloadSourceDO.setDownloadTo(Integer.parseInt(attr.getValue(i)));
-                }
-                else if (attr.getLocalName(i).equals("actualdownloadposition")) {
-                    downloadSourceDO.setActualDownloadPosition(Integer.parseInt(attr.getValue(i)));
-                }
-                else if (attr.getLocalName(i).equals("speed")) {
-                    downloadSourceDO.setSpeed(Integer.parseInt(attr.getValue(i)));
-                }
-                else if (attr.getLocalName(i).equals("version")) {
-                    versionNr = attr.getValue(i);
-                }
-                else if (attr.getLocalName(i).equals("operatingsystem")) {
-                    os = Integer.parseInt(attr.getValue(i));
-                }
-                else if (attr.getLocalName(i).equals("queueposition")) {
-                    downloadSourceDO.setQueuePosition(Integer.parseInt(attr.getValue(i)));
-                }
-                else if (attr.getLocalName(i).equals("powerdownload")) {
-                    downloadSourceDO.setPowerDownload(Integer.parseInt(attr.getValue(i)));
-                }
-                else if (attr.getLocalName(i).equals("filename")) {
-                    downloadSourceDO.setFilename(attr.getValue(i));
-                }
-                else if (attr.getLocalName(i).equals("nickname")) {
-                    downloadSourceDO.setNickname(attr.getValue(i));
-                }
+        }
+        else{
+            downloadSourceDO = new DownloadSourceDO(id);
+            downloadSourcesToDo.add(downloadSourceDO);
+        }
+        downloadSourceDO.setDownloadId(downloadId);
+        String versionNr = "";
+        int os = -1;
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("id")) {
+                continue;
+            }
+            else if (attr.getLocalName(i).equals("downloadid")) {
+                continue;
+            }
+            else if (attr.getLocalName(i).equals("status")) {
+                downloadSourceDO.setStatus(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("directstate")) {
+                downloadSourceDO.setDirectstate(Integer.parseInt(attr.getValue(
+                    i)));
+            }
+            else if (attr.getLocalName(i).equals("downloadfrom")) {
+                downloadSourceDO.setDownloadFrom(Integer.parseInt(attr.getValue(
+                    i)));
+            }
+            else if (attr.getLocalName(i).equals("downloadto")) {
+                downloadSourceDO.setDownloadTo(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("actualdownloadposition")) {
+                downloadSourceDO.setActualDownloadPosition(Integer.parseInt(
+                    attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("speed")) {
+                downloadSourceDO.setSpeed(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("version")) {
+                versionNr = attr.getValue(i);
+            }
+            else if (attr.getLocalName(i).equals("operatingsystem")) {
+                os = Integer.parseInt(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("queueposition")) {
+                downloadSourceDO.setQueuePosition(Integer.parseInt(attr.
+                    getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("powerdownload")) {
+                downloadSourceDO.setPowerDownload(Integer.parseInt(attr.
+                    getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("filename")) {
+                downloadSourceDO.setFilename(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("nickname")) {
+                downloadSourceDO.setNickname(attr.getValue(i));
             }
             if (!versionNr.equals("0.0.0.0")) {
                 Version version = new Version(versionNr, os);
                 downloadSourceDO.setVersion(version);
             }
-        }
-        else{
-            //todo
-            int i=0;
         }
     }
 
@@ -657,6 +667,7 @@ public class ModifiedXMLHolder
     }
 
     private HashSet searchEntriesToDo = new HashSet();
+    private HashSet downloadSourcesToDo = new HashSet();
 
     private void checkSearchEntryFilenameAttributes(Attributes attr){
         if (tmpSearchEntry == null){
@@ -718,8 +729,13 @@ public class ModifiedXMLHolder
     public void endElement(String namespaceURI,
                            String localName,
                            String qName) throws SAXException {
-        if (localName.equals("time")){
-            timestamp = Long.parseLong(contents.toString());
+        if (checkCount>1){
+            if (localName.equals("time")) {
+                timestamp = Long.parseLong(contents.toString());
+            }
+        }
+        else{
+            checkCount++;
         }
     }
 
@@ -793,9 +809,9 @@ public class ModifiedXMLHolder
             information.setExterneIP(netInfo.getExterneIP());
         }
 
-        Search aSearch;
-        SearchEntry searchEntry;
         if (searchEntriesToDo.size()>0){
+            Search aSearch;
+            SearchEntry searchEntry;
             Iterator it = searchEntriesToDo.iterator();
             while(it.hasNext()){
                 searchEntry = (SearchEntry)it.next();
@@ -806,6 +822,23 @@ public class ModifiedXMLHolder
 
             }
             searchEntriesToDo.clear();
+        }
+        if (downloadSourcesToDo.size()>0){
+            DownloadDO downloadDO;
+            DownloadSourceDO downloadSourceDO;
+            Iterator it = downloadSourcesToDo.iterator();
+            while(it.hasNext()){
+                downloadSourceDO = (DownloadSourceDO)it.next();
+                String downloadKey = Integer.toString(downloadSourceDO.getDownloadId());
+                if (downloadMap.containsKey(downloadKey)){
+                    downloadDO = (DownloadDO) downloadMap.get(
+                        downloadKey);
+                    downloadDO.addSource(downloadSourceDO);
+                    sourcenZuDownloads.put(Integer.toString(downloadSourceDO.getId()),
+                                           downloadDO);
+                }
+            }
+            downloadSourcesToDo.clear();
         }
     }
 
