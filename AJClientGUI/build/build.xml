@@ -74,7 +74,6 @@
    <target name="build-archive" depends="create-jar" description="builds archive-zip">
 	<jar destfile="${basedir}/AJCoreGUI_vX_XX.zip">
 		<fileset dir="${basedir}" includes="AJCoreGUI.jar"/>
-		<fileset dir="${basedir}" includes="properties.xml"/>
 		<fileset dir="${basedir}" includes="wizard.xml"/>
 		<fileset dir="${basedir}" includes="changelog.htm"/>
 		<fileset dir="${basedir}" includes="language/*.xml language/*.gif"/>
@@ -88,7 +87,6 @@
    <target name="build-winnative-archive" description="builds winnative-archive">
 	<jar destfile="${basedir}/AJCoreGUI_Win_vX_XX.zip">
 		<fileset dir="${basedir}" includes="AJCoreGUI.exe"/>
-		<fileset dir="${basedir}" includes="properties.xml"/>
 		<fileset dir="${basedir}" includes="wizard.xml"/>
 		<fileset dir="${basedir}" includes="changelog.htm"/>
 		<fileset dir="${basedir}" includes="WICHTIG_LESEN.txt"/>
