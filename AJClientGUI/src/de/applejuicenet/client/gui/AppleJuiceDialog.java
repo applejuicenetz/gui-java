@@ -86,7 +86,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.122 2004/06/11 09:24:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.123 2004/06/13 12:20:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -1081,12 +1081,20 @@ public class AppleJuiceDialog
                 final AJSettings ajSettings = ApplejuiceFassade.getInstance().
                     getAJSettings();
                 if ( ajSettings != null){
+                    long maxUpload = 50;
+                    if (ajSettings.getMaxUploadInKB() > maxUpload){
+                        maxUpload = ajSettings.getMaxUploadInKB() + 20;
+                    }
                     final JSlider uploadSlider = new JSlider(JSlider.VERTICAL,
                         0,
-                        50, (int) ajSettings.getMaxUploadInKB());
+                        (int)maxUpload, (int) ajSettings.getMaxUploadInKB());
+                    long maxDownload = 300;
+                    if (ajSettings.getMaxDownloadInKB() > maxDownload){
+                        maxDownload = ajSettings.getMaxDownloadInKB() + 20;
+                    }
                     final JSlider downloadSlider = new JSlider(JSlider.VERTICAL,
                         0,
-                        300, (int) ajSettings.getMaxDownloadInKB());
+                        (int)maxDownload, (int) ajSettings.getMaxDownloadInKB());
                     uploadSlider.setPaintLabels(true);
                     uploadSlider.setPaintTicks(true);
                     uploadSlider.setPaintTrack(true);
