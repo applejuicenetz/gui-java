@@ -1,1 +1,1 @@
-0.53.1|winLink|sonstigeLink
+0.53.1|http://download.berlios.de/applejuicejava/AJCoreGUI_Win_v0_55_8.zip|http://download.berlios.de/applejuicejava/AJCoreGUI_v0_55_8.zip
