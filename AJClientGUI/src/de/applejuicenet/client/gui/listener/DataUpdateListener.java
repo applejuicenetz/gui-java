@@ -12,5 +12,10 @@ import java.util.HashMap;
  */
 
 public interface DataUpdateListener {
-  public void fireContentChanged();
+  public static final int DOWNLOAD_CHANGED = 0;
+  public static final int UPLOAD_CHANGED = 1;
+  public static final int SERVER_CHANGED = 2;
+  public static final int SHARE_CHANGED = 3;
+
+  public void fireContentChanged(int type, HashMap content);
 }

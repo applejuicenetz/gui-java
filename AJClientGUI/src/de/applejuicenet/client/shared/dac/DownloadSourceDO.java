@@ -30,15 +30,17 @@ public class DownloadSourceDO {
   private String powerdownload;
   private Version version;
   private String nick;
+  private String id;
   private HashSet sources = new HashSet(); //contains DownloadSourceDO leafs
 
-  public DownloadSourceDO(boolean isRoot, String dateiname, int status,
+  public DownloadSourceDO(boolean isRoot, String id, String dateiname, int status,
                     String groesse,
                     String bereitsGeladen, String prozentGeladen,
                     String nochZuLaden, String geschwindigkeit,
                     String restlicheZeit, String powerdownload,
                     Version version, String nick, HashSet sources) {
     root = isRoot;
+    this.id = id;
     this.dateiname = dateiname;
     this.status = status;
     this.groesse = groesse;
@@ -57,6 +59,10 @@ public class DownloadSourceDO {
 
   public void setGroesse(String groesse){
     this.groesse=groesse;
+  }
+
+  public String getId(){
+    return id;
   }
 
   public boolean isRoot(){

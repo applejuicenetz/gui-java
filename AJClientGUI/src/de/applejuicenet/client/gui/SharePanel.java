@@ -7,6 +7,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import java.awt.*;
 import javax.swing.border.*;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.gui.controller.DataManager;
+import java.util.HashMap;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import javax.swing.table.TableColumn;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -17,7 +21,7 @@ import de.applejuicenet.client.shared.IconManager;
  * @version 1.0
  */
 
-public class SharePanel extends JPanel implements LanguageListener, RegisterI{
+public class SharePanel extends JPanel implements LanguageListener, RegisterI, DataUpdateListener{
   private JPanel panelWest;
   private JPanel panelCenter;
   private JButton addFolderWithSubfolder = new JButton();
@@ -93,10 +97,17 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI{
 
     add(panelWest, BorderLayout.WEST);
     add(panelCenter, BorderLayout.CENTER);
+
+    shareTable.setModel(new ShareTableModel(DataManager.getInstance().getShare()));
+    TableColumn tc = shareTable.getColumnModel().getColumn(1);
+    tc.setCellRenderer(new ShareTableCellRenderer());
+
     LanguageSelector.getInstance().addLanguageListener(this);
+    DataManager.getInstance().addShareListener(this);
   }
 
   public void registerSelected(){
+    HashMap shares = DataManager.getInstance().getShare();
   }
 
   public void fireLanguageChanged(){
@@ -120,5 +131,9 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI{
     prioritaetSetzen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "setprio", "hint"})));
     prioritaetAufheben.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "clearprio", "caption"})));
     prioritaetAufheben.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "clearprio", "hint"})));
+  }
+
+  public void fireContentChanged(int type, HashMap content){
+
   }
 }

@@ -72,13 +72,13 @@ public class ODRemotePanel
     passwortAlt.addFocusListener(new FocusAdapter() {
       public void focusLost(FocusEvent e) {
         dirty = true;
-        remote.setOldPassword(passwortAlt.getText());
+        remote.setOldPassword(new String(passwortAlt.getPassword()));
       }
     });
     passwortNeu.addFocusListener(new FocusAdapter() {
       public void focusLost(FocusEvent e) {
         dirty = true;
-        remote.setNewPassword(passwortNeu.getText());
+        remote.setNewPassword(new String(passwortNeu.getPassword()));
       }
     });
 

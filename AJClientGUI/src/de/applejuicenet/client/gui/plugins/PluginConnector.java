@@ -67,5 +67,5 @@ public abstract class PluginConnector extends JPanel implements LanguageListener
 
   /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
     Über den DataManger können diese abgerufen werden.*/
-  public abstract void fireContentChanged();
+  public abstract void fireContentChanged(int type, HashMap content);
 }

@@ -28,8 +28,9 @@ import de.applejuicenet.client.shared.NetworkInfo;
  */
 
 public class DataManager {   //Singleton-Implementierung
-  private DownloadSourceDO[] downloads;
   private HashSet downloadListener;
+  private HashSet shareListener;
+  private HashSet uploadListener;
   private HashSet serverListener;
   private static DataManager instance = null;
   private static int x=0;
@@ -44,6 +45,16 @@ public class DataManager {   //Singleton-Implementierung
       downloadListener.add(listener);
   }
 
+  public void addUploadListener(DataUpdateListener listener){
+    if (!(uploadListener.contains(listener)))
+      uploadListener.add(listener);
+  }
+
+  public void addShareListener(DataUpdateListener listener){
+    if (!(shareListener.contains(listener)))
+      shareListener.add(listener);
+  }
+
   public void addServerListener(DataUpdateListener listener){
     if (!(serverListener.contains(listener)))
       serverListener.add(listener);
@@ -52,33 +63,18 @@ public class DataManager {   //Singleton-Implementierung
   private DataManager(){
     downloadListener = new HashSet();
     serverListener = new HashSet();
+    uploadListener = new HashSet();
+    shareListener = new HashSet();
 
    //load XMLs
    modifiedXML = new ModifiedXMLHolder();
-   reloadModifiedXML(false);
    informationXML = new InformationXMLHolder();
    shareXML = new ShareXMLHolder();
 
+   informationXML.reload("");
    String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[]{"applejuice", "generalinformation", "version"}, true);
    coreVersion = new Version(versionsTag, "Java", Version.getOSTypByOSName((String) System.getProperties().get("os.name")));
 
-
-   //Dummy-Implementierung
-   Version version = new Version(getCoreVersion().getVersion(), "Java", Version.WIN32);
-   Version version2 = new Version(getCoreVersion().getVersion(), "Java", Version.LINUX);
-   String versionText;
-   DownloadSourceDO source = new DownloadSourceDO(false, "datei2.jpg", DownloadSourceDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "Maj0r", null);
-   DownloadSourceDO source2 = new DownloadSourceDO(false, "datei3.jpg", DownloadSourceDO.VERSUCHEINDIREKT, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version2, "Maj0r", null);
-   HashSet sourcen1 = new HashSet();
-   sourcen1.add(source);
-   HashSet sourcen2 = new HashSet();
-   sourcen2.add(source);
-   sourcen2.add(source2);
-   downloads = new DownloadSourceDO[2];
-   downloads[0] = new DownloadSourceDO(true, "dateiliste.mov", DownloadSourceDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", null, "", sourcen1);
-   downloads[1] = new DownloadSourceDO(true, "Film.avi", DownloadSourceDO.WARTESCHLANGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", null, "", sourcen2);
-   //Dummy-Ende
-//   updateDownloads();
   }
 
   public HashMap getAllServer(){
@@ -89,8 +85,8 @@ public class DataManager {   //Singleton-Implementierung
     modifiedXML.update();
     informServerListener();
     informDownloadListener();
+    informUploadListener();
   }
-
 
   public static boolean connectToServer(int id){
     String result;
@@ -115,13 +111,8 @@ public class DataManager {   //Singleton-Implementierung
   }
 
   public NetworkInfo getNetworkInfo(){
-    reloadModifiedXML(true);
+    modifiedXML.update();
     return modifiedXML.getNetworkInfo();
-  }
-
-  public void reloadModifiedXML(boolean informListener){
-    modifiedXML.reload("");
-    updateServer(informListener);
   }
 
   public static boolean istCoreErreichbar(){
@@ -132,9 +123,6 @@ public class DataManager {   //Singleton-Implementierung
       return false;
     }
     return true;
-  }
-
-  protected void updateServer(boolean informListener){
   }
 
   public static DataManager getInstance(){
@@ -151,14 +139,28 @@ public class DataManager {   //Singleton-Implementierung
   private void informDownloadListener(){
     Iterator it = downloadListener.iterator();
     while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged();
+      ((DataUpdateListener)it.next()).fireContentChanged(DataUpdateListener.DOWNLOAD_CHANGED,  modifiedXML.getDownloads());
+    }
+  }
+
+  private void informUploadListener(){
+    Iterator it = uploadListener.iterator();
+    while (it.hasNext()){
+      ((DataUpdateListener)it.next()).fireContentChanged(DataUpdateListener.UPLOAD_CHANGED, modifiedXML.getUploads());
+    }
+  }
+
+  private void informShareListener(){
+    Iterator it = shareListener.iterator();
+    while (it.hasNext()){
+      ((DataUpdateListener)it.next()).fireContentChanged(DataUpdateListener.SHARE_CHANGED, shareXML.getShare());
     }
   }
 
   private void informServerListener(){
     Iterator it = serverListener.iterator();
     while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged();
+      ((DataUpdateListener)it.next()).fireContentChanged(DataUpdateListener.SERVER_CHANGED, modifiedXML.getServer());
     }
   }
 
@@ -176,15 +178,15 @@ public class DataManager {   //Singleton-Implementierung
     }
   }
 
-  public DownloadSourceDO[] getDownloads(){
-    updateDownloads();
-    return downloads;
+  public HashMap getDownloads(){
+    return modifiedXML.getDownloads();
   }
 
-  public void updateDownloads(){
-    //dummy
-    x++;
-    downloads[1].setGroesse(Integer.toString(x));
-    informDownloadListener();
+  public HashMap getUploads(){
+    return modifiedXML.getUploads();
+  }
+
+  public HashMap getShare(){
+    return shareXML.getShare();
   }
 }

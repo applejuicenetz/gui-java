@@ -9,6 +9,7 @@ import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedE
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import de.applejuicenet.client.gui.controller.DataManager;
 
 
 /**
@@ -70,6 +71,7 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI{
   }
 
   public void registerSelected(){
+    DataManager.getInstance().updateModifiedXML();
   }
 
 }

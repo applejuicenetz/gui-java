@@ -32,9 +32,11 @@ public class DownloadModel
   public DownloadModel() {
     super(new DownloadNode());
     loadHeader();
-    DownloadSourceDO[] downloads = DataManager.getInstance().getDownloads();
-    for (int i = 0; i < downloads.length; i++) {
-      ( (DownloadNode) getRoot()).addChild(downloads[i]);
+    HashMap downloads = DataManager.getInstance().getDownloads();
+    Iterator it = downloads.values().iterator();
+    while (it.hasNext()){
+      DownloadSourceDO download = (DownloadSourceDO) it.next();
+      ( (DownloadNode) getRoot()).addChild(download);
     }
   }
 

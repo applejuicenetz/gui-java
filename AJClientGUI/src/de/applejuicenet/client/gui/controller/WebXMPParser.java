@@ -11,6 +11,7 @@ import org.xml.sax.InputSource;
 import java.io.StringReader;
 import de.applejuicenet.client.shared.exception.*;
 import java.sql.Time;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 
 /**
@@ -37,7 +38,7 @@ public abstract class WebXMPParser extends XMLDecoder {
       host = savedHost;
     this.xmlCommand = xmlCommand;
     webXML = true;
-    reload(parameters);
+//    reload(parameters);
   }
 
   public void reload(String parameters){
@@ -47,7 +48,7 @@ public abstract class WebXMPParser extends XMLDecoder {
                                           xmlCommand + "?timestamp=" + timestamp + parameters);
     }
     catch (WebSiteNotFoundException ex) {
-      ex.printStackTrace();
+      AppleJuiceDialog.getApp().closeWithErrormessage("Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.");
     }
     DocumentBuilderFactory factory =
         DocumentBuilderFactory.newInstance();
@@ -59,7 +60,7 @@ public abstract class WebXMPParser extends XMLDecoder {
         timestamp = Long.parseLong(getFirstAttrbuteByTagName(new String[]{"applejuice", "time"}, true));
       else
         firstRun = !firstRun;
-      update();
+//      update();
     }
     catch (SAXException sxe) {
       Exception x = sxe;

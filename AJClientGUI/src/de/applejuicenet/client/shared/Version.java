@@ -10,7 +10,7 @@ package de.applejuicenet.client.shared;
  */
 
 public class Version {
-  public static int LINUX = 0;
+  public static int LINUX = 2;
   public static int WIN32 = 1;
 
   private String versionNr;

@@ -63,6 +63,10 @@ public class AppleJuiceDialog
     return (PluginConnector[]) plugins.toArray(new PluginConnector[plugins.size()]);
   }
 
+  public static AppleJuiceDialog getApp(){
+    return theApp;
+  }
+
   private void jbInit() throws Exception {
     setTitle("AppleJuice Client");
     plugins = new HashSet();
@@ -99,7 +103,6 @@ public class AppleJuiceDialog
     }
     pause = new JButton("Pause");
     pause.setFont(new java.awt.Font("SansSerif", 0, 11));
-//    pause.setPreferredSize(new Dimension(pause.getPreferredSize().width, statusbar[2].getPreferredSize().height));
     DataManager.getInstance().addStatusbarForListen(statusbar);
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;
@@ -134,7 +137,7 @@ public class AppleJuiceDialog
                          (int) systemDimension.getHeight() / 4 * 3);
   }
 
-  private void einstellungenSpeichern() {
+  private static void einstellungenSpeichern() {
     String sprachText = LanguageSelector.getInstance().
         getFirstAttrbuteByTagName(new String[] {"Languageinfo", "name"});
     OptionsManager.getInstance().setSprache(sprachText);
@@ -146,8 +149,9 @@ public class AppleJuiceDialog
     System.exit(0);
   }
 
-  private static void closeWithErrormessage(String error){
+  public static void closeWithErrormessage(String error){
     JOptionPane.showMessageDialog(theApp, error, "Fehler!", JOptionPane.OK_OPTION);
+    einstellungenSpeichern();
     System.exit(-1);
   }
 
