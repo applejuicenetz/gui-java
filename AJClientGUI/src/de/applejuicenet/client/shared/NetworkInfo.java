@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.13 2004/06/11 09:24:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.14 2004/06/15 09:17:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -74,7 +74,6 @@ public class NetworkInfo {
         if (welcomeMessage.toLowerCase().indexOf("<html>") == -1){
             welcomeMessage = "<html>" + welcomeMessage + "</html>";
         }
-        welcomeMessage = welcomeMessage.replaceAll("\n", "<br>");
         this.welcomeMessage = welcomeMessage;
     }
 

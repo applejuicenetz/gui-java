@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.55 2004/06/11 14:01:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.56 2004/06/15 09:17:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -449,7 +449,7 @@ public class StartPanel
                 }
                 String tmp = netInfo.getWelcomeMessage();
                 if (tmp.compareTo(serverMessage.getText()) != 0) {
-                    serverMessage.setText(netInfo.getWelcomeMessage());
+                    serverMessage.setText(tmp);
                     serverMessage.setCaretPosition(0);
                 }
             }
