@@ -3,10 +3,10 @@ package de.applejuicenet.client.gui.plugins.ircplugin;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Random;
 import java.util.StringTokenizer;
 
@@ -36,7 +36,7 @@ import de.applejuicenet.client.gui.plugins.IrcPlugin;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.27 2004/12/06 11:29:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.28 2004/12/07 14:40:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -490,15 +490,23 @@ public class XdccIrc
                         try{
                             line = fromServer.readLine();
                         }
-                        catch (SocketException se){
-                            line = null;
+                        catch (InterruptedIOException se){
+                        	// Timeout vom Socket
+                            try {
+                            	sleep(1500);
+                                continue;
+                            } 
+                            catch (InterruptedException e) {
+                            	// nothing to do
+                            	line = null;
+                            }
                         }
                         if (line != null) {
                             parseFromServer(line);
                         }
                         else {
                             // a null line indicates that our server has
-                            // closed the connection, right?
+                            // closed the connection
                             tabUpdate("Init Window",
                                       "Server closed the connection or network is fucked.");
                             closeAll();
