@@ -9,6 +9,7 @@ import org.apache.log4j.Level;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
+import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
@@ -18,7 +19,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.3 2004/10/29 13:38:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.4 2004/10/29 13:59:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -75,6 +76,10 @@ public class StartController extends GuiController {
 		ApplejuiceFassade.getInstance().addDataUpdateListener(this,
 				DataUpdateListener.INFORMATION_CHANGED);
 		LanguageSelector.getInstance().addLanguageListener(this);
+	}
+
+	public Value[] getCustomizedValues(){
+		return null;
 	}
 
 	public void fireAction(int actionId, Object source) {

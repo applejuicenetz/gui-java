@@ -16,7 +16,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.GuiController;
@@ -60,7 +59,6 @@ public class UploadPanel extends TklPanel implements RegisterI {
 	private JTreeTable uploadDataTable;
 	private JLabel uploadListeLabel = new JLabel("0 Clients in Deiner Uploadliste");
 	private UploadDataTableModel uploadDataTableModel;
-	private Logger logger;
 	private JPopupMenu popupMenu = new JPopupMenu();
 	private JMenuItem itemCopyToClipboard;
 	private JPopupMenu columnPopup = new JPopupMenu();

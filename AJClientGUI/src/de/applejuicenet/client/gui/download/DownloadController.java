@@ -24,6 +24,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -157,6 +158,10 @@ public class DownloadController extends GuiController {
 		LanguageSelector.getInstance().addLanguageListener(this);
 		ApplejuiceFassade.getInstance().addDataUpdateListener(this,
 				DataUpdateListener.DOWNLOAD_CHANGED);		
+	}
+	
+	public Value[] getCustomizedValues(){
+		return null;
 	}
 	
 	public void fireAction(int actionId, Object source) {

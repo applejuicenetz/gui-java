@@ -21,6 +21,7 @@ import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
@@ -70,6 +71,10 @@ public class UploadController extends GuiController {
 		return instance;
 	}
 
+	public Value[] getCustomizedValues(){
+		return null;
+	}
+	
 	private void init() {
 		uploadPanel.getTable().getTableHeader().addMouseListener(
 				new HeaderPopupListener(this, HEADER_POPUP));
@@ -191,8 +196,7 @@ public class UploadController extends GuiController {
 		uploadPanel.getColumnPopup().show(uploadPanel.getTable().getTableHeader(), 
 				e.getX(), e.getY());
 	}
-	
-	
+		
 	public JComponent getComponent() {
 		return uploadPanel;
 	}
