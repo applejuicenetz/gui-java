@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.33 2003/09/09 12:47:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.34 2003/09/10 13:16:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.34  2003/09/10 13:16:28  maj0r
+ * Veraltete Option "Browsen erlauben" entfernt und neue Option MaxNewConnectionsPerTurn hinzugefuegt.
+ *
  * Revision 1.33  2003/09/09 12:47:21  maj0r
  * Version 0.27
  *
@@ -337,8 +340,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             parameters = "Nickname=" +
                     URLEncoder.encode(ajSettings.getNick(), "UTF-8");
             parameters += "&XMLPort=" + Long.toString(ajSettings.getXMLPort());
-            parameters += "&AllowBrowse=" +
-                    (ajSettings.isBrowseAllowed() ? "true" : "false");
             parameters += "&MaxUpload=" + Long.toString(ajSettings.getMaxUpload());
             parameters += "&MaxDownload=" + Long.toString(ajSettings.getMaxDownload());
             parameters += "&Speedperslot=" +
@@ -351,6 +352,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     URLEncoder.encode(Long.toString(ajSettings.getMaxConnections()), "UTF-8");
             parameters += "&autoconnect=" +
                     URLEncoder.encode(new Boolean(ajSettings.isAutoConnect()).toString(), "UTF-8");
+            parameters += "&maxnewconnectionsperturn=" +
+                    URLEncoder.encode(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()), "UTF-8");
         }
         catch (UnsupportedEncodingException ex1)
         {

@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.9 2003/09/08 16:46:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.10 2003/09/10 13:16:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODVerbindungPanel.java,v $
+ * Revision 1.10  2003/09/10 13:16:28  maj0r
+ * Veraltete Option "Browsen erlauben" entfernt und neue Option MaxNewConnectionsPerTurn hinzugefuegt.
+ *
  * Revision 1.9  2003/09/08 16:46:08  maj0r
  * Ueberfluessige Einstellungen entfernt.
  *
@@ -37,12 +40,14 @@ public class ODVerbindungPanel
   private JLabel label2;
   private JLabel label3;
   private JLabel label4;
+  private JLabel label5;
   private JLabel kbSlot;
   private JCheckBox automaticConnect;
   private JTextField maxVerbindungen = new JTextField();
   private JTextField maxUpload = new JTextField();
   private JTextField maxDownload = new JTextField();
   private JSlider kbSlider;
+  private JTextField maxVerbindungenProTurn = new JTextField();
   private AJSettings ajSettings;
 
   public ODVerbindungPanel(AJSettings ajSettings) {
@@ -70,6 +75,7 @@ public class ODVerbindungPanel
     JPanel panel6 = new JPanel(new GridBagLayout());
     JPanel panel7 = new JPanel(new GridBagLayout());
     JPanel panel8 = new JPanel(new GridBagLayout());
+    JPanel panel10 = new JPanel(new GridBagLayout());
     FlowLayout flowL = new FlowLayout();
     flowL.setAlignment(FlowLayout.RIGHT);
     JPanel panel9 = new JPanel(flowL);
@@ -113,6 +119,22 @@ public class ODVerbindungPanel
         }
       }
     });
+    maxVerbindungenProTurn.setDocument(new NumberInputVerifier());
+    maxVerbindungenProTurn.setHorizontalAlignment(JLabel.RIGHT);
+    maxVerbindungenProTurn.addFocusListener(new FocusAdapter() {
+      public void focusLost(FocusEvent e) {
+        long wert = Long.parseLong(maxVerbindungenProTurn.getText());
+        if (wert != ajSettings.getMaxNewConnectionsPerTurn()) {
+            if (wert<1 || wert>200){
+                maxVerbindungenProTurn.setText(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()));
+            }
+            else{
+                dirty = true;
+                ajSettings.setMaxNewConnectionsPerTurn(Long.parseLong(maxVerbindungenProTurn.getText()));
+            }
+        }
+      }
+    });
     LanguageSelector languageSelector = LanguageSelector.getInstance();
 
     label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
@@ -127,6 +149,9 @@ public class ODVerbindungPanel
     label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "Label13",
                                   "caption"})));
+    label5 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                  "verbindung", "label5"})));
     kbSlot = new JLabel();
 
     int untereGrenze = (int) Math.pow( (double) ajSettings.getMaxUploadInKB(),
@@ -193,6 +218,13 @@ public class ODVerbindungPanel
     panel5.add(maxDownload, constraints);
     constraints.weightx = 0;
 
+    constraints.gridx = 0;
+    panel10.add(label5, constraints);
+    constraints.gridx = 1;
+    constraints.weightx = 1;
+    panel10.add(maxVerbindungenProTurn, constraints);
+    constraints.weightx = 0;
+
     panel9.add(automaticConnect);
 
     constraints.gridx = 0;
@@ -213,6 +245,8 @@ public class ODVerbindungPanel
     constraints.gridy = 6;
     panel1.add(panel8, constraints);
     constraints.gridy = 7;
+    panel1.add(panel10, constraints);
+    constraints.gridy = 8;
     panel1.add(panel9, constraints);
 
     add(panel1, BorderLayout.NORTH);
@@ -223,5 +257,6 @@ public class ODVerbindungPanel
     kbSlider.setValue(ajSettings.getSpeedPerSlot());
     kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
     automaticConnect.setSelected(ajSettings.isAutoConnect());
+    maxVerbindungenProTurn.setText(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()));
   }
 }

@@ -6,7 +6,7 @@ import org.w3c.dom.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/SettingsXMLHolder.java,v 1.7 2003/08/10 21:08:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/SettingsXMLHolder.java,v 1.8 2003/09/10 13:16:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SettingsXMLHolder.java,v $
+ * Revision 1.8  2003/09/10 13:16:28  maj0r
+ * Veraltete Option "Browsen erlauben" entfernt und neue Option MaxNewConnectionsPerTurn hinzugefuegt.
+ *
  * Revision 1.7  2003/08/10 21:08:18  maj0r
  * Diverse Änderungen.
  *
@@ -49,9 +52,6 @@ public class SettingsXMLHolder
     long port = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
     nodes = document.getElementsByTagName("xmlport");
     long xmlPort = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
-    nodes = document.getElementsByTagName("allowbrowse");
-    boolean allowBrowse = nodes.item(0).getFirstChild().getNodeValue().
-        compareToIgnoreCase("true") == 0 ? true : false;
     nodes = document.getElementsByTagName("maxupload");
     long maxUpload = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
     nodes = document.getElementsByTagName("maxdownload");
@@ -65,6 +65,9 @@ public class SettingsXMLHolder
                                       getNodeValue()).booleanValue();
     nodes = document.getElementsByTagName("speedperslot");
     int speedPerSlot = Integer.parseInt(nodes.item(0).getFirstChild().
+                                        getNodeValue());
+    nodes = document.getElementsByTagName("maxnewconnectionsperturn");
+    long maxNewConnectionsPerTurn = Long.parseLong(nodes.item(0).getFirstChild().
                                         getNodeValue());
     nodes = document.getElementsByTagName("incomingdirectory");
     String incomingDir = nodes.item(0).getFirstChild().getNodeValue();
@@ -84,9 +87,10 @@ public class SettingsXMLHolder
       entry = new ShareEntry(dir, shareMode);
       shareEntries.add(entry);
     }
-    settings = new AJSettings(nick, port, xmlPort, allowBrowse, maxUpload,
+    settings = new AJSettings(nick, port, xmlPort, maxUpload,
                               maxDownload, speedPerSlot, incomingDir, tempDir,
-                              shareEntries, maxConnections, autoConnect);
+                              shareEntries, maxConnections, autoConnect,
+                              maxNewConnectionsPerTurn);
   }
 
   public AJSettings getAJSettings() {
