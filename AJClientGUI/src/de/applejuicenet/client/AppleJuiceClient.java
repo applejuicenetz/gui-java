@@ -36,7 +36,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import de.applejuicenet.client.gui.ConnectFrame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.49 2003/12/30 13:40:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.50 2003/12/30 13:42:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,6 +45,9 @@ import de.applejuicenet.client.gui.ConnectFrame;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.50  2003/12/30 13:42:24  maj0r
+ * Tippfehler berichtigt.
+ *
  * Revision 1.49  2003/12/30 13:40:06  maj0r
  * Ueberpruefung auf gueltige Javaversion eingebaut.
  *
@@ -200,7 +203,7 @@ public class AppleJuiceClient {
         boolean gueltig = false;
         try{
             int versionsNr = Integer.parseInt(version.toString().substring(0,2));
-            if (versionsNr >= 15){
+            if (versionsNr >= 14){
                 gueltig = true;
             }
         }
