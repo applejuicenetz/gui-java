@@ -19,9 +19,16 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import javax.swing.JTextPane;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.text.html.HTMLFrameHyperlinkEvent;
+import javax.swing.text.html.HTMLDocument;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import javax.swing.JOptionPane;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.38 2003/12/31 15:46:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.39 2004/01/05 14:13:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +37,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.39  2004/01/05 14:13:13  maj0r
+ * Links im Startbereich sind jetzt anklickbar, sofern ein Standardbrowser ausgewaehlt ist.
+ *
  * Revision 1.38  2003/12/31 15:46:48  maj0r
  * Bug #19 gefixt (Danke an dsp2004)
  * Stringverwendung in StringBuffer umgebaut.
@@ -150,7 +160,7 @@ public class StartPanel
     private JLabel warnungen;
     private JLabel deinClient;
     private JLabel label7;
-    private JLabel nachrichten;
+    private JTextPane nachrichten;
     private JLabel label8;
     private JLabel netzwerk;
     private JLabel label6;
@@ -259,7 +269,7 @@ public class StartPanel
 
         constraints.gridy = 5;
         constraints.insets.left = 15;
-        nachrichten = new JLabel();
+        nachrichten = new JTextPane();
         panel3.add(nachrichten, constraints);
 
         constraints.gridy = 6;
@@ -326,7 +336,19 @@ public class StartPanel
                     else {
                         htmlText = "<html>" + htmlText + "</html>";
                     }
+                    nachrichten.setContentType("text/html");
+                    nachrichten.setEditable(false);
                     nachrichten.setText(htmlText);
+                    nachrichten.addHyperlinkListener(new HyperlinkListener (){
+                        public void hyperlinkUpdate(HyperlinkEvent e) {
+                           if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                               String url = e.getURL().toString();
+                               if (url.length() != 0){
+                                   executeLink(url);
+                               }
+                           }
+                       }
+                    });
                 }
                 catch (Exception e) {
                     if (logger.isEnabledFor(Level.INFO)) {
@@ -344,6 +366,33 @@ public class StartPanel
             DataUpdateListener.NETINFO_CHANGED);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
             DataUpdateListener.INFORMATION_CHANGED);
+    }
+
+    private void executeLink(String link) {
+        try {
+            String browser = PropertiesManager.getOptionsManager().
+                getStandardBrowser();
+            try {
+                Runtime.getRuntime().exec(new String[] {browser, link});
+            }
+            catch (Exception ex) {
+                LanguageSelector ls = LanguageSelector.
+                    getInstance();
+                String nachricht = ZeichenErsetzer.korrigiereUmlaute(ls.getFirstAttrbuteByTagName(new
+                    String[] {"javagui", "startup",
+                    "updatefehlernachricht"}));
+                String titel = ZeichenErsetzer.korrigiereUmlaute(ls.getFirstAttrbuteByTagName(new
+                    String[] {"mainform", "caption"}));
+                JOptionPane.showMessageDialog(this, nachricht,
+                                              titel,
+                                              JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
+        }
     }
 
     public void registerSelected() {
