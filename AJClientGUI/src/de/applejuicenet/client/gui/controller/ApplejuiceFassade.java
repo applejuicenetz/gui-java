@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.40 2003/09/12 13:19:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.41 2003/09/13 11:30:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.41  2003/09/13 11:30:40  maj0r
+ * Neuen Listener fuer Geschwindigkeitsanzeigen eingebaut.
+ *
  * Revision 1.40  2003/09/12 13:19:26  maj0r
  * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
  * Version 0.30
@@ -217,7 +220,7 @@ import org.apache.log4j.Level;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String GUI_VERSION = "0.30 Beta";
+    public static final String GUI_VERSION = "0.31 Beta";
 
     private HashSet downloadListener;
     private HashSet shareListener;
@@ -225,6 +228,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     private HashSet serverListener;
     private HashSet networkInfoListener;
     private HashSet statusbarListener;
+    private HashSet speedListener;
     private static ApplejuiceFassade instance = null;
     public static String separator;
     private ModifiedXMLHolder modifiedXML = null;
@@ -267,6 +271,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             {
                 listenerSet = statusbarListener;
             }
+            else if (type == DataUpdateListener.SPEED_CHANGED)
+            {
+                listenerSet = speedListener;
+            }
             else
             {
                 return;
@@ -293,6 +301,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             shareListener = new HashSet();
             networkInfoListener = new HashSet();
             statusbarListener = new HashSet();
+            speedListener = new HashSet();
 
             //load XMLs
             modifiedXML = new ModifiedXMLHolder();
@@ -454,6 +463,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
                     informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
                     informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
+                    informDataUpdateListener(DataUpdateListener.SPEED_CHANGED);
                 }
             });
         }
@@ -763,6 +773,16 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                         while (it.hasNext())
                         {
                             ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.STATUSBAR_CHANGED, content);
+                        }
+                        break;
+                    }
+                case DataUpdateListener.SPEED_CHANGED:
+                    {
+                        HashMap content = modifiedXML.getSpeeds();
+                        Iterator it = speedListener.iterator();
+                        while (it.hasNext())
+                        {
+                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.SPEED_CHANGED, content);
                         }
                         break;
                     }

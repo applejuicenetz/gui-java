@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.32 2003/09/11 09:41:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.33 2003/09/13 11:30:41 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.33  2003/09/13 11:30:41  maj0r
+ * Neuen Listener fuer Geschwindigkeitsanzeigen eingebaut.
+ *
  * Revision 1.32  2003/09/11 09:41:16  maj0r
  * Nullpointer behoben.
  *
@@ -218,6 +221,24 @@ public class ModifiedXMLHolder
                 logger.error("Unbehandelte Exception", ex);
         }
         return status;
+    }
+
+    public HashMap getSpeeds(){
+        HashMap speeds = new HashMap();
+        try{
+            NodeList nodes = document.getElementsByTagName("information");
+            Element e = (Element) nodes.item(0);
+            speeds.put(new MapSetStringKey("uploadspeed"), new Long(e.getAttribute("uploadspeed")));
+            speeds.put(new MapSetStringKey("downloadspeed"), new Long(e.getAttribute("downloadspeed")));
+            speeds.put(new MapSetStringKey("credits"), new Long(e.getAttribute("credits")));
+            speeds.put(new MapSetStringKey("sessionupload"), new Long(e.getAttribute("sessionupload")));
+            speeds.put(new MapSetStringKey("sessiondownload"), new Long(e.getAttribute("sessiondownload")));
+        }
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", ex);
+        }
+        return speeds;
     }
 
     private String getBytesSpeed(long bytes) {
