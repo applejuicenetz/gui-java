@@ -67,7 +67,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.94 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.95 2004/02/21 18:25:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -76,6 +76,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.95  2004/02/21 18:25:54  maj0r
+ * Bug beim Klicken neben den TableHeader behoben.
+ *
  * Revision 1.94  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -1233,6 +1236,9 @@ public class DownloadPanel
                 return;
             }
             int col = header.columnAtPoint(e.getPoint());
+            if (col == -1){
+                return;
+            }
             TableColumn pressedColumn = downloadTable.getColumnModel().
                 getColumn(col);
             if (pressedColumn == columns[9]) {
