@@ -12,7 +12,7 @@ import de.applejuicenet.client.gui.*;
 import de.applejuicenet.client.gui.listener.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.11 2003/08/21 09:30:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.12 2003/09/13 11:31:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import de.applejuicenet.client.gui.listener.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PluginConnector.java,v $
+ * Revision 1.12  2003/09/13 11:31:30  maj0r
+ * Verwendung vereinfacht.
+ *
  * Revision 1.11  2003/08/21 09:30:40  maj0r
  * Unnoetige Imports entfernt.
  *
@@ -65,11 +68,14 @@ public abstract class PluginConnector
     //Liefert eine Kurzbeschreibung des Plugins zurück.
     public abstract String getBeschreibung();
 
-    protected void initIcon(String jarFile){
+    protected void initIcon(){
         if (!initialized) {
             initialized = true;
             try {
-                File aJar = new File(jarFile);
+                String classname = getClass().toString();
+                String path = System.getProperty("user.dir") + File.separator + "plugins" +
+                        File.separator + classname.substring(classname.lastIndexOf('.') + 1) + ".jar";
+                File aJar = new File(path);
                 JarFile jf = new JarFile(aJar);
                 String entryName;
 
