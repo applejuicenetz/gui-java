@@ -1,22 +1,41 @@
 package de.applejuicenet.client;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-
-import java.awt.*;
-import javax.swing.*;
-
-import org.apache.log4j.*;
-import de.applejuicenet.client.gui.*;
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.shared.*;
-import com.l2fprod.util.OS;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.HTMLLayout;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import com.l2fprod.util.OS;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.QuickConnectionSettingsDialog;
+import de.applejuicenet.client.gui.WizardDialog;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.LinkListener;
+import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.Splash;
+import de.applejuicenet.client.shared.WebsiteContentLoader;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.37 2003/11/19 11:54:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.38 2003/11/25 14:22:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +44,9 @@ import java.net.Socket;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.38  2003/11/25 14:22:37  maj0r
+ * Parameteruebergabe an das GUI geaendert.
+ *
  * Revision 1.37  2003/11/19 11:54:07  maj0r
  * LinkListener fertiggestellt.
  *
@@ -100,16 +122,16 @@ import java.net.Socket;
  * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
  *
  * Revision 1.14  2003/06/22 20:03:54  maj0r
- * Konsolenausgaben hinzugefügt.
+ * Konsolenausgaben hinzugefuegt.
  *
  * Revision 1.13  2003/06/22 19:54:45  maj0r
- * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
+ * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefuegt.
  *
  * Revision 1.12  2003/06/22 19:02:58  maj0r
- * Fehlernachricht bei nicht erreichbarem Core geändert.
+ * Fehlernachricht bei nicht erreichbarem Core geaendert.
  *
  * Revision 1.11  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -119,19 +141,28 @@ public class AppleJuiceClient {
 
     public static void main(String[] args) {
         boolean processLink = false;
-        if (args != null && (args.length == 1 || args.length==2)) {
+        String link = "";
+        if (args != null && args.length > 0) {
             try {
-                if (args.length==2){
-                    System.setProperty("user.dir", args[1]);
+                for (int i=0; i<args.length; i++){
+                    if (args[i].indexOf("-path=")!=-1){
+                        System.setProperty("user.dir", args[i].substring(6));
+                        break;
+                    }
                 }
-                int PORT = PropertiesManager.getOptionsManager().getLinkListenerPort();
-                String passwort = PropertiesManager.getOptionsManager().
-                    getRemoteSettings().getOldPassword();
-                Socket socket = new Socket("localhost", PORT);
-                PrintStream out = new PrintStream(socket.getOutputStream());
-                out.println(passwort + "|" + args[0]);
-                socket.close();
-                System.exit(0);
+                for (int i=0; i<args.length; i++){
+                    if (args[i].indexOf("-link=")!=-1){
+                        link = args[i].substring(6);
+                        int PORT = PropertiesManager.getOptionsManager().getLinkListenerPort();
+                        String passwort = PropertiesManager.getOptionsManager().
+                            getRemoteSettings().getOldPassword();
+                        Socket socket = new Socket("localhost", PORT);
+                        PrintStream out = new PrintStream(socket.getOutputStream());
+                        out.println(passwort + "|" + link);
+                        socket.close();
+                        System.exit(0);
+                    }
+                }
             }
             catch (IOException ioE) {
                 //Keine bisherige GUI-Instanz vorhanden, also GUI oeffnen
@@ -261,7 +292,7 @@ public class AppleJuiceClient {
             splash.dispose();
             LinkListener linkListener = new LinkListener();
             if (processLink){
-                ApplejuiceFassade.getInstance().processLink(args[0]);
+                ApplejuiceFassade.getInstance().processLink(link);
             }
             if (PropertiesManager.getOptionsManager().isErsterStart())
             {
