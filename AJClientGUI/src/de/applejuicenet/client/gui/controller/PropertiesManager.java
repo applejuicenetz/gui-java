@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.16 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.17 2004/01/02 16:48:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.17  2004/01/02 16:48:30  maj0r
+ * Serverliste holen geaendert.
+ *
  * Revision 1.16  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -554,38 +557,6 @@ public class PropertiesManager
 
     public void saveAJSettings(AJSettings ajSettings) {
         ApplejuiceFassade.getInstance().saveAJSettings(ajSettings);
-    }
-
-    public String[] getActualServers() {
-        try{
-            String serverUrl;
-            String serverPfad;
-            serverUrl = getFirstAttrbuteByTagName(new String[]{"options", "server",
-                                                          "url"});
-            serverPfad = getFirstAttrbuteByTagName(new String[]{"options",
-                                                              "server", "pfad"});
-            String webContent = WebsiteContentLoader.getWebsiteContent(serverUrl, 80, serverPfad);
-            StringBuffer temp = new StringBuffer(webContent);
-            int pos = 0;
-            int endIndex;
-            ArrayList servers = new ArrayList();
-            while ((pos = temp.indexOf("ajfsp", pos))!=-1){
-                endIndex = temp.indexOf("\"", pos);
-                String test = temp.substring(pos, endIndex);
-                servers.add(test);
-                pos = endIndex;
-            }
-            return (String[]) servers.toArray(new String[servers.size()]);
-        }
-        catch (Exception e)
-        {
-            AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("properties.xml neu erstellt", e);
-            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
-                                                   "Die Datei wird neu erstellt.", false);
-            return null;
-        }
     }
 
     //PositionManager-Interface

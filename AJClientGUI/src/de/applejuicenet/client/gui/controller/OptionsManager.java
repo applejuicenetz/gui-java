@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.31 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.32 2004/01/02 16:48:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.32  2004/01/02 16:48:30  maj0r
+ * Serverliste holen geaendert.
+ *
  * Revision 1.31  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -82,8 +85,6 @@ public interface OptionsManager {
             InvalidPasswordException;
 
     public void saveAJSettings(AJSettings ajSettings);
-
-    public String[] getActualServers();
 
     public String getDefaultTheme();
 

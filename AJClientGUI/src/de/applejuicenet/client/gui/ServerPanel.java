@@ -42,7 +42,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.43 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.44 2004/01/02 16:48:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -51,6 +51,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.44  2004/01/02 16:48:30  maj0r
+ * Serverliste holen geaendert.
+ *
  * Revision 1.43  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -271,9 +274,11 @@ public class ServerPanel
             public void mouseClicked(MouseEvent e) {
                 Thread worker = new Thread() {
                     public void run() {
-                        String[] server = PropertiesManager.getOptionsManager().
-                            getActualServers();
                         ApplejuiceFassade af = ApplejuiceFassade.getInstance();
+                        String[] server = af.getNetworkKnownServers();
+                        if (server == null || server.length == 0){
+                            return;
+                        }
                         for (int i = 0; i < server.length; i++) {
                             af.processLink(server[i]);
                         }

@@ -30,9 +30,10 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.NetworkServerXMLHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.85 2004/01/01 18:37:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.86 2004/01/02 16:48:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +42,9 @@ import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.86  2004/01/02 16:48:30  maj0r
+ * Serverliste holen geaendert.
+ *
  * Revision 1.85  2004/01/01 18:37:50  maj0r
  * Version erhoeht.
  *
@@ -445,6 +449,11 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     public PartListDO getPartList(DownloadSourceDO downloadSourceDO) {
         PartListHolder partlistXML = new UserPartListXMLHolder(downloadSourceDO);
         return partlistXML.getPartList();
+    }
+
+    public String[] getNetworkKnownServers() {
+        NetworkServerXMLHolder getServerXMLHolder = NetworkServerXMLHolder.getInstance();
+        return getServerXMLHolder.getNetworkKnownServers();
     }
 
     public AJSettings getAJSettings() {
