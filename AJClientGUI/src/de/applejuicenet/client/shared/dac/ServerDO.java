@@ -4,42 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.13 2004/05/24 08:03:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.14 2004/05/24 08:05:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ServerDO.java,v $
- * Revision 1.13  2004/05/24 08:03:50  maj0r
- * Unnoetige mehrfache Objektinstanziierung entfernt.
- *
- * Revision 1.12  2004/02/18 17:24:21  maj0r
- * Von DOM auf SAX umgebaut.
- *
- * Revision 1.11  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.10  2004/01/24 09:46:40  maj0r
- * An neue Doku angepasst.
- *
- * Revision 1.9  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.8  2003/11/03 15:18:39  maj0r
- * Optimierungen.
- *
- * Revision 1.7  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.6  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.5  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
