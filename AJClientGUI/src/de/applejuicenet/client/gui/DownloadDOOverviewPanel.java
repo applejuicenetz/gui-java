@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.11 2003/09/01 18:00:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.12 2003/09/02 19:29:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.12  2003/09/02 19:29:26  maj0r
+ * Einige Stellen synchronisiert und Nullpointer behoben.
+ * Version 0.21 beta.
+ *
  * Revision 1.11  2003/09/01 18:00:15  maj0r
  * Wo es ging, DO auf primitiven Datentyp umgebaut.
  * Status "geprueft" eingefuehrt.
@@ -168,10 +172,10 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
                             mbEnde = mbStart + 1048576;
                             kleiner = partPos;
                             groesstes = partPos;
-                            while (parts[kleiner].getFromPosition()>mbStart){
+                            while (parts[kleiner].getFromPosition()>mbStart && kleiner>0){
                                 kleiner--;
                             }
-                            while (parts[groesstes].getFromPosition()<mbEnde){
+                            while (parts[groesstes].getFromPosition()<mbEnde && groesstes<parts.length){
                                 groesstes++;
                             }
                             groesstes--;

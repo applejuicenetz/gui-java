@@ -3,11 +3,13 @@ package de.applejuicenet.client.gui.controller;
 import java.util.*;
 
 import org.w3c.dom.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.27 2003/09/01 15:50:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.28 2003/09/02 19:29:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +18,10 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.28  2003/09/02 19:29:26  maj0r
+ * Einige Stellen synchronisiert und Nullpointer behoben.
+ * Version 0.21 beta.
+ *
  * Revision 1.27  2003/09/01 15:50:51  maj0r
  * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
  *
@@ -103,15 +109,16 @@ public class ModifiedXMLHolder
     private HashMap uploadMap = new HashMap();
     private NetworkInfo netInfo;
     private String[] status = new String[6];
-    int i = 0;
 
     private int connectedWithServerId = -1;
     private int tryConnectToServer = -1;
 
     private boolean reloadInProgress = false;
+    private Logger logger;
 
     public ModifiedXMLHolder() {
         super("/xml/modified.xml", "");
+        logger = Logger.getLogger(getClass());
     }
 
     public HashMap getServer() {
@@ -174,27 +181,27 @@ public class ModifiedXMLHolder
                 status[0] = "Nicht verbunden";
                 status[1] = "<Kein Server>";
             }
+            status[4] = netInfo.getExterneIP();
+            if (nodes.getLength() == 0)
+            {
+                return status; //Keine Ver�nderung seit dem letzten Abrufen
+            }
+            Element e = (Element) nodes.item(0); //Es gibt nur ein information-Element
+            long credits = Long.parseLong(e.getAttribute("credits"));
+            long up = Long.parseLong(e.getAttribute("uploadspeed"));
+            long down = Long.parseLong(e.getAttribute("downloadspeed"));
+            status[2] = " in: " + getBytesSpeed(down) + " out: " + getBytesSpeed(up);
+            long uptotal = Long.parseLong(e.getAttribute("sessionupload"));
+            long downtotal = Long.parseLong(e.getAttribute("sessiondownload"));
+            status[3] = " in: " + bytesUmrechnen(downtotal) + " out: " + bytesUmrechnen(uptotal);
+            status[4] = netInfo.getExterneIP();
+            status[5] = " Credits: " + bytesUmrechnen(credits);
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", ex);
         }
-        status[4] = netInfo.getExterneIP();
-        if (nodes.getLength() == 0)
-        {
-            return status; //Keine Ver�nderung seit dem letzten Abrufen
-        }
-        Element e = (Element) nodes.item(0); //Es gibt nur ein information-Element
-        long credits = Long.parseLong(e.getAttribute("credits"));
-        long up = Long.parseLong(e.getAttribute("uploadspeed"));
-        long down = Long.parseLong(e.getAttribute("downloadspeed"));
-        status[2] = " in: " + getBytesSpeed(down) + " out: " + getBytesSpeed(up);
-        long uptotal = Long.parseLong(e.getAttribute("sessionupload"));
-        long downtotal = Long.parseLong(e.getAttribute("sessiondownload"));
-        status[3] = " in: " + bytesUmrechnen(downtotal) + " out: " + bytesUmrechnen(uptotal);
-        status[4] = netInfo.getExterneIP();
-        status[5] = " Credits: " + bytesUmrechnen(credits);
-
         return status;
     }
 
@@ -275,388 +282,429 @@ public class ModifiedXMLHolder
     }
 
     private void updateIDs() {
-        serverIDs.clear();
-        uploadIDs.clear();
-        downloadIDs.clear();
-        sourcenZuDownloads.clear();
-        Element e = null;
-        String id = null;
-        NodeList nodes = document.getElementsByTagName("serverid");
-        int size = nodes.getLength();
-        for (int i = 0; i < size; i++)
-        {
-            e = (Element) nodes.item(i);
-            id = e.getAttribute("id");
-            serverIDs.add(new MapSetStringKey(id));
-        }
-        nodes = document.getElementsByTagName("uploadid");
-        size = nodes.getLength();
-        for (int i = 0; i < size; i++)
-        {
-            e = (Element) nodes.item(i);
-            id = e.getAttribute("id");
-            uploadIDs.add(new MapSetStringKey(id));
-        }
-        MapSetStringKey suchKey = null;
-        ArrayList toRemove = new ArrayList();
-        Iterator it = uploadMap.keySet().iterator();
-        while (it.hasNext())
-        {
-            suchKey = (MapSetStringKey) it.next();
-            if (!uploadIDs.contains(suchKey))
+        try{
+            serverIDs.clear();
+            uploadIDs.clear();
+            downloadIDs.clear();
+            sourcenZuDownloads.clear();
+            Element e = null;
+            String id = null;
+            NodeList nodes = document.getElementsByTagName("serverid");
+            int size = nodes.getLength();
+            for (int i = 0; i < size; i++)
             {
-                toRemove.add(suchKey);
+                e = (Element) nodes.item(i);
+                id = e.getAttribute("id");
+                serverIDs.add(new MapSetStringKey(id));
             }
-        }
-        for (int x = 0; x < toRemove.size(); x++)
-        {
-            uploadMap.remove(toRemove.get(x));
-        }
-        nodes = document.getElementsByTagName("downloadid");
-        NodeList userNodes;
-        size = nodes.getLength();
-        int userSize;
-        Element userElement = null;
-        MapSetStringKey downloadKey;
-        String userId;
-        for (int i = 0; i < size; i++)
-        {
-            e = (Element) nodes.item(i);
-            id = e.getAttribute("id");
-            downloadKey = new MapSetStringKey(id);
-            downloadIDs.add(downloadKey);
-            userNodes = e.getElementsByTagName("userid");
-            userSize = userNodes.getLength();
-            for (int x = 0; x < userSize; x++)
+            nodes = document.getElementsByTagName("uploadid");
+            size = nodes.getLength();
+            for (int i = 0; i < size; i++)
             {
-                userElement = (Element) userNodes.item(x);
-                userId = userElement.getAttribute("id");
-                sourcenZuDownloads.put(new MapSetStringKey(userId), downloadKey);
+                e = (Element) nodes.item(i);
+                id = e.getAttribute("id");
+                uploadIDs.add(new MapSetStringKey(id));
             }
-        }
-        it = downloadMap.keySet().iterator();
-        MapSetStringKey key;
-        ArrayList toRemoveDownload = new ArrayList();
-        ArrayList toRemoveSources = new ArrayList();
-        DownloadDO downloadDO = null;
-        DownloadSourceDO[] sources = null;
-        while (it.hasNext())
-        {
-            key = (MapSetStringKey) it.next();
-            if (!downloadIDs.contains(key))
-            {
-                toRemoveDownload.add(key);
-            }
-            else
-            {
-                downloadDO = (DownloadDO) downloadMap.get(key);
-                sources = downloadDO.getSources();
-                if (sources != null)
+            MapSetStringKey suchKey = null;
+            ArrayList toRemove = new ArrayList();
+            synchronized(this){
+                Iterator it = uploadMap.keySet().iterator();
+                while (it.hasNext())
                 {
-                    for (int x = 0; x < sources.length; x++)
+                    suchKey = (MapSetStringKey) it.next();
+                    if (!uploadIDs.contains(suchKey))
                     {
-                        key = new MapSetStringKey(sources[x].getId());
-                        if (!sourcenZuDownloads.containsKey(key))
+                        toRemove.add(suchKey);
+                    }
+                }
+                for (int x = 0; x < toRemove.size(); x++)
+                {
+                    uploadMap.remove(toRemove.get(x));
+                }
+            }
+            nodes = document.getElementsByTagName("downloadid");
+            NodeList userNodes;
+            size = nodes.getLength();
+            int userSize;
+            Element userElement = null;
+            MapSetStringKey downloadKey;
+            String userId;
+            for (int i = 0; i < size; i++)
+            {
+                e = (Element) nodes.item(i);
+                id = e.getAttribute("id");
+                downloadKey = new MapSetStringKey(id);
+                downloadIDs.add(downloadKey);
+                userNodes = e.getElementsByTagName("userid");
+                userSize = userNodes.getLength();
+                for (int x = 0; x < userSize; x++)
+                {
+                    userElement = (Element) userNodes.item(x);
+                    userId = userElement.getAttribute("id");
+                    sourcenZuDownloads.put(new MapSetStringKey(userId), downloadKey);
+                }
+            }
+            synchronized(this){
+                Iterator it = downloadMap.keySet().iterator();
+                MapSetStringKey key;
+                ArrayList toRemoveDownload = new ArrayList();
+                ArrayList toRemoveSources = new ArrayList();
+                DownloadDO downloadDO = null;
+                DownloadSourceDO[] sources = null;
+                while (it.hasNext())
+                {
+                    key = (MapSetStringKey) it.next();
+                    if (!downloadIDs.contains(key))
+                    {
+                        toRemoveDownload.add(key);
+                    }
+                    else
+                    {
+                        downloadDO = (DownloadDO) downloadMap.get(key);
+                        sources = downloadDO.getSources();
+                        if (sources != null)
                         {
-                            toRemoveSources.add(key);
+                            for (int x = 0; x < sources.length; x++)
+                            {
+                                key = new MapSetStringKey(sources[x].getId());
+                                if (!sourcenZuDownloads.containsKey(key))
+                                {
+                                    toRemoveSources.add(key);
+                                }
+                            }
                         }
+                    }
+                }
+                size = toRemoveDownload.size();
+                for (int i = 0; i < size; i++)
+                {
+                    downloadMap.remove(toRemoveDownload.get(i));
+                }
+                size = toRemoveSources.size();
+                for (int i = 0; i < size; i++)
+                {
+                    key = (MapSetStringKey) toRemoveSources.get(i);
+                    downloadDO = (DownloadDO) sourcenZuDownloads.get(key);
+                    if (downloadDO != null)
+                    {
+                        downloadDO.removeSource(
+                                key.getValue());
                     }
                 }
             }
         }
-        size = toRemoveDownload.size();
-        for (int i = 0; i < size; i++)
-        {
-            downloadMap.remove(toRemoveDownload.get(i));
-        }
-        size = toRemoveSources.size();
-        for (int i = 0; i < size; i++)
-        {
-            key = (MapSetStringKey) toRemoveSources.get(i);
-            downloadDO = (DownloadDO) sourcenZuDownloads.get(key);
-            if (downloadDO != null)
-            {
-                downloadDO.removeSource(
-                        key.getValue());
-            }
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
     private void updateDownloads() {
-        Element e = null;
-        int id;
-        int shareid;
-        String hash = null;
-        long fileSize;
-        long sizeReady;
-        String temp = null;
-        int status;
-        String filename = null;
-        String targetDirectory = null;
-        int powerDownload;
-        int temporaryFileNumber;
-        NodeList nodes = document.getElementsByTagName("download");
-        int size = nodes.getLength();
-        DownloadDO downloadDO = null;
-        for (int i = 0; i < size; i++)
-        {
-            e = (Element) nodes.item(i);
-            id = Integer.parseInt(e.getAttribute("id"));
-            MapSetStringKey key = new MapSetStringKey(id);
-            if (downloadMap.containsKey(key))
-            {
-                downloadDO = (DownloadDO) downloadMap.get(key);
-                downloadDO.setShareId(Integer.parseInt(e.getAttribute("shareid")));
-                downloadDO.setHash(e.getAttribute("hash"));
-                downloadDO.setGroesse(Long.parseLong(e.getAttribute("size")));
-                downloadDO.setReady(Long.parseLong(e.getAttribute("ready")));
-                temp = e.getAttribute("status");
-                downloadDO.setStatus(Integer.parseInt(temp));
-                downloadDO.setFilename(e.getAttribute("filename"));
-                downloadDO.setTargetDirectory(e.getAttribute("targetdirectory"));
-                temp = e.getAttribute("powerdownload");
-                downloadDO.setPowerDownload(Integer.parseInt(temp));
-                temp = e.getAttribute("temporaryfilenumber");
-                downloadDO.setTemporaryFileNumber(Integer.parseInt(temp));
+        try{
+            Element e = null;
+            int id;
+            int shareid;
+            String hash = null;
+            long fileSize;
+            long sizeReady;
+            String temp = null;
+            int status;
+            String filename = null;
+            String targetDirectory = null;
+            int powerDownload;
+            int temporaryFileNumber;
+            NodeList nodes = document.getElementsByTagName("download");
+            int size = nodes.getLength();
+            DownloadDO downloadDO = null;
+            MapSetStringKey key;
+            synchronized(this){
+                for (int i = 0; i < size; i++)
+                {
+                    e = (Element) nodes.item(i);
+                    id = Integer.parseInt(e.getAttribute("id"));
+                    key = new MapSetStringKey(id);
+                    if (downloadMap.containsKey(key))
+                    {
+                        downloadDO = (DownloadDO) downloadMap.get(key);
+                        downloadDO.setShareId(Integer.parseInt(e.getAttribute("shareid")));
+                        downloadDO.setHash(e.getAttribute("hash"));
+                        downloadDO.setGroesse(Long.parseLong(e.getAttribute("size")));
+                        downloadDO.setReady(Long.parseLong(e.getAttribute("ready")));
+                        temp = e.getAttribute("status");
+                        downloadDO.setStatus(Integer.parseInt(temp));
+                        downloadDO.setFilename(e.getAttribute("filename"));
+                        downloadDO.setTargetDirectory(e.getAttribute("targetdirectory"));
+                        temp = e.getAttribute("powerdownload");
+                        downloadDO.setPowerDownload(Integer.parseInt(temp));
+                        temp = e.getAttribute("temporaryfilenumber");
+                        downloadDO.setTemporaryFileNumber(Integer.parseInt(temp));
+                    }
+                    else
+                    {
+                        shareid = Integer.parseInt(e.getAttribute("shareid"));
+                        hash = e.getAttribute("hash");
+                        fileSize = Long.parseLong(e.getAttribute("size"));
+                        sizeReady = Long.parseLong(e.getAttribute("ready"));
+                        temp = e.getAttribute("status");
+                        status = Integer.parseInt(temp);
+                        filename = e.getAttribute("filename");
+                        targetDirectory = e.getAttribute("targetdirectory");
+                        temp = e.getAttribute("powerdownload");
+                        powerDownload = Integer.parseInt(temp);
+                        temp = e.getAttribute("temporaryfilenumber");
+                        temporaryFileNumber = Integer.parseInt(temp);
+
+                        downloadDO = new DownloadDO(id, shareid, hash, fileSize, sizeReady, status, filename,
+                                                    targetDirectory, powerDownload, temporaryFileNumber);
+
+                        downloadMap.put(new MapSetStringKey(id), downloadDO);
+                    }
+                }
             }
-            else
+            int directstate;
+            nodes = document.getElementsByTagName("user");
+            size = nodes.getLength();
+            int downloadFrom;
+            int downloadTo;
+            int actualDownloadPosition;
+            int speed;
+            Version version = null;
+            String versionNr = null;
+            String nickname = null;
+            int queuePosition;
+            int os;
+            DownloadSourceDO downloadSourceDO = null;
+            for (int i = 0; i < size; i++)
             {
-                shareid = Integer.parseInt(e.getAttribute("shareid"));
-                hash = e.getAttribute("hash");
-                fileSize = Long.parseLong(e.getAttribute("size"));
-                sizeReady = Long.parseLong(e.getAttribute("ready"));
+                e = (Element) nodes.item(i);
+                id = Integer.parseInt(e.getAttribute("id"));
                 temp = e.getAttribute("status");
                 status = Integer.parseInt(temp);
-                filename = e.getAttribute("filename");
-                targetDirectory = e.getAttribute("targetdirectory");
-                temp = e.getAttribute("powerdownload");
-                powerDownload = Integer.parseInt(temp);
-                temp = e.getAttribute("temporaryfilenumber");
-                temporaryFileNumber = Integer.parseInt(temp);
-
-                downloadDO = new DownloadDO(id, shareid, hash, fileSize, sizeReady, status, filename,
-                                            targetDirectory, powerDownload, temporaryFileNumber);
-
-                downloadMap.put(new MapSetStringKey(id), downloadDO);
-            }
-        }
-
-        int directstate;
-        nodes = document.getElementsByTagName("user");
-        size = nodes.getLength();
-        int downloadFrom;
-        int downloadTo;
-        int actualDownloadPosition;
-        int speed;
-        Version version = null;
-        String versionNr = null;
-        String nickname = null;
-        int queuePosition;
-        int os;
-        DownloadSourceDO downloadSourceDO = null;
-        for (int i = 0; i < size; i++)
-        {
-            e = (Element) nodes.item(i);
-            id = Integer.parseInt(e.getAttribute("id"));
-            temp = e.getAttribute("status");
-            status = Integer.parseInt(temp);
-            temp = e.getAttribute("directstate");
-            directstate = Integer.parseInt(temp);
-            if (status == DownloadSourceDO.UEBERTRAGUNG)
-            {
-                temp = e.getAttribute("downloadfrom");
-                downloadFrom = Integer.parseInt(temp);
-                temp = e.getAttribute("downloadto");
-                downloadTo = Integer.parseInt(temp);
-                temp = e.getAttribute("actualdownloadposition");
-                actualDownloadPosition = Integer.parseInt(temp);
-                temp = e.getAttribute("speed");
-                speed = Integer.parseInt(temp);
-            }
-            else
-            {
-                downloadFrom = -1;
-                downloadTo = -1;
-                actualDownloadPosition = -1;
-                speed = 0;
-            }
-            versionNr = e.getAttribute("version");
-            if (versionNr.compareToIgnoreCase("0.0.0.0") == 0)
-            {
-                version = null;
-            }
-            else
-            {
-                temp = e.getAttribute("operatingsystem");
-                os = Integer.parseInt(temp);
-                version = new Version(versionNr, os);
-            }
-            temp = e.getAttribute("queueposition");
-            queuePosition = Integer.parseInt(temp);
-            temp = e.getAttribute("powerdownload");
-            powerDownload = Integer.parseInt(temp);
-            filename = e.getAttribute("filename");
-            nickname = e.getAttribute("nickname");
-            downloadSourceDO = new DownloadSourceDO(id, status, directstate, downloadFrom, downloadTo, actualDownloadPosition,
-                                                    speed, version, queuePosition, powerDownload, filename, nickname);
-            MapSetStringKey key = (MapSetStringKey) sourcenZuDownloads.get(new MapSetStringKey(id));
-            downloadDO = (DownloadDO) downloadMap.get(key);
-            if (downloadDO != null)
-            {
-                downloadDO.addOrAlterSource(downloadSourceDO);
-            }
-        }
-    }
-
-    private void updateUploads() {
-        NodeList nodes = document.getElementsByTagName("upload");
-        int size = nodes.getLength();
-        Element e = null;
-        int shareId;
-        UploadDO upload = null;
-        int id;
-        int os;
-        String versionsNr = null;
-        Version version = null;
-        int prioritaet;
-        String nick = null;
-        String status = null;
-        long uploadFrom;
-        long uploadTo;
-        long actualUploadPos;
-        int speed;
-        MapSetStringKey idKey = null;
-        HashMap share = ApplejuiceFassade.getInstance().getShare(false);
-        for (int i = 0; i < size; i++)
-        {
-            e = (Element) nodes.item(i);
-            id = Integer.parseInt(e.getAttribute("id"));
-            idKey = new MapSetStringKey(id);
-            if (uploadMap.containsKey(idKey))
-            {
-                upload = (UploadDO) uploadMap.get(idKey);
-                upload.setShareFileID(Integer.parseInt(e.getAttribute("shareid")));
-                upload.setPrioritaet(Integer.parseInt(e.getAttribute("priority")));
-                upload.setNick(e.getAttribute("nick"));
-                upload.setStatus(Integer.parseInt(e.getAttribute("status")));
-                upload.setUploadFrom(Long.parseLong(e.getAttribute("uploadfrom")));
-                upload.setUploadTo(Long.parseLong(e.getAttribute("uploadto")));
-                upload.setActualUploadPosition(Long.parseLong(e.getAttribute("actualuploadposition")));
-                upload.setSpeed(Integer.parseInt(e.getAttribute("speed")));
-            }
-            else
-            {
-                shareId = Integer.parseInt(e.getAttribute("shareid"));
-                versionsNr = e.getAttribute("version");
-                if (versionsNr.compareToIgnoreCase("0.0.0.0") == 0)
+                temp = e.getAttribute("directstate");
+                directstate = Integer.parseInt(temp);
+                if (status == DownloadSourceDO.UEBERTRAGUNG)
+                {
+                    temp = e.getAttribute("downloadfrom");
+                    downloadFrom = Integer.parseInt(temp);
+                    temp = e.getAttribute("downloadto");
+                    downloadTo = Integer.parseInt(temp);
+                    temp = e.getAttribute("actualdownloadposition");
+                    actualDownloadPosition = Integer.parseInt(temp);
+                    temp = e.getAttribute("speed");
+                    speed = Integer.parseInt(temp);
+                }
+                else
+                {
+                    downloadFrom = -1;
+                    downloadTo = -1;
+                    actualDownloadPosition = -1;
+                    speed = 0;
+                }
+                versionNr = e.getAttribute("version");
+                if (versionNr.compareToIgnoreCase("0.0.0.0") == 0)
                 {
                     version = null;
                 }
                 else
                 {
-                    os = Integer.parseInt(e.getAttribute("operatingsystem"));
-                    version = new Version(versionsNr, os);
+                    temp = e.getAttribute("operatingsystem");
+                    os = Integer.parseInt(temp);
+                    version = new Version(versionNr, os);
                 }
-                prioritaet = Integer.parseInt(e.getAttribute("priority"));
-                nick = e.getAttribute("nick");
-                status = e.getAttribute("status");
-                uploadFrom = Long.parseLong(e.getAttribute("uploadfrom"));
-                uploadTo = Long.parseLong(e.getAttribute("uploadto"));
-                actualUploadPos = Long.parseLong(e.getAttribute("actualuploadposition"));
-                speed = Integer.parseInt(e.getAttribute("speed"));
-                upload = new UploadDO(id, shareId, version, status, nick,
-                                      uploadFrom, uploadTo, actualUploadPos,
-                                      speed, prioritaet);
-                ShareDO shareDO = (ShareDO) share.get(new MapSetStringKey(shareId));
-                upload.setDateiName(shareDO.getShortfilename());
-                uploadMap.put(idKey, upload);
+                temp = e.getAttribute("queueposition");
+                queuePosition = Integer.parseInt(temp);
+                temp = e.getAttribute("powerdownload");
+                powerDownload = Integer.parseInt(temp);
+                filename = e.getAttribute("filename");
+                nickname = e.getAttribute("nickname");
+                downloadSourceDO = new DownloadSourceDO(id, status, directstate, downloadFrom, downloadTo, actualDownloadPosition,
+                                                        speed, version, queuePosition, powerDownload, filename, nickname);
+                key = (MapSetStringKey) sourcenZuDownloads.get(new MapSetStringKey(id));
+                downloadDO = (DownloadDO) downloadMap.get(key);
+                if (downloadDO != null)
+                {
+                    downloadDO.addOrAlterSource(downloadSourceDO);
+                }
             }
+        }
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    private void updateUploads() {
+        try{
+            NodeList nodes = document.getElementsByTagName("upload");
+            int size = nodes.getLength();
+            Element e = null;
+            int shareId;
+            UploadDO upload = null;
+            int id;
+            int os;
+            String versionsNr = null;
+            Version version = null;
+            int prioritaet;
+            String nick = null;
+            String status = null;
+            long uploadFrom;
+            long uploadTo;
+            long actualUploadPos;
+            int speed;
+            MapSetStringKey idKey = null;
+            synchronized(this){
+                HashMap share = ApplejuiceFassade.getInstance().getShare(false);
+                for (int i = 0; i < size; i++)
+                {
+                    e = (Element) nodes.item(i);
+                    id = Integer.parseInt(e.getAttribute("id"));
+                    idKey = new MapSetStringKey(id);
+                    if (uploadMap.containsKey(idKey))
+                    {
+                        upload = (UploadDO) uploadMap.get(idKey);
+                        upload.setShareFileID(Integer.parseInt(e.getAttribute("shareid")));
+                        upload.setPrioritaet(Integer.parseInt(e.getAttribute("priority")));
+                        upload.setNick(e.getAttribute("nick"));
+                        upload.setStatus(Integer.parseInt(e.getAttribute("status")));
+                        upload.setUploadFrom(Long.parseLong(e.getAttribute("uploadfrom")));
+                        upload.setUploadTo(Long.parseLong(e.getAttribute("uploadto")));
+                        upload.setActualUploadPosition(Long.parseLong(e.getAttribute("actualuploadposition")));
+                        upload.setSpeed(Integer.parseInt(e.getAttribute("speed")));
+                    }
+                    else
+                    {
+                        shareId = Integer.parseInt(e.getAttribute("shareid"));
+                        versionsNr = e.getAttribute("version");
+                        if (versionsNr.compareToIgnoreCase("0.0.0.0") == 0)
+                        {
+                            version = null;
+                        }
+                        else
+                        {
+                            os = Integer.parseInt(e.getAttribute("operatingsystem"));
+                            version = new Version(versionsNr, os);
+                        }
+                        prioritaet = Integer.parseInt(e.getAttribute("priority"));
+                        nick = e.getAttribute("nick");
+                        status = e.getAttribute("status");
+                        uploadFrom = Long.parseLong(e.getAttribute("uploadfrom"));
+                        uploadTo = Long.parseLong(e.getAttribute("uploadto"));
+                        actualUploadPos = Long.parseLong(e.getAttribute("actualuploadposition"));
+                        speed = Integer.parseInt(e.getAttribute("speed"));
+                        upload = new UploadDO(id, shareId, version, status, nick,
+                                              uploadFrom, uploadTo, actualUploadPos,
+                                              speed, prioritaet);
+                        ShareDO shareDO = (ShareDO) share.get(new MapSetStringKey(shareId));
+                        upload.setDateiName(
+                                shareDO.getShortfilename());
+                        uploadMap.put(idKey, upload);
+                    }
+                }
+            }
+        }
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
     private void updateServer() {
-        NodeList nodes = document.getElementsByTagName("server");
-        Iterator it = serverMap.keySet().iterator();
-        MapSetStringKey idKey = null;
-        ArrayList toRemove = new ArrayList();
-        while (it.hasNext())
-        {
-            idKey = (MapSetStringKey) it.next();
-            if (!serverIDs.contains(idKey))
+        try{
+            NodeList nodes = document.getElementsByTagName("server");
+            synchronized(this){
+                Iterator it = serverMap.keySet().iterator();
+                MapSetStringKey idKey = null;
+                ArrayList toRemove = new ArrayList();
+                while (it.hasNext())
+                {
+                    idKey = (MapSetStringKey) it.next();
+                    if (!serverIDs.contains(idKey))
+                    {
+                        toRemove.add(idKey);
+                    }
+                }
+                for (int i = 0; i < toRemove.size(); i++)
+                {
+                    serverMap.remove(toRemove.get(i));
+                }
+            }
+            int size = nodes.getLength();
+            Element e = null;
+            String id_key = null;
+            int id;
+            String name = null;
+            String host = null;
+            long lastseen;
+            String port = null;
+            ServerDO server = null;
+            for (int i = 0; i < size; i++)
             {
-                toRemove.add(idKey);
+                e = (Element) nodes.item(i);
+                id_key = e.getAttribute("id");
+                id = Integer.parseInt(id_key);
+                name = e.getAttribute("name");
+                host = e.getAttribute("host");
+                lastseen = Long.parseLong(e.getAttribute("lastseen"));
+                port = e.getAttribute("port");
+                server = new ServerDO(id, name, host, port, lastseen);
+                serverMap.put(new MapSetStringKey(id_key), server);
             }
         }
-        for (int i = 0; i < toRemove.size(); i++)
-        {
-            serverMap.remove(toRemove.get(i));
-        }
-        int size = nodes.getLength();
-        Element e = null;
-        String id_key = null;
-        int id;
-        String name = null;
-        String host = null;
-        long lastseen;
-        String port = null;
-        ServerDO server = null;
-        for (int i = 0; i < size; i++)
-        {
-            e = (Element) nodes.item(i);
-            id_key = e.getAttribute("id");
-            id = Integer.parseInt(id_key);
-            name = e.getAttribute("name");
-            host = e.getAttribute("host");
-            lastseen = Long.parseLong(e.getAttribute("lastseen"));
-            port = e.getAttribute("port");
-            server = new ServerDO(id, name, host, port, lastseen);
-            serverMap.put(new MapSetStringKey(id_key), server);
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
     private void updateNetworkInfo() {
-        NodeList nodes = document.getElementsByTagName("networkinfo");
-        if (nodes.getLength() == 0)
-        {
-            return; //Keine Ver�nderung seit dem letzten Abrufen
-        }
-        Element e = (Element) nodes.item(0); //Es gibt nur ein Netzerkinfo-Element
-        String users = e.getAttribute("users");
-        String dateien = e.getAttribute("files");
-        String dateigroesse = e.getAttribute("filesize");
-        int tryConnectToServer = Integer.parseInt(e.getAttribute("tryconnecttoserver"));
-        int connectedWithServerId = Integer.parseInt(e.getAttribute("connectedwithserverid"));
-        boolean firewalled = (e.getAttribute("firewalled").compareToIgnoreCase(
-                "true") == 0) ? true : false;
-        String externeIP = e.getAttribute("ip");
-        if (this.tryConnectToServer != tryConnectToServer)
-        {
-            Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.tryConnectToServer)));
+        try{
+            NodeList nodes = document.getElementsByTagName("networkinfo");
+            if (nodes.getLength() == 0)
+            {
+                return; //Keine Ver�nderung seit dem letzten Abrufen
+            }
+            Element e = (Element) nodes.item(0); //Es gibt nur ein Netzerkinfo-Element
+            String users = e.getAttribute("users");
+            String dateien = e.getAttribute("files");
+            String dateigroesse = e.getAttribute("filesize");
+            int tryConnectToServer = Integer.parseInt(e.getAttribute("tryconnecttoserver"));
+            int connectedWithServerId = Integer.parseInt(e.getAttribute("connectedwithserverid"));
+            boolean firewalled = (e.getAttribute("firewalled").compareToIgnoreCase(
+                    "true") == 0) ? true : false;
+            String externeIP = e.getAttribute("ip");
+            if (this.tryConnectToServer != tryConnectToServer)
+            {
+                Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.tryConnectToServer)));
+                if (alterServer != null)
+                {
+                    ((ServerDO) alterServer).setTryConnect(false);
+                }
+                if (tryConnectToServer != -1)
+                {
+                    ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
+                    serverDO.setTryConnect(true);
+                }
+                this.tryConnectToServer = tryConnectToServer;
+            }
+            //if (this.connectedWithServerId != connectedWithServerId){
+            Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.connectedWithServerId)));
             if (alterServer != null)
             {
-                ((ServerDO) alterServer).setTryConnect(false);
+                ((ServerDO) alterServer).setConnected(false);
             }
-            if (tryConnectToServer != -1)
+            if (connectedWithServerId != -1)
             {
-                ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
-                serverDO.setTryConnect(true);
+                ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(connectedWithServerId)));
+                serverDO.setConnected(true);
             }
-            this.tryConnectToServer = tryConnectToServer;
+            this.connectedWithServerId = connectedWithServerId;
+            //}
+            netInfo = new NetworkInfo(users, dateien, dateigroesse, firewalled,
+                                      externeIP, tryConnectToServer, connectedWithServerId);
         }
-        //if (this.connectedWithServerId != connectedWithServerId){
-        Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.connectedWithServerId)));
-        if (alterServer != null)
-        {
-            ((ServerDO) alterServer).setConnected(false);
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
-        if (connectedWithServerId != -1)
-        {
-            ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(connectedWithServerId)));
-            serverDO.setConnected(true);
-        }
-        this.connectedWithServerId = connectedWithServerId;
-        //}
-        netInfo = new NetworkInfo(users, dateien, dateigroesse, firewalled,
-                                  externeIP, tryConnectToServer, connectedWithServerId);
     }
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.1 2003/09/02 16:06:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.2 2003/09/02 19:29:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.2  2003/09/02 19:29:26  maj0r
+ * Einige Stellen synchronisiert und Nullpointer behoben.
+ * Version 0.21 beta.
+ *
  * Revision 1.1  2003/09/02 16:06:26  maj0r
  * Downloadbaum komplett umgebaut.
  *
@@ -42,7 +46,7 @@ public class DownloadRootNode implements Node, DownloadNode {
         synchronized(this){
             int childCount = children.size();   //alte Downloads entfernen
             Object obj;
-            for (int i=0; i<childCount; i++){
+            for (int i=childCount-1; i>=0; i--){
                 obj = children.get(i);
                 if (obj.getClass()==DownloadMainNode.class){
                     if (!downloads.containsKey(new MapSetStringKey(((DownloadMainNode)obj).getDownloadDO().getId()))){

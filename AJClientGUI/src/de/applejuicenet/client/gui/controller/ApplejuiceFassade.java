@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.22 2003/09/02 16:08:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.23 2003/09/02 19:29:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.23  2003/09/02 19:29:26  maj0r
+ * Einige Stellen synchronisiert und Nullpointer behoben.
+ * Version 0.21 beta.
+ *
  * Revision 1.22  2003/09/02 16:08:56  maj0r
  * Downloadbaum komplett umgebaut.
  *
@@ -158,7 +162,7 @@ import org.apache.log4j.Level;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String GUI_VERSION = "0.20 Beta";
+    public static final String GUI_VERSION = "0.21 Beta";
 
     private HashSet downloadListener;
     private HashSet shareListener;
@@ -242,8 +246,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         }
         catch (Exception e)
         {
-            if (logger.isEnabledFor(Level.FATAL))
-                logger.fatal("Unbehandelte Exception", e);
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
@@ -343,7 +347,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             wait(2000);
         }
         catch (InterruptedException e)
-        {}
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
 
     public boolean resumeDownload(int id) {
