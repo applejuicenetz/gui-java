@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<wizard bezeichnung="Wizard">
-		<modem bezeichnung="Modem" maxupload="3" maxdownload="0" maxnewconnections10="25"/>
-		<isdn bezeichnung="ISDN" maxupload="8" maxdownload="0" maxnewconnections10="50"/>
-		<dsl128 bezeichnung="DSL 128" maxupload="15" maxdownload="0" maxnewconnections10="50"/>
-		<dsl256 bezeichnung="DSL 256" maxupload="30" maxdownload="0" maxnewconnections10="50"/>
-		<t1 bezeichnung="T1" maxupload="67" maxdownload="0" maxnewconnections10="50"/>
-		<t3 bezeichnung="T3" maxupload="181" maxdownload="0" maxnewconnections10="50"/>
-		<lan bezeichnung="LAN" maxupload="5600" maxdownload="0" maxnewconnections10="50"/>
-		<oc3 bezeichnung="OC3" maxupload="12000" maxdownload="0" maxnewconnections10="50"/>
+		<modem bezeichnung="Modem" maxupload="3" maxdownload="4" maxnewconnections10="25"/>
+		<isdn bezeichnung="ISDN" maxupload="8" maxdownload="7" maxnewconnections10="50"/>
+		<dsl128 bezeichnung="DSL 128" maxupload="15" maxdownload="90" maxnewconnections10="50"/>
+		<dsl256 bezeichnung="DSL 256" maxupload="30" maxdownload="180" maxnewconnections10="50"/>
+		<t1 bezeichnung="T1" maxupload="67" maxdownload="67" maxnewconnections10="50"/>
+		<t3 bezeichnung="T3" maxupload="181" maxdownload="181" maxnewconnections10="50"/>
+		<lan bezeichnung="LAN" maxupload="5600" maxdownload="5600" maxnewconnections10="50"/>
+		<oc3 bezeichnung="OC3" maxupload="12000" maxdownload="12000" maxnewconnections10="50"/>
 	</wizard>
 </root>
