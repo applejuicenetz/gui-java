@@ -1,4 +1,4 @@
-package de.applejuicenet.client.gui.trees.share;
+package de.applejuicenet.client.gui.trees;
 
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.IconManager;
@@ -8,7 +8,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/WaitNode.java,v 1.1 2003/08/22 11:34:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/Attic/WaitNode.java,v 1.1 2003/08/24 19:37:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import javax.swing.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WaitNode.java,v $
+ * Revision 1.1  2003/08/24 19:37:25  maj0r
+ * no message
+ *
  * Revision 1.1  2003/08/22 11:34:15  maj0r
  * WarteNode eingefuegt.
  *
