@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.172 2004/12/05 20:05:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.173 2004/12/06 21:47:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -925,13 +925,13 @@ public class ApplejuiceFassade {
         }
     }
 
-    public synchronized void processLink(final String link, String subdir) {
+    public synchronized String processLink(final String link, String subdir) {
         try {
             if (link == null || link.length() == 0) {
                 if (logger.isEnabledFor(Level.INFO)) {
                     logger.info("Ungueltiger Link uebergeben: " + link);
                 }
-                return;
+                return "failure: invalid link";
             }
             if (!coreErreichbar){
                 if (links == null){
@@ -968,15 +968,17 @@ public class ApplejuiceFassade {
                 ;
                 //gibbet nicht, also nix zu behandeln...
             }
-            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+            String result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                          "/function/processlink?password=" +
                                          password + "&link=" + encodedLink + "&subdir=" + subdir, 
-										 false);
+										 true);
+            return result;
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error(ERROR_MESSAGE, e);
             }
+            return "";
         }
     }
 

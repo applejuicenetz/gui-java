@@ -77,6 +77,10 @@ public class DownloadController extends GuiController {
 	private boolean firstUpdate = true;
 	private boolean isFirstDownloadPropertyChanged = true;
 	
+	private String alreadyLoaded;
+	private String invalidLink;
+	private String linkFailure;
+	
 	private DownloadController() {
 		super();
 		downloadPanel = new DownloadPanel(this);
@@ -632,13 +636,35 @@ public class DownloadController extends GuiController {
 		}
 		final String targetDir = "";
 		if (link.length() != 0) {
-			new Thread() {
-				public void run() {
-					ApplejuiceFassade.getInstance().processLink(link, targetDir);
+		    Thread linkThread = new Thread(){
+		        public void run(){
+					final String result = ApplejuiceFassade.getInstance().processLink(link, targetDir);
 					SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
-				}
-			}.start();
-			downloadPanel.getDownloadLinkField().setText("");
+					downloadPanel.getDownloadLinkField().setText("");
+					if (result.indexOf("ok") != 0){
+					    SwingUtilities.invokeLater(new Runnable(){
+					        public void run(){
+					            String message = null;
+								if (result.indexOf("already downloaded") != -1){
+								    message = alreadyLoaded.replaceAll("%s", link);
+								}
+								else if (result.indexOf("incorrect link") != -1){
+								    message = invalidLink.replaceAll("%s", link);
+								}
+								else if (result.indexOf("failure") != -1){
+								    message = linkFailure;
+								}
+								if (message != null){
+									JOptionPane.showMessageDialog(AppleJuiceDialog
+											.getApp(), message, dialogTitel,
+											JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+								}
+					        }
+					    });
+					}
+		        }
+		    };
+		    linkThread.start();
 		}
 	}
 
@@ -1002,6 +1028,12 @@ public class DownloadController extends GuiController {
 		downloadPanel.getLblTargetDir().setText(ZeichenErsetzer
 				.korrigiereUmlaute(languageSelector
 						.getFirstAttrbuteByTagName(".root.javagui.downloadform.zielverzeichnis")));
+		alreadyLoaded = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+				.getFirstAttrbuteByTagName(".root.javagui.downloadform.bereitsgeladen"));
+		invalidLink = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+				.getFirstAttrbuteByTagName(".root.javagui.downloadform.falscherlink"));
+		linkFailure = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+				.getFirstAttrbuteByTagName(".root.javagui.downloadform.sonstigerlinkfehlerlang"));
 	}
 
 	protected void contentChanged(int type, final Object content) {
