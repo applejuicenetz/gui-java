@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.13 2004/02/28 15:05:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.14 2004/02/29 19:40:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
+ * Revision 1.14  2004/02/29 19:40:10  maj0r
+ * Dateityp Archiv hinzugefuegt.
+ *
  * Revision 1.13  2004/02/28 15:05:54  maj0r
  * Da hatte ich in der vorherigen Version Mist eingecheckt.
  *
@@ -82,10 +85,11 @@ public class Search {
     public static final String TYPE_ISO = "iso";
     public static final String TYPE_TEXT = "text";
     public static final String TYPE_SOUND = "sound";
+    public static final String TYPE_ARCHIVE = "archive";
     public static final String TYPE_UNKNOWN = "treeRoot";
 
     public static final String[] allTypes = new String[]
-        {TYPE_PDF, TYPE_IMAGE, TYPE_MOVIE, TYPE_ISO, TYPE_TEXT, TYPE_SOUND, TYPE_UNKNOWN};
+        {TYPE_PDF, TYPE_IMAGE, TYPE_MOVIE, TYPE_ISO, TYPE_TEXT, TYPE_SOUND, TYPE_ARCHIVE, TYPE_UNKNOWN};
 
     public Search(int id) {
         this.id = id;
@@ -250,6 +254,7 @@ public class Search {
             int iso = 0;
             int text = 0;
             int sound = 0;
+            int archive = 0;
             int currentMax = 0;
             for (int i=0; i<fileNames.length; i++){
                 String fileNameType = fileNames[i].getFileType();
@@ -298,9 +303,16 @@ public class Search {
                         type = TYPE_SOUND;
                     }
                 }
+                else if (fileNameType.equals(TYPE_ARCHIVE)){
+                    archive++;
+                    if (archive>currentMax){
+                        currentMax = archive;
+                        type = TYPE_ARCHIVE;
+                    }
+                }
             }
             if (pdf == image && movie == iso && image == movie
-                && movie == text && text == sound){
+                && movie == text && text == sound && text == archive){
                     type = TYPE_UNKNOWN;
             }
         }
@@ -398,6 +410,14 @@ public class Search {
                          || lower.endsWith(".midi") || lower.endsWith(".ogg")
                          || lower.endsWith(".mmf")){
                     fileType = TYPE_SOUND;
+                }
+                else if (lower.endsWith(".zip") || lower.endsWith(".rar")
+                         || lower.endsWith(".ace") || lower.endsWith(".arj")
+                         || lower.endsWith(".gz2") || lower.endsWith(".cab")
+                         || lower.endsWith(".lzh") || lower.endsWith(".tag")
+                         || lower.endsWith(".gzip") || lower.endsWith(".uue")
+                         || lower.endsWith(".bz2") || lower.endsWith(".jar")){
+                    fileType = TYPE_ARCHIVE;
                 }
             }
         }
