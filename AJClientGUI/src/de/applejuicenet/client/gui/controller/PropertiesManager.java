@@ -14,9 +14,12 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.ConsoleAppender;
+import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.12 2003/11/18 16:41:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.13 2003/12/27 21:14:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +28,9 @@ import org.apache.xml.serialize.XMLSerializer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.13  2003/12/27 21:14:24  maj0r
+ * Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
+ *
  * Revision 1.12  2003/11/18 16:41:50  maj0r
  * Erste Version des LinkListener eingebaut.
  * Themes koennen nun ueber die properties.xml komplett deaktiviert werden.
@@ -369,6 +375,8 @@ public class PropertiesManager
                 return Level.FATAL;
             else if (temp.compareToIgnoreCase("ALL") == 0)
                 return Level.ALL;
+            else if (temp.compareToIgnoreCase("OFF") == 0)
+                return Level.OFF;
 
             if (logger.isEnabledFor(Level.DEBUG))
                 logger.debug("Aktueller Loglevel: " + result.toString());
@@ -400,7 +408,24 @@ public class PropertiesManager
         else if (level == Level.FATAL)
             temp = "FATAL";
         setAttributeByTagName(new String[]{"options", "logging", "level"}, temp);
-        Logger.getRootLogger().setLevel(level);
+        Logger rootLogger = Logger.getRootLogger();
+        rootLogger.setLevel(level);
+        rootLogger.removeAllAppenders();
+        if (level != Level.OFF){
+            try{
+                FileAppender fileAppender = new FileAppender(AppleJuiceClient.
+                    getLoggerHtmlLayout(),
+                    AppleJuiceClient.getLoggerFileAppenderPath());
+                rootLogger.addAppender(fileAppender);
+            }
+            catch (IOException ioe) {
+                rootLogger.addAppender(new ConsoleAppender());
+                ioe.printStackTrace();
+            }
+        }
+        else{
+            rootLogger.addAppender(new ConsoleAppender());
+        }
         if (logger.isEnabledFor(Level.DEBUG))
             logger.debug("Loglevel geändert in " + level.toString());
     }

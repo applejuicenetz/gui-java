@@ -33,9 +33,11 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Appender;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.40 2003/12/27 09:54:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.41 2003/12/27 21:14:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,6 +46,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.41  2003/12/27 21:14:24  maj0r
+ * Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
+ *
  * Revision 1.40  2003/12/27 09:54:28  maj0r
  * Bug #1234 fixed (Danke an muhviestarr)
  * Splashscreen wird nun frueher angezeigt
@@ -145,6 +150,16 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 public class AppleJuiceClient {
     private static Logger logger;
+    private static String fileAppenderPath;
+    private static HTMLLayout layout;
+
+    public static HTMLLayout getLoggerHtmlLayout(){
+        return layout;
+    }
+
+    public static String getLoggerFileAppenderPath(){
+        return fileAppenderPath;
+    }
 
     public static void main(String[] args) {
         boolean processLink = false;
@@ -218,28 +233,32 @@ public class AppleJuiceClient {
                 System.currentTimeMillis()));
         String dateiName;
         dateiName = datum + ".html";
-        HTMLLayout layout = new HTMLLayout();
+        layout = new HTMLLayout();
         layout.setTitle("appleJuice-Core-GUI-Log " + datum);
         layout.setLocationInfo(true);
-
+        Level logLevel = PropertiesManager.getOptionsManager().getLogLevel();
         try
         {
+            rootLogger.addAppender(new ConsoleAppender());
             String path = System.getProperty("user.dir") + File.separator +
-                    "logs";
+                "logs";
             File aFile = new File(path);
-            if (!aFile.exists())
-            {
+            if (!aFile.exists()) {
                 aFile.mkdir();
             }
-            FileAppender fileAppender = new FileAppender(layout,
-                                                         path + File.separator + dateiName);
-            rootLogger.addAppender(fileAppender);
+            fileAppenderPath = path + File.separator + dateiName;
+            if (logLevel != Level.OFF){
+                FileAppender fileAppender = new FileAppender(layout,
+                    fileAppenderPath);
+                rootLogger.removeAllAppenders();
+                rootLogger.addAppender(fileAppender);
+            }
         }
         catch (IOException ioe)
         {
             ioe.printStackTrace();
         }
-        rootLogger.setLevel(PropertiesManager.getOptionsManager().getLogLevel());
+        rootLogger.setLevel(logLevel);
 
         try
         {

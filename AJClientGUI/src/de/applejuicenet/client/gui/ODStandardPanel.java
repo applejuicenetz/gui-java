@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.14 2003/10/27 13:00:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.15 2003/12/27 21:14:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.15  2003/12/27 21:14:24  maj0r
+ * Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
+ *
  * Revision 1.14  2003/10/27 13:00:17  maj0r
  * Bug #1039 fixed (Danke an xcalibur):
  * Ist im Core noch nicht implementiert und deshalb erstmal wieder aus dem GUI geflogen.
@@ -154,11 +157,13 @@ public class ODStandardPanel
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         Level logLevel = PropertiesManager.getOptionsManager().getLogLevel();
 
-        LevelItem[] levelItems = new LevelItem[2];//{ "Info", "Debug"};
+        LevelItem[] levelItems = new LevelItem[3];//{ "Info", "Debug", "keins"};
         levelItems[0] = new LevelItem(Level.INFO, ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "info"})));
         levelItems[1] = new LevelItem(Level.DEBUG, ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "debug"})));
+        levelItems[2] = new LevelItem(Level.OFF, ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "off"})));
 
         cmbLog = new JComboBox(levelItems);
         cmbLog.addItemListener(new ItemListener() {
@@ -172,6 +177,8 @@ public class ODStandardPanel
             index = 0;
         else if (logLevel == Level.DEBUG)
             index = 1;
+        else if (logLevel == Level.OFF)
+            index = 2;
         cmbLog.setSelectedIndex(index);
 
         panel8.add(cmbLog);
