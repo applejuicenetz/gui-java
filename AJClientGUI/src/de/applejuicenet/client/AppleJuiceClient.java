@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.85 2004/11/23 19:19:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.86 2004/11/24 16:11:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -115,38 +115,42 @@ public class AppleJuiceClient {
         boolean processLink = false;
         String link = "";
         boolean doubleInstance = false;
-        try {
-            new LinkListener();
-        }
-        catch (IOException ex) {
-            //bereits ein GUI vorhanden, also GUI schliessen
-            doubleInstance = true;
-        }
+        boolean linkListenerStartet = false;
         if (args != null && args.length > 0) {
             try {
                 for (int i = 0; i < args.length; i++) {
-                    if (args[i].startsWith("-path=") || args[i].startsWith("--path=")) {
-                        String executionPath = args[i].substring(args[i].indexOf('=')+1); 
-                        System.setProperty("user.dir", executionPath);
+                    if (args[i].indexOf("-path=") != -1) {
+                        System.setProperty("user.dir", args[i].substring(6));
                         break;
                     }
                 }
+                boolean hilfeAusgegeben = false;
                 for (int i = 0; i < args.length; i++) {
-                    if (args[i].equals("-version") || args[i].equals("--version")) {
-                        System.out.println("appleJuice-Java-GUI " + ApplejuiceFassade.GUI_VERSION);
-                        System.exit(0);
-                    }
-                    else if (args[i].equals("-help") || args[i].equals("--help")) {
+                    if (args[i].compareTo("-help") == 0) {
+                        if (hilfeAusgegeben) {
+                            continue;
+                        }
+                        System.out.println();
                         System.out.println(
-                            " --help                       Diese Uebersicht");
-                        System.out.println(" --version                    Versionsinformationen anzeigen");
-                        System.out.println(" --path=<pfad>                Ausfuehrpfad setzen. Alles im GUI ist relativ zu diesem.");
+                            " -help                       Diese Uebersicht.");
+                        System.out.println(" -path=<pfad>                Ausfuehrpfad setzen. Alles im GUI ist relativ zu diesem.");
                         System.out.println(
-                            " --link=<md5Passwort|link>    ajfsp-Link ans GUI uebergeben. " +
-                            "Das GUI wird ggf gestartet.");
-                        System.exit(0);
+                            " -link=<md5Passwort|link>    ajfsp-Link ans GUI uebergeben. " +
+                            " Das GUI wird ggf gestartet.");
+                        System.out.println();
+                        hilfeAusgegeben = true;
                     }
-                    else if (args[i].startsWith("-command=") || args[i].startsWith("--command=")) {
+                    else if (args[i].indexOf("-command=") != -1) {
+                    	if (!linkListenerStartet){
+                    		linkListenerStartet = true;
+	                        try {
+	                            new LinkListener();
+	                        }
+	                        catch (IOException ex) {
+	                            //bereits ein GUI vorhanden, also GUI schliessen
+	                            doubleInstance = true;
+	                        }
+                    	}
                         if (doubleInstance){
                             int PORT = OptionsManagerImpl.getInstance().
                                 getLinkListenerPort();
@@ -157,11 +161,7 @@ public class AppleJuiceClient {
                                 getOutputStream());
                             DataInputStream in = new DataInputStream(socket.
                                 getInputStream());
-                            String command = args[i];
-                            if (args[i].charAt(1) == '-'){
-                                command = command.substring(1);
-                            }
-                            out.println(passwort + "|" + command);
+                            out.println(passwort + "|" + args[i]);
                             BufferedReader reader = new BufferedReader(new
                                 InputStreamReader(in));
                             String line = reader.readLine();
@@ -174,7 +174,17 @@ public class AppleJuiceClient {
                             System.exit(1);
                         }
                     }
-                    else if (args[i].startsWith("-link=") || args[i].startsWith("--link=")) {
+                    else if (args[i].indexOf("-link=") != -1) {
+                    	if (!linkListenerStartet){
+                    		linkListenerStartet = true;
+	                        try {
+	                            new LinkListener();
+	                        }
+	                        catch (IOException ex) {
+	                            //bereits ein GUI vorhanden, also GUI schliessen
+	                            doubleInstance = true;
+	                        }
+                    	}
                         if (doubleInstance){
                             int PORT = OptionsManagerImpl.getInstance().
                                 getLinkListenerPort();
@@ -183,11 +193,7 @@ public class AppleJuiceClient {
                             Socket socket = new Socket("localhost", PORT);
                             PrintStream out = new PrintStream(socket.
                                 getOutputStream());
-                            String theLink = args[i];
-                            if (args[i].charAt(1) == '-'){
-                                theLink = theLink.substring(1);
-                            }
-                            out.println(passwort + "|" + theLink);
+                            out.println(passwort + "|" + args[i]);
                             socket.close();
                             //war nur Linkprocessing, also GUI schliessen
                             System.exit(1);
@@ -206,6 +212,15 @@ public class AppleJuiceClient {
                 System.exit(1);
             }
         }
+    	if (!linkListenerStartet){
+            try {
+                new LinkListener();
+            }
+            catch (IOException ex) {
+                //bereits ein GUI vorhanden, also GUI schliessen
+                doubleInstance = true;
+            }
+    	}
         if (doubleInstance) {
             //bereits ein GUI vorhanden, also GUI schliessen
             JOptionPane.showMessageDialog(new Frame(),
