@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.54 2003/10/31 11:31:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.55 2003/10/31 11:33:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.55  2003/10/31 11:33:59  maj0r
+ * StandardXML angepasst.
+ *
  * Revision 1.54  2003/10/31 11:31:45  maj0r
  * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
  *
@@ -503,7 +506,7 @@ public class AppleJuiceDialog
 
         xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xmlData.append("<root>");
-        xmlData.append("    <options firststart=\"true\" sprache=\"deutsch\">");
+        xmlData.append("    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\">");
         xmlData.append("        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>");
         xmlData.append("        <logging level=\"INFO\"/>");
         xmlData.append("        <download uebersicht=\"true\"/>");
