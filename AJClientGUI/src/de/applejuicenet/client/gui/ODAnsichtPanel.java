@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.22 2004/07/15 06:22:36 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.23 2004/07/20 22:50:39 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -295,7 +295,8 @@ public class ODAnsichtPanel
     }
 
     public void reloadSettings() {
-        // nix zu tun
+        settings = Settings.getSettings();
+        enableToolTip.setSelected(settings.isToolTipEnabled());
     }
 
     class ColorChooserMouseAdapter
