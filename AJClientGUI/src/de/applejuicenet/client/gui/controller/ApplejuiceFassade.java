@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.121 2004/02/26 10:37:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.122 2004/02/26 14:00:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,7 +45,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  */
 
 public class ApplejuiceFassade {
-    public static final String GUI_VERSION = "0.55.11";
+    public static final String GUI_VERSION = "0.56.0";
 
     private HashSet downloadListener;
     private HashSet searchListener;
