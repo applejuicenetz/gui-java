@@ -25,7 +25,6 @@ public class OptionsDialog
   private ODPasswortPanel passwortPanel;
   private ODVerbindungPanel verbindungPanel;
   private ODRemotePanel remotePanel;
-  private ODProxyPanel proxyPanel;
   private JFrame parent;
   private JButton speichern;
   private JButton abbrechen;
@@ -62,10 +61,6 @@ public class OptionsDialog
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"javagui", "options", "remote",
                                   "caption"})), remotePanel);
-    proxyPanel = new ODProxyPanel(); //Proxy-Reiter
-    jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"javagui", "options", "proxy",
-                                  "caption"})), proxyPanel);
     pluginPanel = new ODPluginPanel(parent); //Plugin-Reiter
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "TabSheet1",
@@ -99,7 +94,6 @@ public class OptionsDialog
 
   private void speichern() {
     OptionsManager om = OptionsManager.getInstance();
-    om.saveProxy(proxyPanel.getProxy());
     if (remotePanel.isDirty()) {
       try {
         om.saveRemote(remotePanel.getRemoteConfiguration());

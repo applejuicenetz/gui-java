@@ -2,7 +2,6 @@ package de.applejuicenet.client.gui.controller;
 
 import de.applejuicenet.client.shared.XMLDecoder;
 import java.io.File;
-import de.applejuicenet.client.shared.ProxyConfiguration;
 import org.apache.xerces.impl.dv.util.Base64;
 import de.applejuicenet.client.shared.RemoteConfiguration;
 import java.security.MessageDigest;
@@ -63,22 +62,5 @@ public class OptionsManager extends XMLDecoder {
     setAttributeByTagName(new String[] {"options", "remote", "host"}, remote.getHost());
     if (remote.isRemoteUsed())
       setAttributeByTagName(new String[] {"options", "remote", "use"}, (remote.isRemoteUsed()? "1": "0"));
-  }
-
-  public ProxyConfiguration getProxySettings(){
-    String ip = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "ip"});
-    String port = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "port"});
-    String user = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "user"});
-    String passwort = Base64.decode(getFirstAttrbuteByTagName(new String[] {"options", "proxy", "pass"}));
-    boolean use = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "use"}).equals("1");
-    return new ProxyConfiguration(ip, (port.equalsIgnoreCase(""))? 0 : Integer.parseInt(port), user, passwort, use);
-  }
-
-  public void saveProxy(ProxyConfiguration proxy){
-    setAttributeByTagName(new String[] {"options", "proxy", "ip"}, proxy.getIP());
-    setAttributeByTagName(new String[] {"options", "proxy", "port"}, Integer.toString(proxy.getPort()));
-    setAttributeByTagName(new String[] {"options", "proxy", "user"}, proxy.getUsername());
-    setAttributeByTagName(new String[] {"options", "proxy", "pass"}, new String(Base64.encode(proxy.getPassword().getBytes())));
-    setAttributeByTagName(new String[] {"options", "proxy", "use"}, (proxy.isProxyUsed()? "1": "0"));
   }
 }
