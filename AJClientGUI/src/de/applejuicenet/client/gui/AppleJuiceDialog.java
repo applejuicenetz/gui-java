@@ -63,7 +63,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import javax.swing.Icon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.75 2004/01/06 12:52:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.76 2004/01/06 15:05:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -72,6 +72,9 @@ import javax.swing.Icon;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.76  2004/01/06 15:05:43  maj0r
+ * TrayIcon-Verwendung korrigiert.
+ *
  * Revision 1.75  2004/01/06 12:52:04  maj0r
  * TrayIcon für Windowsplattformen eingebaut.
  *
@@ -863,7 +866,6 @@ public class AppleJuiceDialog
                 " (Core " + versionsNr +
                 " - GUI " + ApplejuiceFassade.GUI_VERSION + ")";
             setTitle(titel);
-            trayIcon.setToolTipText(titel);
             keinServer = languageSelector.getFirstAttrbuteByTagName(new String[] {
                 "javagui", "mainform", "keinserver"});
             themeSupportTitel = ZeichenErsetzer.korrigiereUmlaute(
@@ -916,19 +918,21 @@ public class AppleJuiceDialog
                 getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
                                           "bestaetigung"}));
 
-            popupAboutMenuItem.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
-                                          "caption"})));
-            zeigen = ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                          "zeigen"}));
-            verstecken = ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                          "verstecken"}));
-
+            if (useTrayIcon){
+                trayIcon.setToolTipText(titel);
+                popupAboutMenuItem.setText(ZeichenErsetzer.korrigiereUmlaute(
+                    languageSelector.
+                    getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
+                                              "caption"})));
+                zeigen = ZeichenErsetzer.korrigiereUmlaute(
+                    languageSelector.
+                    getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                              "zeigen"}));
+                verstecken = ZeichenErsetzer.korrigiereUmlaute(
+                    languageSelector.
+                    getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                              "verstecken"}));
+            }
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -984,6 +988,7 @@ public class AppleJuiceDialog
         popup.add(popupShowHideMenuItem);
 	IconManager im = IconManager.getInstance();
         versteckenIcon = im.getIcon("hide");
+        zeigenIcon = im.getIcon("applejuice");
 	Icon aboutIcon = im.getIcon("about");
         popupAboutMenuItem = new JMenuItem("&Info", aboutIcon);
         popupAboutMenuItem.addActionListener(new ActionListener() {

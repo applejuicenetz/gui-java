@@ -651,14 +651,8 @@ public class WindowsTrayIcon {
         String version = System.getProperty("java.version");
         if (version.length() >= 3) {
             String v1 = version.substring(0, 3);
-            if (v1.equals("1.1")) {
-                System.loadLibrary("TrayIcon11");
-                ok = true;
-            }
-            else {
-                System.loadLibrary("TrayIcon12");
-                ok = true;
-            }
+            System.load(System.getProperty("user.dir") + "\\TrayIcon12.dll");
+            ok = true;
         }
         if (!ok) {
             System.out.println("Wrong Java VM version: " + version);
