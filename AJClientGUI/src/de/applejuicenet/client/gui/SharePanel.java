@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.35 2003/09/04 10:13:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.36 2003/09/05 09:47:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,6 +40,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.36  2003/09/05 09:47:35  maj0r
+ * Einige Logger eingebaut.
+ *
  * Revision 1.35  2003/09/04 10:13:28  maj0r
  * Logger eingebaut.
  *
@@ -218,14 +221,21 @@ public class SharePanel
                 neuLaden.setEnabled(false);
                 final SwingWorker worker = new SwingWorker() {
                     public Object construct() {
-                        Object[] values = shareTable.getSelectedItems();
-                        if (values == null)
-                            return null;
-                        ShareNode shareNode = null;
-                        for (int i = 0; i < values.length; i++)
+                        try{
+                            Object[] values = shareTable.getSelectedItems();
+                            if (values == null)
+                                return null;
+                            ShareNode shareNode = null;
+                            for (int i = 0; i < values.length; i++)
+                            {
+                                shareNode = (ShareNode) values[i];
+                                shareNode.setPriority(1);
+                            }
+                        }
+                        catch (Exception e)
                         {
-                            shareNode = (ShareNode) values[i];
-                            shareNode.setPriority(1);
+                            if (logger.isEnabledFor(Level.ERROR))
+                                logger.error("Unbehandelte Exception", e);
                         }
                         return null;
                     }
@@ -251,15 +261,22 @@ public class SharePanel
                 neuLaden.setEnabled(false);
                 final SwingWorker worker = new SwingWorker() {
                     public Object construct() {
-                        int prio = ((Integer) cmbPrio.getSelectedItem()).intValue();
-                        Object[] values = shareTable.getSelectedItems();
-                        if (values == null)
-                            return null;
-                        ShareNode shareNode = null;
-                        for (int i = 0; i < values.length; i++)
+                        try{
+                            int prio = ((Integer) cmbPrio.getSelectedItem()).intValue();
+                            Object[] values = shareTable.getSelectedItems();
+                            if (values == null)
+                                return null;
+                            ShareNode shareNode = null;
+                            for (int i = 0; i < values.length; i++)
+                            {
+                                shareNode = (ShareNode) values[i];
+                                shareNode.setPriority(prio);
+                            }
+                        }
+                        catch (Exception e)
                         {
-                            shareNode = (ShareNode) values[i];
-                            shareNode.setPriority(prio);
+                            if (logger.isEnabledFor(Level.ERROR))
+                                logger.error("Unbehandelte Exception", e);
                         }
                         return null;
                     }
@@ -333,8 +350,15 @@ public class SharePanel
                 refresh.setEnabled(false);
                 final SwingWorker worker = new SwingWorker() {
                     public Object construct() {
-                        HashSet shares = ajSettings.getShareDirs();
-                        ApplejuiceFassade.getInstance().setShare(shares);
+                        try{
+                            HashSet shares = ajSettings.getShareDirs();
+                            ApplejuiceFassade.getInstance().setShare(shares);
+                        }
+                        catch (Exception e)
+                        {
+                            if (logger.isEnabledFor(Level.ERROR))
+                                logger.error("Unbehandelte Exception", e);
+                        }
                         return null;
                     }
 
@@ -353,102 +377,109 @@ public class SharePanel
                 neuLaden.setEnabled(false);
                 final SwingWorker worker = new SwingWorker() {
                     public Object construct() {
-                        ShareNode rootNode = shareModel.getRootNode();
-                        rootNode.removeAllChildren();
-                        ArrayList sharesArray = new ArrayList();
-                        HashSet shareDirs = ajSettings.getShareDirs();
-                        Iterator it = shareDirs.iterator();
-                        ShareNode directoryNode = null;
-                        String pfad;
-                        try
-                        {
-                            pfad = ajSettings.getTempDir();
-                            pfad = pfad.substring(0, pfad.length() - 1);
-                            directoryNode = new ShareNode(rootNode, pfad);
-                        }
-                        catch (NodeAlreadyExistsException e)
-                        {
-                            //Schon da, also brauchts den auch nicht.
-                        }
-                        rootNode.addDirectory(directoryNode);
-                        while (it.hasNext())
-                        {
-                            pfad = ((ShareEntry) it.next()).getDir();
-                            sharesArray.add(pfad);
+                        try{
+                            ShareNode rootNode = shareModel.getRootNode();
+                            rootNode.removeAllChildren();
+                            ArrayList sharesArray = new ArrayList();
+                            HashSet shareDirs = ajSettings.getShareDirs();
+                            Iterator it = shareDirs.iterator();
+                            ShareNode directoryNode = null;
+                            String pfad;
                             try
                             {
+                                pfad = ajSettings.getTempDir();
+                                pfad = pfad.substring(0, pfad.length() - 1);
                                 directoryNode = new ShareNode(rootNode, pfad);
-                                rootNode.addDirectory(directoryNode);
                             }
                             catch (NodeAlreadyExistsException e)
                             {
                                 //Schon da, also brauchts den auch nicht.
                             }
-                        }
-                        HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
-                        Iterator iterator = shares.values().iterator();
-                        int anzahlDateien = 0;
-                        double size = 0;
-                        int anzahlArray;
-                        ShareDO shareDO;
-                        String filename;
-                        String path;
-                        ShareNode superParentNode;
-                        ShareNode parentNode;
-                        while (iterator.hasNext())
-                        {
-                            shareDO = (ShareDO) iterator.next();
-                            filename = shareDO.getFilename();
-                            path = filename.substring(0, filename.lastIndexOf(File.separator));
-                            parentNode = ShareNode.getNodeByPath(path);
-                            if (parentNode != null)
+                            rootNode.addDirectory(directoryNode);
+                            while (it.hasNext())
                             {
-                                parentNode.addChild(shareDO);
-                            }
-                            else
-                            {
-                                anzahlArray = sharesArray.size();
-                                for (int i = 0; i < anzahlArray; i++)
+                                pfad = ((ShareEntry) it.next()).getDir();
+                                sharesArray.add(pfad);
+                                try
                                 {
-                                    if (path.indexOf((String) sharesArray.get(i)) != -1)
-                                    {
-                                        path = path.substring(((String) sharesArray.get(i)).length());
-                                        superParentNode = ShareNode.getNodeByPath((String) sharesArray.get(i));
-                                        parentNode = ShareNode.getNodeByPath(path);
-                                        if (parentNode != null)
-                                        {
-                                            parentNode.addChild(shareDO);
-                                        }
-                                        else
-                                        {
-                                            try
-                                            {
-                                                ShareNode neuesDirectory = new ShareNode(rootNode, path);
-                                                superParentNode.addDirectory(neuesDirectory);
-                                                neuesDirectory.addChild(shareDO);
-                                            }
-                                            catch (NodeAlreadyExistsException e)
-                                            {
-                                                e.printStackTrace();  //To change body of catch statement use Options | File Templates.
-                                            }
-                                        }
-                                        break;
-                                    }
+                                    directoryNode = new ShareNode(rootNode, pfad);
+                                    rootNode.addDirectory(directoryNode);
+                                }
+                                catch (NodeAlreadyExistsException e)
+                                {
+                                    //Schon da, also brauchts den auch nicht.
                                 }
                             }
-                            size += shareDO.getSize();
-                            anzahlDateien++;
+                            HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
+                            Iterator iterator = shares.values().iterator();
+                            int anzahlDateien = 0;
+                            double size = 0;
+                            int anzahlArray;
+                            ShareDO shareDO;
+                            String filename;
+                            String path;
+                            ShareNode superParentNode;
+                            ShareNode parentNode;
+                            while (iterator.hasNext())
+                            {
+                                shareDO = (ShareDO) iterator.next();
+                                filename = shareDO.getFilename();
+                                path = filename.substring(0, filename.lastIndexOf(File.separator));
+                                parentNode = ShareNode.getNodeByPath(path);
+                                if (parentNode != null)
+                                {
+                                    parentNode.addChild(shareDO);
+                                }
+                                else
+                                {
+                                    anzahlArray = sharesArray.size();
+                                    for (int i = 0; i < anzahlArray; i++)
+                                    {
+                                        if (path.indexOf((String) sharesArray.get(i)) != -1)
+                                        {
+                                            path = path.substring(((String) sharesArray.get(i)).length());
+                                            superParentNode = ShareNode.getNodeByPath((String) sharesArray.get(i));
+                                            parentNode = ShareNode.getNodeByPath(path);
+                                            if (parentNode != null)
+                                            {
+                                                parentNode.addChild(shareDO);
+                                            }
+                                            else
+                                            {
+                                                try
+                                                {
+                                                    ShareNode neuesDirectory = new ShareNode(rootNode, path);
+                                                    superParentNode.addDirectory(neuesDirectory);
+                                                    neuesDirectory.addChild(shareDO);
+                                                }
+                                                catch (NodeAlreadyExistsException e)
+                                                {
+                                                    e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                                size += shareDO.getSize();
+                                anzahlDateien++;
+                            }
+                            size = size / 1048576;
+                            dateiGroesse = Double.toString(size);
+                            if (dateiGroesse.indexOf(".") + 3 < dateiGroesse.length())
+                            {
+                                dateiGroesse = dateiGroesse.substring(0, dateiGroesse.indexOf(".") + 3) + " MB";
+                            }
+                            String temp = eintraege;
+                            temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
+                            temp = temp.replaceFirst("%s", dateiGroesse);
+                            dateien.setText(temp);
                         }
-                        size = size / 1048576;
-                        dateiGroesse = Double.toString(size);
-                        if (dateiGroesse.indexOf(".") + 3 < dateiGroesse.length())
+                        catch (Exception e)
                         {
-                            dateiGroesse = dateiGroesse.substring(0, dateiGroesse.indexOf(".") + 3) + " MB";
+                            if (logger.isEnabledFor(Level.ERROR))
+                                logger.error("Unbehandelte Exception", e);
                         }
-                        String temp = eintraege;
-                        temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
-                        temp = temp.replaceFirst("%s", dateiGroesse);
-                        dateien.setText(temp);
                         return null;
                     }
 
@@ -673,42 +704,63 @@ public class SharePanel
 
     class TreeMouseAdapter extends MouseAdapter {
         public void mousePressed(MouseEvent me) {
-            if (SwingUtilities.isRightMouseButton(me))
-            {
-                Point p = me.getPoint();
-                int iRow = folderTree.getRowForLocation(p.x, p.y);
-                folderTree.setSelectionRow(iRow);
+            try{
+                if (SwingUtilities.isRightMouseButton(me))
+                {
+                    Point p = me.getPoint();
+                    int iRow = folderTree.getRowForLocation(p.x, p.y);
+                    folderTree.setSelectionRow(iRow);
+                }
+                maybeShowPopup(me);
             }
-            maybeShowPopup(me);
+            catch (Exception ex)
+            {
+                if (logger.isEnabledFor(Level.ERROR))
+                    logger.error("Unbehandelte Exception", ex);
+            }
         }
 
         public void mouseReleased(MouseEvent e) {
-            super.mouseReleased(e);
-            maybeShowPopup(e);
+            try{
+                super.mouseReleased(e);
+                maybeShowPopup(e);
+            }
+            catch (Exception ex)
+            {
+                if (logger.isEnabledFor(Level.ERROR))
+                    logger.error("Unbehandelte Exception", ex);
+            }
         }
 
         private void maybeShowPopup(MouseEvent e) {
-            if (e.isPopupTrigger())
+            try{
+                if (e.isPopupTrigger())
+                {
+                    DirectoryNode node = (DirectoryNode) folderTree.getLastSelectedPathComponent();
+                    if (node==null)
+                        return;
+                    popup.removeAll();
+                    int nodeShareMode = node.getShareMode();
+                    if (nodeShareMode == DirectoryNode.NOT_SHARED
+                            || nodeShareMode == DirectoryNode.SHARED_SOMETHING
+                            || nodeShareMode == DirectoryNode.SHARED_SUB)
+                    {
+                        popup.add(item1);
+                        popup.add(item2);
+                        popup.show(folderTree, e.getX(), e.getY());
+                    }
+                    else if (nodeShareMode == DirectoryNode.SHARED_WITH_SUB
+                            || nodeShareMode == DirectoryNode.SHARED_WITHOUT_SUB)
+                    {
+                        popup.add(item3);
+                        popup.show(folderTree, e.getX(), e.getY());
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                DirectoryNode node = (DirectoryNode) folderTree.getLastSelectedPathComponent();
-                if (node==null)
-                    return;
-                popup.removeAll();
-                int nodeShareMode = node.getShareMode();
-                if (nodeShareMode == DirectoryNode.NOT_SHARED
-                        || nodeShareMode == DirectoryNode.SHARED_SOMETHING
-                        || nodeShareMode == DirectoryNode.SHARED_SUB)
-                {
-                    popup.add(item1);
-                    popup.add(item2);
-                    popup.show(folderTree, e.getX(), e.getY());
-                }
-                else if (nodeShareMode == DirectoryNode.SHARED_WITH_SUB
-                        || nodeShareMode == DirectoryNode.SHARED_WITHOUT_SUB)
-                {
-                    popup.add(item3);
-                    popup.show(folderTree, e.getX(), e.getY());
-                }
+                if (logger.isEnabledFor(Level.ERROR))
+                    logger.error("Unbehandelte Exception", ex);
             }
         }
     }
