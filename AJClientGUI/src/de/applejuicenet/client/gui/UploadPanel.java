@@ -38,7 +38,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.36 2004/01/20 14:18:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.37 2004/02/04 14:26:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,6 +47,10 @@ import java.util.ArrayList;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.37  2004/02/04 14:26:05  maj0r
+ * Bug #185 gefixt (Danke an muhviestarr)
+ * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
+ *
  * Revision 1.36  2004/01/20 14:18:29  maj0r
  * Spaltenindizes werden jetzt gespeichert.
  *
@@ -135,7 +139,7 @@ public class UploadPanel
     extends JPanel
     implements LanguageListener, RegisterI, DataUpdateListener {
 
-    public static UploadPanel _this;
+    private static UploadPanel instance;
 
     private JTreeTable uploadDataTable;
     private int anzahlClients = 0;
@@ -150,9 +154,15 @@ public class UploadPanel
     private TableColumn[] columns = new TableColumn[7];
     private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[columns.length];
 
-    public UploadPanel() {
+    public static synchronized UploadPanel getInstance(){
+        if (instance == null){
+            instance = new UploadPanel();
+        }
+        return instance;
+    }
+
+    private UploadPanel() {
         logger = Logger.getLogger(getClass());
-        _this = this;
         try {
             init();
         }

@@ -47,7 +47,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.50 2004/02/04 14:03:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.51 2004/02/04 14:26:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -56,6 +56,10 @@ import java.awt.datatransfer.StringSelection;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.51  2004/02/04 14:26:05  maj0r
+ * Bug #185 gefixt (Danke an muhviestarr)
+ * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
+ *
  * Revision 1.50  2004/02/04 14:03:12  maj0r
  * Kleinen Schoenheitsfehler beim Serverlink behoben.
  *
@@ -175,7 +179,7 @@ public class ServerPanel
     extends JPanel
     implements LanguageListener, DataUpdateListener, RegisterI {
 
-    public static ServerPanel _this;
+    private static ServerPanel instance;
 
     private JTable serverTable;
     private JButton sucheServer = new JButton();
@@ -198,8 +202,14 @@ public class ServerPanel
     private String warnungTitel = "";
     private String warnungNachricht = "";
 
-    public ServerPanel() {
-        _this = this;
+    public static synchronized ServerPanel getInstance(){
+        if (instance == null){
+            instance = new ServerPanel();
+        }
+        return instance;
+    }
+
+    private ServerPanel() {
         logger = Logger.getLogger(getClass());
         try {
             init();

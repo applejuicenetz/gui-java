@@ -14,7 +14,7 @@ import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.28 2004/01/14 15:19:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.29 2004/02/04 14:26:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.29  2004/02/04 14:26:05  maj0r
+ * Bug #185 gefixt (Danke an muhviestarr)
+ * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
+ *
  * Revision 1.28  2004/01/14 15:19:59  maj0r
  * Laden von Plugins verbessert.
  * Muell oder nicht standardkonforme Plugins im Plugin-Ordner werden nun korrekt behandelt.
@@ -120,12 +124,12 @@ public class RegisterPanel
             super.setSelectedIndex(index);
           }
         });
-        startPanel = new StartPanel(parent);
-        sharePanel = new SharePanel(parent);
-        downloadPanel = new DownloadPanel();
-        uploadPanel = new UploadPanel();
-        searchPanel = new SearchPanel();
-        serverPanel = new ServerPanel();
+        startPanel = StartPanel.getInstance();
+        sharePanel = SharePanel.getInstance();
+        downloadPanel = DownloadPanel.getInstance();
+        uploadPanel = UploadPanel.getInstance();
+        searchPanel = SearchPanel.getInstance();
+        serverPanel = ServerPanel.getInstance();
 
         IconManager im = IconManager.getInstance();
 

@@ -28,7 +28,7 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import javax.swing.JOptionPane;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.40 2004/01/05 17:08:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.41 2004/02/04 14:26:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +37,10 @@ import javax.swing.JOptionPane;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.41  2004/02/04 14:26:05  maj0r
+ * Bug #185 gefixt (Danke an muhviestarr)
+ * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
+ *
  * Revision 1.40  2004/01/05 17:08:05  maj0r
  * Ungueltige URLs abfangen.
  *
@@ -158,7 +162,7 @@ public class StartPanel
     implements LanguageListener, RegisterI, DataUpdateListener {
     private static final Color APFEL_ROT = new Color(146, 36, 60);
 
-    private AppleJuiceDialog parent;
+    private static StartPanel instance = null;
 
     private JLabel warnungen;
     private JLabel deinClient;
@@ -186,9 +190,15 @@ public class StartPanel
 
     private LanguageSelector languageSelector;
 
-    public StartPanel(AppleJuiceDialog parent) {
+    public static synchronized StartPanel getInstance(){
+        if (instance == null){
+            instance = new StartPanel();
+        }
+        return instance;
+    }
+
+    private StartPanel() {
         logger = Logger.getLogger(getClass());
-        this.parent = parent;
         try {
             init();
         }

@@ -63,7 +63,7 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.88 2004/02/04 13:10:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.89 2004/02/04 14:26:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -72,6 +72,10 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.89  2004/02/04 14:26:05  maj0r
+ * Bug #185 gefixt (Danke an muhviestarr)
+ * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
+ *
  * Revision 1.88  2004/02/04 13:10:37  maj0r
  * Neues Linkformat zusaetzlich in den Downloadbereich eingebaut.
  *
@@ -297,7 +301,7 @@ public class DownloadPanel
     extends JPanel
     implements LanguageListener, RegisterI, DataUpdateListener {
 
-    public static DownloadPanel _this;
+    private static DownloadPanel instance = null;
 
     private DownloadDOOverviewPanel downloadDOOverviewPanel;
     private JTextField downloadLink = new JTextField();
@@ -333,8 +337,14 @@ public class DownloadPanel
     private DownloadPartListWatcher downloadPartListWatcher = new
         DownloadPartListWatcher();
 
-    public DownloadPanel() {
-        _this = this;
+    public static synchronized DownloadPanel getInstance(){
+        if (instance == null){
+            instance = new DownloadPanel();
+        }
+        return instance;
+    }
+
+    private DownloadPanel() {
         logger = Logger.getLogger(getClass());
         try {
             downloadDOOverviewPanel = new DownloadDOOverviewPanel(this);

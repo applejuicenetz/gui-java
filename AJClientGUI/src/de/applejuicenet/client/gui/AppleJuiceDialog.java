@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.90 2004/01/29 15:44:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.91 2004/02/04 14:26:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,10 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.91  2004/02/04 14:26:05  maj0r
+ * Bug #185 gefixt (Danke an muhviestarr)
+ * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
+ *
  * Revision 1.90  2004/01/29 15:44:28  maj0r
  * Formataenderung.
  *
@@ -664,6 +668,20 @@ public class AppleJuiceDialog
             String sprachText = LanguageSelector.getInstance().
                 getFirstAttrbuteByTagName(new String[] {"Languageinfo", "name"});
             PropertiesManager.getOptionsManager().setSprache(sprachText);
+            int[] downloadWidths = DownloadPanel.getInstance().getColumnWidths();
+            int[] uploadWidths = UploadPanel.getInstance().getColumnWidths();
+            int[] serverWidths = ServerPanel.getInstance().getColumnWidths();
+            int[] shareWidths = SharePanel.getInstance().getColumnWidths();
+            Dimension dim = AppleJuiceDialog.getApp().getSize();
+            Point p = AppleJuiceDialog.getApp().getLocationOnScreen();
+            PositionManager pm = PropertiesManager.getPositionManager();
+            pm.setMainXY(p);
+            pm.setMainDimension(dim);
+            pm.setDownloadWidths(downloadWidths);
+            pm.setUploadWidths(uploadWidths);
+            pm.setServerWidths(serverWidths);
+            pm.setShareWidths(shareWidths);
+            pm.save();
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -681,12 +699,6 @@ public class AppleJuiceDialog
     }
 
     private void closeDialog(WindowEvent evt) {
-        int[] downloadWidths = DownloadPanel._this.getColumnWidths();
-        int[] uploadWidths = UploadPanel._this.getColumnWidths();
-        int[] serverWidths = ServerPanel._this.getColumnWidths();
-        int[] shareWidths = SharePanel._this.getColumnWidths();
-        Dimension dim = getSize();
-        Point p = getLocationOnScreen();
         setVisible(false);
         ApplejuiceFassade.getInstance().stopXMLCheck();
         if (rewriteProperties) {
@@ -699,14 +711,6 @@ public class AppleJuiceDialog
         System.out.println(nachricht);
         if (!rewriteProperties) {
             einstellungenSpeichern();
-            PositionManager pm = PropertiesManager.getPositionManager();
-            pm.setMainXY(p);
-            pm.setMainDimension(dim);
-            pm.setDownloadWidths(downloadWidths);
-            pm.setUploadWidths(uploadWidths);
-            pm.setServerWidths(serverWidths);
-            pm.setShareWidths(shareWidths);
-            pm.save();
         }
         if (useTrayIcon) {
             WindowsTrayIcon.cleanUp();

@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.20 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.21 2004/02/04 14:26:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.21  2004/02/04 14:26:05  maj0r
+ * Bug #185 gefixt (Danke an muhviestarr)
+ * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
+ *
  * Revision 1.20  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -76,7 +80,7 @@ public class SearchPanel
         extends JPanel
         implements LanguageListener, RegisterI, DataUpdateListener {
 
-    public static SearchPanel _this;
+    private static SearchPanel instance;
     private JTabbedPane resultPanel = new JTabbedPane();
     private JButton btnStartStopSearch = new JButton("Suche starten");
     private JTextField suchbegriff = new JTextField();
@@ -87,8 +91,14 @@ public class SearchPanel
     private HashMap searchIds = new HashMap();
     private boolean panelSelected = false;
 
-    public SearchPanel() {
-        _this = this;
+    public static synchronized SearchPanel getInstance(){
+        if (instance == null){
+            instance = new SearchPanel();
+        }
+        return instance;
+    }
+
+    private SearchPanel() {
         logger = Logger.getLogger(getClass());
         try {
             init();

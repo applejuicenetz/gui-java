@@ -32,7 +32,7 @@ import java.net.URLEncoder;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.54 2004/01/25 08:31:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.55 2004/02/04 14:26:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,10 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.55  2004/02/04 14:26:05  maj0r
+ * Bug #185 gefixt (Danke an muhviestarr)
+ * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
+ *
  * Revision 1.54  2004/01/25 08:31:11  maj0r
  * Icons eingebaut.
  *
@@ -191,9 +195,7 @@ public class SharePanel
         extends JPanel
         implements LanguageListener, RegisterI {
 
-    private AppleJuiceDialog parent;
-
-    public static SharePanel _this;
+    private static SharePanel instance;
 
     private JPanel panelCenter;
     private DirectoryTree folderTree = new DirectoryTree();
@@ -232,12 +234,17 @@ public class SharePanel
 
     private Logger logger;
 
-    public SharePanel(AppleJuiceDialog parent) {
-        _this = this;
+    public static synchronized SharePanel getInstance(){
+        if (instance == null){
+            instance = new SharePanel();
+        }
+        return instance;
+    }
+
+    private SharePanel() {
         logger = Logger.getLogger(getClass());
         try
         {
-            this.parent = parent;
             init();
         }
         catch (Exception e)
@@ -301,7 +308,7 @@ public class SharePanel
 
         neueListe.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                DateiListeDialog dateiListeDialog = new DateiListeDialog(parent, false);
+                DateiListeDialog dateiListeDialog = new DateiListeDialog(AppleJuiceDialog.getApp(), false);
                 shareTable.setDragEnabled(true);
                 dateiListeDialog.show();
             }
