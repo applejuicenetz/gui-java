@@ -12,7 +12,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.4 2003/09/12 13:19:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.5 2003/09/12 13:31:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODProxyPanel.java,v $
+ * Revision 1.5  2003/09/12 13:31:55  maj0r
+ * Bugs behoben.
+ *
  * Revision 1.4  2003/09/12 13:19:26  maj0r
  * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
  * Version 0.30
@@ -90,7 +93,10 @@ public class ODProxyPanel
                 }
             }
         });
-        port.setText(Integer.toString(proxySettings.getPort()));
+        port.setDocument(new NumberInputVerifier());
+        if (proxySettings.getPort()!=-1){
+            port.setText(Integer.toString(proxySettings.getPort()));
+        }
         port.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
                 if (Integer.toString(proxySettings.getPort()).compareTo(host.getText()) != 0)
@@ -163,7 +169,13 @@ public class ODProxyPanel
         if (dirty){
             proxySettings.setUse(use.isSelected());
             proxySettings.setHost(host.getText());
-            proxySettings.setPort(Integer.parseInt(port.getText()));
+            String tmpPort = port.getText();
+            if (tmpPort.length()==0){
+                proxySettings.setPort(-1);
+            }
+            else{
+                proxySettings.setPort(Integer.parseInt(tmpPort));
+            }
             proxySettings.setUserpass(user.getText(), passwort.getText());
         }
         return proxySettings;

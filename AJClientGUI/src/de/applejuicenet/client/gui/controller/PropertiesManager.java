@@ -14,7 +14,7 @@ import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.2 2003/09/12 13:19:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.3 2003/09/12 13:31:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import org.apache.xml.serialize.XMLSerializer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.3  2003/09/12 13:31:55  maj0r
+ * Bugs behoben.
+ *
  * Revision 1.2  2003/09/12 13:19:26  maj0r
  * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
  * Version 0.30
@@ -368,7 +371,11 @@ public class PropertiesManager
 
                 boolean use = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "use"})).booleanValue();
                 String host = getFirstAttrbuteByTagName(new String[]{"options", "proxy", "host"});
-                int port = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "port"}));
+                int port = -1;
+                try{
+                    port = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "port"}));
+                }
+                catch (Exception e){}
                 String userpass = getFirstAttrbuteByTagName(new String[]{"options", "proxy", "userpass"});
                 proxySettings = new ProxySettings(use, host, port, userpass);
             }

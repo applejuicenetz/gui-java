@@ -15,7 +15,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/WebsiteContentLoader.java,v 1.1 2003/09/12 13:19:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/WebsiteContentLoader.java,v 1.2 2003/09/12 13:31:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebsiteContentLoader.java,v $
+ * Revision 1.2  2003/09/12 13:31:55  maj0r
+ * Bugs behoben.
+ *
  * Revision 1.1  2003/09/12 13:19:26  maj0r
  * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
  * Version 0.30
@@ -39,7 +42,6 @@ public abstract class WebsiteContentLoader {
         try {
             String tmpUrl = website + ":" + port + pfadAndparameters;
             ProxySettings proxySettings = PropertiesManager.getProxyManager().getProxySettings();
-            PropertiesManager.getProxyManager().saveProxySettings(proxySettings);
             if (proxySettings.isUse()){
                 System.getProperties().put("proxyHost", proxySettings.getHost());
                 System.getProperties().put("proxyPort", Integer.toString(proxySettings.getPort()));
