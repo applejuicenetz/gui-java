@@ -1,6 +1,5 @@
 package de.applejuicenet.client.gui.powerdownload;
 
-import java.awt.Frame;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +17,7 @@ import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.11 2005/02/15 16:39:33 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.12 2005/02/15 19:14:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
