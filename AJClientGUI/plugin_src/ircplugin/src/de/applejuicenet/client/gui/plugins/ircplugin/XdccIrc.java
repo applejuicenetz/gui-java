@@ -35,7 +35,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.18 2004/06/07 20:16:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.19 2004/06/09 05:59:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -1157,57 +1157,61 @@ public class XdccIrc
                                 modeReceived.indexOf(" "));
                             String names = modeReceived.substring(modeReceived.indexOf(" ") + 1);
                             String splits[] = names.split(" ");
-                            if ((plusMinus == '-' || plusMinus == '+') && modeReceived.charAt(1) != 'b') {
-                                for (int i = 0; i < splits.length; i++) {
-                                    String name = splits[i];
-                                    SortedListModel model = channel.
-                                        getUserNameList();
-                                    if (model.contains("!" + name)) {
-                                        channel.updateUserArea("!" + name,
-                                            "remove");
-                                    }
-                                    else if (model.contains("@" +
-                                        name)) {
-                                        channel.updateUserArea("@" + name,
-                                            "remove");
-                                    }
-                                    else if (model.contains("%" +
-                                        name)) {
-                                        channel.updateUserArea("%" + name,
-                                            "remove");
-                                    }
-                                    else if (model.contains("+" +
-                                        name)) {
-                                        channel.updateUserArea("+" + name,
-                                            "remove");
-                                    }
-                                    else if (model.contains(name)) {
-                                        channel.updateUserArea(name, "remove");
-                                    }
-                                    if (plusMinus == '+') {
-                                        tmp = modeReceived.substring(1, 2);
-                                        if (tmp.compareToIgnoreCase("v") == 0) {
-                                            channel.updateUserArea("+" + name,
-                                                "add");
-                                        }
-                                        else if (tmp.compareToIgnoreCase("a") ==
-                                                 0) {
+                            if ((plusMinus == '-' || plusMinus == '+')) {
+                                char mode = modeReceived.charAt(1);
+                                if (mode == 'v' || mode == 'a' || mode == 'o' || mode == 'h'){
+                                    for (int i = 0; i < splits.length; i++) {
+                                        String name = splits[i];
+                                        SortedListModel model = channel.
+                                            getUserNameList();
+                                        if (model.contains("!" + name)) {
                                             channel.updateUserArea("!" + name,
-                                                "add");
+                                                "remove");
                                         }
-                                        else if (tmp.compareToIgnoreCase("o") ==
-                                                 0) {
+                                        else if (model.contains("@" +
+                                            name)) {
                                             channel.updateUserArea("@" + name,
-                                                "add");
+                                                "remove");
                                         }
-                                        else if (tmp.compareToIgnoreCase("h") ==
-                                                 0) {
+                                        else if (model.contains("%" +
+                                            name)) {
                                             channel.updateUserArea("%" + name,
-                                                "add");
+                                                "remove");
                                         }
-                                    }
-                                    else if (plusMinus == '-') {
-                                        channel.updateUserArea(name, "add");
+                                        else if (model.contains("+" +
+                                            name)) {
+                                            channel.updateUserArea("+" + name,
+                                                "remove");
+                                        }
+                                        else if (model.contains(name)) {
+                                            channel.updateUserArea(name,
+                                                "remove");
+                                        }
+                                        if (plusMinus == '+') {
+                                            if (mode == 'v') {
+                                                channel.updateUserArea("+" +
+                                                    name,
+                                                    "add");
+                                            }
+                                            else if (mode == 'a') {
+                                                channel.updateUserArea("!" +
+                                                    name,
+                                                    "add");
+                                            }
+                                            else if (mode == 'o') {
+                                                channel.updateUserArea("@" +
+                                                    name,
+                                                    "add");
+                                            }
+                                            else if (mode == 'h') {
+                                                channel.updateUserArea("%" +
+                                                    name,
+                                                    "add");
+                                            }
+                                        }
+                                        else if (plusMinus == '-') {
+                                            channel.updateUserArea(name, "add");
+                                        }
                                     }
                                 }
                             }
