@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.45 2003/10/05 11:48:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.46 2003/10/06 12:08:01 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.46  2003/10/06 12:08:01  maj0r
+ * Unnoetiges Logging entfernt.
+ *
  * Revision 1.45  2003/10/05 11:48:36  maj0r
  * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
  * Userpartlisten werden angezeigt.
@@ -666,7 +669,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 System.out.print("Warnung: Ungueltiger Link uebergeben!");
                 return false;
             }
-            logger.info("Downloade '" + link + "...");
             try
             {
                 String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
