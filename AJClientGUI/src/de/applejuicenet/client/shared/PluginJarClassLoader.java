@@ -21,7 +21,7 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.22 2005/01/24 10:42:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.23 2005/01/24 18:27:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -62,7 +62,7 @@ public class PluginJarClassLoader
         catch (Exception e) {
             if (logger.isEnabledFor(Level.INFO)) {
                 logger.info("Plugin " + jar +
-                    " entspricht nicht dem Standard und wurde nicht geladen.");
+                    " entspricht nicht dem Standard und wurde nicht geladen.", e);
             }
             return null;
         }
