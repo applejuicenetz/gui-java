@@ -39,7 +39,7 @@ import java.util.HashSet;
 import de.applejuicenet.client.shared.NetworkInfo;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.145 2004/06/25 13:16:47 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.146 2004/06/25 13:49:01 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -189,7 +189,9 @@ public class ApplejuiceFassade {
         StringBuffer versioninfo = new StringBuffer();
         versioninfo.append("ok|*** Core: " + getCoreVersion().getVersion());
         versioninfo.append(" * JavaGUI: " + ApplejuiceFassade.GUI_VERSION);
-        versioninfo.append(" * Javaversion: " + System.getProperty("java.version") + " ***");
+        versioninfo.append(" * Javaversion: " + System.getProperty("java.version"));
+        versioninfo.append(" * OS: " + System.getProperty("os.name"));
+        versioninfo.append(" ***");
         return versioninfo.toString();
     }
 
