@@ -5,11 +5,11 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
 
-import de.applejuicenet.client.gui.tables.upload.UploadColumnComponent;
+import de.applejuicenet.client.gui.upload.table.UploadColumnComponent;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.25 2004/10/15 13:34:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.26 2004/10/28 15:02:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

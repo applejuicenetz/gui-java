@@ -19,14 +19,17 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.download.DownloadController;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.gui.search.SearchPanel;
+import de.applejuicenet.client.gui.server.ServerPanel;
 import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.gui.start.StartController;
+import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.48 2004/10/15 15:54:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.49 2004/10/28 14:57:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

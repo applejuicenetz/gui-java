@@ -37,7 +37,7 @@ import de.applejuicenet.client.gui.download.table.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
 import de.applejuicenet.client.gui.download.table.IconGetter;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.tables.upload.MainNode;
+import de.applejuicenet.client.gui.upload.table.MainNode;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 import de.applejuicenet.client.shared.Settings;
@@ -46,7 +46,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.32 2004/10/15 15:54:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.33 2004/10/28 15:02:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

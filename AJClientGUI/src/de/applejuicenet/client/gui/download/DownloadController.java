@@ -21,8 +21,6 @@ import javax.swing.table.TableColumn;
 import org.apache.log4j.Level;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.gui.IncomingDirSelectionDialog;
-import de.applejuicenet.client.gui.RenameDownloadDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
@@ -34,6 +32,7 @@ import de.applejuicenet.client.gui.download.table.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
 import de.applejuicenet.client.gui.download.table.DownloadRootNode;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.Settings;

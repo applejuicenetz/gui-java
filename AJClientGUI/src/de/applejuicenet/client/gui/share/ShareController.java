@@ -17,7 +17,6 @@ import javax.swing.table.TableColumnModel;
 import org.apache.log4j.Level;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.gui.DateiListeDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
@@ -37,7 +36,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.5 2004/10/15 13:39:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.6 2004/10/28 14:57:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

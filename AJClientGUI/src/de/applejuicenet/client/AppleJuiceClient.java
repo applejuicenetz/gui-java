@@ -32,7 +32,6 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.ConnectFrame;
 import de.applejuicenet.client.gui.QuickConnectionSettingsDialog;
 import de.applejuicenet.client.gui.UpdateInformationDialog;
-import de.applejuicenet.client.gui.WizardDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.LinkListener;
@@ -40,6 +39,7 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.shared.KeyStates;
+import de.applejuicenet.client.gui.wizard.WizardDialog;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.82 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.83 2004/10/28 14:57:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
