@@ -7,7 +7,7 @@ Beispiel:
 
 
 Original:
-@="\"C:\\AJClientGUI\\AJCoreGUI.exe\" \"%1\" \"C:\\AJClientGUI\""
+@="\"C:\\AJClientGUI\\AJCoreGUI.exe\" \"-link=%1\" \"-path=C:\\AJClientGUI\""
 
 Wenn Du die exe in "c:\programme\aj" liegen hast, würde die Zeile so aussehen:
-@="\"c:\\programme\\aj\\AJCoreGUI.exe\" \"%1\" \"c:\\programme\\aj\""
+@="\"c:\\programme\\aj\\AJCoreGUI.exe\" \"-link=%1\" \"-path=c:\\programme\\aj\""
