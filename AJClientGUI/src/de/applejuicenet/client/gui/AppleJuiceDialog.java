@@ -12,6 +12,8 @@ import java.io.File;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -99,22 +101,24 @@ public class AppleJuiceDialog
   protected JMenuBar createMenuBar() {
     String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
     File languagePath = new File(path);
-    String[] sprachDateien = languagePath.list();
-
+    String[] tempListe = languagePath.list();
+    HashSet sprachDateien = new HashSet();
+    for (int i = 0; i < tempListe.length; i++) {
+      if (tempListe[i].indexOf(".xml")!=-1)
+        sprachDateien.add(tempListe[i]);
+    }
     JMenuBar menuBar = new JMenuBar();
     optionenMenu = new JMenu("Optionen");
     menuBar.add(optionenMenu);
     JMenuItem menuItem;
 
-
     sprachMenu = new JMenu("Sprache");
-
     menuBar.add(sprachMenu);
-
     ButtonGroup lafGroup = new ButtonGroup();
 
-    for (int i = 0; i < sprachDateien.length; i++) {
-      String sprachText = LanguageSelector.getInstance(path + sprachDateien[i]).getFirstAttrbuteByTagName("Languageinfo", "name");
+    Iterator it = sprachDateien.iterator();
+    while (it.hasNext()) {
+      String sprachText = LanguageSelector.getInstance(path + (String)it.next()).getFirstAttrbuteByTagName("Languageinfo", "name");
       JRadioButtonMenuItem rb = new JRadioButtonMenuItem(sprachText);
       sprachMenu.add(rb);
       rb.addItemListener(new ItemListener() {
