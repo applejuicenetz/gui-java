@@ -2,24 +2,26 @@ package de.applejuicenet.client.shared;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import javax.swing.ImageIcon;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
-import java.lang.reflect.Constructor;
-import javax.swing.ImageIcon;
-import de.applejuicenet.client.gui.plugins.XMLValueHolder;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.20 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.21 2005/01/24 10:40:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -93,14 +95,16 @@ public class PluginJarClassLoader
             }
             if (entryName.equals("plugin_properties.xml")){
                 String xmlString = new String(buf, 0, buf.length);
-                pluginsPropertiesXMLHolder = new XMLValueHolder(xmlString);
+                pluginsPropertiesXMLHolder = new XMLValueHolder();
+                pluginsPropertiesXMLHolder.parse(new File(xmlString));
             }
             else if (entryName.indexOf("icon.gif") != -1){
                 pluginIcon = new ImageIcon(buf);
             }
             else if (entryName.indexOf("language_xml_") != -1){
                 String xmlString = new String(buf, 0, buf.length);
-                XMLValueHolder languageFile = new XMLValueHolder(xmlString);
+                XMLValueHolder languageFile = new XMLValueHolder();
+                languageFile.parse(new File(xmlString));
                 String sprache = languageFile.getXMLAttributeByTagName(".root.language.value");
                 languageXMLs.put(sprache, languageFile);
             }
