@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.13 2003/08/11 14:10:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.14 2003/08/11 16:52:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.14  2003/08/11 16:52:39  maj0r
+ * Ausgabefehler korrigiert.
+ *
  * Revision 1.13  2003/08/11 14:10:28  maj0r
  * DownloadPartList eingefügt.
  * Diverse Änderungen.
@@ -152,15 +155,16 @@ public class StartPanel
     panel3.add(label4, constraints);
 
     constraints.gridx = 1;
-    nachrichten = new JLabel(
+    label8 = new JLabel(
         "<html><font><h2>Netzwerk, Neuigkeiten und Nachrichten</h2></font></html>");
-    nachrichten.setForeground(APFEL_GRUEN);
-    panel3.add(nachrichten, constraints);
+    label8.setForeground(APFEL_GRUEN);
+    panel3.add(label8, constraints);
 
     constraints.gridy = 5;
     constraints.insets.left = 15;
-    label8 = new JLabel();
-    panel3.add(label8, constraints);
+    nachrichten = new JLabel();
+    nachrichten.setForeground(APFEL_GRUEN);
+    panel3.add(nachrichten, constraints);
 
     constraints.gridy = 6;
     constraints.insets.left = 5;
