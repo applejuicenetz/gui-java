@@ -22,9 +22,10 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
 import javax.swing.table.JTableHeader;
 import de.applejuicenet.client.gui.shared.SortButtonRenderer;
 import javax.swing.table.TableColumn;
+import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.11 2004/01/12 14:20:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.12 2004/01/25 08:31:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +34,9 @@ import javax.swing.table.TableColumn;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.12  2004/01/25 08:31:11  maj0r
+ * Icons eingebaut.
+ *
  * Revision 1.11  2004/01/12 14:20:31  maj0r
  * Sortierung eingebaut.
  *
@@ -120,7 +124,9 @@ public class SearchResultPanel extends JPanel{
     }
 
     private void init() throws Exception {
+        IconManager im = IconManager.getInstance();
         item1.setText(linkLaden);
+        item1.setIcon(im.getIcon("download"));
         sucheAbbrechen.setText(sucheStoppen);
         sucheAbbrechen.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){

@@ -32,7 +32,7 @@ import java.net.URLEncoder;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.53 2004/01/05 15:30:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.54 2004/01/25 08:31:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.54  2004/01/25 08:31:11  maj0r
+ * Icons eingebaut.
+ *
  * Revision 1.53  2004/01/05 15:30:22  maj0r
  * Bug #43 gefixt (Danke an flabeg)
  * Shareverzeichnis wird bei Prioritaetenaenderung nicht mehr komplett neu geladen, sondern nur aktualsiert.
@@ -245,6 +248,10 @@ public class SharePanel
     }
 
     private void init() throws Exception {
+        IconManager im = IconManager.getInstance();
+        itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
+        itemCopyToClipboardAsUBBCode.setIcon(im.getIcon("clipboard"));
+
         popup2.add(itemCopyToClipboard);
         popup2.add(itemCopyToClipboardAsUBBCode);
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));
@@ -377,8 +384,11 @@ public class SharePanel
         });
 
         item1 = new JMenuItem();
+        item1.setIcon(im.getIcon("sharedwsub"));
         item2 = new JMenuItem();
+        item2.setIcon(im.getIcon("sharedwosub"));
         item3 = new JMenuItem();
+        item3.setIcon(im.getIcon("notshared"));
         popup.add(item1);
         popup.add(item2);
         popup.add(item3);

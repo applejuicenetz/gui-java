@@ -59,9 +59,10 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JSplitPane;
 import javax.swing.table.TableColumn;
 import javax.swing.JCheckBoxMenuItem;
+import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.85 2004/01/20 12:45:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.86 2004/01/25 08:31:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -70,6 +71,9 @@ import javax.swing.JCheckBoxMenuItem;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.86  2004/01/25 08:31:11  maj0r
+ * Icons eingebaut.
+ *
  * Revision 1.85  2004/01/20 12:45:32  maj0r
  * Spaltenposition wird jetzt gespeichert.
  *
@@ -355,6 +359,16 @@ public class DownloadPanel
         item5 = new JMenuItem("Zielordner ändern");
         item6 = new JMenuItem("Fertige Übertragungen entfernen");
         item7 = new JMenuItem("Partliste anzeigen");
+
+        IconManager im = IconManager.getInstance();
+        item1.setIcon(im.getIcon("abbrechen"));
+        item2.setIcon(im.getIcon("pause"));
+        item4.setIcon(im.getIcon("umbenennen"));
+        item5.setIcon(im.getIcon("zielordner"));
+        item6.setIcon(im.getIcon("bereinigen"));
+        item7.setIcon(im.getIcon("partliste"));
+        itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
+
         popup.add(item1);
         popup.add(item2);
         popup.add(item4);
