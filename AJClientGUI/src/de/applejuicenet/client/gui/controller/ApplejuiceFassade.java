@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.50 2003/10/13 12:37:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.51 2003/10/14 15:44:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.51  2003/10/14 15:44:32  maj0r
+ * Unnoetige Returnwerte ausgebaut.
+ * Powerdownloads werden nun innerhalb einer Connection gesetzt,
+ *
  * Revision 1.50  2003/10/13 12:37:48  maj0r
  * Bug #1003 behoben.
  *
@@ -437,7 +441,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return settingsXML.getAJSettings();
     }
 
-    public boolean saveAJSettings(AJSettings ajSettings) {
+    public void saveAJSettings(AJSettings ajSettings) {
         try{
             String parameters = "";
             try
@@ -466,23 +470,14 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 if (logger.isEnabledFor(Level.ERROR))
                     logger.error("Unbehandelte Exception", ex1);
             }
-            try
-            {
-                String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-                HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                      "/function/setsettings?password=" + password + "&" + parameters, false);
-            }
-            catch (WebSiteNotFoundException ex)
-            {
-                return false;
-            }
-            return true;
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                  "/function/setsettings?password=" + password + "&" + parameters, false);
         }
         catch (Exception e)
         {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
-            return false;
         }
     }
 
@@ -513,7 +508,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         }
     }
 
-    public boolean resumeDownload(int[] id) {
+    public void resumeDownload(int[] id) {
         try
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
@@ -526,42 +521,41 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/resumedownload?password=" + password + parameters, false);
         }
-        catch (WebSiteNotFoundException ex)
+        catch (Exception e)
         {
-            return false;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
-        return true;
     }
 
-    public boolean startSearch(String searchString) {
+    public void startSearch(String searchString) {
         try
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/search?password=" + password + "&search=" + searchString, false);
         }
-        catch (WebSiteNotFoundException ex)
+        catch (Exception e)
         {
-            return false;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
-        return true;
     }
 
-    public static boolean setPassword(String passwordAsMD5) {
+    public static void setPassword(String passwordAsMD5) {
         try
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setpassword?password=" + password + "&newpassword=" + passwordAsMD5, false);
+                                                  "/function/setpassword?password=" + password + "&newpassword="
+                                                  + passwordAsMD5, false);
         }
         catch (WebSiteNotFoundException ex)
         {
-            return false;
         }
-        return true;
     }
 
-    public boolean cancelDownload(int[] id) {
+    public void cancelDownload(int[] id) {
         try
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
@@ -574,14 +568,14 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/canceldownload?password=" + password + parameters, false);
         }
-        catch (WebSiteNotFoundException ex)
+        catch (Exception e)
         {
-            return false;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
-        return true;
     }
 
-    public boolean cleanDownloadList() {
+    public void cleanDownloadList() {
         logger.info("Clear list...");
         try
         {
@@ -589,14 +583,14 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/cleandownloadlist?password=" + password, false);
         }
-        catch (WebSiteNotFoundException ex)
+        catch (Exception e)
         {
-            return false;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
-        return true;
     }
 
-    public boolean pauseDownload(int[] id) {
+    public void pauseDownload(int[] id) {
         try
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
@@ -609,120 +603,99 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/pausedownload?password=" + password + parameters, false);
         }
-        catch (WebSiteNotFoundException ex)
+        catch (Exception e)
         {
-            return false;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
-        return true;
     }
 
-    public boolean connectToServer(int id) {
+    public void connectToServer(int id) {
         try
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/serverlogin?password=" + password + "&id=" + id, false);
         }
-        catch (WebSiteNotFoundException ex)
+        catch (Exception e)
         {
-            return false;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
-        return true;
     }
 
-    public boolean entferneServer(int id) {
+    public void entferneServer(int id) {
         try
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/removeserver?password=" + password + "&id=" + id, false);
         }
-        catch (WebSiteNotFoundException ex)
+        catch (Exception e)
         {
-            return false;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
-        return true;
     }
 
-    public boolean setPrioritaet(int id, int prioritaet) {
+    public void setPrioritaet(int id, int prioritaet) {
         try{
             if (prioritaet < 1 || prioritaet > 250)
             {
                 System.out.print("Warnung: Prioritaet muss 1<= x <=250 sein!");
-                return false;
+                return;
             }
-            try
-            {
-                String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-                HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                      "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet, false);
-            }
-            catch (WebSiteNotFoundException ex)
-            {
-                return false;
-            }
-            return true;
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                  "/function/setpriority?password=" + password + "&id=" + id +
+                                                  "&priority=" + prioritaet, false);
         }
         catch (Exception e)
         {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
-            return false;
         }
     }
 
-    public boolean processLink(String link) {
+    public void processLink(String link) {
         try{
             if (link == null || link.length() == 0)
             {
                 System.out.print("Warnung: Ungueltiger Link uebergeben!");
-                return false;
+                return;
             }
-            try
-            {
-                String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-                HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                      "/function/processlink?password=" + password + "&link=" + link, false);
-            }
-            catch (WebSiteNotFoundException ex)
-            {
-                return false;
-            }
-            return true;
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                  "/function/processlink?password=" + password + "&link=" + link, false);
         }
         catch (Exception e)
         {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
-            return false;
         }
     }
 
-    public boolean setPowerDownload(int id, int powerDownload) {
+    public void setPowerDownload(int[] id, int powerDownload) {
         try{
             if (powerDownload < 0 || powerDownload > 490)
             {
                 System.out.print("Warnung: PowerDownload muss 0<= x <=490 sein!");
-                return false;
+                return;
             }
-            try
-            {
-                String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-                HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                      "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload
-                                             , false);
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            String parameters = "&powerdownload=" + powerDownload + "&id=" + id[0];
+            if (id.length>1){
+                for (int i=1; i<id.length; i++){
+                    parameters += "&id" + i + "=" + id[i];
+                }
             }
-            catch (WebSiteNotFoundException ex)
-            {
-                return false;
-            }
-            return true;
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+                                                  "/function/setpowerdownload?password=" + password + parameters, false);
         }
         catch (Exception e)
         {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
-            return false;
         }
     }
 
@@ -889,11 +862,11 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return share;
     }
 
-    public boolean setShare(HashSet newShare){
+    public void setShare(HashSet newShare){
         try{
             int shareSize = newShare.size();
             if (newShare==null)
-                return false;
+                return;
             String parameters = "countshares=" + shareSize;
             ShareEntry shareEntry = null;
             Iterator it = newShare.iterator();
@@ -904,29 +877,20 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     parameters += "&sharedirectory" + i + "=" + URLEncoder.encode(shareEntry.getDir(), "UTF-8");
                 }
                 catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                    logger.error("Unbehandelte Exception", e);
                 }
                 parameters += "&sharesub" + i + "=" +
                         (shareEntry.getShareMode()==ShareEntry.SUBDIRECTORY ? "true" : "false");
                 i++;
             }
-            try
-            {
-                String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-                HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                      "/function/setsettings?password=" + password + "&" + parameters, false);
-            }
-            catch (WebSiteNotFoundException ex)
-            {
-                return false;
-            }
-            return true;
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                  "/function/setsettings?password=" + password + "&" + parameters, false);
         }
         catch (Exception e)
         {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
-            return false;
         }
     }
 
