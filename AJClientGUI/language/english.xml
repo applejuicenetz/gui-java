@@ -104,7 +104,7 @@
 		<Label10 caption="Language"/>
 		<Button1 caption="OK"/>
 		<Button2 caption="Cancel"/>
-		<Label13 caption="MaxDownload in kb/s (0 = machine limit)"/><visualsheet caption="Visual"/>
+		<Label13 caption="MaxDownload in kb/s"/><visualsheet caption="Visual"/>
 		<dwncol1 caption="Transfered bytes"/>
 		<dwncol2 caption="Percent ready loaded"/>
 		<dwncol3 caption="Bytes to load"/>
