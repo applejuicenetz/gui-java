@@ -80,7 +80,7 @@ public class TrayIconPopupSeparator
      * Param level = the level (submenu depth)
      */
     public void setTrayIcon(WindowsTrayIcon trayicon, int id, int level) {
-        trayicon.subPopup(id, level, "", WindowsTrayIcon.POPUP_TYPE_SEPARATOR,
+    	WindowsTrayIcon.subPopup(id, level, "", WindowsTrayIcon.POPUP_TYPE_SEPARATOR,
                           0);
     }
 

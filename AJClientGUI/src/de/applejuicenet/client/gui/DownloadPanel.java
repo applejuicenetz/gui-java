@@ -66,7 +66,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.108 2004/06/15 15:31:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.109 2004/06/23 12:39:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -420,7 +420,7 @@ public class DownloadPanel
         downloadLink.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e)
             {
-                if (e.getButton() == e.BUTTON3) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     showLinkMenu(e.getX(), e.getY());
                 }
             }

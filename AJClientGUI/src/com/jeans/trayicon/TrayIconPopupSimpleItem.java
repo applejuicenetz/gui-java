@@ -162,7 +162,7 @@ public class TrayIconPopupSimpleItem
         if (m_Default) {
             extra |= WindowsTrayIcon.POPUP_MODE_DEFAULT;
         }
-        m_MenuId = trayicon.subPopup(id, level, m_Item,
+        m_MenuId = WindowsTrayIcon.subPopup(id, level, m_Item,
                                      WindowsTrayIcon.POPUP_TYPE_ITEM, extra);
         m_TrayIcon = trayicon;
     }

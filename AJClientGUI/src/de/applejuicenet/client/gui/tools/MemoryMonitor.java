@@ -54,7 +54,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.5 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.6 2004/06/23 12:38:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,6 +64,9 @@ import javax.swing.JPanel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MemoryMonitor.java,v $
+ * Revision 1.6  2004/06/23 12:38:00  maj0r
+ * PMD-Checks
+ *
  * Revision 1.5  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -280,7 +283,7 @@ public class MemoryMonitor
 
         while (thread == me && !isShowing() || getSize().width == 0) {
             try {
-                thread.sleep(500);
+                Thread.sleep(500);
             }
             catch (InterruptedException e) {
                 return;
@@ -301,7 +304,7 @@ public class MemoryMonitor
             }
             repaint();
             try {
-                thread.sleep(sleepAmount);
+                Thread.sleep(sleepAmount);
             }
             catch (InterruptedException e) {
                 break;

@@ -111,7 +111,7 @@ public class TrayIconPopupCheckItem
         if (m_Selected) {
             extra |= WindowsTrayIcon.POPUP_MODE_CHECK;
         }
-        m_MenuId = trayicon.subPopup(id, level, m_Item,
+        m_MenuId = WindowsTrayIcon.subPopup(id, level, m_Item,
                                      WindowsTrayIcon.POPUP_TYPE_CHECKBOX, extra);
         m_TrayIcon = trayicon;
     }

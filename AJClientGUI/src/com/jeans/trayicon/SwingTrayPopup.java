@@ -23,8 +23,8 @@ public class SwingTrayPopup
     public void setTrayIcon(WindowsTrayIcon icon) {
         if (icon != null) {
             m_Icon = icon;
-            m_Icon.initJAWT();
-            m_Icon.initHook();
+            WindowsTrayIcon.initJAWT();
+            WindowsTrayIcon.initHook();
             m_Listener = new ActivateListener();
             m_Icon.addMouseListener(m_Listener);
         }

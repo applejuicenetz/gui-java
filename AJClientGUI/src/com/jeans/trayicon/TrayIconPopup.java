@@ -119,13 +119,13 @@ public class TrayIconPopup
      */
     public void setTrayIcon(WindowsTrayIcon trayicon, int id, int level) {
         int mLevel = level + 1;
-        trayicon.subPopup(id, mLevel, mItem,
+        WindowsTrayIcon.subPopup(id, mLevel, mItem,
                           WindowsTrayIcon.POPUP_TYPE_INIT_LEVEL, 0);
         for (Enumeration enum = mVector.elements(); enum.hasMoreElements(); ) {
             TrayIconPopupItem item = (TrayIconPopupItem) enum.nextElement();
             item.setTrayIcon(trayicon, id, mLevel);
         }
-        trayicon.subPopup(id, mLevel, mItem,
+        WindowsTrayIcon.subPopup(id, mLevel, mItem,
                           WindowsTrayIcon.POPUP_TYPE_DONE_LEVEL, 0);
     }
 }

@@ -28,7 +28,7 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.14 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.15 2004/06/23 12:39:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -206,8 +206,7 @@ public class ODAnsichtPanel
         public void mouseClicked(MouseEvent e) {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             JLabel source = (JLabel) e.getSource();
-            JColorChooser jColorChooserBackground = new JColorChooser();
-            Color newColor = jColorChooserBackground.showDialog(null,
+            Color newColor = JColorChooser.showDialog(null,
                 ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.options.ansicht.hintergrundfarbewaehlen")),
                 source.getBackground());
