@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.29 2003/09/12 13:19:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.30 2003/10/01 20:10:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.30  2003/10/01 20:10:44  maj0r
+ * Bischen Logging hinzu gefuegt.
+ *
  * Revision 1.29  2003/09/12 13:19:26  maj0r
  * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
  * Version 0.30
@@ -127,6 +130,9 @@ public class AppleJuiceClient {
             if (logger.isEnabledFor(Level.INFO))
                 logger.info(nachricht);
             System.out.println(nachricht);
+            nachricht = "erkanntes GUI-OS: " + System.getProperty("os.name");
+            if (logger.isEnabledFor(Level.INFO))
+                logger.info(nachricht);
 
             Frame dummyFrame = new Frame();
             Image img = IconManager.getInstance().getIcon("applejuice").getImage();

@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.25 2003/09/12 13:19:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.26 2003/10/01 20:10:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.26  2003/10/01 20:10:44  maj0r
+ * Bischen Logging hinzu gefuegt.
+ *
  * Revision 1.25  2003/09/12 13:19:26  maj0r
  * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
  * Version 0.30
@@ -248,6 +251,9 @@ public class StartPanel
                     String coreVersion = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
                     version.setText("GUI: " + ApplejuiceFassade.GUI_VERSION + " Core: " +
                               coreVersion);
+                    String nachricht = "verwendeter Core: " + coreVersion;
+                    if (logger.isEnabledFor(Level.INFO))
+                        logger.info(nachricht);
 
                     String htmlText = WebsiteContentLoader.getWebsiteContent("http://www.applejuicenet.org", 80, "/inprog/news.php?version=" +
                                 ApplejuiceFassade.getInstance().getCoreVersion().getVersion());
