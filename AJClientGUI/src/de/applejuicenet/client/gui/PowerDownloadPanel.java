@@ -3,14 +3,11 @@ package de.applejuicenet.client.gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.*;
 
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
-import de.applejuicenet.client.gui.tables.download.DownloadRootNode;
-import de.applejuicenet.client.gui.tables.download.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.powerdownload.StandardAutomaticPwdlPolicy;
 import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
 import de.applejuicenet.client.shared.*;
@@ -18,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.29 2003/11/17 07:32:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.30 2003/11/17 14:44:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.30  2003/11/17 14:44:10  maj0r
+ * Erste funktionierende Version des automatischen Powerdownloads eingebaut.
+ *
  * Revision 1.29  2003/11/17 07:32:30  maj0r
  * Automatischen Pwdl begonnen.
  *
@@ -95,6 +95,7 @@ public class PowerDownloadPanel
     private JRadioButton btnAutoAktiv = new JRadioButton();
     private JLabel btnHint;
     private JLabel btnHint2;
+    private JLabel btnHint3;
     private JLabel btnPdlUp;
     private JLabel btnPdlDown;
     private float ratioWert = 2.2f;
@@ -120,7 +121,7 @@ public class PowerDownloadPanel
 
     private DownloadPanel parentPanel;
 
-    private Thread autoPwdlThread;
+    private AutomaticPowerdownloadPolicy autoPwdlThread;
 
     public PowerDownloadPanel(DownloadPanel parentPanel) {
         logger = Logger.getLogger(getClass());
@@ -270,7 +271,13 @@ public class PowerDownloadPanel
         };
         btnHint2.setOpaque(true);
         btnHint2.setBackground(BLUE_BACKGROUND);
-
+        btnHint3 = new JLabel(icon) {
+            public JToolTip createToolTip() {
+                MultiLineToolTip tip = new MultiLineToolTip();
+                tip.setComponent(this);
+                return tip;
+            }
+        };
         tempPanel2.add(btnHint2, BorderLayout.EAST);
         backPanel.add(tempPanel2, constraints);
 
@@ -282,8 +289,29 @@ public class PowerDownloadPanel
         btnAutoInaktiv.setText("inaktiv");
         btnAutoAktiv.setText("aktiv");
         btnAutoAktiv.setSelected(true);
+        pwdlPolicies.addItemListener(new ItemListener(){
+            public void itemStateChanged(ItemEvent e) {
+                AutomaticPowerdownloadPolicy policy = (AutomaticPowerdownloadPolicy)pwdlPolicies.getSelectedItem();
+                StringBuffer text = new StringBuffer(policy.getDescription());
+                int i=0;
+                while (i<text.length()){
+                    if (text.charAt(i)=='.'){
+                        text.insert(i+1, '|');
+                        i++;
+                    }
+                    i++;
+                }
+                text.insert(0, policy.toString() + "|" +
+                               "Autor: " + policy.getAuthor() + "|" +
+                               "Beschreibung:|");
+                btnHint3.setToolTipText(text.toString());
+            }
+        });
         fillPwdlPolicies();
-        backPanel.add(pwdlPolicies, constraints);
+        JPanel panel1 = new JPanel(new FlowLayout());
+        panel1.add(pwdlPolicies);
+        panel1.add(btnHint3);
+        backPanel.add(panel1, constraints);
         constraints.gridy = 9;
         backPanel.add(btnAutoInaktiv, constraints);
         constraints.gridy = 10;
@@ -328,6 +356,7 @@ public class PowerDownloadPanel
             }
         });
         add(backPanel, BorderLayout.NORTH);
+        ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.INFORMATION_CHANGED);
     }
 
     private void alterAutoPwdl(){
@@ -336,6 +365,7 @@ public class PowerDownloadPanel
                 pwdlPolicies.setEnabled(false);
                 autoAb.setEnabled(false);
                 autoBis.setEnabled(false);
+                btnPdl.setEnabled(false);
                 AutomaticPowerdownloadPolicy selectedPolicy = (AutomaticPowerdownloadPolicy) pwdlPolicies.getSelectedItem();
                 manageAutoPwdl(selectedPolicy);
             }
@@ -351,7 +381,15 @@ public class PowerDownloadPanel
                 }
             }
         }
+    }
 
+    public boolean isAutomaticPwdlActive(){
+        if (!pwdlPolicies.isEnabled() && autoPwdlThread!=null){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     private void manageAutoPwdl(final AutomaticPowerdownloadPolicy selectedPolicy){
@@ -535,11 +573,16 @@ public class PowerDownloadPanel
 
     public void fireContentChanged(int type, Object content) {
         try {
-            if (!pwdlPolicies.isEnabled() && type == DataUpdateListener.INFORMATION_CHANGED){
+            if (!pwdlPolicies.isEnabled() && type == DataUpdateListener.INFORMATION_CHANGED && autoPwdlThread!=null){
                 Information information = (Information) content;
                 long eingegebenBis = Integer.parseInt(autoBis.getText()) * 1048576l;
                 long eingegebenAb = Integer.parseInt(autoAb.getText()) * 1048576l;
-
+                if (information.getCredits()>eingegebenAb && autoPwdlThread.isPaused()){
+                    autoPwdlThread.setPaused(false);
+                }
+                else if (information.getCredits()<eingegebenBis && !autoPwdlThread.isPaused()){
+                    autoPwdlThread.setPaused(true);
+                }
             }
         }
         catch (Exception e) {

@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.58 2003/11/03 20:57:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.59 2003/11/17 14:44:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.59  2003/11/17 14:44:10  maj0r
+ * Erste funktionierende Version des automatischen Powerdownloads eingebaut.
+ *
  * Revision 1.58  2003/11/03 20:57:03  maj0r
  * Sortieren nach Status eingebaut.
  *
@@ -245,7 +248,7 @@ public class DownloadPanel
         item2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 Object[] selectedItems = getSelectedDownloadItems();
-                if (selectedItems != null && selectedItems.length != 0) {
+                if (selectedItems != null && selectedItems.length != 0 && !powerDownloadPanel.isAutomaticPwdlActive()) {
                     ArrayList indizesPausieren = new ArrayList();
                     ArrayList indizesFortsetzen = new ArrayList();
                     for (int i = 0; i < selectedItems.length; i++) {
@@ -338,11 +341,21 @@ public class DownloadPanel
                 }
                 if (node.getClass() == DownloadMainNode.class
                         && ((DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
-                    powerDownloadPanel.btnPdl.setEnabled(true);
+                    if (!powerDownloadPanel.isAutomaticPwdlActive()){
+                        powerDownloadPanel.btnPdl.setEnabled(true);
+                    }
+                    else{
+                        powerDownloadPanel.btnPdl.setEnabled(false);
+                    }
                     downloadDOOverviewPanel.setDownloadDO(((DownloadMainNode) node).getDownloadDO());
                 }
                 else if (node.getClass() == DownloadSourceDO.class) {
-                    powerDownloadPanel.btnPdl.setEnabled(true);
+                    if (!powerDownloadPanel.isAutomaticPwdlActive()){
+                        powerDownloadPanel.btnPdl.setEnabled(true);
+                    }
+                    else{
+                        powerDownloadPanel.btnPdl.setEnabled(false);
+                    }
                     if (((DownloadSourceDO) node).getQueuePosition() <= 20) {
                         downloadDOOverviewPanel.setDownloadSourceDO((DownloadSourceDO) node);
                     }
