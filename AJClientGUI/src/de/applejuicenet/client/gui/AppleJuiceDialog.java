@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.46 2003/09/09 12:28:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.47 2003/09/09 17:43:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.47  2003/09/09 17:43:24  maj0r
+ * Memory-Anzeige entfernt.
+ *
  * Revision 1.46  2003/09/09 12:28:14  maj0r
  * Wizard fertiggestellt.
  *
@@ -127,8 +130,6 @@ public class AppleJuiceDialog
     private JButton pause = new JButton();
     private boolean paused = false;
     private static Logger logger;
-    private JLabel memory = new JLabel();
-    private Thread memoryWorker;
 
     private static AppleJuiceDialog theApp;
 
@@ -195,9 +196,6 @@ public class AppleJuiceDialog
 
         JPanel panel = new JPanel(new GridBagLayout());
 
-        memory.setHorizontalAlignment(JLabel.RIGHT);
-        memory.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        memory.setFont(new java.awt.Font("SansSerif", 0, 11));
         for (int i = 0; i < statusbar.length; i++)
         {
             statusbar[i] = new JLabel("            ");
@@ -217,16 +215,14 @@ public class AppleJuiceDialog
         panel.add(statusbar[1], constraints);
         constraints.weightx = 0;
         constraints.gridx = 2;
-        panel.add(memory, constraints);
-        constraints.gridx = 3;
         panel.add(statusbar[2], constraints);
-        constraints.gridx = 4;
+        constraints.gridx = 3;
         panel.add(statusbar[3], constraints);
-        constraints.gridx = 5;
+        constraints.gridx = 4;
         panel.add(statusbar[4], constraints);
-        constraints.gridx = 6;
+        constraints.gridx = 5;
         panel.add(statusbar[5], constraints);
-        constraints.gridx = 7;
+        constraints.gridx = 6;
         panel.add(pause, constraints);
         getContentPane().add(panel, BorderLayout.SOUTH);
 
@@ -238,50 +234,6 @@ public class AppleJuiceDialog
         dm.addDataUpdateListener(this,
                                  DataUpdateListener.STATUSBAR_CHANGED);
 
-        memoryWorker = new Thread() {
-            public void run() {
-                if (logger.isEnabledFor(Level.DEBUG))
-                    logger.debug("MemoryWorkerThread gestartet. " + memoryWorker);
-                try{
-                    Runtime runtime = Runtime.getRuntime();
-                    while (!isInterrupted())
-                    {
-                            final long free = runtime.freeMemory();
-                            final long total = runtime.totalMemory();
-                            SwingUtilities.invokeLater(new Runnable() {
-                                public void run() {
-                                    memory.setText("Mem: U/T " + parseGroesse(total-free) + " / " + parseGroesse(total));
-                                }
-                            });
-                        try{
-                            sleep(5000);
-                        }
-                        catch (InterruptedException e){
-                            interrupt();
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    if (logger.isEnabledFor(Level.ERROR))
-                        logger.error("Unbehandelte Exception", e);
-                }
-                if (logger.isEnabledFor(Level.DEBUG))
-                    logger.debug("MemoryWorkerThread beendet. " + memoryWorker);
-            }
-
-            private String parseGroesse(long groesse) {
-                double share = groesse;
-                share = share / 1e5;
-                String result = Double.toString(share);
-                if (result.indexOf(".") + 3 < result.length())
-                {
-                    result = result.substring(0, result.indexOf(".") + 3);
-                }
-                result = result.replace('.', ',');
-                return result + " MB";
-            }
-        };
         try{
             //http://download.berlios.de/applejuicejava/version.txt
             String strAktuellsteVersion = HtmlLoader.getHtmlContent("download.berlios.de", 80, HtmlLoader.GET,
@@ -314,7 +266,6 @@ public class AppleJuiceDialog
                 logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
         }
         dm.startXMLCheck();
-        memoryWorker.start();
     }
 
     private static void einstellungenSpeichern() {
@@ -338,9 +289,6 @@ public class AppleJuiceDialog
         Dimension dim = getSize();
         Point p = getLocationOnScreen();
         setVisible(false);
-        if (memoryWorker!=null){
-            memoryWorker.interrupt();
-        }
         ApplejuiceFassade.getInstance().stopXMLCheck();
         String nachricht = "appleJuice-Core-GUI wird beendet...";
         if (logger.isEnabledFor(Level.INFO))
