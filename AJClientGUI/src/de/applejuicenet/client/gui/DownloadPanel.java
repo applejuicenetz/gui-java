@@ -49,9 +49,11 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.gui.trees.WaitNode;
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.67 2003/12/19 14:26:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.68 2003/12/29 15:29:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -60,6 +62,9 @@ import de.applejuicenet.client.gui.trees.WaitNode;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.68  2003/12/29 15:29:53  maj0r
+ * Downloadlinks werden jetzt in ISO-8859-1 an den Core uebertragen..
+ *
  * Revision 1.67  2003/12/19 14:26:58  maj0r
  * Dau-Button zum Anzeigen der Partliste eingebaut.
  *
@@ -553,7 +558,20 @@ public class DownloadPanel
         if (link.length() != 0) {
             new Thread(){
                 public void run(){
-                    ApplejuiceFassade.getInstance().processLink(link);
+                    String encodedLink = link;
+                    try {
+                        StringBuffer tempLink = new StringBuffer(link);
+                        for (int i=0; i<tempLink.length(); i++){
+                            if (tempLink.charAt(i)==' '){
+                                tempLink.setCharAt(i, '.');
+                            }
+                        }
+                        encodedLink = URLEncoder.encode(tempLink.toString(), "ISO-8859-1");
+                    }
+                    catch (UnsupportedEncodingException ex) {
+                        //gibbet, also nix zu behandeln...
+                    }
+                    ApplejuiceFassade.getInstance().processLink(encodedLink);
                     SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
                 }
             }.start();
