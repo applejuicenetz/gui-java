@@ -11,12 +11,9 @@ import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JToolTip;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -32,9 +29,12 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Settings;
+import de.tklsoft.gui.controls.TKLCheckBox;
+import de.tklsoft.gui.controls.TKLLabel;
+import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.3 2005/01/18 17:35:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.4 2005/02/22 16:01:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,19 +48,19 @@ public class ODAnsichtPanel
     extends JPanel
     implements OptionsRegister {
 
-    private JLabel farbeFertigerDownload = new JLabel("      ");
-    private JLabel farbeQuelle = new JLabel("      ");
+    private TKLLabel farbeFertigerDownload = new TKLLabel("      ");
+    private TKLLabel farbeQuelle = new TKLLabel("      ");
     private Settings settings;
-    private JCheckBox cmbAktiv = new JCheckBox();
-    private JCheckBox cmbDownloadUebersicht = new JCheckBox();
-    private JCheckBox enableToolTip = new JCheckBox();
-    private JCheckBox cmbStartscreenZeigen = new JCheckBox();
+    private TKLCheckBox cmbAktiv = new TKLCheckBox();
+    private TKLCheckBox cmbDownloadUebersicht = new TKLCheckBox();
+    private TKLCheckBox enableToolTip = new TKLCheckBox();
+    private TKLCheckBox cmbStartscreenZeigen = new TKLCheckBox();
     private Logger logger;
     private Icon menuIcon;
     private String menuText;
     private boolean dirty = false;
-    private JTextField openProgram = new JTextField();
-    private JLabel program = new JLabel("VLC ");
+    private TKLTextField openProgram = new TKLTextField();
+    private TKLLabel program = new TKLLabel("VLC ");
 
     public ODAnsichtPanel() {
         logger = Logger.getLogger(getClass());
@@ -121,14 +121,14 @@ public class ODAnsichtPanel
             }
         });
         ImageIcon icon = im.getIcon("hint");
-        JLabel hint1 = new JLabel(icon) {
+        TKLLabel hint1 = new TKLLabel(icon) {
 			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
-        JLabel hint2 = new JLabel(icon) {
+        TKLLabel hint2 = new TKLLabel(icon) {
 			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
@@ -143,18 +143,19 @@ public class ODAnsichtPanel
         openProgram.setEditable(false);
         openProgram.setBackground(Color.WHITE);
         openProgram.setText(om.getOpenProgram());
+        openProgram.ignoreInvalidRules(false);
         Icon icon2 = im.getIcon("folderopen");
         Icon icon3 = im.getIcon("vlc");
         program.setIcon(icon3);
-        JLabel selectProgram = new JLabel(icon2);
+        TKLLabel selectProgram = new TKLLabel(icon2);
         selectProgram.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
-                JLabel source = (JLabel) e.getSource();
+                TKLLabel source = (TKLLabel) e.getSource();
                 source.setBorder(BorderFactory.createLineBorder(Color.black));
             }
 
             public void mouseClicked(MouseEvent e) {
-                JLabel source = (JLabel) e.getSource();
+                TKLLabel source = (TKLLabel) e.getSource();
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogType(JFileChooser.FILES_ONLY);
                 fileChooser.setDialogTitle(program.getText());
@@ -170,12 +171,13 @@ public class ODAnsichtPanel
                     if (browserFile.isFile()) {
                     	openProgram.setText(browserFile.getPath());
                         dirty = true;
+                        openProgram.fireCheckRules();
                     }
                 }
             }
 
             public void mouseExited(MouseEvent e) {
-                JLabel source = (JLabel) e.getSource();
+                TKLLabel source = (TKLLabel) e.getSource();
                 source.setBorder(null);
             }
         });
@@ -207,11 +209,11 @@ public class ODAnsichtPanel
         constraints.gridy = 1;
         constraints.insets.left = 5;
         constraints.insets.right = 5;
-        panel1.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(
+        panel1.add(new TKLLabel(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.options.ansicht.fertigerdownload"))), constraints);
         constraints.gridy = 2;
-        panel1.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(
+        panel1.add(new TKLLabel(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.options.ansicht.quelle"))), constraints);
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
@@ -247,6 +249,11 @@ public class ODAnsichtPanel
         add(panel2, BorderLayout.WEST);
 
         reloadSettings();
+        
+        cmbAktiv.ignoreInvalidRules(false);
+        cmbDownloadUebersicht.ignoreInvalidRules(false);
+        enableToolTip.ignoreInvalidRules(false);
+        cmbStartscreenZeigen.ignoreInvalidRules(false);
     }
 
     public boolean save() {
@@ -306,13 +313,13 @@ public class ODAnsichtPanel
     class ColorChooserMouseAdapter
         extends MouseAdapter {
         public void mouseEntered(MouseEvent e) {
-            JLabel source = (JLabel) e.getSource();
+            TKLLabel source = (TKLLabel) e.getSource();
             source.setBorder(BorderFactory.createLineBorder(Color.black));
         }
 
         public void mouseClicked(MouseEvent e) {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            JLabel source = (JLabel) e.getSource();
+            TKLLabel source = (TKLLabel) e.getSource();
             Color newColor = JColorChooser.showDialog(null,
                 ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.options.ansicht.hintergrundfarbewaehlen")),
@@ -330,7 +337,7 @@ public class ODAnsichtPanel
         }
 
         public void mouseExited(MouseEvent e) {
-            JLabel source = (JLabel) e.getSource();
+            TKLLabel source = (TKLLabel) e.getSource();
             source.setBorder(null);
         }
     }
