@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.2 2003/08/11 15:34:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.3 2003/08/11 18:19:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.3  2003/08/11 18:19:43  maj0r
+ * Korrektur: GridBagLayout kann nur 512 Components pro Zeile.
+ *
  * Revision 1.2  2003/08/11 15:34:45  maj0r
  * Diverse Änderungen.
  *
@@ -89,7 +92,7 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
             remove(actualDlOverviewTable);
             actualDlOverviewTable = new JPanel(new GridBagLayout());
             GridBagConstraints constraints = new GridBagConstraints();
-            constraints.anchor = GridBagConstraints.WEST;
+            constraints.anchor = GridBagConstraints.NORTHWEST;
             constraints.fill = GridBagConstraints.BOTH;
             constraints.gridx = 0;
             constraints.gridy = 0;
@@ -98,9 +101,20 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
             JLabel label1 = null;
             PartListDO.Part[] parts = partListDO.getParts();
             int anzahlParts = parts.length;
-            int anzahlProZeile = anzahlParts / 10;
+            int anzahlGanzeZeilen;
+            int anzahlProZeile;
+            if (anzahlParts>5120){
+                anzahlGanzeZeilen = anzahlParts / 512;
+                anzahlProZeile = 512;
+            }
+            else{
+                anzahlGanzeZeilen = 10;
+                anzahlProZeile = anzahlParts / anzahlGanzeZeilen;
+            }
+            if (anzahlProZeile>512)
+                anzahlProZeile = 512;
             int count = 0;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < anzahlGanzeZeilen; i++)
             {
                 constraints.gridy = i;
                 for (int x = 0; x < anzahlProZeile; x++)
@@ -117,9 +131,9 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
             }
             if (count < anzahlParts)
             {
-                constraints.gridy = 10;
+                constraints.gridy = anzahlGanzeZeilen;
                 count = 0;
-                for (int i = anzahlProZeile * 10; i < anzahlParts; i++)
+                for (int i = anzahlProZeile * anzahlGanzeZeilen; i < anzahlParts ; i++)
                 {
                     constraints.gridx = count;
                     label1 = new JLabel();
