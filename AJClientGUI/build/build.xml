@@ -71,7 +71,7 @@
 	</pack>
    </target>
 
-   <target name="build-archive" depends="create-jar" description="builds archive-zip">
+   <target name="build-archive" description="builds archive-zip">
 	<jar destfile="${basedir}/AJCoreGUI_vX_XX.zip">
 		<fileset dir="${basedir}" includes="AJCoreGUI.jar"/>
 		<fileset dir="${basedir}" includes="wizard.xml"/>
