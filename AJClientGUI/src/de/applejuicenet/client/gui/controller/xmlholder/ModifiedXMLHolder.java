@@ -23,7 +23,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.8 2004/01/29 11:07:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.9 2004/01/29 13:47:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.9  2004/01/29 13:47:57  maj0r
+ * Während des ersten Holens der Quellen wird nun alle 5 Seks die Statuszeile aktualisiert.
+ *
  * Revision 1.8  2004/01/29 11:07:57  maj0r
  * Alte Objekte werden wieder korrekt entfernt.
  *
@@ -181,7 +184,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * Umrechnung korrigiert.
  *
  * Revision 1.5  2003/06/10 12:31:03  maj0r
- * Historie eingefï¿½gt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -306,7 +309,7 @@ public class ModifiedXMLHolder
 
     private void secureSession() {
         try{
-            securerHolder.secure(sessionKontext);
+            securerHolder.secure(sessionKontext, information);
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -320,15 +323,11 @@ public class ModifiedXMLHolder
             reloadInProgress = true;
             Thread securer = new Thread(){
                 public void run(){
-                    long time = System.currentTimeMillis();
                     while (!interrupted()) {
                         try {
                             sleep(5000);
-                            if (System.currentTimeMillis() > time + 16000) {
-                                time = System.currentTimeMillis();
-                                secureSession();
-//                                System.out.println("session secured");
-                            }
+                            secureSession();
+//                            System.out.println("session secured");
                         }
                         catch (InterruptedException ex) {
                             interrupt();
