@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.exception.*;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.13 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.14 2003/08/15 18:31:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.14  2003/08/15 18:31:36  maj0r
+ * Farbdialog in Optionen eingebaut.
+ *
  * Revision 1.13  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -41,6 +44,7 @@ public class OptionsDialog
   private ODStandardPanel standardPanel;
   private ODVerbindungPanel verbindungPanel;
   private ODRemotePanel remotePanel;
+  private ODAnsichtPanel ansichtPanel;
   private JFrame parent;
   private JButton speichern;
   private JButton abbrechen;
@@ -75,6 +79,8 @@ public class OptionsDialog
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "pwsheet",
                                   "caption"})), remotePanel);
+    ansichtPanel = new ODAnsichtPanel(ajSettings);
+    jTabbedPane1.add("Ansicht", ansichtPanel);
     pluginPanel = new ODPluginPanel(parent); //Plugin-Reiter
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "TabSheet1",
