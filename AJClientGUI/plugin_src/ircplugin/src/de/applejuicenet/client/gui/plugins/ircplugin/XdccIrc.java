@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 import java.util.StringTokenizer;
 
@@ -48,13 +51,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
-import javax.swing.text.DateFormatter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.ArrayList;
+import java.util.Set;
+import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.11 2004/05/12 16:58:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.12 2004/05/12 19:52:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -1611,6 +1612,54 @@ public class XdccIrc
                         }
                     }
                 }
+
+                public void keyPressed(KeyEvent ke){
+//                    super.keyPressed(ke);
+                    if (ke.getKeyCode() == KeyEvent.VK_TAB) {
+                        String text = textField.getText();
+                        if (text.length()>0){
+                            int index = text.lastIndexOf(' ');
+                            int index2 = text.lastIndexOf(',');
+                            if (index2>index){
+                                index = index2;
+                            }
+                            String searchString;
+                            if (index != -1){
+                                searchString = text.substring(index+1).toLowerCase();
+                            }
+                            else{
+                                searchString = text.toLowerCase();
+                            }
+                            Set values = usernameList.getValues();
+                            String treffer = "";
+                            int count = 0;
+                            synchronized (values) {
+                                Iterator it = values.iterator();
+                                String value;
+                                while (it.hasNext()) {
+                                    value = (String) it.next();
+                                    if (value.toLowerCase().indexOf(searchString)==0){
+                                        treffer += value + " ";
+                                        count ++;
+                                    }
+                                }
+                            }
+                            treffer = treffer.substring(0, treffer.length()-1);
+                            if (count == 1){
+                                if (index != -1){
+                                    String newText = text.subSequence(0, index+1) + treffer;
+                                    textField.setText(newText);
+                                }
+                                else{
+                                    textField.setText(treffer);
+                                }
+                            }
+                            else if (count > 1){
+                                updateTextArea(treffer);
+                            }
+                        }
+                    }
+                }
             });
 
             userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -1826,16 +1875,27 @@ public class XdccIrc
             }
         }
 
-        public void updateTextArea(String message) {
+        public void updateTextArea(String message, boolean withTimeStamp) {
             int oldCaretPosition = textArea.getCaretPosition();
-            String zeit = dateFormatter.format(new Date(System.currentTimeMillis()));
-            textArea.append("[" + zeit + "]\t" + message + "\n");
+            if (withTimeStamp) {
+                String zeit = dateFormatter.format(new Date(System.
+                    currentTimeMillis()));
+                textArea.append("[" + zeit + "]\t" + message + "\n");
 
+            }
+            else {
+                textArea.append(message + "\n");
+            }
             int newCaretPosition = textArea.getCaretPosition();
             if (newCaretPosition == oldCaretPosition) {
                 textArea.setCaretPosition(oldCaretPosition +
                                           (message + "\n").length());
             }
+        }
+
+
+        public void updateTextArea(String message) {
+            updateTextArea(message, true);
         }
 
         public void updateUserArea(String username, String command) {
