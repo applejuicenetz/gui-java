@@ -20,15 +20,18 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.26 2004/03/01 15:46:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.27 2004/03/01 21:20:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.27  2004/03/01 21:20:59  maj0r
+ * Natuerlich nur synchronisieren, wenn nicht NULL ...
+ *
  * Revision 1.26  2004/03/01 15:46:25  maj0r
  * Bug #254 gefixt
  * Moeglichen NullPointer durch MultiThreading behoben.
@@ -159,14 +162,14 @@ public class DownloadPartListPanel
 
     public void setPartList(PartListDO newPartListDO) {
         try {
-            if (partListDO != null && partListDO != newPartListDO){
+            if (partListDO != null && partListDO != newPartListDO) {
                 partListDO.removeAllParts();
             }
-            synchronized(partListDO){
-                partListDO = newPartListDO;
-                height = (int) getSize().getHeight();
-                width = (int) getSize().getWidth();
-                if (partListDO != null && partListDO.getParts().length > 0) {
+            partListDO = newPartListDO;
+            height = (int) getSize().getHeight();
+            width = (int) getSize().getWidth();
+            if (partListDO != null && partListDO.getParts().length > 0) {
+                synchronized (partListDO) {
                     Part[] parts = partListDO.getParts();
                     int zeilenHoehe = 15;
                     int zeilen = height / zeilenHoehe;
@@ -195,7 +198,8 @@ public class DownloadPartListPanel
                                  parts[i + 1].getFromPosition());
                     }
                     drawPart(true,
-                             (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST),
+                             (partListDO.getPartListType() ==
+                              PartListDO.MAIN_PARTLIST),
                              graphics, pixelSize,
                              parts[parts.length - 1].getType(), zeilenHoehe,
                              parts[parts.length - 1].getFromPosition(),
@@ -265,10 +269,10 @@ public class DownloadPartListPanel
                         processMouseMotionEvent(savedMouseEvent);
                     }
                 }
-                else {
-                    image = null;
-                    savedMouseEvent = null;
-                }
+            }
+            else {
+                image = null;
+                savedMouseEvent = null;
             }
             updateUI();
         }
