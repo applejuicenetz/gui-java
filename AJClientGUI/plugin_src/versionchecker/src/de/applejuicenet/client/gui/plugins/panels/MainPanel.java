@@ -3,18 +3,18 @@ package de.applejuicenet.client.gui.plugins.panels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.entity.Download;
@@ -24,7 +24,7 @@ import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.5 2005/01/21 16:28:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.6 2005/02/18 11:10:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,10 +37,11 @@ import de.applejuicenet.client.shared.IconManager;
 public class MainPanel
     extends JPanel {
     private Logger logger;
-    private HashMap versions = new HashMap();
-    private HashSet ids = new HashSet();
+    private HashMap<String, VersionHolder> versions = new HashMap();
+    private HashSet<String> ids = new HashSet();
     private VersionTableModel versionTableModel = new VersionTableModel();
     private JTable versionTable;
+	private DecimalFormat formatter = new DecimalFormat("###,##0.00");
 
     public MainPanel() {
         logger = Logger.getLogger(getClass());
@@ -48,9 +49,7 @@ public class MainPanel
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
+            logger.error("Unbehandelte Exception", e);
         }
     }
 
@@ -70,42 +69,37 @@ public class MainPanel
         add(new JScrollPane(versionTable), BorderLayout.CENTER);
     }
 
-    public void updateByDownload(HashMap downloads) {
-        Download download = null;
+    public void updateByDownload(HashMap<String, Download> downloads) {
         String versionsNr;
         String key;
         String key2;
         VersionHolder versionHolder;
-        DownloadSource[] sources;
         boolean updateView = false;
         try {
             synchronized (downloads) {
-                Iterator it = downloads.values().iterator();
-                while (it.hasNext()) {
-                    download = (Download) it.next();
-                    if (download == null) {
+                for (Download curDownload : downloads.values()) {
+                    if (curDownload == null) {
                         continue;
                     }
-                    sources = download.getSources();
-                    for (int i = 0; i < sources.length; i++) {
-                        if (sources[i] == null || sources[i].getVersion() == null) {
+                    for (DownloadSource curSource : curDownload.getSources()) {
+                        if (curSource == null || curSource.getVersion() == null) {
                             continue;
                         }
-                        key = Integer.toString(sources[i].getId());
+                        key = Integer.toString(curSource.getId());
                         if (!ids.contains(key)) {
                             updateView = true;
                             ids.add(key);
-                            versionsNr = sources[i].getVersion().getVersion();
+                            versionsNr = curSource.getVersion().getVersion();
                             key2 = versionsNr;
                             if (versions.containsKey(key2)) {
-                                versionHolder = (VersionHolder) versions.get(
+                                versionHolder = versions.get(
                                     key2);
                             }
                             else {
                                 versionHolder = new VersionHolder(versionsNr);
                                 versions.put(key2, versionHolder);
                             }
-                            versionHolder.addUser(sources[i].getVersion().
+                            versionHolder.addUser(curSource.getVersion().
                                                   getBetriebsSystem());
                         }
                     }
@@ -113,19 +107,23 @@ public class MainPanel
             }
             if (updateView) {
                 versionTableModel.setTable(versions);
-                versionTable.updateUI();
-                versionTable.repaint();
+                updateTableHeader();
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
+            logger.error("Unbehandelte Exception", e);
         }
     }
 
-    public void updateByUploads(HashMap uploads) {
-        Upload upload = null;
+	private void updateTableHeader() {
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run() {
+				versionTable.getTableHeader().updateUI();			
+			}
+		});
+	}
+
+	public void updateByUploads(HashMap<String, Upload> uploads) {
         String versionsNr;
         String key;
         String key2;
@@ -133,40 +131,35 @@ public class MainPanel
         boolean updateView = false;
         try {
             synchronized (uploads) {
-                Iterator it = uploads.values().iterator();
-                while (it.hasNext()) {
-                    upload = (Upload) it.next();
-                    if (upload == null || upload.getVersion() == null) {
+                for (Upload curUpload : uploads.values()) {
+                    if (curUpload == null || curUpload.getVersion() == null) {
                         continue;
                     }
-                    key = Integer.toString(upload.getUploadID());
+                    key = Integer.toString(curUpload.getUploadID());
                     if (!ids.contains(key)) {
                         updateView = true;
                         ids.add(key);
-                        versionsNr = upload.getVersion().getVersion();
+                        versionsNr = curUpload.getVersion().getVersion();
                         key2 = versionsNr;
                         if (versions.containsKey(key2)) {
-                            versionHolder = (VersionHolder) versions.get(key2);
+                            versionHolder = versions.get(key2);
                         }
                         else {
                             versionHolder = new VersionHolder(versionsNr);
                             versions.put(key2, versionHolder);
                         }
-                        versionHolder.addUser(upload.getVersion().
+                        versionHolder.addUser(curUpload.getVersion().
                                               getBetriebsSystem());
                     }
                 }
             }
             if (updateView) {
                 versionTableModel.setTable(versions);
-                versionTable.updateUI();
-                versionTable.repaint();
+                updateTableHeader();
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
+            logger.error("Unbehandelte Exception", e);
         }
     }
 
@@ -177,41 +170,49 @@ public class MainPanel
         public Component getTableCellRendererComponent(JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row,
             int column) {
-            setText(value.toString());
             switch (column) {
                 case 1: {
                     setIcon(getVersionIcon(Version.WIN32));
+                    setText(value.toString() + getPercent(Version.WIN32));
                     break;
                 }
                 case 2: {
                     setIcon(getVersionIcon(Version.LINUX));
+                    setText(value.toString() + getPercent(Version.LINUX));
                     break;
                 }
                 case 3: {
                     setIcon(getVersionIcon(Version.MACINTOSH));
+                    setText(value.toString() + getPercent(Version.MACINTOSH));
                     break;
                 }
                 case 4: {
                     setIcon(getVersionIcon(Version.SOLARIS));
+                    setText(value.toString() + getPercent(Version.SOLARIS));
                     break;
                 }
                 case 5: {
                     setIcon(getVersionIcon(Version.OS2));
+                    setText(value.toString() + getPercent(Version.OS2));
                     break;
                 }
                 case 6: {
                     setIcon(getVersionIcon(Version.FREEBSD));
+                    setText(value.toString() + getPercent(Version.FREEBSD));
                     break;
                 }
                 case 7: {
                     setIcon(getVersionIcon(Version.NETWARE));
+                    setText(value.toString() + getPercent(Version.NETWARE));
                     break;
                 }
                 case 8: {
                     setIcon(getVersionIcon(-11 /*unbekannt*/));
+                    setText(value.toString() + getPercent(-11));
                     break;
                 }
                 default: {
+                    //setText(value.toString());
                     break;
                 }
             }
@@ -222,6 +223,21 @@ public class MainPanel
             setOpaque(true);
             return this;
         }
+    }
+    
+    private String getPercent(int os){
+    	if (VersionHolder.countAll == 0){
+    		return "";
+    	}
+    	int gesamt = 0;
+    	for (VersionHolder curHolder : versions.values()) {
+    		gesamt += curHolder.getUser(os);
+    	}
+    	if (gesamt == 0){
+    		return "";
+    	}
+    	double percent = (double) gesamt / VersionHolder.countAll * 100;
+    	return "  ( " + formatter.format(percent) +  "% )";
     }
 
 	private Icon getVersionIcon(int version) {

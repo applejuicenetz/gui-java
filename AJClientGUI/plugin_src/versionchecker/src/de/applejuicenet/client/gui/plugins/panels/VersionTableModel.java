@@ -1,12 +1,13 @@
 package de.applejuicenet.client.gui.plugins.panels;
 
 import javax.swing.table.AbstractTableModel;
+
+import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/VersionTableModel.java,v 1.3 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/VersionTableModel.java,v 1.4 2005/02/18 11:10:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +23,7 @@ public class VersionTableModel
         "", "Windows", "Linux", "Mac", "Solaris", "OS/2", "FreeBSD", "NetWare", "?"};
 
     private VersionHolder[] versions = null;
+	private DecimalFormat formatter = new DecimalFormat("###,##0.00");
 
     public Object getRow(int row) {
         if ( (versions != null) && (row < versions.length)) {
@@ -44,24 +46,40 @@ public class VersionTableModel
             case 0:
                 return versionHolder.versionsNr;
             case 1:
-                return Integer.toString(versionHolder.countWin);
+                return Integer.toString(versionHolder.countWin) + 
+                	getPercent(versionHolder, versionHolder.countWin);
             case 2:
-                return Integer.toString(versionHolder.countLinux);
+                return Integer.toString(versionHolder.countLinux) + 
+            		getPercent(versionHolder, versionHolder.countLinux);
             case 3:
-                return Integer.toString(versionHolder.countMac);
+                return Integer.toString(versionHolder.countMac) + 
+            		getPercent(versionHolder, versionHolder.countMac);
             case 4:
-                return Integer.toString(versionHolder.countSolaris);
+                return Integer.toString(versionHolder.countSolaris) + 
+            		getPercent(versionHolder, versionHolder.countSolaris);
             case 5:
-                return Integer.toString(versionHolder.countOS2);
+                return Integer.toString(versionHolder.countOS2) + 
+            		getPercent(versionHolder, versionHolder.countOS2);
             case 6:
-                return Integer.toString(versionHolder.countFreeBSD);
+                return Integer.toString(versionHolder.countFreeBSD) + 
+            		getPercent(versionHolder, versionHolder.countFreeBSD);
             case 7:
-                return Integer.toString(versionHolder.countNetWare);
+                return Integer.toString(versionHolder.countNetWare) + 
+            		getPercent(versionHolder, versionHolder.countNetWare);
             case 8:
-                return Integer.toString(versionHolder.countSonstige);
+                return Integer.toString(versionHolder.countSonstige) + 
+            		getPercent(versionHolder, versionHolder.countSonstige);
             default:
                 return "";
         }
+    }
+    
+    private String getPercent(VersionHolder versionHolder, int count){
+    	if (count == 0){
+    		return "";
+    	}
+    	double percent = (double) count / VersionHolder.countAll * 100;
+    	return "   ( " + formatter.format(percent) +  "% )";
     }
 
     public int getColumnCount() {
@@ -83,9 +101,10 @@ public class VersionTableModel
         return String.class;
     }
 
-    public void setTable(HashMap changedContent) {
-        versions = order((VersionHolder[])changedContent.values().toArray(new VersionHolder[changedContent.size()]));
-        this.fireTableDataChanged();
+    public void setTable(HashMap<String, VersionHolder> changedContent) {
+        versions = order((VersionHolder[])changedContent.values().toArray(
+        		new VersionHolder[changedContent.size()]));
+        fireTableDataChanged();
     }
 
     private VersionHolder[] order(VersionHolder[] versionHolder){

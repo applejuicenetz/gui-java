@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<language value="english">
-		<description value="Which core-version are currently used? Which operating-systems are used? This plugins answers your questions. GUI 0.56.1 or higer is needed."/>
+		<description value="Which core-version are currently used? Which operating-systems are used? This plugins answers your questions. GUI 0.70.0 or higer is needed."/>
 	</language>
 </root>

@@ -1,7 +1,9 @@
 package de.applejuicenet.client.gui.plugins.panels;
 
+import de.applejuicenet.client.fassade.entity.Version;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/VersionHolder.java,v 1.3 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/VersionHolder.java,v 1.4 2005/02/18 11:10:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +16,9 @@ package de.applejuicenet.client.gui.plugins.panels;
 public class VersionHolder {
 
     public String versionsNr;
+
+    public static int countAll = 0;
+
     public int countWin = 0;
     public int countLinux = 0;
     public int countMac = 0;
@@ -28,32 +33,33 @@ public class VersionHolder {
     }
 
     public void addUser(int os) {
+    	countAll++;
         switch (os) {
-            case 1: {
+            case Version.WIN32: {
                 countWin++;
                 break;
             }
-            case 2: {
+            case Version.LINUX: {
                 countLinux++;
                 break;
             }
-            case 3: {
+            case Version.MACINTOSH: {
                 countMac++;
                 break;
             }
-            case 4: {
+            case Version.SOLARIS: {
                 countSolaris++;
                 break;
             }
-            case 5: {
+            case Version.OS2: {
                 countOS2++;
                 break;
             }
-            case 6: {
+            case Version.FREEBSD: {
                 countFreeBSD++;
                 break;
             }
-            case 7: {
+            case Version.NETWARE: {
                 countNetWare++;
                 break;
             }
@@ -62,5 +68,34 @@ public class VersionHolder {
                 break;
             }
         }
+    }
+    
+    public int getUser(int os){
+        switch (os) {
+	        case Version.WIN32: {
+	            return countWin;
+	        }
+	        case Version.LINUX: {
+	        	return countLinux;
+	        }
+	        case Version.MACINTOSH: {
+	        	return countMac;
+	        }
+	        case Version.SOLARIS: {
+	        	return countSolaris;
+	        }
+	        case Version.OS2: {
+	        	return countOS2;
+	        }
+	        case Version.FREEBSD: {
+	        	return countFreeBSD;
+	        }
+	        case Version.NETWARE: {
+	        	return countNetWare;
+	        }
+	        default: {
+	            return countSonstige;
+	        }
+	    }
     }
 }
