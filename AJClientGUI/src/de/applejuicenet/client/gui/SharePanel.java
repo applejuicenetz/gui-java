@@ -3,6 +3,8 @@ package de.applejuicenet.client.gui;
 import java.util.*;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.border.*;
@@ -26,7 +28,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.32 2003/08/28 06:55:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.33 2003/08/29 11:32:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,6 +37,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.33  2003/08/29 11:32:49  maj0r
+ * Link in Ablage kopieren eingefuegt.
+ *
  * Revision 1.32  2003/08/28 06:55:06  maj0r
  * NullPointer behoben.
  *
@@ -139,9 +144,13 @@ public class SharePanel
     private String eintraege;
 
     private JPopupMenu popup = new JPopupMenu();
+
     private JMenuItem item1;
     private JMenuItem item2;
     private JMenuItem item3;
+
+    private JPopupMenu popup2 = new JPopupMenu();
+    private JMenuItem itemCopyToClipboard = new JMenuItem();
 
     private int anzahlDateien = 0;
     private String dateiGroesse = "0 MB";
@@ -160,8 +169,21 @@ public class SharePanel
     }
 
     private void jbInit() throws Exception {
-        //todo
-//        neueListe.setEnabled(false);
+        popup2.add(itemCopyToClipboard);
+        itemCopyToClipboard.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                Object[] obj = shareTable.getSelectedItems();
+                if (((ShareNode)obj[0]).isLeaf()){
+                    ShareDO shareDO = ((ShareNode)obj[0]).getDO();
+                    Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    StringBuffer toCopy = new StringBuffer();
+                    toCopy.append("ajfsp://file|");
+                    toCopy.append(shareDO.getShortfilename() + "|" + shareDO.getCheckSum() + "|" + shareDO.getSize() + "/");
+                    StringSelection contents = new StringSelection(toCopy.toString());
+                    cb.setContents(contents, null);
+                }
+            }
+        });
 
         neueListe.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -254,6 +276,37 @@ public class SharePanel
         shareModel = new ShareModel(new ShareNode(null, "/"));
         shareTable = new ShareTable(shareModel);
         shareTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        shareTable.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                if (SwingUtilities.isRightMouseButton(me))
+                {
+                    Point p = me.getPoint();
+                    int iRow = shareTable.rowAtPoint(p);
+                    int iCol = shareTable.columnAtPoint(p);
+                    shareTable.setRowSelectionInterval(iRow, iRow);
+                    shareTable.setColumnSelectionInterval(iCol, iCol);
+                }
+                maybeShowPopup(me);
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                maybeShowPopup(e);
+            }
+
+            private void maybeShowPopup(MouseEvent e) {
+                if (e.isPopupTrigger() && shareTable.getSelectedRowCount()==1)
+                {
+                    Object[] obj = shareTable.getSelectedItems();
+                    if (((ShareNode)obj[0]).isLeaf()){
+                        popup2.show(shareTable, e.getX(), e.getY());
+                    }
+                }
+            }
+        });
+
+
         titledBorder1 = new TitledBorder("Test");
         titledBorder2 = new TitledBorder("Tester");
         setLayout(new BorderLayout());
@@ -525,6 +578,9 @@ public class SharePanel
         item3.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
                                                                         "deldirbtn", "caption"})));
+        itemCopyToClipboard.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
+                                                                        "getlink1", "caption"})));
         refresh.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "startsharecheck",
                                                                                                  "caption"})));
