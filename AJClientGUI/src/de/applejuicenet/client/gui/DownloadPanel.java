@@ -20,7 +20,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.71 2003/12/30 14:31:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.72 2003/12/30 14:52:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.72  2003/12/30 14:52:11  maj0r
+ * Das Zielverzeichnis fuer einen Download kann nun geaendert werden.
+ *
  * Revision 1.71  2003/12/30 14:31:23  maj0r
  * Downloads koennen nun umbenannt werden.
  *
@@ -221,6 +224,7 @@ public class DownloadPanel
     private Logger logger;
     private boolean isDownloadUebersicht;
     private String neuerDateiname;
+    private String neuesVerzeichnis;
 
     private DownloadPartListWatcher downloadPartListWatcher = new
         DownloadPartListWatcher();
@@ -259,12 +263,10 @@ public class DownloadPanel
         item5 = new JMenuItem("Zielordner ändern");
         item6 = new JMenuItem("Fertige Übertragungen entfernen");
         item7 = new JMenuItem("Partliste anzeigen");
-        //todo
-        item5.setEnabled(false);
-        //
         popup.add(item1);
         popup.add(item2);
         popup.add(item4);
+        popup.add(item5);
         popup.add(item6);
         popup.add(itemCopyToClipboard);
         popup.add(item7);
@@ -437,6 +439,37 @@ public class DownloadPanel
             }
         });
 
+        item5.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                Object[] selectedItems = getSelectedDownloadItems();
+                if (selectedItems != null && selectedItems.length == 1) {
+                    if (selectedItems[0].getClass() == DownloadMainNode.class
+                        &&
+                        ( (DownloadMainNode) selectedItems[0]).getType() ==
+                        DownloadMainNode.ROOT_NODE) {
+                        DownloadDO downloadDO = ( (DownloadMainNode) selectedItems[0]).
+                            getDownloadDO();
+                        String neuerName = JOptionPane.showInputDialog(
+                            AppleJuiceDialog.getApp(), neuesVerzeichnis + ":",
+                            downloadDO.getTargetDirectory());
+                        if (neuerName == null || neuerName.length() == 0) {
+                            return;
+                        }
+                        else{
+                            if (neuerName.indexOf(File.separator)==0 ||
+                                neuerName.indexOf(ApplejuiceFassade.separator)==0 ){
+                                neuerName = neuerName.substring(1);
+                            }
+                        }
+                        if (downloadDO.getTargetDirectory().compareTo(neuerName)!=0){
+                            ApplejuiceFassade.getInstance().setTargetDir(
+                                downloadDO.getId(), neuerName);
+                        }
+                    }
+                }
+            }
+        });
+
         item6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 ApplejuiceFassade.getInstance().cleanDownloadList();
@@ -572,6 +605,7 @@ public class DownloadPanel
                     }
                     Object[] selectedItems = getSelectedDownloadItems();
                     item4.setVisible(false);
+                    item5.setVisible(false);
                     item7.setVisible(false);
                     if (isDownloadUebersicht && selectedItems != null &&
                         selectedItems.length == 1) {
@@ -583,6 +617,7 @@ public class DownloadPanel
                             item7.setVisible(true);
                             if (selectedItems[0].getClass() != DownloadSourceDO.class) {
                                 item4.setVisible(true);
+                                item5.setVisible(true);
                             }
                         }
                     }
@@ -804,6 +839,9 @@ public class DownloadPanel
             neuerDateiname = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui",
                                           "downloadform", "neuerdateiname"}));
+            neuesVerzeichnis = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui",
+                                          "downloadform", "neuesverzeichnis"}));
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
