@@ -2,6 +2,7 @@ package de.applejuicenet.client.gui.plugins.serverwatcher;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.log4j.Level;
@@ -15,22 +16,13 @@ import org.w3c.dom.NodeList;
 import de.applejuicenet.client.shared.XMLDecoder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerXML.java,v 1.2 2004/03/03 13:13:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerXML.java,v 1.3 2004/04/14 14:02:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ServerXML.java,v $
- * Revision 1.2  2004/03/03 13:13:58  maj0r
- * Pfad zur xml-Datei angepasst und Proxysupport eingebaut.
- *
- * Revision 1.1  2003/09/12 11:15:49  maj0r
- * Server lassen sich nun speichern und entfernen.
- * Version 1.1
- *
  *
  */
 
@@ -40,7 +32,26 @@ public class ServerXML
     private static String path;
 
     private ServerXML(String path) {
-        super(path);
+        super();
+        File aFile = new File(path);
+        if (!aFile.isFile()){
+            try {
+                StringBuffer xmlData = new StringBuffer();
+                xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
+                xmlData.append("<root>\r\n");
+                xmlData.append("  <server>\r\n");
+                xmlData.append("  </server>\r\n");
+                xmlData.append("</root>\r\n");
+                FileWriter fileWriter = new FileWriter(path);
+                fileWriter.write(xmlData.toString());
+                fileWriter.close();
+            }
+            catch (IOException ex) {
+                if (logger.isEnabledFor(Level.ERROR))
+                    logger.error("Fehler beim Anlegen der serverwatcher.xml", ex);
+            }
+        }
+        reload(path);
         logger = Logger.getLogger(getClass());
     }
 

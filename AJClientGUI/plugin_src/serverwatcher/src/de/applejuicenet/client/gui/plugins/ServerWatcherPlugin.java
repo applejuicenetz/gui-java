@@ -28,14 +28,15 @@ import javax.swing.JScrollPane;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.gui.plugins.serverwatcher.NewServerDialog;
 import de.applejuicenet.client.gui.plugins.serverwatcher.ServerConfig;
 import de.applejuicenet.client.gui.plugins.serverwatcher.ServerXML;
 import de.applejuicenet.client.shared.ProxySettings;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.7 2004/03/03 13:13:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.8 2004/04/14 14:02:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,6 +45,10 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerWatcherPlugin.java,v $
+ * Revision 1.8  2004/04/14 14:02:05  maj0r
+ * An neue Schnittstelle und an neuen Speicherort fuer Settingsdateien angepasst.
+ * Version 1.2
+ *
  * Revision 1.7  2004/03/03 13:13:58  maj0r
  * Pfad zur xml-Datei angepasst und Proxysupport eingebaut.
  *
@@ -80,7 +85,7 @@ public class ServerWatcherPlugin extends PluginConnector {
     private JLabel statusText = new JLabel();
     private static Logger logger;
 
-    public ServerWatcherPlugin(XMLValueHolder pluginsPropertiesXMLHolder, HashMap languageFiles, ImageIcon icon) {
+    public ServerWatcherPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon) {
         super(pluginsPropertiesXMLHolder, languageFiles, icon);
         logger = Logger.getLogger(getClass());
         try{
@@ -185,8 +190,7 @@ public class ServerWatcherPlugin extends PluginConnector {
                         tmpUrl += "/status.htm";
                     }
                     URL url = new URL(tmpUrl);
-                    ProxySettings proxySettings = PropertiesManager.getProxyManager().
-                        getProxySettings();
+                    ProxySettings proxySettings = ProxyManagerImpl.getInstance().getProxySettings();
                     if (proxySettings.isUse()) {
                         System.getProperties().put("proxyHost", proxySettings.getHost());
                         System.getProperties().put("proxyPort",
