@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.18 2003/08/30 19:46:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.19 2003/08/31 11:06:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.19  2003/08/31 11:06:22  maj0r
+ * CheckInProgress geaendert.
+ *
  * Revision 1.18  2003/08/30 19:46:10  maj0r
  * Version 0.18 Beta
  *
@@ -166,8 +169,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     //Thread
     private boolean runThread;
     private SwingWorker workerThread;
-
-    private static int checkInProgress = 0;
 
     private Logger logger;
 
@@ -320,9 +321,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     public synchronized void updateModifiedXML() {
         try
         {
-            if (checkInProgress != 0)
-                return;
-            checkInProgress++;
             modifiedXML.update();
             SwingUtilities.invokeLater(new Runnable(){
                 public void run(){
@@ -333,7 +331,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
                 }
             });
-            checkInProgress--;
             wait(2000);
         }
         catch (InterruptedException e)
@@ -355,11 +352,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public static boolean setPassword(String passwordAsMD5) {
-        String result;
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-            result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                   "/function/setpassword?password=" + password + "&newpassword=" + passwordAsMD5, false);
         }
         catch (WebSiteNotFoundException ex)
@@ -662,13 +658,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return true;
     }
 
-    public static boolean isCheckInProgress() {
-        return checkInProgress != 0;
-    }
-
     public void getDirectory(String directory, ApplejuiceNode directoryNode) {
-        checkInProgress++;
         directoryXML.getDirectory(directory, directoryNode);
-        checkInProgress--;
     }
 }

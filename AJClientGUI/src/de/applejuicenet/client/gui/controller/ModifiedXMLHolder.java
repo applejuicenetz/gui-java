@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.25 2003/08/22 10:03:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.26 2003/08/31 11:06:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.26  2003/08/31 11:06:22  maj0r
+ * CheckInProgress geaendert.
+ *
  * Revision 1.25  2003/08/22 10:03:11  maj0r
  * Threadverwendung korrigiert.
  *
@@ -102,6 +105,8 @@ public class ModifiedXMLHolder
     private int connectedWithServerId = -1;
     private int tryConnectToServer = -1;
 
+    private boolean reloadInProgress = false;
+
     public ModifiedXMLHolder() {
         super("/xml/modified.xml", "");
     }
@@ -129,6 +134,16 @@ public class ModifiedXMLHolder
         updateDownloads();
         updateNetworkInfo();
         updateUploads();
+    }
+
+    public void reload(String parameters){
+        if (reloadInProgress)
+            return;
+        else{
+            reloadInProgress = true;
+            super.reload(parameters);
+            reloadInProgress = false;
+        }
     }
 
     public String[] getStatusBar() {
