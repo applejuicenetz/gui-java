@@ -55,7 +55,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.PolicyJarClassLoader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.10 2005/02/16 15:57:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.11 2005/02/17 16:37:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -111,9 +111,7 @@ public class PowerDownloadPanel
             init();
         }
         catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
         }
     }
 
@@ -437,18 +435,29 @@ public class PowerDownloadPanel
         				new Object[]{ AppleJuiceClient.getAjFassade() });        	
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
         autoPwdlThread = policy;
         autoPwdlThread.setParentToInform(this);
-        autoPwdlThread.setPaused(true);
+        checkForPause(autoPwdlThread);
         autoPwdlThread.start();
         autoPwdlEinstellungen.setVisible(autoPwdlThread.hasPropertiesDialog());
     }
 
-    private void oeffneAutomPwdlEinstellungen(){
+	private void checkForPause(AutomaticPowerdownloadPolicy pwdlThread) {
+        long eingegebenBis = Integer.parseInt(autoBis.getText()) *
+        	1048576l;
+	    long eingegebenAb = Integer.parseInt(autoAb.getText()) *
+	        1048576l;
+	    if (lastInformation == null){
+	    	lastInformation = AppleJuiceClient.getAjFassade().getInformation();
+	    }
+	    if ( lastInformation.getCredits() < eingegebenBis ) {
+	    	pwdlThread.setPaused(true);
+	    }
+	}
+
+	private void oeffneAutomPwdlEinstellungen(){
     	if (autoPwdlThread != null && autoPwdlThread.hasPropertiesDialog()){
     		try {
     			autoPwdlThread.showPropertiesDialog(AppleJuiceDialog.getApp());
@@ -511,11 +520,9 @@ public class PowerDownloadPanel
                     }
                     catch (Exception e) {
                         //Von einer Policy lassen wir uns nicht beirren! ;-)
-                        if (logger.isEnabledFor(Level.ERROR)) {
-                            logger.error(
-                                "Eine PowerdownloadPolicy konnte nicht instanziert werden",
-                                e);
-                        }
+                        logger.error(
+                            "Eine PowerdownloadPolicy konnte nicht instanziert werden",
+                            e);
                         continue;
                     }
                 }
@@ -524,9 +531,7 @@ public class PowerDownloadPanel
                 AutomaticPowerdownloadPolicy[policies.size()]);
         }
         catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             return new AutomaticPowerdownloadPolicy[0];
         }
     }
@@ -577,9 +582,7 @@ public class PowerDownloadPanel
             ratioWert = Float.parseFloat(ratio.getText());
         }
         catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
         }
     }
 
@@ -627,9 +630,7 @@ public class PowerDownloadPanel
 		            getFirstAttrbuteByTagName(".root.javagui.options.plugins.einstellungen")));
         }
         catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
         }
     }
 
@@ -672,9 +673,7 @@ public class PowerDownloadPanel
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
