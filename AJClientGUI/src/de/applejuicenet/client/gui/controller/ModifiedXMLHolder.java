@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.14 2003/08/05 20:47:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.15 2003/08/08 05:35:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.15  2003/08/08 05:35:52  maj0r
+ * Nullpointer behoben.
+ *
  * Revision 1.14  2003/08/05 20:47:06  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -284,7 +287,10 @@ public class ModifiedXMLHolder
       for (int i=0; i<size; i++){
           key = (MapSetStringKey)toRemoveSources.get(i);
           downloadDO = (DownloadDO)sourcenZuDownloads.get(key);
-          downloadDO.removeSource(key.getValue());
+          if (downloadDO!=null){
+            downloadDO.removeSource(
+                    key.getValue());
+          }
       }
   }
 
