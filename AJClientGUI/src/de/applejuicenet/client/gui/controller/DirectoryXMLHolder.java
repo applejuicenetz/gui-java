@@ -10,15 +10,18 @@ import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.5 2003/08/24 14:59:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.6 2003/08/28 06:57:41 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.6  2003/08/28 06:57:41  maj0r
+ * Plattformunabhaengigkeit wieder hergestellt.
+ *
  * Revision 1.5  2003/08/24 14:59:59  maj0r
  * Version 0.14
  * Diverse Aenderungen.
@@ -93,11 +96,14 @@ public class DirectoryXMLHolder extends WebXMLParser {
         if (path.length()==0){
             if (directoryNode.getDO()!=null){
                 String parentPfad = directoryNode.getDO().getPath();
-                if (parentPfad.length()!=0 && parentPfad.lastIndexOf('\\')==parentPfad.length()-1){
+                if (parentPfad.length()!=0 && parentPfad.lastIndexOf(DirectoryDO.getSeparator())==parentPfad.length()-1){
                     path = parentPfad + name;
                 }
                 else
                     path = parentPfad + DirectoryDO.getSeparator() + name;
+            }
+            else{
+                path = DirectoryDO.getSeparator();
             }
         }
         DirectoryDO directoryDO = new DirectoryDO(name, type, fileSystem, path);
