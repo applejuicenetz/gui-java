@@ -19,7 +19,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.32 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.33 2004/07/24 07:14:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import javax.xml.parsers.ParserConfigurationException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.33  2004/07/24 07:14:40  maj0r
+ * Anfordern eines Objects mit ungueltiger ID wirft nun eine IllegalArgumentException.
+ *
  * Revision 1.32  2004/03/09 16:25:17  maj0r
  * PropertiesManager besser gekapselt.
  *
@@ -211,7 +214,7 @@ public abstract class WebXMLParser
             String command = getCommand(parameters);
             xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
                 command);
-            if (xmlData.length() == 0) {
+            if (xmlData == null || xmlData.length() == 0 || xmlData.startsWith("error:")) {
                 throw new IllegalArgumentException();
             }
         }
