@@ -34,12 +34,16 @@ public class PowerDownloadPanel
   private float ratioWert = 2.2f;
   private JTextField ratio = new JTextField("2.2");
   private JTextField autoAb = new JTextField();
+  private JTextField autoBis = new JTextField();
   private JButton btnPdl = new JButton("Übernehmen");
   private JButton btnAutoPdl = new JButton("Übernehmen");
   private JLabel powerdownload = new JLabel("Powerdownload");
   private JLabel label6 = new JLabel("Wieviel willst Du maximal für 1 Byte bezahlen?");
   private JLabel label7 = new JLabel("Für 1 Byte zahle");
   private JLabel label8 = new JLabel("Credits");
+  private JLabel label9 = new JLabel("Automatischer Powerdownload");
+  private JLabel label10 = new JLabel("ab ");
+  private JLabel label11 = new JLabel("bis ");
 
 
   public PowerDownloadPanel() {
@@ -142,11 +146,10 @@ public class PowerDownloadPanel
     constraints.gridwidth = 3;
     JPanel tempPanel2 = new JPanel();
     tempPanel2.setLayout(new BorderLayout());
-    JLabel label = new JLabel("Automatischer Powerdownload");
-    label.setForeground(Color.white);
-    label.setOpaque(true);
-    label.setBackground(Color.blue);
-    tempPanel2.add(label, BorderLayout.CENTER);
+    label9.setForeground(Color.white);
+    label9.setOpaque(true);
+    label9.setBackground(Color.blue);
+    tempPanel2.add(label9, BorderLayout.CENTER);
     JLabel btnHint2 = new JLabel(icon);
     tempPanel2.add(btnHint2, BorderLayout.EAST);
     backPanel.add(tempPanel2, constraints);
@@ -164,12 +167,18 @@ public class PowerDownloadPanel
     backPanel.add(btnAutoAktiv, constraints);
     constraints.gridy = 10;
     JPanel panel = new JPanel(new FlowLayout());
-    panel.add(new JLabel("ab "));
+    panel.add(label10);
     autoAb.setDocument(new NumberInputVerifier());
     autoAb.setPreferredSize(new Dimension(40, 21));
     autoAb.setText("200");
+    autoBis.setDocument(new NumberInputVerifier());
+    autoBis.setPreferredSize(new Dimension(40, 21));
+    autoBis.setText("50");
     panel.add(autoAb);
-    panel.add(new JLabel("MB"));
+    panel.add(new JLabel("MB "));
+    panel.add(label11);
+    panel.add(autoBis);
+    panel.add(new JLabel("MB "));
     backPanel.add(panel, constraints);
     constraints.gridy = 11;
     constraints.gridwidth = 3;
@@ -224,12 +233,20 @@ public class PowerDownloadPanel
   public void fireLanguageChanged(){
       try {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        powerdownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "powerdownload", "caption")));
-        label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label6", "caption")));
-        btnInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "powerinactive", "caption")));
-        btnAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "poweractive", "caption")));
-        label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label7", "caption")));
-        label8.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label8", "caption")));
+        powerdownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "powerdownload", "caption"})));
+        label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label6", "caption"})));
+        btnInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "powerinactive", "caption"})));
+        btnAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "poweractive", "caption"})));
+        label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label7", "caption"})));
+        label8.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label8", "caption"})));
+        label9.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "label1"})));
+        btnAutoInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "rbInaktiv"})));
+        btnAutoAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "rbAktiv"})));
+        label10.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "pdlAb"})));
+        label11.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "pdlBis"})));
+        String ok = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "btnOK"}));
+        btnAutoPdl.setText(ok);
+        btnPdl.setText(ok);
       }
       catch (LanguageSelectorNotInstanciatedException ex) {
         ex.printStackTrace();

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<Languageinfo version="1.1" name="English" by="ajteam"/>
-	<mainform caption="appleJuice Client" msgdlgtext1="Press &quot;Search&quot; to search." msgdlgtext2="A new version was found. Go to Homepage now?" msgdlgtext3="Wrong password." msgdlgtext4="Error connecting to %s:%d" msgdlgtext5="Do you really want to cancel these files?" msgdlgtext6="Do you really want to pause these files?" msgdlgtext7="Pay attention! Force Ratio deactivate the Powerdownloadfunction." msgdlgtext8="Your last login is less than 5 minutes away. Please wait until reconnect." msgdlgtext9="Cannot login: Tempory directory does not exists." msgdlgtext10="Cannot login: Incoming directory does not exists." msgdlgtext11="Cannot login: Please change your nick." msgdlgtext12="Stopped." msgdlgtext13="check dir %s" msgdlgtext14="hash file %s" msgdlgtext15="Finished - %s files shared (%s)" html1="Your Client" html2="Customise appleJuice" html3="You can use the %sQuickstart Wizard%s or the %soptions menu%s to configure appleJuice" html4="Search the appleJuice Network" html5="%sClick here to begin a new search%s" html6="my Share" html7="appleJuice Network" html8="Scanning Shares." html9="You %sshare%s %s files totalling %s." html10="You are currently connected to %s. This is one of %d known server. Get more server %shere%s." html11="no server" html12="unkown server" html13="Networknews und messages" html14="%srefresh%s News and Messages" html15="Warnings" html16="It seems you have an empty password setted in core. It is highly recommend changing this password in %soptions%s." html17="found on %snet%s %s (%scheck again%s)">
-		<homesheet caption="Home"/>
+	<mainform caption="appleJuice Client" msgdlgtext1="Press &quot;Search&quot; to search." msgdlgtext2="A new version was found. Go to Homepage now?" msgdlgtext3="Wrong password." msgdlgtext4="Error connecting to %s:%d" msgdlgtext5="Do you really want to cancel these files?" msgdlgtext6="Do you really want to pause these files?" msgdlgtext7="Pay attention! Force Ratio deactivate the Powerdownloadfunction." msgdlgtext8="Your last login is less than 5 minutes away. Please wait until reconnect." msgdlgtext9="Cannot login: Tempory directory does not exists." msgdlgtext10="Cannot login: Incoming directory does not exists." msgdlgtext11="Cannot login: Please change your nick." msgdlgtext12="Stopped." msgdlgtext13="check dir %s" msgdlgtext14="hash file %s" msgdlgtext15="Finished - %s files shared (%s)" html1="Your Client" html2="Customise appleJuice" html3="You can use the %sQuickstart Wizard%s or the %soptions menu%s to configure appleJuice" html4="Search the appleJuice Network" html5="%sClick here to begin a new search%s" html6="my Share" html7="appleJuice Network" html8="Scanning Shares." html9="You %sshare%s %s files totalling %s." html10="You are currently connected to %s. This is one of %d known server. Get more server %shere%s." html11="no server" html12="unkown server" html13="Networknews und messages" html14="%srefresh%s News and Messages" html15="Warnings" html16="It seems you have an empty password setted in core. It is highly recommend changing this password in %soptions%s." html17="found on %snet%s %s (%scheck again%s)" uplcounttext="%d clients in your uploadlist"><homesheet caption="Home"/>
 		<firewallwarning caption="You seem to be behind a Firewall, a Router, a Proxy or something like that. This minimizes your Chances to download something."/>
 		<conbtn connectedcaption="Connect" disconnectedcaption="Disconnect"/>
 		<optbtn caption="Options" hint=""/>
@@ -67,8 +66,7 @@
 		<N91 caption="09"/>
 		<N101 caption="10"/>
 		<N2 caption="-"/>
-		<powerdownload caption="Power&amp;amp;download"/>
-		<setprio caption="set priority" hint="set priority"/>
+		<powerdownload caption="Powerdownload"/><setprio caption="set priority" hint="set priority"/>
 		<Label6 caption="What is your highest limit you will pay for one byte?"/>
 		<Label7 caption="for one byte pay "/>
 		<Label8 caption="credits"/>
@@ -78,8 +76,7 @@
 		<chat2 caption="c&amp;amp;hat"/>
 		<Label9 caption="would be priority"/>
 		<Label10 caption="1"/>
-		<Label11 caption="get more server here"/>
-		<clearprio caption="clear priority" hint="clear priority"/>
+		<Label11 caption="get more servers here"/><clearprio caption="clear priority" hint="clear priority"/>
 		<Label14 caption="add ajfsp-Link"/>
 		<downlajfsp caption="download" hint="reload the share tree"/>
 		<browsesheet caption="Browse"/>
@@ -94,8 +91,7 @@
 		<remuser caption="&amp;amp;remove user"/>
 		<reluser caption="&amp;amp;reload user"/>
 		<downl caption="&amp;amp;download"/>
-	</mainform>
-	<einstform caption="Options">
+	</mainform><einstform caption="Options">
 		<standardsheet caption="Standard"/>
 		<Label8 caption="Nick"/>
 		<Label3 caption="Port"/>
@@ -221,4 +217,4 @@ Enjoy using appleJuice"/>
 		<Button1 caption="&amp;amp;download"/>
 		<Button2 caption="&amp;amp;cancel"/>
 	</newversionform>
-</root>
+	<javagui><downloadtab label1="Automatic Powerdownload" rbInaktiv="inactive" rbAktiv="active" pdlAb="from" pdlBis="to" btnOK="Apply"/></javagui></root>

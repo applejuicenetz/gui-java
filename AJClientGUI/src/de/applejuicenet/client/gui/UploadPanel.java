@@ -7,6 +7,8 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 
 /**
@@ -52,11 +54,20 @@ public class UploadPanel extends JPanel implements LanguageListener{
   public void fireLanguageChanged() {
     try {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-
       String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-          getFirstAttrbuteByTagName("mainform", "uplcounttext"));
-      temp = temp.replaceAll("%d", Integer.toString(anzahlClients));
-      label1.setText(temp);
+          getFirstAttrbuteByTagName(new String[] {"mainform", "uplcounttext"}));
+      label1.setText(temp.replaceAll("%d", Integer.toString(anzahlClients)));
+      String[] columns = new String[6];
+      columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col0caption"}));
+      columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col1caption"}));
+      columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col2caption"}));
+      columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col3caption"}));
+      columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col4caption"}));
+      columns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col5caption"}));
+      TableColumnModel tcm = uploadDataTable.getColumnModel();
+      for (int i=0; i<tcm.getColumnCount(); i++){
+        tcm.getColumn(i).setHeaderValue(columns[i]);
+      }
     }
     catch (LanguageSelectorNotInstanciatedException ex) {
       ex.printStackTrace();

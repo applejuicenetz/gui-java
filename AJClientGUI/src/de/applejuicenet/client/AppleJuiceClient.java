@@ -3,6 +3,9 @@ package de.applejuicenet.client;
 import java.awt.*;
 
 import de.applejuicenet.client.gui.*;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.exception.*;
+import de.applejuicenet.client.gui.controller.OptionsManager;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>

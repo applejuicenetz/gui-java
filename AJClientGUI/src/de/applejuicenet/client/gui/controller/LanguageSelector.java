@@ -50,8 +50,4 @@ public class LanguageSelector extends XMLDecoder{
       ((LanguageListener)it.next()).fireLanguageChanged();
     }
   }
-
-  public String getText(String elementName, String attrbuteName){
-    return this.getFirstAttrbuteByTagName(elementName, attrbuteName);
-  }
 }

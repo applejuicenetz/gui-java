@@ -8,6 +8,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
+import javax.swing.table.TableColumnModel;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -65,7 +66,6 @@ public class ServerPanel
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(serverTable);
     add(aScrollPane, BorderLayout.CENTER);
-
   }
 
   public void fireLanguageChanged() {
@@ -73,8 +73,19 @@ public class ServerPanel
       LanguageSelector languageSelector = LanguageSelector.getInstance();
       sucheServer.setText("<html><font><u>" +
                           ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-          getFirstAttrbuteByTagName("mainform", "Label11", "caption")) +
+          getFirstAttrbuteByTagName(new String[] {"mainform", "Label11", "caption"})) +
                           "</u></font></html>");
+      String[] columns = new String[4];
+      columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col0caption"}));
+      columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col1caption"}));
+      columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col4caption"}));
+      columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col5caption"}));
+
+      TableColumnModel tcm = serverTable.getColumnModel();
+      for (int i=0; i<tcm.getColumnCount(); i++){
+        tcm.getColumn(i).setHeaderValue(columns[i]);
+      }
+
     }
     catch (LanguageSelectorNotInstanciatedException ex) {
       ex.printStackTrace();

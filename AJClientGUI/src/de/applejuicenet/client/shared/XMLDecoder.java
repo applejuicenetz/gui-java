@@ -1,25 +1,27 @@
 package de.applejuicenet.client.shared;
 
 import java.io.*;
-import java.util.*;
 import javax.xml.parsers.*;
 
+import org.apache.xml.serialize.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 
 public abstract class XMLDecoder {
   private Document document;
+  private String filePath;
 
   protected XMLDecoder(String filePath) {
     reload(filePath);
   }
 
-  protected void reload(String filePath){
+  protected void reload(String filePath) {
     DocumentBuilderFactory factory =
         DocumentBuilderFactory.newInstance();
     try {
       DocumentBuilder builder = factory.newDocumentBuilder();
       document = builder.parse(filePath);
+      this.filePath = filePath;
     }
     catch (SAXException sxe) {
       Exception x = sxe;
@@ -38,49 +40,49 @@ public abstract class XMLDecoder {
     }
   }
 
-  public String getFirstAttrbuteByTagName(String elementName,
-                                          String attrbuteName) {
+  public String getFirstAttrbuteByTagName(String[] attributePath) {
     Element ele = document.getDocumentElement();
-    NodeList nl = ele.getElementsByTagName(elementName);
+    NodeList nl = ele.getElementsByTagName(attributePath[0]);
+    if (attributePath.length > 2) {
+      for (int i = 1; i < attributePath.length - 1; i++) {
+        nl = ele.getElementsByTagName(attributePath[i]);
+      }
+    }
     if (nl.getLength() != 0) {
       Element language = (Element) nl.item(0);
-      String attribute = language.getAttribute(attrbuteName);
+      String attribute = language.getAttribute(attributePath[attributePath.
+                                               length - 1]);
       return attribute;
-    }
-    else {
-      return null;
-    }
-  }
-
-  public String getFirstAttrbuteByTagName(String elementName, String subElement,
-                                          String attrbuteName) {
-    Element ele = document.getDocumentElement();
-    NodeList nl = ele.getElementsByTagName(elementName);
-    if (nl.getLength() != 0) {
-      NodeList nl2 = ele.getElementsByTagName(subElement);
-      if (nl2.getLength() != 0) {
-        Element language = (Element) nl2.item(0);
-        String attribute = language.getAttribute(attrbuteName);
-        return attribute;
-      }
     }
     return null;
   }
 
-  public String[] getAllAttrbutesByTagName(String elementName,
-                                           String attrbuteName) {
-    HashSet attributes = new HashSet();
+  public void setAttributeByTagName(String[] attributePath, String newValue) {
     Element ele = document.getDocumentElement();
-    NodeList nl = ele.getElementsByTagName(elementName);
-    if (nl.getLength() != 0) {
-      for (int i = 0; i < nl.getLength(); i++) {
-        Element language = (Element) nl.item(0);
-        attributes.add(language.getAttribute(attrbuteName));
+    NodeList nl = ele.getElementsByTagName(attributePath[0]);
+    if (attributePath.length > 2) {
+      for (int i = 1; i < attributePath.length - 1; i++) {
+        nl = ele.getElementsByTagName(attributePath[i]);
       }
-      return (String[]) attributes.toArray(new String[attributes.size()]);
     }
-    else {
-      return null;
+    if (nl.getLength() != 0) {
+      Element language = (Element) nl.item(0);
+      try {
+        language.setAttribute(attributePath[attributePath.length - 1], ZeichenErsetzer.korrigiereUmlaute(newValue, true));
+        try {
+          XMLSerializer xs = new XMLSerializer(new FileWriter(filePath),
+                                               new OutputFormat(document,
+              "UTF-8", true));
+          xs.serialize(document);
+        }
+        catch (IOException ioE) {
+          ioE.printStackTrace();
+        }
+      }
+      catch (DOMException ex) {
+        ex.printStackTrace();
+      }
     }
   }
+
 }

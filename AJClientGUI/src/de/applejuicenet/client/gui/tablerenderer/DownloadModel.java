@@ -10,14 +10,14 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.controller.DataManager;
 import java.awt.Toolkit;
 import javax.swing.event.TreeModelListener;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.exception.*;
 
 public class DownloadModel
     extends AbstractTreeTableModel
     implements TreeTableModel {
 
-  static protected String[] cNames = {
-      "Dateiname", "Status", "Größe", "Bereits geladen", "Prozent geladen",
-      "Noch zu laden", "Geschwindigkeit", "Restzeit", "Powerdownload", "Client"};
+  static protected String[] cNames;
 
   static protected Class[] cTypes = {
       TreeTableModel.class, String.class, String.class, String.class, String.class,
@@ -29,10 +29,32 @@ public class DownloadModel
 
   public DownloadModel() {
     super(new DownloadNode());
+    loadHeader();
     DownloadSourceDO[] downloads = DataManager.getInstance().getDownloads();
     for (int i = 0; i < downloads.length; i++) {
       ( (DownloadNode) getRoot()).addChild(downloads[i]);
     }
+  }
+
+  private void loadHeader(){
+    LanguageSelector languageSelector = null;
+    try {
+      languageSelector = LanguageSelector.getInstance();
+    }
+    catch (LanguageSelectorNotInstanciatedException ex) {
+      ex.printStackTrace();
+    }
+    cNames = new String[10];
+    cNames[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col0caption"}));
+    cNames[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col1caption"}));
+    cNames[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col2caption"}));
+    cNames[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col3caption"}));
+    cNames[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col4caption"}));
+    cNames[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col5caption"}));
+    cNames[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col6caption"}));
+    cNames[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col7caption"}));
+    cNames[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col8caption"}));
+    cNames[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col9caption"}));
   }
 
   protected DownloadSourceDO getDO(Object node) {

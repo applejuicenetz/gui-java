@@ -19,6 +19,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -126,28 +127,31 @@ public class DownloadPanel extends JPanel implements LanguageListener{
   public void fireLanguageChanged(){
       try {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        String text = languageSelector.getFirstAttrbuteByTagName("mainform", "Label14", "caption");
+        String text = languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label14", "caption"});
         linkLabel.setText(ZeichenErsetzer.korrigiereUmlaute(text));
-        btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "downlajfsp", "caption")));
-        btnStartDownload.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "downlajfsp", "hint")));
+        btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "downlajfsp", "caption"})));
+        btnStartDownload.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "downlajfsp", "hint"})));
         String[] tableColumns = new String[10];
-        tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col0caption"));
-        tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col1caption"));
-        tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col2caption"));
-        tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col3caption"));
-        tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col4caption"));
-        tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col5caption"));
-        tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col6caption"));
-        tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col7caption"));
-        tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col8caption"));
-        tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col9caption"));
-        //toDo
-        //Header muss aktualisiert werden
+        tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col0caption"}));
+        tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col1caption"}));
+        tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col2caption"}));
+        tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col3caption"}));
+        tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col4caption"}));
+        tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col5caption"}));
+        tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col6caption"}));
+        tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col7caption"}));
+        tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col8caption"}));
+        tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col9caption"}));
 
-        label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label4", "caption")));
-        label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label3", "caption")));
-        label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label2", "caption")));
-        label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label1", "caption")));
+        TableColumnModel tcm = downloadTable.getColumnModel();
+        for (int i=0; i<tcm.getColumnCount(); i++){
+          tcm.getColumn(i).setHeaderValue(tableColumns[i]);
+        }
+
+        label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label4", "caption"})));
+        label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label3", "caption"})));
+        label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label2", "caption"})));
+        label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label1", "caption"})));
       }
       catch (LanguageSelectorNotInstanciatedException ex) {
         ex.printStackTrace();

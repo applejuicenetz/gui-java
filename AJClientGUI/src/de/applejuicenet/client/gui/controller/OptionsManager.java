@@ -28,6 +28,10 @@ public class OptionsManager extends XMLDecoder {
   }
 
   public String getSprache(){
-    return getFirstAttrbuteByTagName("options", "sprache");
+    return getFirstAttrbuteByTagName(new String[] {"options", "sprache"});
+  }
+
+  public void setSprache(String sprache){
+    setAttributeByTagName(new String[] {"options", "sprache"}, sprache.toLowerCase());
   }
 }
