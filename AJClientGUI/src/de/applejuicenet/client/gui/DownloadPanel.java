@@ -20,6 +20,10 @@ import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.JPopupMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -42,6 +46,13 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
   private JLabel label3 = new JLabel("Nicht vorhanden");
   private JLabel label2 = new JLabel("In Ordnung");
   private JLabel label1 = new JLabel("Überprüft");
+  private JPopupMenu popup = new JPopupMenu();
+  JMenuItem item1;
+  JMenuItem item2;
+  JMenuItem item3;
+  JMenuItem item4;
+  JMenuItem item5;
+  JMenuItem item6;
 
 
   public DownloadPanel() {
@@ -60,6 +71,19 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
     topPanel.setLayout(new GridBagLayout());
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new BorderLayout());
+
+    item1 = new JMenuItem("Abbrechen");
+    item2 = new JMenuItem("Pause/Fortsetzen");
+    item3 = new JMenuItem("Powerdownload");
+    item4 = new JMenuItem("Umbenennen");
+    item5 = new JMenuItem("Zielordner ändern");
+    item6 = new JMenuItem("Fertige Übertragungen entfernen");
+    popup.add(item1);
+    popup.add(item2);
+    popup.add(item3);
+    popup.add(item4);
+    popup.add(item5);
+    popup.add(item6);
 
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;
@@ -82,6 +106,14 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
 
     downloadModel = new DownloadModel();
     downloadTable = new JTreeTable(downloadModel);
+    downloadTable.addMouseListener(new MouseAdapter() {
+      public void mouseReleased(MouseEvent e) {
+        super.mouseReleased(e);
+        if (e.isPopupTrigger()) {
+          popup.show(downloadTable, e.getX(), e.getY());
+        }
+      }
+    });
 
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(downloadTable);
@@ -155,5 +187,14 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
       label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label3", "caption"})));
       label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label2", "caption"})));
       label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label1", "caption"})));
+
+      item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "canceldown" ,"caption"})));
+      String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "pausedown" ,"caption"}));
+      temp+="/" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "resumedown" ,"caption"}));
+      item2.setText(temp);
+      item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "powerdownload" ,"caption"})));
+      item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "renamefile" ,"caption"})));
+      item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "changetarget" ,"caption"})));
+      item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Clearfinishedentries1" ,"caption"})));
   }
 }

@@ -36,6 +36,8 @@ public class AppleJuiceDialog
   private HashSet plugins;
   private JMenuItem menuItem;
   private JFrame _this;
+  private JButton pause;
+  private boolean paused = false;
 
   public AppleJuiceDialog() {
     super();
@@ -92,6 +94,9 @@ public class AppleJuiceDialog
       statusbar[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
       statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
     }
+    pause = new JButton("Pause");
+    pause.setFont(new java.awt.Font("SansSerif", 0, 11));
+//    pause.setPreferredSize(new Dimension(pause.getPreferredSize().width, statusbar[2].getPreferredSize().height));
     DataManager.getInstance().addStatusbarForListen(statusbar);
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;
@@ -109,6 +114,8 @@ public class AppleJuiceDialog
     panel.add(statusbar[3], constraints);
     constraints.gridx = 4;
     panel.add(statusbar[4], constraints);
+    constraints.gridx = 5;
+    panel.add(pause, constraints);
     getContentPane().add(panel, BorderLayout.SOUTH);
 
     //Tooltipps einstellen
@@ -205,5 +212,13 @@ public class AppleJuiceDialog
         getFirstAttrbuteByTagName(new String[] {"einstform", "caption"})));
     optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"javagui", "menu", "extras"})));
+    if (paused)
+      pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+          getFirstAttrbuteByTagName(new String[] {"javagui", "mainform",
+                                    "fortsetzen"})));
+    else
+      pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+          getFirstAttrbuteByTagName(new String[] {"javagui", "mainform",
+                                    "pause"})));
   }
 }

@@ -88,7 +88,18 @@ public class DataManager {   //Singleton-Implementierung
   }
 
 
-  public static boolean istCoreErreichbar(){
+  public static boolean connectToServer(int id){
+    String result;
+    try {
+      result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST, "/function/serverlogin?id=" + id);
+    }
+    catch (WebSiteNotFoundException ex) {
+      return false;
+    }
+    return true;
+  }
+
+  private static String getHost(){
     OptionsManager om = OptionsManager.getInstance();
     String savedHost = "localhost";
     if (om.getRemoteSettings().isRemoteUsed()){
@@ -96,8 +107,12 @@ public class DataManager {   //Singleton-Implementierung
       if (savedHost.length() == 0)
         savedHost = "localhost";
     }
+    return savedHost;
+  }
+
+  public static boolean istCoreErreichbar(){
     try {
-      String testData = HtmlLoader.getHtmlContent(savedHost, HtmlLoader.GET, "/xml/information.xml");
+      String testData = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET, "/xml/information.xml");
     }
     catch (WebSiteNotFoundException ex) {
       return false;

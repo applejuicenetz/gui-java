@@ -52,15 +52,20 @@ public abstract class HtmlLoader {
 
       String inputLine="" ;
       inputLine = in.readLine();
-      if (inputLine==null)
-        throw new WebSiteNotFoundException(WebSiteNotFoundException.UNKNOWN_HOST);
-      while (inputLine.indexOf("xml version")==-1) {
-        inputLine = in.readLine();
-      }
-      urlContent += inputLine;
-      while ( (inputLine = in.readLine()) != null) {
+      if (method==HtmlLoader.GET){
+        if (inputLine == null)
+          throw new WebSiteNotFoundException(WebSiteNotFoundException.
+                                             UNKNOWN_HOST);
+        while (inputLine.indexOf("xml version") == -1) {
+          inputLine = in.readLine();
+        }
         urlContent += inputLine;
+        while ( (inputLine = in.readLine()) != null) {
+          urlContent += inputLine;
+        }
       }
+      else
+        urlContent = inputLine;
     }
     catch (SocketException sex) {
       throw new WebSiteNotFoundException(WebSiteNotFoundException.AUTHORIZATION_REQUIRED);

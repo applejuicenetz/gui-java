@@ -10,6 +10,9 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 import javax.swing.table.TableColumnModel;
 import java.util.HashMap;
+import de.applejuicenet.client.gui.controller.DataManager;
+import de.applejuicenet.client.shared.dac.ServerDO;
+import javax.swing.table.TableColumn;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -30,9 +33,6 @@ public class ServerPanel
   JMenuItem item1;
   JMenuItem item2;
   JMenuItem item3;
-  JMenuItem item4;
-  JMenuItem item5;
-  JMenuItem item6;
 
   public ServerPanel() {
     try {
@@ -47,18 +47,25 @@ public class ServerPanel
     setLayout(new BorderLayout());
     LanguageSelector.getInstance().addLanguageListener(this);
 
-    item1 = new JMenuItem("Abbrechen");
-    item2 = new JMenuItem("Pause/Fortsetzen");
-    item3 = new JMenuItem("Powerdownload");
-    item4 = new JMenuItem("Umbenennen");
-    item5 = new JMenuItem("Zielordner ändern");
-    item6 = new JMenuItem("Fertige Übertragungen entfernen");
+    item1 = new JMenuItem("Verbinden");
+    item2 = new JMenuItem("Löschen");
+    //todo
+    item2.setEnabled(false);
+    item3 = new JMenuItem("Server hinzufügen");
+    //todo
+    item3.setEnabled(false);
     popup.add(item1);
     popup.add(item2);
+    popup.add(new JSeparator());
     popup.add(item3);
-    popup.add(item4);
-    popup.add(item5);
-    popup.add(item6);
+
+    item1.addActionListener(new ActionListener(){
+      public void actionPerformed(ActionEvent ae){
+        int selected = serverTable.getSelectedRow();
+        ServerDO server = (ServerDO)((ServerTableModel)serverTable.getModel()).getRow(selected);
+        DataManager.connectToServer(server.getID());
+      }
+    });
 
     JPanel panel1 = new JPanel();
     panel1.setLayout(new GridBagLayout());
@@ -89,7 +96,19 @@ public class ServerPanel
     add(panel1, BorderLayout.NORTH);
     serverTable = new JTable();
     serverTable.setModel(new ServerTableModel(DataManager.getInstance().getAllServer()));
-    serverTable.addMouseListener(new java.awt.event.MouseAdapter() {
+    TableColumn tc = serverTable.getColumnModel().getColumn(0);
+    tc.setCellRenderer(new ServerTableCellRenderer());
+    serverTable.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent me){
+        if (SwingUtilities.isRightMouseButton(me)) {
+          Point p = me.getPoint();
+          int iRow = serverTable.rowAtPoint(p);
+          int iCol = serverTable.columnAtPoint(p);
+          serverTable.setRowSelectionInterval(iRow, iRow);
+          serverTable.setColumnSelectionInterval(iCol, iCol);
+        }
+      }
+
       public void mouseReleased(MouseEvent e) {
         super.mouseReleased(e);
         if (e.isPopupTrigger()) {
@@ -120,16 +139,11 @@ public class ServerPanel
     String[] columns = new String[4];
     columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col0caption"}));
     columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col1caption"}));
-    columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col4caption"}));
+    columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col3caption"}));
     columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col5caption"}));
-    item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "canceldown" ,"caption"})));
-    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "pausedown" ,"caption"}));
-    temp+="/" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "resumedown" ,"caption"}));
-    item2.setText(temp);
-    item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "powerdownload" ,"caption"})));
-    item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "renamefile" ,"caption"})));
-    item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "changetarget" ,"caption"})));
-    item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Clearfinishedentries1" ,"caption"})));
+    item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "connserv" ,"caption"})));
+    item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "delserv" ,"caption"})));
+    item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "addserv" ,"caption"})));
 
     TableColumnModel tcm = serverTable.getColumnModel();
     for (int i=0; i<tcm.getColumnCount(); i++){
