@@ -38,7 +38,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.22 2004/01/25 10:16:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.23 2004/02/04 14:57:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,6 +47,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.23  2004/02/04 14:57:20  maj0r
+ * Bug #94 gefixt (Danke an error666)
+ * Zulaessige Werte für Core-Port und XML-Port sind 1024<x<=32000.
+ *
  * Revision 1.22  2004/01/25 10:16:42  maj0r
  * Optionenmenue ueberarbeitet.
  *
@@ -205,19 +209,31 @@ public class ODStandardPanel
         nick.setText(ajSettings.getNick());
         port.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
-                if (ajSettings.getPort() != Integer.parseInt(port.getText())) {
-                    dirty = true;
-                    ajSettings.setPort(Integer.parseInt(port.getText()));
+                int portNr = Integer.parseInt(port.getText());
+                if (ajSettings.getPort() != portNr) {
+                    if (portNr > 1024 && portNr <=32000){
+                        dirty = true;
+                        ajSettings.setPort(Integer.parseInt(port.getText()));
+                    }
+                    else{
+                        port.setText(Long.toString(ajSettings.getPort()));
+                    }
                 }
             }
         });
         xmlPort.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
+                int xmlPortNr = Integer.parseInt(xmlPort.getText());
                 if (ajSettings.getXMLPort() != Long.parseLong(xmlPort.getText())) {
-                    dirty = true;
-                    xmlPortDirty = true;
-                    remote.setXmlPort(Integer.parseInt(xmlPort.getText()));
-                    ajSettings.setXMLPort(Long.parseLong(xmlPort.getText()));
+                    if (xmlPortNr > 1024 && xmlPortNr <=32000){
+                        dirty = true;
+                        xmlPortDirty = true;
+                        remote.setXmlPort(Integer.parseInt(xmlPort.getText()));
+                        ajSettings.setXMLPort(Long.parseLong(xmlPort.getText()));
+                    }
+                    else{
+                        xmlPort.setText(Long.toString(ajSettings.getXMLPort()));
+                    }
                 }
             }
         });
