@@ -64,7 +64,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.99 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.100 2004/03/13 20:15:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -73,6 +73,10 @@ import de.applejuicenet.client.gui.controller.PositionManagerImpl;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.100  2004/03/13 20:15:32  maj0r
+ * Featurerequest #274 gefixt (Danke an johannes8)
+ * Downloads koennen per F2 umbenannt werden.
+ *
  * Revision 1.99  2004/03/09 16:25:17  maj0r
  * PropertiesManager besser gekapselt.
  *
@@ -637,31 +641,7 @@ public class DownloadPanel
 
         item4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                Object[] selectedItems = getSelectedDownloadItems();
-                if (selectedItems != null && selectedItems.length == 1) {
-                    if (selectedItems[0].getClass() == DownloadMainNode.class
-                        &&
-                        ( (DownloadMainNode) selectedItems[0]).getType() ==
-                        DownloadMainNode.ROOT_NODE) {
-                        DownloadDO downloadDO = ( (DownloadMainNode)
-                                                 selectedItems[0]).
-                            getDownloadDO();
-                        String neuerName = JOptionPane.showInputDialog(
-                            AppleJuiceDialog.getApp(), neuerDateiname + ":",
-                            downloadDO.getFilename());
-                        if (neuerName == null) {
-                            return;
-                        }
-                        neuerName = neuerName.trim();
-                        if (neuerName.length() != 0) {
-                            if (downloadDO.getFilename().compareTo(neuerName) !=
-                                0) {
-                                ApplejuiceFassade.getInstance().renameDownload(
-                                    downloadDO.getId(), neuerName);
-                            }
-                        }
-                    }
-                }
+                renameDownload();
             }
         });
 
@@ -766,6 +746,13 @@ public class DownloadPanel
 
         downloadModel = new DownloadModel();
         downloadTable = new JTreeTable(downloadModel);
+        downloadTable.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_F2) {
+                    renameDownload();
+                }
+            }
+        });
 
         TableColumnModel model = downloadTable.getColumnModel();
         for (int i = 0; i < columns.length; i++) {
@@ -1021,6 +1008,34 @@ public class DownloadPanel
 
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
             DataUpdateListener.DOWNLOAD_CHANGED);
+    }
+
+    private void renameDownload(){
+        Object[] selectedItems = getSelectedDownloadItems();
+        if (selectedItems != null && selectedItems.length == 1) {
+            if (selectedItems[0].getClass() == DownloadMainNode.class
+                &&
+                ( (DownloadMainNode) selectedItems[0]).getType() ==
+                DownloadMainNode.ROOT_NODE) {
+                DownloadDO downloadDO = ( (DownloadMainNode)
+                                         selectedItems[0]).
+                    getDownloadDO();
+                String neuerName = JOptionPane.showInputDialog(
+                    AppleJuiceDialog.getApp(), neuerDateiname + ":",
+                    downloadDO.getFilename());
+                if (neuerName == null) {
+                    return;
+                }
+                neuerName = neuerName.trim();
+                if (neuerName.length() != 0) {
+                    if (downloadDO.getFilename().compareTo(neuerName) !=
+                        0) {
+                        ApplejuiceFassade.getInstance().renameDownload(
+                            downloadDO.getId(), neuerName);
+                    }
+                }
+            }
+        }
     }
 
     private void startDownload() {
