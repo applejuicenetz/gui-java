@@ -12,6 +12,7 @@ import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
@@ -21,7 +22,6 @@ import de.applejuicenet.client.gui.download.DownloadController;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.search.SearchController;
-import de.applejuicenet.client.gui.search.SearchPanel;
 import de.applejuicenet.client.gui.server.ServerPanel;
 import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.gui.start.StartController;
@@ -30,7 +30,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.53 2005/03/04 13:47:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.54 2005/03/14 09:36:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
