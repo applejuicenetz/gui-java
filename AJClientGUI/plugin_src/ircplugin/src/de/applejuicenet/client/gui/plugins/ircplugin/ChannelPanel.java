@@ -89,6 +89,8 @@ public class ChannelPanel extends JPanel implements ActionListener {
 	
 	public static final String HTTP_IDENTIFIER = "http://";
 	public static final String WWW_IDENTIFIER = "www.";
+	
+	private static final Color JOIN_GREEN = new Color(0, 128, 0);
 
 	public ChannelPanel(XdccIrc parentPanel, String name, JTabbedPane tabbedPane) {
 		logger = Logger.getLogger(getClass());
@@ -251,10 +253,10 @@ public class ChannelPanel extends JPanel implements ActionListener {
 		return northBox;
 	}
 
-	private MutableAttributeSet setLink(String sUrl) {
-		MutableAttributeSet a = new SimpleAttributeSet();
+	private MutableAttributeSet setLink(String sUrl, SimpleAttributeSet attributeSet) {
+		MutableAttributeSet a = new SimpleAttributeSet(attributeSet);
 		try {
-			if (!sUrl.startsWith(ChannelPanel.HTTP_IDENTIFIER)){
+			if (!sUrl.toLowerCase().startsWith(ChannelPanel.HTTP_IDENTIFIER)){
 				sUrl = ChannelPanel.HTTP_IDENTIFIER + sUrl;
 			}
 			URL url = new URL(sUrl);
@@ -497,7 +499,7 @@ public class ChannelPanel extends JPanel implements ActionListener {
 			eigenerName = true;
 			doMark = true;
 		} else if (message.indexOf("---> JOIN:") != -1) {
-			StyleConstants.setForeground(attributes, Color.GREEN);
+			StyleConstants.setForeground(attributes, JOIN_GREEN);
 		} else if (message.indexOf("<--- PART:") != -1) {
 			StyleConstants.setForeground(attributes, Color.RED);
 		} else if (message.indexOf("<--- QUIT:") != -1) {
@@ -550,11 +552,11 @@ public class ChannelPanel extends JPanel implements ActionListener {
 	
 	private void parseLinks(SimpleAttributeSet attributes, Document doc, String message)
 			throws BadLocationException{
-		while (message.indexOf(HTTP_IDENTIFIER) != -1 || 
-				message.indexOf(WWW_IDENTIFIER) != -1){
+		while (message.toLowerCase().indexOf(HTTP_IDENTIFIER) != -1 || 
+				message.toLowerCase().indexOf(WWW_IDENTIFIER) != -1){
 			String httpIdentifier;
-			int indexHttp = message.indexOf(HTTP_IDENTIFIER);
-			int indexWww = message.indexOf(WWW_IDENTIFIER);
+			int indexHttp = message.toLowerCase().indexOf(HTTP_IDENTIFIER);
+			int indexWww = message.toLowerCase().indexOf(WWW_IDENTIFIER);
 			if (indexHttp == -1){
 				httpIdentifier = WWW_IDENTIFIER;
 			}
@@ -570,9 +572,10 @@ public class ChannelPanel extends JPanel implements ActionListener {
 				}
 			}
 			
-			doc.insertString(doc.getLength(), message.substring(0, message.indexOf(httpIdentifier)), 
+			doc.insertString(doc.getLength(), 
+					message.substring(0, message.toLowerCase().indexOf(httpIdentifier)), 
 					attributes);
-			message = message.substring(message.indexOf(httpIdentifier));
+			message = message.substring(message.toLowerCase().indexOf(httpIdentifier));
 			int index = message.indexOf(" ");
 			int index2 = message.indexOf(">");
 			if (index2 != -1 && index2 < index){
@@ -592,14 +595,14 @@ public class ChannelPanel extends JPanel implements ActionListener {
 			}
 			if (index != -1){
 				doc.insertString(doc.getLength(), message.substring(0, index), 
-						setLink(message.substring(0, index)));
+						setLink(message.substring(0, index), attributes));
 				message = message.substring(index);
 				if (message.indexOf(httpIdentifier, index) == -1){
 					break;
 				}
 			}
 			else{
-				doc.insertString(doc.getLength(), message, setLink(message));
+				doc.insertString(doc.getLength(), message, setLink(message, attributes));
 				message = "";
 			}
 		}

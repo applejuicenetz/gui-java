@@ -68,7 +68,6 @@ public class InitPanel extends JPanel implements ActionListener {
 		textArea.setDocument(document);
 		textArea.setEditable(false);
 		textArea.addHyperlinkListener(new HyperlinkAdapter(textArea));
-
 		setLayout(new BorderLayout());
 
 		textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -84,10 +83,10 @@ public class InitPanel extends JPanel implements ActionListener {
 		add(makeNorth(), BorderLayout.NORTH);
 	}
 
-	private MutableAttributeSet setLink(String sUrl) {
-		MutableAttributeSet a = new SimpleAttributeSet();
+	private MutableAttributeSet setLink(String sUrl, SimpleAttributeSet attributes) {
+		MutableAttributeSet a = new SimpleAttributeSet(attributes);
 		try {
-			if (!sUrl.startsWith(ChannelPanel.HTTP_IDENTIFIER)){
+			if (!sUrl.toLowerCase().startsWith(ChannelPanel.HTTP_IDENTIFIER)){
 				sUrl = ChannelPanel.HTTP_IDENTIFIER + sUrl;
 			}
 			URL url = new URL(sUrl);
@@ -151,11 +150,11 @@ public class InitPanel extends JPanel implements ActionListener {
 		String zeit = dateFormatter.format(new Date(System.currentTimeMillis()));
 		try {
 			doc.insertString(doc.getLength(), "[" + zeit + "]\t", attributes);
-			while (message.indexOf(ChannelPanel.HTTP_IDENTIFIER) != -1 || 
-					message.indexOf(ChannelPanel.WWW_IDENTIFIER) != -1){
+			while (message.toLowerCase().indexOf(ChannelPanel.HTTP_IDENTIFIER) != -1 || 
+					message.toLowerCase().indexOf(ChannelPanel.WWW_IDENTIFIER) != -1){
 				String httpIdentifier;
-				int indexHttp = message.indexOf(ChannelPanel.HTTP_IDENTIFIER);
-				int indexWww = message.indexOf(ChannelPanel.WWW_IDENTIFIER);
+				int indexHttp = message.toLowerCase().indexOf(ChannelPanel.HTTP_IDENTIFIER);
+				int indexWww = message.toLowerCase().indexOf(ChannelPanel.WWW_IDENTIFIER);
 				if (indexHttp == -1){
 					httpIdentifier = ChannelPanel.WWW_IDENTIFIER;
 				}
@@ -171,9 +170,10 @@ public class InitPanel extends JPanel implements ActionListener {
 					}
 				}
 			
-				doc.insertString(doc.getLength(), message.substring(0, message.indexOf(httpIdentifier)), 
+				doc.insertString(doc.getLength(), 
+						message.toLowerCase().substring(0, message.indexOf(httpIdentifier)), 
 						attributes);
-				message = message.substring(message.indexOf(httpIdentifier));
+				message = message.substring(message.toLowerCase().indexOf(httpIdentifier));
 				int index = message.indexOf(" ");
 				int index2 = message.indexOf(">");
 				if (index2 != -1 && index2 < index){
@@ -193,11 +193,11 @@ public class InitPanel extends JPanel implements ActionListener {
 				}
 				if (index != -1){
 					doc.insertString(doc.getLength(), message.substring(0, index), 
-							setLink(message.substring(0, index)));
+							setLink(message.substring(0, index), attributes));
 					message = message.substring(index);
 				}
 				else{
-					doc.insertString(doc.getLength(), message, setLink(message));
+					doc.insertString(doc.getLength(), message, setLink(message, attributes));
 					message = "";
 				}
 			}
