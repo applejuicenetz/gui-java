@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.2 2004/01/06 17:32:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.3 2004/02/04 13:10:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SettingsXMLHolder.java,v $
+ * Revision 1.3  2004/02/04 13:10:37  maj0r
+ * Neues Linkformat zusaetzlich in den Downloadbereich eingebaut.
+ *
  * Revision 1.2  2004/01/06 17:32:50  maj0r
  * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
  *
@@ -121,4 +124,12 @@ public class SettingsXMLHolder
         update();
         return settings;
     }
+
+    public AJSettings getCurrentAJSettings() {
+        if(settings == null){
+            update();
+        }
+        return settings;
+    }
+
 }

@@ -59,9 +59,11 @@ import javax.swing.JSplitPane;
 import javax.swing.table.TableColumn;
 import javax.swing.JCheckBoxMenuItem;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.Information;
+import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.87 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.88 2004/02/04 13:10:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -70,6 +72,9 @@ import de.applejuicenet.client.shared.IconManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.88  2004/02/04 13:10:37  maj0r
+ * Neues Linkformat zusaetzlich in den Downloadbereich eingebaut.
+ *
  * Revision 1.87  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -310,6 +315,7 @@ public class DownloadPanel
     private JMenuItem item5;
     private JMenuItem item6;
     private JMenuItem itemCopyToClipboard = new JMenuItem();
+    private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
     private JSplitPane splitPane;
     private String downloadAbbrechen;
     private String dialogTitel;
@@ -370,6 +376,7 @@ public class DownloadPanel
         item6.setIcon(im.getIcon("bereinigen"));
         item7.setIcon(im.getIcon("partliste"));
         itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
+        itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
 
         popup.add(item1);
         popup.add(item2);
@@ -377,6 +384,7 @@ public class DownloadPanel
         popup.add(item5);
         popup.add(item6);
         popup.add(itemCopyToClipboard);
+        popup.add(itemCopyToClipboardWithSources);
         popup.add(item7);
         item7.setVisible(false);
 
@@ -422,6 +430,68 @@ public class DownloadPanel
                 }
             }
         });
+
+        itemCopyToClipboardWithSources.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                Object[] selectedItems = getSelectedDownloadItems();
+                if (selectedItems != null && selectedItems.length == 1) {
+                    Clipboard cb = Toolkit.getDefaultToolkit().
+                        getSystemClipboard();
+                    StringBuffer toCopy = new StringBuffer();
+                    toCopy.append("ajfsp://file|");
+                    boolean copyToClipboard = false;
+                    if (selectedItems[0].getClass() == DownloadMainNode.class
+                        &&
+                        ( (DownloadMainNode) selectedItems[0]).getType() ==
+                        DownloadMainNode.ROOT_NODE) {
+                        DownloadDO downloadDO = ( (DownloadMainNode)
+                                                 selectedItems[0]).
+                            getDownloadDO();
+                        toCopy.append(downloadDO.getFilename() + "|" +
+                                      downloadDO.getHash() + "|" +
+                                      downloadDO.getGroesse());
+                        copyToClipboard = true;
+                    }
+                    else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
+                        DownloadSourceDO downloadSourceDO = (DownloadSourceDO)
+                            selectedItems[0];
+                        HashMap downloads = ApplejuiceFassade.getInstance().
+                            getDownloadsSnapshot();
+                        String key = Integer.toString(
+                            downloadSourceDO.getDownloadId());
+                        DownloadDO downloadDO = (DownloadDO) downloads.get(key);
+                        if (downloadDO != null) {
+                            toCopy.append(downloadSourceDO.getFilename() + "|" +
+                                          downloadDO.getHash() + "|" +
+                                          downloadDO.getGroesse());
+                            copyToClipboard = true;
+                        }
+                    }
+                    if (copyToClipboard){
+                        long port = ApplejuiceFassade.getInstance().getAJSettings().getPort();
+                        Information information = ApplejuiceFassade.getInstance().getInformation();
+                        toCopy.append( "|" );
+                        toCopy.append( information.getExterneIP() );
+                        toCopy.append( ":" );
+                        toCopy.append( port );
+                        if (information.getVerbindungsStatus()==Information.VERBUNDEN){
+                            ServerDO serverDO = information.getServerDO();
+                            if (serverDO!=null){
+                                toCopy.append( ":" );
+                                toCopy.append( serverDO.getHost() );
+                                toCopy.append( ":" );
+                                toCopy.append( serverDO.getPort() );
+                            }
+                        }
+                        toCopy.append( "/" );
+                        StringSelection contents = new StringSelection(
+                            toCopy.toString());
+                        cb.setContents(contents, null);
+                    }
+                }
+            }
+        });
+
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 Object[] selectedItems = getSelectedDownloadItems();
@@ -1101,6 +1171,10 @@ public class DownloadPanel
                 languageSelector.getFirstAttrbuteByTagName(new String[] {
                 "mainform",
                 "getlink1", "caption"})));
+            itemCopyToClipboardWithSources.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "javagui",
+                "downloadform", "getlinkwithsources"})));
             neuerDateiname = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui",
                                           "downloadform", "neuerdateiname"}));

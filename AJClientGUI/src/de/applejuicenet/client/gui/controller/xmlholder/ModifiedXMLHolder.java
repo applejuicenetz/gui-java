@@ -22,7 +22,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.12 2004/02/02 19:28:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.13 2004/02/04 13:10:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.13  2004/02/04 13:10:37  maj0r
+ * Neues Linkformat zusaetzlich in den Downloadbereich eingebaut.
+ *
  * Revision 1.12  2004/02/02 19:28:57  maj0r
  * Kompression wird nur beim initialen Laden und bei entferntem Core verwendet.
  *
@@ -401,15 +404,16 @@ public class ModifiedXMLHolder
                 String serverName = null;
                 String externeIP;
                 int verbindungsStatus = Information.NICHT_VERBUNDEN;
+                ServerDO serverDO = null;;
                 if (tryConnectToServer != -1) {
-                    ServerDO serverDO = (ServerDO) serverMap.get(Integer.toString(tryConnectToServer));
+                    serverDO = (ServerDO) serverMap.get(Integer.toString(tryConnectToServer));
                     if (serverDO != null) {
                         verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
                         serverName = serverDO.getName();
                     }
                 }
                 else if (connectedWithServerId != -1) {
-                    ServerDO serverDO = (ServerDO) serverMap.get(Integer.toString(connectedWithServerId));
+                    serverDO = (ServerDO) serverMap.get(Integer.toString(connectedWithServerId));
                     if (serverDO != null) {
                         verbindungsStatus = Information.VERBUNDEN;
                         serverName = serverDO.getName();
@@ -438,7 +442,7 @@ public class ModifiedXMLHolder
                                                   downloadSpeed,
                                                   openConnections,
                                                   verbindungsStatus, serverName,
-                                                  externeIP);
+                                                  externeIP, serverDO);
                 }
                 else {
                     information = new Information(information.getId(),
@@ -451,7 +455,7 @@ public class ModifiedXMLHolder
                                                   information.
                                                   getOpenConnections(),
                                                   verbindungsStatus, serverName,
-                                                  externeIP);
+                                                  externeIP, serverDO);
                 }
             }
             return information;
