@@ -2,7 +2,7 @@
 <!--JBuilder XML Project-->
 <project>
   <property category="generalFormatting" name="blockIndent" value="4"/>
-  <property category="javaFormatting" name="packageThreshold" value="0"/>
+  <property category="javaFormatting" name="alwaysClasses" value="1"/>
   <property category="optimize.0" name="OptimizableType" value="intuitive.ide.borland.jb8.ProfilerBootstrap"/>
   <property category="optimize.0" name="oicc.FilterFile" value="C:\CrefoTeam\AJClientGUI\AJCoreGUI.oif"/>
   <property category="optimize.0" name="oipr.FilterFile" value="C:\CrefoTeam\AJClientGUI\AJCoreGUI.oif"/>
@@ -61,6 +61,7 @@
     <property category="archiving" name="executableFiles.5" value=""/>
     <property category="archiving" name="libraryStates.1" value="3:AJLibs"/>
     <property category="archiving" name="manifestConfigFile" value="0"/>
+    <property category="archiving" name="overrideManifestPath" value="build/MANIFEST.MF"/>
     <property category="archiving" name="targetCompressed" value="1"/>
     <property category="archiving" name="targetPath" value="AJCoreGUI.jar"/>
     <property category="archiving" name="usingRules" value="1"/>

@@ -8,6 +8,7 @@
     <path>[tools/xercesImpl.jar]</path>
     <path>[tools/xmlParserAPIs.jar]</path>
     <path>[needed_jars/skinlf.jar]</path>
+    <path>[needed_jars/looks-1.2.1.jar]</path>
   </class>
-  <lastmodsaved>1069151967420</lastmodsaved>
+  <lastmodsaved>1078736480281</lastmodsaved>
 </library>
