@@ -24,7 +24,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.13 2003/09/04 17:55:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.14 2003/09/05 09:47:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +33,9 @@ import java.util.EventObject;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.14  2003/09/05 09:47:09  maj0r
+ * Eine Klasse vertauscht.
+ *
  * Revision 1.13  2003/09/04 17:55:58  maj0r
  * Ausgabe für DownloadSourceDO korrigiert.
  *
@@ -326,7 +329,7 @@ public class JTreeTable extends JTable{
           c = super.getTreeCellRendererComponent(tree, value.toString(),
                                        sel, expanded, leaf, row, hasFocus);
       }
-      else if (value.getClass()==DirectoryNode.class){
+      else if (value.getClass()==DownloadDirectoryNode.class){
           c = super.getTreeCellRendererComponent(tree, ((DownloadDirectoryNode)value).getVerzeichnis(),
                                        sel, expanded, leaf, row, hasFocus);
       }
