@@ -17,6 +17,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.PolicyJarClassLoader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.7 2005/01/25 12:07:17 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.8 2005/02/16 08:42:03 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -430,15 +431,12 @@ public class PowerDownloadPanel
         }
         AutomaticPowerdownloadPolicy policy = null;
         try {
-            policy = (AutomaticPowerdownloadPolicy) selectedPolicy.getClass().
-                newInstance();
+        	Constructor con = selectedPolicy.getClass().getConstructor(new Class[]{ ApplejuiceFassade.class });
+        	policy = 
+        		(AutomaticPowerdownloadPolicy)con.newInstance(
+        				new Object[]{ AppleJuiceClient.getAjFassade() });        	
         }
-        catch (InstantiationException e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
-        }
-        catch (IllegalAccessException e) {
+        catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }

@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.powerdownload;
 
+import java.awt.GridLayout;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -15,9 +16,11 @@ import javax.swing.JTextField;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.shared.NumberAndSpecialCharsInputVerifier;
+import de.applejuicenet.client.shared.NumberInputVerifier;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.12 2005/02/15 19:14:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.13 2005/02/16 08:42:03 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,35 +51,30 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         shouldPause = false;
         double wert = 0;
         boolean correctInput = false;
-        JPanel abfrage = new JPanel();
-        JTextField pwdlWert = new JTextField("2,6");
-        JTextField pwdlCount = new JTextField("2");
+        JTextField pwdlWert = new JTextField();
+        JTextField pwdlCount = new JTextField();
+        NumberAndSpecialCharsInputVerifier verifier = new NumberAndSpecialCharsInputVerifier(",.");
+        verifier.setSpecialPattern("^([1-4]?[0-9]|50$)([,.][0-9]{0,2})?$");
+        pwdlWert.setDocument(verifier);
+        pwdlCount.setDocument(new NumberInputVerifier(1, 99));
+
+        JPanel abfrage = new JPanel(new GridLayout(2, 2));
         abfrage.add(new JLabel("Pwdl-Wert:"));
         abfrage.add(pwdlWert);
-        abfrage.add(new JLabel("# DL:"));
+        abfrage.add(new JLabel("Anzahl Downloads:"));
         abfrage.add(pwdlCount);
         while (!correctInput){
-            JOptionPane.showInputDialog(AppleJuiceDialog.getApp(), abfrage);
+            JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), abfrage, "Powerdownload konfigurieren", JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE);
             try {
             	String result = pwdlWert.getText();
             	result = result.replace(',', '.');
-            	if (result.length()>result.lastIndexOf('.')+2){
-            		result = result.substring(0, result.lastIndexOf('.')+2);
-            	}
             	wert = Double.parseDouble(result) - 1;
             	wert = ((double) Math.round(wert * 100.0))/100.0;
             	pwdlValue = (int)((wert) * 10);
             	if (pwdlValue<12 || pwdlValue>490){
             		continue;
             	}
-            	Integer counter = null;
-            	try {
-            		counter = new Integer(pwdlCount.getText());
-            	}
-            	catch (NumberFormatException ex) {
-            		continue;
-            	}
-              anzahlDownloads = counter;
+              anzahlDownloads = new Integer(pwdlCount.getText());
             	
             	correctInput = true;
             }
