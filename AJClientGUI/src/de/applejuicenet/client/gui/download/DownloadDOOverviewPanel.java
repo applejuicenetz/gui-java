@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.1 2004/10/15 15:54:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,7 +35,6 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 public class DownloadDOOverviewPanel
     extends JPanel
     implements LanguageListener{
-    private static final long serialVersionUID = 6888218356284268994L;
 	private DownloadPartListPanel actualDlOverviewTable;
     private JLabel actualDLDateiName = new JLabel();
     private JLabel label5 = new JLabel();

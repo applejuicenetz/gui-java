@@ -22,7 +22,6 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 public class RulesDialog extends JDialog{
-    private static final long serialVersionUID = 3053560558928219351L;
 	private Logger logger;
 
     public RulesDialog(Frame parent, boolean modal){

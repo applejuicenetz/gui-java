@@ -12,8 +12,6 @@ import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 
 public class SearchResultIconNodeRenderer extends DefaultIconNodeRenderer{
 
-	private static final long serialVersionUID = -6263988615720145890L;
-
 	public SearchResultIconNodeRenderer() {
 		super();
 	}

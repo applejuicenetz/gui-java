@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/ConnectFrame.java,v 1.1 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/ConnectFrame.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,7 +23,6 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 public class ConnectFrame
     extends JFrame {
 
-    private static final long serialVersionUID = 1852329673424603919L;
 	private Logger logger;
 
     public ConnectFrame() {

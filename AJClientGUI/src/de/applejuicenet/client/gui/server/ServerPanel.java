@@ -75,8 +75,6 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 public class ServerPanel extends JPanel implements LanguageListener,
 		DataUpdateListener, RegisterI {
 
-	private static final long serialVersionUID = -4783164086221861433L;
-
 	private static ServerPanel instance;
 
 	private JTable serverTable;

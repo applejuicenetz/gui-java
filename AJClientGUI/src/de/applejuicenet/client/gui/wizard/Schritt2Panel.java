@@ -9,7 +9,7 @@ import javax.swing.JTextArea;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt2Panel.java,v 1.9 2004/10/15 13:34:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt2Panel.java,v 1.10 2004/11/22 16:25:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,7 +21,6 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 public class Schritt2Panel
     extends WizardPanel {
-    private static final long serialVersionUID = -6518468998057003406L;
 	private JLabel label1 = new JLabel();
     private JTextArea textArea1 = new JTextArea();
     private JTextArea textArea2 = new JTextArea();

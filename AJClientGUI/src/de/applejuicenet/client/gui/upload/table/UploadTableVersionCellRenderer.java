@@ -9,7 +9,6 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 
 public class UploadTableVersionCellRenderer
     extends DefaultTableCellRenderer {
-    private static final long serialVersionUID = -8290299428037659817L;
 
 	public Component getTableCellRendererComponent(JTable table,
         Object value,

@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DateiListeTableModel.java,v 1.1 2004/10/28 15:03:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DateiListeTableModel.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,7 +21,6 @@ import java.util.Map;
 
 public class DateiListeTableModel
     extends AbstractTableModel {
-    private static final long serialVersionUID = 276151482766890329L;
 
 	final static String[] COL_NAMES = {
         "Name", "Groesze"};

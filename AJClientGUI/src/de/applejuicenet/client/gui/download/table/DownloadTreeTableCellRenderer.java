@@ -17,7 +17,6 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 public class DownloadTreeTableCellRenderer extends DefaultTreeTableCellRenderer
 	implements DataUpdateListener{
 
-	private static final long serialVersionUID = -8862016968967394448L;
 	private Settings settings;
 	
 	public DownloadTreeTableCellRenderer(TreeModel model) {

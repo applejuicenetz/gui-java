@@ -42,8 +42,6 @@ import de.applejuicenet.client.shared.NetworkInfo;
 
 public class StartPanel extends TklPanel {
 
-	private static final long serialVersionUID = 3456825404472175660L;
-
 	private static final Color APFEL_ROT = new Color(146, 36, 60);
 
 	private JLabel warnungen;

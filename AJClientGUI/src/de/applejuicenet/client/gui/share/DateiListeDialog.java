@@ -47,7 +47,7 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/DateiListeDialog.java,v 1.3 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/DateiListeDialog.java,v 1.4 2004/11/22 16:25:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -59,7 +59,6 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 public class DateiListeDialog
     extends JDialog {
-    private static final long serialVersionUID = 5114504658143608456L;
 	private JLabel speicherTxt = new JLabel();
     private JLabel speicherHtml = new JLabel();
     private JTable table = new JTable();

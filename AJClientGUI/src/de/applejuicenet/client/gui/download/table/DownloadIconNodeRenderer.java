@@ -19,7 +19,6 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 public class DownloadIconNodeRenderer extends DefaultIconNodeRenderer 
 	implements DataUpdateListener {
 
-	private static final long serialVersionUID = 821866148610444935L;
 	private Settings settings;
 	private JTreeTable treeTable;
 

@@ -20,7 +20,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/InitPanel.java,v 1.5 2004/10/15 13:34:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/InitPanel.java,v 1.6 2004/11/22 16:25:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,7 +33,6 @@ import org.apache.log4j.Logger;
 public class InitPanel
     extends JPanel
     implements ActionListener {
-    private static final long serialVersionUID = 7175536052598544894L;
 	final String name = "Init Window";
     final JTextPane textArea = new JTextPane();
     final JTextField textField = new JTextField();

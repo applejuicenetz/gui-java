@@ -35,7 +35,7 @@ import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/QuickConnectionSettingsDialog.java,v 1.1 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/QuickConnectionSettingsDialog.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,7 +48,6 @@ import java.util.ArrayList;
 public class QuickConnectionSettingsDialog
     extends JDialog {
 	
-    private static final long serialVersionUID = 4634257195062724741L;
     public static final int ABGEBROCHEN = 1;
 
     private ODConnectionPanel remotePanel;

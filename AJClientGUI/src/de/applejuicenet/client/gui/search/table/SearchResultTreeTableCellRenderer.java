@@ -7,8 +7,6 @@ import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRend
 
 public class SearchResultTreeTableCellRenderer extends DefaultTreeTableCellRenderer{
 
-	private static final long serialVersionUID = 609607530614270654L;
-	
 	public SearchResultTreeTableCellRenderer(TreeModel model) {
 		super(model);
 	}

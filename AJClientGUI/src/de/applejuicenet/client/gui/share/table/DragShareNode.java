@@ -6,7 +6,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DragShareNode.java,v 1.1 2004/10/15 13:39:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DragShareNode.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,7 +19,6 @@ import java.awt.datatransfer.Transferable;
 public class DragShareNode
     implements Transferable, Serializable {
 
-    private static final long serialVersionUID = -37424467525963520L;
 	private Object[] nodes;
 
     public DragShareNode(Object[] shareNode) {

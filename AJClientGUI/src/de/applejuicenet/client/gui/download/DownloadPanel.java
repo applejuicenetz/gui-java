@@ -71,8 +71,6 @@ import de.applejuicenet.client.shared.IconManager;
 
 public class DownloadPanel extends TklPanel {
 
-	private static final long serialVersionUID = 3086254831787190128L;
-
 	private DownloadDOOverviewPanel downloadDOOverviewPanel;
 	private JTextField downloadLink = new JTextField();
 	private JButton btnStartDownload = new JButton();

@@ -10,8 +10,6 @@ import de.applejuicenet.client.gui.components.util.IconGetter;
 
 public class DefaultIconNodeRenderer extends DefaultTreeCellRenderer {
 
-	private static final long serialVersionUID = 1476701693980518291L;
-
 	public DefaultIconNodeRenderer() {
 		super();
 	}

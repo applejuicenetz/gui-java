@@ -17,7 +17,7 @@ import javax.swing.tree.TreePath;
 
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/treetable/JTreeTable.java,v 1.1 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/treetable/JTreeTable.java,v 1.2 2004/11/22 16:25:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,10 +29,8 @@ import javax.swing.tree.TreePath;
 
 public class JTreeTable
     extends JTable {
-    private static final long serialVersionUID = -2358030317266014942L;
 
 	protected DefaultTreeTableCellRenderer tree;
-
     protected JTable thisTable;
 
     public JTreeTable(TreeTableModel treeTableModel, DefaultTreeTableCellRenderer treeTableCellRenderer) {
@@ -120,7 +118,6 @@ public class JTreeTable
     class ListToTreeSelectionModelWrapper
         extends DefaultTreeSelectionModel {
 
-        private static final long serialVersionUID = 3201094989681091040L;
 		protected boolean updatingListSelectionModel;
 
         public ListToTreeSelectionModelWrapper() {

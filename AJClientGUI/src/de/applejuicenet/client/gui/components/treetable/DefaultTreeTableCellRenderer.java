@@ -15,10 +15,7 @@ import javax.swing.tree.TreeModel;
 public class DefaultTreeTableCellRenderer extends JTree implements
 		TableCellRenderer  {
 
-	private static final long serialVersionUID = -7215158508387389379L;
-
 	protected int visibleRow;
-
 	protected JTreeTable treeTable;
 
 	public DefaultTreeTableCellRenderer(TreeModel model) {

@@ -15,7 +15,6 @@ import javax.swing.Icon;
 
 public class UploadTableTreeCellRenderer
     extends DefaultTableCellRenderer {
-    private static final long serialVersionUID = -7964351436902318837L;
 
 	public Component getTableCellRendererComponent(JTable table,
         Object value,

@@ -33,7 +33,7 @@ import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.4 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.5 2004/11/22 16:25:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,8 +44,6 @@ import de.applejuicenet.client.shared.IconManager;
  */
 
 public class SharePanel extends TklPanel{
-
-    private static final long serialVersionUID = 2359016777104153892L;
 
     private JPanel panelCenter;
     private DirectoryTree folderTree = new DirectoryTree();

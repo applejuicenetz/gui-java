@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.plaf.metal.MetalToolTipUI;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.10 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.11 2004/11/22 16:25:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,8 +25,6 @@ import javax.swing.plaf.metal.MetalToolTipUI;
 
 public class MultiLineToolTip
     extends JToolTip {
-
-    private static final long serialVersionUID = -6749799030338402248L;
 
 	public MultiLineToolTip() {
         setUI(new MultiLineToolTipUI());

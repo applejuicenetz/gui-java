@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.1 2004/10/15 15:54:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -66,8 +66,6 @@ public class PowerDownloadPanel
     extends JPanel
     implements LanguageListener, DataUpdateListener {
 	
-    private static final long serialVersionUID = 6452879508173851941L;
-    
 	private final Color BLUE_BACKGROUND = new Color(118, 112, 148);
 	public JRadioButton btnInaktiv = new JRadioButton();
     public JRadioButton btnAktiv = new JRadioButton();
@@ -173,8 +171,6 @@ public class PowerDownloadPanel
         ImageIcon icon = im.getIcon("hint");
 
         btnHint = new JLabel(icon) {
-            private static final long serialVersionUID = 3874691546825417972L;
-
 			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
@@ -253,8 +249,6 @@ public class PowerDownloadPanel
         label9.setBackground(BLUE_BACKGROUND);
         tempPanel2.add(label9, BorderLayout.CENTER);
         btnHint2 = new JLabel(icon) {
-            private static final long serialVersionUID = 6339190369466608281L;
-
 			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
@@ -264,8 +258,6 @@ public class PowerDownloadPanel
         btnHint2.setOpaque(true);
         btnHint2.setBackground(BLUE_BACKGROUND);
         btnHint3 = new JLabel(icon) {
-            private static final long serialVersionUID = 2576149918227024712L;
-
 			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);

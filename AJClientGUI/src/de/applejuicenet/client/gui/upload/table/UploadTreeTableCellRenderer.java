@@ -7,8 +7,6 @@ import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRend
 
 public class UploadTreeTableCellRenderer extends DefaultTreeTableCellRenderer{
 
-	private static final long serialVersionUID = 7183042985627590983L;
-	
 	public UploadTreeTableCellRenderer(TreeModel model) {
 		super(model);
 	}

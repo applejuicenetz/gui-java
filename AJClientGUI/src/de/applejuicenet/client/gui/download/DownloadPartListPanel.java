@@ -43,8 +43,6 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
 public class DownloadPartListPanel extends JPanel implements
 		MouseMotionListener, LanguageListener {
 
-	private static final long serialVersionUID = 5259974179175947895L;
-
 	private static DownloadPartListPanel instance = null;
 	
 	private PartListDO partListDO;

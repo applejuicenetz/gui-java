@@ -54,8 +54,6 @@ import de.applejuicenet.client.shared.IconManager;
 
 public class UploadPanel extends TklPanel implements RegisterI {
 
-	private static final long serialVersionUID = -636534546650240286L;
-
 	private JTreeTable uploadDataTable;
 	private JLabel uploadListeLabel = new JLabel("0 Clients in Deiner Uploadliste");
 	private UploadDataTableModel uploadDataTableModel;

@@ -13,7 +13,6 @@ import javax.swing.JPopupMenu;
 public class SwingTrayPopup
     extends JPopupMenu {
 
-    private static final long serialVersionUID = -5219749013627073027L;
 	// Swing popup menu for a TrayIcon
     private WindowsTrayIcon m_Icon;
     private MouseListener m_Listener;

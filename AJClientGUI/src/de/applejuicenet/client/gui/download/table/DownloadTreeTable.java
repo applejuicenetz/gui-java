@@ -16,8 +16,6 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 public class DownloadTreeTable extends JTreeTable {
 
-    private static final long serialVersionUID = 1701386393277342225L;
-
 	public DownloadTreeTable(TreeTableModel treeTableModel, DefaultTreeTableCellRenderer treeTableCellRenderer) {
         super(treeTableModel, treeTableCellRenderer);
     }

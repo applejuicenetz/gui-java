@@ -29,7 +29,7 @@ import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.50 2004/10/29 13:38:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.51 2004/11/22 16:25:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -42,9 +42,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 public class RegisterPanel
     extends JTabbedPane
     implements LanguageListener {
-	
-    private static final long serialVersionUID = -8677504466512253432L;
-    
+	  
 	private StartController startController;
     private DownloadController downloadController;
     private SearchPanel searchPanel;
@@ -77,7 +75,6 @@ public class RegisterPanel
     private void init() {
         LanguageSelector.getInstance().addLanguageListener(this);
         setModel(new DefaultSingleSelectionModel() {
-            private static final long serialVersionUID = -687725119224964868L;
 
 			public void setSelectedIndex(int index) {
                 int oldIndex = getSelectedIndex();

@@ -20,7 +20,7 @@ import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.shared.dac.DirectoryDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/DirectoryNode.java,v 1.1 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/DirectoryNode.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,7 +33,6 @@ import de.applejuicenet.client.shared.dac.DirectoryDO;
 public class DirectoryNode
     extends DefaultMutableTreeNode
     implements Node, ApplejuiceNode {
-    private static final long serialVersionUID = 5049239281851486091L;
 	public static final int NOT_SHARED = 0;
     public static final int SHARED_WITH_SUB = 1;
     public static final int SHARED_WITHOUT_SUB = 2;

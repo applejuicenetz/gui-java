@@ -13,7 +13,6 @@ import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 
 public class ShareTable
     extends JTreeTable {
-    private static final long serialVersionUID = 2076999402327913095L;
 	private static DragSource dragSource = DragSource.getDefaultDragSource();
     private boolean dragEnabled = false;
 

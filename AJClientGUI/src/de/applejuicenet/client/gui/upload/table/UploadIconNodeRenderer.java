@@ -12,8 +12,6 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 
 public class UploadIconNodeRenderer extends DefaultIconNodeRenderer{
 
-	private static final long serialVersionUID = -2877797102156404846L;
-
 	public UploadIconNodeRenderer() {
 		super();
 	}
