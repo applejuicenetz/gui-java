@@ -9,12 +9,12 @@ import java.util.Set;
 
 import javax.swing.Icon;
 
+import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.download.table.DownloadModel;
-import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.20 2004/10/15 15:54:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.21 2004/10/29 11:58:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

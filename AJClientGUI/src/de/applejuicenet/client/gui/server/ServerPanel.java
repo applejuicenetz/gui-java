@@ -35,6 +35,8 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.RegisterI;
+import de.applejuicenet.client.gui.components.table.HeaderListener;
+import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
@@ -43,8 +45,6 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.server.table.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.server.table.ServerTableModel;
-import de.applejuicenet.client.gui.shared.HeaderListener;
-import de.applejuicenet.client.gui.shared.SortButtonRenderer;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;

@@ -4,7 +4,7 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 public class UploadTablePercentCellRenderer

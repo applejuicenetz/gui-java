@@ -2,8 +2,8 @@ package de.applejuicenet.client.gui.search.table;
 
 import javax.swing.tree.TreeModel;
 
-import de.applejuicenet.client.gui.tables.DefaultIconNodeRenderer;
-import de.applejuicenet.client.gui.tables.DefaultTreeTableCellRenderer;
+import de.applejuicenet.client.gui.components.treetable.DefaultIconNodeRenderer;
+import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRenderer;
 
 public class SearchResultTreeTableCellRenderer extends DefaultTreeTableCellRenderer{
 

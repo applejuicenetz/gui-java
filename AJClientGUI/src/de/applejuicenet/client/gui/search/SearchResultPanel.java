@@ -21,13 +21,14 @@ import javax.swing.table.TableColumnModel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.components.treetable.JTreeTable;
+import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.search.table.SearchNode;
 import de.applejuicenet.client.gui.search.table.SearchResultTableModel;
 import de.applejuicenet.client.gui.search.table.SearchResultTreeTableCellRenderer;
-import de.applejuicenet.client.gui.shared.SortButtonRenderer;
-import de.applejuicenet.client.gui.tables.JTreeTable;
-import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.FileTypeHelper;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Search;
@@ -35,7 +36,7 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
 import javax.swing.JToggleButton;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.3 2004/10/29 11:16:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.4 2004/10/29 11:58:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

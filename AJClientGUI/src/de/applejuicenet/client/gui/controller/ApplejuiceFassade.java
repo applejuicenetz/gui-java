@@ -14,6 +14,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.components.tree.ApplejuiceNode;
 import de.applejuicenet.client.gui.controller.xmlholder.DirectoryXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.InformationXMLHolder;
@@ -23,7 +24,6 @@ import de.applejuicenet.client.gui.controller.xmlholder.PartListXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.SettingsXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.ShareXMLHolder;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Information;
@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.162 2004/10/15 13:34:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.163 2004/10/29 11:58:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

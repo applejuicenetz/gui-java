@@ -34,6 +34,9 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
+import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRenderer;
+import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
@@ -42,10 +45,8 @@ import de.applejuicenet.client.gui.download.table.DownloadRootNode;
 import de.applejuicenet.client.gui.download.table.DownloadTableCellRenderer;
 import de.applejuicenet.client.gui.download.table.DownloadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.download.table.DownloadTableVersionCellRenderer;
+import de.applejuicenet.client.gui.download.table.DownloadTreeTable;
 import de.applejuicenet.client.gui.download.table.DownloadTreeTableCellRenderer;
-import de.applejuicenet.client.gui.shared.SortButtonRenderer;
-import de.applejuicenet.client.gui.tables.DefaultTreeTableCellRenderer;
-import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
@@ -311,7 +312,7 @@ public class DownloadPanel extends TklPanel {
 		downloadModel = new DownloadModel();
 		DefaultTreeTableCellRenderer defaultTreeTableCellRenderer =
 			new DownloadTreeTableCellRenderer(downloadModel);
-		downloadTable = new JTreeTable(downloadModel, defaultTreeTableCellRenderer);
+		downloadTable = new DownloadTreeTable(downloadModel, defaultTreeTableCellRenderer);
 
 		TableColumnModel model = downloadTable.getColumnModel();
 		for (int i = 0; i < columns.length; i++) {

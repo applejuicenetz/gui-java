@@ -4,9 +4,9 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import de.applejuicenet.client.gui.components.treetable.JTreeTable;
+import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.download.table.DownloadRootNode;
-import de.applejuicenet.client.gui.tables.JTreeTable;
-import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 
 public class DownloadTableMouseAdapter extends MouseAdapter{
 	

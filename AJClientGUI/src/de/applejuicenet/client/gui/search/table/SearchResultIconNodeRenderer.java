@@ -5,9 +5,9 @@ import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.JTree;
 
+import de.applejuicenet.client.gui.components.treetable.DefaultIconNodeRenderer;
+import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.download.table.IconGetter;
-import de.applejuicenet.client.gui.tables.DefaultIconNodeRenderer;
-import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 
 public class SearchResultIconNodeRenderer extends DefaultIconNodeRenderer{

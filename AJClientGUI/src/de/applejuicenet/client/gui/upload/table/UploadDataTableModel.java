@@ -2,17 +2,17 @@ package de.applejuicenet.client.gui.upload.table;
 
 import java.util.Map;
 
+import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
+import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
-import de.applejuicenet.client.gui.tables.TreeTableModel;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.1 2004/10/28 15:02:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.2 2004/10/29 11:58:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

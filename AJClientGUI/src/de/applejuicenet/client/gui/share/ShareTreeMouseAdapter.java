@@ -12,11 +12,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.trees.share.DirectoryNode;
-import de.applejuicenet.client.gui.trees.share.DirectoryTree;
+import de.applejuicenet.client.gui.share.tree.DirectoryNode;
+import de.applejuicenet.client.gui.share.tree.DirectoryTree;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareTreeMouseAdapter.java,v 1.2 2004/10/15 13:34:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareTreeMouseAdapter.java,v 1.3 2004/10/29 11:58:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

@@ -5,11 +5,11 @@ import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.JTree;
 
+import de.applejuicenet.client.gui.components.treetable.DefaultIconNodeRenderer;
+import de.applejuicenet.client.gui.components.treetable.JTreeTable;
+import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.tables.DefaultIconNodeRenderer;
-import de.applejuicenet.client.gui.tables.JTreeTable;
-import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.upload.table.MainNode;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.dac.DownloadDO;

@@ -21,19 +21,19 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
+import de.applejuicenet.client.gui.components.table.NormalHeaderRenderer;
+import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.share.table.ShareModel;
 import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.gui.share.table.ShareTable;
-import de.applejuicenet.client.gui.tables.NormalHeaderRenderer;
-import de.applejuicenet.client.gui.trees.WaitNode;
-import de.applejuicenet.client.gui.trees.share.DirectoryTree;
-import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeCellRenderer;
+import de.applejuicenet.client.gui.share.tree.DirectoryTree;
+import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeCellRenderer;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.3 2004/10/15 13:39:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.4 2004/10/29 11:58:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

@@ -13,18 +13,18 @@ import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.trees.WaitNode;
-import de.applejuicenet.client.gui.trees.chooser.DirectoryChooserNode;
-import de.applejuicenet.client.gui.trees.chooser.
-    DirectoryChooserTreeCellRenderer;
-import de.applejuicenet.client.gui.trees.chooser.DirectoryChooserTreeModel;
+import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserNode;
+import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserTreeCellRenderer;
+import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserTreeModel;
 import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODDirectoryChooser.java,v 1.1 2004/10/28 14:57:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODDirectoryChooser.java,v 1.2 2004/10/29 11:58:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

@@ -6,10 +6,10 @@ import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceDropEvent;
 
-import de.applejuicenet.client.gui.tables.DefaultTreeTableCellRenderer;
-import de.applejuicenet.client.gui.tables.JTreeTable;
-import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
-import de.applejuicenet.client.shared.dnd.DndSourceAdapter;
+import de.applejuicenet.client.gui.components.dragndrop.DndSourceAdapter;
+import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRenderer;
+import de.applejuicenet.client.gui.components.treetable.JTreeTable;
+import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 
 public class ShareTable
     extends JTreeTable {
