@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.12 2004/12/03 17:31:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.13 2004/12/06 10:49:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -50,9 +50,9 @@ public class GetObjectXMLHolder
         size = Long.parseLong(e.getAttribute("size"));
         checksum = e.getAttribute("checksum");
         prioritaet = Integer.parseInt(e.getAttribute("priority"));
-        long lastAsked = Integer.parseInt(e.getAttribute("lastasked"));
-        long askCount = Integer.parseInt(e.getAttribute("askcount"));
-        long searchCount = Integer.parseInt(e.getAttribute("searchcount"));
+        long lastAsked = Long.parseLong(e.getAttribute("lastasked"));
+        long askCount = Long.parseLong(e.getAttribute("askcount"));
+        long searchCount = Long.parseLong(e.getAttribute("searchcount"));
         shareDO = new ShareDO(id_key, filename, shortfilename, size, checksum,
                               prioritaet, lastAsked, askCount, searchCount);
         return shareDO;
