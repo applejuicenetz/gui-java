@@ -1,9 +1,11 @@
 package de.applejuicenet.client.shared;
 
 import java.util.Vector;
+import java.util.HashMap;
+import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.4 2003/12/30 13:08:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +14,10 @@ import java.util.Vector;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
+ * Revision 1.4  2003/12/30 13:08:32  maj0r
+ * Suchanzeige korrigiert
+ * Es kann passieren, dass nicht alle gefundenen Suchergebnisse beim Core ankommen, die Ausgabe wurde entsprechend korrigiert.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -30,7 +36,7 @@ public class Search {
     private int offeneSuchen;
     private int gefundenDateien;
     private int durchsuchteClients;
-    private Vector searchEntries = new Vector();
+    private HashMap searchEntries = new HashMap();
 
     public static int currentSearchCount = 0;
 
@@ -75,20 +81,28 @@ public class Search {
     }
 
     public void addSearchEntry(SearchEntry searchEntry){
-        if (!searchEntries.contains(searchEntry)){
-            searchEntries.add(searchEntry);
+        MapSetStringKey key = new MapSetStringKey(searchEntry.getId());
+        if (!searchEntries.containsKey(key)){
+            searchEntries.put(key, searchEntry);
+        }
+        else{
+            SearchEntry searchEntryOld = (SearchEntry)searchEntries.get(key);
+            FileName[] fileNames = searchEntry.getFileNames();
+            for (int i=0; i<fileNames.length; i++){
+                searchEntryOld.addFileName(fileNames[i]);
+            }
         }
     }
 
     public SearchEntry[] getSearchEntries(){
-        return (SearchEntry[]) searchEntries.toArray(new SearchEntry[searchEntries.size()]);
+        return (SearchEntry[]) searchEntries.values().toArray(new SearchEntry[searchEntries.size()]);
     }
 
     public class SearchEntry{
         private int id;
         private String checksumme;
         private long groesse;
-        private Vector fileNames = new Vector();
+        private HashMap fileNames = new HashMap();
 
         public SearchEntry(int id, String checksumme, long groesse) {
             this.id = id;
@@ -109,13 +123,18 @@ public class Search {
         }
 
         public void addFileName(FileName fileName){
-            if (!fileNames.contains(fileName)){
-                fileNames.add(fileName);
+            MapSetStringKey key = new MapSetStringKey(fileName.getDateiName());
+            if (!fileNames.containsKey(key)){
+                fileNames.put(key, fileName);
+            }
+            else{
+                FileName fileNameOld = (FileName)fileNames.get(key);
+                fileNameOld.setHaeufigkeit(fileName.getHaeufigkeit());
             }
         }
 
         public FileName[] getFileNames(){
-            return (FileName[]) fileNames.toArray(new FileName[fileNames.size()]);
+            return (FileName[]) fileNames.values().toArray(new FileName[fileNames.size()]);
         }
 
         public class FileName{
@@ -133,6 +152,10 @@ public class Search {
 
             public int getHaeufigkeit() {
                 return haeufigkeit;
+            }
+
+            public void setHaeufigkeit(int haeufigkeit){
+                this.haeufigkeit = haeufigkeit;
             }
         }
     }

@@ -18,9 +18,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import de.applejuicenet.client.shared.Search.SearchEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.7 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.8 2003/12/30 13:08:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +30,10 @@ import java.awt.event.ActionEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.8  2003/12/30 13:08:32  maj0r
+ * Suchanzeige korrigiert
+ * Es kann passieren, dass nicht alle gefundenen Suchergebnisse beim Core ankommen, die Ausgabe wurde entsprechend korrigiert.
+ *
  * Revision 1.7  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -74,6 +79,7 @@ public class SearchResultPanel extends JPanel{
     private JMenuItem item1 = new JMenuItem();
     private boolean activeSearch = true;
     private SearchPanel parentSearchPanel;
+    private int searchHitsCount;
 
     public SearchResultPanel(Search aSearch, SearchPanel parent) {
         search = aSearch;
@@ -120,9 +126,7 @@ public class SearchResultPanel extends JPanel{
 
         popup.add(item1);
         setLayout(new BorderLayout());
-        label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
-        label2.setText(gefundeneDateien.replaceFirst("%i", Integer.toString(search.getGefundenDateien())));
-        label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
+        updateZahlen();
         tableModel = new SearchResultTableModel(search);
         searchResultTable = new JTreeTable(tableModel);
         searchResultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -225,14 +229,23 @@ public class SearchResultPanel extends JPanel{
     public void updateSearchContent(){
         try{
             searchResultTable.updateUI();
-            label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
-            label2.setText(gefundeneDateien.replaceFirst("%i", Integer.toString(search.getGefundenDateien())));
-            label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
+            updateZahlen();
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
+    }
+
+    private void updateZahlen(){
+        SearchEntry[] searchEntries = search.getSearchEntries();
+        searchHitsCount = 0;
+        for (int i=0; i<searchEntries.length; i++){
+            searchHitsCount += searchEntries[i].getFileNames().length;
+        }
+        label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
+        label2.setText(gefundeneDateien.replaceFirst("%i", Integer.toString(searchHitsCount)));
+        label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
     }
 
     public void aendereSprache(){
