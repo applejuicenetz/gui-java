@@ -61,7 +61,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.JCheckBoxMenuItem;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.84 2004/01/12 13:09:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.85 2004/01/20 12:45:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -70,6 +70,9 @@ import javax.swing.JCheckBoxMenuItem;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.85  2004/01/20 12:45:32  maj0r
+ * Spaltenposition wird jetzt gespeichert.
+ *
  * Revision 1.84  2004/01/12 13:09:11  maj0r
  * Bug #77 gefixt (Danke an spam_blocker)
  * Selektionsproblem der Downloadtabelle beim Entfernen von fertigen Downloads behoben.
@@ -645,10 +648,22 @@ public class DownloadPanel
                     if (columnPopupItems[x].isSelected()){
                         downloadTable.getColumnModel().addColumn(columns[x]);
                         PropertiesManager.getPositionManager().setDownloadColumnVisible(x, true);
+                        PropertiesManager.getPositionManager().setDownloadColumnIndex(
+                            x, downloadTable.getColumnModel().getColumnIndex(columns[x].getIdentifier()));
                     }
                     else{
                         downloadTable.getColumnModel().removeColumn(columns[x]);
                         PropertiesManager.getPositionManager().setDownloadColumnVisible(x, false);
+                        for (int i=0; i<columns.length; i++){
+                            try{
+                                PropertiesManager.getPositionManager().setDownloadColumnIndex(
+                                    i, downloadTable.getColumnModel().getColumnIndex(columns[i].getIdentifier()));
+                            }
+                            catch (IllegalArgumentException niaE)
+                            {
+                                //nix zu tun
+                            }
+                        }
                     }
                 }
             });
@@ -675,7 +690,6 @@ public class DownloadPanel
         downloadTable.getColumnModel().getColumn(9).setCellRenderer(new
             DownloadTableVersionCellRenderer());
         JTableHeader header = downloadTable.getTableHeader();
-//        header.addMouseMotionListener(new HeaderDragListener(header));
 
         btnStartDownload.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -843,7 +857,21 @@ public class DownloadPanel
         }
         header.addMouseListener(new SortMouseAdapter(header, renderer2));
         header.addMouseListener(new HeaderPopupListener());
-
+        header.addMouseMotionListener(new MouseMotionAdapter(){
+            public void mouseDragged(MouseEvent e){
+                PositionManager pm = PropertiesManager.getPositionManager();
+                TableColumnModel columnModel = downloadTable.getColumnModel();
+                for (int i=0; i<columns.length; i++){
+                    try{
+                        pm.setDownloadColumnIndex(i, columnModel.getColumnIndex(columns[i].getIdentifier()));
+                    }
+                    catch (IllegalArgumentException niaE)
+                    {
+                        //nix zu tun
+                    }
+                }
+            }
+        });
         downloadTable.setSelectionMode(ListSelectionModel.
                                        MULTIPLE_INTERVAL_SELECTION);
 
@@ -918,10 +946,24 @@ public class DownloadPanel
                 if (pm.isLegal()) {
                     int[] widths = pm.getDownloadWidths();
                     boolean[] visibilies = pm.getDownloadColumnVisibilities();
+                    int[] indizes = pm.getDownloadColumnIndizes();
+                    ArrayList visibleColumns = new ArrayList();
                     for (int i = 0; i < columns.length; i++) {
                         columns[i].setPreferredWidth(widths[i]);
-                        if (!visibilies[i]){
-                            downloadTable.removeColumn(columns[i]);
+                        downloadTable.removeColumn(columns[i]);
+                        if (visibilies[i]){
+                            visibleColumns.add(columns[i]);
+                        }
+                    }
+                    int pos = -1;
+                    for (int i = 0; i < visibleColumns.size(); i++) {
+                        for (int x = 0; x < columns.length; x++) {
+                            if (visibleColumns.contains(columns[x])
+                                && indizes[x] == pos +1){
+                                downloadTable.addColumn(columns[x]);
+                                pos ++;
+                                break;
+                            }
                         }
                     }
                 }
