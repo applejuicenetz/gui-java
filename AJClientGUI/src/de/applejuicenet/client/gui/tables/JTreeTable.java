@@ -4,24 +4,24 @@ import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.tables.AbstractCellEditor;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.Settings;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 import javax.swing.table.*;
 
-import java.awt.Dimension;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 
 import java.awt.event.MouseEvent;
 
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.8 2003/08/12 06:12:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.9 2003/08/16 17:50:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,10 @@ import java.util.EventObject;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.9  2003/08/16 17:50:31  maj0r
+ * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
+ * DownloaduebersichtTabelle kann deaktiviert werden.
+ *
  * Revision 1.8  2003/08/12 06:12:05  maj0r
  * Fertig-Status-Farbe korrigiert.
  *
@@ -51,7 +55,7 @@ import java.util.EventObject;
  *
  */
 
-public class JTreeTable extends JTable {
+public class JTreeTable extends JTable{
     //todo
     //wenn Spalten vergroessert werden, sollte ein ScrollBar erscheinen
     protected TreeTableCellRenderer tree;
@@ -109,13 +113,16 @@ public class JTreeTable extends JTable {
     }
 
     public class TreeTableCellRenderer extends JTree implements
-            TableCellRenderer {
+            TableCellRenderer, DataUpdateListener {
 
 	protected int visibleRow;
+    private Settings settings;
 
 	public TreeTableCellRenderer(TreeModel model) {
 	    super(model);
+        settings = Settings.getSettings();
         this.setCellRenderer(new IconNodeRenderer());
+        OptionsManager.getInstance().addSettingsListener(this);
 	}
 
 	public void updateUI() {
@@ -159,13 +166,13 @@ public class JTreeTable extends JTable {
 	    if(isSelected)
     		setBackground(table.getSelectionBackground());
 	    else{
-            if (node instanceof DownloadNode ){
+            if (node instanceof DownloadNode && settings.isFarbenAktiv()){
                 if (((DownloadNode)node).getNodeType()==DownloadNode.SOURCE_NODE){
-                    setBackground(DownloadNode.SOURCE_NODE_COLOR);
+                    setBackground(settings.getQuelleHintergrundColor());
                 }
                 else if (((DownloadNode)node).getNodeType()==DownloadNode.DOWNLOAD_NODE &&
                     ((DownloadNode)node).getDownloadDO().getStatus()==DownloadDO.FERTIG){
-                      setBackground(DownloadNode.DOWNLOAD_FERTIG_COLOR);
+                      setBackground(settings.getDownloadFertigHintergrundColor());
                 }
                 else{
                     setBackground(table.getBackground());
@@ -178,6 +185,12 @@ public class JTreeTable extends JTable {
 	    visibleRow = row;
 	    return this;
 	}
+
+        public void fireContentChanged(int type, Object content) {
+            if (type==DataUpdateListener.SETTINGS_CHANGED){
+                settings = (Settings) content;
+            }
+        }
     }
 
 
@@ -275,7 +288,15 @@ public class JTreeTable extends JTable {
     }
 
   public class IconNodeRenderer
-      extends DefaultTreeCellRenderer {
+      extends DefaultTreeCellRenderer implements DataUpdateListener{
+
+    private Settings settings;
+
+    public IconNodeRenderer(){
+        super();
+        settings = Settings.getSettings();
+        OptionsManager.getInstance().addSettingsListener(this);
+    }
 
     public Component getTreeCellRendererComponent(JTree tree, Object value,
                                                   boolean sel, boolean expanded,
@@ -291,13 +312,13 @@ public class JTreeTable extends JTable {
               ((JLabel)c).setForeground(thisTable.getSelectionForeground());
           }
           else{
-              if (value instanceof DownloadNode){
+              if (value instanceof DownloadNode && settings.isFarbenAktiv()){
                   if (((DownloadNode)value).getNodeType()==DownloadNode.SOURCE_NODE){
-                      ((JLabel)c).setBackground(DownloadNode.SOURCE_NODE_COLOR);
+                      ((JLabel)c).setBackground(settings.getQuelleHintergrundColor());
                   }
                   else if (((DownloadNode)value).getNodeType()==DownloadNode.DOWNLOAD_NODE &&
-                      ((DownloadNode)value).getDownloadDO().getStatus()==DownloadDO.FERTIGSTELLEN){
-                        ((JLabel)c).setBackground(DownloadNode.DOWNLOAD_FERTIG_COLOR);
+                      ((DownloadNode)value).getDownloadDO().getStatus()==DownloadDO.FERTIG){
+                        ((JLabel)c).setBackground(settings.getDownloadFertigHintergrundColor());
                   }
                   else{
                       ((JLabel)c).setBackground(tree.getBackground());
@@ -311,5 +332,11 @@ public class JTreeTable extends JTable {
       }
       return this;
     }
+
+      public void fireContentChanged(int type, Object content) {
+          if (type == DataUpdateListener.SETTINGS_CHANGED){
+              settings = (Settings) content;
+          }
+      }
   }
 }

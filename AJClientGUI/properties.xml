@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
     <options sprache="deutsch">
-        <remote host="server" passwort="7693f04a7d3223cd2f5ad0506b86d089"/>
+        <remote host="localhost" passwort=""/>
         <logging level="INFO"/>
+        <download uebersicht="true"/>
+        <farben aktiv="true">
+            <hintergrund downloadFertig="-13382656" quelle="-205"/>
+        </farben>
     </options>
 </root>

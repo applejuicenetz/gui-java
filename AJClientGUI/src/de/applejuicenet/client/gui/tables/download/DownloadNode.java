@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.8 2003/08/15 14:45:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.9 2003/08/16 17:50:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,10 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadNode.java,v $
+ * Revision 1.9  2003/08/16 17:50:42  maj0r
+ * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
+ * DownloaduebersichtTabelle kann deaktiviert werden.
+ *
  * Revision 1.8  2003/08/15 14:45:08  maj0r
  * Refactoring.
  *
@@ -66,9 +70,6 @@ public class DownloadNode implements Node {
   public static final int DIRECTORY_NODE = 1;
   public static final int DOWNLOAD_NODE = 2;
   public static final int SOURCE_NODE = 3;
-
-  public static final Color SOURCE_NODE_COLOR = new Color(255, 255, 150);
-  public static final Color DOWNLOAD_FERTIG_COLOR = Color.GREEN;
 
   private int nodetype;
 

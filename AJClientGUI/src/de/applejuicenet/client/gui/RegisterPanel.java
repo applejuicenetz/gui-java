@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.19 2003/07/08 20:28:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.20 2003/08/16 17:49:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.20  2003/08/16 17:49:56  maj0r
+ * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
+ * DownloaduebersichtTabelle kann deaktiviert werden.
+ *
  * Revision 1.19  2003/07/08 20:28:23  maj0r
  * Logger eingefügt.
  *
@@ -106,11 +110,13 @@ public class RegisterPanel
     String[] tempListe = pluginPath.list();
     PluginJarClassLoader jarLoader = null;
     for (int i = 0; i < tempListe.length; i++) {
-      if (tempListe[i].indexOf(".jar") != -1) {
+      int pos = tempListe[i].indexOf(".jar");
+      if (pos != -1) {
         URL url = null;
         try {
           url = new URL("file://" + path + tempListe[i]);
-          jarLoader = new PluginJarClassLoader(url);
+          String className = tempListe[i].substring(0, pos);
+          jarLoader = new PluginJarClassLoader(url, className);
           PluginConnector aPlugin = jarLoader.getPlugin();
           if (aPlugin != null) {
             if (aPlugin.istReiter()) {

@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.19 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.20 2003/08/16 17:50:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,10 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.20  2003/08/16 17:50:06  maj0r
+ * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
+ * DownloaduebersichtTabelle kann deaktiviert werden.
+ *
  * Revision 1.19  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -153,6 +157,11 @@ public class ModifiedXMLHolder
   }
 
   private String creditsUmrechnen(long bytes) {
+    boolean minus = false;
+    if (bytes<0){
+        minus = true;
+        bytes *= -1;
+    }
     if (bytes == 0) {
       return "0 MB";
     }
@@ -171,6 +180,9 @@ public class ModifiedXMLHolder
     }
     else {
       faktor = 1099511627776l;
+    }
+    if (minus){
+        bytes *= -1;
     }
     double umgerechnet = (double)bytes / (double)faktor;
     String result = Double.toString(umgerechnet);

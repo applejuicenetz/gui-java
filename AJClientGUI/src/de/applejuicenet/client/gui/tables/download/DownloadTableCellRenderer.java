@@ -8,9 +8,11 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.controller.OptionsManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.10 2003/08/11 19:42:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.11 2003/08/16 17:50:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +21,10 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.11  2003/08/16 17:50:42  maj0r
+ * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
+ * DownloaduebersichtTabelle kann deaktiviert werden.
+ *
  * Revision 1.10  2003/08/11 19:42:51  maj0r
  * Fertig-Status-Farbe korrigiert.
  *
@@ -56,7 +62,16 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  */
 
 public class DownloadTableCellRenderer
-    implements TableCellRenderer {
+    implements TableCellRenderer, DataUpdateListener {
+
+    private Settings settings;
+
+    public DownloadTableCellRenderer(){
+        super();
+        settings = Settings.getSettings();
+        OptionsManager.getInstance().addSettingsListener(this);
+    }
+
   public Component getTableCellRendererComponent(JTable table,
                                                  Object value,
                                                  boolean isSelected,
@@ -119,8 +134,8 @@ public class DownloadTableCellRenderer
         label1.setForeground(table.getSelectionForeground());
       }
       else {
-          if (downloadDO.getStatus()==DownloadDO.FERTIG)
-            label1.setBackground(DownloadNode.DOWNLOAD_FERTIG_COLOR);
+          if (downloadDO.getStatus()==DownloadDO.FERTIG && settings.isFarbenAktiv())
+            label1.setBackground(settings.getDownloadFertigHintergrundColor());
           else
             label1.setBackground(table.getBackground());
           label1.setForeground(table.getForeground());
@@ -136,7 +151,6 @@ public class DownloadTableCellRenderer
                                                    int row,
                                                    int column){
         DownloadSourceDO downloadSourceDO = node.getDownloadSourceDO();
-        Color background = DownloadNode.SOURCE_NODE_COLOR;
         Color foreground = table.getForeground();
         if (column == 6) {
             String prozent = downloadSourceDO.getDownloadPercentAsString();
@@ -166,8 +180,14 @@ public class DownloadTableCellRenderer
             versionText.setBackground(table.getSelectionForeground());
           }
           else {
-            returnPanel.setBackground(background);
-            returnPanel.setForeground(foreground);
+            if (settings.isFarbenAktiv()){
+                returnPanel.setBackground(settings.getQuelleHintergrundColor());
+                returnPanel.setForeground(foreground);
+            }
+            else{
+                returnPanel.setBackground(table.getBackground());
+                returnPanel.setForeground(table.getForeground());
+            }
             image.setBackground(table.getBackground());
             versionText.setBackground(table.getBackground());
             image.setForeground(table.getForeground());
@@ -196,7 +216,10 @@ public class DownloadTableCellRenderer
           label1.setForeground(table.getSelectionForeground());
         }
         else {
-          label1.setBackground(background);
+          if (settings.isFarbenAktiv())
+              label1.setBackground(settings.getQuelleHintergrundColor());
+          else
+              label1.setBackground(table.getBackground());
           label1.setForeground(foreground);
         }
         return label1;
@@ -224,4 +247,9 @@ public class DownloadTableCellRenderer
         return label1;
     }
 
+    public void fireContentChanged(int type, Object content) {
+        if (type == DataUpdateListener.SETTINGS_CHANGED){
+            settings = (Settings) content;
+        }
+    }
 }

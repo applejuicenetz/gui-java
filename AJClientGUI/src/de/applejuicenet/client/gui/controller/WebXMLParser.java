@@ -1,6 +1,7 @@
 package de.applejuicenet.client.gui.controller;
 
 import java.io.*;
+import java.net.URLDecoder;
 import javax.xml.parsers.*;
 
 import org.xml.sax.*;
@@ -11,7 +12,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.7 2003/08/15 17:53:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.8 2003/08/16 17:50:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,10 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.8  2003/08/16 17:50:06  maj0r
+ * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
+ * DownloaduebersichtTabelle kann deaktiviert werden.
+ *
  * Revision 1.7  2003/08/15 17:53:54  maj0r
  * Tree fuer Shareauswahl fortgefuehrt, aber noch nicht fertiggestellt.
  *
@@ -107,6 +112,10 @@ public abstract class WebXMLParser
         DocumentBuilderFactory.newInstance();
     try {
       DocumentBuilder builder = factory.newDocumentBuilder();
+      //todo
+      //was sind das fuer beschissene Zeichen??
+      xmlData = xmlData.replaceAll("&#8;", "");
+      xmlData = xmlData.replaceAll("&#12;", "");
       document = builder.parse(new InputSource(new StringReader(xmlData)));
       if (!firstRun) {
         if (useTimestamp) {

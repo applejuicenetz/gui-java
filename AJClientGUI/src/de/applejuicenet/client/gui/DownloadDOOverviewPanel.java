@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.6 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.7 2003/08/16 17:49:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.7  2003/08/16 17:49:55  maj0r
+ * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
+ * DownloaduebersichtTabelle kann deaktiviert werden.
+ *
  * Revision 1.6  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -35,14 +39,17 @@ package de.applejuicenet.client.gui;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
+public class DownloadDOOverviewPanel extends JPanel implements LanguageListener, DataUpdateListener{
     private DownloadDO downloadDO = null;
     private JPanel actualDlOverviewTable = new JPanel();
     private JLabel actualDLDateiName = new JLabel();
@@ -50,10 +57,13 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
     private JLabel label3 = new JLabel("Nicht vorhanden");
     private JLabel label2 = new JLabel("In Ordnung");
     private JLabel label1 = new JLabel("Überprüft");
+    private Settings settings;
 
     public DownloadDOOverviewPanel() {
         init();
+        settings = Settings.getSettings();
         LanguageSelector.getInstance().addLanguageListener(this);
+        OptionsManager.getInstance().addSettingsListener(this);
     }
 
     private void init() {
@@ -90,7 +100,10 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
     }
 
     public void setDownloadDO(DownloadDO downloadDO) {
-        if (this.downloadDO != downloadDO)
+        if (!settings.isDownloadUebersicht()){
+            remove(actualDlOverviewTable);
+        }
+        else if (this.downloadDO != downloadDO)
         {
             this.downloadDO = downloadDO;
             PartListDO partListDO = ApplejuiceFassade.getInstance().getDownloadPartList(downloadDO);
@@ -208,5 +221,11 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
                 getFirstAttrbuteByTagName(new String[]{"mainform", "Label2", "caption"})));
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[]{"mainform", "Label1", "caption"})));
+    }
+
+    public void fireContentChanged(int type, Object content) {
+        if (type == DataUpdateListener.SETTINGS_CHANGED){
+            settings = (Settings) content;
+        }
     }
 }
