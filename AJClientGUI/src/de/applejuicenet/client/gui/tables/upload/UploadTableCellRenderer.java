@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadTableCellRenderer.java,v 1.1 2003/08/09 10:57:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadTableCellRenderer.java,v 1.2 2003/08/11 14:42:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadTableCellRenderer.java,v $
+ * Revision 1.2  2003/08/11 14:42:13  maj0r
+ * Versions-Icon-Beschaffung in die Klasse Version verschoben.
+ *
  * Revision 1.1  2003/08/09 10:57:14  maj0r
  * UploadTabelle weitergeführt.
  *
@@ -100,23 +103,7 @@ public class UploadTableCellRenderer
                     return returnPanel;
                 }
                 else {
-                    switch (uploadDO.getVersion().getBetriebsSystem()) {
-                        case Version.WIN32:
-                            {
-                                image.setIcon(IconManager.getInstance().getIcon("winsymbol"));
-                                break;
-                            }
-                        case Version.LINUX:
-                            {
-                                image.setIcon(IconManager.getInstance().getIcon("linuxsymbol"));
-                                break;
-                            }
-                        default:
-                            {
-                                image.setIcon(IconManager.getInstance().getIcon("linuxsymbol"));
-                            }
-
-                    }
+                    image.setIcon(uploadDO.getVersion().getVersionIcon());
                 }
                 serverName.setText("  " + uploadDO.getVersion().getVersion());
                 serverName.setFont(table.getFont());

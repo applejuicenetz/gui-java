@@ -1,7 +1,9 @@
 package de.applejuicenet.client.shared;
 
+import javax.swing.*;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.9 2003/08/04 14:28:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.10 2003/08/11 14:42:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +12,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Version.java,v $
+ * Revision 1.10  2003/08/11 14:42:13  maj0r
+ * Versions-Icon-Beschaffung in die Klasse Version verschoben.
+ *
  * Revision 1.9  2003/08/04 14:28:55  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -27,7 +32,7 @@ public class Version {
   public static final int WIN32 = 1;
   public static final int LINUX = 2;
   public static final int MACINTOSH = 3;
-  public static final int SOLRAIS = 4;
+  public static final int SOLARIS = 4;
   public static final int OS2 = 5;
   public static final int FREEBSD = 6;
   public static final int NETWARE = 7;
@@ -79,5 +84,34 @@ public class Version {
       result = LINUX;
     }
     return result;
+  }
+
+  public ImageIcon getVersionIcon(){
+      switch (betriebsSystem){
+          case Version.WIN32:
+              {
+                  return IconManager.getInstance().getIcon("winsymbol");
+              }
+          case Version.LINUX:
+              {
+                  return IconManager.getInstance().getIcon("linuxsymbol");
+              }
+          case Version.FREEBSD:
+              {
+                  return IconManager.getInstance().getIcon("freebsdsymbol");
+              }
+          case Version.MACINTOSH:
+              {
+                  return IconManager.getInstance().getIcon("macsymbol");
+              }
+          case Version.SOLARIS:
+              {
+                  return IconManager.getInstance().getIcon("sunossymbol");
+              }
+          default:
+              {
+                  return IconManager.getInstance().getIcon("unbekanntsymbol");
+              }
+      }
   }
 }

@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.8 2003/08/10 21:08:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.9 2003/08/11 14:42:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.9  2003/08/11 14:42:13  maj0r
+ * Versions-Icon-Beschaffung in die Klasse Version verschoben.
+ *
  * Revision 1.8  2003/08/10 21:08:18  maj0r
  * Diverse Änderungen.
  *
@@ -172,23 +175,7 @@ public class DownloadTableCellRenderer
             return returnPanel;
           }
           else {
-              switch (downloadSourceDO.getVersion().getBetriebsSystem()){
-                  case Version.WIN32:
-                      {
-                          image.setIcon(IconManager.getInstance().getIcon("winsymbol"));
-                          break;
-                      }
-                  case Version.LINUX:
-                      {
-                          image.setIcon(IconManager.getInstance().getIcon("linuxsymbol"));
-                          break;
-                      }
-                  default:
-                      {
-                          image.setIcon(IconManager.getInstance().getIcon("linuxsymbol"));
-                      }
-
-              }
+            image.setIcon(downloadSourceDO.getVersion().getVersionIcon());
           }
           versionText.setText("  " + downloadSourceDO.getVersion().getVersion());
           versionText.setFont(table.getFont());
