@@ -15,11 +15,9 @@ import javax.swing.JPanel;
 
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/IncomingDirSelectionDialog.java,v 1.4 2004/04/05 10:09:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/IncomingDirSelectionDialog.java,v 1.5 2004/06/17 09:57:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +26,9 @@ import java.awt.event.KeyEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: IncomingDirSelectionDialog.java,v $
+ * Revision 1.5  2004/06/17 09:57:53  maj0r
+ * Unnoetige Imports entfernt.
+ *
  * Revision 1.4  2004/04/05 10:09:32  maj0r
  * [Maj0r] Dialog zur Eingabe eines Datei-Incoming-Verzeichnisses kann jetzt per <RET> bestaetigt werden.
  *
