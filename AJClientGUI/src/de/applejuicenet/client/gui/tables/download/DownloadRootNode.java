@@ -9,9 +9,10 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.HashSet;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.2 2003/09/02 19:29:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.3 2003/10/02 15:01:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.3  2003/10/02 15:01:00  maj0r
+ * Erste Version den Versteckens eingebaut.
+ *
  * Revision 1.2  2003/09/02 19:29:26  maj0r
  * Einige Stellen synchronisiert und Nullpointer behoben.
  * Version 0.21 beta.
@@ -33,8 +37,38 @@ import java.util.Iterator;
 public class DownloadRootNode implements Node, DownloadNode {
     private HashMap downloads;
 
-    HashMap childrenPath = new HashMap();
-    ArrayList children = new ArrayList();
+    private HashMap childrenPath = new HashMap();
+    private ArrayList children = new ArrayList();
+    private HashMap versteckteNodes = new HashMap();
+    private boolean versteckt = false;
+
+    public void verstecke(DownloadMainNode downloadMainNode, boolean hide){
+        if (downloadMainNode.getType()==DownloadMainNode.ROOT_NODE){
+            MapSetStringKey key = new MapSetStringKey(downloadMainNode.getDownloadDO().getId());
+            if (hide){
+                versteckteNodes.put(key, downloadMainNode);
+            }
+            else{
+                Object node = versteckteNodes.get(key);
+                versteckteNodes.remove(key);
+                children.add(node);
+            }
+        }
+    }
+
+    public void enableVerstecke(boolean verstecke){
+        versteckt = verstecke;
+        if (!versteckt){
+            Iterator it = versteckteNodes.values().iterator();
+            while (it.hasNext()){
+                children.add(it.next());
+            }
+        }
+    }
+
+    public boolean isVerstecktEnabled(){
+        return versteckt;
+    }
 
     public Object[] getChildren(){
         if (downloads==null)
@@ -49,7 +83,8 @@ public class DownloadRootNode implements Node, DownloadNode {
             for (int i=childCount-1; i>=0; i--){
                 obj = children.get(i);
                 if (obj.getClass()==DownloadMainNode.class){
-                    if (!downloads.containsKey(new MapSetStringKey(((DownloadMainNode)obj).getDownloadDO().getId()))){
+                    key = new MapSetStringKey(((DownloadMainNode)obj).getDownloadDO().getId());
+                    if (!downloads.containsKey(key) || (versteckt && versteckteNodes.containsKey(key))){
                         children.remove(i);
                     }
                 }
@@ -60,8 +95,11 @@ public class DownloadRootNode implements Node, DownloadNode {
             MapSetStringKey mapKey;
             while (it.hasNext()){
                 downloadDO = (DownloadDO)it.next();
-                pfad = downloadDO.getTargetDirectory();
                 mapKey = new MapSetStringKey(downloadDO.getId());
+                if (versteckt && versteckteNodes.containsKey(mapKey)){
+                    continue;
+                }
+                pfad = downloadDO.getTargetDirectory();
                 pathEntry = (PathEntry)childrenPath.get(mapKey);
                 if (pathEntry!=null){
                     if (pathEntry.getPfad().compareToIgnoreCase(pfad)!=0){ //geaenderter Download

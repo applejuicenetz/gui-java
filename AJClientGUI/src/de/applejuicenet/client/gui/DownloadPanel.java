@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.47 2003/10/01 14:45:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.48 2003/10/02 15:01:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.48  2003/10/02 15:01:00  maj0r
+ * Erste Version den Versteckens eingebaut.
+ *
  * Revision 1.47  2003/10/01 14:45:40  maj0r
  * Suche fortgesetzt.
  *
@@ -134,6 +137,8 @@ public class DownloadPanel
     private JMenuItem item4;
     private JMenuItem item5;
     private JMenuItem item6;
+    private JMenuItem item7;
+    private JMenuItem item8;
     private Logger logger;
 
     public DownloadPanel() {
@@ -163,6 +168,8 @@ public class DownloadPanel
         item4 = new JMenuItem("Umbenennen");
         item5 = new JMenuItem("Zielordner ändern");
         item6 = new JMenuItem("Fertige Übertragungen entfernen");
+        item7 = new JMenuItem("Download verstecken");
+        item8 = new JCheckBoxMenuItem("Versteckte Downloads anzeigen");
         //todo
         item4.setEnabled(false);
         item5.setEnabled(false);
@@ -172,6 +179,9 @@ public class DownloadPanel
         popup.add(item4);
         popup.add(item5);
         popup.add(item6);
+        popup.add(new JPopupMenu.Separator());
+        popup.add(item7);
+        popup.add(item8);
 
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -243,6 +253,29 @@ public class DownloadPanel
             }
         });
 
+        item7.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                Object[] selectedItems = getSelectedDownloadItems();
+                if (selectedItems != null && selectedItems.length != 0) {
+                    DownloadRootNode root = (DownloadRootNode) downloadModel.getRoot();
+                    for (int i = 0; i < selectedItems.length; i++) {
+                        if (selectedItems[i].getClass() == DownloadMainNode.class) {
+                            root.verstecke((DownloadMainNode)selectedItems[i], true);
+                        }
+                    }
+                    downloadTable.updateUI();
+                }
+            }
+        });
+
+        item8.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                DownloadRootNode root = (DownloadRootNode) downloadModel.getRoot();
+                root.enableVerstecke(!item8.isSelected());
+                downloadTable.updateUI();
+            }
+        });
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
@@ -282,6 +315,7 @@ public class DownloadPanel
                 startDownload();
             }
         });
+        aScrollPane = new JScrollPane(downloadTable);
         downloadTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
@@ -314,13 +348,13 @@ public class DownloadPanel
 
             private void maybeShowPopup(MouseEvent e) {
                 if (e.isPopupTrigger()) {
+                    DownloadRootNode root = (DownloadRootNode) downloadModel.getRoot();
+                    item8.setSelected(!root.isVerstecktEnabled());
                     popup.show(downloadTable, e.getX(), e.getY());
                 }
             }
         });
 
-        aScrollPane = new JScrollPane();
-        aScrollPane.getViewport().add(downloadTable);
         topPanel.add(aScrollPane, constraints);
 
         bottomPanel.add(powerDownloadPanel, BorderLayout.WEST);
