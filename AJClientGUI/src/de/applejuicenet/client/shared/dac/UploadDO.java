@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadColumnComponent;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.19 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.20 2004/05/24 08:31:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -208,7 +208,7 @@ public class UploadDO implements UploadColumnComponent{
         if (temp == 0.0) {
             return "0";
         }
-        temp = temp * 100 / getSize();
+        temp *= 100 / getSize();
         String result = Double.toString(temp);
         if (result.indexOf(".") + 3 < result.length()) {
             result = result.substring(0, result.indexOf(".") + 3);
@@ -227,13 +227,12 @@ public class UploadDO implements UploadColumnComponent{
         if (status == UploadDO.AKTIVE_UEBERTRAGUNG) {
             if (progressChanged){
                 String prozent = getDownloadPercentAsString();
-                int pos = prozent.indexOf('.');
-                String balken = prozent;
-                if (pos != -1) {
-                    balken = balken.substring(0, pos);
-                }
-                progress.setValue(Integer.parseInt(balken));
                 progress.setString(prozent + " %");
+                int pos = prozent.indexOf('.');
+                if (pos != -1) {
+                    prozent = prozent.substring(0, pos);
+                }
+                progress.setValue(Integer.parseInt(prozent));
                 progressChanged = false;
             }
             return progress;

@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.tables.download;
 
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -13,23 +14,34 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableVersionCellRenderer.java,v 1.5 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableVersionCellRenderer.java,v 1.6 2004/05/24 08:31:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
 public class DownloadTableVersionCellRenderer
     implements TableCellRenderer, DataUpdateListener {
+    private static Color background;
+    private static Color foreground;
+    private static Color selectionBackground;
+    private static Color selectionForeground;
+
+    static {
+        JTable tmpTable = new JTable();
+        foreground = tmpTable.getForeground();
+        background = tmpTable.getBackground();
+        selectionBackground = tmpTable.getSelectionBackground();
+        selectionForeground = tmpTable.getSelectionForeground();
+    }
 
     private Settings settings;
 
     public DownloadTableVersionCellRenderer() {
-        super();
         settings = Settings.getSettings();
         OptionsManagerImpl.getInstance().addSettingsListener(this);
     }
@@ -68,22 +80,22 @@ public class DownloadTableVersionCellRenderer
                                              boolean hasFocus,
                                              int row,
                                              int column) {
-        DownloadDO downloadDO = downloadMainNode.getDownloadDO();
         Component c = downloadMainNode.getVersionComponent(table, value);
         if (isSelected) {
-            c.setBackground(table.getSelectionBackground());
-            c.setForeground(table.getSelectionForeground());
+            c.setBackground(selectionBackground);
+            c.setForeground(selectionForeground);
         }
         else {
+            DownloadDO downloadDO = downloadMainNode.getDownloadDO();
             if (downloadMainNode.getType() == DownloadMainNode.ROOT_NODE &&
                 downloadDO.getStatus() == DownloadDO.FERTIG &&
                 settings.isFarbenAktiv()) {
                 c.setBackground(settings.getDownloadFertigHintergrundColor());
             }
             else {
-                c.setBackground(table.getBackground());
+                c.setBackground(background);
             }
-            c.setForeground(table.getForeground());
+            c.setForeground(foreground);
         }
         return c;
     }
@@ -97,16 +109,16 @@ public class DownloadTableVersionCellRenderer
                                            int column) {
         Component c = downloadSourceDO.getVersionComponent(table, value);
         if (isSelected) {
-            c.setBackground(table.getSelectionBackground());
-            c.setForeground(table.getSelectionForeground());
+            c.setBackground(selectionBackground);
+            c.setForeground(selectionForeground);
         }
         else {
-            c.setForeground(table.getForeground());
+            c.setForeground(foreground);
             if (settings.isFarbenAktiv()) {
                 c.setBackground(settings.getQuelleHintergrundColor());
             }
             else {
-                c.setBackground(table.getBackground());
+                c.setBackground(background);
             }
         }
         return c;
@@ -121,12 +133,12 @@ public class DownloadTableVersionCellRenderer
                                               int column) {
         Component c = downloadDirectoryNode.getVersionComponent(table, value);
         if (isSelected) {
-            c.setBackground(table.getSelectionBackground());
-            c.setForeground(table.getSelectionForeground());
+            c.setBackground(selectionBackground);
+            c.setForeground(selectionForeground);
         }
         else {
-            c.setBackground(table.getBackground());
-            c.setForeground(table.getForeground());
+            c.setBackground(background);
+            c.setForeground(foreground);
         }
         return c;
     }
