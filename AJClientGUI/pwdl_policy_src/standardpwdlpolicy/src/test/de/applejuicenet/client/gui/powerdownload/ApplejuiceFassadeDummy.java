@@ -23,13 +23,13 @@ public class ApplejuiceFassadeDummy extends ApplejuiceFassade
 
 	public ApplejuiceFassadeDummy(Map<String, Download> downloads) throws IllegalArgumentException
 	{
-		super("", Integer.MIN_VALUE, "", true);
+		super("", new Integer(Integer.MIN_VALUE), "", true);
 		snapshot = downloads;
 	}	
 
 	public ApplejuiceFassadeDummy() throws IllegalArgumentException
 	{
-		super("", Integer.MIN_VALUE, "", true);
+		super("", new Integer(Integer.MIN_VALUE), "", true);
 		snapshot = new HashMap();
 	}	
 
@@ -86,7 +86,7 @@ public class ApplejuiceFassadeDummy extends ApplejuiceFassade
 			Assert.assertNotNull(download);
 			Assert.assertEquals("Filename nicht gleich", cur.getFilename(), download.getFilename());
 			Assert.assertEquals("Status nicht gleich", cur.getStatus(), download.getStatus());
-			Assert.assertEquals("BereitsGeladen nicht gleich", cur.getProzentGeladen(), download.getProzentGeladen());
+			Assert.assertEquals("BereitsGeladen nicht gleich", cur.getProzentGeladen(), download.getProzentGeladen(), 0.00);
 			Assert.assertEquals("Powerdownload nicht gleich", cur.getPowerDownload(), download.getPowerDownload());
 			Assert.assertEquals("Groesse nicht gleich", cur.getGroesse(), download.getGroesse());
 			Assert.assertEquals("quellen nicht gleich", cur.getSources(), download.getSources());

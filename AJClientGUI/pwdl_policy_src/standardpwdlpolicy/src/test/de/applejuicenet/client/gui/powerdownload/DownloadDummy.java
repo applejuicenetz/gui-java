@@ -43,12 +43,12 @@ public class DownloadDummy implements Download
 
 	public DownloadDummy(int id, double prozentGeladen, int status, int powerdwl, int groesse, DownloadSource[] quellen)
 	{
-		this(id, "", prozentGeladen, status, powerdwl, groesse, quellen);
+		this(new Integer(id), "", prozentGeladen, status, powerdwl, groesse, quellen);
 	}
 
 	public DownloadDummy(int id, double prozentGeladen, int status, int powerdwl, int groesse)
 	{
-		this(id, "", prozentGeladen, status, powerdwl, groesse, null);
+		this(new Integer(id), "", prozentGeladen, status, powerdwl, groesse, null);
 	}
 
 	public DownloadDummy(int id, double prozentGeladen, int status, int powerdwl)
@@ -122,7 +122,7 @@ public class DownloadDummy implements Download
 
 	public int getId()
 	{
-		return id;
+		return id.intValue();
 	}
 
 	public int getTemporaryFileNumber()

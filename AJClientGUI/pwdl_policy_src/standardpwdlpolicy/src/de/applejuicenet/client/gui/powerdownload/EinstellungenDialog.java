@@ -174,7 +174,7 @@ public class EinstellungenDialog extends JDialog implements ActionListener
 			powerDownload = tempValue;
 		}
 		try {
-			anzahlDownloads = new Integer(tfPwdlCount.getText());
+			anzahlDownloads = Integer.parseInt(tfPwdlCount.getText());
 		}
 		catch (NumberFormatException e) {
 			returnValue = false;

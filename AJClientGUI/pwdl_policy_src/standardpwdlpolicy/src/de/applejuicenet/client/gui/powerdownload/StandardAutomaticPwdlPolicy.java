@@ -15,7 +15,7 @@ import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.16 2005/02/17 16:20:51 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.17 2005/02/17 22:22:21 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -103,7 +103,7 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
 
     private void setPowerDownload(List<Download> downloads2Start) throws IllegalArgumentException
 		{
-			applejuiceFassade.setPowerDownload(downloads2Start, pwdlValue);
+			applejuiceFassade.setPowerDownload(downloads2Start, new Integer(pwdlValue));
     	informedPowerdownload = pwdlValue;
     }
     
@@ -202,22 +202,22 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
     	private Double prozentGeladen;
     	private Long groesse;
     	private Integer id;
-    	private Integer quellenAnzahl = 0;
+    	private Integer quellenAnzahl = new Integer(0);
     	
     	public Sortierkriterium(Double prozentGeladen, Long groesse, Integer id, DownloadSource[] quellen) {
     		this.prozentGeladen = prozentGeladen;
     		this.groesse = groesse;
     		this.id = id;
-    		this.quellenAnzahl = quellen.length;
+    		this.quellenAnzahl = new Integer(quellen.length);
     	}
 
     	public Sortierkriterium(Download current)
 			{
     		this.prozentGeladen = new Double(current.getProzentGeladen());
-    		this.groesse = current.getGroesse();
-    		this.id = current.getId();
+    		this.groesse = new Long(current.getGroesse());
+    		this.id = new Integer(current.getId());
     		if (current.getSources() != null) {
-    			this.quellenAnzahl = current.getSources().length;
+    			this.quellenAnzahl = new Integer(current.getSources().length);
     		}
 			}
 
