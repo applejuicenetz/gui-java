@@ -23,6 +23,10 @@ public class DownloadModel
       TreeTableModel.class, String.class, String.class, String.class, String.class,
       String.class, String.class, String.class, String.class, String.class};
 
+  public void setNames(String[] names){
+    cNames = names;
+  }
+
   public DownloadModel() {
     super(new DownloadNode());
     DownloadSourceDO[] downloads = DataManager.getInstance().getDownloads();
@@ -138,8 +142,8 @@ class DownloadNode
     }
   }
 
-  public ImageIcon getConvenientIcon(boolean expanded) {
-    if (download == null) {
+  public Icon getConvenientIcon() {
+    if (children.size()!=0) {
       return rootIcon;
     }
     if (download.getIntStatus() == DownloadSourceDO.UEBERTRAGE) {

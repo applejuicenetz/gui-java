@@ -5,6 +5,7 @@ import javax.swing.JTree;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.tree.TreePath;
+import javax.swing.table.DefaultTableModel;
 
 public class TreeTableModelAdapter extends AbstractTableModel
 {

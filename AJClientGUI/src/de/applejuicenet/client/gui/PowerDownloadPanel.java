@@ -7,6 +7,10 @@ import java.awt.event.*;
 import javax.swing.*;
 import de.applejuicenet.client.gui.controller.DataManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -18,7 +22,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
  */
 
 public class PowerDownloadPanel
-    extends JPanel {
+    extends JPanel implements LanguageListener {
   GridBagLayout gridBagLayout1 = new GridBagLayout();
   private JRadioButton btnInaktiv = new JRadioButton();
   private JRadioButton btnAktiv = new JRadioButton();
@@ -30,8 +34,13 @@ public class PowerDownloadPanel
   private float ratioWert = 2.2f;
   private JTextField ratio = new JTextField("2.2");
   private JTextField autoAb = new JTextField();
-  JButton btnPdl = new JButton("Übernehmen");
-  JButton btnAutoPdl = new JButton("Übernehmen");
+  private JButton btnPdl = new JButton("Übernehmen");
+  private JButton btnAutoPdl = new JButton("Übernehmen");
+  private JLabel powerdownload = new JLabel("Powerdownload");
+  private JLabel label6 = new JLabel("Wieviel willst Du maximal für 1 Byte bezahlen?");
+  private JLabel label7 = new JLabel("Für 1 Byte zahle");
+  private JLabel label8 = new JLabel("Credits");
+
 
   public PowerDownloadPanel() {
     try {
@@ -44,6 +53,7 @@ public class PowerDownloadPanel
 
   private void jbInit() throws Exception {
     setLayout(new BorderLayout());
+    LanguageSelector.getInstance().addLanguageListener(this);
     JPanel backPanel = new JPanel();
     backPanel.setLayout(gridBagLayout1);
 
@@ -56,7 +66,6 @@ public class PowerDownloadPanel
     constraints.gridwidth = 3;
     JPanel tempPanel = new JPanel();
     tempPanel.setLayout(new BorderLayout());
-    JLabel powerdownload = new JLabel("Powerdownload");
     powerdownload.setForeground(Color.white);
     powerdownload.setOpaque(true);
     powerdownload.setBackground(Color.blue);
@@ -83,8 +92,7 @@ public class PowerDownloadPanel
     tempPanel.add(btnHint, BorderLayout.EAST);
     backPanel.add(tempPanel, constraints);
     constraints.gridy = 1;
-    backPanel.add(new JLabel("Wieviel willst Du maximal für 1 Byte bezahlen?"),
-                  constraints);
+    backPanel.add(label6, constraints);
     constraints.gridwidth = 1;
     constraints.gridy = 2;
     ButtonGroup buttonGroup = new ButtonGroup();
@@ -98,7 +106,7 @@ public class PowerDownloadPanel
     backPanel.add(btnAktiv, constraints);
     JPanel tempFlowPanel = new JPanel();
     tempFlowPanel.setLayout(new FlowLayout());
-    tempFlowPanel.add(new JLabel("Für 1 Byte zahle"));
+    tempFlowPanel.add(label7);
     url = getClass().getResource("upload.gif");
     ImageIcon icon2 = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
     btnPdlUp = new JLabel(icon2);
@@ -118,7 +126,7 @@ public class PowerDownloadPanel
     tempFlowPanel.add(btnPdlUp);
     tempFlowPanel.add(ratio);
     tempFlowPanel.add(btnPdlDown);
-    tempFlowPanel.add(new JLabel("Credits"));
+    tempFlowPanel.add(label8);
 
     constraints.gridy = 4;
     backPanel.add(tempFlowPanel, constraints);
@@ -211,5 +219,20 @@ public class PowerDownloadPanel
 
   void btnPdl_actionPerformed(ActionEvent e) {
     DataManager.getInstance().getDownloads();
+  }
+
+  public void fireLanguageChanged(){
+      try {
+        LanguageSelector languageSelector = LanguageSelector.getInstance();
+        powerdownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "powerdownload", "caption")));
+        label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label6", "caption")));
+        btnInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "powerinactive", "caption")));
+        btnAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "poweractive", "caption")));
+        label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label7", "caption")));
+        label8.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label8", "caption")));
+      }
+      catch (LanguageSelectorNotInstanciatedException ex) {
+        ex.printStackTrace();
+      }
   }
 }

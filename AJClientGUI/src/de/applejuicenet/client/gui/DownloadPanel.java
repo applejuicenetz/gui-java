@@ -14,6 +14,11 @@ import de.applejuicenet.client.shared.DownloadSourceDO;
 import java.util.HashSet;
 import de.applejuicenet.client.shared.Version;
 import de.applejuicenet.client.gui.tablerenderer.DownloadModel;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.exception.*;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -24,16 +29,24 @@ import de.applejuicenet.client.gui.tablerenderer.DownloadModel;
  * @version 1.0
  */
 
-public class DownloadPanel extends JPanel {
+public class DownloadPanel extends JPanel implements LanguageListener{
   private JTextField downloadLink = new JTextField();
   private JButton btnStartDownload = new JButton("Download");
   private PowerDownloadPanel powerDownloadPanel = new PowerDownloadPanel();
   private JTreeTable downloadTable;
   private JTable actualDlOverviewTable = new JTable();
+  private JLabel linkLabel = new JLabel("ajfsp-Link hinzufügen");
+  private DownloadModel downloadModel;
+  private JLabel label4 = new JLabel("Vorhanden");
+  private JLabel label3 = new JLabel("Nicht vorhanden");
+  private JLabel label2 = new JLabel("In Ordnung");
+  private JLabel label1 = new JLabel("Überprüft");
+
 
   public DownloadPanel() {
     try {
       jbInit();
+      LanguageSelector.getInstance().addLanguageListener(this);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -56,7 +69,7 @@ public class DownloadPanel extends JPanel {
     constraints.gridheight = 1;
     JPanel tempPanel = new JPanel();
     tempPanel.setLayout(new BorderLayout());
-    tempPanel.add(new JLabel("ajfsp-Link hinzufügen"), BorderLayout.WEST);
+    tempPanel.add(linkLabel, BorderLayout.WEST);
     tempPanel.add(downloadLink, BorderLayout.CENTER);
     tempPanel.add(btnStartDownload, BorderLayout.EAST);
     topPanel.add(tempPanel, constraints);
@@ -66,7 +79,8 @@ public class DownloadPanel extends JPanel {
     constraints.weighty = 1;
     constraints.weightx = 1;
 
-    downloadTable = new JTreeTable(new DownloadModel());
+    downloadModel = new DownloadModel();
+    downloadTable = new JTreeTable(downloadModel);
 
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(downloadTable);
@@ -79,25 +93,25 @@ public class DownloadPanel extends JPanel {
     blau.setOpaque(true);
     blau.setBackground(Color.blue);
     tempPanel1.add(blau);
-    tempPanel1.add(new JLabel("Vorhanden"));
+    tempPanel1.add(label4);
 
     JLabel red = new JLabel("     ");
     red.setOpaque(true);
     red.setBackground(Color.red);
     tempPanel1.add(red);
-    tempPanel1.add(new JLabel("Nicht vorhanden"));
+    tempPanel1.add(label3);
 
     JLabel black = new JLabel("     ");
     black.setOpaque(true);
     black.setBackground(Color.black);
     tempPanel1.add(black);
-    tempPanel1.add(new JLabel("In Ordnung"));
+    tempPanel1.add(label2);
 
     JLabel green = new JLabel("     ");
     green.setOpaque(true);
     green.setBackground(Color.green);
     tempPanel1.add(green);
-    tempPanel1.add(new JLabel("Überprüft"));
+    tempPanel1.add(label1);
 
     JPanel tempPanel2 = new JPanel();
     tempPanel2.setLayout(new BorderLayout());
@@ -107,5 +121,36 @@ public class DownloadPanel extends JPanel {
 
     add(topPanel, BorderLayout.CENTER);
     add(bottomPanel, BorderLayout.SOUTH);
+  }
+
+  public void fireLanguageChanged(){
+      try {
+        LanguageSelector languageSelector = LanguageSelector.getInstance();
+        String text = languageSelector.getFirstAttrbuteByTagName("mainform", "Label14", "caption");
+        linkLabel.setText(ZeichenErsetzer.korrigiereUmlaute(text));
+        btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "downlajfsp", "caption")));
+        btnStartDownload.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "downlajfsp", "hint")));
+        String[] tableColumns = new String[10];
+        tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col0caption"));
+        tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col1caption"));
+        tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col2caption"));
+        tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col3caption"));
+        tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col4caption"));
+        tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col5caption"));
+        tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col6caption"));
+        tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col7caption"));
+        tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col8caption"));
+        tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queue", "col9caption"));
+        //toDo
+        //Header muss aktualisiert werden
+
+        label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label4", "caption")));
+        label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label3", "caption")));
+        label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label2", "caption")));
+        label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "Label1", "caption")));
+      }
+      catch (LanguageSelectorNotInstanciatedException ex) {
+        ex.printStackTrace();
+      }
   }
 }

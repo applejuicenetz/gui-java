@@ -5,6 +5,10 @@ import java.net.URL;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -15,7 +19,7 @@ import javax.swing.ImageIcon;
  * @version 1.0
  */
 
-public class RegisterPanel extends JTabbedPane {
+public class RegisterPanel extends JTabbedPane implements LanguageListener{
   private StartPanel startPanel;
   private DownloadPanel downloadPanel;
   private SearchPanel searchPanel;
@@ -27,6 +31,11 @@ public class RegisterPanel extends JTabbedPane {
   }
 
   private void init() {
+    try {
+      LanguageSelector.getInstance().addLanguageListener(this);
+    }
+    catch (LanguageSelectorNotInstanciatedException ex) {
+    }
     startPanel = new StartPanel();
     downloadPanel = new DownloadPanel();
     uploadPanel = new UploadPanel();
@@ -62,5 +71,19 @@ public class RegisterPanel extends JTabbedPane {
     ImageIcon icon5 = new ImageIcon();
     icon5.setImage(img);
     addTab("Server", icon5, serverPanel);
+  }
+
+  public void fireLanguageChanged(){
+      try {
+        LanguageSelector languageSelector = LanguageSelector.getInstance();
+        setTitleAt(0, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "homesheet", "caption")));
+        setTitleAt(1, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "seachsheet", "caption")));
+        setTitleAt(2, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "queuesheet", "caption")));
+        setTitleAt(3, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "uploadsheet", "caption")));
+        setTitleAt(4, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform", "serversheet", "caption")));
+      }
+      catch (LanguageSelectorNotInstanciatedException ex) {
+        ex.printStackTrace();
+      }
   }
 }

@@ -3,6 +3,10 @@ package de.applejuicenet.client.gui;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
+import de.applejuicenet.client.gui.listener.LanguageListener;
 
 
 /**
@@ -14,10 +18,10 @@ import java.awt.FlowLayout;
  * @version 1.0
  */
 
-public class UploadPanel extends JPanel {
+public class UploadPanel extends JPanel implements LanguageListener{
   private JTable uploadDataTable;
   private int anzahlClients = 0;
-  private JLabel clients = new JLabel();
+  private JLabel label1 = new JLabel("0 Clients in Deiner Uploadliste");
 
   public UploadPanel() {
     try {
@@ -29,6 +33,7 @@ public class UploadPanel extends JPanel {
   }
   private void jbInit() throws Exception {
     setLayout(new BorderLayout());
+    LanguageSelector.getInstance().addLanguageListener(this);
     uploadDataTable = new JTable();
     uploadDataTable.setModel(new UploadDataTableModel());
     JScrollPane aScrollPane = new JScrollPane();
@@ -37,12 +42,24 @@ public class UploadPanel extends JPanel {
 
     JPanel panel = new JPanel();
     panel.setLayout(new FlowLayout());
-    clients.setText(Integer.toString(anzahlClients));
-    panel.add(clients);
-    panel.add(new JLabel(" Clients in Deiner Uploadliste"));
+    panel.add(label1);
     JPanel panel2 = new JPanel();
     panel2.setLayout(new BorderLayout());
     panel2.add(panel, BorderLayout.WEST);
     add(panel2, BorderLayout.SOUTH);
+  }
+
+  public void fireLanguageChanged() {
+    try {
+      LanguageSelector languageSelector = LanguageSelector.getInstance();
+
+      String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+          getFirstAttrbuteByTagName("mainform", "uplcounttext"));
+      temp = temp.replaceAll("%d", Integer.toString(anzahlClients));
+      label1.setText(temp);
+    }
+    catch (LanguageSelectorNotInstanciatedException ex) {
+      ex.printStackTrace();
+    }
   }
 }

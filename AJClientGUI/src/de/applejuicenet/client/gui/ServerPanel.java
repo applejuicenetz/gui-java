@@ -1,13 +1,13 @@
 package de.applejuicenet.client.gui;
 
-import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.*;
-import java.awt.Cursor;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
+import javax.swing.*;
 
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.exception.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -18,20 +18,25 @@ import java.awt.GridBagConstraints;
  * @version 1.0
  */
 
-public class ServerPanel extends JPanel {
+public class ServerPanel
+    extends JPanel
+    implements LanguageListener {
   private JTable serverTable;
+  private JLabel sucheServer = new JLabel(
+      "<html><font><u>mehr Server gibt es hier</u></font></html>");
 
   public ServerPanel() {
     try {
       jbInit();
     }
-    catch(Exception e) {
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
 
   private void jbInit() throws Exception {
     setLayout(new BorderLayout());
+    LanguageSelector.getInstance().addLanguageListener(this);
     JPanel panel1 = new JPanel();
     panel1.setLayout(new GridBagLayout());
     GridBagConstraints constraints = new GridBagConstraints();
@@ -40,15 +45,15 @@ public class ServerPanel extends JPanel {
     constraints.gridx = 0;
     constraints.gridy = 0;
 
-    JLabel sucheServer = new JLabel("<html><font><u>mehr Server gibt es hier</u></font></html>");
     sucheServer.setForeground(Color.blue);
-    sucheServer.addMouseListener(new MouseAdapter(){
-       public void mouseExited (MouseEvent e){
-           setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-       }
-       public void mouseEntered(MouseEvent e){
-         setCursor(new Cursor(Cursor.HAND_CURSOR));
-       }
+    sucheServer.addMouseListener(new MouseAdapter() {
+      public void mouseExited(MouseEvent e) {
+        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+      }
+
+      public void mouseEntered(MouseEvent e) {
+        setCursor(new Cursor(Cursor.HAND_CURSOR));
+      }
     });
     panel1.add(sucheServer, constraints);
     constraints.gridx = 1;
@@ -61,5 +66,18 @@ public class ServerPanel extends JPanel {
     aScrollPane.getViewport().add(serverTable);
     add(aScrollPane, BorderLayout.CENTER);
 
+  }
+
+  public void fireLanguageChanged() {
+    try {
+      LanguageSelector languageSelector = LanguageSelector.getInstance();
+      sucheServer.setText("<html><font><u>" +
+                          ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+          getFirstAttrbuteByTagName("mainform", "Label11", "caption")) +
+                          "</u></font></html>");
+    }
+    catch (LanguageSelectorNotInstanciatedException ex) {
+      ex.printStackTrace();
+    }
   }
 }

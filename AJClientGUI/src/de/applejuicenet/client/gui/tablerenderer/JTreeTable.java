@@ -6,11 +6,14 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.tree.*;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.controller.DataManager;
+
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.listener.*;
+import java.util.Hashtable;
 
 public class JTreeTable
-    extends JTable implements DataUpdateListener {
+    extends JTable
+    implements DataUpdateListener {
   protected TreeTableCellRenderer tree;
 
   public JTreeTable(TreeTableModel treeTableModel) {
@@ -35,7 +38,7 @@ public class JTreeTable
     DataManager.getInstance().addDownloadListener(this);
   }
 
-  public void fireContentChanged(){
+  public void fireContentChanged() {
     repaint();
   }
 
@@ -53,6 +56,7 @@ public class JTreeTable
     public TreeTableCellRenderer(TreeModel model) {
       super(model);
       this.setRootVisible(false);
+      this.setCellRenderer(new IconNodeRenderer());
     }
 
     public void setBounds(int x, int y, int w, int h) {
@@ -88,6 +92,24 @@ public class JTreeTable
                                                  boolean isSelected, int r,
                                                  int c) {
       return tree;
+    }
+  }
+
+  public class IconNodeRenderer
+      extends DefaultTreeCellRenderer {
+
+    public Component getTreeCellRendererComponent(JTree tree, Object value,
+                                                  boolean sel, boolean expanded,
+                                                  boolean leaf,
+                                                  int row, boolean hasFocus) {
+
+      super.getTreeCellRendererComponent(tree, value,
+                                         sel, expanded, leaf, row, hasFocus);
+
+      Icon icon = ((DownloadNode)value).getConvenientIcon();
+      if (icon!=null)
+        setIcon(icon);
+      return this;
     }
   }
 
