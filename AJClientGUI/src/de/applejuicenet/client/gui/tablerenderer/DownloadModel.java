@@ -1,155 +1,183 @@
 package de.applejuicenet.client.gui.tablerenderer;
 
-import java.io.File;
-import java.util.Date;
-import javax.swing.tree.DefaultMutableTreeNode;
-import de.applejuicenet.client.shared.DownloadDO;
-import java.util.HashSet;
+import java.net.*;
+import java.util.*;
 
-/**
- * FileSystemModel is a TreeTableModel representing a hierarchical file
- * system. Nodes in the FileSystemModel are FileNodes which, when they
- * are directory nodes, cache their children to avoid repeatedly querying
- * the real file system.
- *
- * @version %I% %G%
- *
- * @author Philip Milne
- * @author Scott Violet
- */
+import javax.swing.*;
+import javax.swing.tree.*;
 
-public class DownloadModel extends AbstractTreeTableModel
-                             implements TreeTableModel {
+import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.gui.listener.DownloadListener;
+import de.applejuicenet.client.gui.controller.DataManager;
 
-    // Names of the columns.
-    static protected String[]  cNames = {"Name", "Size", "Type", "Modified"};
+public class DownloadModel
+    extends AbstractTreeTableModel
+    implements TreeTableModel, DownloadListener {
 
-    // Types of the columns.
-    static protected Class[]  cTypes = {TreeTableModel.class, Integer.class, String.class, Date.class};
+  static protected String[] cNames = {
+      "Dateiname", "Status", "Größe", "Bereits geladen", "Prozent geladen",
+      "Noch zu laden", "Geschwindigkeit", "Restzeit", "Powerdownload", "Client"};
 
-    // The the returned file length for directories.
-    public static final Integer ZERO = new Integer(0);
+  static protected Class[] cTypes = {
+      TreeTableModel.class, String.class, String.class, String.class, String.class,
+      String.class, String.class, String.class, String.class, String.class};
 
-    public DownloadModel(DownloadDO downloads) {
-	super(new DownloadNode(downloads));
+  public DownloadModel(DownloadDO[] downloads) {
+    super(new DownloadNode());
+    for (int i = 0; i < downloads.length; i++) {
+      ( (DownloadNode) getRoot()).addChild(downloads[i]);
     }
+    DataManager.getInstance().addDownloadListener(this);
+  }
 
-    //
-    // Some convenience methods.
-    //
+  public void fireContentChanged(){
+    //toDo
+  }
 
-    protected DownloadDO getDO(Object node) {
-	DownloadNode fileNode = ((DownloadNode)node);
-	return fileNode.getDO();
+  protected DownloadDO getDO(Object node) {
+    DownloadNode fileNode = ( (DownloadNode) node);
+    return fileNode.getDO();
+  }
+
+  protected Object[] getChildren(Object node) {
+    DownloadNode fileNode = ( (DownloadNode) node);
+    return fileNode.getChildren();
+  }
+
+  public int getChildCount(Object node) {
+    Object[] children = getChildren(node);
+    return (children == null) ? 0 : children.length;
+  }
+
+  public Object getChild(Object node, int i) {
+    return getChildren(node)[i];
+  }
+
+  public int getColumnCount() {
+    return cNames.length;
+  }
+
+  public String getColumnName(int column) {
+    return cNames[column];
+  }
+
+  public Class getColumnClass(int column) {
+    return cTypes[column];
+  }
+
+  public Object getValueAt(Object node, int column) {
+    DownloadDO download = getDO(node);
+    if (download == null) {
+      return "";
     }
-
-    protected Object[] getChildren(Object node) {
-	DownloadNode fileNode = ((DownloadNode)node);
-	return fileNode.getChildren();
+    try {
+      switch (column) {
+        case 0:
+          return download.getDateiname();
+        case 1:
+          return download.getStatus();
+        case 2:
+          return download.getGroesse();
+        case 3:
+          return download.getBereitsGeladen();
+        case 4:
+          return download.getProzentGeladen();
+        case 5:
+          return download.getNochZuLaden();
+        case 6:
+          return download.getGeschwindigkeit();
+        case 7:
+          return download.getRestlicheZeit();
+        case 8:
+          return download.getPowerdownload();
+        case 9:
+          return download.getVersion().getVersion();
+        default:
+          return "";
+      }
     }
+    catch (SecurityException se) {}
 
-    //
-    // The TreeModel interface
-    //
-
-    public int getChildCount(Object node) {
-	Object[] children = getChildren(node);
-	return (children == null) ? 0 : children.length;
-    }
-
-    public Object getChild(Object node, int i) {
-	return getChildren(node)[i];
-    }
-
-    // The superclass's implementation would work, but this is more efficient.
-//    public boolean isLeaf(Object node) { return getFile(node).isFile(); }
-
-    //
-    //  The TreeTableNode interface.
-    //
-
-    public int getColumnCount() {
-	return cNames.length;
-    }
-
-    public String getColumnName(int column) {
-	return cNames[column];
-    }
-
-    public Class getColumnClass(int column) {
-	return cTypes[column];
-    }
-
-    public Object getValueAt(Object node, int column) {
-	DownloadDO download = getDO(node);
-	try {
-	    switch(column) {
-	    case 0:
-		return download.getDateiname();
-	    case 1:
-		return download.getStatus();
-	    case 2:
-		return download.getGroesse();
-	    case 3:
-		return download.getBereitsGeladen();
-	    }
-	}
-	catch  (SecurityException se) { }
-
-	return null;
-    }
+    return null;
+  }
 }
 
-/* A FileNode is a derivative of the File class - though we delegate to
- * the File object rather than subclassing it. It is used to maintain a
- * cache of a directory's children and therefore avoid repeated access
- * to the underlying file system during rendering.
- */
-class DownloadNode{
-    DownloadDO download;
-    HashSet children;
+class DownloadNode
+    extends DefaultMutableTreeNode {
+  private static ImageIcon rootIcon;
+  private static ImageIcon uebertrageIcon;
+  private static ImageIcon warteschlangeIcon;
+  private static ImageIcon indirektIcon;
 
-    public DownloadNode(DownloadDO download) {
-	this.download = download;
-        children = new HashSet();
-        for (int i=0; i<download.getSources().length; i++){
-          children.add(download.getSources()[i]);
-        }
-    }
+  DownloadDO download;
+  HashSet children;
 
-    public void addChild(DownloadDO download){
-      if (!(children.contains(download)))
-        children.add(download);
+  public DownloadNode(DownloadDO download) {
+    initIcons();
+    this.download = download;
+    children = new HashSet();
+    if (download.getSources() != null && download.getSources().length != 0) {
+      for (int i = 0; i < download.getSources().length; i++) {
+        children.add(new DownloadNode(download.getSources()[i]));
+      }
     }
+  }
 
-    public void removeChild(DownloadDO download){
-      if (children.contains(download))
-        children.remove(download);
-    }
+  public DownloadNode() {
+    initIcons();
+    children = new HashSet();
+  }
 
-    // Used to sort the file names.
-    static private MergeSort  fileMS = new MergeSort() {
-	public int compareElementsAt(int a, int b) {
-	    return ((String)toSort[a]).compareTo((String)toSort[b]);
-	}
-    };
+  private void initIcons() {
+    if (rootIcon == null) {
+      URL url = getClass().getResource("treeRoot.gif");
+      rootIcon = new ImageIcon(url);
+      url = getClass().getResource("treeUebertrage.gif");
+      uebertrageIcon = new ImageIcon(url);
+      url = getClass().getResource("treeWarteschlange.gif");
+      warteschlangeIcon = new ImageIcon(url);
+      url = getClass().getResource("treeIndirekt.gif");
+      indirektIcon = new ImageIcon(url);
+    }
+  }
 
-    public DownloadDO getDO(){
-      return download;
+  public ImageIcon getConvenientIcon(boolean expanded) {
+    if (download == null) {
+      return rootIcon;
     }
-    /**
-     * Returns the the string to be used to display this leaf in the JTree.
-     */
-    public String toString() {
-	return download.getDateiname();
+    if (download.getIntStatus() == DownloadDO.UEBERTRAGE) {
+      return uebertrageIcon;
     }
+    else if (download.getIntStatus() == DownloadDO.VERSUCHEINDIREKT) {
+      return indirektIcon;
+    }
+    else if (download.getIntStatus() == DownloadDO.WARTESCHLANGE) {
+      return warteschlangeIcon;
+    }
+    else if (download.getIntStatus() == DownloadDO.ROOT) {
+      return rootIcon;
+    }
+    else {
+      return rootIcon;
+    }
+  }
 
-    /**
-     * Loads the children, caching the results in the children ivar.
-     */
-    protected Object[] getChildren() {
-	return children.toArray(new DownloadDO[children.size()]);
+  public void addChild(DownloadDO download) {
+    children.add(new DownloadNode(download));
+  }
+
+  public DownloadDO getDO() {
+    return download;
+  }
+
+  public String toString() {
+    if (download == null) {
+      return "";
     }
+    return download.getDateiname();
+  }
+
+  protected Object[] getChildren() {
+    return children.toArray(new DownloadNode[children.size()]);
+  }
 }
-
-

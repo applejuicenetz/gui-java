@@ -5,16 +5,6 @@ import javax.swing.tree.TreePath;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeModelEvent;
 
-
-/**
- * An abstract implementation of the TreeTableModel interface, handling
- * the list of listeners.
- *
- * @version %I% %G%
- *
- * @author Philip Milne
- */
-
 public abstract class AbstractTreeTableModel implements TreeTableModel {
     protected Object root;
     protected EventListenerList listenerList = new EventListenerList();
@@ -22,10 +12,6 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
     public AbstractTreeTableModel(Object root) {
         this.root = root;
     }
-
-    //
-    // Default implmentations for methods in the TreeModel interface.
-    //
 
     public Object getRoot() {
         return root;
@@ -37,7 +23,6 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
 
     public void valueForPathChanged(TreePath path, Object newValue) {}
 
-    // This is not called in the JTree's default mode: use a naive implementation.
     public int getIndexOfChild(Object parent, Object child) {
         for (int i = 0; i < getChildCount(parent); i++) {
 	    if (getChild(parent, i).equals(child)) {
@@ -55,24 +40,13 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
         listenerList.remove(TreeModelListener.class, l);
     }
 
-    /*
-     * Notify all listeners that have registered interest for
-     * notification on this event type.  The event instance
-     * is lazily created using the parameters passed into
-     * the fire method.
-     * @see EventListenerList
-     */
     protected void fireTreeNodesChanged(Object source, Object[] path,
                                         int[] childIndices,
                                         Object[] children) {
-        // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
         for (int i = listeners.length-2; i>=0; i-=2) {
             if (listeners[i]==TreeModelListener.class) {
-                // Lazily create the event:
                 if (e == null)
                     e = new TreeModelEvent(source, path,
                                            childIndices, children);
@@ -81,24 +55,13 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
         }
     }
 
-    /*
-     * Notify all listeners that have registered interest for
-     * notification on this event type.  The event instance
-     * is lazily created using the parameters passed into
-     * the fire method.
-     * @see EventListenerList
-     */
     protected void fireTreeNodesInserted(Object source, Object[] path,
                                         int[] childIndices,
                                         Object[] children) {
-        // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
         for (int i = listeners.length-2; i>=0; i-=2) {
             if (listeners[i]==TreeModelListener.class) {
-                // Lazily create the event:
                 if (e == null)
                     e = new TreeModelEvent(source, path,
                                            childIndices, children);
@@ -107,24 +70,13 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
         }
     }
 
-    /*
-     * Notify all listeners that have registered interest for
-     * notification on this event type.  The event instance
-     * is lazily created using the parameters passed into
-     * the fire method.
-     * @see EventListenerList
-     */
     protected void fireTreeNodesRemoved(Object source, Object[] path,
                                         int[] childIndices,
                                         Object[] children) {
-        // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
         for (int i = listeners.length-2; i>=0; i-=2) {
             if (listeners[i]==TreeModelListener.class) {
-                // Lazily create the event:
                 if (e == null)
                     e = new TreeModelEvent(source, path,
                                            childIndices, children);
@@ -133,24 +85,13 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
         }
     }
 
-    /*
-     * Notify all listeners that have registered interest for
-     * notification on this event type.  The event instance
-     * is lazily created using the parameters passed into
-     * the fire method.
-     * @see EventListenerList
-     */
     protected void fireTreeStructureChanged(Object source, Object[] path,
                                         int[] childIndices,
                                         Object[] children) {
-        // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
         for (int i = listeners.length-2; i>=0; i-=2) {
             if (listeners[i]==TreeModelListener.class) {
-                // Lazily create the event:
                 if (e == null)
                     e = new TreeModelEvent(source, path,
                                            childIndices, children);
@@ -159,16 +100,8 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
         }
     }
 
-    //
-    // Default impelmentations for methods in the TreeTableModel interface.
-    //
-
     public Class getColumnClass(int column) { return Object.class; }
 
-   /** By default, make the column with the Tree in it the only editable one.
-    *  Making this column editable causes the JTable to forward mouse
-    *  and keyboard events in the Tree column to the underlying JTree.
-    */
     public boolean isCellEditable(Object node, int column) {
          return getColumnClass(column) == TreeTableModel.class;
     }

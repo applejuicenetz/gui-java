@@ -1,13 +1,5 @@
 package de.applejuicenet.client.gui.tablerenderer;
 
-/**
- * An implementation of MergeSort, needs to be subclassed to provide a
- * comparator.
- *
- * @version %I% %G%
- *
- * @author Scott Violet
- */
 public abstract class MergeSort extends Object {
     protected Object           toSort[];
     protected Object           swapSpace[];

@@ -65,24 +65,16 @@ public class DownloadPanel extends JPanel {
     constraints.gridy = 1;
     constraints.weighty = 1;
     constraints.weightx = 1;
-    /*
-    downloadTable = new JTable();
-    downloadTable.setModel(new DownloadDataTableModel());
-    int vColIndex = 0;
-    TableColumn col = downloadTable.getColumnModel().getColumn(vColIndex);
-    col.setCellRenderer(new DownloadDateiNameCellRenderer(downloadTable));
-*/
+
     Version version = new Version("0.27", "Java", "Win");
-    DownloadDO source = new DownloadDO(false, "datei2.jpg", "Warte", "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "Maj0r", null);
+    DownloadDO source = new DownloadDO(false, "datei2.jpg", DownloadDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "Maj0r", null);
     HashSet sourcen = new HashSet();
     sourcen.add(source);
-    DownloadDO download = new DownloadDO(true, "datei1.jpg", "Warte", "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
-    downloadTable = new JTreeTable(new DownloadModel(download));
+    DownloadDO[] downloads = new DownloadDO[2];
+    downloads[0] = new DownloadDO(true, "datei1.jpg", DownloadDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
+    downloads[1] = new DownloadDO(true, "Film.avi", DownloadDO.WARTESCHLANGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
+    downloadTable = new JTreeTable(new DownloadModel(downloads));
 
-/*    Object[] test = new Object[1];
-    test[0] = new String("dies ist ein test");
-    ((DownloadDataTableModel)downloadTable.getModel()).setTable(test);
-*/
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(downloadTable);
     topPanel.add(aScrollPane, constraints);

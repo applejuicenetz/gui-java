@@ -5,6 +5,7 @@ import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import de.applejuicenet.client.gui.controller.DataManager;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -59,6 +60,11 @@ public class PowerDownloadPanel
     ratio.setPreferredSize(new Dimension(50, 21));
     ratio.setEditable(false);
     ratio.setHorizontalAlignment(SwingConstants.RIGHT);
+    btnPdl.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        btnPdl_actionPerformed(e);
+      }
+    });
     tempPanel.add(powerdownload, BorderLayout.CENTER);
 
     URL url = getClass().getResource("hint.gif");
@@ -156,5 +162,9 @@ public class PowerDownloadPanel
     }
     ratio.setText(ganzZahl + "." + nachKomma);
     ratioWert = Float.parseFloat(ratio.getText());
+  }
+
+  void btnPdl_actionPerformed(ActionEvent e) {
+    DataManager.getInstance().getDownloads();
   }
 }
