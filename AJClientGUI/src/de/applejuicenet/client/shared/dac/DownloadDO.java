@@ -1,12 +1,15 @@
 package de.applejuicenet.client.shared.dac;
 
-import de.applejuicenet.client.shared.MapSetStringKey;
-
 import java.util.HashMap;
 import java.util.Iterator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
+import de.applejuicenet.client.gui.tables.download.DownloadModel;
+import de.applejuicenet.client.shared.MapSetStringKey;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.14 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.15 2004/01/12 07:23:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +18,10 @@ import java.util.Iterator;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.15  2004/01/12 07:23:46  maj0r
+ * Caching, Logging eingebaut.
+ * Wiedergabe der Tabellenwerte vom Model ins Node umgebaut.
+ *
  * Revision 1.14  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -61,7 +68,14 @@ import java.util.Iterator;
  *
  */
 
-public class DownloadDO {
+public class DownloadDO
+    implements DownloadColumnValue {
+
+    private static Logger logger;
+
+    static {
+        logger = Logger.getLogger(DownloadDO.class);
+    }
 
     //Status - IDs
     public static final int SUCHEN_LADEN = 0;
@@ -85,9 +99,13 @@ public class DownloadDO {
     private int powerDownload;
     private int temporaryFileNumber;
 
+    private long oldSpeed;
+    private String speedAsString;
+
     private HashMap sourcen = new HashMap();
 
-    public DownloadDO(int id, int shareId, String hash, long groesse, long ready,
+    public DownloadDO(int id, int shareId, String hash, long groesse,
+                      long ready,
                       int status, String filename, String targetDirectory,
                       int powerDownload, int temporaryFileNumber) {
         this.id = id;
@@ -102,44 +120,52 @@ public class DownloadDO {
         this.temporaryFileNumber = temporaryFileNumber;
     }
 
-    public String getProzentGeladenAsString(){
-        double temp = (double) ready * 100 / groesse;
-        String result = Double.toString(temp);
-        if (result.indexOf(".") + 3 < result.length())
-        {
-            result = result.substring(0, result.indexOf(".") + 3);
+    public String getProzentGeladenAsString() {
+        try {
+            double temp = getProzentGeladen();
+            String result = Double.toString(temp);
+            if (result.indexOf(".") + 3 < result.length()) {
+                result = result.substring(0, result.indexOf(".") + 3);
+            }
+            return result;
         }
-        return result;
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
+            return "";
+        }
     }
 
-    public double getProzentGeladen(){
-        return ready * 100 / groesse;
+    public double getProzentGeladen() {
+        return (double) ready * 100 / groesse;
     }
 
-    public DownloadSourceDO getSourceById(int sourceId){
+    public DownloadSourceDO getSourceById(int sourceId) {
         MapSetStringKey key = new MapSetStringKey(sourceId);
-        if (sourcen.containsKey(key)){
-            return (DownloadSourceDO)sourcen.get(key);
+        if (sourcen.containsKey(key)) {
+            return (DownloadSourceDO) sourcen.get(key);
         }
-        else{
+        else {
             return null;
         }
     }
 
-    public void addSource(DownloadSourceDO downloadSourceDO){
+    public void addSource(DownloadSourceDO downloadSourceDO) {
         MapSetStringKey key = new MapSetStringKey(downloadSourceDO.getId());
-        if (!sourcen.containsKey(key)){
+        if (!sourcen.containsKey(key)) {
             sourcen.put(key, downloadSourceDO);
         }
     }
 
-    public DownloadSourceDO[] getSources(){
-        return (DownloadSourceDO[])sourcen.values().toArray(new DownloadSourceDO[sourcen.size()]);
+    public DownloadSourceDO[] getSources() {
+        return (DownloadSourceDO[]) sourcen.values().toArray(new
+            DownloadSourceDO[sourcen.size()]);
     }
 
-    public void removeSource(String id){
+    public void removeSource(String id) {
         MapSetStringKey key = new MapSetStringKey(id);
-        if (sourcen.containsKey(key)){
+        if (sourcen.containsKey(key)) {
             sourcen.remove(key);
         }
     }
@@ -220,59 +246,204 @@ public class DownloadDO {
         this.ready = ready;
     }
 
-    public long getRestZeit(){
+    public long getRestZeit() {
         long speed = getSpeedInBytes();
-        if (speed == 0)
+        if (speed == 0){
             return Long.MAX_VALUE;
-        return ((groesse-ready) / speed);
+        }
+        return ( (groesse - ready) / speed);
     }
 
-    public String getRestZeitAsString(){
-        long speed = getSpeedInBytes();
-        if (speed == 0)
+    public String getRestZeitAsString() {
+        try {
+            long speed = getSpeedInBytes();
+            if (speed == 0) {
+                return "";
+            }
+            if (speed == oldSpeed) {
+                return speedAsString;
+            }
+            oldSpeed = speed;
+            int restZeit = (int) ( (groesse - ready) / speed);
+            int tage = restZeit / 86400;
+            restZeit -= tage * 86400;
+            int stunden = restZeit / 3600;
+            restZeit -= stunden * 3600;
+            int minuten = restZeit / 60;
+            restZeit -= minuten * 60;
+
+            StringBuffer temp = new StringBuffer();
+            if (tage < 10) {
+                temp.append('0');
+            }
+            temp.append(Integer.toString(tage));
+            temp.append(':');
+            if (stunden < 10) {
+                temp.append('0');
+            }
+            temp.append(Integer.toString(stunden));
+            temp.append(':');
+            if (minuten < 10) {
+                temp.append('0');
+            }
+            temp.append(Integer.toString(minuten));
+            temp.append(':');
+            if (restZeit < 10) {
+                temp.append('0');
+            }
+            temp.append(Integer.toString(restZeit));
+            speedAsString = temp.toString();
+            return speedAsString;
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
             return "";
-        int restZeit =(int)((groesse-ready) / speed);
-        int tage = restZeit / 86400;
-        restZeit -= tage * 86400;
-        int stunden = restZeit / 3600;
-        restZeit -= stunden * 3600;
-        int minuten = restZeit / 60;
-        restZeit -= minuten * 60;
-
-        StringBuffer temp = new StringBuffer();
-        if (tage<10)
-            temp.append('0');
-        temp.append(Integer.toString(tage));
-        temp.append(':');
-        if (stunden<10)
-            temp.append('0');
-        temp.append(Integer.toString(stunden));
-        temp.append(':');
-        if (minuten<10)
-            temp.append('0');
-        temp.append(Integer.toString(minuten));
-        temp.append(':');
-        if (restZeit<10)
-            temp.append('0');
-        temp.append(Integer.toString(restZeit));
-        return temp.toString();
+        }
     }
 
-    public long getSpeedInBytes(){
+    public long getSpeedInBytes() {
         long speed = 0;
-        Iterator it = sourcen.values().iterator();
-        while (it.hasNext()){
-            speed += ((DownloadSourceDO)it.next()).getSpeed();
+        try {
+            Iterator it = sourcen.values().iterator();
+            while (it.hasNext()) {
+                speed += ( (DownloadSourceDO) it.next()).getSpeed();
+            }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
         }
         return speed;
     }
 
-    public long getBereitsGeladen(){
+    public long getBereitsGeladen() {
         long geladen = ready;
-        Iterator it = sourcen.values().iterator();
-        while (it.hasNext()){
-            geladen += ((DownloadSourceDO)it.next()).getBereitsGeladen();
+        try {
+            Iterator it = sourcen.values().iterator();
+            while (it.hasNext()) {
+                geladen += ( (DownloadSourceDO) it.next()).getBereitsGeladen();
+            }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
         }
         return geladen;
+    }
+
+    public String getColumn0() {
+        return getFilename();
+    }
+
+    public String getColumn1() {
+        return getStatusAsString();
+    }
+
+    public String getColumn2() {
+        return DownloadModel.parseGroesse(groesse);
+    }
+
+    public String getColumn3() {
+        return DownloadModel.parseGroesse(getBereitsGeladen());
+    }
+
+    public String getColumn4() {
+        if (status == DownloadDO.SUCHEN_LADEN) {
+            return DownloadModel.getSpeedAsString(getSpeedInBytes());
+        }
+        else {
+            return "";
+        }
+    }
+
+    public String getColumn5() {
+        if (status == DownloadDO.SUCHEN_LADEN) {
+            return getRestZeitAsString();
+        }
+        else {
+            return "";
+        }
+    }
+
+    public String getColumn6() {
+        return "";
+    }
+
+    public String getColumn7() {
+        if (status == DownloadDO.SUCHEN_LADEN || status == DownloadDO.PAUSIERT) {
+            return DownloadModel.parseGroesse(groesse - getBereitsGeladen());
+        }
+        else {
+            return "";
+        }
+    }
+
+    public String getColumn8() {
+        if (status == DownloadDO.SUCHEN_LADEN ||
+            status == DownloadDO.PAUSIERT) {
+            return DownloadModel.powerdownload(getPowerDownload());
+        }
+        else {
+            return "";
+        }
+    }
+
+    public String getColumn9() {
+        return "";
+    }
+
+    public String getStatusAsString() {
+        try {
+            switch (getStatus()) {
+                case DownloadDO.PAUSIERT:
+                    return DownloadModel.pausiert;
+                case DownloadDO.ABBRECHEN:
+                    return DownloadModel.abbrechen;
+                case DownloadDO.AGBEGROCHEN:
+                    return DownloadModel.abgebrochen;
+                case DownloadDO.FERTIG:
+                    return DownloadModel.fertig;
+                case DownloadDO.FEHLER_BEIM_FERTIGSTELLEN:
+                    return DownloadModel.fehlerBeimFertigstellen;
+                case DownloadDO.NICHT_GENUG_PLATZ_FEHLER:
+                    return DownloadModel.keinPlatz;
+                case DownloadDO.SUCHEN_LADEN: {
+                    DownloadSourceDO[] sources = getSources();
+                    String result = "";
+                    int uebertragung = 0;
+                    int warteschlange = 0;
+                    int status;
+                    for (int i = 0; i < sources.length; i++) {
+                        status = sources[i].getStatus();
+                        if (status == DownloadSourceDO.UEBERTRAGUNG) {
+                            uebertragung++;
+                            result = DownloadModel.laden;
+                        }
+                        else if (status == DownloadSourceDO.IN_WARTESCHLANGE) {
+                            warteschlange++;
+                        }
+                    }
+                    if (result.length() == 0) {
+                        result = DownloadModel.suchen;
+                    }
+                    return result + " " + (warteschlange + uebertragung) + "/" +
+                        sources.length + " (" + uebertragung + ")";
+                }
+                case DownloadDO.FERTIGSTELLEN:
+                    return DownloadModel.fertigstellen;
+                default:
+                    return "";
+            }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
+            return "";
+        }
     }
 }

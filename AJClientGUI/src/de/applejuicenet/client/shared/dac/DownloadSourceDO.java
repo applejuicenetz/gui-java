@@ -1,11 +1,13 @@
 package de.applejuicenet.client.shared.dac;
 
-import java.util.*;
-
-import de.applejuicenet.client.shared.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
+import de.applejuicenet.client.gui.tables.download.DownloadModel;
+import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.16 2003/12/30 13:55:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.17 2004/01/12 07:28:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +16,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.17  2004/01/12 07:28:10  maj0r
+ * Caching, Logging eingebaut.
+ * Wiedergabe der Tabellenwerte vom Model ins Node umgebaut.
+ *
  * Revision 1.16  2003/12/30 13:55:20  maj0r
  * Neuen DownloadSourceStatus indirekteVerbindungAbgelehnt eingebaut.
  *
@@ -50,7 +56,15 @@ import de.applejuicenet.client.shared.*;
  *
  */
 
-public class DownloadSourceDO {
+public class DownloadSourceDO
+    implements DownloadColumnValue {
+
+    private static Logger logger;
+
+    static {
+        logger = Logger.getLogger(DownloadDO.class);
+    }
+
     //Status - IDs
     public static final int UNGEFRAGT = 1;
     public static final int VERSUCHE_ZU_VERBINDEN = 2;
@@ -88,9 +102,21 @@ public class DownloadSourceDO {
     private String nickname;
     private int downloadId;
 
-    public DownloadSourceDO(int id, int status, int directstate, int downloadFrom, int downloadTo,
-                            int actualDownloadPosition, int speed, Version version, int queuePosition,
-                            int powerDownload, String filename, String nickname, int downloadId) {
+    private int oldSize;
+    private String sizeAsString;
+
+    private int oldBereitsGeladen;
+    private String bereitsGeladenAsString;
+
+    private int oldNochZuLaden;
+    private String nochZuLadenAsString;
+
+    public DownloadSourceDO(int id, int status, int directstate,
+                            int downloadFrom, int downloadTo,
+                            int actualDownloadPosition, int speed,
+                            Version version, int queuePosition,
+                            int powerDownload, String filename, String nickname,
+                            int downloadId) {
         this.id = id;
         this.status = status;
         this.directstate = directstate;
@@ -110,9 +136,10 @@ public class DownloadSourceDO {
         return status;
     }
 
-    public int getSize(){
-        if (downloadTo==-1 || downloadFrom==-1)
+    public int getSize() {
+        if (downloadTo == -1 || downloadFrom == -1) {
             return 0;
+        }
         return downloadTo - downloadFrom;
     }
 
@@ -120,58 +147,82 @@ public class DownloadSourceDO {
         this.status = status;
     }
 
-    public String getDownloadPercentAsString(){
-        if (actualDownloadPosition==-1 || downloadFrom==-1)
-            return "0";
-        double temp = actualDownloadPosition - downloadFrom;
-        temp =  temp * 100 / getSize();
-        String result = Double.toString(temp);
-        if (result.indexOf(".") + 3 < result.length())
-        {
-            result = result.substring(0, result.indexOf(".") + 3);
+    public String getDownloadPercentAsString() {
+        try {
+            if (actualDownloadPosition == -1 || downloadFrom == -1) {
+                return "0";
+            }
+            double temp = actualDownloadPosition - downloadFrom;
+            temp = temp * 100 / getSize();
+            String result = Double.toString(temp);
+            if (result.indexOf(".") + 3 < result.length()) {
+                result = result.substring(0, result.indexOf(".") + 3);
+            }
+            return result;
         }
-        return result;
-    }
-
-    public String getRestZeitAsString(){
-        if (speed==0 || speed==-1)
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
             return "";
-        int restZeit = getNochZuLaden() / speed;
-        int tage = restZeit / 86400;
-        restZeit -= tage * 86400;
-        int stunden = restZeit / 3600;
-        restZeit -= stunden * 3600;
-        int minuten = restZeit / 60;
-        restZeit -= minuten * 60;
+        }
 
-        StringBuffer temp = new StringBuffer();
-        if (tage<10)
-            temp.append('0');
-        temp.append(Integer.toString(tage));
-        temp.append(':');
-        if (stunden<10)
-            temp.append('0');
-        temp.append(Integer.toString(stunden));
-        temp.append(':');
-        if (minuten<10)
-            temp.append('0');
-        temp.append(Integer.toString(minuten));
-        temp.append(':');
-        if (restZeit<10)
-            temp.append('0');
-        temp.append(Integer.toString(restZeit));
-        return temp.toString();
     }
 
-    public int getBereitsGeladen(){
-        if (actualDownloadPosition==-1 || downloadFrom==-1)
+    public String getRestZeitAsString() {
+        try {
+            if (speed == 0 || speed == -1) {
+                return "";
+            }
+            int restZeit = getNochZuLaden() / speed;
+            int tage = restZeit / 86400;
+            restZeit -= tage * 86400;
+            int stunden = restZeit / 3600;
+            restZeit -= stunden * 3600;
+            int minuten = restZeit / 60;
+            restZeit -= minuten * 60;
+
+            StringBuffer temp = new StringBuffer();
+            if (tage < 10) {
+                temp.append('0');
+            }
+            temp.append(Integer.toString(tage));
+            temp.append(':');
+            if (stunden < 10) {
+                temp.append('0');
+            }
+            temp.append(Integer.toString(stunden));
+            temp.append(':');
+            if (minuten < 10) {
+                temp.append('0');
+            }
+            temp.append(Integer.toString(minuten));
+            temp.append(':');
+            if (restZeit < 10) {
+                temp.append('0');
+            }
+            temp.append(Integer.toString(restZeit));
+            return temp.toString();
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
+            return "";
+        }
+    }
+
+    public int getBereitsGeladen() {
+        if (actualDownloadPosition == -1 || downloadFrom == -1) {
             return 0;
+        }
         return actualDownloadPosition - downloadFrom;
     }
 
-    public int getNochZuLaden(){
-        if (downloadTo==-1 || actualDownloadPosition==-1)
+    public int getNochZuLaden() {
+        if (downloadTo == -1 || actualDownloadPosition == -1) {
             return 0;
+        }
         return downloadTo - actualDownloadPosition;
     }
 
@@ -265,5 +316,108 @@ public class DownloadSourceDO {
 
     public void setDownloadId(int downloadId) {
         this.downloadId = downloadId;
+    }
+
+    public String getColumn0() {
+        return getFilename();
+    }
+
+    public String getColumn1() {
+        switch (getStatus()) {
+            case DownloadSourceDO.UNGEFRAGT:
+                return DownloadModel.ungefragt;
+            case DownloadSourceDO.VERSUCHE_ZU_VERBINDEN:
+                return DownloadModel.versucheZuVerbinden;
+            case DownloadSourceDO.GEGENSTELLE_HAT_ZU_ALTE_VERSION:
+                return DownloadModel.ggstZuAlteVersion;
+            case DownloadSourceDO.GEGENSTELLE_KANN_DATEI_NICHT_OEFFNEN:
+                return DownloadModel.kannDateiNichtOeffnen;
+            case DownloadSourceDO.IN_WARTESCHLANGE: {
+                String temp = DownloadModel.position;
+                temp = temp.replaceFirst("%d",
+                                         Integer.toString(getQueuePosition()));
+                return DownloadModel.warteschlange + " " + temp;
+            }
+            case DownloadSourceDO.KEINE_BRAUCHBAREN_PARTS:
+                return DownloadModel.keineBrauchbarenParts;
+            case DownloadSourceDO.UEBERTRAGUNG:
+                return DownloadModel.uebertragung;
+            case DownloadSourceDO.NICHT_GENUEGEND_PLATZ_AUF_DER_PLATTE:
+                return DownloadModel.nichtGenugPlatz;
+            case DownloadSourceDO.FERTIGGESTELLT:
+                return DownloadModel.fertiggestellt;
+            case DownloadSourceDO.KEINE_VERBINDUNG_MOEGLICH:
+                return DownloadModel.keineVerbindungMoeglich;
+            case DownloadSourceDO.PAUSIERT:
+                return DownloadModel.pausiert;
+            case DownloadSourceDO.VERSUCHE_INDIREKT:
+                return DownloadModel.versucheIndirekt;
+            case DownloadSourceDO.WARTESCHLANGE_VOLL:
+                return DownloadModel.warteschlangeVoll;
+            case DownloadSourceDO.EIGENES_LIMIT_ERREICHT:
+                return DownloadModel.eigenesLimitErreicht;
+            case DownloadSourceDO.INDIREKTE_VERBINDUNG_ABGELEHNT:
+                return DownloadModel.indirekteVerbindungAbgelehnt;
+
+            default:
+                return "";
+        }
+    }
+
+    public String getColumn2() {
+        int size = getSize();
+        if (size != oldSize) {
+            oldSize = size;
+            sizeAsString = DownloadModel.parseGroesse(size);
+        }
+        return sizeAsString;
+    }
+
+    public String getColumn3() {
+        int bereitsGeladen = getBereitsGeladen();
+        if (bereitsGeladen != oldBereitsGeladen) {
+            oldBereitsGeladen = bereitsGeladen;
+            bereitsGeladenAsString = DownloadModel.parseGroesse(bereitsGeladen);
+        }
+        return bereitsGeladenAsString;
+    }
+
+    public String getColumn4() {
+        if (getStatus() != DownloadSourceDO.UEBERTRAGUNG) {
+            return "";
+        }
+        else {
+            return DownloadModel.getSpeedAsString( (long) getSpeed());
+        }
+    }
+
+    public String getColumn5() {
+        return getRestZeitAsString();
+    }
+
+    public String getColumn6() {
+        return "";
+    }
+
+    public String getColumn7() {
+        int nochZuLaden = getNochZuLaden();
+        if (nochZuLaden != oldNochZuLaden) {
+            oldNochZuLaden = nochZuLaden;
+            nochZuLadenAsString = DownloadModel.parseGroesse(nochZuLaden);
+        }
+        return nochZuLadenAsString;
+    }
+
+    public String getColumn8() {
+        return DownloadModel.powerdownload(getPowerDownload());
+    }
+
+    public String getColumn9() {
+        if (getVersion() != null) {
+            return getVersion().getVersion();
+        }
+        else {
+            return "";
+        }
     }
 }
