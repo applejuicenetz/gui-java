@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.29 2003/09/06 08:34:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.30 2003/09/10 15:30:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.30  2003/09/10 15:30:48  maj0r
+ * Begonnen auf neue Session-Struktur umzubauen.
+ *
  * Revision 1.29  2003/09/06 08:34:23  maj0r
  * Nullpointer behoben.
  * Dank an Fumpi.
@@ -141,8 +144,8 @@ public class ModifiedXMLHolder
         return netInfo;
     }
 
-    public synchronized void update() {
-        reload("");
+    public synchronized void update(String sessionId) {
+        reload("&session=" + sessionId);
         updateIDs();
         updateServer();
         updateDownloads();
@@ -158,6 +161,10 @@ public class ModifiedXMLHolder
             super.reload(parameters);
             reloadInProgress = false;
         }
+    }
+
+    public void update() {
+        throw new RuntimeException();
     }
 
     public String[] getStatusBar() {
@@ -472,6 +479,7 @@ public class ModifiedXMLHolder
             int downloadTo;
             int actualDownloadPosition;
             int speed;
+            int downloadId;
             Version version = null;
             String versionNr = null;
             String nickname = null;
@@ -521,8 +529,10 @@ public class ModifiedXMLHolder
                 powerDownload = Integer.parseInt(temp);
                 filename = e.getAttribute("filename");
                 nickname = e.getAttribute("nickname");
+                temp = e.getAttribute("downloadid");
+                downloadId = Integer.parseInt(temp);
                 downloadSourceDO = new DownloadSourceDO(id, status, directstate, downloadFrom, downloadTo, actualDownloadPosition,
-                                                        speed, version, queuePosition, powerDownload, filename, nickname);
+                                                        speed, version, queuePosition, powerDownload, filename, nickname, downloadId);
                 key = (MapSetStringKey) sourcenZuDownloads.get(new MapSetStringKey(id));
                 downloadDO = (DownloadDO) downloadMap.get(key);
                 if (downloadDO != null)

@@ -5,7 +5,7 @@ import java.util.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.11 2003/09/01 15:50:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.12 2003/09/10 15:30:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.12  2003/09/10 15:30:48  maj0r
+ * Begonnen auf neue Session-Struktur umzubauen.
+ *
  * Revision 1.11  2003/09/01 15:50:51  maj0r
  * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
  *
@@ -68,10 +71,11 @@ public class DownloadSourceDO {
     private int powerDownload;
     private String filename;
     private String nickname;
+    private int downloadId;
 
     public DownloadSourceDO(int id, int status, int directstate, int downloadFrom, int downloadTo,
                             int actualDownloadPosition, int speed, Version version, int queuePosition,
-                            int powerDownload, String filename, String nickname) {
+                            int powerDownload, String filename, String nickname, int downloadId) {
         this.id = id;
         this.status = status;
         this.directstate = directstate;
@@ -84,6 +88,7 @@ public class DownloadSourceDO {
         this.powerDownload = powerDownload;
         this.filename = filename;
         this.nickname = nickname;
+        this.downloadId = downloadId;
     }
 
     public int getStatus() {
@@ -237,5 +242,13 @@ public class DownloadSourceDO {
 
     public int getId() {
         return id;
+    }
+
+    public int getDownloadId() {
+        return downloadId;
+    }
+
+    public void setDownloadId(int downloadId) {
+        this.downloadId = downloadId;
     }
 }

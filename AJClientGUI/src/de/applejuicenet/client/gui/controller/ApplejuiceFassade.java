@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.35 2003/09/10 13:18:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.36 2003/09/10 15:30:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.36  2003/09/10 15:30:48  maj0r
+ * Begonnen auf neue Session-Struktur umzubauen.
+ *
  * Revision 1.35  2003/09/10 13:18:01  maj0r
  * Version 0.28
  *
@@ -296,8 +299,19 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                         if (logger.isEnabledFor(Level.DEBUG))
                             logger.debug("MainWorkerThread gestartet. " + workerThread);
                         try{
+                            SessionXMLHolder session = new SessionXMLHolder();
+                            session.reload("");
+                            String sessionId = session.getFirstAttrbuteByTagName(new String[]{
+                                "applejuice", "session", "id" }, false);
+                            long time = System.currentTimeMillis();
                             while (!isInterrupted()){
-                                updateModifiedXML();
+                                if (System.currentTimeMillis() > time + 20000){
+                                    session.reload("");
+                                    sessionId = session.getFirstAttrbuteByTagName(new String[]{
+                                        "applejuice", "session", "id" }, false);
+                                    time = System.currentTimeMillis();
+                                }
+                                updateModifiedXML(sessionId);
                                 try{
                                     sleep(2000);
                                 }
@@ -378,10 +392,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return modifiedXML.getServer();
     }
 
-    public synchronized void updateModifiedXML() {
+    public synchronized void updateModifiedXML(String sessionId) {
         try
         {
-            modifiedXML.update();
+            modifiedXML.update(sessionId);
             SwingUtilities.invokeLater(new Runnable(){
                 public void run(){
                     informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.6 2003/09/01 15:50:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.7 2003/09/10 15:30:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.7  2003/09/10 15:30:48  maj0r
+ * Begonnen auf neue Session-Struktur umzubauen.
+ *
  * Revision 1.6  2003/09/01 15:50:51  maj0r
  * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
  *
@@ -102,6 +105,7 @@ public class DownloadDO {
             alteSource.setSpeed(downloadSourceDO.getSpeed());
             alteSource.setStatus(downloadSourceDO.getStatus());
             alteSource.setVersion(downloadSourceDO.getVersion());
+            alteSource.setDownloadId(downloadSourceDO.getDownloadId());
         }
         else{
             sourcen.put(key, downloadSourceDO);
