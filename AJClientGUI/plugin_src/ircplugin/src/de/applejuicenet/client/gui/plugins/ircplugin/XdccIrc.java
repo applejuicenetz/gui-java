@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.3 2003/10/27 14:48:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.4 2003/10/27 16:01:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import de.applejuicenet.client.shared.SwingWorker;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: XdccIrc.java,v $
+ * Revision 1.4  2003/10/27 16:01:24  maj0r
+ * Benutzerliste wird nun bei Veränderung aktualisiert und halbwegs richtig sortiert (Status wird noch nicht berücksichtigt).
+ *
  * Revision 1.3  2003/10/27 14:48:36  maj0r
  * Bug #833 fixed (Danke an plutoman2):
  * Threadverwendung korrigiert.
@@ -1206,8 +1209,46 @@ public class XdccIrc
                         Component aComponent = tabbedPane.getComponentAt(indexOfChannel);
                         if (aComponent instanceof ChannelPanel)
                         {
-                            ((ChannelPanel) aComponent).updateTextArea(nickCommand +
-                                                                       " sets MODE: " + modeReceived);
+                            ChannelPanel channel = (ChannelPanel)aComponent;
+                            channel.updateTextArea(nickCommand +" sets MODE: " + modeReceived);
+                            String tmp = modeReceived.substring(0,1);
+                            if (tmp.compareToIgnoreCase("-")==0
+                                || tmp.compareToIgnoreCase("+")==0){
+                                String name = modeReceived.substring(3);
+                                if (channel.usernameList.contains("!" + name)){
+                                    channel.updateUserArea("!" + name, "remove");
+                                }
+                                else if (channel.usernameList.contains("@" + name)){
+                                    channel.updateUserArea("@" + name, "remove");
+                                }
+                                else if (channel.usernameList.contains("%" + name)){
+                                    channel.updateUserArea("%" + name, "remove");
+                                }
+                                else if (channel.usernameList.contains("+" + name)){
+                                    channel.updateUserArea("+" + name, "remove");
+                                }
+                                else if (channel.usernameList.contains(name)){
+                                    channel.updateUserArea(name, "remove");
+                                }
+                                if (tmp.compareToIgnoreCase("+")==0){
+                                    tmp = modeReceived.substring(1,2);
+                                    if (tmp.compareToIgnoreCase("v")==0){
+                                        channel.updateUserArea("+" + name, "add");
+                                    }
+                                    else if (tmp.compareToIgnoreCase("a")==0){
+                                        channel.updateUserArea("!" + name, "add");
+                                    }
+                                    else if (tmp.compareToIgnoreCase("o")==0){
+                                        channel.updateUserArea("@" + name, "add");
+                                    }
+                                    else if (tmp.compareToIgnoreCase("h")==0){
+                                        channel.updateUserArea("%" + name, "add");
+                                    }
+                                }
+                                else if (tmp.compareToIgnoreCase("-")==0){
+                                    channel.updateUserArea(name, "add");
+                                }
+                            }
                         }
                     }
                 }

@@ -4,15 +4,18 @@ import javax.swing.*;
 import java.util.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.1 2003/09/12 06:32:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.2 2003/10/27 16:01:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SortedListModel.java,v $
+ * Revision 1.2  2003/10/27 16:01:24  maj0r
+ * Benutzerliste wird nun bei Veränderung aktualisiert und halbwegs richtig sortiert (Status wird noch nicht berücksichtigt).
+ *
  * Revision 1.1  2003/09/12 06:32:17  maj0r
  * Nur verschoben.
  *
@@ -24,23 +27,24 @@ import java.util.*;
 
 public class SortedListModel extends AbstractListModel {
 
-    private SortedSet model = new TreeSet();
+    private SortedSet model;
 
     public SortedListModel() {
+        model = new TreeSet(new StringComparator());
     }
 
     public int getSize() {
         return model.size();
     }
 
-    public synchronized Object getElementAt(int index) {
+    public Object getElementAt(int index) {
         if (index < model.size())
             return model.toArray()[index];
         else
             return null;
     }
 
-    public synchronized void add(Object element) {
+    public void add(Object element) {
         if (model.add(element))
         {
             fireIntervalAdded(this, 0, getSize());
@@ -60,20 +64,35 @@ public class SortedListModel extends AbstractListModel {
         return model.first();
     }
 
-    public Iterator iterator() {
-        return model.iterator();
-    }
-
     public Object lastElement() {
         return model.last();
     }
 
-    public synchronized boolean remove(Object element) {
+    public boolean remove(Object element) {
         boolean removed = model.remove(element);
         if (removed)
         {
             fireIntervalRemoved(this, 0, getSize());
         }
         return removed;
+    }
+
+    private class StringComparator implements Comparator{
+        public int compare(Object o1, Object o2) {
+            if (o1.getClass()==String.class && o2.getClass()==String.class){
+                return ((String)o1).compareToIgnoreCase((String)o2);
+            }
+            else{
+                if (o1.hashCode()==o2.hashCode()){
+                    return 0;
+                }
+                else if (o1.hashCode()<=o2.hashCode()){
+                    return -1;
+                }
+                else{
+                    return 1;
+                }
+            }
+        }
     }
 }
