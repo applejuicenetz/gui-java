@@ -98,6 +98,15 @@ public class ShareXMLHolder extends DefaultHandler {
 			} else if (attr.getLocalName(i).equals("priority")) {
 				shareDO.setPrioritaet(Integer.parseInt(attr.getValue(i)));
 			}
+            else if (attr.getLocalName(i).equals("lastasked")){
+                shareDO.setLastAsked(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("askcount")){
+                shareDO.setAskCount(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("searchcount")){
+                shareDO.setSearchCount(Long.parseLong(attr.getValue(i)));
+            }
 		}
 	}
 
@@ -120,7 +129,7 @@ public class ShareXMLHolder extends DefaultHandler {
 		}
 	}
 
-	public Map getShare() {
+	public Map<String, ShareDO> getShare() {
 		update();
 		return shareMap;
 	}

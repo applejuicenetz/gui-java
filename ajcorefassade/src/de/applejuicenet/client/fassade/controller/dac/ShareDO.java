@@ -24,27 +24,30 @@ public class ShareDO {
 	private final int id;
 
 	private String filename;
-
 	private String shortfilename;
-
 	private long size;
-
 	private String checksum;
-
 	private int prioritaet;
+    private long lastAsked;
+    private long askCount;
+    private long searchCount;
 
 	public ShareDO(int id) {
 		this.id = id;
 	}
 
 	public ShareDO(int id, String filename, String shortfilename, long size,
-			String checksum, int prioritaet) {
+			String checksum, int prioritaet, long lastAsked, long askCount, 
+			   long searchCount) {
 		this.id = id;
 		this.filename = filename;
 		this.shortfilename = shortfilename;
 		this.size = size;
 		this.checksum = checksum;
 		this.prioritaet = prioritaet;
+        this.lastAsked = lastAsked;
+        this.askCount = askCount;
+        this.searchCount = searchCount;
 	}
 
 	public void setFilename(String filename) {
@@ -89,5 +92,29 @@ public class ShareDO {
 
 	public void setPrioritaet(int prioritaet) {
 		this.prioritaet = prioritaet;
+	}
+
+	public long getAskCount() {
+		return askCount;
+	}
+	
+	public void setAskCount(long askCount) {
+		this.askCount = askCount;
+	}
+	
+	public long getLastAsked() {
+		return lastAsked;
+	}
+	
+	public void setLastAsked(long lastAsked) {
+		this.lastAsked = lastAsked;
+	}
+	
+	public long getSearchCount() {
+		return searchCount;
+	}
+
+	public void setSearchCount(long searchCount) {
+		this.searchCount = searchCount;
 	}
 }

@@ -17,6 +17,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.controller.DataPropertyChangeInformer;
 import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
@@ -83,9 +84,11 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		new Vector<DownloadDataPropertyChangeEvent>();
 	private boolean downloadSourceEvent;
 	private DataPropertyChangeInformer downloadPropertyChangeInformer;
+	private ApplejuiceFassade ajFassade;
 
-	public ModifiedXMLHolder(CoreConnectionSettingsHolder coreHolder) {
+	public ModifiedXMLHolder(CoreConnectionSettingsHolder coreHolder, ApplejuiceFassade ajFassade) {
 		this.coreHolder = coreHolder;
+		this.ajFassade = ajFassade;
 		try {
 			securerHolder = new SecurerXMLHolder(coreHolder);
 			init();
@@ -325,11 +328,9 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		}
 		checkUploadMap(uploadDO, attributes);
 		attributes.clear();
-		// todo
-		/*
-		 * if (shareMap == null){ shareMap =
-		 * ApplejuiceFassade.getInstance().getShare(false); }
-		 */
+		if (shareMap == null){ 
+			shareMap = ajFassade.getShare(false); 
+		}
 		ShareDO shareDO = (ShareDO) shareMap.get(uploadDO
 				.getShareFileIDAsString());
 		if (shareDO != null) {
@@ -365,6 +366,8 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		downloadSourceDO.setFilename((String) userAttributes.get("filename"));
 		downloadSourceDO.setNickname((String) userAttributes.get("nickname"));
 		String versionNr = (String) userAttributes.get("version");
+		downloadSourceDO.setHerkunft(
+				Integer.parseInt((String)userAttributes.get("source")));
 		int os = Integer.parseInt((String) userAttributes
 				.get("operatingsystem"));
 		if (!versionNr.equals("0.0.0.0") && os != -1) {

@@ -24,23 +24,15 @@ import java.util.StringTokenizer;
 
 public class Version {
 	public static final int UNKNOWN = 0;
-
 	public static final int WIN32 = 1;
-
 	public static final int LINUX = 2;
-
 	public static final int MACINTOSH = 3;
-
 	public static final int SOLARIS = 4;
-
 	public static final int OS2 = 5;
-
 	public static final int FREEBSD = 6;
-
 	public static final int NETWARE = 7;
 
 	private String versionNr;
-
 	private int betriebsSystem;
 
 	public Version(String versionNr, int betriebsSystem) {

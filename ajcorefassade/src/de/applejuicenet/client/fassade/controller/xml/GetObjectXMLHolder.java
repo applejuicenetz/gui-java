@@ -1,7 +1,7 @@
 package de.applejuicenet.client.fassade.controller.xml;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xml/GetObjectXMLHolder.java,v 1.1 2004/12/03 15:51:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xml/GetObjectXMLHolder.java,v 1.2 2005/01/18 17:34:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,8 +48,11 @@ public class GetObjectXMLHolder extends WebXMLParser {
 		size = Long.parseLong(e.getAttribute("size"));
 		checksum = e.getAttribute("checksum");
 		prioritaet = Integer.parseInt(e.getAttribute("priority"));
-		shareDO = new ShareDO(id_key, filename, shortfilename, size, checksum,
-				prioritaet);
+        long lastAsked = Long.parseLong(e.getAttribute("lastasked"));
+        long askCount = Long.parseLong(e.getAttribute("askcount"));
+        long searchCount = Long.parseLong(e.getAttribute("searchcount"));
+        shareDO = new ShareDO(id_key, filename, shortfilename, size, checksum,
+                              prioritaet, lastAsked, askCount, searchCount);
 		return shareDO;
 	}
 
@@ -189,10 +192,12 @@ public class GetObjectXMLHolder extends WebXMLParser {
 		nickname = e.getAttribute("nickname");
 		temp = e.getAttribute("downloadid");
 		downloadId = Integer.parseInt(temp);
+        temp = e.getAttribute("source");
+        int herkunft = Integer.parseInt(temp);
 		DownloadSourceDO downloadSourceDO = new DownloadSourceDO(id, status,
 				directstate, downloadFrom, downloadTo, actualDownloadPosition,
 				speed, version, queuePosition, powerDownload, filename,
-				nickname, downloadId);
+				nickname, downloadId, herkunft);
 		return downloadSourceDO;
 	}
 

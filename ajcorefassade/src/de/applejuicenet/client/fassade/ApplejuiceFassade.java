@@ -1,5 +1,6 @@
 package de.applejuicenet.client.fassade;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.controller.dac.PartListDO;
 import de.applejuicenet.client.fassade.controller.dac.ServerDO;
+import de.applejuicenet.client.fassade.controller.dac.ShareDO;
 import de.applejuicenet.client.fassade.controller.xml.DirectoryXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.GetObjectXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.InformationXMLHolder;
@@ -57,7 +59,9 @@ import de.applejuicenet.client.fassade.tools.MD5Encoder;
  */
 
 public class ApplejuiceFassade {
-	public static final String MIN_NEEDED_CORE_VERSION = "0.30.145.610";
+	public static final String FASSADE_VERSION = "F-1.0";
+	
+	public static final String MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
 	public static final String ERROR_MESSAGE = "Unbehandelte Exception";
 
 	public static String separator;
@@ -72,9 +76,10 @@ public class ApplejuiceFassade {
 	private SettingsXMLHolder settingsXML = null;
 	private DirectoryXMLHolder directoryXML = null;
 	private Version coreVersion;
-	private Map share = null;
+	private Map<String, ShareDO> share = null;
 	private PartListXMLHolder partlistXML = null;
-	private boolean coreErreichbar = false;
+	
+	private long sleepTime = 2000;
 
 	// Thread
 	private Thread workerThread;
@@ -83,7 +88,7 @@ public class ApplejuiceFassade {
 			boolean passwordIsPlaintext) throws IllegalArgumentException {
 		coreHolder = new CoreConnectionSettingsHolder(host, port, password,
 				passwordIsPlaintext);
-		modifiedXML = new ModifiedXMLHolder(coreHolder);
+		modifiedXML = new ModifiedXMLHolder(coreHolder, this);
 		DataUpdateInformer downloadInformer = new DataUpdateInformer(
 				DataUpdateListener.DOWNLOAD_CHANGED) {
 			protected Object getContentObject() {
@@ -190,7 +195,7 @@ public class ApplejuiceFassade {
 		}
 		Version neededVersion = new Version();
 		neededVersion.setVersion(ApplejuiceFassade.MIN_NEEDED_CORE_VERSION);
-		if (!getCoreVersion().equals(neededVersion)) {
+		if (getCoreVersion().compareTo(neededVersion) < 0) {
 			throw new RuntimeException("invalid coreversion");
 		}
 	}
@@ -224,7 +229,7 @@ public class ApplejuiceFassade {
 				while (!isInterrupted()) {
 					try {
 						versuch = tryUpdate(versuch);
-						sleep(2000);
+						sleep(sleepTime);
 					} catch (InterruptedException e) {
 						interrupt();
 					}
@@ -232,6 +237,12 @@ public class ApplejuiceFassade {
 			}
 		};
 		workerThread.start();
+	}
+	
+	public void setUpdateInterval(long millis){
+		if (millis > 0) {
+			sleepTime = millis;
+		}
 	}
 
 	public void stopXMLCheck() {
@@ -372,7 +383,7 @@ public class ApplejuiceFassade {
 				false);
 	}
 
-	public Map getAllServer() {
+	public Map<String, ServerDO> getAllServer() {
 		if (modifiedXML != null) {
 			return modifiedXML.getServer();
 		}
@@ -393,6 +404,7 @@ public class ApplejuiceFassade {
 			return true;
 		} catch (RuntimeException re) {
 			// connection to core lost, next try
+			re.printStackTrace();
 			return false;
 		} catch (Exception e) {
 			return false;
@@ -635,11 +647,25 @@ public class ApplejuiceFassade {
 						+ serverDO.getID(), false);
 	}
 
+	public void setPrioritaet(ShareDO shareDO, Integer priority) 
+		throws IllegalArgumentException {
+		if (shareDO == null) {
+			throw new IllegalArgumentException("invalid shareDO");
+		}
+		setPrioritaet(shareDO.getId(), priority);
+	}
+	
+	
 	public void setPrioritaet(DownloadDO downloadDO, Integer priority)
 			throws IllegalArgumentException {
 		if (downloadDO == null) {
 			throw new IllegalArgumentException("invalid downloadDO");
 		}
+		setPrioritaet(downloadDO.getId(), priority);
+	}
+	
+	private void setPrioritaet(int id, Integer priority)
+			throws IllegalArgumentException {
 		if (priority == null) {
 			throw new IllegalArgumentException("invalid priority");
 		}
@@ -650,34 +676,53 @@ public class ApplejuiceFassade {
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
 				.getCorePort(), HtmlLoader.GET,
 				"/function/setpriority?password="
-						+ coreHolder.getCorePassword() + "&id="
-						+ downloadDO.getId() + "&priority="
-						+ priority.intValue(), false);
-	}
+				+ coreHolder.getCorePassword() + "&id="
+				+ id + "&priority="
+				+ priority.intValue(), false);
+	}	
 
-	public synchronized void processLink(final String link)
+	public synchronized String processLink(final String link, String subdir)
 			throws IllegalArgumentException {
 		if (link == null || link.length() == 0) {
 			throw new IllegalArgumentException("invalid link");
 		}
-		String encodedLink = link;
-		try {
-			StringBuffer tempLink = new StringBuffer(link);
-			for (int i = 0; i < tempLink.length(); i++) {
-				if (tempLink.charAt(i) == ' ') {
-					tempLink.setCharAt(i, '.');
-				}
+/*        if (isCoreAvailable() != 0){
+                if (links == null){
+                    links = new HashSet();
+                }
+                links.add(link);
+        }*/
+		if (subdir == null) {
+			subdir = "";
+		} else {
+			subdir = subdir.trim();
+			if (subdir.indexOf(File.separator) == 0
+					|| subdir.indexOf(ApplejuiceFassade.separator) == 0) {
+				subdir = subdir.substring(1);
 			}
-			encodedLink = URLEncoder.encode(tempLink.toString(), "ISO-8859-1");
-		} catch (UnsupportedEncodingException ex) {
-			throw new RuntimeException(ex);
+			subdir = subdir.replaceAll("..", "_");
+			subdir = subdir.replaceAll(":", "_");
 		}
-		HtmlLoader
-				.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
-						.getCorePort(), HtmlLoader.GET,
-						"/function/processlink?password="
-								+ coreHolder.getCorePassword() + "&link="
-								+ encodedLink, false);
+
+        String encodedLink = link;
+        try {
+            StringBuffer tempLink = new StringBuffer(link);
+            for (int i = 0; i < tempLink.length(); i++) {
+                if (tempLink.charAt(i) == ' ') {
+                    tempLink.setCharAt(i, '.');
+                }
+            }
+            encodedLink = URLEncoder.encode(tempLink.toString(),
+                "ISO-8859-1");
+        }
+        catch (UnsupportedEncodingException ex) {
+            ;
+            //gibbet nicht, also nix zu behandeln...
+        }
+        return HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
+				.getCorePort(), HtmlLoader.GET, "/function/processlink?password=" +
+				coreHolder.getCorePassword() + "&link=" + 
+				encodedLink + "&subdir=" + subdir, true);
 	}
 
 	public void setPowerDownload(DownloadDO[] downloadDOs, Integer powerDownload)
@@ -734,7 +779,7 @@ public class ApplejuiceFassade {
 		return coreVersion;
 	}
 
-	public Map getDownloadsSnapshot() {
+	public Map<String, DownloadDO> getDownloadsSnapshot() {
 		return modifiedXML.getDownloads();
 	}
 
@@ -746,34 +791,30 @@ public class ApplejuiceFassade {
 		}
 	}
 
-	public Map getShare(boolean reinit) {
+	public Map<String, ShareDO> getShare(boolean reinit) {
 		if (share == null || reinit) {
 			share = shareXML.getShare();
 		}
 		return share;
 	}
 
-	public void setShare(Set newShare) {
-		int shareSize = newShare.size();
+	public void setShare(Set<ShareEntry> newShare) {
 		if (newShare == null) {
 			return;
 		}
-		String parameters = "countshares=" + shareSize;
-		ShareEntry shareEntry = null;
-		Iterator it = newShare.iterator();
+		String parameters = "countshares=" + newShare.size();
 		int i = 1;
-		while (it.hasNext()) {
-			shareEntry = (ShareEntry) it.next();
+		for (ShareEntry curShareEntry : newShare) {
 			try {
 				parameters += "&sharedirectory" + i + "="
-						+ URLEncoder.encode(shareEntry.getDir(), "UTF-8");
+						+ URLEncoder.encode(curShareEntry.getDir(), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
 			parameters += "&sharesub"
 					+ i
 					+ "="
-					+ (shareEntry.getShareMode() == ShareEntry.SUBDIRECTORY ? "true"
+					+ (curShareEntry.getShareMode() == ShareEntry.SUBDIRECTORY ? "true"
 							: "false");
 			i++;
 		}
