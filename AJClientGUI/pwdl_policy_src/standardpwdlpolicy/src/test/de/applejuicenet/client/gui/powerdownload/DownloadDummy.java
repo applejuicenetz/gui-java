@@ -13,41 +13,45 @@ public class DownloadDummy implements Download
 {
 	private Integer id;
 	private String bezeichnung;
-	private double bereitsGeladen; 
+	private double prozentGeladen; 
 	private int status;
 	private int powerdwl;
 	private long groesse;
 	
-	public DownloadDummy(Integer id, String bezeichnung, double bereitsGeladen, int status, int powerdwl)
+	public DownloadDummy(Integer id, String bezeichnung, double prozentGeladen, int status, int powerdwl, long groesse)
 	{
 		super();
 		this.id = id;
 		this.bezeichnung = bezeichnung;
-		this.bereitsGeladen = bereitsGeladen;
-		this.status = status;
-		this.powerdwl = powerdwl;
-		this.groesse = 0;
-	}
-
-	public DownloadDummy(Integer id, String bezeichnung, double bereitsGeladen, int status, int powerdwl, long groesse)
-	{
-		super();
-		this.id = id;
-		this.bezeichnung = bezeichnung;
-		this.bereitsGeladen = bereitsGeladen;
+		this.prozentGeladen = prozentGeladen;
 		this.status = status;
 		this.powerdwl = powerdwl;
 		this.groesse = groesse;
 	}
 
+	public DownloadDummy(Integer id, String bezeichnung, double prozentGeladen, int status, int powerdwl)
+	{
+		this(id, bezeichnung, prozentGeladen, status, powerdwl, 0);
+	}
+
+	public DownloadDummy(int id, String bezeichnung, double prozentGeladen, int status, int powerdwl)
+	{
+		this(new Integer(id), bezeichnung, prozentGeladen, status, powerdwl, 0);
+	}
+
+	public DownloadDummy(int id, double prozentGeladen, int status, int powerdwl)
+	{
+		this(id, "", prozentGeladen, status, powerdwl, 0);
+	}
+
 	public String getProzentGeladenAsString()
 	{
-		return Double.toString(bereitsGeladen);
+		return Double.toString(prozentGeladen);
 	}
 
 	public double getProzentGeladen()
 	{
-		return bereitsGeladen;
+		return prozentGeladen;
 	}
 
 	public DownloadSource getSourceById(int sourceId)
@@ -137,7 +141,7 @@ public class DownloadDummy implements Download
 
 	public long getBereitsGeladen()
 	{
-		return (long)bereitsGeladen;
+		return 0;
 	}
 
 	public void setStatus(int status)

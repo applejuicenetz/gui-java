@@ -62,24 +62,19 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 		fassade.verify();
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	public void testDoFourAction() throws Exception
 	{
-		Map<String,Download> downloads = new HashMap();
-		downloads.put(Integer.toString(1), new DownloadDummy(new Integer(1), "bla1", 0.0, Download.SUCHEN_LADEN, 1));
-		downloads.put(Integer.toString(2), new DownloadDummy(new Integer(2), "bla2", 0.0, Download.SUCHEN_LADEN, 1));
-		downloads.put(Integer.toString(3), new DownloadDummy(new Integer(3), "bla3", 1.3, Download.SUCHEN_LADEN, 1));
-		downloads.put(Integer.toString(4), new DownloadDummy(new Integer(4), "bla4", 1.4, Download.SUCHEN_LADEN, 1));
-
-		fassade = new ApplejuiceFassadeDummy(downloads);
+		fassade = new ApplejuiceFassadeDummy(new HashMap());
 		policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3);
 
-		fassade.addExpectedDownload(new DownloadDummy(new Integer(1), "bla1", 0.0, Download.PAUSIERT, 1));
-		fassade.addExpectedDownload(new DownloadDummy(new Integer(2), "bla2", 0.0, Download.PAUSIERT, 1)); 
-		fassade.addExpectedDownload(new DownloadDummy(new Integer(3), "bla3", 1.3, Download.PAUSIERT, 1)); 
-		fassade.addExpectedDownload(new DownloadDummy(new Integer(4), "bla4", 1.4, Download.SUCHEN_LADEN, 3)); 
+		fassade.addDownload(new DownloadDummy(1, 0.0, Download.SUCHEN_LADEN, 1));
+		fassade.addDownload(new DownloadDummy(2, 0.0, Download.SUCHEN_LADEN, 1));
+		fassade.addDownload(new DownloadDummy(3, 1.3, Download.SUCHEN_LADEN, 1));
+		fassade.addDownload(new DownloadDummy(4, 1.4, Download.SUCHEN_LADEN, 1));
+		fassade.addExpectedDownload(new DownloadDummy(1, 0.0, Download.PAUSIERT, 1));
+		fassade.addExpectedDownload(new DownloadDummy(2, 0.0, Download.PAUSIERT, 1)); 
+		fassade.addExpectedDownload(new DownloadDummy(3, 1.3, Download.PAUSIERT, 1)); 
+		fassade.addExpectedDownload(new DownloadDummy(4, 1.4, Download.SUCHEN_LADEN, 3)); 
 		
 		policy.doAction();
 		fassade.verify();
@@ -92,6 +87,7 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 		downloads.put(Integer.toString(2), new DownloadDummy(new Integer(2), "bla2", 10.0, Download.SUCHEN_LADEN, 1, 20));
 		downloads.put(Integer.toString(3), new DownloadDummy(new Integer(3), "bla3", 1.3, Download.SUCHEN_LADEN, 1, 30));
 		downloads.put(Integer.toString(4), new DownloadDummy(new Integer(4), "bla4", 1.4, Download.SUCHEN_LADEN, 1, 40));
+		downloads.put(Integer.toString(5), new DownloadDummy(new Integer(5), "bla5", 10.0, Download.SUCHEN_LADEN, 1, 15));
 
 		fassade = new ApplejuiceFassadeDummy(downloads);
 		policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3);
@@ -100,6 +96,7 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 		fassade.addExpectedDownload(new DownloadDummy(new Integer(2), "bla2", 10.0, Download.SUCHEN_LADEN, 3, 20)); 
 		fassade.addExpectedDownload(new DownloadDummy(new Integer(3), "bla3", 1.3, Download.PAUSIERT, 1, 30)); 
 		fassade.addExpectedDownload(new DownloadDummy(new Integer(4), "bla4", 1.4, Download.PAUSIERT, 1, 40)); 
+		fassade.addExpectedDownload(new DownloadDummy(new Integer(5), "bla5", 10.0, Download.PAUSIERT, 1, 15)); 
 		
 		policy.doAction();
 		fassade.verify();
@@ -164,6 +161,26 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 		fassade.addExpectedDownload(new DownloadDummy(new Integer(3), "bla3", 1.3, Download.FERTIG, 3)); 
 		fassade.addExpectedDownload(new DownloadDummy(new Integer(4), "bla4", 1.4, Download.FERTIG, 1)); 
 		
+		fassade.verify();
+	}
+
+	public void testDoActionOneAdded() throws Exception
+	{
+		fassade = new ApplejuiceFassadeDummy(new HashMap());
+		policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3);
+
+		fassade.addDownload(new DownloadDummy(1, 10.0, Download.SUCHEN_LADEN, 1));
+		fassade.addDownload(new DownloadDummy(2, 10.0, Download.SUCHEN_LADEN, 1));
+		fassade.addExpectedDownload(new DownloadDummy(1, 10.0, Download.SUCHEN_LADEN, 3));
+		fassade.addExpectedDownload(new DownloadDummy(2, 10.0, Download.PAUSIERT, 1)); 
+
+		policy.doAction();
+		fassade.verify();
+
+		fassade.addDownload(new DownloadDummy(3, 0.0, Download.SUCHEN_LADEN, 1));
+		fassade.addExpectedDownload(new DownloadDummy(3, 0.0, Download.PAUSIERT, 1)); 
+		
+		policy.doAction();
 		fassade.verify();
 	}
 

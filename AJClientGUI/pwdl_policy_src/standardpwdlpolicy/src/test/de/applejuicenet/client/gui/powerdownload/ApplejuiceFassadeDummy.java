@@ -57,6 +57,11 @@ public class ApplejuiceFassadeDummy extends ApplejuiceFassade
 		}
 	}
 
+	public void addDownload(Download download)
+	{
+		this.snapshot.put(Integer.toString(download.getId()), download);
+	}
+	
 	public void addExpectedDownload(DownloadDummy dummy)
 	{
 		this.expected.add(dummy);
@@ -74,7 +79,7 @@ public class ApplejuiceFassadeDummy extends ApplejuiceFassade
 			Assert.assertNotNull(download);
 			Assert.assertEquals("Filename nicht gleich", cur.getFilename(), download.getFilename());
 			Assert.assertEquals("Status nicht gleich", cur.getStatus(), download.getStatus());
-			Assert.assertEquals("BereitsGeladen nicht gleich", cur.getBereitsGeladen(), download.getBereitsGeladen());
+			Assert.assertEquals("BereitsGeladen nicht gleich", cur.getProzentGeladen(), download.getProzentGeladen());
 			Assert.assertEquals("Powerdownload nicht gleich", cur.getPowerDownload(), download.getPowerDownload());
 			Assert.assertEquals("Groesse nicht gleich", cur.getGroesse(), download.getGroesse());
 		}

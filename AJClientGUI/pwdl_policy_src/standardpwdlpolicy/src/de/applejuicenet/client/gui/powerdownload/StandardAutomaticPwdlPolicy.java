@@ -15,7 +15,7 @@ import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.9 2005/02/15 15:37:39 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.10 2005/02/15 16:31:11 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -202,28 +202,28 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
     }
     
     private class Sortierkriterium {
-    	private Double bereitsGeladen;
+    	private Double prozentGeladen;
     	private Long groesse;
     	private Integer id;
     	
-    	public Sortierkriterium(Double bereitsGeladen, Long groesse, Integer id) {
-    		this.bereitsGeladen = bereitsGeladen;
+    	public Sortierkriterium(Double prozentGeladen, Long groesse, Integer id) {
+    		this.prozentGeladen = prozentGeladen;
     		this.groesse = groesse;
     		this.id = id;
     	}
 
     	public Sortierkriterium(Download current)
 			{
-    		this.bereitsGeladen = new Double(current.getBereitsGeladen());
+    		this.prozentGeladen = new Double(current.getProzentGeladen());
     		this.groesse = current.getGroesse();
     		this.id = current.getId();
 			}
 
 			public int compareTo(Sortierkriterium comparable)
 			{
-				int compareResult = this.bereitsGeladen.compareTo(comparable.bereitsGeladen);
+				int compareResult = this.prozentGeladen.compareTo(comparable.prozentGeladen) * -1;
 				if (compareResult == 0) {
-					compareResult = this.groesse.compareTo(comparable.groesse);
+					compareResult = this.groesse.compareTo(comparable.groesse) * -1;
 				}
 				if (compareResult == 0) {
 					compareResult = this.id.compareTo(comparable.id);
@@ -235,7 +235,7 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
     private class ProzentGeladenComparator implements Comparator {
 			public int compare(Object arg0, Object arg1)
 			{
-				return ((Sortierkriterium)arg1).compareTo((Sortierkriterium)arg0);
+				return ((Sortierkriterium)arg0).compareTo((Sortierkriterium)arg1);
 			}
     }
 }
