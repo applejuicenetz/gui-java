@@ -1,0 +1,12 @@
+REGEDIT4
+
+[HKEY_CLASSES_ROOT\ajfsp]
+@="URL: Applejuice Protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\ajfsp\shell]
+
+[HKEY_CLASSES_ROOT\ajfsp\shell\open]
+
+[HKEY_CLASSES_ROOT\ajfsp\shell\open\command]
+@="\"C:\\AJClientGUI\\AJCoreGUI.exe\" \"%1\" \"C:\\AJClientGUI\""

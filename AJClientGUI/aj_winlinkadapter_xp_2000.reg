@@ -9,4 +9,4 @@ Windows Registry Editor Version 5.00
 [HKEY_CLASSES_ROOT\ajfsp\shell\open]
 
 [HKEY_CLASSES_ROOT\ajfsp\shell\open\command]
-@="\"C:\\source\\AJClientGUI\\AJCoreGUIW.exe\" \"%1\" \"C:\\source\\AJClientGUI\""
+@="\"C:\\AJClientGUI\\AJCoreGUI.exe\" \"%1\" \"C:\\AJClientGUI\""
