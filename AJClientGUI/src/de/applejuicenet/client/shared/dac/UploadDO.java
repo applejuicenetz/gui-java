@@ -85,7 +85,7 @@ public class UploadDO {
     return version;
   }
 
-  public void setVersion(Version shareFileID) {
+  public void setVersion(Version version) {
     this.version = version;
   }
 

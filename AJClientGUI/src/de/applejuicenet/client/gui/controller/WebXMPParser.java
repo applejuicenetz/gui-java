@@ -48,7 +48,7 @@ public abstract class WebXMPParser extends XMLDecoder {
                                           xmlCommand + "?timestamp=" + timestamp + parameters);
     }
     catch (WebSiteNotFoundException ex) {
-      AppleJuiceDialog.getApp().closeWithErrormessage("Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.");
+      AppleJuiceDialog.closeWithErrormessage("Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.");
     }
     DocumentBuilderFactory factory =
         DocumentBuilderFactory.newInstance();
@@ -60,7 +60,6 @@ public abstract class WebXMPParser extends XMLDecoder {
         timestamp = Long.parseLong(getFirstAttrbuteByTagName(new String[]{"applejuice", "time"}, true));
       else
         firstRun = !firstRun;
-//      update();
     }
     catch (SAXException sxe) {
       Exception x = sxe;
