@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: ./needed_jars/skinlf.jar,./needed_jars/looks-1.2.1.jar
+Main-Class: de.applejuicenet.client.AppleJuiceClient
+
