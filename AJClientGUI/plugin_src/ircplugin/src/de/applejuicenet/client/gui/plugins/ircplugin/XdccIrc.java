@@ -33,9 +33,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
+import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.24 2004/11/22 16:25:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.25 2004/12/05 20:04:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -106,8 +107,9 @@ public class XdccIrc
                     //ungueltiger Port
                 }
             }
-
+            IconManager im = IconManager.getInstance();
             createConnection = new JButton("Connect");
+            createConnection.setIcon(im.getIcon("irc_login"));
             createConnection.addActionListener(connectActionListener);
             newUserAction = new JButton("Talk Private");
             newUserAction.addActionListener(new ActionListener() {
@@ -116,6 +118,7 @@ public class XdccIrc
                 }
             });
             joinChannelAction = new JButton("Join a Channel");
+            joinChannelAction.setIcon(im.getIcon("irc_chan"));
             joinChannelAction.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
                     joinChan();
@@ -1149,8 +1152,6 @@ public class XdccIrc
                             indexOfChannel);
                         if (aComponent instanceof ChannelPanel) {
                             ChannelPanel channel = (ChannelPanel) aComponent;
-                            channel.updateTextArea(nickCommand + " sets MODE: " +
-                                modeReceived);
                             //MeineR sets MODE: +vvv bluna Biggestking ajPluginUser23249
                             char plusMinus = modeReceived.charAt(0);
                             String tmp = modeReceived.substring(1,
@@ -1162,59 +1163,31 @@ public class XdccIrc
                                 if (mode == 'v' || mode == 'a' || mode == 'o' || mode == 'h'){
                                     for (int i = 0; i < splits.length; i++) {
                                         String name = splits[i];
-                                        SortedListModel model = channel.
-                                            getUserNameList();
-                                        if (model.contains("!" + name)) {
-                                            channel.updateUserArea("!" + name,
-                                                "remove");
-                                        }
-                                        else if (model.contains("@" +
-                                            name)) {
-                                            channel.updateUserArea("@" + name,
-                                                "remove");
-                                        }
-                                        else if (model.contains("%" +
-                                            name)) {
-                                            channel.updateUserArea("%" + name,
-                                                "remove");
-                                        }
-                                        else if (model.contains("+" +
-                                            name)) {
-                                            channel.updateUserArea("+" + name,
-                                                "remove");
-                                        }
-                                        else if (model.contains(name)) {
-                                            channel.updateUserArea(name,
-                                                "remove");
-                                        }
-                                        if (plusMinus == '+') {
-                                            if (mode == 'v') {
-                                                channel.updateUserArea("+" +
-                                                    name,
-                                                    "add");
+                                        User[] users = channel.
+                                        	getUserNameList().getValues();
+                                        for (int x=0; x<users.length; x++){
+                                           if (users[x].getName().equalsIgnoreCase(name)){
+                                                if (mode == 'v') {
+                                                    users[x].setVoice(plusMinus == '+');
+                                                }
+                                                else if (mode == 'a') {
+                                                    users[x].setAdmin(plusMinus == '+');
+                                                }
+                                                else if (mode == 'o') {
+                                                    users[x].setOp(plusMinus == '+');
+                                                }
+                                                else if (mode == 'h') {
+                                                    users[x].setHalfop(plusMinus == '+');
+                                                }
+                                                channel.getUserNameList().reorder();
+                                                break;
                                             }
-                                            else if (mode == 'a') {
-                                                channel.updateUserArea("!" +
-                                                    name,
-                                                    "add");
-                                            }
-                                            else if (mode == 'o') {
-                                                channel.updateUserArea("@" +
-                                                    name,
-                                                    "add");
-                                            }
-                                            else if (mode == 'h') {
-                                                channel.updateUserArea("%" +
-                                                    name,
-                                                    "add");
-                                            }
-                                        }
-                                        else if (plusMinus == '-') {
-                                            channel.updateUserArea(name, "add");
-                                        }
+                                        }                                        
                                     }
                                 }
                             }
+                            channel.updateTextArea(nickCommand + " sets MODE: " +
+                                    modeReceived);
                         }
                     }
                 }

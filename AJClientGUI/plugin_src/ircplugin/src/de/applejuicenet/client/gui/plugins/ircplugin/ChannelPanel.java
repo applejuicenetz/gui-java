@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -44,7 +43,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.13 2004/12/03 20:20:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.14 2004/12/05 20:04:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -135,19 +134,14 @@ public class ChannelPanel
                         else{
                             searchString = text.toLowerCase();
                         }
-                        Set values = usernameList.getValues();
                         String treffer = "";
                         int count = 0;
-                        synchronized (values) {
-                            Iterator it = values.iterator();
-                            String value;
-                            while (it.hasNext()) {
-                                value = (String) it.next();
-                                if (value.indexOf('!') == 0 || value.indexOf('@') == 0 || value.indexOf('%') == 0 || value.indexOf('+') == 0){
-                                    value = value.substring(1);
-                                }
-                                if (value.toLowerCase().indexOf(searchString)==0){
-                                    treffer += value + " ";
+                        synchronized (usernameList) {
+                            User[] users = usernameList.getValues();
+                            String compareValue;
+                            for (int i=0; i<users.length; i++){
+                                if (users[i].getName().startsWith(searchString)){
+                                    treffer += users[i].getName() + " ";
                                     count ++;
                                 }
                             }
@@ -533,6 +527,7 @@ public class ChannelPanel
         if (newCaretPosition != oldCaretPosition){
             textArea.setCaretPosition(newCaretPosition);
         }
+        usernameList.reorder();
     }
 
 
@@ -542,7 +537,35 @@ public class ChannelPanel
 
     public void updateUserArea(String username, String command) {
         if (command.equals("add")) {
-            usernameList.add(username);
+            User user;
+            if (username.indexOf('!') == 0 || username.indexOf('@') == 0
+                || username.indexOf('%') == 0 || username.indexOf('+') == 0){
+                char mod = username.charAt(0);
+                username = username.substring(1);
+                user = new User(username);
+                switch (mod){
+                	case '!':{
+                	    user.setAdmin(true);
+                	    break;
+                	}
+                	case '@':{
+                	    user.setOp(true);
+                	    break;
+                	}
+                	case '%':{
+                	    user.setHalfop(true);
+                	    break;
+                	}
+                	case '+':{
+                	    user.setVoice(true);
+                	    break;
+                	}
+                }
+            }
+            else{
+                user = new User(username);
+            }
+            usernameList.add(user);
         }
 
         else if (command.equals("remove")) {
@@ -550,28 +573,28 @@ public class ChannelPanel
                 || username.indexOf('%') == 0 || username.indexOf('+') == 0){
                 username = username.substring(1);
             }
-            usernameList.remove(username);
+            User[] users = usernameList.getValues();
+            User user = null;
+            for (int i=0; i<users.length; i++){
+                if (users[i].getName().equalsIgnoreCase(username)){
+                    user = users[i];
+                    break;
+                }
+            }
+            if (user != null){
+                usernameList.remove(user);
+            }
         }
         counter.setText(usernameList.getSize() + " User");
     }
 
     public void userQuits(String nick, boolean hide){
-        Set values = usernameList.getValues();
-        String nickToRemove = null;
-        synchronized (values) {
-            Iterator it = values.iterator();
-            String value;
-            String compareValue;
-            while (it.hasNext()) {
-                value = (String) it.next();
-                if (value.indexOf('!') == 0 || value.indexOf('@') == 0 || value.indexOf('%') == 0 || value.indexOf('+') == 0){
-                    compareValue = value.substring(1);
-                }
-                else{
-                    compareValue = value;
-                }
-                if (compareValue.compareToIgnoreCase(nick)==0){
-                    nickToRemove = value;
+        User nickToRemove = null;
+        synchronized (usernameList) {
+            User[] users = usernameList.getValues();
+            for (int i=0; i<users.length; i++){
+                if (users[i].getName().equalsIgnoreCase(nick)){
+                    nickToRemove = users[i];
                     break;
                 }
             }
@@ -585,31 +608,20 @@ public class ChannelPanel
     }
 
     public void renameUser(String oldNick, String newNick){
-        Set values = usernameList.getValues();
-        String nickToRemove = null;
-        String mod = "";
-        synchronized (values) {
-            Iterator it = values.iterator();
-            String value;
+        User searchedNick = null;
+        synchronized (usernameList) {
+            User[] users = usernameList.getValues();
             String compareValue;
-            while (it.hasNext()) {
-                value = (String) it.next();
-                if (value.indexOf('!') == 0 || value.indexOf('@') == 0 || value.indexOf('%') == 0 || value.indexOf('+') == 0){
-                    compareValue = value.substring(1);
-                    mod = value.substring(0, 1);
-                }
-                else{
-                    compareValue = value;
-                }
-                if (compareValue.compareToIgnoreCase(oldNick)==0){
-                    nickToRemove = value;
+            for (int i=0; i<users.length; i++){
+                if (users[i].getName().compareToIgnoreCase(oldNick)==0){
+                    searchedNick = users[i];
                     break;
                 }
             }
         }
-        if (nickToRemove != null){
-            updateUserArea(nickToRemove, "remove");
-            updateUserArea(mod + newNick, "add");
+        if (searchedNick != null){
+            searchedNick.setName(newNick);
+            usernameList.reorder();
             updateTextArea(oldNick + " changes nickname to " +
                                 newNick);
         }

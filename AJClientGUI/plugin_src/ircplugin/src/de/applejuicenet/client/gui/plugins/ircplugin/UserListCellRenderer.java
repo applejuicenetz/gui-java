@@ -1,13 +1,14 @@
 package de.applejuicenet.client.gui.plugins.ircplugin;
 
-import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import de.applejuicenet.client.shared.IconManager;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserListCellRenderer.java,v 1.9 2004/11/22 16:25:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserListCellRenderer.java,v 1.10 2004/12/05 20:04:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,34 +36,35 @@ public class UserListCellRenderer
 
         setFont(list.getFont());
         if (value != null) {
-            String inhalt = (String) value;
-            setText(inhalt);
+            User user = (User) value;
+            setText(user.getName());
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
                 setForeground(list.getSelectionForeground());
             }
             else {
                 setForeground(list.getForeground());
-                if (inhalt.length() != 0){
-                    if (inhalt.substring(0, 1).compareTo("!") == 0) {
-                        setBackground(Color.RED);
-                    }
-                    else if (inhalt.substring(0, 1).compareTo("@") == 0) {
-                        setBackground(Color.YELLOW);
-                    }
-                    else if (inhalt.substring(0, 1).compareTo("%") == 0) {
-                        setBackground(Color.GREEN);
-                    }
-                    else if (inhalt.substring(0, 1).compareTo("+") == 0) {
-                        setBackground(Color.LIGHT_GRAY);
-                    }
-                    else {
-                        setBackground(list.getBackground());
-                    }
-                }
-                else {
-                    setBackground(list.getBackground());
-                }
+                setBackground(list.getBackground());
+            }
+            if (user.isAdmin()) {
+                setIcon(IconManager.getInstance().getIcon("irc_red"));
+                setToolTipText("Administrator");
+            }
+            else if (user.isOp()) {
+                setIcon(IconManager.getInstance().getIcon("irc_blue"));
+                setToolTipText("Operator");
+            }
+            else if (user.isHalfop()) {
+                setIcon(IconManager.getInstance().getIcon("irc_green"));
+                setToolTipText("Half-Operator");
+            }
+            else if (user.isVoice()) {
+                setIcon(IconManager.getInstance().getIcon("irc_yellow"));
+                setToolTipText("Voice");
+            }
+            else {
+                setIcon(null);
+                setToolTipText(null);
             }
         }
         return this;
