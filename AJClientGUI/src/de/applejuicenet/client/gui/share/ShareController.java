@@ -15,7 +15,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumnModel;
 
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.DateiListeDialog;
@@ -54,7 +53,6 @@ public class ShareController extends GuiController {
 	
 	private static ShareController instance = null;
 	
-    private Logger logger;
 	private SharePanel sharePanel;
     private String dateiGroesse;
     private String eintraege;
@@ -64,7 +62,7 @@ public class ShareController extends GuiController {
     private ShareTreeMouseAdapter shareTreeMouseAdapter;
 	
 	private ShareController(){
-        logger = Logger.getLogger(getClass());
+		super();
 		sharePanel = new SharePanel(this);
 		init();
 		LanguageSelector.getInstance().addLanguageListener(this);
@@ -555,10 +553,11 @@ public class ShareController extends GuiController {
         worker2.start();
     }
     
-	public void componentLostSelection() {
+    public void componentLostSelection() {
+    	// nix zu tun
 	}
     
-    public void fireLanguageChanged() {
+    protected void languageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         eintraege = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.shareform.anzahlShare"));
@@ -571,5 +570,9 @@ public class ShareController extends GuiController {
         else {
         	sharePanel.getLblDateien().setText("");
         }
+	}
+
+	protected void contentChanged(int type, Object content) {
+		// nix zu tun
 	}
 }

@@ -19,12 +19,13 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.share.ShareController;
+import de.applejuicenet.client.gui.start.StartController;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.46 2004/10/15 10:14:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.47 2004/10/15 12:59:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,7 +41,7 @@ public class RegisterPanel
 	
     private static final long serialVersionUID = -8677504466512253432L;
     
-	private StartPanel startPanel;
+	private StartController startController;
     private DownloadPanel downloadPanel;
     private SearchPanel searchPanel;
     private UploadPanel uploadPanel;
@@ -82,7 +83,7 @@ public class RegisterPanel
                 super.setSelectedIndex(index);
             }
         });
-        startPanel = StartPanel.getInstance();
+        startController = StartController.getInstance();
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(40, "Lade Sharepanel...");
         }
@@ -107,7 +108,7 @@ public class RegisterPanel
         IconManager im = IconManager.getInstance();
 
         ImageIcon icon = im.getIcon("start");
-        addTab("Start", icon, startPanel);
+        addTab("Start", icon, startController.getComponent());
 
         ImageIcon icon6 = im.getIcon("meinshare");
         addTab("Share", icon6, shareController.getComponent());
