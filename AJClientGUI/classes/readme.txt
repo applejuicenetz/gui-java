@@ -1,1 +1,0 @@
-Nur ein Platzhalter fuer CVS.
