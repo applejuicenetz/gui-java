@@ -25,7 +25,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.19 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.20 2003/08/20 07:49:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +34,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.20  2003/08/20 07:49:50  maj0r
+ * Programmstart beschleunigt.
+ *
  * Revision 1.19  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -111,13 +114,6 @@ public class SharePanel
   }
 
   private void jbInit() throws Exception {
-    ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
-    Iterator it = ajSettings.getShareDirs().iterator();
-    while (it.hasNext()) {
-      ShareEntry entry = (ShareEntry) it.next();
-      ( (DefaultListModel) folderList.getModel()).addElement(entry);
-    }
-
     shareModel = new ShareModel(new ShareNode(null, "/"));
     shareTable = new JTreeTable(shareModel);
     titledBorder1 = new TitledBorder("Test");
@@ -221,6 +217,12 @@ public class SharePanel
 
   public void registerSelected() {
     if (!treeInitialisiert){
+        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
+        Iterator it = ajSettings.getShareDirs().iterator();
+        while (it.hasNext()) {
+          ShareEntry entry = (ShareEntry) it.next();
+          ( (DefaultListModel) folderList.getModel()).addElement(entry);
+        }
         folderTree.setRootVisible(false);
         ShareSelectionTreeModel treeModel = new ShareSelectionTreeModel();
         folderTree.setModel(treeModel);
