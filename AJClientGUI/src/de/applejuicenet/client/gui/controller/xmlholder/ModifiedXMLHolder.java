@@ -23,7 +23,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.4 2004/01/06 17:32:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.5 2004/01/07 16:15:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.5  2004/01/07 16:15:20  maj0r
+ * Warnmeldung bezueglich 30-Minuten-Sperre bei manuellem Serverwechsel eingebaut.
+ *
  * Revision 1.4  2004/01/06 17:32:50  maj0r
  * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
  *
@@ -224,7 +227,7 @@ public class ModifiedXMLHolder
         updateNetworkInfo();
         updateUploads();
         updateSuche();
-        getInformation();
+        getInformation(true);
     }
 
     public void reload(String parameters) {
@@ -253,66 +256,73 @@ public class ModifiedXMLHolder
         throw new RuntimeException();
     }
 
-    public Information getInformation() {
-        NodeList nodes = document.getElementsByTagName("information");
+    public Information getInformation(boolean reload) {
         try {
-            long sessionUpload;
-            long sessionDownload;
-            long credits;
-            long uploadSpeed;
-            long downloadSpeed;
-            long openConnections;
-            String serverName = null;
-            String externeIP;
-            int verbindungsStatus = Information.NICHT_VERBUNDEN;
-            if (tryConnectToServer != -1) {
-                ServerDO serverDO = (ServerDO) serverMap.get(new
-                    MapSetStringKey(tryConnectToServer));
-                if (serverDO != null) {
-                    verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
-                    serverName = serverDO.getName();
+            if (reload || information == null) {
+                NodeList nodes = document.getElementsByTagName("information");
+                long sessionUpload;
+                long sessionDownload;
+                long credits;
+                long uploadSpeed;
+                long downloadSpeed;
+                long openConnections;
+                String serverName = null;
+                String externeIP;
+                int verbindungsStatus = Information.NICHT_VERBUNDEN;
+                if (tryConnectToServer != -1) {
+                    ServerDO serverDO = (ServerDO) serverMap.get(new
+                        MapSetStringKey(tryConnectToServer));
+                    if (serverDO != null) {
+                        verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
+                        serverName = serverDO.getName();
+                    }
                 }
-            }
-            else if (connectedWithServerId != -1) {
-                ServerDO serverDO = (ServerDO) serverMap.get(new
-                    MapSetStringKey(connectedWithServerId));
-                if (serverDO != null) {
-                    verbindungsStatus = Information.VERBUNDEN;
-                    serverName = serverDO.getName();
+                else if (connectedWithServerId != -1) {
+                    ServerDO serverDO = (ServerDO) serverMap.get(new
+                        MapSetStringKey(connectedWithServerId));
+                    if (serverDO != null) {
+                        verbindungsStatus = Information.VERBUNDEN;
+                        serverName = serverDO.getName();
+                    }
                 }
-            }
-            else {
-                verbindungsStatus = Information.NICHT_VERBUNDEN;
-            }
-            externeIP = netInfo.getExterneIP();
-            if (nodes.getLength() != 0) {
-                Element e = (Element) nodes.item(0);
+                else {
+                    verbindungsStatus = Information.NICHT_VERBUNDEN;
+                }
+                externeIP = netInfo.getExterneIP();
+                if (nodes.getLength() != 0) {
+                    Element e = (Element) nodes.item(0);
 //                int id = Integer.parseInt(e.getAttribute("id"));
-                credits = Long.parseLong(e.getAttribute("credits"));
-                uploadSpeed = Long.parseLong(e.getAttribute("uploadspeed"));
-                downloadSpeed = Long.parseLong(e.getAttribute("downloadspeed"));
-                openConnections = Long.parseLong(e.getAttribute(
-                    "openconnections"));
-                sessionUpload = Long.parseLong(e.getAttribute("sessionupload"));
-                sessionDownload = Long.parseLong(e.getAttribute(
-                    "sessiondownload"));
-                information = new Information(-1, sessionUpload, sessionDownload,
-                                              credits, uploadSpeed,
-                                              downloadSpeed,
-                                              openConnections,
-                                              verbindungsStatus, serverName,
-                                              externeIP);
-            }
-            else {
-                information = new Information(information.getId(),
-                                              information.getSessionUpload(),
-                                              information.getSessionDownload(),
-                                              information.getCredits(),
-                                              information.getUploadSpeed(),
-                                              information.getDownloadSpeed(),
-                                              information.getOpenConnections(),
-                                              verbindungsStatus, serverName,
-                                              externeIP);
+                    credits = Long.parseLong(e.getAttribute("credits"));
+                    uploadSpeed = Long.parseLong(e.getAttribute("uploadspeed"));
+                    downloadSpeed = Long.parseLong(e.getAttribute(
+                        "downloadspeed"));
+                    openConnections = Long.parseLong(e.getAttribute(
+                        "openconnections"));
+                    sessionUpload = Long.parseLong(e.getAttribute(
+                        "sessionupload"));
+                    sessionDownload = Long.parseLong(e.getAttribute(
+                        "sessiondownload"));
+                    information = new Information( -1, sessionUpload,
+                                                  sessionDownload,
+                                                  credits, uploadSpeed,
+                                                  downloadSpeed,
+                                                  openConnections,
+                                                  verbindungsStatus, serverName,
+                                                  externeIP);
+                }
+                else {
+                    information = new Information(information.getId(),
+                                                  information.getSessionUpload(),
+                                                  information.
+                                                  getSessionDownload(),
+                                                  information.getCredits(),
+                                                  information.getUploadSpeed(),
+                                                  information.getDownloadSpeed(),
+                                                  information.
+                                                  getOpenConnections(),
+                                                  verbindungsStatus, serverName,
+                                                  externeIP);
+                }
             }
             return information;
         }

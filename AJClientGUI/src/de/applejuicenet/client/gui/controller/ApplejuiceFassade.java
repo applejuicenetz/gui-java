@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.90 2004/01/07 14:52:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.91 2004/01/07 16:15:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -478,7 +478,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public Information getInformation() {
-        return modifiedXML.getInformation();
+        return modifiedXML.getInformation(false);
     }
 
     public PartListDO getPartList(DownloadDO downloadDO) {
@@ -984,7 +984,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     break;
                 }
                 case DataUpdateListener.INFORMATION_CHANGED: {
-                    Information content = modifiedXML.getInformation();
+                    Information content = modifiedXML.getInformation(false);
                     Iterator it = informationListener.iterator();
                     while (it.hasNext()) {
                         ( (DataUpdateListener) it.next()).fireContentChanged(

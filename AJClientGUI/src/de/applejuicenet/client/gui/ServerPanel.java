@@ -40,9 +40,12 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import de.applejuicenet.client.shared.Information;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.44 2004/01/02 16:48:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.45 2004/01/07 16:15:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -51,6 +54,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.45  2004/01/07 16:15:20  maj0r
+ * Warnmeldung bezueglich 30-Minuten-Sperre bei manuellem Serverwechsel eingebaut.
+ *
  * Revision 1.44  2004/01/02 16:48:30  maj0r
  * Serverliste holen geaendert.
  *
@@ -155,8 +161,7 @@ public class ServerPanel
     public static ServerPanel _this;
 
     private JTable serverTable;
-    private JLabel sucheServer = new JLabel(
-        "<html><font><u>mehr Server gibt es hier</u></font></html>");
+    private JButton sucheServer = new JButton();
     private JPopupMenu popup = new JPopupMenu();
     private JPopupMenu popup2 = new JPopupMenu();
     private JPopupMenu popup3 = new JPopupMenu();
@@ -172,6 +177,8 @@ public class ServerPanel
     private JLabel juenger24h = new JLabel();
     private Logger logger;
     private boolean initizialiced = false;
+    private String warnungTitel = "";
+    private String warnungNachricht = "";
 
     public ServerPanel() {
         _this = this;
@@ -190,6 +197,7 @@ public class ServerPanel
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
 
+        sucheServer.setForeground(Color.BLUE);
         item1 = new JMenuItem("Verbinden");
         item5 = new JMenuItem("Hinzufügen");
         item2 = new JMenuItem("Löschen");
@@ -208,7 +216,15 @@ public class ServerPanel
                 ServerDO server = (ServerDO) ( (ServerTableModel) serverTable.
                                               getModel()).
                     getRow(selected);
-                ApplejuiceFassade.getInstance().connectToServer(server.getID());
+                if (ApplejuiceFassade.getInstance().getInformation().getVerbindungsStatus() == Information.VERBUNDEN){
+                    int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), warnungNachricht, warnungTitel,
+                                  JOptionPane.YES_NO_OPTION);
+                    if (result != JOptionPane.YES_OPTION){
+                        return;
+                    }
+                }
+                ApplejuiceFassade.getInstance().connectToServer(server.
+                    getID());
                 SoundPlayer.getInstance().playSound(SoundPlayer.VERBINDEN);
             }
         });
@@ -261,17 +277,8 @@ public class ServerPanel
         constraints.gridx = 0;
         constraints.gridy = 0;
 
-        sucheServer.setForeground(Color.blue);
-        sucheServer.addMouseListener(new MouseAdapter() {
-            public void mouseExited(MouseEvent e) {
-                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            }
-
-            public void mouseEntered(MouseEvent e) {
-                setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-
-            public void mouseClicked(MouseEvent e) {
+        sucheServer.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
                 Thread worker = new Thread() {
                     public void run() {
                         ApplejuiceFassade af = ApplejuiceFassade.getInstance();
@@ -433,11 +440,9 @@ public class ServerPanel
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            /*            sucheServer.setText("<html><font><u>" +
-                 ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            sucheServer.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                  getFirstAttrbuteByTagName(new String[]{"mainform", "Label11",
-                 "caption"})) +
-                                            "</u></font></html>");*/
+                 "caption"})));
             String[] columns = new String[4];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"mainform",
@@ -489,6 +494,13 @@ public class ServerPanel
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
                                           "juenger24h"})));
+            warnungTitel = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
+            warnungNachricht = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
+                                          "warnungnachricht"}));
 
             TableColumnModel tcm = serverTable.getColumnModel();
             for (int i = 0; i < tcm.getColumnCount(); i++) {
