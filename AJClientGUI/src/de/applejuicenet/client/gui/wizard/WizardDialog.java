@@ -28,7 +28,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardDialog.java,v 1.4 2004/12/06 15:16:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardDialog.java,v 1.5 2004/12/07 16:48:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -201,8 +201,8 @@ public class WizardDialog
         LanguageSelector.getInstance().removeLanguageListener(this);
 		int result = JOptionPane.showConfirmDialog(this, ZeichenErsetzer.korrigiereUmlaute(
 				LanguageSelector.getInstance().
-	            getFirstAttrbuteByTagName(".root.connect.remember.caption")), 
-				"appleJuice Client" + " ?",
+	            getFirstAttrbuteByTagName(".root.connect.remember.caption")) + " ?", 
+				"appleJuice Client",
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE);
 		if (result == JOptionPane.YES_OPTION) {
