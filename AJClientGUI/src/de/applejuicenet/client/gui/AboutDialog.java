@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.10 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.11 2004/01/04 16:36:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AboutDialog.java,v $
+ * Revision 1.11  2004/01/04 16:36:40  maj0r
+ * Credits geaendert.
+ *
  * Revision 1.10  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -200,6 +203,8 @@ public class AboutDialog extends JDialog {
             credits.add(new CreditsEntry(false, "muhviehstarr"));
             credits.add(new CreditsEntry(true, "Banner & Bilder"));
             credits.add(new CreditsEntry(false, "saschxd"));
+            credits.add(new CreditsEntry(true, "Übersetzung"));
+            credits.add(new CreditsEntry(false, "BlueTiger"));
             credits.add(new CreditsEntry(true, "Kontakt"));
             credits.add(new CreditsEntry(false, "irc.bongster.de"));
             credits.add(new CreditsEntry(false, "#applejuice"));
