@@ -37,7 +37,7 @@ import de.applejuicenet.client.gui.plugins.IrcPlugin;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.30 2004/12/08 13:51:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.31 2004/12/08 15:17:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -288,7 +288,6 @@ public class XdccIrc
                 }
                 connectButton.setEnabled(false);
                 createConnection.setEnabled(false);
-                tabUpdate("Init Window", " Connecting to: " + host);
                 connectStartRegister();
                 createConnection.setText(trennen);
                 createConnection.removeActionListener(connectActionListener);
@@ -342,6 +341,7 @@ public class XdccIrc
         if (propHost != null && propHost.length() > 0) {
             host = propHost;
         }
+        tabUpdate("Init Window", " Connecting to: " + host);
         String propPort = parent.getProperties().getProperty("port");
         if (propPort != null && propPort.length() > 0) {
             try {
