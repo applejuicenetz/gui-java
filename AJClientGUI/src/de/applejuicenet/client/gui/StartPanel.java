@@ -7,9 +7,11 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.12 2003/08/09 16:47:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.13 2003/08/11 14:10:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +20,10 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.13  2003/08/11 14:10:28  maj0r
+ * DownloadPartList eingefügt.
+ * Diverse Änderungen.
+ *
  * Revision 1.12  2003/08/09 16:47:42  maj0r
  * Diverse Änderungen.
  *
@@ -61,10 +67,13 @@ public class StartPanel
   private String label6Text;
   private String firewallWarning;
 
+  private Logger logger;
+
 
   private LanguageSelector languageSelector;
 
   public StartPanel(AppleJuiceDialog parent) {
+    logger = Logger.getLogger(getClass());
     this.parent = parent;
     try {
       jbInit();
@@ -238,8 +247,6 @@ public class StartPanel
                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"mainform", "html15"})) +
                       "</h2></font></html>");
-
-      //http://www.applejuicenet.de/inprog/news.php?version=
     try {
         String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.de", 80, HtmlLoader.GET,
                 "/inprog/news.php?version=" + DataManager.getInstance().getCoreVersion().getVersion());
@@ -247,7 +254,8 @@ public class StartPanel
         nachrichten.setText(htmlText);
     }
     catch (WebSiteNotFoundException e) {
-        e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+        if (logger.isEnabledFor(Level.INFO))
+          logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Proxy?");
     }
   }
 

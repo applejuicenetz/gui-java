@@ -17,11 +17,12 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.33 2003/08/10 21:08:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.34 2003/08/11 14:10:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +31,10 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.34  2003/08/11 14:10:27  maj0r
+ * DownloadPartList eingefügt.
+ * Diverse Änderungen.
+ *
  * Revision 1.33  2003/08/10 21:08:18  maj0r
  * Diverse Änderungen.
  *
@@ -76,17 +81,14 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
 public class DownloadPanel
         extends JPanel
         implements LanguageListener, RegisterI, DataUpdateListener {
+    private DownloadDOOverviewPanel downloadDOOverviewPanel = new DownloadDOOverviewPanel();
     private JTextField downloadLink = new JTextField();
     private JButton btnStartDownload = new JButton("Download");
+    private JPanel overviewPanel = new JPanel(new BorderLayout());
     private PowerDownloadPanel powerDownloadPanel;
     private JTreeTable downloadTable;
-    private JTable actualDlOverviewTable = new JTable();
     private JLabel linkLabel = new JLabel("ajfsp-Link hinzufügen");
     private DownloadModel downloadModel;
-    private JLabel label4 = new JLabel("Vorhanden");
-    private JLabel label3 = new JLabel("Nicht vorhanden");
-    private JLabel label2 = new JLabel("In Ordnung");
-    private JLabel label1 = new JLabel("Überprüft");
     private JPopupMenu popup = new JPopupMenu();
     JMenuItem item1;
     JMenuItem item2;
@@ -213,16 +215,17 @@ public class DownloadPanel
                 Point p = e.getPoint();
                 int selectedRow = downloadTable.rowAtPoint(p);
                 DownloadNode node = (DownloadNode) ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(selectedRow);
-                if (node.getNodeType() == DownloadNode.DOWNLOAD_NODE) {
-                    powerDownloadPanel.btnPdl.setEnabled(true);
-                }
-                else {
-                    powerDownloadPanel.btnPdl.setEnabled(false);
-                }
                 if (downloadTable.columnAtPoint(p) != 0) {
                     if (e.getClickCount() == 2) {
                         ((TreeTableModelAdapter) downloadTable.getModel()).expandOrCollapseRow(selectedRow);
                     }
+                }
+                if (node.getNodeType() == DownloadNode.DOWNLOAD_NODE) {
+                    powerDownloadPanel.btnPdl.setEnabled(true);
+                    downloadDOOverviewPanel.setDownloadDO(node.getDownloadDO());
+                }
+                else {
+                    powerDownloadPanel.btnPdl.setEnabled(false);
                 }
             }
 
@@ -248,38 +251,8 @@ public class DownloadPanel
         topPanel.add(aScrollPane, constraints);
 
         bottomPanel.add(powerDownloadPanel, BorderLayout.WEST);
-        JPanel tempPanel1 = new JPanel();
-        tempPanel1.setLayout(new FlowLayout());
-        JLabel blau = new JLabel("     ");
-        blau.setOpaque(true);
-        blau.setBackground(Color.blue);
-        tempPanel1.add(blau);
-        tempPanel1.add(label4);
 
-        JLabel red = new JLabel("     ");
-        red.setOpaque(true);
-        red.setBackground(Color.red);
-        tempPanel1.add(red);
-        tempPanel1.add(label3);
-
-        JLabel black = new JLabel("     ");
-        black.setOpaque(true);
-        black.setBackground(Color.black);
-        tempPanel1.add(black);
-        tempPanel1.add(label2);
-
-        JLabel green = new JLabel("     ");
-        green.setOpaque(true);
-        green.setBackground(Color.green);
-        tempPanel1.add(green);
-        tempPanel1.add(label1);
-
-        JPanel tempPanel2 = new JPanel();
-        tempPanel2.setLayout(new BorderLayout());
-        tempPanel2.add(tempPanel1, BorderLayout.NORTH);
-        tempPanel2.add(actualDlOverviewTable, BorderLayout.CENTER);
-        bottomPanel.add(tempPanel2, BorderLayout.CENTER);
-
+        bottomPanel.add(downloadDOOverviewPanel, BorderLayout.CENTER);
         add(topPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
         DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
@@ -304,25 +277,6 @@ public class DownloadPanel
 
     public void registerSelected() {
         //    nix zu tun
-        //test
-/*      Version version = new Version("0.01.34", Version.LINUX);
-      Version version2 = new Version("0.01.36", Version.WIN32);
-      DownloadDO download = new DownloadDO("12", "24", "kjhh", "13138657", DownloadDO.SUCHEN_LADEN, "test1.rar", "filme", 33);
-      DownloadSourceDO source = new DownloadSourceDO("13", DownloadSourceDO.UEBERTRAGUNG, DownloadSourceDO.INDIREKTE_VERBINDUNG,
-              new Integer(100000), new Integer(747520), new Integer(340756), new Integer(738), version, 4, 33, "test1.rar", "nickname");
-      download.addOrAlterSource(source);
-      DownloadDO download2 = new DownloadDO("16", "14", "kjhh", "44223423406", DownloadDO.SUCHEN_LADEN, "test2.rar", "", 490);
-      DownloadSourceDO source2 = new DownloadSourceDO("18", DownloadSourceDO.UEBERTRAGUNG, DownloadSourceDO.DIREKTE_VERBINDUNG,
-              new Integer(100), new Integer(300), new Integer(230), new Integer(44206), version, 4, 490, "test2.rar", "maj0r");
-      DownloadSourceDO source3 = new DownloadSourceDO("17", DownloadSourceDO.UNGEFRAGT, DownloadSourceDO.UNBEKANNT,
-              new Integer(430), new Integer(670), new Integer(430), new Integer(0), version2, 4, 32, "test2.rar", "seppel");
-      DownloadDO download3 = new DownloadDO("5", "11", "kjhh", "34523423406", DownloadDO.FERTIGSTELLEN, "fertigeDatei.rar", "", 0);
-      download2.addOrAlterSource(source2);
-      download2.addOrAlterSource(source3);
-      DownloadNode node3 = new DownloadNode(download3);
-      DownloadNode node = new DownloadNode(download);
-      DownloadNode node2 = new DownloadNode(download2);
-      downloadTable.updateUI();  */
     }
 
     public void fireLanguageChanged() {
@@ -372,15 +326,6 @@ public class DownloadPanel
         for (int i = 0; i < tcm.getColumnCount(); i++) {
             tcm.getColumn(i).setHeaderValue(tableColumns[i]);
         }
-
-        label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "Label4", "caption"})));
-        label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "Label3", "caption"})));
-        label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "Label2", "caption"})));
-        label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "Label1", "caption"})));
 
         item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[]{"mainform", "canceldown",
