@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadTableCellRenderer;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.15 2003/08/18 14:51:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.16 2003/08/18 17:10:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.16  2003/08/18 17:10:22  maj0r
+ * Debugausgabe entfernt.
+ *
  * Revision 1.15  2003/08/18 14:51:04  maj0r
  * Anzeige korrigiert.
  *
@@ -126,9 +129,6 @@ public class UploadPanel
             model.setTable((HashMap)content);
             if (selected != -1 && selected < uploadDataTable.getRowCount()) {
               uploadDataTable.setRowSelectionInterval(selected, selected);
-            }
-            if (anzahlClients!=model.getRowCount()){
-                System.out.println("Anzahl Uploads: " + model.getRowCount());
             }
             anzahlClients = model.getRowCount();
             label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
