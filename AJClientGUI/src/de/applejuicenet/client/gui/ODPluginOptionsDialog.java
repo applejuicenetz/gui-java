@@ -8,9 +8,14 @@ import javax.swing.JFrame;
 import javax.swing.JDialog;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.swing.JButton;
+import java.awt.FlowLayout;
+import javax.swing.JPanel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginOptionsDialog.java,v 1.1 2004/01/01 15:30:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginOptionsDialog.java,v 1.2 2004/01/04 10:31:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +24,9 @@ import java.awt.Toolkit;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginOptionsDialog.java,v $
+ * Revision 1.2  2004/01/04 10:31:43  maj0r
+ * PluginOptionenDialog ueberarbeitet.
+ *
  * Revision 1.1  2004/01/01 15:30:21  maj0r
  * Plugins koennen nun ein JPanel zB fuer Optionen implementieren.
  * Dieses wird dann im Optionendialog angezeigt.
@@ -28,6 +36,7 @@ import java.awt.Toolkit;
 
 public class ODPluginOptionsDialog extends JDialog{
     private PluginConnector pluginConnector;
+    private JButton schliessen = new JButton();
 
     public ODPluginOptionsDialog(JDialog parent, PluginConnector pluginConnector) {
         super(parent, true);
@@ -37,15 +46,28 @@ public class ODPluginOptionsDialog extends JDialog{
 
     private void init(){
         LanguageSelector languageSelector = LanguageSelector.getInstance();
+        schliessen.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                ODPluginOptionsDialog.this.dispose();
+            }
+        });
         String title = pluginConnector.getTitle() + " - ";
         title += ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
             getFirstAttrbuteByTagName(new
                                       String[] {"javagui", "options", "plugins",
                                       "einstellungen"}));
+        schliessen.setText(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new
+                                      String[] {"javagui", "options", "plugins",
+                                      "schliessen"})));
         setTitle(title);
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(pluginConnector.getOptionPanel(), BorderLayout.CENTER);
+        JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        southPanel.add(schliessen);
+        getContentPane().add(southPanel, BorderLayout.SOUTH);
         pack();
         Dimension appDimension = getSize();
         Dimension screenSize = Toolkit.getDefaultToolkit().
