@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.10 2004/03/01 15:35:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.11 2004/03/03 15:45:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Information.java,v $
+ * Revision 1.11  2004/03/03 15:45:16  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.10  2004/03/01 15:35:47  maj0r
  * Bug #264 gefixt (Danke an muhviestarr)
  * Verbindungsstatus wird richtig angezeigt.
@@ -50,6 +53,7 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import java.util.Map;
 
 public class Information
     implements LanguageListener {
@@ -118,7 +122,7 @@ public class Information
             return null;
         }
         else {
-            HashMap server = ApplejuiceFassade.getInstance().getAllServer();
+            Map server = ApplejuiceFassade.getInstance().getAllServer();
             ServerDO serverDO = (ServerDO) server.get(Integer.toString(serverId));
             if (serverDO != null) {
                 return serverDO;
