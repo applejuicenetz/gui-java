@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.23 2003/09/05 12:07:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.24 2003/09/06 14:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.24  2003/09/06 14:57:55  maj0r
+ * Splashscreenausblendung verlagert.
+ *
  * Revision 1.23  2003/09/05 12:07:28  maj0r
  * Logdateinamen auf 24 Stunden korrigiert.
  *
@@ -142,12 +145,12 @@ public class AppleJuiceClient {
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
       theApp.setLocation( (screenSize.width - appDimension.width) / 2,
                          (screenSize.height - appDimension.height) / 2);
-      splash.dispose();
       theApp.show();
       nachricht = "appleJuice-Core-GUI läuft...";
       if (logger.isEnabledFor(Level.INFO))
         logger.info(nachricht);
       System.out.println(nachricht);
+      splash.dispose();
     }
     catch (Exception e) {
       if (logger.isEnabledFor(Level.FATAL))
