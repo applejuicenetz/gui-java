@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.8 2003/08/22 12:40:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.9 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.9  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.8  2003/08/22 12:40:19  maj0r
  * Zeitaufwendiges Partliste holen in Thread ausgelagert.
  *
@@ -49,7 +53,6 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -166,7 +169,7 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
                 {
                     constraints.gridy = anzahlGanzeZeilen+1;
                     count = 0;
-                    for (int i = anzahlProZeile * anzahlGanzeZeilen; i < anzahlParts ; i++)
+                    for (int i = anzahlProZeile * anzahlGanzeZeilen; i < anzahlParts-1 ; i++)
                     {
                         constraints.gridx = count;
                         label1 = new JLabel();

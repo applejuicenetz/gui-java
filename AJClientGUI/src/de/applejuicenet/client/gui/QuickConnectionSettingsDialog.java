@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.1 2003/08/22 10:55:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.2 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.2  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.1  2003/08/22 10:55:06  maj0r
  * Klassen umbenannt.
  *
@@ -87,8 +91,7 @@ public class QuickConnectionSettingsDialog extends JDialog {
         ok.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){
                 try {
-                    if (remotePanel.isDirty())
-                        speichereEinstellungen();
+                    speichereEinstellungen();
                     result = 0;
                     hide();
                 } catch (InvalidPasswordException e) {

@@ -5,7 +5,6 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
@@ -18,16 +17,15 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.share.ShareModel;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
-import de.applejuicenet.client.gui.trees.share.DirectoryNode;
 import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeModel;
 import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeCellRenderer;
-import de.applejuicenet.client.gui.trees.share.WaitNode;
+import de.applejuicenet.client.gui.trees.WaitNode;
 
 import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.21 2003/08/22 11:34:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.22 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +34,10 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.22  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.21  2003/08/22 11:34:43  maj0r
  * WarteNode eingefuegt.
  *
@@ -119,6 +121,14 @@ public class SharePanel
   }
 
   private void jbInit() throws Exception {
+    //todo
+    addFolderWithSubfolder.setEnabled(false);
+    addFolderWithoutSubfolder.setEnabled(false);
+    startCheck.setEnabled(false);
+    neueListe.setEnabled(false);
+    prioritaetSetzen.setEnabled(false);
+    prioritaetAufheben.setEnabled(false);
+
     shareModel = new ShareModel(new ShareNode(null, "/"));
     shareTable = new JTreeTable(shareModel);
     titledBorder1 = new TitledBorder("Test");
@@ -135,25 +145,61 @@ public class SharePanel
       public void actionPerformed(ActionEvent ae){
           ShareNode rootNode = shareModel.getRootNode();
           rootNode.removeAllChildren();
+          ArrayList sharesArray = new ArrayList();
+          HashSet shareDirs = ajSettings.getShareDirs();
+          Iterator it = shareDirs.iterator();
+          ShareNode directoryNode = null;
+          String pfad;
+          while (it.hasNext()){
+              pfad = ((ShareEntry)it.next()).getDir();
+              sharesArray.add(pfad);
+              try {
+                  directoryNode = new ShareNode(rootNode, pfad);
+                  rootNode.addDirectory(directoryNode);
+              }
+              catch (NodeAlreadyExistsException e) {
+                  //Schon da, also brauchts den auch nicht.
+              }
+          }
           HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
           Iterator iterator = shares.values().iterator();
-          anzahlDateien = 0;
+          int anzahlDateien = 0;
           double size = 0;
+          int anzahlArray;
+          ShareDO shareDO;
+          String filename;
+          String path;
+          ShareNode superParentNode;
+          ShareNode parentNode;
           while (iterator.hasNext()){
-              ShareDO shareDO = (ShareDO)iterator.next();
-              String filename = shareDO.getFilename();
-              String path = filename.substring(0, filename.lastIndexOf(File.separator));
-              ShareNode parentNode = ShareNode.getNodeByPath(path);
+              shareDO = (ShareDO)iterator.next();
+              filename = shareDO.getFilename();
+              path = filename.substring(0, filename.lastIndexOf(File.separator));
+              parentNode = ShareNode.getNodeByPath(path);
               if (parentNode!=null){
                   parentNode.addChild(shareDO);
               }
               else{
-                  try {
-                      ShareNode neuesDirectory = new ShareNode(rootNode, path);
-                      rootNode.addDirectory(neuesDirectory);
-                      neuesDirectory.addChild(shareDO);
-                  } catch (NodeAlreadyExistsException e) {
-                      e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                  anzahlArray = sharesArray.size();
+                  for (int i=0; i<anzahlArray; i++){
+                      if (path.indexOf((String)sharesArray.get(i))!=-1){
+                          path = path.substring(((String)sharesArray.get(i)).length());
+                          superParentNode = ShareNode.getNodeByPath((String)sharesArray.get(i));
+                          parentNode = ShareNode.getNodeByPath(path);
+                          if (parentNode!=null){
+                              parentNode.addChild(shareDO);
+                          }
+                          else{
+                              try {
+                                  ShareNode neuesDirectory = new ShareNode(rootNode, path);
+                                  superParentNode.addDirectory(neuesDirectory);
+                                  neuesDirectory.addChild(shareDO);
+                              } catch (NodeAlreadyExistsException e) {
+                                  e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                              }
+                          }
+                          break;
+                      }
                   }
               }
               size += Long.parseLong(shareDO.getSize());
@@ -194,7 +240,7 @@ public class SharePanel
 
     constraints.gridy = 5;
     constraints.weighty = 1;
-    panelWest.add(folderList, constraints);
+    panelWest.add(new JScrollPane(folderList), constraints);
 
     for (int i = 1; i <= 250; i++) {
       cmbPrio.addItem(Integer.toString(i));
@@ -210,7 +256,11 @@ public class SharePanel
     panelCenter.add(new JScrollPane(shareTable), BorderLayout.CENTER);
     panelCenter.add(dateien, BorderLayout.SOUTH);
 
-
+    removeFolder.addActionListener(new ActionListener(){
+        public void actionPerformed(ActionEvent ae){
+            entferneOrdner();
+        }
+    });
     add(panelWest, BorderLayout.WEST);
     add(panelCenter, BorderLayout.CENTER);
 
@@ -220,32 +270,56 @@ public class SharePanel
     LanguageSelector.getInstance().addLanguageListener(this);
   }
 
+  private void entferneOrdner(){
+      HashSet shares = ajSettings.getShareDirs();
+      Object[] selected = folderList.getSelectedValues();
+      if (selected!=null && selected.length!=0){
+          removeFolder.setEnabled(false);
+          for (int i=0; i<selected.length; i++){
+              shares.remove(selected[i]);
+          }
+          ApplejuiceFassade.getInstance().setShare(shares);
+          initShareList();
+      }
+  }
+
+  private void initShareSelectionTree(){
+      folderTree.setModel(new DefaultTreeModel(new WaitNode()));
+      folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
+      final SwingWorker worker2 = new SwingWorker() {
+                  public Object construct() {
+                      ShareSelectionTreeModel treeModel = new ShareSelectionTreeModel();
+                      folderTree.setModel(treeModel);
+                      folderTree.setRootVisible(false);
+                      return null;
+                  }
+              };
+      worker2.start();
+  }
+
+  private void initShareList(){
+      final SwingWorker worker = new SwingWorker() {
+                  public Object construct() {
+                      removeFolder.setEnabled(false);
+                      ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
+                      ( (DefaultListModel) folderList.getModel()).removeAllElements();
+                      Iterator it = ajSettings.getShareDirs().iterator();
+                      while (it.hasNext()) {
+                        ShareEntry entry = (ShareEntry) it.next();
+                        ( (DefaultListModel) folderList.getModel()).addElement(entry);
+                      }
+                      removeFolder.setEnabled(true);
+                      return null;
+                  }
+              };
+      worker.start();
+  }
+
   public void registerSelected() {
     if (!treeInitialisiert){
         treeInitialisiert = true;
-        folderTree.setModel(new DefaultTreeModel(new WaitNode()));
-        folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
-        final SwingWorker worker = new SwingWorker() {
-                    public Object construct() {
-                        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
-                        Iterator it = ajSettings.getShareDirs().iterator();
-                        while (it.hasNext()) {
-                          ShareEntry entry = (ShareEntry) it.next();
-                          ( (DefaultListModel) folderList.getModel()).addElement(entry);
-                        }
-                        return null;
-                    }
-                };
-        worker.start();
-        final SwingWorker worker2 = new SwingWorker() {
-                    public Object construct() {
-                        ShareSelectionTreeModel treeModel = new ShareSelectionTreeModel();
-                        folderTree.setModel(treeModel);
-                        folderTree.setRootVisible(false);
-                        return null;
-                    }
-                };
-        worker2.start();
+        initShareList();
+        initShareSelectionTree();
     }
   }
 

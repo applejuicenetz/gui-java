@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.tables.search.SearchResultTableModel;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.8 2003/07/01 18:41:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.9 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.9  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.8  2003/07/01 18:41:39  maj0r
  * Struktur verändert.
  *
@@ -48,6 +52,9 @@ public class SearchPanel
   }
 
   private void jbInit() throws Exception {
+    //todo
+    btnStartStopSearch.setEnabled(false);
+
     setLayout(new BorderLayout());
     LanguageSelector.getInstance().addLanguageListener(this);
     JPanel panel3 = new JPanel();

@@ -6,11 +6,9 @@ import java.util.*;
 
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.Timer;
 
 import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.tables.download.DownloadNode;
-import de.applejuicenet.client.gui.trees.share.DirectoryNode;
+import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.shared.dac.*;
@@ -18,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.10 2003/08/22 14:16:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.11 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +25,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.11  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.10  2003/08/22 14:16:00  maj0r
  * Threadverwendung korrigiert.
  *
@@ -122,7 +124,7 @@ import org.apache.log4j.Level;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String DATAMANAGER_VERSION = "0.13 Beta";
+    public static final String DATAMANAGER_VERSION = "0.14 Beta";
 
     private HashSet downloadListener;
     private HashSet shareListener;
@@ -610,11 +612,44 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return share;
     }
 
+    public boolean setShare(HashSet newShare){
+        int shareSize = newShare.size();
+        if (newShare==null)
+            return false;
+        String parameters = "countshares=" + shareSize;
+        ShareEntry shareEntry = null;
+        Iterator it = newShare.iterator();
+        int i = 1;
+        while (it.hasNext()){
+            shareEntry = (ShareEntry)it.next();
+            try {
+                parameters += "&sharedirectory" + i + "=" + URLEncoder.encode(shareEntry.getDir(), "UTF-8");
+            }
+            catch (UnsupportedEncodingException e) {
+                e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+            }
+            parameters += "&sharesub" + i + "=" +
+                    (shareEntry.getShareMode()==ShareEntry.SUBDIRECTORY ? "true" : "false");
+            i++;
+        }
+        try
+        {
+            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                  "/function/setsettings?password=" + password + "&" + parameters);
+        }
+        catch (WebSiteNotFoundException ex)
+        {
+            return false;
+        }
+        return true;
+    }
+
     public static boolean isCheckInProgress() {
         return checkInProgress != 0;
     }
 
-    public void getDirectory(String directory, DirectoryNode directoryNode) {
+    public void getDirectory(String directory, ApplejuiceNode directoryNode) {
         checkInProgress++;
         directoryXML.getDirectory(directory, directoryNode);
         checkInProgress--;

@@ -4,6 +4,7 @@ import de.applejuicenet.client.shared.dac.DirectoryDO;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
@@ -11,7 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.5 2003/08/17 16:13:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.6 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,10 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryNode.java,v $
+ * Revision 1.6  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.5  2003/08/17 16:13:11  maj0r
  * Erstellen des DirectoryNode-Baumes korrigiert.
  *
@@ -35,7 +40,7 @@ import java.util.ArrayList;
  *
  */
 
-public class DirectoryNode extends DefaultMutableTreeNode implements Node{
+public class DirectoryNode extends DefaultMutableTreeNode implements Node, ApplejuiceNode{
     private DirectoryDO directoryDO;
     private ArrayList children = null;
     private DirectoryNode parent;
@@ -50,11 +55,6 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node{
         this.directoryDO = null;
         children = new ArrayList();
         ApplejuiceFassade.getInstance().getDirectory(null, this);
-        /*if (childDirectoryDO!=null && childDirectoryDO.length!=0){
-            for(int i=0; i<childDirectoryDO.length; i++){
-                children.add(new DirectoryNode(this, childDirectoryDO[i]));
-            }
-        } */
     }
 
     public int getChildCount() {
@@ -100,7 +100,7 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node{
         return directoryDO.getName();
     }
 
-    public DirectoryNode addChild(DirectoryDO childDirectoryDO){
+    public ApplejuiceNode addChild(DirectoryDO childDirectoryDO){
         if (children==null){
             children = new ArrayList();
         }

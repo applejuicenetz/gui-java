@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.33 2003/08/23 11:16:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.34 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.34  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.33  2003/08/23 11:16:13  maj0r
  * Plattformunabhaengigkeit wieder hergestellt.
  *
@@ -74,7 +78,7 @@ public class AppleJuiceDialog
     extends JFrame
     implements LanguageListener, DataUpdateListener {
 
-  public static final String GUI_VERSION = "0.13 Beta";
+  public static final String GUI_VERSION = "0.14 Beta";
 
   RegisterPanel registerPane;
   JLabel[] statusbar = new JLabel[6];
@@ -83,7 +87,7 @@ public class AppleJuiceDialog
   private HashSet plugins;
   private JMenuItem menuItem;
   private JFrame _this;
-  private JButton pause;
+  private JButton pause = new JButton();
   private boolean paused = false;
   private Logger logger;
 
@@ -117,6 +121,8 @@ public class AppleJuiceDialog
   }
 
   private void jbInit() throws Exception {
+    //todo
+    pause.setEnabled(false);
     setTitle("AppleJuice Client");
     plugins = new HashSet();
     Image img = IconManager.getInstance().getIcon("applejuice").getImage();
@@ -150,7 +156,6 @@ public class AppleJuiceDialog
       statusbar[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
       statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
     }
-    pause = new JButton("Pause");
     pause.setFont(new java.awt.Font("SansSerif", 0, 11));
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;

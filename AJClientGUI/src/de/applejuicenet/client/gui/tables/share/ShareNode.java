@@ -6,13 +6,11 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.shared.exception.NodeAlreadyExistsException;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
 import java.util.HashMap;
-import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.3 2003/08/15 14:44:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.4 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +19,10 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.4  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.3  2003/08/15 14:44:48  maj0r
  * Schreibfehler.
  *

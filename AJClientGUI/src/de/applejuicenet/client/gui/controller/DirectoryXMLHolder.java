@@ -1,11 +1,7 @@
 package de.applejuicenet.client.gui.controller;
 
-import de.applejuicenet.client.shared.AJSettings;
-import de.applejuicenet.client.shared.ShareEntry;
-import de.applejuicenet.client.shared.LoggerUtils;
 import de.applejuicenet.client.shared.dac.DirectoryDO;
-import de.applejuicenet.client.gui.tables.download.DownloadNode;
-import de.applejuicenet.client.gui.trees.share.DirectoryNode;
+import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import org.apache.log4j.Logger;
@@ -14,7 +10,7 @@ import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.4 2003/08/19 12:38:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.5 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +19,10 @@ import java.io.UnsupportedEncodingException;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.5  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.4  2003/08/19 12:38:47  maj0r
  * Passworteingabe und md5 korrigiert.
  *
@@ -42,7 +42,7 @@ public class DirectoryXMLHolder extends WebXMLParser {
 
     private String directory;
     private Logger logger;
-    private DirectoryNode directoryNode;
+    private ApplejuiceNode directoryNode;
 
     public DirectoryXMLHolder() {
         super("/xml/directory.xml", "", false);
@@ -81,7 +81,7 @@ public class DirectoryXMLHolder extends WebXMLParser {
         }
     }
 
-    private void getNodes(Element element, DirectoryNode directoryNode){
+    private void getNodes(Element element, ApplejuiceNode directoryNode){
         int type;
         boolean fileSystem;
         String name;
@@ -101,7 +101,7 @@ public class DirectoryXMLHolder extends WebXMLParser {
             }
         }
         DirectoryDO directoryDO = new DirectoryDO(name, type, fileSystem, path);
-        DirectoryNode newNode = directoryNode.addChild(directoryDO);
+        ApplejuiceNode newNode = directoryNode.addChild(directoryDO);
         NodeList nodes = element.getChildNodes();
         int nodesSize = nodes.getLength();
         Element e = null;
@@ -115,7 +115,7 @@ public class DirectoryXMLHolder extends WebXMLParser {
         }
     }
 
-    public void getDirectory(String directory, DirectoryNode directoryNode) {
+    public void getDirectory(String directory, ApplejuiceNode directoryNode) {
         this.directory = directory;
         this.directoryNode = directoryNode;
         update();

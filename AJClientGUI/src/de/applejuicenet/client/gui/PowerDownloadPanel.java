@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.19 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.20 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.20  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.19  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -85,6 +89,9 @@ public class PowerDownloadPanel
   }
 
   private void jbInit() throws Exception {
+    //todo
+    btnAutoPdl.setEnabled(false);
+
     setLayout(new BorderLayout());
     LanguageSelector.getInstance().addLanguageListener(this);
     JPanel backPanel = new JPanel();

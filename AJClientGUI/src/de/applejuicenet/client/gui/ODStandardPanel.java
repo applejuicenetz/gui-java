@@ -1,7 +1,5 @@
 package de.applejuicenet.client.gui;
 
-import java.io.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -11,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.6 2003/06/24 12:06:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.7 2003/08/24 14:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +18,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.7  2003/08/24 14:59:59  maj0r
+ * Version 0.14
+ * Diverse Aenderungen.
+ *
  * Revision 1.6  2003/06/24 12:06:49  maj0r
  * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
  *
@@ -49,12 +51,12 @@ public class ODStandardPanel
   private JLabel hint3;
   private JLabel hint4;
   private JLabel hint5;
-  private JFrame parent;
+  private JDialog parent;
   private AJSettings ajSettings;
   private JCheckBox cmbAllowBrowse = new JCheckBox();
   private JComboBox cmbLog;
 
-  public ODStandardPanel(JFrame parent, AJSettings ajSettings) {
+  public ODStandardPanel(JDialog parent, AJSettings ajSettings) {
     this.parent = parent;
     this.ajSettings = ajSettings;
     try {
@@ -75,7 +77,11 @@ public class ODStandardPanel
 
   private void jbInit() throws Exception {
     temp.setText(ajSettings.getTempDir());
+    temp.setEditable(false);
+    temp.setBackground(Color.WHITE);
     incoming.setText(ajSettings.getIncomingDir());
+    incoming.setEditable(false);
+    incoming.setBackground(Color.WHITE);
     port.setText(Long.toString(ajSettings.getPort()));
     nick.setText(ajSettings.getNick());
     cmbAllowBrowse.setSelected(ajSettings.isBrowseAllowed());
@@ -92,22 +98,6 @@ public class ODStandardPanel
         if (ajSettings.getNick().compareTo(nick.getText()) != 0) {
           dirty = true;
           ajSettings.setNick(nick.getText());
-        }
-      }
-    });
-    temp.addFocusListener(new FocusAdapter() {
-      public void focusLost(FocusEvent e) {
-        if (ajSettings.getTempDir().compareTo(temp.getText()) != 0) {
-          dirty = true;
-          ajSettings.setTempDir(temp.getText());
-        }
-      }
-    });
-    incoming.addFocusListener(new FocusAdapter() {
-      public void focusLost(FocusEvent e) {
-        if (ajSettings.getIncomingDir().compareTo(incoming.getText()) != 0) {
-          dirty = true;
-          ajSettings.setIncomingDir(incoming.getText());
         }
       }
     });
@@ -235,11 +225,11 @@ public class ODStandardPanel
       cmbUploadPrio.addItem(new Integer(i));
     }
     Icon icon2 = im.getIcon("folderopen");
-    FileChooserMouseAdapter fcMouseAdapter = new FileChooserMouseAdapter();
+    DirectoryChooserMouseAdapter dcMouseAdapter = new DirectoryChooserMouseAdapter();
     openTemp = new JLabel(icon2);
-    openTemp.addMouseListener(fcMouseAdapter);
+    openTemp.addMouseListener(dcMouseAdapter);
     openIncoming = new JLabel(icon2);
-    openIncoming.addMouseListener(fcMouseAdapter);
+    openIncoming.addMouseListener(dcMouseAdapter);
 
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;
@@ -314,7 +304,7 @@ public class ODStandardPanel
     add(panel6, BorderLayout.NORTH);
   }
 
-  class FileChooserMouseAdapter
+  class DirectoryChooserMouseAdapter
       extends MouseAdapter {
     public void mouseEntered(MouseEvent e) {
       JLabel source = (JLabel) e.getSource();
@@ -323,19 +313,27 @@ public class ODStandardPanel
 
     public void mouseClicked(MouseEvent e) {
       JLabel source = (JLabel) e.getSource();
-      JFileChooser jf = new JFileChooser();
-      jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-      int ret = jf.showOpenDialog(parent);
-      if (ret == JFileChooser.APPROVE_OPTION) {
-        File selectedFile = jf.getSelectedFile();
-        if (selectedFile.isDirectory()) {
+      String title = "";
+      if (source == openTemp) {
+          title = label1.getText();
+      }
+      else{
+          title = label2.getText();
+      }
+      ODDirectoryChooser chooser = new ODDirectoryChooser(parent, title);
+      chooser.setLocation(parent.getLocation());
+      chooser.show();
+      if (chooser.isNewPathSelected()){
+          dirty = true;
+          String path = chooser.getSelectedPath();
           if (source == openTemp) {
-            temp.setText(selectedFile.getPath());
+              temp.setText(path);
+              ajSettings.setTempDir(path);
           }
-          else if (source == openIncoming) {
-            incoming.setText(selectedFile.getPath());
+          else{
+              incoming.setText(path);
+              ajSettings.setIncomingDir(path);
           }
-        }
       }
     }
 
@@ -343,10 +341,6 @@ public class ODStandardPanel
       JLabel source = (JLabel) e.getSource();
       source.setBorder(null);
     }
-  }
-
-  void temp_focusLost(FocusEvent e) {
-
   }
 
   class LevelItem{
@@ -365,6 +359,5 @@ public class ODStandardPanel
     public String toString(){
       return bezeichnung;
     }
-
   }
 }
