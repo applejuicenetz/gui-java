@@ -12,9 +12,15 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseEvent;
+import java.awt.Point;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.22 2004/02/24 08:11:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.23 2004/02/25 11:08:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +29,9 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.23  2004/02/25 11:08:08  maj0r
+ * Partliste zeigt nun per MausOver-Effekt den Tooltipp zum ausgewaehlten Partstueck an.
+ *
  * Revision 1.22  2004/02/24 08:11:39  maj0r
  * Bug #239 gefixt (Danke an dsp2004)
  * ArrayIndexOutOfBoundsException behoben.
@@ -86,7 +95,7 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  */
 
 public class DownloadPartListPanel
-    extends JPanel {
+    extends JPanel implements MouseMotionListener, LanguageListener{
     private PartListDO partListDO;
     private Logger logger;
     private BufferedImage image = null;
@@ -95,9 +104,19 @@ public class DownloadPartListPanel
     private long fertigSeit = -1;
     private boolean miniFile = false;
 
+    private String ueberprueft = "";
+    private String nichtVorhanden = "";
+    private String vorhanden = "";
+    private String quellen = "";
+    private String uebertragen = "";
+
+    private MouseEvent savedMouseEvent = null;
+
     public DownloadPartListPanel() {
         super(new BorderLayout());
         logger = Logger.getLogger(getClass());
+        addMouseMotionListener(this);
+        LanguageSelector.getInstance().addLanguageListener(this);
     }
 
     public void paintComponent(Graphics g) {
@@ -201,9 +220,13 @@ public class DownloadPartListPanel
                     g.drawImage(tempImage.getSubimage(x, 0, width, zeilenHoehe), 0, i*zeilenHoehe, null);
                     x += width;
                 }
+                if (savedMouseEvent != null){
+                    processMouseMotionEvent(savedMouseEvent);
+                }
             }
             else{
                 image = null;
+                savedMouseEvent = null;
             }
             updateUI();
         }
@@ -331,6 +354,101 @@ public class DownloadPartListPanel
         }
         else{
             return PartListDO.COLOR_READY_100;
+        }
+    }
+
+    public void mouseDragged(MouseEvent mouseEvent) {
+    }
+
+    public void mouseMoved(MouseEvent mouseEvent) {
+        if (image!=null){
+            savedMouseEvent = mouseEvent;
+            Point p = mouseEvent.getPoint();
+            int rgb = image.getRGB((int)p.getX(), (int)p.getY());
+            if (rgb == PartListDO.COLOR_TYPE_UEBERPRUEFT.getRGB()) {
+                setToolTipText(ueberprueft);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_0.getRGB()) {
+                setToolTipText(nichtVorhanden);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_OK.getRGB()) {
+                setToolTipText(vorhanden);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_1.getRGB()) {
+                setToolTipText("1" + quellen);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_2.getRGB()) {
+                setToolTipText("2" + quellen);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_3.getRGB()) {
+                setToolTipText("3" + quellen);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_4.getRGB()) {
+                setToolTipText("4" + quellen);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_5.getRGB()) {
+                setToolTipText("5" + quellen);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_6.getRGB()) {
+                setToolTipText("6" + quellen);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_7.getRGB()) {
+                setToolTipText("7" + quellen);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_8.getRGB()) {
+                setToolTipText("8" + quellen);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_9.getRGB()) {
+                setToolTipText("9" + quellen);
+            }
+            else if (rgb == PartListDO.COLOR_TYPE_10.getRGB()) {
+                setToolTipText("10+" + quellen);
+            }
+            else if (rgb == PartListDO.COLOR_READY_10.getRGB()) {
+                setToolTipText("0-10" + uebertragen);
+            }
+            else if (rgb == PartListDO.COLOR_READY_30.getRGB()) {
+                setToolTipText("10-30" + uebertragen);
+            }
+            else if (rgb == PartListDO.COLOR_READY_50.getRGB()) {
+                setToolTipText("30-50" + uebertragen);
+            }
+            else if (rgb == PartListDO.COLOR_READY_70.getRGB()) {
+                setToolTipText("50-70" + uebertragen);
+            }
+            else if (rgb == PartListDO.COLOR_READY_90.getRGB()) {
+                setToolTipText("70-90" + uebertragen);
+            }
+            else if (rgb == PartListDO.COLOR_READY_100.getRGB()) {
+                setToolTipText("90-100" + uebertragen);
+            }
+            else {
+                setToolTipText(null);
+            }
+        }
+        else{
+            setToolTipText(null);
+        }
+    }
+
+    public void fireLanguageChanged() {
+        try {
+            LanguageSelector languageSelector = LanguageSelector.getInstance();
+            vorhanden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.Label4.caption"));
+            nichtVorhanden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.Label3.caption"));
+            ueberprueft = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.Label1.caption"));
+            quellen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.javagui.downloadform.quellen"));
+            uebertragen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.javagui.downloadform.uebertragen"));
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 }
