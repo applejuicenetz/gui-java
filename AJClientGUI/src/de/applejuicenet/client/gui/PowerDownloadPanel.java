@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import de.applejuicenet.client.gui.controller.DataManager;
+import de.applejuicenet.client.shared.NumberInputVerifier;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -21,12 +22,16 @@ public class PowerDownloadPanel
   GridBagLayout gridBagLayout1 = new GridBagLayout();
   private JRadioButton btnInaktiv = new JRadioButton();
   private JRadioButton btnAktiv = new JRadioButton();
+  private JRadioButton btnAutoInaktiv = new JRadioButton();
+  private JRadioButton btnAutoAktiv = new JRadioButton();
   private JLabel btnHint;
   private JLabel btnPdlUp;
   private JLabel btnPdlDown;
   private float ratioWert = 2.2f;
   private JTextField ratio = new JTextField("2.2");
-  JButton btnPdl = new JButton("Setze Powerdownload");
+  private JTextField autoAb = new JTextField();
+  JButton btnPdl = new JButton("Übernehmen");
+  JButton btnAutoPdl = new JButton("Übernehmen");
 
   public PowerDownloadPanel() {
     try {
@@ -68,7 +73,7 @@ public class PowerDownloadPanel
     tempPanel.add(powerdownload, BorderLayout.CENTER);
 
     URL url = getClass().getResource("hint.gif");
-    ImageIcon icon = new ImageIcon(url);
+    ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
     btnHint = new JLabel(icon);
     btnHint.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
@@ -95,10 +100,10 @@ public class PowerDownloadPanel
     tempFlowPanel.setLayout(new FlowLayout());
     tempFlowPanel.add(new JLabel("Für 1 Byte zahle"));
     url = getClass().getResource("upload.gif");
-    ImageIcon icon2 = new ImageIcon(url);
+    ImageIcon icon2 = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
     btnPdlUp = new JLabel(icon2);
-    url = getClass().getResource("download.gif");
-    ImageIcon icon3 = new ImageIcon(url);
+    url = getClass().getResource("download.GIF");
+    ImageIcon icon3 = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
     btnPdlDown = new JLabel(icon3);
     btnPdlUp.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
@@ -121,6 +126,46 @@ public class PowerDownloadPanel
     constraints.gridwidth = 3;
     backPanel.add(btnPdl, constraints);
 
+    constraints.gridy = 6;
+    backPanel.add(new JLabel(" "), constraints);
+    constraints.gridx = 0;
+    constraints.gridy = 7;
+    constraints.gridheight = 1;
+    constraints.gridwidth = 3;
+    JPanel tempPanel2 = new JPanel();
+    tempPanel2.setLayout(new BorderLayout());
+    JLabel label = new JLabel("Automatischer Powerdownload");
+    label.setForeground(Color.white);
+    label.setOpaque(true);
+    label.setBackground(Color.blue);
+    tempPanel2.add(label, BorderLayout.CENTER);
+    JLabel btnHint2 = new JLabel(icon);
+    tempPanel2.add(btnHint2, BorderLayout.EAST);
+    backPanel.add(tempPanel2, constraints);
+
+    constraints.gridwidth = 1;
+    constraints.gridy = 8;
+    ButtonGroup buttonGroup2 = new ButtonGroup();
+    buttonGroup2.add(btnAutoInaktiv);
+    buttonGroup2.add(btnAutoAktiv);
+    btnAutoInaktiv.setText("inaktiv");
+    btnAutoInaktiv.setSelected(true);
+    btnAutoAktiv.setText("aktiv");
+    backPanel.add(btnAutoInaktiv, constraints);
+    constraints.gridy = 9;
+    backPanel.add(btnAutoAktiv, constraints);
+    constraints.gridy = 10;
+    JPanel panel = new JPanel(new FlowLayout());
+    panel.add(new JLabel("ab "));
+    autoAb.setDocument(new NumberInputVerifier());
+    autoAb.setPreferredSize(new Dimension(40, 21));
+    autoAb.setText("200");
+    panel.add(autoAb);
+    panel.add(new JLabel("MB"));
+    backPanel.add(panel, constraints);
+    constraints.gridy = 11;
+    constraints.gridwidth = 3;
+    backPanel.add(btnAutoPdl, constraints);
     add(backPanel, BorderLayout.NORTH);
   }
 

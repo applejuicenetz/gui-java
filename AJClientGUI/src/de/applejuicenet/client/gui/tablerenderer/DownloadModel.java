@@ -7,12 +7,13 @@ import javax.swing.*;
 import javax.swing.tree.*;
 
 import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.controller.DataManager;
+import java.awt.Toolkit;
+import javax.swing.event.TreeModelListener;
 
 public class DownloadModel
     extends AbstractTreeTableModel
-    implements TreeTableModel, DataUpdateListener {
+    implements TreeTableModel {
 
   static protected String[] cNames = {
       "Dateiname", "Status", "Größe", "Bereits geladen", "Prozent geladen",
@@ -28,12 +29,6 @@ public class DownloadModel
     for (int i = 0; i < downloads.length; i++) {
       ( (DownloadNode) getRoot()).addChild(downloads[i]);
     }
-    DataManager.getInstance().addDownloadListener(this);
-  }
-
-  public void fireContentChanged(){
-    //toDo
-      this.nodeChanged((TreeNode)getRoot());
   }
 
   protected DownloadSourceDO getDO(Object node) {
@@ -133,13 +128,13 @@ class DownloadNode
   private void initIcons() {
     if (rootIcon == null) {
       URL url = getClass().getResource("treeRoot.gif");
-      rootIcon = new ImageIcon(url);
+      rootIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
       url = getClass().getResource("treeUebertrage.gif");
-      uebertrageIcon = new ImageIcon(url);
+      uebertrageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
       url = getClass().getResource("treeWarteschlange.gif");
-      warteschlangeIcon = new ImageIcon(url);
+      warteschlangeIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
       url = getClass().getResource("treeIndirekt.gif");
-      indirektIcon = new ImageIcon(url);
+      indirektIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
     }
   }
 

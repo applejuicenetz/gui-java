@@ -32,7 +32,7 @@ public class RegisterPanel extends JTabbedPane {
     uploadPanel = new UploadPanel();
     searchPanel = new SearchPanel();
     serverPanel = new ServerPanel();
-    URL url = getClass().getResource("start.gif");
+    URL url = getClass().getResource("start.GIF");
     Image img=Toolkit.getDefaultToolkit().getImage(url);
     ImageIcon icon = new ImageIcon();
     icon.setImage(img);
@@ -45,7 +45,7 @@ public class RegisterPanel extends JTabbedPane {
     addTab("Suchen", icon2, searchPanel);
 
 
-    url = getClass().getResource("download.gif");
+    url = getClass().getResource("download.GIF");
     img = Toolkit.getDefaultToolkit().getImage(url);
     ImageIcon icon3 = new ImageIcon();
     icon3.setImage(img);

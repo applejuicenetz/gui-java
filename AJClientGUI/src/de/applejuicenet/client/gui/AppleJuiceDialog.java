@@ -18,7 +18,7 @@ import de.applejuicenet.client.gui.controller.DataManager;
  */
 
 public class AppleJuiceDialog extends JFrame {
-  RegisterPanel registerPane = new RegisterPanel();
+  RegisterPanel registerPane;
   JLabel[] statusbar = new JLabel[5];
 
   public AppleJuiceDialog() {
@@ -37,7 +37,7 @@ public class AppleJuiceDialog extends JFrame {
     URL url = getClass().getResource("applejuice.gif");
     Image img = Toolkit.getDefaultToolkit().getImage(url);
     setIconImage(img);
-
+    registerPane = new RegisterPanel();
     addWindowListener(
         new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {

@@ -6,9 +6,11 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.tree.*;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.controller.DataManager;
 
 public class JTreeTable
-    extends JTable {
+    extends JTable implements DataUpdateListener {
   protected TreeTableCellRenderer tree;
 
   public JTreeTable(TreeTableModel treeTableModel) {
@@ -30,6 +32,11 @@ public class JTreeTable
 
     setShowGrid(false);
     setIntercellSpacing(new Dimension(0, 0));
+    DataManager.getInstance().addDownloadListener(this);
+  }
+
+  public void fireContentChanged(){
+    repaint();
   }
 
   public int getEditingRow() {

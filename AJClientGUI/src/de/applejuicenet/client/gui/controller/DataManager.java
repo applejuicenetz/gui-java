@@ -66,7 +66,7 @@ public class DataManager {   //Singleton-Implementierung
     if (statusbar!=null){
       statusbar[0].setText("Nicht verbunden");
       statusbar[3].setText("Credits: 0,00 MB");
-      statusbar[4].setText("Version 0.30");
+      statusbar[4].setText("Version 0.01PreA");
     }
   }
 
