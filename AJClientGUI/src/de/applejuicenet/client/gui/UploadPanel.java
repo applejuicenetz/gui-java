@@ -126,6 +126,32 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI,
 		uploadDataTableModel = new UploadDataTableModel();
 		uploadDataTable = new JTreeTable(uploadDataTableModel);
 		uploadDataTable.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				super.mousePressed(me);
+				maybeShowPopup(me);
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				super.mouseReleased(e);
+				maybeShowPopup(e);
+			}
+
+			private void maybeShowPopup(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					Point p = e.getPoint();
+					int selectedRow = uploadDataTable.rowAtPoint(p);
+					if (selectedRow != -1) {
+						uploadDataTable.setRowSelectionInterval(selectedRow,
+								selectedRow);
+						Object selectedItem = ((TreeTableModelAdapter) uploadDataTable
+								.getModel()).nodeForRow(selectedRow);
+						if (selectedItem.getClass() == UploadDO.class) {
+							popupMenu.show(uploadDataTable, e.getX(), e.getY());
+						}
+					}
+				}
+			}
+
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
 				Point p = e.getPoint();
@@ -237,33 +263,6 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI,
 			}
 		});
 		popupMenu.add(itemCopyToClipboard);
-		uploadDataTable.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent me) {
-				super.mousePressed(me);
-				maybeShowPopup(me);
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				super.mouseReleased(e);
-				maybeShowPopup(e);
-			}
-
-			private void maybeShowPopup(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					Point p = e.getPoint();
-					int selectedRow = uploadDataTable.rowAtPoint(p);
-					if (selectedRow != -1) {
-						uploadDataTable.setRowSelectionInterval(selectedRow,
-								selectedRow);
-						Object selectedItem = ((TreeTableModelAdapter) uploadDataTable
-								.getModel()).nodeForRow(selectedRow);
-						if (selectedItem.getClass() == UploadDO.class) {
-							popupMenu.show(uploadDataTable, e.getX(), e.getY());
-						}
-					}
-				}
-			}
-		});
 
 		ApplejuiceFassade.getInstance().addDataUpdateListener(this,
 				DataUpdateListener.UPLOAD_CHANGED);
