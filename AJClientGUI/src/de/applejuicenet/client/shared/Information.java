@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.9 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.10 2004/03/01 15:35:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Information.java,v $
+ * Revision 1.10  2004/03/01 15:35:47  maj0r
+ * Bug #264 gefixt (Danke an muhviestarr)
+ * Verbindungsstatus wird richtig angezeigt.
+ *
  * Revision 1.9  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -66,7 +70,7 @@ public class Information
     private long downloadSpeed;
     private long openConnections;
     private String serverName;
-    private int verbindungsStatus;
+    private int verbindungsStatus = NICHT_VERBUNDEN;
     private String externeIP;
     private int serverId;
 
