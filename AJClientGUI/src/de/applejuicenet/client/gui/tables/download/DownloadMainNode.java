@@ -17,7 +17,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import javax.swing.JTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.9 2004/02/25 16:20:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.10 2004/02/27 15:24:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import javax.swing.JTable;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadMainNode.java,v $
+ * Revision 1.10  2004/02/27 15:24:26  maj0r
+ * Status "Warteschlange voll" wird nun auch in "In Warteschlange" angezeigt, da diese genauso zB fuer Pwdl-Aenderungen genauso relevant sind.
+ *
  * Revision 1.9  2004/02/25 16:20:16  maj0r
  * ProgressBar auf opaque=false gesetzt.
  *
@@ -187,8 +190,8 @@ public class DownloadMainNode
                 ArrayList kinder = new ArrayList();
                 DownloadSourceDO[] downloadSourceDO = downloadDO.getSources();
                 for (int i = 0; i < downloadSourceDO.length; i++) {
-                    if (downloadSourceDO[i].getStatus() ==
-                        DownloadSourceDO.IN_WARTESCHLANGE) {
+                    if (downloadSourceDO[i].getStatus() == DownloadSourceDO.IN_WARTESCHLANGE
+                        || downloadSourceDO[i].getStatus() == DownloadSourceDO.WARTESCHLANGE_VOLL) {
                         kinder.add(downloadSourceDO[i]);
                     }
                 }
@@ -202,7 +205,8 @@ public class DownloadMainNode
                     if (downloadSourceDO[i].getStatus() !=
                         DownloadSourceDO.UEBERTRAGUNG
                         &&
-                        downloadSourceDO[i].getStatus() != DownloadSourceDO.IN_WARTESCHLANGE) {
+                        downloadSourceDO[i].getStatus() != DownloadSourceDO.IN_WARTESCHLANGE
+                        && downloadSourceDO[i].getStatus() != DownloadSourceDO.WARTESCHLANGE_VOLL) {
                         kinder.add(downloadSourceDO[i]);
                     }
                 }
