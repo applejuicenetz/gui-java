@@ -21,7 +21,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.7 2003/08/09 10:56:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.8 2003/08/12 06:12:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,9 @@ import java.util.EventObject;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.8  2003/08/12 06:12:05  maj0r
+ * Fertig-Status-Farbe korrigiert.
+ *
  * Revision 1.7  2003/08/09 10:56:54  maj0r
  * Nur ein todo eingefügt.
  *
@@ -161,7 +164,7 @@ public class JTreeTable extends JTable {
                     setBackground(DownloadNode.SOURCE_NODE_COLOR);
                 }
                 else if (((DownloadNode)node).getNodeType()==DownloadNode.DOWNLOAD_NODE &&
-                    ((DownloadNode)node).getDownloadDO().getStatus()==DownloadDO.FERTIGSTELLEN){
+                    ((DownloadNode)node).getDownloadDO().getStatus()==DownloadDO.FERTIG){
                       setBackground(DownloadNode.DOWNLOAD_FERTIG_COLOR);
                 }
                 else{
