@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.41 2003/11/03 14:29:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.42 2003/11/04 15:55:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.42  2003/11/04 15:55:05  maj0r
+ * gc eingefuehrt.
+ *
  * Revision 1.41  2003/11/03 14:29:16  maj0r
  * Speicheroptimierung.
  *
@@ -153,6 +156,7 @@ public class ModifiedXMLHolder
     private int tryConnectToServer = -1;
 
     private boolean reloadInProgress = false;
+    private int gcCounter = 0;
     private Logger logger;
 
     public ModifiedXMLHolder() {
@@ -330,6 +334,20 @@ public class ModifiedXMLHolder
                     downloadDO.removeSource(id);
                     sourcenZuDownloads.remove(toRemoveKey);
                     continue;
+                }
+            }
+            gcCounter++;
+            if (gcCounter-30 == 0){
+                gcCounter = 0;
+                if (logger.isEnabledFor(Level.DEBUG)){
+                    Runtime runtime = Runtime.getRuntime();
+                    float freeMemoryOld = (float) runtime.freeMemory();
+                    runtime.gc();
+                    float freeMemoryNew = (float) runtime.freeMemory();
+                    logger.debug(String.valueOf((int) (freeMemoryNew-freeMemoryOld) / 1024) + "K freed");
+                }
+                else{
+                    Runtime.getRuntime().gc();
                 }
             }
         }
