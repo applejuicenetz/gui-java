@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.32 2003/10/05 11:48:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.33 2003/10/06 12:08:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.33  2003/10/06 12:08:36  maj0r
+ * Server holen in Thread ausgelagert.
+ *
  * Revision 1.32  2003/10/05 11:48:36  maj0r
  * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
  * Userpartlisten werden angezeigt.
@@ -183,11 +186,16 @@ public class ServerPanel
             }
 
             public void mouseClicked(MouseEvent e) {
-                String[] server = PropertiesManager.getOptionsManager().getActualServers();
-                ApplejuiceFassade af = ApplejuiceFassade.getInstance();
-                for (int i=0; i<server.length; i++){
-                    af.processLink(server[i]);
-                }
+                Thread worker = new Thread(){
+                    public void run(){
+                        String[] server = PropertiesManager.getOptionsManager().getActualServers();
+                        ApplejuiceFassade af = ApplejuiceFassade.getInstance();
+                        for (int i=0; i<server.length; i++){
+                            af.processLink(server[i]);
+                        }
+                    }
+                };
+                worker.start();
             }
         });
         panel1.add(sucheServer, constraints);
