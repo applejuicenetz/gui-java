@@ -35,17 +35,13 @@ import java.util.ArrayList;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.89 2004/01/06 20:01:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.90 2004/01/07 14:52:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ApplejuiceFassade.java,v $
- * Revision 1.89  2004/01/06 20:01:43  maj0r
- * Version erhoeht.
  *
  * Revision 1.88  2004/01/06 17:32:50  maj0r
  * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
@@ -57,17 +53,11 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * Revision 1.86  2004/01/02 16:48:30  maj0r
  * Serverliste holen geaendert.
  *
- * Revision 1.85  2004/01/01 18:37:50  maj0r
- * Version erhoeht.
- *
  * Revision 1.84  2004/01/01 14:26:53  maj0r
  * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
  *
  * Revision 1.83  2003/12/31 16:13:16  maj0r
  * Refactoring.
- *
- * Revision 1.82  2003/12/31 15:46:03  maj0r
- * Version erhoeht.
  *
  * Revision 1.81  2003/12/30 20:14:59  maj0r
  * Funktionsname korrigiert.
@@ -285,7 +275,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String GUI_VERSION = "0.53.2";
+    public static final String GUI_VERSION = "0.53.3";
 
     private HashSet downloadListener;
     private HashSet searchListener;
