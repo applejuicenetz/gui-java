@@ -10,12 +10,14 @@
    <property name="log4j-1.2.8.jar"            location="${basedir}/needed_jars/log4j-1.2.8.jar"/>
    <property name="skinlf.jar"            location="${basedir}/needed_jars/skinlf.jar"/>
    <property name="ajcorefassade.jar"            location="${basedir}/needed_jars/ajcorefassade.jar"/>
+   <property name="tklcontrols.jar"            location="${basedir}/needed_jars/tklcontrols.jar"/>
 
    <!-- classpath for compilation ... -->
    <path id="lib.path">
       <pathelement location="${log4j-1.2.8.jar}"/>
       <pathelement location="${skinlf.jar}"/>
       <pathelement location="${ajcorefassade.jar}"/>
+      <pathelement location="${tklcontrols.jar}"/>
    </path>
 
    <!-- remove class files, DavaDoc files and test results ... -->
