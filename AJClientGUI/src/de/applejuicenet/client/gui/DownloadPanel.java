@@ -67,7 +67,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.90 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.91 2004/02/09 14:10:01 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -76,6 +76,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.91  2004/02/09 14:10:01  maj0r
+ * Rand der JSplitPane im Downloadbereich entfernt (Danke an muhviestarr).
+ *
  * Revision 1.90  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -966,6 +969,7 @@ public class DownloadPanel
 
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel,
                                    bottomPanel);
+        splitPane.setBorder(null);
         add(splitPane, BorderLayout.CENTER);
 
         SortButtonRenderer renderer2 = new SortButtonRenderer();
