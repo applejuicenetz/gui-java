@@ -37,7 +37,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import de.applejuicenet.client.gui.ConnectFrame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.47 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.48 2003/12/29 16:35:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,6 +46,9 @@ import de.applejuicenet.client.gui.ConnectFrame;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.48  2003/12/29 16:35:28  maj0r
+ * Taskbareinbau verbessert.
+ *
  * Revision 1.47  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -339,7 +342,6 @@ public class AppleJuiceClient {
                 }
                 splash.setVisible(true);
             }
-            connectFrame.dispose();
             if (versuche > 0) {
                 SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
             }
@@ -352,6 +354,7 @@ public class AppleJuiceClient {
             else {
                 theApp.setLocation(20, 20);
             }
+            connectFrame.dispose();
             theApp.show();
             nachricht = "appleJuice-Core-GUI läuft...";
             if (logger.isEnabledFor(Level.INFO)) {
