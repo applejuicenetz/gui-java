@@ -5,12 +5,12 @@ import java.util.Iterator;
 
 import javax.swing.table.AbstractTableModel;
 
-import de.applejuicenet.client.gui.tables.share.ShareNode;
+import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.12 2004/10/15 13:34:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.13 2004/10/15 13:39:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

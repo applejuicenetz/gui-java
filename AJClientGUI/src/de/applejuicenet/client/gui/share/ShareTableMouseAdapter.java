@@ -7,11 +7,11 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
-import de.applejuicenet.client.gui.tables.share.ShareNode;
-import de.applejuicenet.client.gui.tables.share.ShareTable;
+import de.applejuicenet.client.gui.share.table.ShareNode;
+import de.applejuicenet.client.gui.share.table.ShareTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareTableMouseAdapter.java,v 1.2 2004/10/15 13:34:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareTableMouseAdapter.java,v 1.3 2004/10/15 13:39:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

@@ -1,4 +1,4 @@
-package de.applejuicenet.client.gui.tables.share;
+package de.applejuicenet.client.gui.share.table;
 
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
