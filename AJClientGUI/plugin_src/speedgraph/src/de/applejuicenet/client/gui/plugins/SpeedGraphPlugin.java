@@ -12,7 +12,7 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.plugins.speedgraph.GraphPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/Attic/SpeedGraphPlugin.java,v 1.5 2004/03/02 21:14:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/Attic/SpeedGraphPlugin.java,v 1.6 2004/03/03 12:46:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import de.applejuicenet.client.gui.plugins.speedgraph.GraphPanel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SpeedGraphPlugin.java,v $
+ * Revision 1.6  2004/03/03 12:46:58  maj0r
+ * Sprachunterstuetzung eungebaut.
+ *
  * Revision 1.5  2004/03/02 21:14:13  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -43,8 +46,8 @@ public class SpeedGraphPlugin extends PluginConnector {
     private GraphPanel graphPanel = new GraphPanel();
     private static Logger logger;
 
-    public SpeedGraphPlugin(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder, ImageIcon icon) {
-        super(pluginsPropertiesXMLHolder, icon);
+    public SpeedGraphPlugin(XMLValueHolder pluginsPropertiesXMLHolder, HashMap languageFiles, ImageIcon icon) {
+        super(pluginsPropertiesXMLHolder, languageFiles, icon);
         logger = Logger.getLogger(getClass());
         try{
             setLayout(new BorderLayout());

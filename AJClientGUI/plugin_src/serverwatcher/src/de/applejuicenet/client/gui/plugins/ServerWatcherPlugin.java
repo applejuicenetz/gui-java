@@ -1,21 +1,39 @@
 package de.applejuicenet.client.gui.plugins;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
 
-import org.apache.log4j.Logger;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 import org.apache.log4j.Level;
-import de.applejuicenet.client.gui.plugins.serverwatcher.ServerXML;
-import de.applejuicenet.client.gui.plugins.serverwatcher.ServerConfig;
-import de.applejuicenet.client.gui.plugins.serverwatcher.NewServerDialog;
+import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.plugins.serverwatcher.NewServerDialog;
+import de.applejuicenet.client.gui.plugins.serverwatcher.ServerConfig;
+import de.applejuicenet.client.gui.plugins.serverwatcher.ServerXML;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.5 2004/03/02 21:10:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.6 2004/03/03 12:49:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +42,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerWatcherPlugin.java,v $
+ * Revision 1.6  2004/03/03 12:49:26  maj0r
+ * Sprachunterstuetzung eungebaut.
+ *
  * Revision 1.5  2004/03/02 21:10:57  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -54,8 +75,8 @@ public class ServerWatcherPlugin extends PluginConnector {
     private JLabel statusText = new JLabel();
     private static Logger logger;
 
-    public ServerWatcherPlugin(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder, ImageIcon icon) {
-        super(pluginsPropertiesXMLHolder, icon);
+    public ServerWatcherPlugin(XMLValueHolder pluginsPropertiesXMLHolder, HashMap languageFiles, ImageIcon icon) {
+        super(pluginsPropertiesXMLHolder, languageFiles, icon);
         logger = Logger.getLogger(getClass());
         try{
             setLayout(new BorderLayout());
