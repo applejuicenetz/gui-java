@@ -463,6 +463,9 @@ public class DownloadController extends GuiController {
 						pausiert = true;
 					}
 				}
+                if (selectedItems[0] instanceof DownloadDirectoryNode) {
+                    downloadPanel.getMnuZielordner().setVisible(true);
+                }
 			} else {
 				for (int i = 0; i < selectedItems.length; i++) {
 					if ((selectedItems[i].getClass() == DownloadMainNode.class && ((DownloadMainNode) selectedItems[i])
@@ -695,6 +698,19 @@ public class DownloadController extends GuiController {
 					toChange.add(download);
 				}
 			}
+            else if (selectedItems[i] instanceof DownloadDirectoryNode) {
+                Object[] children = ((DownloadDirectoryNode)selectedItems[i]).getChildren();
+                for (int x=0; x<children.length; x++){
+                    if (children[x].getClass() == DownloadMainNode.class
+                            && ((DownloadMainNode) children[x]).getType() 
+                                == DownloadMainNode.ROOT_NODE) {
+                        download = ((DownloadMainNode) children[x]).getDownload();
+                        if (download.getTargetDirectory().compareTo(neuerName) != 0) {
+                            toChange.add(download);
+                        }
+                    }
+                }
+            }
 		}
 		if (toChange.size()>0) {
 			try {
@@ -912,9 +928,7 @@ public class DownloadController extends GuiController {
 			}
 			downloadPanel.getDownloadTable().updateUI();
 		} catch (Exception e) {
-			if (logger.isEnabledFor(Level.ERROR)) {
-				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-			}
+			logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 		}
 	}
 
