@@ -20,7 +20,7 @@ import de.applejuicenet.client.shared.NumberAndSpecialCharsInputVerifier;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.13 2005/02/16 08:42:03 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.14 2005/02/16 14:49:12 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -50,7 +50,6 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
     public boolean initAction() {
         shouldPause = false;
         double wert = 0;
-        boolean correctInput = false;
         JTextField pwdlWert = new JTextField();
         JTextField pwdlCount = new JTextField();
         NumberAndSpecialCharsInputVerifier verifier = new NumberAndSpecialCharsInputVerifier(",.");
@@ -63,7 +62,8 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         abfrage.add(pwdlWert);
         abfrage.add(new JLabel("Anzahl Downloads:"));
         abfrage.add(pwdlCount);
-        while (!correctInput){
+        int versuche = 3;
+        while (--versuche >= 0) {
             JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), abfrage, "Powerdownload konfigurieren", JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE);
             try {
             	String result = pwdlWert.getText();
@@ -75,14 +75,13 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
             		continue;
             	}
               anzahlDownloads = new Integer(pwdlCount.getText());
-            	
-            	correctInput = true;
             }
             catch (Exception e) {
             	continue;
             }
+          	return true;
         }
-        return true;
+        return false;
     }
 
     public void doAction() throws Exception {
