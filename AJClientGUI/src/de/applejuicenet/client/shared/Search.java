@@ -9,9 +9,12 @@ import javax.swing.Icon;
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
+import java.util.Map;
+import java.util.List;
+import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.14 2004/02/29 19:40:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.15 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +23,9 @@ import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
+ * Revision 1.15  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.14  2004/02/29 19:40:10  maj0r
  * Dateityp Archiv hinzugefuegt.
  *
@@ -70,14 +76,14 @@ public class Search {
     private int offeneSuchen;
     private int gefundenDateien;
     private int durchsuchteClients;
-    private HashMap mapping = new HashMap();
-    private ArrayList entries = new ArrayList();
+    private Map mapping = new HashMap();
+    private List entries = new ArrayList();
     private boolean changed = true;
     private long creationTime;
 
     public static int currentSearchCount = 0;
 
-    private HashSet filter = new HashSet();
+    private Set filter = new HashSet();
 
     public static final String TYPE_PDF = "pdf";
     public static final String TYPE_IMAGE = "image";
@@ -203,8 +209,8 @@ public class Search {
         private String checksumme;
         private long groesse;
         private String groesseAsString = null;
-        private ArrayList fileNames = new ArrayList();
-        private HashSet keys = new HashSet();
+        private List fileNames = new ArrayList();
+        private Set keys = new HashSet();
 
         private String type = TYPE_UNKNOWN;
 

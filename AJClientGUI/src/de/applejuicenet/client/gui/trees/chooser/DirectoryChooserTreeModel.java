@@ -6,9 +6,10 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserTreeModel.java,v 1.4 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserTreeModel.java,v 1.5 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +18,9 @@ import javax.swing.tree.TreePath;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryChooserTreeModel.java,v $
+ * Revision 1.5  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.4  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -35,7 +39,7 @@ import javax.swing.tree.TreePath;
 public class DirectoryChooserTreeModel
     implements TreeModel {
     private DirectoryChooserNode root;
-    private Vector listener = new Vector();
+    private List listener = new Vector();
 
     public DirectoryChooserTreeModel() {
         root = new DirectoryChooserNode();

@@ -1,8 +1,9 @@
 package de.applejuicenet.client.gui.tables.server;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -11,7 +12,7 @@ import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.9 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.10 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerTableModel.java,v $
+ * Revision 1.10  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.9  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -67,9 +71,9 @@ public class ServerTableModel
         "Name", "DynIP", "Port", "Verbindungsversuche", "Letztes mal online"};
 
     private TableSorter sorter;
-    private ArrayList servers = new ArrayList();
+    private List servers = new ArrayList();
 
-    public ArrayList getContent() {
+    public List getContent() {
         return servers;
     }
 
@@ -138,7 +142,7 @@ public class ServerTableModel
         }
     }
 
-    public void setTable(HashMap changedContent) {
+    public void setTable(Map changedContent) {
         //alte Server entfernen
         String suchKey = null;
         ArrayList toRemove = new ArrayList();

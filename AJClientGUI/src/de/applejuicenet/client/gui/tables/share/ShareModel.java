@@ -5,7 +5,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModel;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareModel.java,v 1.8 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareModel.java,v 1.9 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ShareModel.java,v $
+ * Revision 1.9  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.8  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -119,6 +122,7 @@ public class ShareModel
             }
         }
         catch (SecurityException se) {
+            ;
         }
         return null;
     }

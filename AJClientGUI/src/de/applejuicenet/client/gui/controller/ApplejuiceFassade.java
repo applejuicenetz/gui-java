@@ -3,9 +3,10 @@ package de.applejuicenet.client.gui.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.swing.SwingUtilities;
@@ -30,13 +31,13 @@ import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.shared.Version;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.125 2004/02/27 15:05:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.126 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -50,14 +51,14 @@ public class ApplejuiceFassade {
     public static final String GUI_VERSION = "0.56.1";
     public static final String MIN_NEEDED_CORE_VERSION = "0.29.135.208";
 
-    private HashSet downloadListener;
-    private HashSet searchListener;
-    private HashSet shareListener;
-    private HashSet uploadListener;
-    private HashSet serverListener;
-    private HashSet networkInfoListener;
-    private HashSet speedListener;
-    private HashSet informationListener;
+    private Set downloadListener;
+    private Set searchListener;
+    private Set shareListener;
+    private Set uploadListener;
+    private Set serverListener;
+    private Set networkInfoListener;
+    private Set speedListener;
+    private Set informationListener;
     public static String separator;
     private ModifiedXMLHolder modifiedXML = null;
     private InformationXMLHolder informationXML = null;
@@ -65,7 +66,7 @@ public class ApplejuiceFassade {
     private SettingsXMLHolder settingsXML = null;
     private DirectoryXMLHolder directoryXML = null;
     private Version coreVersion;
-    private HashMap share = null;
+    private Map share = null;
     private PartListXMLHolder partlistXML = null;
 
     private static ApplejuiceFassade instance = null;
@@ -245,7 +246,7 @@ public class ApplejuiceFassade {
     }
 
     public String[] getCurrentIncomingDirs() {
-        HashMap download = getDownloadsSnapshot();
+        Map download = getDownloadsSnapshot();
         DownloadDO downloadDO = null;
         ArrayList incomingDirs = new ArrayList();
         boolean found;
@@ -397,7 +398,7 @@ public class ApplejuiceFassade {
         }
     }
 
-    public HashMap getAllServer() {
+    public Map getAllServer() {
         return modifiedXML.getServer();
     }
 
@@ -540,6 +541,7 @@ public class ApplejuiceFassade {
                                                 "ISO-8859-1");
             }
             catch (UnsupportedEncodingException ex) {
+                ;
                 //gibbet, also nix zu behandeln...
             }
             String password = PropertiesManager.getOptionsManager().
@@ -597,6 +599,7 @@ public class ApplejuiceFassade {
                                          + passwordAsMD5, false);
         }
         catch (WebSiteNotFoundException ex) {
+            ;
         }
     }
 
@@ -735,6 +738,7 @@ public class ApplejuiceFassade {
                     "ISO-8859-1");
             }
             catch (UnsupportedEncodingException ex) {
+                ;
                 //gibbet nicht, also nix zu behandeln...
             }
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
@@ -805,7 +809,7 @@ public class ApplejuiceFassade {
         return coreVersion;
     }
 
-    public HashMap getDownloadsSnapshot() {
+    public Map getDownloadsSnapshot() {
         return modifiedXML.getDownloads();
     }
 
@@ -813,7 +817,7 @@ public class ApplejuiceFassade {
         try {
             switch (type) {
                 case DataUpdateListener.DOWNLOAD_CHANGED: {
-                    HashMap content = modifiedXML.getDownloads();
+                    Map content = modifiedXML.getDownloads();
                     Iterator it = downloadListener.iterator();
                     while (it.hasNext()) {
                         ( (DataUpdateListener) it.next()).fireContentChanged(
@@ -823,7 +827,7 @@ public class ApplejuiceFassade {
                     break;
                 }
                 case DataUpdateListener.UPLOAD_CHANGED: {
-                    HashMap content = modifiedXML.getUploads();
+                    Map content = modifiedXML.getUploads();
                     Iterator it = uploadListener.iterator();
                     while (it.hasNext()) {
                         ( (DataUpdateListener) it.next()).fireContentChanged(
@@ -833,7 +837,7 @@ public class ApplejuiceFassade {
                     break;
                 }
                 case DataUpdateListener.SERVER_CHANGED: {
-                    HashMap content = modifiedXML.getServer();
+                    Map content = modifiedXML.getServer();
                     Iterator it = serverListener.iterator();
                     while (it.hasNext()) {
                         ( (DataUpdateListener) it.next()).fireContentChanged(
@@ -843,7 +847,7 @@ public class ApplejuiceFassade {
                     break;
                 }
                 case DataUpdateListener.SHARE_CHANGED: {
-                    HashMap content = shareXML.getShare();
+                    Map content = shareXML.getShare();
                     Iterator it = shareListener.iterator();
                     while (it.hasNext()) {
                         ( (DataUpdateListener) it.next()).fireContentChanged(
@@ -863,7 +867,7 @@ public class ApplejuiceFassade {
                     break;
                 }
                 case DataUpdateListener.SPEED_CHANGED: {
-                    HashMap content = modifiedXML.getSpeeds();
+                    Map content = modifiedXML.getSpeeds();
                     Iterator it = speedListener.iterator();
                     while (it.hasNext()) {
                         ( (DataUpdateListener) it.next()).fireContentChanged(
@@ -872,7 +876,7 @@ public class ApplejuiceFassade {
                     break;
                 }
                 case DataUpdateListener.SEARCH_CHANGED: {
-                    HashMap content = modifiedXML.getSearchs();
+                    Map content = modifiedXML.getSearchs();
                     Iterator it = searchListener.iterator();
                     while (it.hasNext()) {
                         ( (DataUpdateListener) it.next()).fireContentChanged(
@@ -900,7 +904,7 @@ public class ApplejuiceFassade {
         }
     }
 
-    public HashMap getShare(boolean reinit) {
+    public Map getShare(boolean reinit) {
         try {
             if (share == null || reinit) {
                 share = shareXML.getShare();
@@ -914,7 +918,7 @@ public class ApplejuiceFassade {
         return share;
     }
 
-    public void setShare(HashSet newShare) {
+    public void setShare(Set newShare) {
         try {
             int shareSize = newShare.size();
             if (newShare == null) {

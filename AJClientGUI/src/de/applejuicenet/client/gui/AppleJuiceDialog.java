@@ -73,9 +73,11 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import java.util.Set;
+import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.105 2004/03/01 21:14:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.106 2004/03/03 15:33:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -84,6 +86,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.106  2004/03/03 15:33:30  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.105  2004/03/01 21:14:44  maj0r
  * Unter Linux ist die properties.xml nun unter ~/appleJuice zu finden.
  *
@@ -367,7 +372,7 @@ public class AppleJuiceDialog
     private JMenu optionenMenu;
     private JMenu themesMenu = null;
     private JMenu coreMenu;
-    private HashSet plugins;
+    private Set plugins;
     private JMenuItem menuItemOptionen = new JMenuItem();
     private JMenuItem menuItemDateiliste = new JMenuItem();
     private JMenuItem menuItemCoreBeenden = new JMenuItem();
@@ -383,7 +388,7 @@ public class AppleJuiceDialog
     public static boolean rewriteProperties = false;
     private boolean firstChange = true;
     private MemoryMonitorDialog memoryMonitorDialog;
-    private static HashMap themes = new HashMap();
+    private static Map themes = new HashMap();
     private String themeSupportTitel;
     private String themeSupportNachricht;
     private boolean automaticPwdlEnabled = false;
@@ -938,7 +943,6 @@ public class AppleJuiceDialog
                 }
                 it = themesDateien.iterator();
                 ButtonGroup lafGroup2 = new ButtonGroup();
-                Skin standardSkin = null;
                 String temp;
                 String shortName = "";
                 String defaultTheme = PropertiesManager.getOptionsManager().
@@ -1098,9 +1102,11 @@ public class AppleJuiceDialog
                             }
                         }
                         catch (FileNotFoundException ex) {
+                            ;
                             //nix zu tun
                         }
                         catch (IOException ex1) {
+                            ;
                             //nix zu tun
                         }
                     }

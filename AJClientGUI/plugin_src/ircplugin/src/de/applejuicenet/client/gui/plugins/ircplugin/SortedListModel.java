@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.util.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.3 2003/10/27 18:26:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.4 2004/03/03 15:35:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.util.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SortedListModel.java,v $
+ * Revision 1.4  2004/03/03 15:35:45  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.3  2003/10/27 18:26:58  maj0r
  * Bugs behoben...
  *
@@ -41,10 +44,12 @@ public class SortedListModel extends AbstractListModel {
     }
 
     public synchronized Object getElementAt(int index) {
-        if (index < model.size())
+        if (index < model.size()){
             return model.toArray()[index];
-        else
+        }
+        else{
             return null;
+        }
     }
 
     public synchronized void add(Object element) {

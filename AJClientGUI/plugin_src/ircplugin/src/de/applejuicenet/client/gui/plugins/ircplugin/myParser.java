@@ -3,7 +3,7 @@ package de.applejuicenet.client.gui.plugins.ircplugin;
 import java.util.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/myParser.java,v 1.1 2003/09/12 06:32:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/myParser.java,v 1.2 2004/03/03 15:35:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.util.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: myParser.java,v $
+ * Revision 1.2  2004/03/03 15:35:45  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.1  2003/09/12 06:32:17  maj0r
  * Nur verschoben.
  *
@@ -46,8 +49,9 @@ public class myParser {
         {
             String temp = st.nextToken();
             int index = temp.indexOf(":");
-            if (index != -1)
+            if (index != -1){
                 prefix = temp.substring(index + 1);
+            }
 
             temp = st.nextToken();
             command = temp;
@@ -59,8 +63,9 @@ public class myParser {
         {
             String temp = st.nextToken();
             command = temp;
-            while (st.hasMoreTokens())
+            while (st.hasMoreTokens()){
                 params = params + st.nextToken();
+            }
         }
     }
 
@@ -145,10 +150,12 @@ public class myParser {
             int index = params.indexOf(":");
             if (index != -1 && index >= 0)
             {
-                if (params.startsWith(" ") && index - 1 >= 1)
+                if (params.startsWith(" ") && index - 1 >= 1){
                     middle = params.substring(1, index - 1);
-                else
+                }
+                else{
                     middle = params.substring(0, index - 1);
+                }
             }
         }
         return middle;

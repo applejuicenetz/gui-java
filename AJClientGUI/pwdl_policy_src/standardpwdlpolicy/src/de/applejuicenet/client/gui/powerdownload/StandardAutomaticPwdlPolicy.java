@@ -1,14 +1,15 @@
 package de.applejuicenet.client.gui.powerdownload;
 
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.swing.JOptionPane;
+
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import javax.swing.JOptionPane;
-import de.applejuicenet.client.gui.AppleJuiceDialog;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.1 2004/01/31 08:48:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.2 2004/03/03 15:37:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +18,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StandardAutomaticPwdlPolicy.java,v $
+ * Revision 1.2  2004/03/03 15:37:12  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.1  2004/01/31 08:48:04  maj0r
  * PwdlPolicies werden jetzt wie Plugins als jars eingebunden.
  *
@@ -48,7 +52,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  */
 
 public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
-    private HashMap downloads = null;
+    private Map downloads = null;
     private int[] maxProzentId = new int[]{-1, -1};
     double[] maxProzent = new double[]{-1, -1};
     private DownloadDO[] downloadDO = new DownloadDO[2];

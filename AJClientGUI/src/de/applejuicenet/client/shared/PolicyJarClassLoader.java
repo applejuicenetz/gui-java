@@ -12,9 +12,10 @@ import java.util.zip.ZipEntry;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
+import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PolicyJarClassLoader.java,v 1.2 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PolicyJarClassLoader.java,v 1.3 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +24,9 @@ import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PolicyJarClassLoader.java,v $
+ * Revision 1.3  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.2  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -44,7 +48,7 @@ public class PolicyJarClassLoader
     public AutomaticPowerdownloadPolicy getPolicy(String jar) throws Exception {
         try {
             File aJar = new File(jar);
-            Vector classes = loadClassBytesFromJar(aJar);
+            List classes = loadClassBytesFromJar(aJar);
             if (classes == null) {
                 return null;
             }
@@ -68,7 +72,7 @@ public class PolicyJarClassLoader
         }
     }
 
-    private Vector loadClassBytesFromJar(File jar) throws Exception {
+    private List loadClassBytesFromJar(File jar) throws Exception {
         if (!jar.isFile()) {
             return null;
         }

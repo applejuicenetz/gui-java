@@ -10,9 +10,11 @@ import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
+import java.util.Map;
+import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.23 2004/02/28 14:15:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.24 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +23,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.24  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.23  2004/02/28 14:15:02  maj0r
  * Featurerequest #254 gefixt (Danke an te_real_ZeroBANG)
  * Downloadtabelle wird jetzt beim Start standarmaessig nach Dateiname sortiert.
@@ -114,18 +119,18 @@ public class DownloadRootNode
     public static int SORT_GESCHWINDIGKEIT = 7;
     public static int SORT_STATUS = 8;
 
-    private HashMap downloads;
+    private Map downloads;
 
     private static boolean initialized = false;
 
-    private HashMap childrenPath = new HashMap();
-    private ArrayList children = new ArrayList();
+    private Map childrenPath = new HashMap();
+    private List children = new ArrayList();
 
     private int sort = SORT_DOWNLOADNAME;
     private boolean isAscent = true;
 
     private Object[] sortedChildNodes;
-    private HashMap targetDirs = new HashMap();
+    private Map targetDirs = new HashMap();
 
     public static boolean isInitialized() {
         return initialized;
@@ -391,7 +396,7 @@ public class DownloadRootNode
         }
     }
 
-    public void setDownloadMap(HashMap downloadMap) {
+    public void setDownloadMap(Map downloadMap) {
         if (downloads == null) {
             initialized = true;
             downloads = downloadMap;

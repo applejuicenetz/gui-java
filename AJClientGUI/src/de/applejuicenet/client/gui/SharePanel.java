@@ -2,9 +2,9 @@ package de.applejuicenet.client.gui;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -58,7 +58,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.61 2004/03/01 15:10:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.62 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -67,6 +67,9 @@ import de.applejuicenet.client.shared.dac.ShareDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.62  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.61  2004/03/01 15:10:09  maj0r
  * TableHeader werden in allen Tabellen gleich dargestellt.
  *
@@ -387,6 +390,7 @@ public class SharePanel
                             toString(), "ISO-8859-1");
                     }
                     catch (UnsupportedEncodingException ex) {
+                        ;
                         //gibbet, also nix zu behandeln...
                     }
                     toCopy.append("[URL=ajfsp://file|");
@@ -553,7 +557,7 @@ public class SharePanel
                 final SwingWorker worker = new SwingWorker() {
                     public Object construct() {
                         try {
-                            HashSet shares = ajSettings.getShareDirs();
+                            Set shares = ajSettings.getShareDirs();
                             ApplejuiceFassade.getInstance().setShare(shares);
                         }
                         catch (Exception e) {
@@ -611,7 +615,7 @@ public class SharePanel
 
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                HashSet shares = ajSettings.getShareDirs();
+                Set shares = ajSettings.getShareDirs();
                 DirectoryNode node = (DirectoryNode) folderTree.
                     getLastSelectedPathComponent();
                 if (node != null) {
@@ -628,7 +632,7 @@ public class SharePanel
 
         item2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                HashSet shares = ajSettings.getShareDirs();
+                Set shares = ajSettings.getShareDirs();
                 DirectoryNode node = (DirectoryNode) folderTree.
                     getLastSelectedPathComponent();
                 if (node != null) {
@@ -645,7 +649,7 @@ public class SharePanel
 
         item3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                HashSet shares = ajSettings.getShareDirs();
+                Set shares = ajSettings.getShareDirs();
                 DirectoryNode node = (DirectoryNode) folderTree.
                     getLastSelectedPathComponent();
                 if (node != null) {
@@ -681,7 +685,7 @@ public class SharePanel
                     if (komplettNeu) {
                         rootNode.removeAllChildren();
                     }
-                    HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
+                    Map shares = ApplejuiceFassade.getInstance().getShare(true);
                     Iterator iterator = shares.values().iterator();
                     int anzahlDateien = 0;
                     double size = 0;

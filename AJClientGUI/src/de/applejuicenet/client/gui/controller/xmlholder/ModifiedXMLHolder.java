@@ -32,9 +32,11 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.29 2004/03/01 15:41:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.30 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +45,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.30  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.29  2004/03/01 15:41:43  maj0r
  * IP wird nun korrekt angezeigt.
  *
@@ -83,13 +88,13 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 public class ModifiedXMLHolder
     extends DefaultHandler  {
-    private HashMap sourcenZuDownloads = new HashMap();
+    private Map sourcenZuDownloads = new HashMap();
     private XMLReader xr = null;
 
-    private HashMap serverMap = new HashMap();
-    private HashMap downloadMap = new HashMap();
-    private HashMap uploadMap = new HashMap();
-    private HashMap searchMap = new HashMap();
+    private Map serverMap = new HashMap();
+    private Map downloadMap = new HashMap();
+    private Map uploadMap = new HashMap();
+    private Map searchMap = new HashMap();
     private NetworkInfo netInfo;
     private Information information;
     private int count = 0;
@@ -147,19 +152,19 @@ public class ModifiedXMLHolder
 
     }
 
-    public HashMap getServer() {
+    public Map getServer() {
         return serverMap;
     }
 
-    public HashMap getUploads() {
+    public Map getUploads() {
         return uploadMap;
     }
 
-    public HashMap getDownloads() {
+    public Map getDownloads() {
         return downloadMap;
     }
 
-    public HashMap getSearchs() {
+    public Map getSearchs() {
         return searchMap;
     }
 
@@ -168,12 +173,7 @@ public class ModifiedXMLHolder
     }
 
     public synchronized boolean update() {
-        if (tryToReload()) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return tryToReload();
     }
 
     private boolean tryToReload() {
@@ -212,8 +212,8 @@ public class ModifiedXMLHolder
         return information;
     }
 
-    public HashMap getSpeeds() {
-        HashMap speeds = new HashMap();
+    public Map getSpeeds() {
+        Map speeds = new HashMap();
         if (information != null) {
             speeds.put("uploadspeed",
                        new Long(information.getUploadSpeed()));
@@ -326,7 +326,7 @@ public class ModifiedXMLHolder
         }
     }
 
-    private HashMap shareMap = null;
+    private Map shareMap = null;
 
     private void checkUploadAttributes(Attributes attr){
         int id = -1;
@@ -664,8 +664,8 @@ public class ModifiedXMLHolder
         }
     }
 
-    private HashSet searchEntriesToDo = new HashSet();
-    private HashSet downloadSourcesToDo = new HashSet();
+    private Set searchEntriesToDo = new HashSet();
+    private Set downloadSourcesToDo = new HashSet();
 
     private void checkSearchEntryFilenameAttributes(Attributes attr){
         if (tmpSearchEntry == null){

@@ -16,9 +16,10 @@ import java.lang.reflect.Constructor;
 import javax.swing.ImageIcon;
 import de.applejuicenet.client.gui.plugins.XMLValueHolder;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.17 2004/03/03 11:56:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.18 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +28,9 @@ import java.util.HashMap;
  * @author: Maj0r aj@tkl-soft.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.18  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.17  2004/03/03 11:56:53  maj0r
  * Sprachunterstuetzung fuer Plugins eingebaut.
  *
@@ -80,7 +84,7 @@ public class PluginJarClassLoader
     private Logger logger;
     private XMLValueHolder pluginsPropertiesXMLHolder = null;
     private ImageIcon pluginIcon = null;
-    private HashMap languageXMLs = new HashMap();
+    private Map languageXMLs = new HashMap();
 
     public PluginJarClassLoader(URL url) {
         super(new URL[] {url});
@@ -97,7 +101,7 @@ public class PluginJarClassLoader
             loadClassBytesFromJar(aJar);
             String theClassName = pluginsPropertiesXMLHolder.getXMLAttributeByTagName(".root.general.classname.value");
             Class cl = loadClass(theClassName);
-            Class[] constructorHelper = {XMLValueHolder.class, HashMap.class, ImageIcon.class };
+            Class[] constructorHelper = {XMLValueHolder.class, Map.class, ImageIcon.class };
             Constructor con = cl.getConstructor(constructorHelper);
             Object aPlugin = con.newInstance(new Object[]{pluginsPropertiesXMLHolder, languageXMLs, pluginIcon});
             return (PluginConnector) aPlugin;

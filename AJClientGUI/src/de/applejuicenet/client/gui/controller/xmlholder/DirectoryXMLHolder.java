@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import de.applejuicenet.client.shared.dac.DirectoryDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.7 2004/02/18 20:44:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.8 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.dac.DirectoryDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.8  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.7  2004/02/18 20:44:37  maj0r
  * Bugs #223 und #224 behoben.
  *
@@ -140,7 +143,7 @@ public class DirectoryXMLHolder
             }
         }
         DirectoryDO directoryDO = new DirectoryDO(name, type, fileSystem, path);
-        ApplejuiceNode newNode = directoryNode.addChild(directoryDO);
+        directoryNode.addChild(directoryDO);
     }
 
     public void getDirectory(String directory, ApplejuiceNode directoryNode) {

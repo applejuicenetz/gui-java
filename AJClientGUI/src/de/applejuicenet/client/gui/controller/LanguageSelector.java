@@ -19,9 +19,11 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.17 2004/03/03 11:56:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.18 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +32,9 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.18  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.17  2004/03/03 11:56:53  maj0r
  * Sprachunterstuetzung fuer Plugins eingebaut.
  *
@@ -75,13 +80,13 @@ public class LanguageSelector
 
     private static LanguageSelector instance = null;
 
-    private HashSet languageListener = new HashSet();
-    private HashMap words = new HashMap();
+    private Set languageListener = new HashSet();
+    private Map words = new HashMap();
     private XMLReader xr = null;
     private CharArrayWriter contents = new CharArrayWriter();
     private static Logger logger = Logger.getLogger(LanguageSelector.class);
     private StringBuffer key = new StringBuffer();
-    private HashSet pluginsToWatch = new HashSet();
+    private Set pluginsToWatch = new HashSet();
 
     private LanguageSelector(String path) {
         try {
@@ -111,7 +116,7 @@ public class LanguageSelector
         return instance;
     }
 
-    public void addPluginsToWatch(HashSet plugins){
+    public void addPluginsToWatch(Set plugins){
         pluginsToWatch = plugins;
     }
 

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/NetworkServerXMLHolder.java,v 1.5 2004/02/18 20:44:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/NetworkServerXMLHolder.java,v 1.6 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: NetworkServerXMLHolder.java,v $
+ * Revision 1.6  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.5  2004/02/18 20:44:37  maj0r
  * Bugs #223 und #224 behoben.
  *
@@ -41,6 +44,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import org.apache.log4j.Level;
 import org.apache.xerces.parsers.SAXParser;
+import java.util.List;
 
 public class NetworkServerXMLHolder
     extends DefaultHandler {
@@ -87,7 +91,7 @@ public class NetworkServerXMLHolder
         }
     }
 
-    private ArrayList links = new ArrayList();
+    private List links = new ArrayList();
 
     public String[] getNetworkKnownServers() {
         String xmlData = null;

@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import java.awt.Color;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserListCellRenderer.java,v 1.1 2003/09/12 06:32:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserListCellRenderer.java,v 1.2 2004/03/03 15:35:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import java.awt.Color;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UserListCellRenderer.java,v $
+ * Revision 1.2  2004/03/03 15:35:45  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.1  2003/09/12 06:32:17  maj0r
  * Nur verschoben.
  *
@@ -48,16 +51,21 @@ public class UserListCellRenderer implements ListCellRenderer {
         else
         {
             aLabel.setForeground(list.getForeground());
-            if (inhalt.substring(0, 1).compareTo("!") == 0)
+            if (inhalt.substring(0, 1).compareTo("!") == 0){
                 aLabel.setBackground(Color.RED);
-            else if (inhalt.substring(0, 1).compareTo("@") == 0)
+            }
+            else if (inhalt.substring(0, 1).compareTo("@") == 0){
                 aLabel.setBackground(Color.YELLOW);
-            else if (inhalt.substring(0, 1).compareTo("%") == 0)
+            }
+            else if (inhalt.substring(0, 1).compareTo("%") == 0){
                 aLabel.setBackground(Color.GREEN);
-            else if (inhalt.substring(0, 1).compareTo("+") == 0)
+            }
+            else if (inhalt.substring(0, 1).compareTo("+") == 0){
                 aLabel.setBackground(list.getBackground());
-            else
+            }
+            else{
                 aLabel.setBackground(Color.LIGHT_GRAY);
+            }
         }
         return aLabel;
     }

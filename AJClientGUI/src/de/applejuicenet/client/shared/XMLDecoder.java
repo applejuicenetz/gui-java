@@ -15,7 +15,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.20 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.21 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.xml.sax.SAXException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: XMLDecoder.java,v $
+ * Revision 1.21  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.20  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -96,6 +99,7 @@ public abstract class XMLDecoder {
             }
         }
         catch (Exception e) {
+            ;
         }
     }
 

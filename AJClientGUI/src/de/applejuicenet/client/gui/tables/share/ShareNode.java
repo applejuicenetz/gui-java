@@ -10,9 +10,10 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.ShareDO;
+import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.19 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.20 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +22,9 @@ import de.applejuicenet.client.shared.dac.ShareDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.20  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.19  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -97,7 +101,7 @@ public class ShareNode
     }
 
     private ShareDO shareDO;
-    private HashMap children = new HashMap();
+    private Map children = new HashMap();
     private ShareNode parent;
     private String path;
     private Object[] sortedChildren = null;
@@ -227,7 +231,7 @@ public class ShareNode
         }
     }
 
-    public HashMap getChildrenMap() {
+    public Map getChildrenMap() {
         return children;
     }
 

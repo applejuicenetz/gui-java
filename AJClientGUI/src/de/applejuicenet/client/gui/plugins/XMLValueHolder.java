@@ -12,11 +12,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+import java.util.Map;
 
 public class XMLValueHolder extends DefaultHandler{
     private Logger logger;
     private XMLReader xr = null;
-    private HashMap xmlContents = new HashMap();
+    private Map xmlContents = new HashMap();
     private StringBuffer key = new StringBuffer();
 
     public XMLValueHolder(String xmlString) {

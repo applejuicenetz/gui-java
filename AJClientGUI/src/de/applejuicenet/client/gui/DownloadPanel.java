@@ -1,10 +1,9 @@
 package de.applejuicenet.client.gui;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -53,10 +52,8 @@ import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.gui.tables.download.DownloadRootNode;
 import de.applejuicenet.client.gui.tables.download.DownloadTableCellRenderer;
-import de.applejuicenet.client.gui.tables.download.
-    DownloadTablePercentCellRenderer;
-import de.applejuicenet.client.gui.tables.download.
-    DownloadTableVersionCellRenderer;
+import de.applejuicenet.client.gui.tables.download.DownloadTablePercentCellRenderer;
+import de.applejuicenet.client.gui.tables.download.DownloadTableVersionCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.Settings;
@@ -67,7 +64,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.96 2004/02/21 20:52:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.97 2004/03/03 15:33:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -76,6 +73,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.97  2004/03/03 15:33:30  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.96  2004/02/21 20:52:43  maj0r
  * Bug #234 gefixt (Danke an hirsch.marcel)
  * Tabellen werden beim Aendern von Spaltengroessen nicht mehr sortiert.
@@ -447,7 +447,7 @@ public class DownloadPanel
                     else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
                         DownloadSourceDO downloadSourceDO = (DownloadSourceDO)
                             selectedItems[0];
-                        HashMap downloads = ApplejuiceFassade.getInstance().
+                        Map downloads = ApplejuiceFassade.getInstance().
                             getDownloadsSnapshot();
                         String key = Integer.toString(
                             downloadSourceDO.getDownloadId());
@@ -489,7 +489,7 @@ public class DownloadPanel
                     else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
                         DownloadSourceDO downloadSourceDO = (DownloadSourceDO)
                             selectedItems[0];
-                        HashMap downloads = ApplejuiceFassade.getInstance().
+                        Map downloads = ApplejuiceFassade.getInstance().
                             getDownloadsSnapshot();
                         String key = Integer.toString(
                             downloadSourceDO.getDownloadId());
@@ -783,15 +783,16 @@ public class DownloadPanel
                         downloadTable.getColumnModel().removeColumn(columns[x]);
                         PropertiesManager.getPositionManager().
                             setDownloadColumnVisible(x, false);
-                        for (int i = 0; i < columns.length; i++) {
+                        for (int y = 0; y < columns.length; y++) {
                             try {
                                 PropertiesManager.getPositionManager().
                                     setDownloadColumnIndex(
-                                    i,
+                                    y,
                                     downloadTable.getColumnModel().
-                                    getColumnIndex(columns[i].getIdentifier()));
+                                    getColumnIndex(columns[y].getIdentifier()));
                             }
                             catch (IllegalArgumentException niaE) {
+                                ;
                                 //nix zu tun
                             }
                         }
@@ -1003,6 +1004,7 @@ public class DownloadPanel
                             i].getIdentifier()));
                     }
                     catch (IllegalArgumentException niaE) {
+                        ;
                         //nix zu tun
                     }
                 }

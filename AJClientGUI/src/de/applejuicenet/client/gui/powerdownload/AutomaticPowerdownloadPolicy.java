@@ -1,8 +1,9 @@
 package de.applejuicenet.client.gui.powerdownload;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -10,7 +11,7 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.5 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.6 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AutomaticPowerdownloadPolicy.java,v $
+ * Revision 1.6  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.5  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -40,7 +44,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 public abstract class AutomaticPowerdownloadPolicy
     extends Thread {
 
-    private HashSet threads = new HashSet();
+    private Set threads = new HashSet();
     protected ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.
         getInstance();
     private Logger logger = Logger.getLogger(getClass());
@@ -104,7 +108,7 @@ public abstract class AutomaticPowerdownloadPolicy
 
     private final void pauseAllDownloads() {
         try {
-            HashMap downloads = applejuiceFassade.getDownloadsSnapshot();
+            Map downloads = applejuiceFassade.getDownloadsSnapshot();
             synchronized (downloads) {
                 Iterator it = downloads.values().iterator();
                 int[] ids = new int[downloads.size()];

@@ -25,9 +25,10 @@ import de.applejuicenet.client.shared.ProxySettings;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
+import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.35 2004/03/03 12:36:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.36 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +37,9 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.36  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.35  2004/03/03 12:36:07  maj0r
  * Modifizierbare und potenziell modifizierbare Dateien bei Nicht-Windows-System verschoben.
  *
@@ -200,8 +204,8 @@ public class PropertiesManager
     implements OptionsManager, PositionManager, ProxyManager {
     private static PropertiesManager instance = null;
     private Logger logger;
-    private HashSet settingsListener = new HashSet();
-    private HashSet connectionSettingsListener = new HashSet();
+    private Set settingsListener = new HashSet();
+    private Set connectionSettingsListener = new HashSet();
     private Point mainXY;
     private Dimension mainDimension;
     private ProxySettings proxySettings;

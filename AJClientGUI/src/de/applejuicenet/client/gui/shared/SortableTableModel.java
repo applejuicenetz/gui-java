@@ -1,9 +1,9 @@
 package de.applejuicenet.client.gui.shared;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/SortableTableModel.java,v 1.3 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/SortableTableModel.java,v 1.4 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SortableTableModel.java,v $
+ * Revision 1.4  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.3  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -29,7 +32,7 @@ import java.util.ArrayList;
 public interface SortableTableModel {
     public int getRowCount();
 
-    public ArrayList getContent();
+    public List getContent();
 
     public Object getValueAt(int row, int column);
 

@@ -21,7 +21,7 @@ import java.util.zip.ZipEntry;
 import java.util.HashSet;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.34 2004/03/03 12:36:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.35 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,9 @@ import java.util.HashSet;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.35  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.34  2004/03/03 12:36:07  maj0r
  * Modifizierbare und potenziell modifizierbare Dateien bei Nicht-Windows-System verschoben.
  *
@@ -179,7 +182,6 @@ public class RegisterPanel
 
     private void loadPlugins() {
         String path;
-        String test =System.getProperty("os.name");
         if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1) {
             path = System.getProperty("user.home") + File.separator +
                 "appleJuice" + File.separator +

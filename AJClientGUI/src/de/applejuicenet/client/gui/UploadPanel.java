@@ -39,7 +39,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.41 2004/03/01 15:10:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.42 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.42  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.41  2004/03/01 15:10:09  maj0r
  * TableHeader werden in allen Tabellen gleich dargestellt.
  *
@@ -232,15 +235,16 @@ public class UploadPanel
                         uploadDataTable.getColumnModel().removeColumn(columns[x]);
                         PropertiesManager.getPositionManager().
                             setUploadColumnVisible(x, false);
-                        for (int i = 0; i < columns.length; i++) {
+                        for (int y = 0; y < columns.length; y++) {
                             try {
                                 PropertiesManager.getPositionManager().
                                     setUploadColumnIndex(
-                                    i,
+                                    y,
                                     uploadDataTable.getColumnModel().
-                                    getColumnIndex(columns[i].getIdentifier()));
+                                    getColumnIndex(columns[y].getIdentifier()));
                             }
                             catch (IllegalArgumentException niaE) {
+                                ;
                                 //nix zu tun
                             }
                         }
@@ -264,6 +268,7 @@ public class UploadPanel
                             i].getIdentifier()));
                     }
                     catch (IllegalArgumentException niaE) {
+                        ;
                         //nix zu tun
                     }
                 }

@@ -1,12 +1,12 @@
 package de.applejuicenet.client.gui.plugins;
 
+import java.util.Map;
+
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import java.util.HashMap;
 
 /**
  * <p>Titel: AppleJuice Core-GUI</p>
@@ -28,10 +28,10 @@ public abstract class PluginConnector
 
     private final ImageIcon pluginIcon;
     private final XMLValueHolder xMLValueHolder;
-    private final HashMap languageFiles;
+    private final Map languageFiles;
     private XMLValueHolder currentLanguageFile;
 
-    protected PluginConnector(XMLValueHolder xMLValueHolder, HashMap languageFiles, ImageIcon icon){
+    protected PluginConnector(XMLValueHolder xMLValueHolder, Map languageFiles, ImageIcon icon){
         if (xMLValueHolder == null || icon == null || languageFiles == null){
             throw new RuntimeException("Plugin nicht richtig implementiert");
         }

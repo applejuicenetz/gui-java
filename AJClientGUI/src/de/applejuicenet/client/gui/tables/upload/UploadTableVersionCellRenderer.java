@@ -1,10 +1,6 @@
 package de.applejuicenet.client.gui.tables.upload;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 

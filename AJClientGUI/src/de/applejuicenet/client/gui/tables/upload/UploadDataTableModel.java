@@ -1,7 +1,6 @@
 package de.applejuicenet.client.gui.tables.upload;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
@@ -11,7 +10,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.12 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.13 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +19,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadDataTableModel.java,v $
+ * Revision 1.13  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.12  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -81,7 +83,7 @@ public class UploadDataTableModel
     private String warteschlange;
     private MainNode mainNode;
 
-    private HashMap uploads = null;
+    private Map uploads = null;
 
     public UploadDataTableModel() {
         super(new MainNode());
@@ -241,7 +243,7 @@ public class UploadDataTableModel
         return null;
     }
 
-    public void setTable(HashMap content) {
+    public void setTable(Map content) {
         if (uploads == null) {
             uploads = content;
             mainNode.setUploads(content);

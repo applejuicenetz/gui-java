@@ -11,7 +11,7 @@ import javax.swing.JTabbedPane;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultTabbedPane.java,v 1.2 2004/02/12 21:16:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultTabbedPane.java,v 1.3 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.IconManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultTabbedPane.java,v $
+ * Revision 1.3  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.2  2004/02/12 21:16:51  maj0r
  * Bug #23 gefixt (Danke an computer.ist.org)
  * Suche abbrechen korrigiert.
@@ -49,13 +52,15 @@ public class SearchResultTabbedPane extends JTabbedPane
 
     public void mouseClicked(MouseEvent e) {
         int tabNumber = getUI().tabForCoordinate(this, e.getX(), e.getY());
-        if (tabNumber < 0)
+        if (tabNumber < 0){
             return;
+        }
         CloseIcon icon = ( (CloseIcon) getIconAt(tabNumber));
         if (icon != null){
             Rectangle rect = icon.getBounds();
-            if (rect.contains(e.getX(), e.getY()))
+            if (rect.contains(e.getX(), e.getY())){
                 removeTabAt(tabNumber);
+            }
         }
     }
 
@@ -87,8 +92,9 @@ public class SearchResultTabbedPane extends JTabbedPane
         public void paintIcon(Component c, Graphics g, int x, int y) {
             x_pos = x;
             y_pos = y;
-            if (icon != null)
+            if (icon != null){
                 icon.paintIcon(c, g, x_pos, y_pos);
+            }
         }
 
         public int getIconWidth() {

@@ -27,16 +27,15 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.tables.download.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
 import de.applejuicenet.client.gui.tables.download.IconGetter;
-import de.applejuicenet.client.shared.Search.SearchEntry;
+import de.applejuicenet.client.gui.tables.upload.MainNode;
+import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
-import de.applejuicenet.client.gui.tables.upload.MainNode;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.22 2004/02/09 14:21:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.23 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,6 +44,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.23  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.22  2004/02/09 14:21:32  maj0r
  * Icons für Upload-DirectStates eingebaut.
  *

@@ -1,20 +1,21 @@
 package de.applejuicenet.client.gui.tables.download;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.JLabel;
+import javax.swing.JTable;
 
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
-import javax.swing.JTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.11 2004/02/28 14:15:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.12 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +24,9 @@ import javax.swing.JTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDirectoryNode.java,v $
+ * Revision 1.12  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.11  2004/02/28 14:15:02  maj0r
  * Featurerequest #254 gefixt (Danke an te_real_ZeroBANG)
  * Downloadtabelle wird jetzt beim Start standarmaessig nach Dateiname sortiert.
@@ -83,9 +87,9 @@ public class DownloadDirectoryNode
 
     private Object[] sortedChildNodes;
 
-    private static HashMap downloads;
+    private static Map downloads;
     private String verzeichnis;
-    private ArrayList children = new ArrayList();
+    private List children = new ArrayList();
 
     private JLabel progressbarLabel;
     private JLabel versionLabel;
@@ -98,7 +102,7 @@ public class DownloadDirectoryNode
         versionLabel.setOpaque(true);
     }
 
-    public static void setDownloads(HashMap downloadsMap) {
+    public static void setDownloads(Map downloadsMap) {
         if (downloads == null) {
             downloads = downloadsMap;
         }
@@ -229,12 +233,12 @@ public class DownloadDirectoryNode
                 int k = i;
                 for (int j = i + 1; j < n; j++) {
                     if (isAscent) {
-                        if (compare(childNodes, j, k, isAscent) < 0) {
+                        if (compare(childNodes, j, k) < 0) {
                             k = j;
                         }
                     }
                     else {
-                        if (compare(childNodes, j, k, isAscent) > 0) {
+                        if (compare(childNodes, j, k) > 0) {
                             k = j;
                         }
                     }
@@ -248,8 +252,7 @@ public class DownloadDirectoryNode
         }
     }
 
-    private int compare(Object[] childNodes, int row1, int row2,
-                        boolean isAscent) {
+    private int compare(Object[] childNodes, int row1, int row2) {
         Object o1 = null;
         Object o2 = null;
         if (sort == SORT_DOWNLOADNAME) {

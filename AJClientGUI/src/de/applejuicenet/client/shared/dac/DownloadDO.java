@@ -8,9 +8,10 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.SoundPlayer;
+import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.24 2004/02/27 15:24:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.25 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import de.applejuicenet.client.shared.SoundPlayer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.25  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.24  2004/02/27 15:24:26  maj0r
  * Status "Warteschlange voll" wird nun auch in "In Warteschlange" angezeigt, da diese genauso zB fuer Pwdl-Aenderungen genauso relevant sind.
  *
@@ -132,7 +136,7 @@ public class DownloadDO
     private long oldSpeed;
     private String speedAsString;
 
-    private HashMap sourcen = new HashMap();
+    private Map sourcen = new HashMap();
 
     public DownloadDO(int id){
         this.id = id;

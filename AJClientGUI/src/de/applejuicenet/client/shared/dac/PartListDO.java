@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.12 2004/02/25 11:16:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.13 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListDO.java,v $
+ * Revision 1.13  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.12  2004/02/25 11:16:29  maj0r
  * Bug #241 gefixt (Danke an computer.ist.org)
  * Farbgebung war genau umgekehrt. Nun gilt wirklich: je dunkler, desto mehr Quellen gefunden.
@@ -54,6 +57,7 @@ package de.applejuicenet.client.shared.dac;
 import java.util.ArrayList;
 
 import java.awt.Color;
+import java.util.List;
 
 public class PartListDO {
     public static final Color COLOR_TYPE_UEBERPRUEFT = Color.GREEN;
@@ -82,7 +86,7 @@ public class PartListDO {
 
     private Object valueHolderDO;
     private long groesse;
-    private ArrayList parts = new ArrayList();
+    private List parts = new ArrayList();
     private int type;
 
     public PartListDO(DownloadDO downloadDO) {

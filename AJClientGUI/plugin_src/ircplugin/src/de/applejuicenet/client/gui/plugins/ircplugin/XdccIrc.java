@@ -56,7 +56,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.7 2004/03/03 14:22:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.8 2004/03/03 15:35:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,6 +65,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: XdccIrc.java,v $
+ * Revision 1.8  2004/03/03 15:35:45  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.7  2004/03/03 14:22:23  maj0r
  * Es wird nun Deutsch und Englisch unterstuetzt.
  *
@@ -114,7 +117,6 @@ public class XdccIrc
     private JTabbedPane tabbedPane;
     //XdccTree xdccTree;
     // 5 = # of DCC arguments and 128 = max number of DCCs
-    private String[][] xdccInfos = new String[128][5];
     //0 = port
     //1 = address
     //2 = Filename
@@ -142,7 +144,7 @@ public class XdccIrc
     private JTextField nickJTextField2;
     private JTextField nickJTextField3;
 
-    private String nickname1, nickname2, nickname3;
+    private String nickname2, nickname3;
 
     // For communicating purposes. You write to 'toServer' to
     // send something to the IRC server. For example:
@@ -152,9 +154,6 @@ public class XdccIrc
     private Socket chatSocket;
     private BufferedReader fromServer;
     private PrintWriter toServer;
-
-    // For debugging purpose only
-    private PrintWriter debugOut;
 
     private AppleJuiceDialog theApp = AppleJuiceDialog.getApp();
 
@@ -269,8 +268,6 @@ public class XdccIrc
 
     private void makeConnectionInfo() {
         dialog = new JDialog(AppleJuiceDialog.getApp(), connectionInfo, true);
-        Border etched = BorderFactory.createEtchedBorder();
-
         Container dialogContentPane = dialog.getContentPane();
 
         // Ok, let's make the UserInfo
@@ -312,19 +309,24 @@ public class XdccIrc
         box4.add(box1);
         box4.add(box2);
         box4.add(box3);
-        Random random = new Random();
-        if (nickname != null)
+        if (nickname != null){
             nickJTextField1.setText(nickname);
-        else
+        }
+        else{
             nickJTextField1.setText("");
-        if (nickname2 != null)
+        }
+        if (nickname2 != null){
             nickJTextField2.setText(nickname2);
-        else
+        }
+        else{
             nickJTextField2.setText("");
-        if (nickname3 != null)
+        }
+        if (nickname3 != null){
             nickJTextField3.setText(nickname3);
-        else
+        }
+        else{
             nickJTextField3.setText("");
+        }
 
         userInfo.add("Center", box4);
 
@@ -470,6 +472,7 @@ public class XdccIrc
             }
             else if (aComponent instanceof UserPanel)
             {
+                ;
                 // Do UserPanel processing
                 // Actually this process was done in the NICK handling part....
             }
@@ -720,10 +723,6 @@ public class XdccIrc
                     {
                         String ctcpCommand;
                         String trailing;
-                        String dccPort;
-                        String dccType;
-
-                        StringTokenizer st;
                         char firstOne = 1;
 
                         trailing = parser.getTrailing();
@@ -1063,8 +1062,7 @@ public class XdccIrc
         else if (command.equals("301"))
         { // RPL_AWAY
             StringTokenizer st = new StringTokenizer(parser.getParams(), " \r\n");
-            String awayNickname = "",
-                    awayReason = "";
+            String awayNickname = "";
             for (int i = 0; st.hasMoreTokens();)
             {
                 String aToken = st.nextToken();
@@ -1093,8 +1091,7 @@ public class XdccIrc
         else if (command.equals("332") // RPL_TOPIC
         )
         {
-            String topicChannelName = "",
-                    topicTopic = "";
+            String topicChannelName = "";
 
             StringTokenizer st = new StringTokenizer(parser.getParams(), " \r\n");
             for (int i = 0; st.hasMoreTokens();)
@@ -1179,6 +1176,7 @@ public class XdccIrc
             }
             else
             { // channelName tab doesn't exist!
+                ;
             }
         }
 
@@ -1565,7 +1563,7 @@ public class XdccIrc
         }
 
         public void actionPerformed(ActionEvent e) {
-            Object source = e.getSource();
+            ;
         }
     }
 
@@ -1820,7 +1818,7 @@ public class XdccIrc
         }
 
         public void valueChanged(ListSelectionEvent e) {
-            if (e.getValueIsAdjusting() == false)
+            if (!e.getValueIsAdjusting())
             {
                 Object obj = userList.getSelectedValue();
                 if (obj != null)

@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.42 2004/02/25 13:16:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.43 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -61,6 +61,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.43  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.42  2004/02/25 13:16:48  maj0r
  * Featurerequest #244 gefixt (Danke an Homer1Simpson)
  * Standardmaessig ist nun beim automatischen Powerdownload der Inaktiv-Button selektiert.
@@ -201,10 +204,10 @@ public class PowerDownloadPanel
 
     public PowerDownloadPanel(DownloadPanel parentPanel) {
         logger = Logger.getLogger(getClass());
-        this.parentPanel = parentPanel;
-        btnPdl.setEnabled(false);
         try {
-            jbInit();
+            this.parentPanel = parentPanel;
+            btnPdl.setEnabled(false);
+            init();
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -213,7 +216,7 @@ public class PowerDownloadPanel
         }
     }
 
-    private void jbInit() throws Exception {
+    private void init() throws Exception {
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
         JPanel backPanel = new JPanel();
@@ -253,6 +256,9 @@ public class PowerDownloadPanel
                     case KeyEvent.VK_DOWN:{
                         btnAktiv.setSelected(true);
                         alterRatio(false);
+                        break;
+                    }
+                    default:{
                         break;
                     }
                 }
@@ -494,12 +500,7 @@ public class PowerDownloadPanel
     }
 
     public boolean isAutomaticPwdlActive() {
-        if (!pwdlPolicies.isEnabled() && autoPwdlThread != null) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (!pwdlPolicies.isEnabled() && autoPwdlThread != null);
     }
 
     private void manageAutoPwdl(final AutomaticPowerdownloadPolicy

@@ -9,9 +9,10 @@ import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.Search.SearchEntry;
+import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.11 2004/02/28 15:01:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.12 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,9 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchNode.java,v $
+ * Revision 1.12  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.11  2004/02/28 15:01:42  maj0r
  * Suche um Filter erweitert
  * Die Filter in der Suchergebnistabelle wirken sich NICHT auf die Suche aus, lediglich die Treffer werden gefiltert.
@@ -72,7 +76,7 @@ public class SearchNode
     public static int ROOT_NODE = 0;
     public static int ENTRY_NODE = 1;
     private int type;
-    private HashMap children;
+    private Map children;
     private Object[] sortedChildNodes;
     private boolean forceSort = false;
 

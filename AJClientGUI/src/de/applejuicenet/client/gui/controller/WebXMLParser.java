@@ -19,7 +19,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.29 2004/02/18 20:44:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.30 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import javax.xml.parsers.ParserConfigurationException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.30  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.29  2004/02/18 20:44:37  maj0r
  * Bugs #223 und #224 behoben.
  *
@@ -141,6 +144,7 @@ public abstract class WebXMLParser
             builder = factory.newDocumentBuilder();
         }
         catch (ParserConfigurationException ex) {
+            ;
         }
     }
 

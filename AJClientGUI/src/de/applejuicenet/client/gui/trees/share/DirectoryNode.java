@@ -14,9 +14,11 @@ import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.shared.dac.DirectoryDO;
+import java.util.Set;
+import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.14 2004/02/09 20:12:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.15 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +27,9 @@ import de.applejuicenet.client.shared.dac.DirectoryDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryNode.java,v $
+ * Revision 1.15  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.14  2004/02/09 20:12:28  maj0r
  * Sortierung verbessert bzw. eingebaut.
  *
@@ -77,10 +82,10 @@ public class DirectoryNode
     public static final int SHARED_SOMETHING = 3;
     public static final int SHARED_SUB = 4;
 
-    private static HashSet shareDirs = new HashSet();
+    private static Set shareDirs = new HashSet();
 
     private DirectoryDO directoryDO;
-    private ArrayList children = null;
+    private List children = null;
     private DirectoryNode parent;
 
     public DirectoryNode(DirectoryNode parent, DirectoryDO directoryDO) {
@@ -95,7 +100,7 @@ public class DirectoryNode
         ApplejuiceFassade.getInstance().getDirectory(null, this);
     }
 
-    public static void setShareDirs(HashSet newShareDirs) {
+    public static void setShareDirs(Set newShareDirs) {
         shareDirs = newShareDirs;
     }
 

@@ -24,7 +24,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.16 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.17 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +33,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODVerbindungPanel.java,v $
+ * Revision 1.17  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.16  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -93,7 +96,7 @@ public class ODVerbindungPanel
         logger = Logger.getLogger(getClass());
         this.ajSettings = ajSettings;
         try {
-            jbInit();
+            init();
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -106,7 +109,7 @@ public class ODVerbindungPanel
         return dirty;
     }
 
-    private void jbInit() throws Exception {
+    private void init() throws Exception {
         IconManager im = IconManager.getInstance();
         menuIcon = im.getIcon("opt_verbindung");
         setLayout(new BorderLayout());

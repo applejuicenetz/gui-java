@@ -1,10 +1,10 @@
 package de.applejuicenet.client.gui.shared;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/TableSorter.java,v 1.4 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/TableSorter.java,v 1.5 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.util.Date;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: TableSorter.java,v $
+ * Revision 1.5  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.4  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -32,7 +35,7 @@ import java.util.Date;
 
 public class TableSorter {
 
-    SortableTableModel model;
+    private SortableTableModel model;
 
     public TableSorter(SortableTableModel model) {
         this.model = model;
@@ -40,7 +43,7 @@ public class TableSorter {
 
     public void sort(int column, boolean isAscent) {
 
-        ArrayList content = model.getContent();
+        List content = model.getContent();
         int n = content.size();
 
         for (int i = 0; i < n - 1; i++) {

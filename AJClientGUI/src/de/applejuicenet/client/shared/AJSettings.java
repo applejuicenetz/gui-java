@@ -1,9 +1,9 @@
 package de.applejuicenet.client.shared;
 
-import java.util.HashSet;
+import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/AJSettings.java,v 1.8 2004/02/09 07:28:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/AJSettings.java,v 1.9 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.util.HashSet;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AJSettings.java,v $
+ * Revision 1.9  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.8  2004/02/09 07:28:24  maj0r
  * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
  *
@@ -44,14 +47,14 @@ public class AJSettings {
     private int speedPerSlot;
     private String incomingDir;
     private String tempDir;
-    private HashSet shareDirs;
+    private Set shareDirs;
     private long maxNewConnectionsPerTurn;
     private long maxSourcesPerFile;
 
     public AJSettings(String nick, long port, long xmlPort,
                       long maxUpload, long maxDownload,
                       int speedPerSlot, String incomingDir, String tempDir,
-                      HashSet shareDirs, long maxConnections,
+                      Set shareDirs, long maxConnections,
                       boolean autoConnect,
                       long maxNewConnectionsPerTurn,
                       long maxSourcesPerFile) {
@@ -150,11 +153,11 @@ public class AJSettings {
         this.tempDir = tempDir;
     }
 
-    public HashSet getShareDirs() {
+    public Set getShareDirs() {
         return shareDirs;
     }
 
-    public void setShareDirs(HashSet shareDirs) {
+    public void setShareDirs(Set shareDirs) {
         this.shareDirs = shareDirs;
     }
 

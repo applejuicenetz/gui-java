@@ -8,7 +8,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import de.applejuicenet.client.gui.tables.Node;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserTreeCellRenderer.java,v 1.6 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserTreeCellRenderer.java,v 1.7 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.gui.tables.Node;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryChooserTreeCellRenderer.java,v $
+ * Revision 1.7  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.6  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -45,7 +48,7 @@ public class DirectoryChooserTreeCellRenderer
                                                   boolean leaf,
                                                   int row, boolean hasFocus) {
 
-        Component c = super.getTreeCellRendererComponent(tree, value,
+        super.getTreeCellRendererComponent(tree, value,
             sel, expanded, leaf, row, hasFocus);
         Icon icon = ( (Node) value).getConvenientIcon();
         if (icon != null) {

@@ -10,9 +10,10 @@ import javax.swing.ImageIcon;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.shared.icons.DummyClass;
+import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.10 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.11 2004/03/03 15:33:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +22,9 @@ import de.applejuicenet.client.shared.icons.DummyClass;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: IconManager.java,v $
+ * Revision 1.11  2004/03/03 15:33:31  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.10  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -50,7 +54,7 @@ import de.applejuicenet.client.shared.icons.DummyClass;
 
 public class IconManager {
     private static IconManager instance = null;
-    private HashMap icons;
+    private Map icons;
     private static Logger logger;
 
     private IconManager() {

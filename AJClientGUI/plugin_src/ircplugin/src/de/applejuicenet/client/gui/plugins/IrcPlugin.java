@@ -1,14 +1,13 @@
 package de.applejuicenet.client.gui.plugins;
 
-import java.util.HashMap;
-
 import java.awt.BorderLayout;
 import javax.swing.ImageIcon;
 
 import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
+import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.8 2004/03/03 14:22:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.9 2004/03/03 15:35:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +16,9 @@ import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: IrcPlugin.java,v $
+ * Revision 1.9  2004/03/03 15:35:45  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.8  2004/03/03 14:22:23  maj0r
  * Es wird nun Deutsch und Englisch unterstuetzt.
  *
@@ -38,7 +40,7 @@ import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
 public class IrcPlugin extends PluginConnector {
     private XdccIrc xdccIrc;
 
-    public IrcPlugin(XMLValueHolder pluginsPropertiesXMLHolder, HashMap languageFiles, ImageIcon icon) {
+    public IrcPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon) {
         super(pluginsPropertiesXMLHolder, languageFiles, icon);
         setLayout(new BorderLayout());
         xdccIrc = new XdccIrc(this);
