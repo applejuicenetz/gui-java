@@ -12,7 +12,7 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.plugins.speedgraph.GraphPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/Attic/SpeedGraphPlugin.java,v 1.4 2004/01/30 16:35:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/Attic/SpeedGraphPlugin.java,v 1.5 2004/03/02 21:14:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import de.applejuicenet.client.gui.plugins.speedgraph.GraphPanel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SpeedGraphPlugin.java,v $
+ * Revision 1.5  2004/03/02 21:14:13  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.4  2004/01/30 16:35:00  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -40,10 +43,10 @@ public class SpeedGraphPlugin extends PluginConnector {
     private GraphPanel graphPanel = new GraphPanel();
     private static Logger logger;
 
-    public SpeedGraphPlugin() {
+    public SpeedGraphPlugin(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder, ImageIcon icon) {
+        super(pluginsPropertiesXMLHolder, icon);
         logger = Logger.getLogger(getClass());
         try{
-            initIcon();
             setLayout(new BorderLayout());
             graphPanel.setBackground(Color.BLACK);
             add(new JScrollPane(graphPanel), BorderLayout.CENTER);
@@ -68,26 +71,5 @@ public class SpeedGraphPlugin extends PluginConnector {
     }
 
     public void registerSelected() {
-    }
-
-    public String getTitle() {
-        return "SpeedGraph";
-    }
-
-    public String getAutor() {
-        return "Maj0r";
-    }
-
-    public String getBeschreibung() {
-        return "Der SpeedGraph zeigt die Historie der\r\nDownload- und Uploadgeschwindigkeit an.\r\n\r\n" +
-            "GUI ab 0.54.7 wird benötigt.";
-    }
-
-    public String getVersion() {
-        return "1.12";
-    }
-
-    public boolean istReiter() {
-        return true;
     }
 }
