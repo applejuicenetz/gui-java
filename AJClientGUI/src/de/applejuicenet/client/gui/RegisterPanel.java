@@ -15,6 +15,7 @@ import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.controller.DataManager;
 import de.applejuicenet.client.shared.IconManager;
+import javax.swing.JFrame;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -31,8 +32,9 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
   private SearchPanel searchPanel;
   private UploadPanel uploadPanel;
   private ServerPanel serverPanel;
+  private AppleJuiceDialog parent;
 
-  public RegisterPanel(){
+  public RegisterPanel(AppleJuiceDialog parent){
     init();
   }
 
@@ -91,6 +93,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
             }
             DataManager.getInstance().addGlobalListener(aPlugin);
             LanguageSelector.getInstance().addLanguageListener(aPlugin);
+            this.parent.addPluginToHashSet(aPlugin);
           }
         }
         catch (Exception e){

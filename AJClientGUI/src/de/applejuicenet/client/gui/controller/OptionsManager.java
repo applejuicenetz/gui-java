@@ -34,4 +34,15 @@ public class OptionsManager extends XMLDecoder {
   public void setSprache(String sprache){
     setAttributeByTagName(new String[] {"options", "sprache"}, sprache.toLowerCase());
   }
+
+  public String[] getProxySettings(){
+    String[] proxySettings = new String[4];
+    proxySettings[0] = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "ip"});
+    if (proxySettings[0].compareTo("")==0)
+      return null;
+    proxySettings[1] = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "port"});
+    proxySettings[2] = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "user"});
+    proxySettings[3] = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "pass"});
+    return proxySettings;
+  }
 }

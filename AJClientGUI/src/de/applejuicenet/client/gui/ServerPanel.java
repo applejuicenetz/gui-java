@@ -55,6 +55,10 @@ public class ServerPanel
       public void mouseEntered(MouseEvent e) {
         setCursor(new Cursor(Cursor.HAND_CURSOR));
       }
+
+      public void mouseClicked(MouseEvent e){
+        //to do
+      }
     });
     panel1.add(sucheServer, constraints);
     constraints.gridx = 1;

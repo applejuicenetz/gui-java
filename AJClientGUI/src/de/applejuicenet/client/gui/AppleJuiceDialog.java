@@ -1,22 +1,20 @@
 package de.applejuicenet.client.gui;
 
+import java.io.*;
 import java.net.*;
+import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import org.apache.xerces.impl.dv.util.*;
 import de.applejuicenet.client.gui.controller.*;
-import java.io.File;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import java.util.HashSet;
-import java.util.Iterator;
-import de.applejuicenet.client.shared.PluginJarClassLoader;
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
-import de.applejuicenet.client.shared.IconManager;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -28,17 +26,22 @@ import de.applejuicenet.client.shared.IconManager;
  */
 
 public class AppleJuiceDialog
-    extends JFrame implements LanguageListener{
+    extends JFrame
+    implements LanguageListener {
   RegisterPanel registerPane;
   JLabel[] statusbar = new JLabel[5];
   private JMenu sprachMenu;
   private JMenu optionenMenu;
+  private HashSet plugins;
+  private JMenuItem menuItem;
+  private JFrame _this;
 
   public AppleJuiceDialog() {
     super();
     try {
       jbInit();
       pack();
+      _this = this;
       LanguageSelector.getInstance().addLanguageListener(this);
     }
     catch (Exception ex) {
@@ -46,19 +49,24 @@ public class AppleJuiceDialog
     }
   }
 
+  public void addPluginToHashSet(PluginConnector plugin){
+    plugins.add(plugin);
+  }
+
   private void jbInit() throws Exception {
     setTitle("AppleJuice Client");
-
+    plugins = new HashSet();
     Image img = IconManager.getInstance().getIcon("applejuice").getImage();
     setIconImage(img);
     setJMenuBar(createMenuBar());
-    String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
+    String path = System.getProperty("user.dir") + File.separator + "language" +
+        File.separator;
     OptionsManager op = OptionsManager.getInstance();
     String datei = op.getSprache();
     path += datei + ".xml";
     //zZ werden die Header der TableModel nicht aktualisiert, deshalb hier schon
     LanguageSelector ls = LanguageSelector.getInstance(path);
-    registerPane = new RegisterPanel();
+    registerPane = new RegisterPanel(this);
     ls = LanguageSelector.getInstance(path);
     addWindowListener(
         new WindowAdapter() {
@@ -109,7 +117,7 @@ public class AppleJuiceDialog
                          (int) systemDimension.getHeight() / 4 * 3);
   }
 
-  private void einstellungenSpeichern(){
+  private void einstellungenSpeichern() {
     try {
       String sprachText = LanguageSelector.getInstance().
           getFirstAttrbuteByTagName(new String[] {"Languageinfo", "name"});
@@ -127,18 +135,27 @@ public class AppleJuiceDialog
   }
 
   protected JMenuBar createMenuBar() {
-    String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
+    String path = System.getProperty("user.dir") + File.separator + "language" +
+        File.separator;
     File languagePath = new File(path);
     String[] tempListe = languagePath.list();
     HashSet sprachDateien = new HashSet();
     for (int i = 0; i < tempListe.length; i++) {
-      if (tempListe[i].indexOf(".xml")!=-1)
+      if (tempListe[i].indexOf(".xml") != -1) {
         sprachDateien.add(tempListe[i]);
+      }
     }
     JMenuBar menuBar = new JMenuBar();
-    optionenMenu = new JMenu("Optionen");
+    optionenMenu = new JMenu("Extras");
+    menuItem = new JMenuItem("Optionen");
+    menuItem.addActionListener(new ActionListener(){
+      public void actionPerformed(ActionEvent e){
+        OptionsDialog od = new OptionsDialog(_this);
+        od.show();
+      }
+    });
+    optionenMenu.add(menuItem);
     menuBar.add(optionenMenu);
-    JMenuItem menuItem;
 
     sprachMenu = new JMenu("Sprache");
     menuBar.add(sprachMenu);
@@ -146,17 +163,20 @@ public class AppleJuiceDialog
 
     Iterator it = sprachDateien.iterator();
     while (it.hasNext()) {
-      String sprachText = LanguageSelector.getInstance(path + (String)it.next()).getFirstAttrbuteByTagName(new String[] {"Languageinfo", "name"});
+      String sprachText = LanguageSelector.getInstance(path + (String) it.next()).
+          getFirstAttrbuteByTagName(new String[] {"Languageinfo", "name"});
       JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
-      if (OptionsManager.getInstance().getSprache().equalsIgnoreCase(sprachText))
+      if (OptionsManager.getInstance().getSprache().equalsIgnoreCase(sprachText)) {
         rb.setSelected(true);
+      }
       sprachMenu.add(rb);
       rb.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent ae) {
-          JCheckBoxMenuItem rb2 = (JCheckBoxMenuItem)ae.
-                                     getSource();
-          if(rb2.isSelected()) {
-            String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
+          JCheckBoxMenuItem rb2 = (JCheckBoxMenuItem) ae.
+              getSource();
+          if (rb2.isSelected()) {
+            String path = System.getProperty("user.dir") + File.separator +
+                "language" + File.separator;
             String dateiName = path + rb2.getText() + ".xml";
             LanguageSelector.getInstance(dateiName);
           }
@@ -171,10 +191,12 @@ public class AppleJuiceDialog
     try {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
       setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-          getFirstAttrbuteByTagName(new String[] {"mainform", "caption"})));
+                                                 getFirstAttrbuteByTagName(new
+          String[] {"mainform", "caption"})));
       sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-          getFirstAttrbuteByTagName(new String[] {"einstform", "languagesheet", "caption"})));
-      optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+          getFirstAttrbuteByTagName(new String[] {"einstform", "languagesheet",
+                                    "caption"})));
+      menuItem.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
           getFirstAttrbuteByTagName(new String[] {"einstform", "caption"})));
     }
     catch (LanguageSelectorNotInstanciatedException ex) {
