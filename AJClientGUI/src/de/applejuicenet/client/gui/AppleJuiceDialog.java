@@ -12,12 +12,14 @@ import javax.swing.event.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.plugins.*;
+import de.applejuicenet.client.gui.tools.MemoryMonitor;
+import de.applejuicenet.client.gui.tools.MemoryMonitorDialog;
 import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.57 2003/11/03 14:26:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.58 2003/11/04 13:14:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.58  2003/11/04 13:14:50  maj0r
+ * Memory-Monitor eingebaut.
+ *
  * Revision 1.57  2003/11/03 14:26:12  maj0r
  * Titelzeile geaendert.
  *
@@ -157,10 +162,12 @@ public class AppleJuiceDialog
     private JMenuItem menuItemUeber = new JMenuItem();
     private JFrame _this;
     private JButton sound = new JButton();
+    private JButton memory = new JButton();
     private String keinServer = "";
     private static Logger logger;
     public static boolean rewriteProperties = false;
     private boolean firstChange = true;
+    private MemoryMonitorDialog memoryMonitorDialog;
 
     private static AppleJuiceDialog theApp;
 
@@ -232,6 +239,22 @@ public class AppleJuiceDialog
             statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
         }
 //        pause.setFont(new java.awt.Font("SansSerif", 0, 11));
+        memory.setIcon(IconManager.getInstance().getIcon("mmonitor"));
+        memory.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                if (memoryMonitorDialog==null){
+                    memoryMonitorDialog = new MemoryMonitorDialog(AppleJuiceDialog.this);
+                    Point loc = memory.getLocationOnScreen();
+                    loc.setLocation(loc.getX()-memoryMonitorDialog.getWidth(),
+                                    loc.getY()-memoryMonitorDialog.getHeight());
+                    memoryMonitorDialog.setLocation(loc);
+                }
+                if (!memoryMonitorDialog.isVisible()){
+                    memoryMonitorDialog.show();
+                }
+            }
+        });
+
         sound.addActionListener(new ActionListener(){
             {
                 if (PropertiesManager.getOptionsManager().isSoundEnabled()){
@@ -272,6 +295,8 @@ public class AppleJuiceDialog
         constraints.gridx = 5;
         panel.add(statusbar[5], constraints);
         constraints.gridx = 6;
+        panel.add(memory, constraints);
+        constraints.gridx = 7;
         panel.add(sound, constraints);
         getContentPane().add(panel, BorderLayout.SOUTH);
 
