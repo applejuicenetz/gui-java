@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.trees.WaitNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.24 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.25 2003/12/30 13:55:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.gui.trees.WaitNode;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.25  2003/12/30 13:55:20  maj0r
+ * Neuen DownloadSourceStatus indirekteVerbindungAbgelehnt eingebaut.
+ *
  * Revision 1.24  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -128,6 +131,7 @@ public class DownloadModel
   private static String versucheIndirekt = "";
   private static String warteschlangeVoll = "";
   private static String eigenesLimitErreicht = "";
+  private static String indirekteVerbindungAbgelehnt = "";
 
   static protected Class[] cTypes = {
       TreeTableModel.class, String.class, String.class, String.class, String.class,
@@ -334,6 +338,9 @@ public class DownloadModel
                     return warteschlangeVoll;
             case DownloadSourceDO.EIGENES_LIMIT_ERREICHT:
                     return eigenesLimitErreicht;
+            case DownloadSourceDO.INDIREKTE_VERBINDUNG_ABGELEHNT:
+                    return indirekteVerbindungAbgelehnt;
+
             default:
                 return "";
         }
@@ -474,6 +481,7 @@ public class DownloadModel
         position = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat51"}));
         versucheIndirekt = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat10"}));
         eigenesLimitErreicht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadform", "eigeneslimiterreicht"}));
+        indirekteVerbindungAbgelehnt = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadform", "indverbindungabgelehnt"}));
 
         suchen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestatlook"}));
         laden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestattransfer"}));

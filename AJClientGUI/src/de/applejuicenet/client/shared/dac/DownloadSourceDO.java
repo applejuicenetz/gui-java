@@ -5,7 +5,7 @@ import java.util.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.15 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.16 2003/12/30 13:55:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.16  2003/12/30 13:55:20  maj0r
+ * Neuen DownloadSourceStatus indirekteVerbindungAbgelehnt eingebaut.
+ *
  * Revision 1.15  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -63,6 +66,7 @@ public class DownloadSourceDO {
     public static final int PAUSIERT = 13;
     public static final int WARTESCHLANGE_VOLL = 14;
     public static final int EIGENES_LIMIT_ERREICHT = 15;
+    public static final int INDIREKTE_VERBINDUNG_ABGELEHNT = 16;
 
     //directstate - IDs
     public static final int UNBEKANNT = 0;
