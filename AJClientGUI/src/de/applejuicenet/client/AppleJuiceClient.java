@@ -35,7 +35,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.39 2003/11/25 14:32:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.40 2003/12/27 09:54:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,6 +44,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.40  2003/12/27 09:54:28  maj0r
+ * Bug #1234 fixed (Danke an muhviestarr)
+ * Splashscreen wird nun frueher angezeigt
+ *
  * Revision 1.39  2003/11/25 14:32:46  maj0r
  * -help Parameter eingebaut.
  *
@@ -240,6 +244,8 @@ public class AppleJuiceClient {
         try
         {
             String nachricht = "appleJuice-Core-GUI Version " + ApplejuiceFassade.GUI_VERSION + " wird gestartet...";
+            Splash splash = new Splash(IconManager.getInstance().getIcon("splashscreen").getImage());
+            splash.show();
             if (logger.isEnabledFor(Level.INFO))
                 logger.info(nachricht);
             System.out.println(nachricht);
@@ -287,8 +293,6 @@ public class AppleJuiceClient {
             if (versuche>0){
                 SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
             }
-            Splash splash = new Splash(IconManager.getInstance().getIcon("splashscreen").getImage());
-            splash.show();
             PositionManager lm = PropertiesManager.getPositionManager();
             final AppleJuiceDialog theApp = new AppleJuiceDialog();
             if (lm.isLegal())
