@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.6 2003/10/14 19:21:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.7 2003/12/27 19:06:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.7  2003/12/27 19:06:33  maj0r
+ * Bug #1233 fixed (Danke an muhviestarr)
+ * Im Verbindungsfenster geht nun ein einfaches <Enter>.
+ *
  * Revision 1.6  2003/10/14 19:21:23  maj0r
  * Korrekturen zur Xml-Port-Verwendung.
  *
@@ -55,6 +59,7 @@ public class QuickConnectionSettingsDialog extends JDialog {
     private ODConnectionPanel remotePanel;
     public static final int ABGEBROCHEN = 1;
     private ConnectionSettings remote;
+    private JButton ok = new JButton("OK");
     private Logger logger;
 
     private int result = 0;
@@ -74,7 +79,7 @@ public class QuickConnectionSettingsDialog extends JDialog {
 
     private void init(){
         remote = PropertiesManager.getOptionsManager().getRemoteSettings();
-        remotePanel = new ODConnectionPanel(remote, true);
+        remotePanel = new ODConnectionPanel(remote, this, true);
         setTitle("appleJuice Client");
 
         getContentPane().setLayout(new BorderLayout());
@@ -104,7 +109,6 @@ public class QuickConnectionSettingsDialog extends JDialog {
         getContentPane().add(remotePanel, BorderLayout.CENTER);
 
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton ok = new JButton("OK");
         panel1.add(ok);
         JButton abbrechen = new JButton("Abbrechen");
         panel1.add(abbrechen);
@@ -142,6 +146,10 @@ public class QuickConnectionSettingsDialog extends JDialog {
         setLocation( (screenSize.width - appDimension.width) / 2,
                            (screenSize.height - appDimension.height) / 2);
 
+    }
+
+    public void pressOK(){
+        ok.doClick();
     }
 
     public int getResult(){
