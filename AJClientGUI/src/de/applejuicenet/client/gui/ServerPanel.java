@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.39 2003/12/17 16:42:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.40 2003/12/26 19:26:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.40  2003/12/26 19:26:40  maj0r
+ * Bug #1231 fixed (Danke an muhviestarr)
+ * Gridlines werden nun in der Servertabelle nicht mehr angezeigt.
+ *
  * Revision 1.39  2003/12/17 16:42:16  maj0r
  * Verhalten des Popupmenues der Servertabelle ueberarbeitet.
  * Muell entfernt.
@@ -242,6 +246,7 @@ public class ServerPanel
         add(panel1, BorderLayout.NORTH);
         serverTable = new JTable();
         serverTable.setModel(new ServerTableModel());
+        serverTable.setShowGrid(false);
         serverTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         SortButtonRenderer renderer = new SortButtonRenderer();
         TableColumnModel model = serverTable.getColumnModel();
