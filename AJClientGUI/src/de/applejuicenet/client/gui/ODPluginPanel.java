@@ -26,7 +26,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.14 2004/03/02 20:47:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.15 2004/03/03 11:57:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,6 +35,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginPanel.java,v $
+ * Revision 1.15  2004/03/03 11:57:08  maj0r
+ * Kontaktadresse eingebaut.
+ *
  * Revision 1.14  2004/03/02 20:47:18  maj0r
  * Beschreibungsfeld in eine JTextArea geaendert.
  *
@@ -188,7 +191,7 @@ public class ODPluginPanel
             String text;
             text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + autor +
                 ":\r\n" +
-                plugin.getAutor()
+                plugin.getAutor() + " [" + plugin.getContact() + "]"
                 + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion()
                 + "\r\n\r\n" + erlaeuterung + ":\r\n" + plugin.getBeschreibung();
             return text;
