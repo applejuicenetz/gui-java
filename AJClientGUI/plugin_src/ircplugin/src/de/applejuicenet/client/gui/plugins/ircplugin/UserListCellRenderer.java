@@ -8,7 +8,7 @@ import javax.swing.ListCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserListCellRenderer.java,v 1.10 2004/12/05 20:04:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserListCellRenderer.java,v 1.11 2004/12/06 08:03:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,19 +47,19 @@ public class UserListCellRenderer
                 setBackground(list.getBackground());
             }
             if (user.isAdmin()) {
-                setIcon(IconManager.getInstance().getIcon("irc_red"));
+                setIcon(IconManager.getInstance().getIcon("irc_red", true));
                 setToolTipText("Administrator");
             }
             else if (user.isOp()) {
-                setIcon(IconManager.getInstance().getIcon("irc_blue"));
+                setIcon(IconManager.getInstance().getIcon("irc_blue", true));
                 setToolTipText("Operator");
             }
             else if (user.isHalfop()) {
-                setIcon(IconManager.getInstance().getIcon("irc_green"));
+                setIcon(IconManager.getInstance().getIcon("irc_green", true));
                 setToolTipText("Half-Operator");
             }
             else if (user.isVoice()) {
-                setIcon(IconManager.getInstance().getIcon("irc_yellow"));
+                setIcon(IconManager.getInstance().getIcon("irc_yellow", true));
                 setToolTipText("Voice");
             }
             else {

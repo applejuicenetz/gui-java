@@ -36,7 +36,7 @@ import de.applejuicenet.client.gui.plugins.IrcPlugin;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.25 2004/12/05 20:04:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.26 2004/12/06 08:03:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -109,7 +109,7 @@ public class XdccIrc
             }
             IconManager im = IconManager.getInstance();
             createConnection = new JButton("Connect");
-            createConnection.setIcon(im.getIcon("irc_login"));
+            createConnection.setIcon(im.getIcon("irc_login", true));
             createConnection.addActionListener(connectActionListener);
             newUserAction = new JButton("Talk Private");
             newUserAction.addActionListener(new ActionListener() {
@@ -118,7 +118,7 @@ public class XdccIrc
                 }
             });
             joinChannelAction = new JButton("Join a Channel");
-            joinChannelAction.setIcon(im.getIcon("irc_chan"));
+            joinChannelAction.setIcon(im.getIcon("irc_chan", true));
             joinChannelAction.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
                     joinChan();
