@@ -90,9 +90,7 @@ public class DownloadController extends GuiController {
 		try{
 			init();
 		} catch (Exception e) {
-			if (logger.isEnabledFor(Level.ERROR)) {
-				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-			}
+			logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 		}
 	}
 
@@ -267,7 +265,8 @@ public class DownloadController extends GuiController {
 		if (isFirstDownloadPropertyChanged){
 			isFirstDownloadPropertyChanged = false;
 			Map downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-			((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
+			((DownloadRootNode) downloadPanel.getDownloadModel().
+                    getRoot()).setDownloadMap(downloads);
 			DownloadDirectoryNode.setDownloads(downloads);
 		}
 		boolean tmpSort = false;

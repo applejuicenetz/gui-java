@@ -20,6 +20,7 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.download.DownloadController;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.gui.search.SearchController;
 import de.applejuicenet.client.gui.search.SearchPanel;
 import de.applejuicenet.client.gui.server.ServerPanel;
 import de.applejuicenet.client.gui.share.ShareController;
@@ -29,7 +30,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.52 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.53 2005/03/04 13:47:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,7 +46,7 @@ public class RegisterPanel
 	  
 	private StartController startController;
     private DownloadController downloadController;
-    private SearchPanel searchPanel;
+    private SearchController searchController;
     private UploadController uploadController;
     private ServerPanel serverPanel;
     private ShareController shareController;
@@ -100,7 +101,7 @@ public class RegisterPanel
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(70, "Lade Searchpanel...");
         }
-        searchPanel = SearchPanel.getInstance();
+        searchController = SearchController.getInstance();
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(80, "Lade Serverpanel...");
         }
@@ -115,7 +116,7 @@ public class RegisterPanel
         addTab("Share", icon6, shareController.getComponent());
 
         ImageIcon icon2 = im.getIcon("suchen");
-        addTab("Suchen", icon2, searchPanel);
+        addTab("Suchen", icon2, searchController.getComponent());
 
         ImageIcon icon3 = im.getIcon("download");
         addTab("Download", icon3, downloadController.getComponent());
