@@ -32,9 +32,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
+import java.net.SocketException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.16 2004/05/14 19:48:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.17 2004/05/29 14:18:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -472,7 +473,13 @@ public class XdccIrc
                                 interrupt();
                             }
                         }
-                        String line = fromServer.readLine();
+                        String line = null;
+                        try{
+                            line = fromServer.readLine();
+                        }
+                        catch (SocketException se){
+                            line = null;
+                        }
                         if (line != null) {
                             parseFromServer(line);
                         }
