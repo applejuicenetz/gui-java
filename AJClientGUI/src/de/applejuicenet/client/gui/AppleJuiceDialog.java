@@ -259,6 +259,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 	public AppleJuiceDialog() {
 		super();
 		try {
+            enableCloseWindowListener(false);
 			theApp = this;
 			init();
 			pack();
