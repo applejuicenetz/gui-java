@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.28 2004/02/27 13:19:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.29 2004/03/01 15:41:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +43,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.29  2004/03/01 15:41:43  maj0r
+ * IP wird nun korrekt angezeigt.
+ *
  * Revision 1.28  2004/02/27 13:19:38  maj0r
  * Pruefung auf gueltigen Core eingebaut.
  * Um das zu pruefen, duerfen die Nachrichten im Startbereich erst spaeter geladen werden.
@@ -776,7 +779,6 @@ public class ModifiedXMLHolder
             tryConnectToServer = netInfo.getTryConnectToServer();
             information.setServer(serverDO);
             information.setVerbindungsStatus(verbindungsStatus);
-            information.setExterneIP(netInfo.getExterneIP());
         }
         if (connectedWithServerId != netInfo.getConnectedWithServerId() ){
             if (connectedWithServerId != -1){
@@ -798,8 +800,8 @@ public class ModifiedXMLHolder
             connectedWithServerId = netInfo.getConnectedWithServerId();
             information.setServer(serverDO);
             information.setVerbindungsStatus(verbindungsStatus);
-            information.setExterneIP(netInfo.getExterneIP());
         }
+        information.setExterneIP(netInfo.getExterneIP());
 
         if (searchEntriesToDo.size()>0){
             Search aSearch;
