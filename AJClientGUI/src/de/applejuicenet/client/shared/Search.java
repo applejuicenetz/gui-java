@@ -3,70 +3,24 @@ package de.applejuicenet.client.shared;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.Icon;
 
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
-import java.util.Map;
-import java.util.List;
-import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.15 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.16 2004/04/30 14:14:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: Search.java,v $
- * Revision 1.15  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.14  2004/02/29 19:40:10  maj0r
- * Dateityp Archiv hinzugefuegt.
- *
- * Revision 1.13  2004/02/28 15:05:54  maj0r
- * Da hatte ich in der vorherigen Version Mist eingecheckt.
- *
- * Revision 1.11  2004/02/27 20:39:24  maj0r
- * Icons weiter ausgebaut.
- *
- * Revision 1.10  2004/02/27 16:48:27  maj0r
- * Suchergebnisse werden nun, wenn moeglich mit einem sprechenden Icon angezeigt.
- *
- * Revision 1.9  2004/02/18 17:24:21  maj0r
- * Von DOM auf SAX umgebaut.
- *
- * Revision 1.8  2004/02/12 21:16:51  maj0r
- * Bug #23 gefixt (Danke an computer.ist.org)
- * Suche abbrechen korrigiert.
- *
- * Revision 1.7  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.6  2004/01/30 16:32:47  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.5  2004/01/08 07:47:17  maj0r
- * 98%-CPU-Last Bug durch Suche gefixt.
- *
- * Revision 1.4  2003/12/30 13:08:32  maj0r
- * Suchanzeige korrigiert
- * Es kann passieren, dass nicht alle gefundenen Suchergebnisse beim Core ankommen, die Ausgabe wurde entsprechend korrigiert.
- *
- * Revision 1.3  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.2  2003/12/16 14:51:46  maj0r
- * Suche kann nun GUI-seitig abgebrochen werden.
- *
- * Revision 1.1  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -188,6 +142,17 @@ public class Search {
 
     public SearchEntry[] getAllSearchEntries() {
         return (SearchEntry[]) entries.toArray(new SearchEntry[entries.size()]);
+    }
+
+    public SearchEntry getSearchEntryById(int id){
+        SearchEntry searchEntry;
+        for (int i=0; i<entries.size(); i++){
+            searchEntry = (SearchEntry)entries.get(i);
+            if (searchEntry.getId() == id){
+                return searchEntry;
+            }
+        }
+        return null;
     }
 
     public SearchEntry[] getSearchEntries() {

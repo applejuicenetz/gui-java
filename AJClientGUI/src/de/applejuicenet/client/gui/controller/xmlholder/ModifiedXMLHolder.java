@@ -36,13 +36,13 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.34 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.35 2004/04/30 14:14:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -487,8 +487,11 @@ public class ModifiedXMLHolder
         Search aSearch;
         if (searchMap.containsKey(key)) {
             aSearch = (Search) searchMap.get(key);
-            tmpSearchEntry = aSearch.new SearchEntry(id, searchId, checksum, groesse);
-            aSearch.addSearchEntry(tmpSearchEntry);
+            tmpSearchEntry = aSearch.getSearchEntryById(id);
+            if (tmpSearchEntry == null){
+                tmpSearchEntry = aSearch.new SearchEntry(id, searchId, checksum, groesse);
+                aSearch.addSearchEntry(tmpSearchEntry);
+            }
         }
         else{
             tmpSearchEntry = new Search(-1).new SearchEntry(id, searchId, checksum, groesse);
@@ -559,7 +562,10 @@ public class ModifiedXMLHolder
     public void endElement(String namespaceURI,
                            String localName,
                            String qName) throws SAXException {
-        if (checkCount>1){
+        if (localName.equals("searchentry")){
+            tmpSearchEntry = null;
+        }
+        else if (checkCount>1){
             if (localName.equals("time")) {
                 timestamp = Long.parseLong(contents.toString());
             }
