@@ -10,9 +10,11 @@ import de.applejuicenet.client.gui.tables.Node;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.4 2003/07/04 06:43:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.5 2003/07/06 20:00:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +23,9 @@ import java.util.HashMap;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadNode.java,v $
+ * Revision 1.5  2003/07/06 20:00:19  maj0r
+ * DownloadTable bearbeitet.
+ *
  * Revision 1.4  2003/07/04 06:43:51  maj0r
  * Diverse Änderungen am DownloadTableModel.
  *
@@ -50,6 +55,9 @@ public class DownloadNode implements Node {
   public static final int DIRECTORY_NODE = 1;
   public static final int DOWNLOAD_NODE = 2;
   public static final int SOURCE_NODE = 3;
+
+  public static final Color SOURCE_NODE_COLOR = new Color(255, 255, 150);
+  public static final Color DOWNLOAD_FERTIG_COLOR = Color.GREEN;
 
   private int nodetype;
 
@@ -119,6 +127,21 @@ public class DownloadNode implements Node {
       else{
           return false;
       }
+  }
+
+  public long getSpeedInBytes(){
+      if (nodetype == SOURCE_NODE)
+          return (long)downloadSourceDO.getSpeed().intValue();
+      else if (nodetype == DOWNLOAD_NODE)
+      {
+          long speed = 0;
+          Iterator it = children.values().iterator();
+          while (it.hasNext()){
+              speed += (long)((DownloadNode)it.next()).getDownloadSourceDO().getSpeed().intValue();
+          }
+          return speed;
+      }
+      return 0;
   }
 
   private DownloadNode(String pfad){

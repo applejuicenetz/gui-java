@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.5 2003/07/04 06:43:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.6 2003/07/06 20:00:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.6  2003/07/06 20:00:19  maj0r
+ * DownloadTable bearbeitet.
+ *
  * Revision 1.5  2003/07/04 06:43:51  maj0r
  * Diverse Änderungen am DownloadTableModel.
  *
@@ -93,13 +96,18 @@ public class DownloadTableCellRenderer
     else {
       JLabel label1 = new JLabel();
       label1.setOpaque(true);
+      label1.setFont(table.getFont());
+      label1.setText((String)value);
       if (isSelected) {
         label1.setBackground(table.getSelectionBackground());
         label1.setForeground(table.getSelectionForeground());
       }
       else {
-        label1.setBackground(table.getBackground());
-        label1.setForeground(table.getForeground());
+          if (downloadDO.getStatus()==DownloadDO.FERTIGSTELLEN)
+            label1.setBackground(DownloadNode.DOWNLOAD_FERTIG_COLOR);
+          else
+            label1.setBackground(table.getBackground());
+          label1.setForeground(table.getForeground());
       }
       return label1;
     }
@@ -112,7 +120,22 @@ public class DownloadTableCellRenderer
                                                    int row,
                                                    int column){
         DownloadSourceDO downloadSourceDO = node.getDownloadSourceDO();
-        if (column == 9) {
+        Color background = DownloadNode.SOURCE_NODE_COLOR;
+        Color foreground = table.getForeground();
+        if (column == 6) {
+            String prozent = downloadSourceDO.getDownloadPercentAsString();
+            JProgressBar progress = new JProgressBar(JProgressBar.HORIZONTAL, 0,
+                                                     100);
+            int pos = prozent.indexOf('.');
+            String balken = prozent;
+            if (pos!=-1)
+                balken = balken.substring(0, pos);
+            progress.setValue(Integer.parseInt(balken));
+            progress.setString(prozent + " %");
+            progress.setStringPainted(true);
+            return progress;
+          }
+        else if (column == 9) {
           JPanel returnPanel = new JPanel(new BorderLayout());
           JLabel image = new JLabel();
 
@@ -129,8 +152,8 @@ public class DownloadTableCellRenderer
             serverName.setBackground(table.getSelectionForeground());
           }
           else {
-            returnPanel.setBackground(table.getBackground());
-            returnPanel.setForeground(table.getForeground());
+            returnPanel.setBackground(background);
+            returnPanel.setForeground(foreground);
             image.setBackground(table.getBackground());
             serverName.setBackground(table.getBackground());
             image.setForeground(table.getForeground());
@@ -167,14 +190,16 @@ public class DownloadTableCellRenderer
         }
       else {
         JLabel label1 = new JLabel();
+        label1.setText((String)value);
+        label1.setFont(table.getFont());
         label1.setOpaque(true);
         if (isSelected) {
           label1.setBackground(table.getSelectionBackground());
           label1.setForeground(table.getSelectionForeground());
         }
         else {
-          label1.setBackground(table.getBackground());
-          label1.setForeground(table.getForeground());
+          label1.setBackground(background);
+          label1.setForeground(foreground);
         }
         return label1;
       }
@@ -187,6 +212,8 @@ public class DownloadTableCellRenderer
                                                    int row,
                                                    int column){
         JLabel label1 = new JLabel();
+        label1.setText((String)value);
+        label1.setFont(table.getFont());
         label1.setOpaque(true);
         if (isSelected) {
           label1.setBackground(table.getSelectionBackground());

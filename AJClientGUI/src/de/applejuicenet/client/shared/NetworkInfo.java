@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.6 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.7 2003/07/06 20:00:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: NetworkInfo.java,v $
+ * Revision 1.7  2003/07/06 20:00:19  maj0r
+ * DownloadTable bearbeitet.
+ *
  * Revision 1.6  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -61,7 +64,7 @@ public class NetworkInfo {
       if (share / 1024 < 1024) {
         faktor = 1024;
       }
-      else if (share / 1048576 < 1000) {
+      else if (share / 1048576 < 1024) {
         faktor = 1048576;
       }
       else {
@@ -70,7 +73,10 @@ public class NetworkInfo {
     }
     share = share / faktor;
     String result = Double.toString(share);
-    result = result.substring(0, result.indexOf(".") + 3);
+    if (result.indexOf(".") + 3 < result.length())
+    {
+        result = result.substring(0, result.indexOf(".") + 3);
+    }
     result = result.replace('.', ',');
     if (faktor == 1) {
       result += " MB";

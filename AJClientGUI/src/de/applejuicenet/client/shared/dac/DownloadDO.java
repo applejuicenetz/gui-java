@@ -5,7 +5,7 @@ import de.applejuicenet.client.shared.MapSetStringKey;
 import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.1 2003/07/03 19:15:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.2 2003/07/06 20:00:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import java.util.HashMap;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.2  2003/07/06 20:00:19  maj0r
+ * DownloadTable bearbeitet.
+ *
  * Revision 1.1  2003/07/03 19:15:06  maj0r
  * DownloadTable überarbeitet.
  *
@@ -67,7 +70,7 @@ public class DownloadDO {
 
     public String getProzentGeladen(){
         //todo
-        return "12";
+        return "0";
     }
 
     public void addOrAlterSource(DownloadSourceDO downloadSourceDO){

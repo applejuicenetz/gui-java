@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.28 2003/07/04 15:25:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.29 2003/07/06 20:00:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.29  2003/07/06 20:00:19  maj0r
+ * DownloadTable bearbeitet.
+ *
  * Revision 1.28  2003/07/04 15:25:38  maj0r
  * Version erhöht.
  * DownloadModel erweitert.
@@ -128,11 +131,10 @@ public class DownloadPanel
     downloadModel = new DownloadModel();
     downloadTable = new JTreeTable(downloadModel);
 
-    TableColumn tc = downloadTable.getColumnModel().getColumn(9);
-    TableColumn tc2 = downloadTable.getColumnModel().getColumn(6);
     DownloadTableCellRenderer renderer = new DownloadTableCellRenderer();
-    tc.setCellRenderer(renderer);
-    tc2.setCellRenderer(renderer);
+    for (int i=1; i<downloadTable.getColumnModel().getColumnCount(); i++){
+        downloadTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
+    }
 
     downloadTable.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
@@ -211,16 +213,22 @@ public class DownloadPanel
   public void registerSelected() {
     //    nix zu tun
       //test
-      Version version = new Version("0.01", Version.LINUX);
-      DownloadDO download = new DownloadDO("12", "24", "kjhh", "387636455", DownloadDO.SUCHEN_LADEN, "test1.rar", "filme", 1);
-      DownloadSourceDO source = new DownloadSourceDO("13", DownloadSourceDO.IN_WARTESCHLANGE, DownloadSourceDO.INDIREKTE_VERBINDUNG,
-              new Integer(100), new Integer(300), new Integer(230), new Integer(243), version, 4, 1, "test1.rar", "nickname");
+      Version version = new Version("0.01.34", Version.LINUX);
+      Version version2 = new Version("0.01.36", Version.WIN32);
+      DownloadDO download = new DownloadDO("12", "24", "kjhh", "13138657", DownloadDO.SUCHEN_LADEN, "test1.rar", "filme", 33);
+      DownloadSourceDO source = new DownloadSourceDO("13", DownloadSourceDO.UEBERTRAGUNG, DownloadSourceDO.INDIREKTE_VERBINDUNG,
+              new Integer(100000), new Integer(747520), new Integer(340756), new Integer(738), version, 4, 33, "test1.rar", "nickname");
       download.addOrAlterSource(source);
-      DownloadNode node = new DownloadNode(download);
-      DownloadDO download2 = new DownloadDO("16", "14", "kjhh", "387635", DownloadDO.SUCHEN_LADEN, "test2.rar", "", 1);
+      DownloadDO download2 = new DownloadDO("16", "14", "kjhh", "44223423406", DownloadDO.SUCHEN_LADEN, "test2.rar", "", 490);
       DownloadSourceDO source2 = new DownloadSourceDO("18", DownloadSourceDO.UEBERTRAGUNG, DownloadSourceDO.DIREKTE_VERBINDUNG,
-              new Integer(100), new Integer(300), new Integer(230), new Integer(243), version, 4, 1, "test2.rar", "maj0r");
+              new Integer(100), new Integer(300), new Integer(230), new Integer(44206), version, 4, 490, "test2.rar", "maj0r");
+      DownloadSourceDO source3 = new DownloadSourceDO("17", DownloadSourceDO.UNGEFRAGT, DownloadSourceDO.UNBEKANNT,
+              new Integer(430), new Integer(670), new Integer(430), new Integer(0), version2, 4, 32, "test2.rar", "seppel");
+      DownloadDO download3 = new DownloadDO("5", "11", "kjhh", "34523423406", DownloadDO.FERTIGSTELLEN, "fertigeDatei.rar", "", 0);
       download2.addOrAlterSource(source2);
+      download2.addOrAlterSource(source3);
+      DownloadNode node3 = new DownloadNode(download3);
+      DownloadNode node = new DownloadNode(download);
       DownloadNode node2 = new DownloadNode(download2);
       downloadTable.updateUI();
   }

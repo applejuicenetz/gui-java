@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.5 2003/07/04 15:25:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.6 2003/07/06 20:00:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.6  2003/07/06 20:00:19  maj0r
+ * DownloadTable bearbeitet.
+ *
  * Revision 1.5  2003/07/04 15:25:38  maj0r
  * Version erhöht.
  * DownloadModel erweitert.
@@ -103,9 +106,13 @@ public class DownloadModel
         DownloadDO downloadDO = downloadNode.getDownloadDO();
         switch (column) {
           case 0:
-            {
                 return downloadDO.getFilename();
-            }
+          case 2:
+                return parseGroesse(downloadDO.getGroesse());
+          case 4:
+                return getSpeedAsString(downloadNode.getSpeedInBytes());
+          case 8:
+                return powerdownload(downloadDO.getPowerDownload());
           default:
             return "";
         }
@@ -133,13 +140,24 @@ public class DownloadModel
             case 1:
                 return getStatusForSource(downloadSourceDO);
             case 2:
+                return parseGroesse(Integer.toString(downloadSourceDO.getSize()));
             case 3:
+                return parseGroesse(Integer.toString(downloadSourceDO.getBereitsGeladen()));
             case 4:
+                  {
+                      if (downloadSourceDO.getStatus()!=DownloadSourceDO.UEBERTRAGUNG)
+                          return "0 Bytes/s";
+                      else
+                          return getSpeedAsString((long)downloadSourceDO.getSpeed().intValue());
+                  }
             case 5:
+                  return downloadSourceDO.getRestZeitAsString();
             case 6:
+                  break;
             case 7:
+                  return parseGroesse(Integer.toString(downloadSourceDO.getNochZuLaden()));
             case 8:
-                break;
+                  return powerdownload(downloadSourceDO.getPowerDownload());
             case 9:
               if (downloadSourceDO.getVersion() != null) {
                 return downloadSourceDO.getVersion().getVersion();
@@ -185,6 +203,83 @@ public class DownloadModel
             default:
                 return "";
         }
+    }
+
+    private String powerdownload(int pwdl){
+        if (pwdl==0)
+            return "1:1,0";
+        double power = pwdl;
+        power = power / 10 + 1;
+        String temp = Double.toString(power);
+        temp = temp.replace('.', ',');
+        return "1:" + temp;
+    }
+
+    private String parseGroesse(String groesse){
+        double share = Double.parseDouble(groesse);
+        int faktor;
+        if (share == 0) {
+          return "";
+        }
+        if (share < 1024) {
+          return groesse + " Bytes";
+        }
+        else if (share / 1024 < 1024) {
+          faktor = 1024;
+        }
+        else if (share / 1048576 < 1024) {
+          faktor = 1048576;
+        }
+        else if (share / 1073741824 < 1024) {
+          faktor = 1073741824;
+        }
+        else {
+          faktor = 1;
+        }
+        share = share / faktor;
+        String result = Double.toString(share);
+        if (result.indexOf(".") + 3 < result.length())
+        {
+            result = result.substring(0, result.indexOf(".") + 3);
+        }
+        result = result.replace('.', ',');
+        if (faktor == 1024) {
+          result += " KB";
+        }
+        else if (faktor == 1048576) {
+          result += " MB";
+        }
+        else if (faktor == 1073741824) {
+          result += " GB";
+        }
+        else {
+          result += " ??";
+        }
+        return result;
+    }
+
+    private String getSpeedAsString(long speed){
+        if (speed==0)
+            return "0 Bytes/s";
+        double size = speed;
+        int faktor = 1;
+        if (size < 1024)
+            faktor = 1;
+        else
+            faktor = 1024;
+
+        size = size / faktor;
+        String s = Double.toString(size);
+        if (s.indexOf(".") + 3 < s.length()){
+            s = s.substring(0, s.indexOf(".") + 3);
+        }
+        if (faktor==1){
+            s += " Bytes/s";
+        }
+        else{
+            s += " kb/s";
+        }
+        return s;
     }
 
     public void fireLanguageChanged() {

@@ -2,6 +2,8 @@ package de.applejuicenet.client.gui.tables;
 
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.tables.AbstractCellEditor;
+import de.applejuicenet.client.gui.tables.download.DownloadNode;
+import de.applejuicenet.client.shared.dac.DownloadDO;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -18,7 +20,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.3 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.4 2003/07/06 20:00:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +29,9 @@ import java.util.EventObject;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.4  2003/07/06 20:00:19  maj0r
+ * DownloadTable bearbeitet.
+ *
  * Revision 1.3  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -37,8 +42,11 @@ public class JTreeTable extends JTable {
 
     protected TreeTableCellRenderer tree;
 
+    protected JTable thisTable;
+
     public JTreeTable(TreeTableModel treeTableModel) {
 	super();
+    thisTable = this;
 	tree = new TreeTableCellRenderer(treeTableModel);
 
 	super.setModel(new TreeTableModelAdapter(treeTableModel, tree));
@@ -132,10 +140,22 @@ public class JTreeTable extends JTable {
 						       boolean isSelected,
 						       boolean hasFocus,
 						       int row, int column) {
+        DownloadNode node = (DownloadNode) ( (TreeTableModelAdapter) table.getModel()).
+            nodeForRow(row);
 	    if(isSelected)
-		setBackground(table.getSelectionBackground());
-	    else
-		setBackground(table.getBackground());
+    		setBackground(table.getSelectionBackground());
+	    else{
+            if (node.getNodeType()==DownloadNode.SOURCE_NODE){
+                setBackground(DownloadNode.SOURCE_NODE_COLOR);
+            }
+            else if (node.getNodeType()==DownloadNode.DOWNLOAD_NODE &&
+                node.getDownloadDO().getStatus()==DownloadDO.FERTIGSTELLEN){
+                  setBackground(DownloadNode.DOWNLOAD_FERTIG_COLOR);
+            }
+            else{
+                setBackground(table.getBackground());
+            }
+        }
 
 	    visibleRow = row;
 	    return this;
@@ -244,9 +264,27 @@ public class JTreeTable extends JTable {
                                                   boolean leaf,
                                                   int row, boolean hasFocus) {
 
-      super.getTreeCellRendererComponent(tree, value,
+      Component c = super.getTreeCellRendererComponent(tree, value,
                                          sel, expanded, leaf, row, hasFocus);
-
+      if (c instanceof JLabel){
+          ((JLabel)c).setOpaque(true);
+          if (sel){
+              ((JLabel)c).setBackground(thisTable.getSelectionBackground());
+              ((JLabel)c).setForeground(thisTable.getSelectionForeground());
+          }
+          else{
+              if (((DownloadNode)value).getNodeType()==DownloadNode.SOURCE_NODE){
+                  ((JLabel)c).setBackground(DownloadNode.SOURCE_NODE_COLOR);
+              }
+              else if (((DownloadNode)value).getNodeType()==DownloadNode.DOWNLOAD_NODE &&
+                  ((DownloadNode)value).getDownloadDO().getStatus()==DownloadDO.FERTIGSTELLEN){
+                    ((JLabel)c).setBackground(DownloadNode.DOWNLOAD_FERTIG_COLOR);
+              }
+              else{
+                  ((JLabel)c).setBackground(tree.getBackground());
+              }
+          }
+      }
       Icon icon = ( (Node) value).getConvenientIcon();
       if (icon != null) {
         setIcon(icon);

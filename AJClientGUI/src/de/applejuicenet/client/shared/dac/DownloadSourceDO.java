@@ -5,7 +5,7 @@ import java.util.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.8 2003/07/03 19:11:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.9 2003/07/06 20:00:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.9  2003/07/06 20:00:19  maj0r
+ * DownloadTable bearbeitet.
+ *
  * Revision 1.8  2003/07/03 19:11:16  maj0r
  * DownloadTable überarbeitet.
  *
@@ -80,8 +83,69 @@ public class DownloadSourceDO {
         return status;
     }
 
+    public int getSize(){
+        if (downloadTo==null || downloadFrom==null)
+            return 0;
+        return downloadTo.intValue() - downloadFrom.intValue();
+    }
+
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getDownloadPercentAsString(){
+        if (actualDownloadPosition==null || downloadFrom==null)
+            return "0";
+        double temp = actualDownloadPosition.intValue() - downloadFrom.intValue();
+        temp =  temp * 100 / getSize();
+        String result = Double.toString(temp);
+        if (result.indexOf(".") + 3 < result.length())
+        {
+            result = result.substring(0, result.indexOf(".") + 3);
+        }
+        return result;
+    }
+
+    public String getRestZeitAsString(){
+        if (speed==null || speed.intValue()==0)
+            return "";
+        int restZeit = getNochZuLaden() / speed.intValue();
+        int tage = restZeit / 86400;
+        restZeit -= tage * 86400;
+        int stunden = restZeit / 3600;
+        restZeit -= stunden * 3600;
+        int minuten = restZeit / 60;
+        restZeit -= minuten * 60;
+
+        StringBuffer temp = new StringBuffer();
+        if (tage<10)
+            temp.append('0');
+        temp.append(Integer.toString(tage));
+        temp.append(':');
+        if (stunden<10)
+            temp.append('0');
+        temp.append(Integer.toString(stunden));
+        temp.append(':');
+        if (minuten<10)
+            temp.append('0');
+        temp.append(Integer.toString(minuten));
+        temp.append(':');
+        if (restZeit<10)
+            temp.append('0');
+        temp.append(Integer.toString(restZeit));
+        return temp.toString();
+    }
+
+    public int getBereitsGeladen(){
+        if (actualDownloadPosition==null || downloadFrom==null)
+            return 0;
+        return actualDownloadPosition.intValue() - downloadFrom.intValue();
+    }
+
+    public int getNochZuLaden(){
+        if (downloadTo==null || actualDownloadPosition==null)
+            return 0;
+        return downloadTo.intValue() - actualDownloadPosition.intValue();
     }
 
     public int getDirectstate() {
