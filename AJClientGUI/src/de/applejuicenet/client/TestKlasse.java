@@ -1,5 +1,5 @@
 package de.applejuicenet.client;
 
 public class TestKlasse {
-    private int i=0;
+    private int i=1;
 }
