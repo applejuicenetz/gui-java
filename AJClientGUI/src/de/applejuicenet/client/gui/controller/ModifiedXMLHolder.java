@@ -7,15 +7,18 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.7 2003/06/22 19:00:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.8 2003/06/30 20:35:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.8  2003/06/30 20:35:50  maj0r
+ * Code optimiert.
+ *
  * Revision 1.7  2003/06/22 19:00:27  maj0r
  * Basisklasse umbenannt.
  *
@@ -23,7 +26,7 @@ import de.applejuicenet.client.shared.dac.*;
  * Umrechnung korrigiert.
  *
  * Revision 1.5  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefï¿½gt.
  *
  *
  */
@@ -73,7 +76,7 @@ public class ModifiedXMLHolder
     NodeList nodes = document.getElementsByTagName("information");
     status[3] = netInfo.getExterneIP();
     if (nodes.getLength() == 0) {
-      return status; //Keine Veränderung seit dem letzten Abrufen
+      return status; //Keine Verï¿½nderung seit dem letzten Abrufen
     }
     Element e = (Element) nodes.item(0); //Es gibt nur ein information-Element
     long credits = Long.parseLong(e.getAttribute("credits"));
@@ -223,11 +226,26 @@ public class ModifiedXMLHolder
     }
     NodeList nodes = document.getElementsByTagName("upload");
     HashMap changedUploads = new HashMap();
-    for (int i = 0; i < nodes.getLength(); i++) {
-      Element e = (Element) nodes.item(i);
-      String shareId = e.getAttribute("shareid");
+    int size = nodes.getLength();
+    Element e = null;
+    String shareId = null;
+    UploadDO upload = null;
+    String id = null;
+    int os;
+    String versionsNr = null;
+    Version version = null;
+    String prioritaet = null;
+    String nick = null;
+    String status = null;
+    String uploadFrom = null;
+    String uploadTo = null;
+    String actualUploadPos = null;
+    String speed = null;
+    for (int i = 0; i < size; i++) {
+      e = (Element) nodes.item(i);
+      shareId = e.getAttribute("shareid");
       if (uploadMap.containsKey(shareId)) {
-        UploadDO upload = (UploadDO) uploadMap.get(shareId);
+        upload = (UploadDO) uploadMap.get(shareId);
         upload.setPrioritaet(e.getAttribute("priority"));
         upload.setNick(e.getAttribute("nick"));
         upload.setStatus(Integer.parseInt(e.getAttribute("status")));
@@ -237,19 +255,19 @@ public class ModifiedXMLHolder
         upload.setSpeed(e.getAttribute("speed"));
       }
       else {
-        String id = e.getAttribute("id");
-        int os = Integer.parseInt(e.getAttribute("operatingsystem"));
-        String versionsNr = e.getAttribute("version");
-        Version version = new Version(versionsNr, "Java", os);
+        id = e.getAttribute("id");
+        os = Integer.parseInt(e.getAttribute("operatingsystem"));
+        versionsNr = e.getAttribute("version");
+        version = new Version(versionsNr, "Java", os);
 
-        String prioritaet = e.getAttribute("priority");
-        String nick = e.getAttribute("nick");
-        String status = e.getAttribute("status");
-        String uploadFrom = e.getAttribute("uploadfrom");
-        String uploadTo = e.getAttribute("uploadto");
-        String actualUploadPos = e.getAttribute("actualuploadposition");
-        String speed = e.getAttribute("speed");
-        UploadDO upload = new UploadDO(id, shareId, version, status, nick,
+        prioritaet = e.getAttribute("priority");
+        nick = e.getAttribute("nick");
+        status = e.getAttribute("status");
+        uploadFrom = e.getAttribute("uploadfrom");
+        uploadTo = e.getAttribute("uploadto");
+        actualUploadPos = e.getAttribute("actualuploadposition");
+        speed = e.getAttribute("speed");
+        upload = new UploadDO(id, shareId, version, status, nick,
                                        uploadFrom, uploadTo, actualUploadPos,
                                        speed, prioritaet);
         changedUploads.put(shareId, upload);
@@ -264,15 +282,24 @@ public class ModifiedXMLHolder
     }
     NodeList nodes = document.getElementsByTagName("server");
     HashMap changedServer = new HashMap();
-    for (int i = 0; i < nodes.getLength(); i++) {
-      Element e = (Element) nodes.item(i);
-      String id_key = e.getAttribute("id");
-      int id = Integer.parseInt(id_key);
-      String name = e.getAttribute("name");
-      String host = e.getAttribute("host");
-      long lastseen = Long.parseLong(e.getAttribute("lastseen"));
-      String port = e.getAttribute("port");
-      ServerDO server = new ServerDO(id, name, host, port, lastseen);
+    int size = nodes.getLength();
+    Element e = null;
+    String id_key = null;
+    int id;
+    String name = null;
+    String host = null;
+    long lastseen;
+    String port = null;
+    ServerDO server = null;
+    for (int i = 0; i < size; i++) {
+      e = (Element) nodes.item(i);
+      id_key = e.getAttribute("id");
+      id = Integer.parseInt(id_key);
+      name = e.getAttribute("name");
+      host = e.getAttribute("host");
+      lastseen = Long.parseLong(e.getAttribute("lastseen"));
+      port = e.getAttribute("port");
+      server = new ServerDO(id, name, host, port, lastseen);
       changedServer.put(id_key, server);
     }
     serverMap.putAll(changedServer);
@@ -281,7 +308,7 @@ public class ModifiedXMLHolder
   private void updateNetworkInfo() {
     NodeList nodes = document.getElementsByTagName("networkinfo");
     if (nodes.getLength() == 0) {
-      return; //Keine Veränderung seit dem letzten Abrufen
+      return; //Keine Verï¿½nderung seit dem letzten Abrufen
     }
     Element e = (Element) nodes.item(0); //Es gibt nur ein Netzerkinfo-Element
     String users = e.getAttribute("users");

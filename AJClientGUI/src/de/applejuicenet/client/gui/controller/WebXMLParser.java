@@ -9,23 +9,26 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.2 2003/06/22 19:54:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.3 2003/06/30 20:35:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.3  2003/06/30 20:35:50  maj0r
+ * Code optimiert.
+ *
  * Revision 1.2  2003/06/22 19:54:45  maj0r
- * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
+ * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefï¿½gt.
  *
  * Revision 1.1  2003/06/22 18:58:53  maj0r
  * Umbenannt und Hostverwendung korrigiert.
  *
  * Revision 1.9  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefï¿½gt.
  *
  *
  */
@@ -84,8 +87,6 @@ public abstract class WebXMLParser
         DocumentBuilderFactory.newInstance();
     try {
       DocumentBuilder builder = factory.newDocumentBuilder();
-      xmlData = xmlData.replaceAll(
-          "<!DOCTYPE applejuice SYSTEM \"applejuice_1.dtd\">", "");
       document = builder.parse(new InputSource(new StringReader(xmlData)));
       if (!firstRun) {
         if (useTimestamp) {

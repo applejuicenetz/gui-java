@@ -8,7 +8,7 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.10 2003/06/30 19:46:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.11 2003/06/30 20:35:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import org.xml.sax.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: XMLDecoder.java,v $
+ * Revision 1.11  2003/06/30 20:35:50  maj0r
+ * Code optimiert.
+ *
  * Revision 1.10  2003/06/30 19:46:11  maj0r
  * Sourcestil verbessert.
  *
@@ -78,11 +81,12 @@ public abstract class XMLDecoder {
     }
     else {
       NodeList nodes = document.getChildNodes();
-      for (int i = 0; i < attributePath.length; i++) {
-        for (int x = 0; x < nodes.getLength(); x++) {
-          String test = nodes.item(x).getNodeName();
+      int attributePathSize = attributePath.length;
+      for (int i = 0; i < attributePathSize; i++) {
+        int nodesSize = nodes.getLength();
+        for (int x = 0; x < nodesSize; x++) {
           if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
-            if (i == attributePath.length - 1) {
+            if (i == attributePathSize - 1) {
               String result = "";
               if (lastIsElement) {
                 Element e = (Element) nodes.item(x);
@@ -91,7 +95,7 @@ public abstract class XMLDecoder {
               }
               else {
                 Element e = (Element) nodes.item(x);
-                result = e.getAttribute(attributePath[attributePath.length - 1]);
+                result = e.getAttribute(attributePath[attributePathSize - 1]);
               }
               return result;
             }
@@ -111,13 +115,14 @@ public abstract class XMLDecoder {
     NodeList nodes = document.getChildNodes();
     Node rootNode = nodes.item(0); //Element "root"
     nodes = rootNode.getChildNodes();
-    for (int i = 0; i < attributePath.length - 1; i++) {
-      for (int x = 0; x < nodes.getLength(); x++) {
-        String test = nodes.item(x).getNodeName();
+    int attributePathSize = attributePath.length;
+    for (int i = 0; i < attributePathSize - 1; i++) {
+      int nodesSize = nodes.getLength();
+      for (int x = 0; x < nodesSize; x++) {
         if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
-          if (i == attributePath.length - 2) {
+          if (i == attributePathSize - 2) {
             Element e = (Element) nodes.item(x);
-            return e.getAttribute(attributePath[attributePath.length - 1]);
+            return e.getAttribute(attributePath[attributePathSize - 1]);
           }
           else {
             nodes = nodes.item(x).getChildNodes();
@@ -133,13 +138,14 @@ public abstract class XMLDecoder {
     NodeList nodes = document.getChildNodes();
     Node rootNode = nodes.item(0); //Element "root"
     nodes = rootNode.getChildNodes();
-    for (int i = 0; i < attributePath.length - 1; i++) {
-      for (int x = 0; x < nodes.getLength(); x++) {
-        String test = nodes.item(x).getNodeName();
+    int attributePathSize = attributePath.length;
+    for (int i = 0; i < attributePathSize - 1; i++) {
+      int nodesSize = nodes.getLength();
+      for (int x = 0; x < nodesSize; x++) {
         if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
-          if (i == attributePath.length - 2) {
+          if (i == attributePathSize - 2) {
             Element e = (Element) nodes.item(x);
-            e.setAttribute(attributePath[attributePath.length - 1],
+            e.setAttribute(attributePath[attributePathSize - 1],
                            ZeichenErsetzer.korrigiereUmlaute(newValue, true));
             try {
               XMLSerializer xs = new XMLSerializer(new FileWriter(filePath),
