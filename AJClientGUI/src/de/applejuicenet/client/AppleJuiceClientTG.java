@@ -7,7 +7,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.2 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.3 2004/02/25 14:27:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClientTG.java,v $
+ * Revision 1.3  2004/02/25 14:27:28  maj0r
+ * ArrayIndexOutOfBoundsException wird nur noch im Debug gelogt.
+ *
  * Revision 1.2  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -35,7 +38,12 @@ public class AppleJuiceClientTG
     }
 
     public void uncaughtException(Thread t, Throwable e) {
-        if (logger.isEnabledFor(Level.ERROR)) {
+        if(e.getClass()==ArrayIndexOutOfBoundsException.class){
+            if (logger.isEnabledFor(Level.DEBUG)) {
+                logger.debug("Unbehandelte Exception", e);
+            }
+        }
+        else if (logger.isEnabledFor(Level.ERROR)) {
             logger.error("Unbehandelte Exception", e);
         }
     }
