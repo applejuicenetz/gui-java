@@ -35,9 +35,10 @@ import javax.swing.table.TableColumn;
 import javax.swing.JCheckBoxMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.35 2004/01/12 07:26:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.36 2004/01/20 14:18:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,6 +47,9 @@ import java.awt.event.ActionEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.36  2004/01/20 14:18:29  maj0r
+ * Spaltenindizes werden jetzt gespeichert.
+ *
  * Revision 1.35  2004/01/12 07:26:10  maj0r
  * Tabellenspalte nun ueber Headerkontextmenue ein/ausblendbar.
  *
@@ -192,10 +196,22 @@ public class UploadPanel
                     if (columnPopupItems[x].isSelected()){
                         uploadDataTable.getColumnModel().addColumn(columns[x]);
                         PropertiesManager.getPositionManager().setUploadColumnVisible(x, true);
+                        PropertiesManager.getPositionManager().setUploadColumnIndex(
+                            x, uploadDataTable.getColumnModel().getColumnIndex(columns[x].getIdentifier()));
                     }
                     else{
                         uploadDataTable.getColumnModel().removeColumn(columns[x]);
                         PropertiesManager.getPositionManager().setUploadColumnVisible(x, false);
+                        for (int i=0; i<columns.length; i++){
+                            try{
+                                PropertiesManager.getPositionManager().setUploadColumnIndex(
+                                    i, uploadDataTable.getColumnModel().getColumnIndex(columns[i].getIdentifier()));
+                            }
+                            catch (IllegalArgumentException niaE)
+                            {
+                                //nix zu tun
+                            }
+                        }
                     }
                 }
             });
@@ -203,7 +219,23 @@ public class UploadPanel
         }
         columnPopupItems[0].setEnabled(false);
 
-        uploadDataTable.getTableHeader().addMouseListener(new HeaderPopupListener());
+        JTableHeader header = uploadDataTable.getTableHeader();
+        header.addMouseListener(new HeaderPopupListener());
+        header.addMouseMotionListener(new MouseMotionAdapter(){
+            public void mouseDragged(MouseEvent e){
+                PositionManager pm = PropertiesManager.getPositionManager();
+                TableColumnModel columnModel = uploadDataTable.getColumnModel();
+                for (int i=0; i<columns.length; i++){
+                    try{
+                        pm.setUploadColumnIndex(i, columnModel.getColumnIndex(columns[i].getIdentifier()));
+                    }
+                    catch (IllegalArgumentException niaE)
+                    {
+                        //nix zu tun
+                    }
+                }
+            }
+        });
 
         JScrollPane aScrollPane = new JScrollPane(uploadDataTable);
         aScrollPane.setBackground(uploadDataTable.getBackground());
@@ -294,10 +326,24 @@ public class UploadPanel
                 if (pm.isLegal()) {
                     int[] widths = pm.getUploadWidths();
                     boolean[] visibilies = pm.getUploadColumnVisibilities();
+                    int[] indizes = pm.getUploadColumnIndizes();
+                    ArrayList visibleColumns = new ArrayList();
                     for (int i = 0; i < columns.length; i++) {
                         columns[i].setPreferredWidth(widths[i]);
-                        if (!visibilies[i]){
-                            uploadDataTable.removeColumn(columns[i]);
+                        uploadDataTable.removeColumn(columns[i]);
+                        if (visibilies[i]){
+                            visibleColumns.add(columns[i]);
+                        }
+                    }
+                    int pos = -1;
+                    for (int i = 0; i < visibleColumns.size(); i++) {
+                        for (int x = 0; x < columns.length; x++) {
+                            if (visibleColumns.contains(columns[x])
+                                && indizes[x] == pos +1){
+                                uploadDataTable.addColumn(columns[x]);
+                                pos ++;
+                                break;
+                            }
                         }
                     }
                 }
