@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.25 2003/09/07 09:29:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.26 2003/09/09 06:37:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.26  2003/09/09 06:37:36  maj0r
+ * Wizard erweitert, aber noch nicht fertiggestellt.
+ *
  * Revision 1.25  2003/09/07 09:29:55  maj0r
  * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
@@ -161,6 +164,15 @@ public class AppleJuiceClient {
         logger.info(nachricht);
       System.out.println(nachricht);
       splash.dispose();
+        if (OptionsManager.getInstance().isErsterStart()){
+            WizardDialog wizardDialog = new WizardDialog(theApp, true);
+            Dimension appDimension = wizardDialog.getSize();
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            wizardDialog.setLocation((screenSize.width - appDimension.width)/2,
+                           (screenSize.height - appDimension.height)/2);
+            wizardDialog.show();
+        }
+
     }
     catch (Exception e) {
       if (logger.isEnabledFor(Level.FATAL))
