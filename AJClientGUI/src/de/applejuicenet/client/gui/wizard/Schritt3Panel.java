@@ -5,15 +5,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
+import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
+import de.tklsoft.gui.controls.InvalidRule;
+import de.tklsoft.gui.controls.TKLTextArea;
+import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.12 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.13 2005/02/22 09:21:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,8 +28,8 @@ import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 
 public class Schritt3Panel
     extends WizardPanel {
-	private JTextArea label1 = new JTextArea();
-    private JTextField nickname = new JTextField();
+	private TKLTextArea erlaeuterung = new TKLTextArea();
+    private TKLTextField nickname = new TKLTextField();
     private WizardDialog parent;
 
     public Schritt3Panel(WizardDialog parent, AJSettings settings) {
@@ -43,11 +46,20 @@ public class Schritt3Panel
     }
 
     private void init() {
-        label1.setWrapStyleWord(true);
-        label1.setLineWrap(true);
-        label1.setBackground(Color.WHITE);
-        label1.setEditable(false);
+        erlaeuterung.setWrapStyleWord(true);
+        erlaeuterung.setLineWrap(true);
+        erlaeuterung.setBackground(Color.WHITE);
+        erlaeuterung.setEditable(false);
         nickname.setColumns(20);
+        
+        InvalidRule rule = new InvalidRule(){
+            public boolean isInvalid(JComponent component) {
+                return (nickname.getText().toLowerCase().startsWith("nonick") 
+                        || nickname.getText().length() == 0) ? true : false;
+            }
+        };
+        nickname.addInvalidRule(rule);
+        
         nickname.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
                 if (isValidNickname()) {
@@ -58,6 +70,7 @@ public class Schritt3Panel
                 }
             }
         });
+        nickname.ignoreInvalidRules(false);
 
         setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -68,7 +81,7 @@ public class Schritt3Panel
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 2;
-        add(label1, constraints);
+        add(erlaeuterung, constraints);
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
@@ -84,12 +97,11 @@ public class Schritt3Panel
     }
 
     public boolean isValidNickname() {
-        return (nickname.getText().startsWith("nonick") ||
-                nickname.getText().length() == 0) ? false : true;
+        return !nickname.isInvalid();
     }
 
     public void fireLanguageChanged() {
-        label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        erlaeuterung.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.wizard.schritt3.label1")));
     }
 

@@ -3,13 +3,15 @@ package de.applejuicenet.client.gui.wizard;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
 
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
+import de.tklsoft.gui.controls.TKLLabel;
+import de.tklsoft.gui.controls.TKLTextArea;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt2Panel.java,v 1.11 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt2Panel.java,v 1.12 2005/02/22 09:21:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,9 +23,9 @@ import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 
 public class Schritt2Panel
     extends WizardPanel {
-	private JLabel label1 = new JLabel();
-    private JTextArea textArea1 = new JTextArea();
-    private JTextArea textArea2 = new JTextArea();
+	private TKLLabel label1 = new TKLLabel();
+    private TKLTextArea textArea1 = new TKLTextArea();
+    private TKLTextArea textArea2 = new TKLTextArea();
 
     public Schritt2Panel() {
         super();

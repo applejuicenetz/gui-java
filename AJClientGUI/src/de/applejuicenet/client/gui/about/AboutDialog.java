@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -32,9 +30,11 @@ import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
+import de.tklsoft.gui.controls.TKLLabel;
+import de.tklsoft.gui.controls.TKLPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.4 2005/01/19 16:22:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.5 2005/02/22 09:21:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,9 +64,7 @@ public class AboutDialog
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -90,10 +88,10 @@ public class AboutDialog
     }
 
     class BackPanel
-        extends JPanel{
+        extends TKLPanel{
 		private Image backgroundImage;
         private Image flagge;
-        private JLabel version = new JLabel();
+        private TKLLabel version = new TKLLabel();
         private List credits = new ArrayList();
         private Logger logger;
 
@@ -104,9 +102,7 @@ public class AboutDialog
                 init();
             }
             catch (Exception e) {
-                if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                }
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
             worker = new WorkerThread(backgroundImage, this, credits);
             worker.start();
@@ -154,7 +150,7 @@ public class AboutDialog
             font = new Font(font.getName(), Font.PLAIN, font.getSize());
             version.setFont(font);
             setLayout(new BorderLayout());
-            JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            TKLPanel panel1 = new TKLPanel(new FlowLayout(FlowLayout.RIGHT));
             panel1.add(version);
             panel1.setOpaque(false);
             add(panel1, BorderLayout.SOUTH);
@@ -305,9 +301,7 @@ public class AboutDialog
                 }
             }
             catch (Exception e) {
-                if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                }
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
             if (logger.isEnabledFor(Level.DEBUG)) {
                 logger.debug("About-Workerthread beendet. " + worker);

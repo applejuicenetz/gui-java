@@ -36,16 +36,12 @@ import java.util.zip.ZipFile;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
@@ -100,6 +96,10 @@ import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
+import de.tklsoft.gui.controls.TKLButton;
+import de.tklsoft.gui.controls.TKLFrame;
+import de.tklsoft.gui.controls.TKLLabel;
+import de.tklsoft.gui.controls.TKLPanel;
 
 /**
  * $Header:
@@ -121,7 +121,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
  *
  */
 
-public class AppleJuiceDialog extends JFrame implements LanguageListener,
+public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 		DataUpdateListener {
 
 	//CVS-Beispiel 0.60.0-1-CVS
@@ -133,7 +133,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	private static AppleJuiceDialog theApp;
 
 	private RegisterPanel registerPane;
-	private JLabel[] statusbar = new JLabel[6];
+	private TKLLabel[] statusbar = new TKLLabel[6];
 	private JMenu sprachMenu;
 	private JMenu optionenMenu;
 	private JMenu themesMenu = null;
@@ -150,8 +150,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	private JMenuItem popupAboutMenuItem = new JMenuItem();
 	private JMenuItem popupShowHideMenuItem = new JMenuItem();
 	private JMenuItem popupCheckUpdateMenuItem = new JMenuItem();
-	private JButton sound = new JButton();
-	private JButton memory = new JButton();
+	private TKLButton sound = new TKLButton();
+	private TKLButton memory = new TKLButton();
 	private String keinServer;
 	private boolean firstChange = true;
 	private MemoryMonitorDialog memoryMonitorDialog;
@@ -249,9 +249,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 				}
 			}
 		} catch (Exception e) {
-			if (logger.isEnabledFor(Level.ERROR)) {
-				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-			}
+			logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 		}
 	}
 
@@ -263,9 +261,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 			pack();
 			LanguageSelector.getInstance().addLanguageListener(this);
 		} catch (Exception e) {
-			if (logger.isEnabledFor(Level.ERROR)) {
-				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-			}
+			logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 		}
 	}
 
@@ -409,11 +405,11 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		});
 		getContentPane().add(registerPane, BorderLayout.CENTER);
 
-		JPanel panel = new JPanel(new GridBagLayout());
+		TKLPanel panel = new TKLPanel(new GridBagLayout());
 
 		for (int i = 0; i < statusbar.length; i++) {
-			statusbar[i] = new JLabel("            ");
-			statusbar[i].setHorizontalAlignment(JLabel.RIGHT);
+			statusbar[i] = new TKLLabel("            ");
+			statusbar[i].setHorizontalAlignment(TKLLabel.RIGHT);
 			statusbar[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
 			statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
 		}
@@ -531,9 +527,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 			pm.setShareWidths(shareWidths);
 			pm.save();
 		} catch (Exception e) {
-			if (logger.isEnabledFor(Level.ERROR)) {
-				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-			}
+			logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 		}
 	}
 
@@ -818,9 +812,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 			coreMenu.setText("Core");
 			return menuBar;
 		} catch (Exception e) {
-			if (logger.isEnabledFor(Level.ERROR)) {
-				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-			}
+			logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 			return null;
 		}
 	}
@@ -978,7 +970,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							            textArea.setPreferredSize(new Dimension(550, 300));
 							            textArea.setMaximumSize(new Dimension(550, 300));
 							            textArea.setEditable(false);
-							            textArea.setBackground(new JLabel().getBackground());
+							            textArea.setBackground(new TKLLabel().getBackground());
 							            textArea.setText(returnValues.toString());
 										JOptionPane.showMessageDialog(AppleJuiceDialog
 												.getApp(), new JScrollPane(textArea), dialogTitel,
@@ -1110,9 +1102,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 						.getToolTipText());
 			}
 		} catch (Exception e) {
-			if (logger.isEnabledFor(Level.ERROR)) {
-				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-			}
+			logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 		}
 	}
 
@@ -1134,9 +1124,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							}
 						}
 					} catch (Exception e) {
-						if (logger.isEnabledFor(Level.ERROR)) {
-							logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-						}
+						logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 					}
 				}
 			});
@@ -1188,9 +1176,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 						statusbar[4].setText(information.getExterneIP());
 						statusbar[5].setText(information.getCreditsAsString());
 					} catch (Exception e) {
-						if (logger.isEnabledFor(Level.ERROR)) {
-							logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-						}
+						logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 					}
 				}
 			});
@@ -1259,10 +1245,10 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 					downloadSlider.setSnapToTicks(true);
 					final JMenu uploadMenu = new JMenu("Upload");
 					final JMenu downloadMenu = new JMenu("Download");
-					JPanel uploadPanel = new JPanel(new BorderLayout());
-					JPanel downloadPanel = new JPanel(new BorderLayout());
-					final JLabel label1 = new JLabel("50 kb/s");
-					final JLabel label2 = new JLabel("50 kb/s");
+					TKLPanel uploadPanel = new TKLPanel(new BorderLayout());
+					TKLPanel downloadPanel = new TKLPanel(new BorderLayout());
+					final TKLLabel label1 = new TKLLabel("50 kb/s");
+					final TKLLabel label2 = new TKLLabel("50 kb/s");
 					label1.setText(Long.toString(ajSettings.getMaxUploadInKB())
 							+ " kb/s");
 					label2.setText(Long.toString(ajSettings

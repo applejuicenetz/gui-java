@@ -1,21 +1,21 @@
 package de.applejuicenet.client.gui.wizard;
 
-import java.io.File;
-
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import javax.swing.JComboBox;
+import java.io.File;
+
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
 
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.tklsoft.gui.controls.TKLComboBox;
+import de.tklsoft.gui.controls.TKLTextArea;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt1Panel.java,v 1.11 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt1Panel.java,v 1.12 2005/02/22 09:21:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,8 +27,8 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 
 public class Schritt1Panel
     extends WizardPanel {
-	private JTextArea label1 = new JTextArea();
-    private JComboBox sprachen = new JComboBox();
+	private TKLTextArea erlaeuterung = new TKLTextArea();
+    private TKLComboBox sprachen = new TKLComboBox();
 
     public Schritt1Panel() {
         super();
@@ -36,10 +36,10 @@ public class Schritt1Panel
     }
 
     private void init() {
-        label1.setWrapStyleWord(true);
-        label1.setLineWrap(true);
-        label1.setEditable(false);
-        label1.setBackground(Color.WHITE);
+        erlaeuterung.setWrapStyleWord(true);
+        erlaeuterung.setLineWrap(true);
+        erlaeuterung.setEditable(false);
+        erlaeuterung.setBackground(Color.WHITE);
 
         String path = System.getProperty("user.dir") + File.separator +
             "language" +
@@ -78,7 +78,7 @@ public class Schritt1Panel
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 2;
-        add(label1, constraints);
+        add(erlaeuterung, constraints);
         constraints.gridwidth = 1;
         constraints.gridx = 0;
         constraints.gridy = 1;
@@ -93,7 +93,7 @@ public class Schritt1Panel
     }
 
     public void fireLanguageChanged() {
-        label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        erlaeuterung.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.wizard.schritt1.label1")));
     }
 

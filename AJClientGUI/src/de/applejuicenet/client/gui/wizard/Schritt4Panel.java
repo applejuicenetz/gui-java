@@ -3,14 +3,15 @@ package de.applejuicenet.client.gui.wizard;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import javax.swing.JComboBox;
+
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
 
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
+import de.tklsoft.gui.controls.TKLComboBox;
+import de.tklsoft.gui.controls.TKLTextArea;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt4Panel.java,v 1.10 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt4Panel.java,v 1.11 2005/02/22 09:21:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,9 +23,9 @@ import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 
 public class Schritt4Panel
     extends WizardPanel {
-	private JTextArea label1 = new JTextArea();
-    private JTextArea label2 = new JTextArea();
-    private JComboBox verbindungsart = new JComboBox();
+	private TKLTextArea label1 = new TKLTextArea();
+    private TKLTextArea label2 = new TKLTextArea();
+    private TKLComboBox verbindungsart = new TKLComboBox();
 
     public Schritt4Panel() {
         super();
@@ -48,6 +49,7 @@ public class Schritt4Panel
             }
             verbindungsart.setSelectedIndex(0);
         }
+        verbindungsart.ignoreInvalidRules(false);
 
         setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();

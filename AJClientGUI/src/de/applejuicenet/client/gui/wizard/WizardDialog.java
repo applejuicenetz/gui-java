@@ -10,11 +10,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -27,9 +25,11 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
+import de.tklsoft.gui.controls.TKLButton;
+import de.tklsoft.gui.controls.TKLPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardDialog.java,v 1.7 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardDialog.java,v 1.8 2005/02/22 09:21:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -49,10 +49,10 @@ public class WizardDialog
     private WizardPanel schritt3;
     private WizardPanel schritt4 = new Schritt4Panel();
     private WizardPanel schritt5 = new Schritt5Panel();
-    private JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    private JButton zurueck = new JButton();
-    private JButton weiter = new JButton();
-    private JButton ende = new JButton();
+    private TKLPanel buttons = new TKLPanel(new FlowLayout(FlowLayout.RIGHT));
+    private TKLButton zurueck = new TKLButton();
+    private TKLButton weiter = new TKLButton();
+    private TKLButton ende = new TKLButton();
     private AJSettings ajSettings;
     private boolean regularClosed = false;
 
