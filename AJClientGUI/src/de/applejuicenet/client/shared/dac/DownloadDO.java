@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.11 2003/11/03 14:29:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.12 2003/11/30 17:00:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import java.util.Iterator;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.12  2003/11/30 17:00:06  maj0r
+ * Prozentangabe bei Downloads nun auf zwei Nachkommastellen genau (Danke an muhviestarr)
+ *
  * Revision 1.11  2003/11/03 14:29:16  maj0r
  * Speicheroptimierung.
  *
@@ -93,7 +96,7 @@ public class DownloadDO {
     }
 
     public String getProzentGeladenAsString(){
-        double temp = ready * 100 / groesse;
+        double temp = (double) ready * 100 / groesse;
         String result = Double.toString(temp);
         if (result.indexOf(".") + 3 < result.length())
         {
