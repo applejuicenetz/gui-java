@@ -38,7 +38,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.shared.Search;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.112 2004/02/17 14:42:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.113 2004/02/17 15:26:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -973,9 +973,12 @@ public class ApplejuiceFassade {
         try {
             String password = PropertiesManager.getOptionsManager().
                 getRemoteSettings().getOldPassword();
-            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+            String result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                          "/xml/information.xml?password=" +
                                          password);
+            if (result.compareTo("wrong password") == 0){
+                return false;
+            }
         }
         catch (WebSiteNotFoundException ex) {
             return false;

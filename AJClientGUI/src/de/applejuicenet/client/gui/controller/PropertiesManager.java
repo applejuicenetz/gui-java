@@ -27,7 +27,7 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.30 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.31 2004/02/17 15:26:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +36,10 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.31  2004/02/17 15:26:38  maj0r
+ * Bug #219 gefixt (Danke an uselessplayer)
+ * 100%-CPU bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt.
+ *
  * Revision 1.30  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -770,6 +774,15 @@ public class PropertiesManager
                               ,
                               Integer.toString(remote.getXmlPort()));
         informConnectionSettingsListener(getRemoteSettings());
+    }
+
+    public void onlySaveRemote(ConnectionSettings remote) {
+        setAttributeByTagName(new String[] {"options", "remote", "host"}
+                              , remote.getHost());
+        setAttributeByTagName(new String[] {"options", "remote", "passwort"}
+                              , remote.getNewPassword());
+        setAttributeByTagName(new String[] {"options", "remote", "port"}
+                              , Integer.toString(remote.getXmlPort()));
     }
 
     public void saveAJSettings(AJSettings ajSettings) {

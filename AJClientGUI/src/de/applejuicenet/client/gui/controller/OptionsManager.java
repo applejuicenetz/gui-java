@@ -8,7 +8,7 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.36 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.37 2004/02/17 15:26:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,10 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.37  2004/02/17 15:26:38  maj0r
+ * Bug #219 gefixt (Danke an uselessplayer)
+ * 100%-CPU bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt.
+ *
  * Revision 1.36  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -97,6 +101,8 @@ public interface OptionsManager {
 
     public void saveRemote(ConnectionSettings remote) throws
         InvalidPasswordException;
+
+    public void onlySaveRemote(ConnectionSettings remote);
 
     public void saveAJSettings(AJSettings ajSettings);
 

@@ -31,7 +31,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.11 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.12 2004/02/17 15:26:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,6 +40,10 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.12  2004/02/17 15:26:38  maj0r
+ * Bug #219 gefixt (Danke an uselessplayer)
+ * 100%-CPU bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt.
+ *
  * Revision 1.11  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -169,14 +173,9 @@ public class QuickConnectionSettingsDialog
 
         ok.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                try {
-                    speichereEinstellungen();
-                    result = 0;
-                    hide();
-                }
-                catch (InvalidPasswordException e) {
-                    zeigeFehlerNachricht();
-                }
+                speichereEinstellungen();
+                result = 0;
+                hide();
             }
         });
 
@@ -209,14 +208,9 @@ public class QuickConnectionSettingsDialog
         return result;
     }
 
-    private void zeigeFehlerNachricht() {
-        JOptionPane.showMessageDialog(this, "Falsches Passwort", "Fehler",
-                                      JOptionPane.ERROR_MESSAGE);
-    }
-
-    private void speichereEinstellungen() throws InvalidPasswordException {
+    private void speichereEinstellungen(){
         try {
-            PropertiesManager.getOptionsManager().saveRemote(remote);
+            PropertiesManager.getOptionsManager().onlySaveRemote(remote);
             if (dirty) {
                 PropertiesManager.getOptionsManager().
                     showConnectionDialogOnStartup(!cmbNieWiederZeigen.
@@ -224,13 +218,8 @@ public class QuickConnectionSettingsDialog
             }
         }
         catch (Exception e) {
-            if (e.getClass() == InvalidPasswordException.class) {
-                throw (InvalidPasswordException) e;
-            }
-            else {
-                if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error("Unbehandelte Exception", e);
-                }
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
             }
         }
     }

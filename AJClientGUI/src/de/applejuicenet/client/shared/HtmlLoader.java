@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.23 2004/02/12 13:22:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.24 2004/02/17 15:26:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.24  2004/02/17 15:26:38  maj0r
+ * Bug #219 gefixt (Danke an uselessplayer)
+ * 100%-CPU bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt.
+ *
  * Revision 1.23  2004/02/12 13:22:54  maj0r
  * Mehr Logging fuer WebSiteNotFoundException eingebaut.
  *
@@ -207,6 +211,9 @@ public abstract class HtmlLoader {
                             throw new WebSiteNotFoundException(
                                 WebSiteNotFoundException.
                                 UNKNOWN_HOST);
+                        }
+                        if (inputLine.indexOf("/wrongpassword") != -1){
+                            return "wrong password";
                         }
                         if (inputLine.indexOf("invalid id") != -1) {
                             return "";
