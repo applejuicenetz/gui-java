@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.36 2003/10/01 07:25:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.37 2003/10/04 15:53:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.37  2003/10/04 15:53:40  maj0r
+ * Kompatibilitaet zur naechsten Coreversion hergestellt.
+ *
  * Revision 1.36  2003/10/01 07:25:44  maj0r
  * Suche weiter gefuehrt.
  *
@@ -389,6 +392,9 @@ public class ModifiedXMLHolder
                     key = new MapSetStringKey(id);
                     suchtext = e.getAttribute("searchtext");
                     String temp = e.getAttribute("opensearchs");
+                    if (temp.length()==0){
+                        temp = e.getAttribute("opensearches");
+                    }
                     offeneSuchen = Integer.parseInt(temp);
                     temp = e.getAttribute("sumsearches");
                     durchsuchteClients = Integer.parseInt(temp);
