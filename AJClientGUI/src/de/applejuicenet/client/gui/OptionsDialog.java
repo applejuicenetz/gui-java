@@ -35,7 +35,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.43 2004/07/09 11:34:00 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.44 2004/07/09 13:44:57 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -81,7 +81,7 @@ public class OptionsDialog
             getFirstAttrbuteByTagName(".root.einstform.caption")));
         optionPanels = new OptionsRegister[6];
         optionPanels[0] = new ODStandardPanel(this, ajSettings, remote);
-        optionPanels[1] = new ODVerbindungPanel(ajSettings);
+        optionPanels[1] = new ODVerbindungPanel(this, ajSettings);
         optionPanels[2] = new ODConnectionPanel(remote, null);
         optionPanels[3] = new ODProxyPanel();
         optionPanels[4] = new ODAnsichtPanel();

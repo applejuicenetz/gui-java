@@ -1,51 +1,22 @@
 package de.applejuicenet.client;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.net.*;
+import java.text.*;
+import java.util.*;
 
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Toolkit;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.HTMLLayout;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.gui.ConnectFrame;
-import de.applejuicenet.client.gui.QuickConnectionSettingsDialog;
-import de.applejuicenet.client.gui.UpdateInformationDialog;
-import de.applejuicenet.client.gui.WizardDialog;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.LinkListener;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.gui.controller.PositionManager;
-import de.applejuicenet.client.gui.controller.PositionManagerImpl;
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.SoundPlayer;
-import de.applejuicenet.client.shared.Splash;
-import de.applejuicenet.client.shared.WebsiteContentLoader;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import java.io.DataInputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import de.applejuicenet.client.gui.shared.KeyStates;
-import java.awt.event.KeyEvent;
+import org.apache.log4j.*;
+import de.applejuicenet.client.gui.*;
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.shared.*;
+import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.75 2004/07/09 07:48:43 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.76 2004/07/09 13:44:57 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -368,15 +339,7 @@ public class AppleJuiceClient {
                 ApplejuiceFassade.getInstance().processLink(link);
             }
             if (OptionsManagerImpl.getInstance().isErsterStart()) {
-                WizardDialog wizardDialog = new WizardDialog(theApp, true);
-                Dimension appDimension = wizardDialog.getSize();
-                Dimension screenSize = Toolkit.getDefaultToolkit().
-                    getScreenSize();
-                wizardDialog.setLocation( (screenSize.width -
-                                           appDimension.width) / 2,
-                                         (screenSize.height -
-                                          appDimension.height) / 2);
-                wizardDialog.show();
+                showConnectionWizard(theApp);
             }
             Thread versionWorker = new Thread() {
                 public void run() {
@@ -469,5 +432,30 @@ public class AppleJuiceClient {
             }
             System.exit( -1);
         }
+    }
+
+    public static void showConnectionWizard(JFrame frame) throws
+        HeadlessException {
+        WizardDialog wizardDialog = new WizardDialog(frame, true);
+        Dimension appDimension = wizardDialog.getSize();
+        Dimension screenSize = Toolkit.getDefaultToolkit().
+            getScreenSize();
+        wizardDialog.setLocation( (screenSize.width -
+                                   appDimension.width) / 2,
+                                 (screenSize.height -
+                                  appDimension.height) / 2);
+        wizardDialog.show();
+    }
+    public static void showConnectionWizard(JDialog dialog) throws
+        HeadlessException {
+        WizardDialog wizardDialog = new WizardDialog(dialog, true);
+        Dimension appDimension = wizardDialog.getSize();
+        Dimension screenSize = Toolkit.getDefaultToolkit().
+            getScreenSize();
+        wizardDialog.setLocation( (screenSize.width -
+                                   appDimension.width) / 2,
+                                 (screenSize.height -
+                                  appDimension.height) / 2);
+        wizardDialog.show();
     }
 }

@@ -23,9 +23,15 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import de.applejuicenet.client.AppleJuiceClient;
+import javax.swing.JFrame;
+import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.18 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.19 2004/07/09 13:44:57 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +40,10 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODVerbindungPanel.java,v $
+ * Revision 1.19  2004/07/09 13:44:57  loevenwong
+ * Featurerequest #458; Verbindungswizard kann über
+ * Optionen->Verbindungen gestartet werden.
+ *
  * Revision 1.18  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -95,9 +105,12 @@ public class ODVerbindungPanel
     private Logger logger;
     private Icon menuIcon;
     private String menuText;
+    private JButton wizzard = new JButton("Wizzard starten");
+    private JDialog parent;
 
-    public ODVerbindungPanel(AJSettings ajSettings) {
+    public ODVerbindungPanel(JDialog parent, AJSettings ajSettings) {
         logger = Logger.getLogger(getClass());
+        this.parent = parent;
         this.ajSettings = ajSettings;
         try {
             init();
@@ -257,6 +270,12 @@ public class ODVerbindungPanel
                 ajSettings.setAutoConnect(automaticConnect.isSelected());
             }
         });
+        wizzard.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                displayConnectionWizard();
+            }
+        });
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
@@ -334,6 +353,11 @@ public class ODVerbindungPanel
         constraints.gridy = 9;
         panel1.add(panel9, constraints);
 
+        constraints.gridy = 10;
+        JPanel panel11 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panel11.add(wizzard);
+        panel1.add(panel11, constraints);
+
         add(panel1, BorderLayout.NORTH);
 
         maxUpload.setText(Long.toString(ajSettings.getMaxUploadInKB()));
@@ -353,5 +377,9 @@ public class ODVerbindungPanel
 
     public String getMenuText() {
         return menuText;
+    }
+
+    public void displayConnectionWizard() {
+        AppleJuiceClient.showConnectionWizard(parent);
     }
 }
