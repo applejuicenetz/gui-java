@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.2 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.3 2004/01/01 14:24:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Information.java,v $
+ * Revision 1.3  2004/01/01 14:24:37  maj0r
+ * Id wird nun auch ausgelesen.
+ *
  * Revision 1.2  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -33,6 +36,7 @@ public class Information implements LanguageListener {
     private static String nichtVerbunden;
     private static LanguageSelector languageSelector;
 
+    private int id;
     private long sessionUpload;
     private long sessionDownload;
     private long credits;
@@ -52,8 +56,9 @@ public class Information implements LanguageListener {
 
     private Information(){} //nur fuer den LanguageSelector
 
-    public Information(long sessionUpload, long sessionDownload, long credits, long uploadSpeed, long downloadSpeed,
+    public Information(int id, long sessionUpload, long sessionDownload, long credits, long uploadSpeed, long downloadSpeed,
                        long openConnections, int verbindungsStatus, String serverName, String externeIP) {
+        this.id = id;
         this.sessionUpload = sessionUpload;
         this.sessionDownload = sessionDownload;
         this.credits = credits;
@@ -68,6 +73,10 @@ public class Information implements LanguageListener {
             this.serverName = serverName;
         }
         this.externeIP = externeIP;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public long getSessionUpload() {
