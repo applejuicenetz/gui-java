@@ -6,12 +6,14 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 
-import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.controller.DataManager;
 import java.awt.Toolkit;
 import javax.swing.event.TreeModelListener;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.exception.*;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.shared.IconManager;
 
 public class DownloadModel
     extends AbstractTreeTableModel

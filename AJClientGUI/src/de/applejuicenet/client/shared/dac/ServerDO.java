@@ -69,7 +69,7 @@ public class ServerDO {
 
   public String getTimeLastSeenAsString(){
     if (timeLastSeen==0)
-      return "nie";
+      return "";
     else{
       SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
       return formatter.format(new Date(timeLastSeen));

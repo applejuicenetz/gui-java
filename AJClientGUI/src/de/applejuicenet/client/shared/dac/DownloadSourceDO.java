@@ -1,6 +1,7 @@
-package de.applejuicenet.client.shared;
+package de.applejuicenet.client.shared.dac;
 
 import java.util.*;
+import de.applejuicenet.client.shared.Version;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>

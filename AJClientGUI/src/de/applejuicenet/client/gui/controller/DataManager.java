@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.controller;
 
-import de.applejuicenet.client.shared.DownloadSourceDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.Version;
 import java.util.HashSet;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;

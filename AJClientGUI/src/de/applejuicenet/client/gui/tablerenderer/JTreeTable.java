@@ -10,6 +10,7 @@ import javax.swing.tree.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import java.util.Hashtable;
+import java.util.HashMap;
 
 public class JTreeTable
     extends JTable
@@ -38,7 +39,7 @@ public class JTreeTable
     DataManager.getInstance().addDownloadListener(this);
   }
 
-  public void fireContentChanged() {
+  public void fireContentChanged(HashMap changedContent) {
     repaint();
   }
 
