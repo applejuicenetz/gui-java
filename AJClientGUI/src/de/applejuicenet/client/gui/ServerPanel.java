@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.36 2003/11/30 17:01:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.37 2003/12/05 11:18:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.37  2003/12/05 11:18:02  maj0r
+ * Workaround fürs Setzen der Hintergrundfarben der Scrollbereiche ausgebaut.
+ *
  * Revision 1.36  2003/11/30 17:01:33  maj0r
  * Hintergrundfarbe aller Scrollbereiche an ihre Tabellen angepasst.
  *
@@ -256,11 +259,10 @@ public class ServerPanel
 
         TableColumn tc = serverTable.getColumnModel().getColumn(0);
         tc.setCellRenderer(new ServerTableCellRenderer());
-        JPanel panel2 = new JPanel(new BorderLayout());
-        panel2.setBackground(serverTable.getBackground());
-        panel2.setOpaque(true);
-        panel2.add(serverTable, BorderLayout.CENTER);
-        final JScrollPane aScrollPane = new JScrollPane(panel2);
+        final JScrollPane aScrollPane = new JScrollPane(serverTable);
+        aScrollPane.setBackground(serverTable.getBackground());
+        serverTable.getTableHeader().setBackground(serverTable.getBackground());
+        aScrollPane.getViewport().setOpaque(false);
         MouseAdapter popupMouseAdapter = new MouseAdapter(){
             public void mousePressed(MouseEvent me) {
                 super.mouseReleased(me);

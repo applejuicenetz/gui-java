@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.42 2003/11/30 17:01:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.43 2003/12/05 11:18:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +39,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.43  2003/12/05 11:18:02  maj0r
+ * Workaround fürs Setzen der Hintergrundfarben der Scrollbereiche ausgebaut.
+ *
  * Revision 1.42  2003/11/30 17:01:33  maj0r
  * Hintergrundfarbe aller Scrollbereiche an ihre Tabellen angepasst.
  *
@@ -526,11 +529,11 @@ public class SharePanel
         panel1.add(prioritaetAufheben);
 
         panelCenter.add(panel1, BorderLayout.NORTH);
-        JPanel panel2 = new JPanel(new BorderLayout());
-        panel2.setBackground(shareTable.getBackground());
-        panel2.setOpaque(true);
-        panel2.add(shareTable, BorderLayout.CENTER);
-        JScrollPane scrollPane = new JScrollPane(panel2);
+        JScrollPane scrollPane = new JScrollPane(shareTable);
+        scrollPane.setBackground(shareTable.getBackground());
+        shareTable.getTableHeader().setBackground(shareTable.getBackground());
+        scrollPane.getViewport().setOpaque(false);
+
         panelCenter.add(scrollPane, BorderLayout.CENTER);
         panelCenter.add(dateien, BorderLayout.SOUTH);
 
