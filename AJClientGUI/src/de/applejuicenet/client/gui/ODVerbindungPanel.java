@@ -27,59 +27,16 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import de.applejuicenet.client.AppleJuiceClient;
-import javax.swing.JFrame;
 import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.19 2004/07/09 13:44:57 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.20 2004/07/09 14:16:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ODVerbindungPanel.java,v $
- * Revision 1.19  2004/07/09 13:44:57  loevenwong
- * Featurerequest #458; Verbindungswizard kann über
- * Optionen->Verbindungen gestartet werden.
- *
- * Revision 1.18  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.17  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.16  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.15  2004/02/09 07:28:24  maj0r
- * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
- *
- * Revision 1.14  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.13  2004/01/25 10:16:42  maj0r
- * Optionenmenue ueberarbeitet.
- *
- * Revision 1.12  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.11  2003/10/14 15:43:52  maj0r
- * An pflegbaren Xml-Port angepasst.
- *
- * Revision 1.10  2003/09/10 13:16:28  maj0r
- * Veraltete Option "Browsen erlauben" entfernt und neue Option MaxNewConnectionsPerTurn hinzugefuegt.
- *
- * Revision 1.9  2003/09/08 16:46:08  maj0r
- * Ueberfluessige Einstellungen entfernt.
- *
- * Revision 1.8  2003/08/10 21:08:18  maj0r
- * Diverse Änderungen.
- *
- * Revision 1.7  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
+ * @author: Maj0r <maj0r@applejuicenet.de>
  *
  */
 
