@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.12 2003/12/16 18:30:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.13 2003/12/17 20:35:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.13  2003/12/17 20:35:54  maj0r
+ * Bug beim Sortieren der Sharetabelle behoben.
+ *
  * Revision 1.12  2003/12/16 18:30:06  maj0r
  * Nun ist es auch wieder plattformunabhaengig.
  *
@@ -79,6 +82,7 @@ public class ShareNode
     private HashMap children = new HashMap();
     private ShareNode parent;
     private String path;
+    private Object[] sortedChildren = null;
 
     public ShareNode(ShareNode parent, ShareDO shareDO) {
         this.parent = parent;
@@ -170,6 +174,7 @@ public class ShareNode
         else {
             childNode = new ShareNode(this, shareDOtoAdd);
             children.put(new MapSetStringKey(shareDOtoAdd.getId()), childNode);
+            sortedChildren = null;
         }
         return childNode;
     }
@@ -198,17 +203,17 @@ public class ShareNode
         return children;
     }
 
-    public void removeChild(ShareNode toRemove) {
-        children.remove(new MapSetStringKey(toRemove.getDO().getId()));
-    }
-
     public void removeAllChildren() {
         children.clear();
+        sortedChildren=null;
     }
 
     protected Object[] getChildren() {
-        ShareNode[] shareNodes = (ShareNode[]) children.values().toArray(new ShareNode[children.size()]);
-        return sort(shareNodes);
+        if (sortedChildren==null){
+            ShareNode[] shareNodes = (ShareNode[]) children.values().toArray(new ShareNode[children.size()]);
+            sortedChildren = sort(shareNodes);
+        }
+        return sortedChildren;
     }
 
     private Object[] sort(ShareNode[] childNodes) {
