@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.80 2004/10/13 15:29:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.81 2004/10/14 08:08:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -292,12 +292,12 @@ public class AppleJuiceClient {
             splash.setProgress(10, "Teste Verbindung...");
             boolean showDialog = OptionsManagerImpl.getInstance().
                 shouldShowConnectionDialogOnStartup();
+            boolean keyDown = ks.isKeyDown(KeyEvent.VK_SHIFT);
             if (!showDialog) {
-                showDialog = ks.isKeyDown(KeyEvent.VK_SHIFT);
+                showDialog = keyDown;
             }
-
             ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.getInstance();
-            boolean firstTry = true;
+            boolean firstTry = keyDown ? false : true;
             while (showDialog || !applejuiceFassade.istCoreErreichbar()) {
                 splash.setVisible(false);
                 if (!showDialog) {
