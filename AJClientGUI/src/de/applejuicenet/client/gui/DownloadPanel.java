@@ -1,26 +1,61 @@
 package de.applejuicenet.client.gui;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
-import java.awt.*;
-import java.awt.datatransfer.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
-
-import org.apache.log4j.*;
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.shared.*;
-import de.applejuicenet.client.gui.tables.*;
-import de.applejuicenet.client.gui.tables.download.*;
-import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.dac.*;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.shared.SortButtonRenderer;
+import de.applejuicenet.client.gui.tables.JTreeTable;
+import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.tables.download.DownloadDirectoryNode;
+import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
+import de.applejuicenet.client.gui.tables.download.DownloadModel;
+import de.applejuicenet.client.gui.tables.download.DownloadRootNode;
+import de.applejuicenet.client.gui.tables.download.DownloadTableCellRenderer;
+import de.applejuicenet.client.shared.MapSetStringKey;
+import de.applejuicenet.client.shared.Settings;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.74 2004/01/01 18:38:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.75 2004/01/04 12:37:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,11 +64,15 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.75  2004/01/04 12:37:27  maj0r
+ * Bug #40 umgesetzt (Danke an hirsch.marcel)
+ * Incoming-Verzeichnis kann nun für mehrere Downloads gleichzeitig geaendert werden.
+ *
  * Revision 1.74  2004/01/01 18:38:14  maj0r
- * Partlisten von einigen wenigen DownloadSourcen wurden bei Bedarf nicht geholt.
+     * Partlisten von einigen wenigen DownloadSourcen wurden bei Bedarf nicht geholt.
  *
  * Revision 1.73  2003/12/30 20:52:19  maj0r
- * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
+     * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
  *
  * Revision 1.72  2003/12/30 14:52:11  maj0r
  * Das Zielverzeichnis fuer einen Download kann nun geaendert werden.
@@ -428,7 +467,8 @@ public class DownloadPanel
                         &&
                         ( (DownloadMainNode) selectedItems[0]).getType() ==
                         DownloadMainNode.ROOT_NODE) {
-                        DownloadDO downloadDO = ( (DownloadMainNode) selectedItems[0]).
+                        DownloadDO downloadDO = ( (DownloadMainNode)
+                                                 selectedItems[0]).
                             getDownloadDO();
                         String neuerName = JOptionPane.showInputDialog(
                             AppleJuiceDialog.getApp(), neuerDateiname + ":",
@@ -438,7 +478,8 @@ public class DownloadPanel
                         }
                         neuerName = neuerName.trim();
                         if (neuerName.length() != 0) {
-                            if (downloadDO.getFilename().compareTo(neuerName)!=0){
+                            if (downloadDO.getFilename().compareTo(neuerName) !=
+                                0) {
                                 ApplejuiceFassade.getInstance().renameDownload(
                                     downloadDO.getId(), neuerName);
                             }
@@ -451,28 +492,41 @@ public class DownloadPanel
         item5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 Object[] selectedItems = getSelectedDownloadItems();
-                if (selectedItems != null && selectedItems.length == 1) {
-                    if (selectedItems[0].getClass() == DownloadMainNode.class
+                if (selectedItems == null ||
+                    selectedItems.length == 0){
+                    return;
+                }
+                String[] dirs = ApplejuiceFassade.getInstance().
+                    getCurrentIncomingDirs();
+                IncomingDirSelectionDialog incomingDirSelectionDialog =
+                    new IncomingDirSelectionDialog(AppleJuiceDialog.getApp(),
+                    dirs);
+                incomingDirSelectionDialog.show();
+                String neuerName = incomingDirSelectionDialog.
+                    getSelectedIncomingDir();
+
+                if (neuerName == null) {
+                    return;
+                }
+                else {
+                    neuerName = neuerName.trim();
+                    if (neuerName.indexOf(File.separator) == 0 ||
+                        neuerName.indexOf(ApplejuiceFassade.separator) == 0) {
+                        neuerName = neuerName.substring(1);
+                    }
+                }
+                DownloadDO downloadDO;
+                for (int i = 0; i < selectedItems.length; i++) {
+                    if (selectedItems[i].getClass() == DownloadMainNode.class
                         &&
-                        ( (DownloadMainNode) selectedItems[0]).getType() ==
+                        ( (DownloadMainNode) selectedItems[i]).getType() ==
                         DownloadMainNode.ROOT_NODE) {
-                        DownloadDO downloadDO = ( (DownloadMainNode) selectedItems[0]).
+                        downloadDO = ( (DownloadMainNode) selectedItems[i]).
                             getDownloadDO();
-                        String neuerName = JOptionPane.showInputDialog(
-                            AppleJuiceDialog.getApp(), neuesVerzeichnis + ":",
-                            downloadDO.getTargetDirectory());
-                        if (neuerName == null) {
-                            return;
-                        }
-                        else{
-                            neuerName = neuerName.trim();
-                            if (neuerName.indexOf(File.separator)==0 ||
-                                neuerName.indexOf(ApplejuiceFassade.separator)==0 ){
-                                neuerName = neuerName.substring(1);
-                            }
-                        }
-                        if (downloadDO.getTargetDirectory().compareTo(neuerName)!=0){
-                            ApplejuiceFassade.getInstance().setTargetDir(
+                        if (downloadDO.getTargetDirectory().compareTo(
+                            neuerName) != 0) {
+                            ApplejuiceFassade.getInstance().
+                                setTargetDir(
                                 downloadDO.getId(), neuerName);
                         }
                     }
@@ -617,17 +671,35 @@ public class DownloadPanel
                     item4.setVisible(false);
                     item5.setVisible(false);
                     item7.setVisible(false);
-                    if (isDownloadUebersicht && selectedItems != null &&
-                        selectedItems.length == 1) {
-                        if ( (selectedItems[0].getClass() == DownloadMainNode.class
-                              &&
-                              ( (DownloadMainNode) selectedItems[0]).getType() ==
-                              DownloadMainNode.ROOT_NODE)
-                            || (selectedItems[0].getClass() == DownloadSourceDO.class)) {
-                            item7.setVisible(true);
-                            if (selectedItems[0].getClass() != DownloadSourceDO.class) {
-                                item4.setVisible(true);
-                                item5.setVisible(true);
+                    if (selectedItems != null) {
+                        if (selectedItems.length == 1) {
+                            if ( (selectedItems[0].getClass() ==
+                                  DownloadMainNode.class
+                                  &&
+                                  ( (DownloadMainNode) selectedItems[0]).
+                                  getType() ==
+                                  DownloadMainNode.ROOT_NODE)
+                                ||
+                                (selectedItems[0].getClass() ==
+                                 DownloadSourceDO.class)) {
+                                item7.setVisible(true);
+                                if (selectedItems[0].getClass() !=
+                                    DownloadSourceDO.class) {
+                                    item4.setVisible(true);
+                                    item5.setVisible(true);
+                                }
+                            }
+                        }
+                        else {
+                            for (int i = 0; i < selectedItems.length; i++) {
+                                if ( (selectedItems[i].getClass() ==
+                                      DownloadMainNode.class
+                                      &&
+                                      ( (DownloadMainNode) selectedItems[i]).
+                                      getType() ==
+                                      DownloadMainNode.ROOT_NODE)) {
+                                    item5.setVisible(true);
+                                }
                             }
                         }
                     }
@@ -849,9 +921,6 @@ public class DownloadPanel
             neuerDateiname = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui",
                                           "downloadform", "neuerdateiname"}));
-            neuesVerzeichnis = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui",
-                                          "downloadform", "neuesverzeichnis"}));
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -1023,10 +1092,13 @@ public class DownloadPanel
                                          DownloadSourceDO.class) {
                                     powerDownloadPanel.btnPdl.
                                         setEnabled(false);
-                                    if ( ( (DownloadSourceDO) nodeObject).getStatus() == DownloadSourceDO.IN_WARTESCHLANGE &&
-                                        ( (DownloadSourceDO) nodeObject).getQueuePosition() > 20) {
-                                       return;
-                                   }
+                                    if ( ( (DownloadSourceDO) nodeObject).
+                                        getStatus() ==
+                                        DownloadSourceDO.IN_WARTESCHLANGE &&
+                                        ( (DownloadSourceDO) nodeObject).
+                                        getQueuePosition() > 20) {
+                                        return;
+                                    }
                                     downloadDOOverviewPanel.setDownloadSourceDO( (
                                         DownloadSourceDO) nodeObject);
                                 }

@@ -31,9 +31,10 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.NetworkServerXMLHolder;
+import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.86 2004/01/02 16:48:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.87 2004/01/04 12:37:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -42,6 +43,10 @@ import de.applejuicenet.client.gui.controller.xmlholder.NetworkServerXMLHolder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.87  2004/01/04 12:37:27  maj0r
+ * Bug #40 umgesetzt (Danke an hirsch.marcel)
+ * Incoming-Verzeichnis kann nun für mehrere Downloads gleichzeitig geaendert werden.
+ *
  * Revision 1.86  2004/01/02 16:48:30  maj0r
  * Serverliste holen geaendert.
  *
@@ -435,6 +440,34 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 logger.error("Unbehandelte Exception", e);
             }
         }
+    }
+
+    public String[] getCurrentIncomingDirs(){
+        HashMap download = getDownloadsSnapshot();
+        DownloadDO downloadDO = null;
+        ArrayList incomingDirs = new ArrayList();
+        boolean found;
+        synchronized (download){
+            Iterator it = download.values().iterator();
+            while (it.hasNext()){
+                downloadDO = (DownloadDO)it.next();
+                if (downloadDO.getTargetDirectory().length()==0){
+                    continue;
+                }
+                found = false;
+                for (int i=0; i<incomingDirs.size(); i++){
+                    if (((String)incomingDirs.get(i)).compareToIgnoreCase(downloadDO.getTargetDirectory())==0){
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found){
+                    incomingDirs.add(downloadDO.getTargetDirectory());
+                }
+            }
+        }
+        incomingDirs.add("");
+        return (String[]) incomingDirs.toArray(new String[incomingDirs.size()]);
     }
 
     public Information getInformation() {
