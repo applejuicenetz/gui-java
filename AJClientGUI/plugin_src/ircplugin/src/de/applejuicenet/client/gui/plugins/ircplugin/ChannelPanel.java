@@ -43,7 +43,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.16 2004/12/06 12:49:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.17 2004/12/06 20:29:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -193,11 +193,11 @@ public class ChannelPanel
                     if (!user.getName().equalsIgnoreCase(parentPanel.getNickname())){
                         JTabbedPane tabbedPane = parentPanel.getTabbedPane();
                         for (int i = 1; i < tabbedPane.getTabCount(); i++) {
-                            if (tabbedPane.getTitleAt(i).equalsIgnoreCase(name)) {
+                            if (tabbedPane.getTitleAt(i).equalsIgnoreCase(user.getName())) {
                                 return;
                             }
                         }
-                        parentPanel.addUser(tabbedPane, name);
+                        parentPanel.addUser(tabbedPane, user.getName());
                         tabbedPane.setSelectedIndex(tabbedPane.getTabCount() -
                             1);
                     }
