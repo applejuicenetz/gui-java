@@ -1,8 +1,12 @@
 package de.applejuicenet.client.gui.trees.share;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.Icon;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -14,62 +18,15 @@ import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.shared.dac.DirectoryDO;
-import java.util.Set;
-import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.15 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.16 2004/04/14 09:36:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: DirectoryNode.java,v $
- * Revision 1.15  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.14  2004/02/09 20:12:28  maj0r
- * Sortierung verbessert bzw. eingebaut.
- *
- * Revision 1.13  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.12  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.11  2003/12/18 14:50:37  maj0r
- * Bug im Sharebaum behoben.
- *
- * Revision 1.10  2003/09/03 11:12:00  maj0r
- * Eintraege werden nun nach Verzeichnisname sortiert.
- *
- * Revision 1.9  2003/08/28 06:58:14  maj0r
- * Plattformunabhaengigkeit wieder hergestellt.
- *
- * Revision 1.8  2003/08/26 09:49:01  maj0r
- * ShareTree weitgehend fertiggestellt.
- *
- * Revision 1.7  2003/08/26 06:20:10  maj0r
- * Anpassungen an muhs neuen Tree.
- *
- * Revision 1.6  2003/08/24 14:59:59  maj0r
- * Version 0.14
- * Diverse Aenderungen.
- *
- * Revision 1.5  2003/08/17 16:13:11  maj0r
- * Erstellen des DirectoryNode-Baumes korrigiert.
- *
- * Revision 1.4  2003/08/16 20:53:40  maj0r
- * Kleinen Fehler korrigiert
- *
- * Revision 1.3  2003/08/15 17:53:54  maj0r
- * Tree fuer Shareauswahl fortgefuehrt, aber noch nicht fertiggestellt.
- *
- * Revision 1.2  2003/08/15 14:44:20  maj0r
- * DirectoryTree eingefuegt, aber noch nicht fertiggestellt.
- *
+ * @author: Maj0r [maj0r@applejuicenet.de]
  *
  */
 
@@ -83,6 +40,8 @@ public class DirectoryNode
     public static final int SHARED_SUB = 4;
 
     private static Set shareDirs = new HashSet();
+    private static Map icons = new HashMap();
+    private static boolean initialized = false;
 
     private DirectoryDO directoryDO;
     private List children = null;
@@ -160,18 +119,20 @@ public class DirectoryNode
     }
 
     public Icon getShareModeIcon() {
-        IconManager im = IconManager.getInstance();
+        if (!initialized){
+            initializeImages();
+        }
         switch (getShareMode()) {
             case SHARED_WITH_SUB:
-                return im.getIcon("sharedwsub");
+                return (Icon)icons.get("sharedwsub");
             case SHARED_SUB:
-                return im.getIcon("sharedwsub");
+                return (Icon)icons.get("sharedwsub");
             case SHARED_WITHOUT_SUB:
-                return im.getIcon("sharedwosub");
+                return (Icon)icons.get("sharedwosub");
             case SHARED_SOMETHING:
-                return im.getIcon("somethingshared");
+                return (Icon)icons.get("somethingshared");
             default:
-                return im.getIcon("notshared");
+                return (Icon)icons.get("notshared");
         }
     }
 
@@ -179,18 +140,20 @@ public class DirectoryNode
         if (directoryDO == null) {
             return null; //rootNode
         }
-        IconManager im = IconManager.getInstance();
+        if (!initialized){
+            initializeImages();
+        }
         switch (directoryDO.getType()) {
             case DirectoryDO.TYPE_DESKTOP:
-                return im.getIcon("server");
+                return (Icon)icons.get("server");
             case DirectoryDO.TYPE_DISKETTE:
-                return im.getIcon("diskette");
+                return (Icon)icons.get("diskette");
             case DirectoryDO.TYPE_LAUFWERK:
-                return im.getIcon("laufwerk");
+                return (Icon)icons.get("laufwerk");
             case DirectoryDO.TYPE_ORDNER:
-                return im.getIcon("tree");
+                return (Icon)icons.get("tree");
             case DirectoryDO.TYPE_RECHNER:
-                return im.getIcon("server");
+                return (Icon)icons.get("server");
             default:
                 return null;
         }
@@ -246,5 +209,36 @@ public class DirectoryNode
             sortChildren();
         }
         return children.toArray(new DirectoryNode[children.size()]);
+    }
+
+    private static void initializeImages(){
+        initialized = true;
+        IconManager im = IconManager.getInstance();
+        icons.put("server", im.getIcon("server"));
+        icons.put("diskette", im.getIcon("diskette"));
+        icons.put("laufwerk", im.getIcon("laufwerk"));
+        icons.put("tree", im.getIcon("tree"));
+        icons.put("sharedwsub", im.getIcon("sharedwsub"));
+        icons.put("sharedwsub", im.getIcon("sharedwsub"));
+        icons.put("sharedwosub", im.getIcon("sharedwosub"));
+        icons.put("somethingshared", im.getIcon("somethingshared"));
+        icons.put("notshared", im.getIcon("notshared"));
+        icons.put("warten", im.getIcon("warten"));
+    }
+
+    public static int getMaxHeight(){
+        if (!initialized){
+            initializeImages();
+        }
+        Iterator it = icons.values().iterator();
+        Icon icon = null;
+        int maxHeight = 0;
+        while (it.hasNext()){
+            icon = (Icon)it.next();
+            if (icon.getIconHeight() > maxHeight){
+                maxHeight = icon.getIconHeight();
+            }
+        }
+        return maxHeight;
     }
 }
