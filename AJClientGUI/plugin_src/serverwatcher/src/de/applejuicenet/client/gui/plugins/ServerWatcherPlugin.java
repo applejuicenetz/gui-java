@@ -15,7 +15,7 @@ import de.applejuicenet.client.gui.plugins.serverwatcher.NewServerDialog;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.4 2003/09/13 18:35:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.5 2004/03/02 21:10:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerWatcherPlugin.java,v $
+ * Revision 1.5  2004/03/02 21:10:57  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.4  2003/09/13 18:35:19  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -51,7 +54,8 @@ public class ServerWatcherPlugin extends PluginConnector {
     private JLabel statusText = new JLabel();
     private static Logger logger;
 
-    public ServerWatcherPlugin() {
+    public ServerWatcherPlugin(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder, ImageIcon icon) {
+        super(pluginsPropertiesXMLHolder, icon);
         logger = Logger.getLogger(getClass());
         try{
             setLayout(new BorderLayout());
@@ -80,8 +84,6 @@ public class ServerWatcherPlugin extends PluginConnector {
             constraints.gridx = 1;
             constraints.weightx = 1;
             topPanel.add(new JLabel(), constraints);
-
-            initIcon();
 
             status.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent ae){
@@ -199,25 +201,5 @@ public class ServerWatcherPlugin extends PluginConnector {
     }
 
     public void registerSelected() {
-    }
-
-    public String getTitle() {
-        return "ServerWatcher";
-    }
-
-    public String getAutor() {
-        return "Maj0r";
-    }
-
-    public String getBeschreibung() {
-        return "Mit dem Serverwatcher kann der Status von\r\nServern angezeigt werden.";
-    }
-
-    public String getVersion() {
-        return "1.11";
-    }
-
-    public boolean istReiter() {
-        return true;
     }
 }
