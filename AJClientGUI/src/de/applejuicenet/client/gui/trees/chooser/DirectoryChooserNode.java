@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DirectoryDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserNode.java,v 1.3 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserNode.java,v 1.4 2004/02/09 20:12:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.dac.DirectoryDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryChooserNode.java,v $
+ * Revision 1.4  2004/02/09 20:12:28  maj0r
+ * Sortierung verbessert bzw. eingebaut.
+ *
  * Revision 1.3  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -109,10 +112,34 @@ public class DirectoryChooserNode
         return childNode;
     }
 
+    private void sortChildren() {
+        if (children == null || children.size() < 2) {
+            return;
+        }
+        int n = children.size();
+        int k;
+        for (int i = 0; i < n - 1; i++) {
+            k = i;
+            for (int j = i + 1; j < n; j++) {
+                if (!((DirectoryChooserNode)children.get(j)).getDO().isFileSystem()){
+                    continue;
+                }
+                if (children.get(j).toString().compareToIgnoreCase(children.get(
+                    k).toString()) < 0) {
+                    k = j;
+                }
+            }
+            Object tmp = children.get(i);
+            children.set(i, children.get(k));
+            children.set(k, tmp);
+        }
+    }
+
     protected Object[] getChildren() {
         if (children == null) {
             children = new ArrayList();
             ApplejuiceFassade.getInstance().getDirectory(directoryDO.getPath(), this);
+            sortChildren();
         }
         return children.toArray(new DirectoryChooserNode[children.size()]);
     }

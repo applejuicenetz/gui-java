@@ -16,7 +16,7 @@ import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.shared.dac.DirectoryDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.13 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.14 2004/02/09 20:12:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import de.applejuicenet.client.shared.dac.DirectoryDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryNode.java,v $
+ * Revision 1.14  2004/02/09 20:12:28  maj0r
+ * Sortierung verbessert bzw. eingebaut.
+ *
  * Revision 1.13  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -217,6 +220,9 @@ public class DirectoryNode
         for (int i = 0; i < n - 1; i++) {
             k = i;
             for (int j = i + 1; j < n; j++) {
+                if (!((DirectoryNode)children.get(j)).getDO().isFileSystem()){
+                    continue;
+                }
                 if (children.get(j).toString().compareToIgnoreCase(children.get(
                     k).toString()) < 0) {
                     k = j;

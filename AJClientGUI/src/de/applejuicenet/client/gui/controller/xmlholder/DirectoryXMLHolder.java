@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import de.applejuicenet.client.shared.dac.DirectoryDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.5 2004/02/09 20:12:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.dac.DirectoryDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.5  2004/02/09 20:12:28  maj0r
+ * Sortierung verbessert bzw. eingebaut.
+ *
  * Revision 1.4  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -111,7 +114,7 @@ public class DirectoryXMLHolder
         String name;
         String path;
         name = element.getAttribute("name");
-        fileSystem = Boolean.getBoolean(element.getAttribute("isfilesystem"));
+        fileSystem = element.getAttribute("isfilesystem").equalsIgnoreCase("true");
         type = Integer.parseInt(element.getAttribute("type"));
         path = element.getAttribute("path");
         if (path.length() == 0) {
