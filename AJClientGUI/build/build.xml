@@ -79,6 +79,7 @@
 		<fileset dir="${basedir}" includes="TrayIcon12.dll"/>
 		<fileset dir="${basedir}" includes="language/*.xml language/*.gif"/>
 		<fileset dir="${basedir}" includes="plugins/*.jar plugins/*.txt"/>
+		<fileset dir="${basedir}" includes="pwdlpolicies/*.jar pwdlpolicies/*.txt"/>
 		<fileset dir="${basedir}" includes="themes/*.zip themes/*.first"/>
 		<fileset dir="${basedir}" includes="sounds/*.wav sounds/*.first"/>
 		<fileset dir="${basedir}" includes="needed_jars/*.jar"/>
@@ -95,6 +96,7 @@
 		<fileset dir="${basedir}" includes="*.reg"/>
 		<fileset dir="${basedir}" includes="language/*.xml language/*.gif"/>
 		<fileset dir="${basedir}" includes="plugins/*.jar plugins/*.txt"/>
+		<fileset dir="${basedir}" includes="pwdlpolicies/*.jar pwdlpolicies/*.txt"/>
 		<fileset dir="${basedir}" includes="themes/*.zip themes/*.first"/>
 		<fileset dir="${basedir}" includes="sounds/*.wav sounds/*.first"/>
 		<fileset dir="${basedir}" includes="needed_jars/*.jar"/>
@@ -110,6 +112,18 @@
 	<jar destfile="${basedir}/plugins/VersionChecker.jar">
 		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
 							  		excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+         </jar>
+   </target>
+
+   <target name="build-pwdlPolicy" description="builds pwdlPolicy - build.xml needs to be modified">
+      <delete includeEmptyDirs="true">
+         <fileset dir="${basedir}/pwdlpolicies" casesensitive="false">
+            <include name="**/StandardPwdlPolicy.jar"/>
+         </fileset>
+      </delete>
+	<jar destfile="${basedir}/pwdlpolicies/StandardPwdlPolicy.jar">
+		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/powerdownload/**/*.*"
+			excludes="**/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.class" />
          </jar>
    </target>
 
