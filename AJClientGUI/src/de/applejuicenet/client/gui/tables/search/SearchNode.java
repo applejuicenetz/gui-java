@@ -11,7 +11,7 @@ import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.Search.SearchEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.8 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.9 2004/02/12 17:04:01 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchNode.java,v $
+ * Revision 1.9  2004/02/12 17:04:01  maj0r
+ * Bug #167 gefixt (Danke an arnoldfake)
+ * Sortierung nach Anzahl in der Suchtabelle korrigiert.
+ *
  * Revision 1.8  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -244,7 +248,7 @@ public class SearchNode
             }
             o1 = new Integer(haeufigkeit);
             Search.SearchEntry entry2 = (Search.SearchEntry) ( (SearchNode)
-                childNodes[row1]).getValueObject();
+                childNodes[row2]).getValueObject();
             filenames = entry2.getFileNames();
             haeufigkeit = 0;
             for (int i = 0; i < filenames.length; i++) {
