@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.23 2004/01/12 09:36:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.24 2004/01/20 11:18:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.24  2004/01/20 11:18:03  maj0r
+ * Format der properties.xml geaendert.
+ *
  * Revision 1.23  2004/01/12 09:36:20  maj0r
  * Speichern korrigiert.
  *
@@ -645,72 +648,72 @@ public class PropertiesManager
 
     protected void init(){
         try{
-            String temp = getFirstAttrbuteByTagName(new String[]{"options", "location", "main", "x"});
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "location", "x"});
             if (temp.length()!=0){
                 legal = true;
-                int mainX = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "main", "x"}));
-                int mainY = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "main", "y"}));
+                int mainX = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "x"}));
+                int mainY = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "y"}));
                 mainXY = new Point(mainX, mainY);
-                int mainWidth = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "main", "width"}));
-                int mainHeight = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "main", "height"}));
+                int mainWidth = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "width"}));
+                int mainHeight = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "height"}));
                 mainDimension = new Dimension(mainWidth, mainHeight);
 
                 downloadWidths = new int[10];
-                downloadWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "download", "column0"}));
-                downloadWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "download", "column1"}));
-                downloadWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "download", "column2"}));
-                downloadWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "download", "column3"}));
-                downloadWidths[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "download", "column4"}));
-                downloadWidths[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "download", "column5"}));
-                downloadWidths[6] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "download", "column6"}));
-                downloadWidths[7] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "download", "column7"}));
-                downloadWidths[8] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "download", "column8"}));
-                downloadWidths[9] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "download", "column9"}));
+                downloadWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column0", "width"}));
+                downloadWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column1", "width"}));
+                downloadWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column2", "width"}));
+                downloadWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column3", "width"}));
+                downloadWidths[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column4", "width"}));
+                downloadWidths[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column5", "width"}));
+                downloadWidths[6] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column6", "width"}));
+                downloadWidths[7] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column7", "width"}));
+                downloadWidths[8] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column8", "width"}));
+                downloadWidths[9] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column9", "width"}));
 
                 uploadWidths = new int[7];
-                uploadWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "upload", "column0"}));
-                uploadWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "upload", "column1"}));
-                uploadWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "upload", "column2"}));
-                uploadWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "upload", "column3"}));
-                uploadWidths[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "upload", "column4"}));
-                uploadWidths[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "upload", "column5"}));
-                uploadWidths[6] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "upload", "column6"}));
+                uploadWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column0", "width"}));
+                uploadWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column1", "width"}));
+                uploadWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column2", "width"}));
+                uploadWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column3", "width"}));
+                uploadWidths[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column4", "width"}));
+                uploadWidths[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column5", "width"}));
+                uploadWidths[6] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column6", "width"}));
 
                 serverWidths = new int[4];
-                serverWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "server", "column0"}));
-                serverWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "server", "column1"}));
-                serverWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "server", "column2"}));
-                serverWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "server", "column3"}));
+                serverWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "server", "column0", "width"}));
+                serverWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "server", "column1", "width"}));
+                serverWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "server", "column2", "width"}));
+                serverWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "server", "column3", "width"}));
 
                 shareWidths = new int[3];
-                shareWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column0"}));
-                shareWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column1"}));
-                shareWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column2"}));
+                shareWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "share", "column0", "width"}));
+                shareWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "share", "column1", "width"}));
+                shareWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "share", "column2", "width"}));
 
                 downloadVisibilities = new boolean[10];
                 downloadVisibilities[0] = true;
-                String xmlTest = getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column1"});
+                String xmlTest = getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column1", "visibility"});
                 if (xmlTest.length() == 0){
                     throw new Exception("Properties.xml hat altes Format. Wird neu erstellt.");
                 }
                 downloadVisibilities[1] = new Boolean(xmlTest).booleanValue();
-                downloadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column2"})).booleanValue();
-                downloadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column3"})).booleanValue();
-                downloadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column4"})).booleanValue();
-                downloadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column5"})).booleanValue();
-                downloadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column6"})).booleanValue();
-                downloadVisibilities[7] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column7"})).booleanValue();
-                downloadVisibilities[8] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column8"})).booleanValue();
-                downloadVisibilities[9] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column9"})).booleanValue();
+                downloadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column2", "visibility"})).booleanValue();
+                downloadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column3", "visibility"})).booleanValue();
+                downloadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column4", "visibility"})).booleanValue();
+                downloadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column5", "visibility"})).booleanValue();
+                downloadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column6", "visibility"})).booleanValue();
+                downloadVisibilities[7] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column7", "visibility"})).booleanValue();
+                downloadVisibilities[8] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column8", "visibility"})).booleanValue();
+                downloadVisibilities[9] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column9", "visibility"})).booleanValue();
 
                 uploadVisibilities = new boolean[7];
                 uploadVisibilities[0] = true;
-                uploadVisibilities[1] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column1"})).booleanValue();
-                uploadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column2"})).booleanValue();
-                uploadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column3"})).booleanValue();
-                uploadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column4"})).booleanValue();
-                uploadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column5"})).booleanValue();
-                uploadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column6"})).booleanValue();
+                uploadVisibilities[1] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column1", "visibility"})).booleanValue();
+                uploadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column2", "visibility"})).booleanValue();
+                uploadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column3", "visibility"})).booleanValue();
+                uploadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column4", "visibility"})).booleanValue();
+                uploadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column5", "visibility"})).booleanValue();
+                uploadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column6", "visibility"})).booleanValue();
             }
             else{
                 downloadVisibilities = new boolean[10];
@@ -746,55 +749,55 @@ public class PropertiesManager
 
     public void save(){
         try{
-            setAttributeByTagName(new String[]{"options", "location", "main", "x"}, mainXY.x);
-            setAttributeByTagName(new String[]{"options", "location", "main", "y"}, mainXY.y);
-            setAttributeByTagName(new String[]{"options", "location", "main", "width"}, mainDimension.width);
-            setAttributeByTagName(new String[]{"options", "location", "main", "height"}, mainDimension.height);
+            setAttributeByTagName(new String[]{"options", "location", "x"}, mainXY.x);
+            setAttributeByTagName(new String[]{"options", "location", "y"}, mainXY.y);
+            setAttributeByTagName(new String[]{"options", "location", "width"}, mainDimension.width);
+            setAttributeByTagName(new String[]{"options", "location", "height"}, mainDimension.height);
 
-            setAttributeByTagName(new String[]{"options", "location", "download", "column0"}, downloadWidths[0]);
-            setAttributeByTagName(new String[]{"options", "location", "download", "column1"}, downloadWidths[1]);
-            setAttributeByTagName(new String[]{"options", "location", "download", "column2"}, downloadWidths[2]);
-            setAttributeByTagName(new String[]{"options", "location", "download", "column3"}, downloadWidths[3]);
-            setAttributeByTagName(new String[]{"options", "location", "download", "column4"}, downloadWidths[4]);
-            setAttributeByTagName(new String[]{"options", "location", "download", "column5"}, downloadWidths[5]);
-            setAttributeByTagName(new String[]{"options", "location", "download", "column6"}, downloadWidths[6]);
-            setAttributeByTagName(new String[]{"options", "location", "download", "column7"}, downloadWidths[7]);
-            setAttributeByTagName(new String[]{"options", "location", "download", "column8"}, downloadWidths[8]);
-            setAttributeByTagName(new String[]{"options", "location", "download", "column9"}, downloadWidths[9]);
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column0", "width"}, downloadWidths[0]);
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column1", "width"}, downloadWidths[1]);
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column2", "width"}, downloadWidths[2]);
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column3", "width"}, downloadWidths[3]);
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column4", "width"}, downloadWidths[4]);
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column5", "width"}, downloadWidths[5]);
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column6", "width"}, downloadWidths[6]);
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column7", "width"}, downloadWidths[7]);
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column8", "width"}, downloadWidths[8]);
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column9", "width"}, downloadWidths[9]);
 
-            setAttributeByTagName(new String[]{"options", "location", "upload", "column0"}, uploadWidths[0]);
-            setAttributeByTagName(new String[]{"options", "location", "upload", "column1"}, uploadWidths[1]);
-            setAttributeByTagName(new String[]{"options", "location", "upload", "column2"}, uploadWidths[2]);
-            setAttributeByTagName(new String[]{"options", "location", "upload", "column3"}, uploadWidths[3]);
-            setAttributeByTagName(new String[]{"options", "location", "upload", "column4"}, uploadWidths[4]);
-            setAttributeByTagName(new String[]{"options", "location", "upload", "column5"}, uploadWidths[5]);
-            setAttributeByTagName(new String[]{"options", "location", "upload", "column6"}, uploadWidths[6]);
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column0", "width"}, uploadWidths[0]);
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column1", "width"}, uploadWidths[1]);
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column2", "width"}, uploadWidths[2]);
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column3", "width"}, uploadWidths[3]);
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column4", "width"}, uploadWidths[4]);
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column5", "width"}, uploadWidths[5]);
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column6", "width"}, uploadWidths[6]);
 
-            setAttributeByTagName(new String[]{"options", "location", "server", "column0"}, serverWidths[0]);
-            setAttributeByTagName(new String[]{"options", "location", "server", "column1"}, serverWidths[1]);
-            setAttributeByTagName(new String[]{"options", "location", "server", "column2"}, serverWidths[2]);
-            setAttributeByTagName(new String[]{"options", "location", "server", "column3"}, serverWidths[3]);
+            setAttributeByTagName(new String[]{"options", "columns", "server", "column0", "width"}, serverWidths[0]);
+            setAttributeByTagName(new String[]{"options", "columns", "server", "column1", "width"}, serverWidths[1]);
+            setAttributeByTagName(new String[]{"options", "columns", "server", "column2", "width"}, serverWidths[2]);
+            setAttributeByTagName(new String[]{"options", "columns", "server", "column3", "width"}, serverWidths[3]);
 
-            setAttributeByTagName(new String[]{"options", "location", "share", "column0"}, shareWidths[0]);
-            setAttributeByTagName(new String[]{"options", "location", "share", "column1"}, shareWidths[1]);
-            setAttributeByTagName(new String[]{"options", "location", "share", "column2"}, shareWidths[2]);
+            setAttributeByTagName(new String[]{"options", "columns", "share", "column0", "width"}, shareWidths[0]);
+            setAttributeByTagName(new String[]{"options", "columns", "share", "column1", "width"}, shareWidths[1]);
+            setAttributeByTagName(new String[]{"options", "columns", "share", "column2", "width"}, shareWidths[2]);
 
-            setAttributeByTagName(new String[]{"options", "visibility", "download", "column1"}, Boolean.toString(downloadVisibilities[1]));
-            setAttributeByTagName(new String[]{"options", "visibility", "download", "column2"}, Boolean.toString(downloadVisibilities[2]));
-            setAttributeByTagName(new String[]{"options", "visibility", "download", "column3"}, Boolean.toString(downloadVisibilities[3]));
-            setAttributeByTagName(new String[]{"options", "visibility", "download", "column4"}, Boolean.toString(downloadVisibilities[4]));
-            setAttributeByTagName(new String[]{"options", "visibility", "download", "column5"}, Boolean.toString(downloadVisibilities[5]));
-            setAttributeByTagName(new String[]{"options", "visibility", "download", "column6"}, Boolean.toString(downloadVisibilities[6]));
-            setAttributeByTagName(new String[]{"options", "visibility", "download", "column7"}, Boolean.toString(downloadVisibilities[7]));
-            setAttributeByTagName(new String[]{"options", "visibility", "download", "column8"}, Boolean.toString(downloadVisibilities[8]));
-            setAttributeByTagName(new String[]{"options", "visibility", "download", "column9"}, Boolean.toString(downloadVisibilities[9]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column1", "visibility"}, Boolean.toString(downloadVisibilities[1]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column2", "visibility"}, Boolean.toString(downloadVisibilities[2]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column3", "visibility"}, Boolean.toString(downloadVisibilities[3]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column4", "visibility"}, Boolean.toString(downloadVisibilities[4]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column5", "visibility"}, Boolean.toString(downloadVisibilities[5]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column6", "visibility"}, Boolean.toString(downloadVisibilities[6]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column7", "visibility"}, Boolean.toString(downloadVisibilities[7]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column8", "visibility"}, Boolean.toString(downloadVisibilities[8]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column9", "visibility"}, Boolean.toString(downloadVisibilities[9]));
 
-            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column1"}, Boolean.toString(uploadVisibilities[1]));
-            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column2"}, Boolean.toString(uploadVisibilities[2]));
-            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column3"}, Boolean.toString(uploadVisibilities[3]));
-            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column4"}, Boolean.toString(uploadVisibilities[4]));
-            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column5"}, Boolean.toString(uploadVisibilities[5]));
-            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column6"}, Boolean.toString(uploadVisibilities[6]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column1", "visibility"}, Boolean.toString(uploadVisibilities[1]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column2", "visibility"}, Boolean.toString(uploadVisibilities[2]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column3", "visibility"}, Boolean.toString(uploadVisibilities[3]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column4", "visibility"}, Boolean.toString(uploadVisibilities[4]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column5", "visibility"}, Boolean.toString(uploadVisibilities[5]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column6", "visibility"}, Boolean.toString(uploadVisibilities[6]));
 
             saveDom();
         }

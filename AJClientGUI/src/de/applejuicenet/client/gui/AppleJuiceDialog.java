@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.82 2004/01/20 10:34:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.83 2004/01/20 11:18:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.83  2004/01/20 11:18:03  maj0r
+ * Format der properties.xml geaendert.
+ *
  * Revision 1.82  2004/01/20 10:34:07  maj0r
  * Focus bei der Anzeige des Dialogs nach Verstecken per TrayIcon korrigiert.
  *
@@ -1232,53 +1235,75 @@ public class AppleJuiceDialog
             "properties.xml";
         StringBuffer xmlData = new StringBuffer();
 
-        xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        xmlData.append("<root>");
+        xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
+        xmlData.append("<root>\r\n");
         xmlData.append(
             "    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\" ");
         xmlData.append(
-            "themes=\"true\" defaulttheme=\"aquathemepack\" loadplugins=\"true\"");
+            "themes=\"true\" defaulttheme=\"aquathemepack\" loadplugins=\"true\" ");
         xmlData.append(
-            "             linklistenerport=\"8768\" versionsinfo=\"1\" >");
+            "linklistenerport=\"8768\" versionsinfo=\"1\" >\r\n");
         xmlData.append(
-            "        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>");
-        xmlData.append("        <logging level=\"INFO\"/>");
-        xmlData.append("        <download uebersicht=\"true\"/>");
-        xmlData.append("        <farben aktiv=\"true\">");
+            "        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>\r\n");
+        xmlData.append("        <logging level=\"INFO\"/>\r\n");
+        xmlData.append("        <download uebersicht=\"true\"/>\r\n");
+        xmlData.append("        <farben aktiv=\"true\">\r\n");
         xmlData.append(
-            "            <hintergrund downloadFertig=\"-13382656\" quelle=\"-205\"/>");
-        xmlData.append("        </farben>");
-        xmlData.append("        <location>");
+            "            <hintergrund downloadFertig=\"-13382656\" quelle=\"-205\"/>\r\n");
+        xmlData.append("        </farben>\r\n");
         xmlData.append(
-            "            <main height=\"\" width=\"\" x=\"\" y=\"\"/>");
+            "        <location height=\"\" width=\"\" x=\"\" y=\"\"/>\r\n");
+        xmlData.append("        <columns>\r\n");
+        xmlData.append("                <download>\r\n");
         xmlData.append(
-            "            <download column0=\"80\" column1=\"80\" column2=\"80\"");
+            "                        <column0 width=\"80\" index=\"0\" />\r\n");
+        xmlData.append("                        <column1 width=\"80\" visibility=\"true\" index=\"1\" />\r\n");
+        xmlData.append("                        <column2 width=\"80\" visibility=\"true\" index=\"2\" />\r\n");
+        xmlData.append("                        <column3 width=\"80\" visibility=\"true\" index=\"3\" />\r\n");
+        xmlData.append("                        <column4 width=\"81\" visibility=\"true\" index=\"4\" />\r\n");
+        xmlData.append("                        <column5 width=\"80\" visibility=\"true\" index=\"5\" />\r\n");
+        xmlData.append("                        <column6 width=\"81\" visibility=\"true\" index=\"6\" />\r\n");
+        xmlData.append("                        <column7 width=\"80\" visibility=\"true\" index=\"7\" />\r\n");
+        xmlData.append("                        <column8 width=\"81\" visibility=\"true\" index=\"8\" />\r\n");
+        xmlData.append("                        <column9 width=\"80\" visibility=\"true\" index=\"9\" />\r\n");
+        xmlData.append("                </download>\r\n");
+        xmlData.append("                <upload>\r\n");
         xmlData.append(
-            "                column3=\"80\" column4=\"81\" column5=\"80\" column6=\"81\"");
+            "                        <column0 width=\"136\" index=\"0\" />\r\n");
+        xmlData.append("                        <column1 width=\"111\" visibility=\"true\" index=\"1\" />\r\n");
+        xmlData.append("                        <column2 width=\"111\" visibility=\"true\" index=\"2\" />\r\n");
+        xmlData.append("                        <column3 width=\"111\" visibility=\"true\" index=\"3\" />\r\n");
+        xmlData.append("                        <column4 width=\"111\" visibility=\"true\" index=\"4\" />\r\n");
+        xmlData.append("                        <column5 width=\"112\" visibility=\"true\" index=\"5\" />\r\n");
+        xmlData.append("                        <column6 width=\"111\" visibility=\"true\" index=\"6\" />\r\n");
+        xmlData.append("                </upload>\r\n");
+        xmlData.append("                <server>\r\n");
         xmlData.append(
-            "                column7=\"80\" column8=\"81\" column9=\"80\"/>");
+            "                        <column0 width=\"201\" index=\"0\" />\r\n");
+        xmlData.append("                        <column1 width=\"201\" visibility=\"true\" index=\"1\" />\r\n");
+        xmlData.append("                        <column2 width=\"201\" visibility=\"true\" index=\"2\" />\r\n");
+        xmlData.append("                        <column3 width=\"200\" visibility=\"true\" index=\"3\" />\r\n");
+        xmlData.append("                </server>\r\n");
+        xmlData.append("                <search>\r\n");
         xmlData.append(
-            "            <upload column0=\"136\" column1=\"111\" column2=\"111\"");
-        xmlData.append("                column3=\"111\" column4=\"111\" column5=\"112\" column6=\"111\"/>");
-        xmlData.append("            <server column0=\"201\" column1=\"201\" column2=\"201\" column3=\"200\"/>");
+            "                        <column0 width=\"103\" index=\"0\" />\r\n");
+        xmlData.append("                        <column1 width=\"103\" visibility=\"true\" index=\"1\" />\r\n");
+        xmlData.append("                        <column2 width=\"103\" visibility=\"true\" index=\"2\" />\r\n");
+        xmlData.append("                        <column3 width=\"103\" visibility=\"true\" index=\"3\" />\r\n");
+        xmlData.append("                        <column4 width=\"103\" visibility=\"true\" index=\"4\" />\r\n");
+        xmlData.append("                        <column5 width=\"103\" visibility=\"true\" index=\"5\" />\r\n");
+        xmlData.append("                </search>\r\n");
+        xmlData.append("                <share>\r\n");
         xmlData.append(
-            "            <search column0=\"103\" column1=\"103\" column2=\"103\"");
+            "                        <column0 width=\"194\" index=\"0\" />\r\n");
+        xmlData.append("                        <column1 width=\"195\" visibility=\"true\" index=\"1\" />\r\n");
+        xmlData.append("                        <column2 width=\"194\" visibility=\"true\" index=\"2\" />\r\n");
+        xmlData.append("                </share>\r\n");
+        xmlData.append("        </columns>\r\n");
+        xmlData.append("        <browser file=\"\"/>\r\n");
         xmlData.append(
-            "                column3=\"103\" column4=\"103\" column5=\"103\"/>");
-        xmlData.append(
-            "            <share column0=\"194\" column1=\"195\" column2=\"194\"/>");
-        xmlData.append("        </location>");
-        xmlData.append("        <visibility>");
-        xmlData.append("            <download column1=\"true\" column2=\"true\" column3=\"true\"");
-        xmlData.append("                column4=\"true\" column5=\"true\" column6=\"true\"");
-        xmlData.append("                column7=\"true\" column8=\"true\" column9=\"true\"/>");
-        xmlData.append("            <upload column1=\"true\" column2=\"true\" column3=\"true\"");
-        xmlData.append("                column4=\"true\" column5=\"true\" column6=\"true\"/>");
-        xmlData.append("        </visibility>");
-        xmlData.append("        <browser file=\"\"/>");
-        xmlData.append(
-            "        <proxy host=\"\" port=\"\" use=\"false\" userpass=\"=\"/>");
-        xmlData.append("    </options>");
+            "        <proxy host=\"\" port=\"\" use=\"false\" userpass=\"=\"/>\r\n");
+        xmlData.append("    </options>\r\n");
         xmlData.append("</root>");
 
         FileWriter fileWriter = null;
