@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.34 2003/08/09 10:57:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.35 2003/08/09 16:47:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.35  2003/08/09 16:47:42  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.34  2003/08/09 10:57:54  maj0r
  * Upload- und DownloadTabelle weitergeführt.
  *
@@ -95,6 +98,8 @@ public class DataManager { //Singleton-Implementierung
   private Version coreVersion;
   private Timer modifiedTimer;
   private HashMap share = null;
+
+  private static boolean checkInProgress = false;
 
   private Logger logger;
 
@@ -203,7 +208,7 @@ public class DataManager { //Singleton-Implementierung
     String result;
     try {
       String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-      result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
+      result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                          "/function/setsettings?password=" + password + "&" + parameters);
     }
     catch (WebSiteNotFoundException ex) {
@@ -217,12 +222,16 @@ public class DataManager { //Singleton-Implementierung
   }
 
   public synchronized void updateModifiedXML() {
+    if (checkInProgress)
+        return;
+    checkInProgress = true;
     modifiedXML.update();
     informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
     informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
     informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
     informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
     informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
+    checkInProgress = false;
   }
 
   public boolean connectToServer(int id) {
@@ -238,7 +247,7 @@ public class DataManager { //Singleton-Implementierung
       logger.info("Verbinde mit '" + serverDO.getName() + "'...");
       try {
         String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-        result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+        result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                            "/function/serverlogin?password=" + password + "&id=" + id);
       }
       catch (WebSiteNotFoundException ex) {
@@ -264,7 +273,7 @@ public class DataManager { //Singleton-Implementierung
         logger.info("Setze '" + shareDO.getShortfilename() + "' auf Prioritaet " + prioritaet + "...");
         try {
           String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
+          result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                              "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet);
         }
         catch (WebSiteNotFoundException ex) {
@@ -283,7 +292,7 @@ public class DataManager { //Singleton-Implementierung
         logger.info("Downloade '" + link + "...");
         try {
           String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
+          result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                              "/function/processlink?password=" + password + "&link=" + link );
         }
         catch (WebSiteNotFoundException ex) {
@@ -309,7 +318,7 @@ public class DataManager { //Singleton-Implementierung
         logger.info("Setze '" + downloadDO.getFilename() + "' auf PowerDownload " + powerDownload + "...");
         try {
           String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
+          result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                              "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload);
         }
         catch (WebSiteNotFoundException ex) {
@@ -328,14 +337,18 @@ public class DataManager { //Singleton-Implementierung
   }
 
   public NetworkInfo getNetworkInfo() {
+    if (checkInProgress)
+        modifiedXML.getNetworkInfo();
+    checkInProgress = true;
     modifiedXML.update();
+    checkInProgress = false;
     return modifiedXML.getNetworkInfo();
   }
 
   public static boolean istCoreErreichbar() {
     try {
       String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-      String testData = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
+      String testData = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                   "/xml/information.xml?password=" + password);
     }
     catch (WebSiteNotFoundException ex) {
@@ -445,4 +458,8 @@ public class DataManager { //Singleton-Implementierung
         share = shareXML.getShare();
     return share;
   }
+
+    public static boolean isCheckInProgress() {
+        return checkInProgress;
+    }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="3" relativePaths="false">
   <component name="ProjectRootManager" version="2">
-    <jdk name="java version &quot;1.4.2-beta&quot;" />
+    <jdk name="java version &quot;1.4.2&quot;" />
     <projectPath>
       <root type="composite">
         <root type="simple" url="file://$PROJECT_DIR$/src" />
@@ -10,13 +10,13 @@
     <sourcePath>
       <root type="composite">
         <root type="simple" url="file://$PROJECT_DIR$/src" />
-        <root type="jdk" rootType="sourcePath" name="java version &quot;1.4.2-beta&quot;" />
+        <root type="jdk" rootType="sourcePath" name="java version &quot;1.4.2&quot;" />
       </root>
     </sourcePath>
     <classPath>
       <root type="composite">
         <root type="output" />
-        <root type="jdk" rootType="classPath" name="java version &quot;1.4.2-beta&quot;" />
+        <root type="jdk" rootType="classPath" name="java version &quot;1.4.2&quot;" />
         <root type="simple" url="jar://$PROJECT_DIR$/tools/log4j-1.2.8.jar!/" />
         <root type="simple" url="jar://$PROJECT_DIR$/tools/pack.jar!/" />
         <root type="simple" url="jar://$PROJECT_DIR$/tools/xercesImpl.jar!/" />
@@ -30,7 +30,7 @@
     </excludePath>
     <javadocPath>
       <root type="composite">
-        <root type="jdk" rootType="javadocPath" name="java version &quot;1.4.2-beta&quot;" />
+        <root type="jdk" rootType="javadocPath" name="java version &quot;1.4.2&quot;" />
       </root>
     </javadocPath>
     <assert_keyword enabled="no" />

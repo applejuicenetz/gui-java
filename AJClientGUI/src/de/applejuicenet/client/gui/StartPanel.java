@@ -6,9 +6,10 @@ import javax.swing.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.11 2003/08/03 19:54:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.12 2003/08/09 16:47:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +18,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.12  2003/08/09 16:47:42  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.11  2003/08/03 19:54:05  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -107,8 +111,9 @@ public class StartPanel
 
     constraints.gridy = 1;
     constraints.insets.left = 15;
+    String coreVersion = DataManager.getInstance().getCoreVersion().getVersion();
     panel3.add(new JLabel("GUI: " + parent.GUI_VERSION + " Controller: " + DataManager.DATAMANAGER_VERSION + " Core: " +
-                          DataManager.getInstance().getCoreVersion().getVersion()),
+                          coreVersion),
                constraints);
 
     constraints.gridy = 2;
@@ -117,8 +122,6 @@ public class StartPanel
     ImageIcon icon3 = im.getIcon("warnung");
     JLabel label3 = new JLabel(icon3);
     panel3.add(label3, constraints);
-
-    NetworkInfo netInfo = DataManager.getInstance().getNetworkInfo();
 
     constraints.gridx = 1;
     warnungen = new JLabel("<html><font><h2>Warnungen</h2></font></html>");
@@ -235,6 +238,17 @@ public class StartPanel
                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"mainform", "html15"})) +
                       "</h2></font></html>");
+
+      //http://www.applejuicenet.de/inprog/news.php?version=
+    try {
+        String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.de", 80, HtmlLoader.GET,
+                "/inprog/news.php?version=" + DataManager.getInstance().getCoreVersion().getVersion());
+        htmlText = "<html>" + htmlText + "</html>";
+        nachrichten.setText(htmlText);
+    }
+    catch (WebSiteNotFoundException e) {
+        e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+    }
   }
 
   public void fireContentChanged(int type, Object content) {

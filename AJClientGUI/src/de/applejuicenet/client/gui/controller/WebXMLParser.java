@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.4 2003/08/02 12:03:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.5 2003/08/09 16:47:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.5  2003/08/09 16:47:42  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.4  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -71,12 +74,12 @@ public abstract class WebXMLParser
     String xmlData = null;
     try {
       if (useTimestamp) {
-        xmlData = HtmlLoader.getHtmlContent(host, HtmlLoader.GET,
+        xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
                                             xmlCommand + "?password=" + password + "&timestamp=" +
                                             timestamp + parameters);
       }
       else {
-        xmlData = HtmlLoader.getHtmlContent(host, HtmlLoader.GET,
+        xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
                                             xmlCommand + "?password=" + password + "&" + parameters);
       }
     }
