@@ -48,16 +48,19 @@ import java.util.Date;
 import javax.swing.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.3 2003/11/05 15:46:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>              modifizierte, gekuerzte Sun-Source</p>
- * <p>Copyright: open-source</p>
+ * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MemoryMonitor.java,v $
+ * Revision 1.4  2003/12/29 16:04:17  maj0r
+ * Header korrigiert.
+ *
  * Revision 1.3  2003/11/05 15:46:48  maj0r
  * Klammerung korrigiert.
  *

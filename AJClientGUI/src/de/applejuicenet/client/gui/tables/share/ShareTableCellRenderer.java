@@ -8,15 +8,18 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareTableCellRenderer.java,v 1.2 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareTableCellRenderer.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: open-source</p>
+ * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareTableCellRenderer.java,v $
+ * Revision 1.3  2003/12/29 16:04:17  maj0r
+ * Header korrigiert.
+ *
  * Revision 1.2  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *

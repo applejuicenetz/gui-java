@@ -7,15 +7,18 @@ import javax.swing.event.TreeModelEvent;
 import java.util.Vector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/ShareSelectionTreeModel.java,v 1.1 2003/08/15 14:43:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/ShareSelectionTreeModel.java,v 1.2 2003/12/29 16:04:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: open-source</p>
+ * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareSelectionTreeModel.java,v $
+ * Revision 1.2  2003/12/29 16:04:17  maj0r
+ * Header korrigiert.
+ *
  * Revision 1.1  2003/08/15 14:43:38  maj0r
  * DirectoryTree eingefügt, aber noch nicht fertiggestellt.
  *

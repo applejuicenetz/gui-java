@@ -2,17 +2,20 @@ package de.applejuicenet.client.gui.tables;
 
 import javax.swing.tree.*;
 import javax.swing.event.*;
- 
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/AbstractTreeTableModel.java,v 1.3 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/AbstractTreeTableModel.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: open-source</p>
+ * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AbstractTreeTableModel.java,v $
+ * Revision 1.4  2003/12/29 16:04:17  maj0r
+ * Header korrigiert.
+ *
  * Revision 1.3  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -22,9 +25,9 @@ import javax.swing.event.*;
 public abstract class AbstractTreeTableModel implements TreeTableModel {
     protected Object root;
     protected EventListenerList listenerList = new EventListenerList();
-  
+
     public AbstractTreeTableModel(Object root) {
-        this.root = root; 
+        this.root = root;
     }
 
     public Object getRoot() {
@@ -32,18 +35,18 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
     }
 
     public boolean isLeaf(Object node) {
-        return getChildCount(node) == 0; 
+        return getChildCount(node) == 0;
     }
 
     public void valueForPathChanged(TreePath path, Object newValue) {}
 
     public int getIndexOfChild(Object parent, Object child) {
         for (int i = 0; i < getChildCount(parent); i++) {
-	    if (getChild(parent, i).equals(child)) { 
-	        return i; 
+	    if (getChild(parent, i).equals(child)) {
+	        return i;
 	    }
         }
-	return -1; 
+	return -1;
     }
 
     public void addTreeModelListener(TreeModelListener l) {
@@ -55,7 +58,7 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
     }
 
     protected void fireTreeNodesChanged(Object source, Object[] path,
-                                        int[] childIndices, 
+                                        int[] childIndices,
                                         Object[] children) {
         Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
@@ -65,12 +68,12 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
                     e = new TreeModelEvent(source, path,
                                            childIndices, children);
                 ((TreeModelListener)listeners[i+1]).treeNodesChanged(e);
-            }          
+            }
         }
     }
 
     protected void fireTreeNodesInserted(Object source, Object[] path,
-                                        int[] childIndices, 
+                                        int[] childIndices,
                                         Object[] children) {
         Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
@@ -80,12 +83,12 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
                     e = new TreeModelEvent(source, path,
                                            childIndices, children);
                 ((TreeModelListener)listeners[i+1]).treeNodesInserted(e);
-            }          
+            }
         }
     }
 
     protected void fireTreeNodesRemoved(Object source, Object[] path,
-                                        int[] childIndices, 
+                                        int[] childIndices,
                                         Object[] children) {
         Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
@@ -95,12 +98,12 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
                     e = new TreeModelEvent(source, path,
                                            childIndices, children);
                 ((TreeModelListener)listeners[i+1]).treeNodesRemoved(e);
-            }          
+            }
         }
     }
 
     protected void fireTreeStructureChanged(Object source, Object[] path,
-                                        int[] childIndices, 
+                                        int[] childIndices,
                                         Object[] children) {
         Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
@@ -110,7 +113,7 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
                     e = new TreeModelEvent(source, path,
                                            childIndices, children);
                 ((TreeModelListener)listeners[i+1]).treeStructureChanged(e);
-            }          
+            }
         }
     }
 
