@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.1 2003/08/11 16:52:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.2 2003/08/11 19:41:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PartListDO.java,v $
+ * Revision 1.2  2003/08/11 19:41:09  maj0r
+ * HashSet ggn ArrayList getauscht, um die Reihenfolge der Parts zu behalten.
+ *
  * Revision 1.1  2003/08/11 16:52:22  maj0r
  * DownloadPartList eingefügt.
  *
@@ -18,6 +21,7 @@ package de.applejuicenet.client.shared.dac;
 
 import java.awt.*;
 import java.util.HashSet;
+import java.util.ArrayList;
 
 public class PartListDO {
     public static final Color COLOR_TYPE_OK = Color.BLACK;
@@ -35,7 +39,7 @@ public class PartListDO {
 
     private DownloadDO downloadDO;
     private Long groesse;
-    private HashSet parts = new HashSet();
+    private ArrayList parts = new ArrayList();
 
     public PartListDO(DownloadDO downloadDO){
         this.downloadDO = downloadDO;
