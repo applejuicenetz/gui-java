@@ -31,7 +31,7 @@ import java.awt.Dimension;
 import javax.swing.text.Document;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.52 2004/05/24 06:05:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.53 2004/05/24 07:29:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -132,7 +132,7 @@ public class StartPanel
         sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         panel1.add(label1, BorderLayout.WEST);
-        panel1.add(sp, BorderLayout.EAST);
+        panel1.add(sp, BorderLayout.CENTER);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
