@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.97 2004/01/27 18:53:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.98 2004/01/28 12:34:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -275,7 +275,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String GUI_VERSION = "0.54.4";
+    public static final String GUI_VERSION = "0.55.1";
 
     private HashSet downloadListener;
     private HashSet searchListener;
@@ -388,23 +388,11 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                         String[] {
                         "applejuice", "session", "id"}
                         , false);
-                    long time = System.currentTimeMillis();
                     if (logger.isEnabledFor(Level.DEBUG)) {
                         logger.debug("SessionID = " + sessionId);
                     }
                     int versuch = 0;
                     while (!isInterrupted()) {
-                        if (System.currentTimeMillis() > time + 20000) {
-                            session.reload("", false);
-                            sessionId = session.getFirstAttrbuteByTagName(new
-                                String[] {
-                                "applejuice", "session", "id"}
-                                , false);
-                            if (logger.isEnabledFor(Level.DEBUG)) {
-                                logger.debug("SessionID = " + sessionId);
-                            }
-                        }
-                        time = System.currentTimeMillis();
                         if (updateModifiedXML(sessionId)){
                             versuch = 0;
                         }
@@ -587,20 +575,26 @@ public class ApplejuiceFassade { //Singleton-Implementierung
 
     public synchronized boolean updateModifiedXML(String sessionId) {
         try {
-            modifiedXML.update(sessionId);
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
-                    informDataUpdateListener(DataUpdateListener.
-                                             DOWNLOAD_CHANGED);
-                    informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
-                    informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
-                    informDataUpdateListener(DataUpdateListener.SPEED_CHANGED);
-                    informDataUpdateListener(DataUpdateListener.SEARCH_CHANGED);
-                    informDataUpdateListener(DataUpdateListener.
-                                             INFORMATION_CHANGED);
-                }
-            });
+            if (modifiedXML.update(sessionId)){
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        informDataUpdateListener(DataUpdateListener.
+                                                 SERVER_CHANGED);
+                        informDataUpdateListener(DataUpdateListener.
+                                                 DOWNLOAD_CHANGED);
+                        informDataUpdateListener(DataUpdateListener.
+                                                 UPLOAD_CHANGED);
+                        informDataUpdateListener(DataUpdateListener.
+                                                 NETINFO_CHANGED);
+                        informDataUpdateListener(DataUpdateListener.
+                                                 SPEED_CHANGED);
+                        informDataUpdateListener(DataUpdateListener.
+                                                 SEARCH_CHANGED);
+                        informDataUpdateListener(DataUpdateListener.
+                                                 INFORMATION_CHANGED);
+                    }
+                });
+            }
             return true;
         }
         catch(RuntimeException re){

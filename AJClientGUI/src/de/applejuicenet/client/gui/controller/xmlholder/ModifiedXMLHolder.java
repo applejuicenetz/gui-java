@@ -21,9 +21,10 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
+import org.apache.xerces.dom.DeferredElementImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.6 2004/01/24 08:10:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.7 2004/01/28 12:34:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +33,10 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.7  2004/01/28 12:34:21  maj0r
+ * Beim Start Filter eingebaut.
+ * Session wird nun besser aufrecht erhalten.
+ *
  * Revision 1.6  2004/01/24 08:10:24  maj0r
  * Anzahl der Verbindungsversuche eingebaut.
  *
@@ -189,6 +194,11 @@ public class ModifiedXMLHolder
     private HashMap searchMap = new HashMap();
     private NetworkInfo netInfo;
     private Information information;
+    private int count = 0;
+    private String filter = "";
+    private String sessionKontext = "";
+
+    private SecurerXMLHolder securerHolder = new SecurerXMLHolder();
 
     private int connectedWithServerId = -1;
     private int tryConnectToServer = -1;
@@ -222,35 +232,120 @@ public class ModifiedXMLHolder
         return netInfo;
     }
 
-    public synchronized void update(String sessionId) {
-        reload("&session=" + sessionId);
-        updateIDs();
-        updateServer();
-        updateDownloads();
-        updateNetworkInfo();
-        updateUploads();
-        updateSuche();
-        getInformation(true);
+    public synchronized boolean update(String sessionId) {
+        sessionKontext = "&session=" + sessionId;
+        if (tryToReload(sessionKontext)){
+            switch (count){
+                case 0:{
+                    updateIDs();
+                    updateDownloads();
+                    updateUploads();
+                    updateServer();
+                    updateNetworkInfo();
+                    getInformation(true);
+                    break;
+                }
+                case 1:{
+                    updateDownloads();
+                    updateUploads();
+                    updateServer();
+                    updateNetworkInfo();
+                    getInformation(true);
+                    break;
+                }
+                default:{
+                    updateIDs();
+                    updateDownloads();
+                    updateUploads();
+                    updateServer();
+                    updateNetworkInfo();
+                    getInformation(true);
+                    updateSuche();
+                }
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private boolean tryToReload(String parameters){
+        if (reloadInProgress) {
+            return false;
+        }
+        else {
+            switch (count){
+                //lazy loading
+                case 0:{
+                    count ++;
+                    filter = "&filter=ids;down;uploads;server;informations";
+                    break;
+                }
+                case 1:{
+                    count ++;
+                    filter = "&filter=informations;user";
+                    break;
+                }
+                case 2:{
+                    count ++;
+                    filter = ""; // kein Filter
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+            reload(parameters + filter);
+            return true;
+        }
+    }
+
+    private void secureSession() {
+        try{
+            securerHolder.secure(sessionKontext);
+        }
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", ex);
+            }
+        }
     }
 
     public void reload(String parameters) {
-        if (reloadInProgress) {
-            return;
-        }
-        else {
-            try {
-                reloadInProgress = true;
-                super.reload(parameters, true);
-                reloadInProgress = false;
-            }
-            catch(WebSiteNotFoundException webSiteNotFound){
-                reloadInProgress = false;
-                throw new RuntimeException();
-            }
-            catch (Exception ex) {
-                if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error("Unbehandelte Exception", ex);
+        try {
+            reloadInProgress = true;
+            Thread securer = new Thread(){
+                public void run(){
+                    long time = System.currentTimeMillis();
+                    while (!interrupted()) {
+                        try {
+                            sleep(5000);
+                            if (System.currentTimeMillis() > time + 16000) {
+                                time = System.currentTimeMillis();
+                                secureSession();
+//                                System.out.println("session secured");
+                            }
+                        }
+                        catch (InterruptedException ex) {
+                            interrupt();
+                        }
+                    }
                 }
+            };
+            securer.start();
+            super.reload(parameters, true);
+            securer.interrupt();
+            securer = null;
+            reloadInProgress = false;
+        }
+        catch (WebSiteNotFoundException webSiteNotFound) {
+            reloadInProgress = false;
+            throw new RuntimeException();
+        }
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", ex);
             }
         }
     }
@@ -367,10 +462,16 @@ public class ModifiedXMLHolder
 
     private void updateIDs() {
         try {
+            NodeList nodes = document.getElementsByTagName("removed");
+            if (nodes == null || nodes.item(0) == null){
+                return;
+            }
+            nodes = nodes.item(0).getChildNodes();
+            if (nodes.getClass() == DeferredElementImpl.class){
+                return;
+            }
             Element e = null;
             String id = null;
-            NodeList nodes = document.getElementsByTagName("removed");
-            nodes = nodes.item(0).getChildNodes();
             int size = nodes.getLength();
             MapSetStringKey toRemoveKey;
             DownloadDO downloadDO;
