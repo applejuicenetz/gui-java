@@ -68,7 +68,7 @@ import java.io.*;
 import java.awt.datatransfer.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.101 2004/04/01 09:08:21 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.102 2004/04/01 12:26:56 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -77,6 +77,9 @@ import java.awt.datatransfer.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.102  2004/04/01 12:26:56  loevenwong
+ * Popupmenü erscheint jetzt neben dem Cursor.
+ *
  * Revision 1.101  2004/04/01 09:08:21  loevenwong
  * Rechte Maustaste im Download-Textfeld eingebaut.
  *
@@ -421,6 +424,9 @@ public class DownloadPanel
         item6 = new JMenuItem("Fertige Übertragungen entfernen");
         item7 = new JMenuItem("Partliste anzeigen");
 
+        menu = new JPopupMenu();
+        einfuegen = new JMenuItem("Einfügen");
+
         IconManager im = IconManager.getInstance();
         item1.setIcon(im.getIcon("abbrechen"));
         item2.setIcon(im.getIcon("pause"));
@@ -430,6 +436,7 @@ public class DownloadPanel
         item7.setIcon(im.getIcon("partliste"));
         itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
         itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
+        einfuegen.setIcon(im.getIcon("clipboard"));
 
         popup.add(item1);
         popup.add(item2);
@@ -441,8 +448,6 @@ public class DownloadPanel
         popup.add(item7);
         item7.setVisible(false);
 
-        menu = new JPopupMenu();
-        einfuegen = new JMenuItem("Einfügen");
         einfuegen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 linkMenuActionPerformed(e);
@@ -1277,25 +1282,23 @@ public class DownloadPanel
 
     private void showLinkMenu(int x, int y)
     {
-        menu.show(this, x, y);
+        menu.show(downloadLink, x, y);
     }
 
     private void linkMenuActionPerformed(ActionEvent e)
     {
-        if ("Einfügen".equals(e.getActionCommand())) {
-            Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
-            Transferable transferable = cb.getContents(this);
-            if (transferable != null) {
-                String data = null;
-                try {
-                    data = (String) transferable.getTransferData(DataFlavor.
-                        stringFlavor);
-                }
-                catch (Exception ex) {
-                    this.downloadLink.setText("Error");
-                }
-                this.downloadLink.setText(data);
+        Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable transferable = cb.getContents(this);
+        if (transferable != null) {
+            String data = null;
+            try {
+                data = (String) transferable.getTransferData(DataFlavor.
+                    stringFlavor);
             }
+            catch (Exception ex) {
+                this.downloadLink.setText("Error");
+            }
+            this.downloadLink.setText(data);
         }
     }
 
