@@ -11,11 +11,13 @@
    <!-- other path settings, some items to be customized locally ...  -->
    <property name="xercesImpl.jar"            location="${basedir}/tools/xercesImpl.jar"/>
    <property name="xmlParserAPIs.jar"            location="${basedir}/tools/xmlParserAPIs.jar"/>
+   <property name="log4j-1.2.8.jar"            location="${basedir}/tools/log4j-1.2.8.jar"/>
 
    <!-- classpath for compilation ... -->
    <path id="lib.path">
       <pathelement location="${xercesImpl.jar}"/>
       <pathelement location="${xmlParserAPIs.jar}"/>
+      <pathelement location="${log4j-1.2.8.jar}"/>
    </path>
 
    <!-- usage information ... -->
@@ -54,8 +56,11 @@
    <target name="create-jar" depends="gui-rebuild" description="builds appleJuice-jar">
 	<pack classes="de.applejuicenet.client.AppleJuiceClient"
 	      targetJar="${basedir}/AJCoreGUI.jar" 
-	      classpath="${gui.compiledir}"
 	      manifestMainClass="de.applejuicenet.client.AppleJuiceClient">
+           <classpath>
+           	<pathelement path="${gui.compiledir}"/>
+           	<path refid="lib.path"/>
+           </classpath>
            <additionalfileset dir="${gui.compiledir}" excludes="**/*.txt **/*.class **/*.dep2">
            </additionalfileset>
 	</pack>
