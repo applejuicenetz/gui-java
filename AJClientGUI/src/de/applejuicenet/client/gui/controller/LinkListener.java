@@ -10,9 +10,10 @@ import java.net.Socket;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import java.net.InetAddress;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.8 2004/06/14 17:15:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.9 2004/06/15 09:43:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -53,32 +54,49 @@ public class LinkListener
         try {
             while (true) {
                 Socket client = listen.accept();
-                try {
+                if (client.getInetAddress().getHostAddress().compareTo(
+                    InetAddress.getByName("localhost").getHostAddress()) == 0){
+                    try {
+                        DataInputStream in = new DataInputStream(client.
+                            getInputStream());
+                        BufferedReader reader = new BufferedReader(new
+                            InputStreamReader(in));
+                        String line = reader.readLine();
+                        if (line.indexOf("-link=") != -1) {
+                            String link = getLinkFromReadLine(line);
+                            if (link != null) {
+                                ApplejuiceFassade.getInstance().processLink(
+                                    link);
+                            }
+                        }
+                        else if (line.indexOf("-command=") != -1) {
+                            String command = line.substring(line.indexOf(
+                                "-command=") + 9).toLowerCase();
+                            if (command.startsWith("getajstats")) {
+                                PrintStream out = new PrintStream(client.
+                                    getOutputStream());
+                                out.println(ApplejuiceFassade.getInstance().
+                                            getStats());
+                            }
+                        }
+                    }
+                    catch (Exception e) {
+                        if (logger.isEnabledFor(Level.ERROR)) {
+                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                        }
+                        client.close();
+                        return;
+                    }
+                }
+                else{
                     DataInputStream in = new DataInputStream(client.
                         getInputStream());
                     BufferedReader reader = new BufferedReader(new
                         InputStreamReader(in));
-                    String line = reader.readLine();
-                    if (line.indexOf("-link=") != -1){
-                        String link = getLinkFromReadLine(line);
-                        if (link != null) {
-                            ApplejuiceFassade.getInstance().processLink(link);
-                        }
-                    }
-                    else if (line.indexOf("-command=") != -1){
-                        String command = line.substring(line.indexOf("-command=") + 9).toLowerCase();
-                        if (command.startsWith("getajstats")){
-                            PrintStream out = new PrintStream(client.getOutputStream());
-                            out.println(ApplejuiceFassade.getInstance().getStats());
-                        }
-                    }
-                }
-                catch (Exception e) {
-                    if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                    }
-                    client.close();
-                    return;
+                    reader.readLine();
+                    PrintStream out = new PrintStream(client.
+                        getOutputStream());
+                    out.println("Fuck you, little bastard !!!");
                 }
                 client.close();
             }
