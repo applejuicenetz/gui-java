@@ -25,9 +25,10 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import javax.swing.JScrollPane;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.42 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.43 2004/02/09 14:49:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +37,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.43  2004/02/09 14:49:44  maj0r
+ * Startbereich scrollbar gemacht, wenn die Darstellung zu klein ist.
+ *
  * Revision 1.42  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -318,7 +322,9 @@ public class StartPanel
 
         add(panel1, BorderLayout.NORTH);
         panel4.add(panel3, BorderLayout.NORTH);
-        add(panel4, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(panel4);
+        scrollPane.setBorder(null);
+        add(scrollPane, BorderLayout.CENTER);
         languageSelector = LanguageSelector.getInstance();
         languageSelector.addLanguageListener(this);
         Thread aktualisierungWorker = new Thread() {
@@ -354,6 +360,7 @@ public class StartPanel
                     nachrichten.setContentType("text/html");
                     nachrichten.setEditable(false);
                     nachrichten.setText(htmlText);
+                    nachrichten.setFont(label9.getFont());
                     nachrichten.addHyperlinkListener(new HyperlinkListener() {
                         public void hyperlinkUpdate(HyperlinkEvent e) {
                             if (e.getEventType() ==
