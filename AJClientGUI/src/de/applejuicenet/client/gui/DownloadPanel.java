@@ -51,7 +51,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.gui.trees.WaitNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.66 2003/12/17 17:03:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.67 2003/12/19 14:26:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -60,6 +60,9 @@ import de.applejuicenet.client.gui.trees.WaitNode;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.67  2003/12/19 14:26:58  maj0r
+ * Dau-Button zum Anzeigen der Partliste eingebaut.
+ *
  * Revision 1.66  2003/12/17 17:03:37  maj0r
  * In der Downloadtabelle nun ein Warteicon angezeigt, bis erstmalig Daten geholt wurden.
  *
@@ -214,8 +217,7 @@ public class DownloadPanel
 
     public static DownloadPanel _this;
 
-    private DownloadDOOverviewPanel downloadDOOverviewPanel = new
-        DownloadDOOverviewPanel();
+    private DownloadDOOverviewPanel downloadDOOverviewPanel;
     private JTextField downloadLink = new JTextField();
     private JButton btnStartDownload = new JButton("Download");
     private PowerDownloadPanel powerDownloadPanel;
@@ -233,7 +235,6 @@ public class DownloadPanel
     private String downloadAbbrechen;
     private String dialogTitel;
     private JMenuItem item7;
-//    private JMenuItem item8;
     private Logger logger;
     private boolean isDownloadUebersicht;
 
@@ -243,9 +244,10 @@ public class DownloadPanel
     public DownloadPanel() {
         _this = this;
         logger = Logger.getLogger(getClass());
-        powerDownloadPanel = new PowerDownloadPanel(this);
-        isDownloadUebersicht = Settings.getSettings().isDownloadUebersicht();
         try {
+            downloadDOOverviewPanel = new DownloadDOOverviewPanel(this);
+            powerDownloadPanel = new PowerDownloadPanel(this);
+            isDownloadUebersicht = Settings.getSettings().isDownloadUebersicht();
             init();
             LanguageSelector.getInstance().addLanguageListener(this);
         }
@@ -254,6 +256,10 @@ public class DownloadPanel
                 logger.error("Unbehandelte Exception", e);
             }
         }
+    }
+
+    public void tryGetPartList(){
+        item7.doClick();
     }
 
     private void init() throws Exception {
@@ -460,14 +466,17 @@ public class DownloadPanel
                     if (!powerDownloadPanel.isAutomaticPwdlActive()) {
                         powerDownloadPanel.btnPdl.setEnabled(true);
                     }
+                    downloadDOOverviewPanel.enableHoleListButton(true);
                 }
                 else if (node.getClass() == DownloadSourceDO.class) {
                     if (!powerDownloadPanel.isAutomaticPwdlActive()) {
                         powerDownloadPanel.btnPdl.setEnabled(true);
                     }
+                    downloadDOOverviewPanel.enableHoleListButton(true);
                 }
                 else{
                     powerDownloadPanel.btnPdl.setEnabled(false);
+                    downloadDOOverviewPanel.enableHoleListButton(false);
                 }
             }
 
@@ -580,6 +589,7 @@ public class DownloadPanel
     }
 
     public void registerSelected() {
+        downloadDOOverviewPanel.enableHoleListButton(false);
         if (!initialized) {
             try {
                 initialized = true;

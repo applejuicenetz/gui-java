@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.20 2003/12/16 09:06:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.21 2003/12/19 14:27:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.21  2003/12/19 14:27:16  maj0r
+ * Dau-Button zum Anzeigen der Partliste eingebaut.
+ *
  * Revision 1.20  2003/12/16 09:06:40  maj0r
  * Partliste wird nun erst nach 2 Sekunden Wartezeit geholt, um ein erneutes Klicken behandeln zu können.
  *
@@ -96,6 +99,8 @@ import java.awt.*;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DownloadDOOverviewPanel extends JPanel implements LanguageListener, DataUpdateListener{
     private DownloadPartListPanel actualDlOverviewTable = new DownloadPartListPanel();
@@ -106,11 +111,14 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
     private JLabel label1 = new JLabel("Überprüft");
     private Settings settings;
     private Logger logger;
+    private JButton holeListe = new JButton("Hole Partliste");
     private Thread partListWorkerThread = new Thread();
+    private DownloadPanel downloadPanel;
 
-    public DownloadDOOverviewPanel() {
+    public DownloadDOOverviewPanel(DownloadPanel parent) {
         logger = Logger.getLogger(getClass());
         try{
+            downloadPanel = parent;
             init();
             settings = Settings.getSettings();
             LanguageSelector.getInstance().addLanguageListener(this);
@@ -123,7 +131,12 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
         }
     }
 
+    public void enableHoleListButton(boolean enable){
+        holeListe.setEnabled(enable);
+    }
+
     private void init() {
+        holeListe.setEnabled(false);
         setLayout(new BorderLayout());
         JPanel tempPanel1 = new JPanel();
         tempPanel1.setLayout(new FlowLayout());
@@ -151,12 +164,22 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
         tempPanel1.add(green);
         tempPanel1.add(label1);
 
-        add(tempPanel1, BorderLayout.NORTH);
+        JPanel panel3 = new JPanel(new BorderLayout());
+        panel3.add(holeListe, BorderLayout.WEST);
+        panel3.add(tempPanel1, BorderLayout.CENTER);
+
+        add(panel3, BorderLayout.NORTH);
         actualDLDateiName.setPreferredSize(new Dimension(actualDLDateiName.getPreferredSize().width, 17));
         JPanel panel1 = new JPanel(new BorderLayout());
         panel1.add(actualDLDateiName, BorderLayout.NORTH);
         panel1.add(actualDlOverviewTable, BorderLayout.CENTER);
         add(panel1, BorderLayout.CENTER);
+        holeListe.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                holeListe.setEnabled(false);
+                downloadPanel.tryGetPartList();
+            }
+        });
     }
 
     public void setDownloadDO(DownloadDO downloadDO) {
@@ -173,7 +196,7 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
                 partListWorkerThread.interrupt();
                 partListWorkerThread = new Thread() {
                     public void run() {
-                        actualDLDateiName.setText(tempDO.getFilename() + " (" +
+                        actualDLDateiName.setText(" " + tempDO.getFilename() + " (" +
                                                   tempDO.getTemporaryFileNumber() +
                                                   ".data)");
                         actualDlOverviewTable.setPartList(null);
@@ -252,6 +275,9 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
                     getFirstAttrbuteByTagName(new String[]{"mainform", "Label2", "caption"})));
             label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                     getFirstAttrbuteByTagName(new String[]{"mainform", "Label1", "caption"})));
+            holeListe.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui",
+                                          "downloadform", "partlisteanzeigen"})));
         }
         catch (Exception e)
         {
