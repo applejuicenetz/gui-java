@@ -6,9 +6,10 @@ import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.tables.TreeTableModel;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
+import de.applejuicenet.client.gui.trees.WaitNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.21 2003/12/16 14:52:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.22 2003/12/17 17:03:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +18,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.22  2003/12/17 17:03:37  maj0r
+ * In der Downloadtabelle nun ein Warteicon angezeigt, bis erstmalig Daten geholt wurden.
+ *
  * Revision 1.21  2003/12/16 14:52:16  maj0r
  * An Schnittstellenerweiterung angepasst.
  *
@@ -129,7 +133,8 @@ public class DownloadModel
   }
 
   protected Object[] getChildren(Object node) {
-      if (node.getClass()!=DownloadDO.class && node.getClass()!=DownloadSourceDO.class){
+      if (node.getClass()!=DownloadDO.class && node.getClass()!=DownloadSourceDO.class
+          && node.getClass()!=WaitNode.class){
           return ((DownloadNode)node).getChildren();
       }
       else if (node.getClass()==DownloadDO.class){
@@ -139,7 +144,8 @@ public class DownloadModel
   }
 
   public int getChildCount(Object node) {
-      if (node.getClass()!=DownloadDO.class && node.getClass()!=DownloadSourceDO.class){
+      if (node.getClass()!=DownloadDO.class && node.getClass()!=DownloadSourceDO.class
+          && node.getClass()!=WaitNode.class){
           return ((DownloadNode)node).getChildCount();
       }
       else if (node.getClass()==DownloadDO.class){

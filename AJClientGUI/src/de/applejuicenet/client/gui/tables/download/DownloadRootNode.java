@@ -9,9 +9,10 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
+import de.applejuicenet.client.gui.trees.WaitNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.11 2003/11/03 20:57:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.12 2003/12/17 17:03:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,9 @@ import java.util.Iterator;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.12  2003/12/17 17:03:37  maj0r
+ * In der Downloadtabelle nun ein Warteicon angezeigt, bis erstmalig Daten geholt wurden.
+ *
  * Revision 1.11  2003/11/03 20:57:03  maj0r
  * Sortieren nach Status eingebaut.
  *
@@ -74,6 +78,8 @@ public class DownloadRootNode implements Node, DownloadNode {
 
     private HashMap downloads;
 
+    private static boolean initialized = false;
+
     private HashMap childrenPath = new HashMap();
     private ArrayList children = new ArrayList();
 
@@ -82,9 +88,17 @@ public class DownloadRootNode implements Node, DownloadNode {
 
     private DownloadMainNode[] sortedChildNodes;
 
+    public static boolean isInitialized(){
+        return initialized;
+    }
+
     public Object[] getChildren() {
-        if (downloads == null)
+        if (!initialized){
+            return new Object[]{new WaitNode()};
+        }
+        if (downloads == null){
             return null;
+        }
         DownloadDO downloadDO;
         HashMap targetDirs = new HashMap();
         MapSetStringKey key;
@@ -278,14 +292,16 @@ public class DownloadRootNode implements Node, DownloadNode {
 
     public void setDownloadMap(HashMap downloadMap) {
         if (downloads == null) {
+            initialized = true;
             downloads = downloadMap;
         }
     }
 
     public int getChildCount() {
         Object[] obj = getChildren();
-        if (obj == null)
+        if (obj == null){
             return 0;
+        }
         return getChildren().length;
     }
 

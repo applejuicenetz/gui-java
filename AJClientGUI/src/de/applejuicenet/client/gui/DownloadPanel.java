@@ -48,9 +48,10 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.gui.trees.WaitNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.65 2003/12/17 14:54:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.66 2003/12/17 17:03:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -59,6 +60,9 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.66  2003/12/17 17:03:37  maj0r
+ * In der Downloadtabelle nun ein Warteicon angezeigt, bis erstmalig Daten geholt wurden.
+ *
  * Revision 1.65  2003/12/17 14:54:06  maj0r
  * Reaktion des Popupmenues durch Threads beschleunigt.
  *
@@ -437,6 +441,9 @@ public class DownloadPanel
         downloadTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                if (!DownloadRootNode.isInitialized()){
+                    return;
+                }
                 Point p = e.getPoint();
                 int selectedRow = downloadTable.rowAtPoint(p);
                 Object node = ( (TreeTableModelAdapter) downloadTable.getModel()).
@@ -475,6 +482,9 @@ public class DownloadPanel
             }
 
             private void maybeShowPopup(MouseEvent e) {
+                if (!DownloadRootNode.isInitialized()){
+                    return;
+                }
                 if (e.isPopupTrigger()) {
                     Point p = e.getPoint();
                     int selectedRow = downloadTable.rowAtPoint(p);
