@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared;
 import java.util.Vector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.1 2003/09/30 16:35:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.2 2003/12/16 14:51:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.util.Vector;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
+ * Revision 1.2  2003/12/16 14:51:46  maj0r
+ * Suche kann nun GUI-seitig abgebrochen werden.
+ *
  * Revision 1.1  2003/09/30 16:35:11  maj0r
  * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
  *
@@ -25,6 +28,8 @@ public class Search {
     private int gefundenDateien;
     private int durchsuchteClients;
     private Vector searchEntries = new Vector();
+
+    public static int currentSearchCount = 0;
 
     public Search(int id) {
         this.id = id;

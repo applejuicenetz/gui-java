@@ -20,7 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.5 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.6 2003/12/16 14:51:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import java.awt.event.ActionEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.6  2003/12/16 14:51:46  maj0r
+ * Suche kann nun GUI-seitig abgebrochen werden.
+ *
  * Revision 1.5  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -54,6 +57,7 @@ public class SearchResultPanel extends JPanel{
     private SearchResultTableModel tableModel;
     private Search search;
     private JButton sucheAbbrechen = new JButton();
+    private JButton schliessen = new JButton("X");
     private static String offeneSuchen = "%i offene Suchen";
     private static String gefundeneDateien = "%i gefundene Dateien";
     private static String durchsuchteClients = "%i durchsuchte Clients";
@@ -65,9 +69,12 @@ public class SearchResultPanel extends JPanel{
     private JLabel label3 = new JLabel();
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem item1 = new JMenuItem();
+    private boolean activeSearch = true;
+    private SearchPanel parentSearchPanel;
 
-    public SearchResultPanel(Search aSearch) {
+    public SearchResultPanel(Search aSearch, SearchPanel parent) {
         search = aSearch;
+        parentSearchPanel = parent;
         logger = Logger.getLogger(getClass());
         try {
             init();
@@ -78,15 +85,35 @@ public class SearchResultPanel extends JPanel{
         }
     }
 
+    public Search getSearch(){
+        return search;
+    }
+
+    public void setActiveSearch(boolean active){
+        activeSearch = active;
+        schliessen.setEnabled(!active);
+        sucheAbbrechen.setEnabled(active);
+    }
+
     private void init() throws Exception {
         item1.setText(linkLaden);
         sucheAbbrechen.setText(sucheStoppen);
-
-        /**
-         * @ToDo: zu implementieren, sobald der Core es kann
-         */
-        sucheAbbrechen.setEnabled(false);
-        sucheAbbrechen.setToolTipText("Der Core unterstützt noch nicht das Abbrechen einer Suche");
+        sucheAbbrechen.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                ApplejuiceFassade.getInstance().cancelSearch(search.getId());
+                sucheAbbrechen.setEnabled(false);
+            }
+        });
+        schliessen.setEnabled(false);
+        schliessen.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                SwingUtilities.invokeLater(new Runnable(){
+                    public void run(){
+                        parentSearchPanel.close(SearchResultPanel.this);
+                    }
+                });
+            }
+        });
 
         popup.add(item1);
         setLayout(new BorderLayout());
@@ -103,7 +130,10 @@ public class SearchResultPanel extends JPanel{
         textPanel.add(label2);
         textPanel.add(label3);
 
-        southPanel.add(sucheAbbrechen, BorderLayout.WEST);
+        JPanel panel1 = new JPanel(new FlowLayout());
+        panel1.add(schliessen);
+        panel1.add(sucheAbbrechen);
+        southPanel.add(panel1, BorderLayout.WEST);
         southPanel.add(textPanel, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
         MouseAdapter popupMouseAdapter = new MouseAdapter(){

@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.68 2003/12/16 09:05:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.69 2003/12/16 14:51:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.69  2003/12/16 14:51:46  maj0r
+ * Suche kann nun GUI-seitig abgebrochen werden.
+ *
  * Revision 1.68  2003/12/16 09:05:55  maj0r
  * Version erhoeht.
  *
@@ -589,6 +592,20 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/search?password=" + password + "&search=" + searchString, false);
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    public void cancelSearch(int searchId) {
+        try
+        {
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+                                                  "/function/cancelsearch?password=" + password + "&id=" + searchId, false);
         }
         catch (Exception e)
         {

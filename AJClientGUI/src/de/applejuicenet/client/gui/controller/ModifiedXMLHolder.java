@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.42 2003/11/04 15:55:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.43 2003/12/16 14:51:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.43  2003/12/16 14:51:46  maj0r
+ * Suche kann nun GUI-seitig abgebrochen werden.
+ *
  * Revision 1.42  2003/11/04 15:55:05  maj0r
  * gc eingefuehrt.
  *
@@ -335,6 +338,11 @@ public class ModifiedXMLHolder
                     sourcenZuDownloads.remove(toRemoveKey);
                     continue;
                 }
+                else if (searchMap.containsKey(toRemoveKey)){
+                    searchMap.remove(toRemoveKey);
+                    Search.currentSearchCount = searchMap.size();
+                    continue;
+                }
             }
             gcCounter++;
             if (gcCounter-30 == 0){
@@ -400,8 +408,8 @@ public class ModifiedXMLHolder
                         aSearch.setSuchText(suchtext);
                         searchMap.put(key, aSearch);
                     }
-
                 }
+                Search.currentSearchCount = searchMap.size();
             }
             nodes = document.getElementsByTagName("searchentry");
             size = nodes.getLength();
