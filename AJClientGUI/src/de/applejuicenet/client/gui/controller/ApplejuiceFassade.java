@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.129 2004/03/23 14:50:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.130 2004/04/14 10:25:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -321,7 +321,7 @@ public class ApplejuiceFassade {
         return modifiedXML.getInformation();
     }
 
-    public PartListDO getPartList(Object object) {
+    public PartListDO getPartList(Object object) throws WebSiteNotFoundException{
         if (partlistXML == null){
             partlistXML = PartListXMLHolder.getInstance();
         }

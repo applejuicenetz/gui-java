@@ -20,9 +20,10 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
+import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.9 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.10 2004/04/14 10:25:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -118,7 +119,7 @@ public class PartListXMLHolder
     }
 
     private String getXMLString(String parameters) throws
-        Exception {
+        WebSiteNotFoundException {
         String xmlData = null;
         String command = xmlCommand + zipMode + "password=" + password + parameters;
         xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
@@ -129,7 +130,7 @@ public class PartListXMLHolder
         return xmlData;
     }
 
-    public PartListDO getPartList(Object object) {
+    public PartListDO getPartList(Object object) throws WebSiteNotFoundException{
         try {
             String xmlString;
             if (object.getClass()==DownloadSourceDO.class){

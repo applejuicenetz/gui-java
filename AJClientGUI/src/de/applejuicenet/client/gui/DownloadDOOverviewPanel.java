@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.33 2004/03/05 15:49:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.34 2004/04/14 10:25:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.34  2004/04/14 10:25:22  maj0r
+ * [Maj0r] Bug #293 gefixt (Danke an dsp2004)
+ * Bei Partlistanfragen an einen ueberlasteten Core kam es zu Fehlern.
+ *
  * Revision 1.33  2004/03/05 15:49:38  maj0r
  * PMD-Optimierung
  *
@@ -140,6 +144,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
+import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 public class DownloadDOOverviewPanel
     extends JPanel
@@ -253,10 +258,16 @@ public class DownloadDOOverviewPanel
                                                   tempDO.getTemporaryFileNumber() +
                                                   ".data)");
                         actualDlOverviewTable.setPartList(null);
-                        PartListDO partList;
+                        PartListDO partList = null;
                         while (!isInterrupted()) {
-                            partList = ApplejuiceFassade.getInstance().
-                                getPartList(tempDO);
+                            try{
+                                partList = ApplejuiceFassade.getInstance().
+                                    getPartList(tempDO);
+                            }
+                            catch(WebSiteNotFoundException wsnfE){
+                                // Core ist wahrscheinlich zurzeit ueberlastet
+                                partList = null;
+                            }
                             if (isInterrupted()){
                                 break;
                             }
@@ -313,8 +324,15 @@ public class DownloadDOOverviewPanel
                         actualDLDateiName.setText(tempDO.getFilename() + " (" +
                                                   tempDO.getNickname() + ")");
                         actualDlOverviewTable.setPartList(null);
-                        PartListDO partList = ApplejuiceFassade.getInstance().
-                            getPartList(tempDO);
+                        PartListDO partList;
+                        try {
+                            partList = ApplejuiceFassade.getInstance().
+                                getPartList(tempDO);
+                        }
+                        catch (WebSiteNotFoundException ex) {
+                            // Core ist wahrscheinlich zurzeit ueberlastet
+                            partList = null;
+                        }
                         if (partList == null) {
                             interrupt();
                             actualDLDateiName.setText("");
