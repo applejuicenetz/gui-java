@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -48,6 +49,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -79,12 +81,11 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
-import java.util.StringTokenizer;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.118 2004/05/05 08:28:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.119 2004/05/08 08:25:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -1194,11 +1195,28 @@ public class AppleJuiceDialog
         int index = 2;
         if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
             xmlData.append("                    <laf" + index + " name=\"JGoodies Windows\" value=\"com.jgoodies.plaf.windows.ExtWindowsLookAndFeel\"/>\r\n");
+            index++;
         }
         LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
+        LookAndFeel currentFeel = UIManager.getLookAndFeel();
         for (int i=0; i<feels.length; i++){
-            index++;
-            xmlData.append("                    <laf" + index + " name=\"" + feels[i].getName() + "\" value=\"" + feels[i].getClassName() + "\"/>\r\n");
+            try{
+                UIManager.setLookAndFeel(feels[i].getClassName());
+                xmlData.append("                    <laf" + index + " name=\"" + feels[i].getName() + "\" value=\"" + feels[i].getClassName() + "\"/>\r\n");
+                index++;
+            }
+            catch(Exception e){
+                //unsupported
+            }
+        }
+        try {
+            UIManager.setLookAndFeel(currentFeel);
+        }
+        catch (Exception ex) {
+            //muss klappen
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            }
         }
         xmlData.append("                    <default name=\"JGoodies Plastic\"/>\r\n");
         xmlData.append("                </lookandfeels>\r\n");
