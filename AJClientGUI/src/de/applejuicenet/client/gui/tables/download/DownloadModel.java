@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.13 2003/09/02 16:06:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.14 2003/09/03 10:29:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.14  2003/09/03 10:29:16  maj0r
+ * Statusausgabe geaendert.
+ *
  * Revision 1.13  2003/09/02 16:06:26  maj0r
  * Downloadbaum komplett umgebaut.
  *
@@ -292,10 +295,7 @@ public class DownloadModel
                     }
                     if (result.length()==0)
                         result = suchen;
-                    if (warteschlange!=0 || uebertragung!=0)
-                        return result + " " + uebertragung + "/" + warteschlange + " (" + sources.length +")";
-                    else
-                        return result;
+                    return result + " " + (warteschlange + uebertragung) + "/" + sources.length + " (" + uebertragung +")";
                 }
             case DownloadDO.FERTIGSTELLEN:
                 return fertigstellen;
