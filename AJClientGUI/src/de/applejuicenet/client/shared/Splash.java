@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Splash.java,v 1.1 2003/08/24 19:27:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Splash.java,v 1.2 2003/12/29 11:00:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Splash.java,v $
+ * Revision 1.2  2003/12/29 11:00:58  maj0r
+ * Taskbareintrag auch fuer den Splashscreen eingebaut.
+ *
  * Revision 1.1  2003/08/24 19:27:57  maj0r
  * Splashscreen eingefuegt.
  *
@@ -29,8 +32,8 @@ public class Splash extends Window {
     private Image back;
     private Image image;
 
-    public Splash(Image image) {
-        super(new Frame());
+    public Splash(Frame parent, Image image) {
+        super(parent);
         this.image = image;
     }
 

@@ -37,7 +37,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import de.applejuicenet.client.gui.ConnectFrame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.44 2003/12/29 10:31:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.45 2003/12/29 11:00:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,6 +46,9 @@ import de.applejuicenet.client.gui.ConnectFrame;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.45  2003/12/29 11:00:58  maj0r
+ * Taskbareintrag auch fuer den Splashscreen eingebaut.
+ *
  * Revision 1.44  2003/12/29 10:31:58  maj0r
  * Bug #2 gefixt (Danke an muhviestarr).
  * Wenn das Gui nicht zur Core verbinden kann, hat das GUI nun einen Taskbareintrag.
@@ -276,7 +279,9 @@ public class AppleJuiceClient {
         try {
             String nachricht = "appleJuice-Core-GUI Version " +
                 ApplejuiceFassade.GUI_VERSION + " wird gestartet...";
-            Splash splash = new Splash(IconManager.getInstance().getIcon(
+            ConnectFrame connectFrame = new ConnectFrame();
+            connectFrame.show();
+            Splash splash = new Splash(connectFrame, IconManager.getInstance().getIcon(
                 "splashscreen").getImage());
             splash.show();
             if (logger.isEnabledFor(Level.INFO)) {
@@ -288,22 +293,13 @@ public class AppleJuiceClient {
                 logger.info(nachricht);
 
             }
-            Frame dummyFrame = new Frame();
-            Image img = IconManager.getInstance().getIcon("applejuice").
-                getImage();
-            dummyFrame.setIconImage(img);
             String titel = null;
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog = null;
             int versuche = 0;
             AppleJuiceDialog.initThemes();
-            ConnectFrame connectFrame = null;
             while (!ApplejuiceFassade.istCoreErreichbar()) {
                 versuche++;
-                if (connectFrame == null){
-                    connectFrame = new ConnectFrame();
-                }
-                connectFrame.show();
                 titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                     getFirstAttrbuteByTagName(new String[] {"mainform",
                                               "caption"}));
@@ -332,11 +328,12 @@ public class AppleJuiceClient {
                                                   JOptionPane.OK_OPTION);
                     logger.fatal(nachricht);
                     System.out.println("Fehler: " + nachricht);
+                    connectFrame.dispose();
                     System.exit( -1);
                 }
-                connectFrame.dispose();
                 splash.setVisible(true);
             }
+            connectFrame.dispose();
             if (versuche > 0) {
                 SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
             }
