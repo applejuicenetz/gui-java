@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.148 2004/06/28 15:47:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.149 2004/06/29 18:31:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -158,7 +158,7 @@ public class ApplejuiceFassade {
         stats.append("ok|*** Core(" + getCoreVersion().getVersion() + ")");
         stats.append(" * Down: " + getInformation().getDownAsString());
         stats.append(" * Up: " + getInformation().getUpAsString());
-        stats.append(" * Credits: " + getInformation().getCreditsAsString());
+        stats.append(" * " + getInformation().getCreditsAsString());
         stats.append(" * Downloads: " + getDownloadsSnapshot().size());
         stats.append(" * Connections: " + getInformation().getOpenConnections());
         stats.append(" * Firewalled: " + (getNetworkInfo().isFirewalled() ? "Ja" : "Nein") );
