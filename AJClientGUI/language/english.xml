@@ -217,4 +217,4 @@ Enjoy using appleJuice"/>
 		<Button1 caption="&amp;amp;download"/>
 		<Button2 caption="&amp;amp;cancel"/>
 	</newversionform>
-	<javagui><downloadtab label1="Automatic Powerdownload" rbInaktiv="inactive" rbAktiv="active" pdlAb="from" pdlBis="to" btnOK="Apply"/></javagui></root>
+	<javagui><tooltipps powerdownload="Activation of powerdownload increases your chances to download.|The more credits you spend, the higher you slip in the queue." autopowerdownload="By activation of the automatic power download you can fix, from which count of|credits the power download is activated and when it switches|off itself again. The power download always considers the mostly loaded files.|The GUI must run."/><downloadtab label1="Automatic Powerdownload" rbInaktiv="inactive" rbAktiv="active" pdlAb="from" pdlBis="to" btnOK="Apply"/></javagui></root>

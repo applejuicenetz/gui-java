@@ -11,6 +11,8 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
+import de.applejuicenet.client.shared.MultiLineToolTip;
+import de.applejuicenet.client.shared.MultiLineToolTipUI;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -29,6 +31,7 @@ public class PowerDownloadPanel
   private JRadioButton btnAutoInaktiv = new JRadioButton();
   private JRadioButton btnAutoAktiv = new JRadioButton();
   private JLabel btnHint;
+  private JLabel btnHint2;
   private JLabel btnPdlUp;
   private JLabel btnPdlDown;
   private float ratioWert = 2.2f;
@@ -87,12 +90,13 @@ public class PowerDownloadPanel
 
     URL url = getClass().getResource("hint.gif");
     ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
-    btnHint = new JLabel(icon);
-    btnHint.addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent e) {
-        executeHint();
+    btnHint = new JLabel(icon){
+      public JToolTip createToolTip() {
+        MultiLineToolTip tip = new MultiLineToolTip();
+        tip.setComponent(this);
+        return tip;
       }
-    });
+    };
     tempPanel.add(btnHint, BorderLayout.EAST);
     backPanel.add(tempPanel, constraints);
     constraints.gridy = 1;
@@ -150,7 +154,13 @@ public class PowerDownloadPanel
     label9.setOpaque(true);
     label9.setBackground(Color.blue);
     tempPanel2.add(label9, BorderLayout.CENTER);
-    JLabel btnHint2 = new JLabel(icon);
+    btnHint2 = new JLabel(icon){
+      public JToolTip createToolTip() {
+        MultiLineToolTip tip = new MultiLineToolTip();
+        tip.setComponent(this);
+        return tip;
+      }
+    };
     tempPanel2.add(btnHint2, BorderLayout.EAST);
     backPanel.add(tempPanel2, constraints);
 
@@ -187,7 +197,6 @@ public class PowerDownloadPanel
   }
 
   private void executeHint() {
-
   }
 
   private void alterRatio(boolean increase) {
@@ -227,7 +236,7 @@ public class PowerDownloadPanel
   }
 
   void btnPdl_actionPerformed(ActionEvent e) {
-    DataManager.getInstance().getDownloads();
+//    DataManager.getInstance().getDownloads(); war nur test für das model
   }
 
   public void fireLanguageChanged(){
@@ -247,6 +256,8 @@ public class PowerDownloadPanel
         String ok = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "downloadtab", "btnOK"}));
         btnAutoPdl.setText(ok);
         btnPdl.setText(ok);
+        btnHint.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "tooltipps", "powerdownload"})));
+        btnHint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "javagui", "tooltipps", "autopowerdownload"})));
       }
       catch (LanguageSelectorNotInstanciatedException ex) {
         ex.printStackTrace();

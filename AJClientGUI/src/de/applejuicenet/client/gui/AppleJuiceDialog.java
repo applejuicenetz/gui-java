@@ -94,6 +94,11 @@ public class AppleJuiceDialog
     constraints.gridx = 4;
     panel.add(statusbar[4], constraints);
     getContentPane().add(panel, BorderLayout.SOUTH);
+
+    //Tooltipps einstellen
+    ToolTipManager.sharedInstance().setInitialDelay(1);
+    ToolTipManager.sharedInstance().setDismissDelay(50000);
+
     fireLanguageChanged();
   }
 
