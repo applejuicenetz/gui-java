@@ -2,57 +2,21 @@ package de.applejuicenet.client.gui.tables.search;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.tables.TreeTableModel;
 import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.Search.SearchEntry;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchResultTableModel.java,v 1.10 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchResultTableModel.java,v 1.11 2004/04/30 11:33:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: SearchResultTableModel.java,v $
- * Revision 1.10  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.9  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.8  2004/01/08 07:47:11  maj0r
- * 98%-CPU-Last Bug durch Suche gefixt.
- *
- * Revision 1.7  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.6  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.5  2003/10/01 16:52:53  maj0r
- * Suche weiter gefuehrt.
- * Version 0.32
- *
- * Revision 1.4  2003/10/01 14:45:40  maj0r
- * Suche fortgesetzt.
- *
- * Revision 1.3  2003/10/01 07:25:44  maj0r
- * Suche weiter gefuehrt.
- *
- * Revision 1.2  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- * Revision 1.1  2003/07/01 18:41:39  maj0r
- * Struktur verändert.
- *
- * Revision 1.4  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -130,6 +94,10 @@ public class SearchResultTableModel
 
     public Object getValueAt(Object node, int column) {
         try {
+            if (column == 0){
+                //liefert das node
+                return "";
+            }
             if (node.getClass() == WaitNode.class) {
                 return "";
             }
@@ -141,19 +109,6 @@ public class SearchResultTableModel
                 else {
                     Search.SearchEntry entry = (Search.SearchEntry) o;
                     switch (column) {
-                        case 0: {
-                            Search.SearchEntry.FileName[] filenames = entry.
-                                getFileNames();
-                            int haeufigkeit = 0;
-                            String dateiname = "";
-                            for (int i = 0; i < filenames.length; i++) {
-                                if (filenames[i].getHaeufigkeit() > haeufigkeit) {
-                                    haeufigkeit = filenames[i].getHaeufigkeit();
-                                    dateiname = filenames[i].getDateiName();
-                                }
-                            }
-                            return dateiname;
-                        }
                         case 1:
                             return entry.getGroesseAsString();
                         case 2: {
@@ -174,8 +129,6 @@ public class SearchResultTableModel
                 Search.SearchEntry.FileName filename = (Search.SearchEntry.
                     FileName) node;
                 switch (column) {
-                    case 0:
-                        return filename.getDateiName();
                     case 1:
                         return "";
                     case 2:

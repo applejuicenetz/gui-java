@@ -1,6 +1,7 @@
 package de.applejuicenet.client.gui.tables.search;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Icon;
 
@@ -9,56 +10,15 @@ import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.Search.SearchEntry;
-import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.12 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.13 2004/04/30 11:33:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: SearchNode.java,v $
- * Revision 1.12  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.11  2004/02/28 15:01:42  maj0r
- * Suche um Filter erweitert
- * Die Filter in der Suchergebnistabelle wirken sich NICHT auf die Suche aus, lediglich die Treffer werden gefiltert.
- *
- * Revision 1.10  2004/02/27 16:48:27  maj0r
- * Suchergebnisse werden nun, wenn moeglich mit einem sprechenden Icon angezeigt.
- *
- * Revision 1.9  2004/02/12 17:04:01  maj0r
- * Bug #167 gefixt (Danke an arnoldfake)
- * Sortierung nach Anzahl in der Suchtabelle korrigiert.
- *
- * Revision 1.8  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.7  2004/01/30 16:32:47  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.6  2004/01/12 14:20:31  maj0r
- * Sortierung eingebaut.
- *
- * Revision 1.5  2004/01/08 07:47:11  maj0r
- * 98%-CPU-Last Bug durch Suche gefixt.
- *
- * Revision 1.4  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.3  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.2  2003/10/01 14:45:40  maj0r
- * Suche fortgesetzt.
- *
- * Revision 1.1  2003/10/01 07:25:44  maj0r
- * Suche weiter gefuehrt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -104,8 +64,17 @@ public class SearchNode
             return "";
         }
         else if (type == ENTRY_NODE) {
-            return ( (Search.SearchEntry) valueObject).getFileNames()[0].
-                getDateiName();
+            Search.SearchEntry.FileName[] filenames = ( (Search.SearchEntry) valueObject).
+                getFileNames();
+            int haeufigkeit = 0;
+            String dateiname = "";
+            for (int i = 0; i < filenames.length; i++) {
+                if (filenames[i].getHaeufigkeit() > haeufigkeit) {
+                    haeufigkeit = filenames[i].getHaeufigkeit();
+                    dateiname = filenames[i].getDateiName();
+                }
+            }
+            return dateiname;
         }
         else {
             return "";
@@ -152,6 +121,7 @@ public class SearchNode
             }
             else {
                 if ( ( (Search) valueObject).isChanged()) {
+                    sort = true;
                     Search.SearchEntry[] entries = ( (Search) valueObject).
                         getSearchEntries();
                     ( (Search) valueObject).setChanged(false);
@@ -160,7 +130,6 @@ public class SearchNode
                         key = Integer.toString(entries[i].getId());
                         if (!children.containsKey(key)) {
                             children.put(key, new SearchNode(entries[i]));
-                            sort = true;
                         }
                     }
                 }
