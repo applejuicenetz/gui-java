@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.3 2004/12/01 13:08:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.4 2004/12/01 14:12:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -204,17 +204,27 @@ public class DownloadDOOverviewPanel
             		paused = true;
             		continue;
             	}
+            	boolean shortPause = false;
             	if (objectDO.getClass() == DownloadDO.class){
-            		workDownloadDO((DownloadDO)objectDO);
+            		shortPause = workDownloadDO((DownloadDO)objectDO);
             	}
             	else{
+            		shortPause = workDownloadSourceDO((DownloadSourceDO)objectDO);
             		paused = true;
-            		workDownloadSourceDO((DownloadSourceDO)objectDO);
+            	}
+            	if (shortPause){
+        			try{
+	        			sleep(2000);
+	        			continue;
+	                }
+	                catch (InterruptedException iE) {
+	                    interrupt();
+	                }
             	}
         	}
         }
         
-        private void workDownloadDO(DownloadDO downloadDO){
+        private boolean workDownloadDO(DownloadDO downloadDO){
         	if (downloadDO.getStatus() != DownloadDO.FERTIGSTELLEN 
         			&& downloadDO.getStatus() != DownloadDO.FERTIG){
             	String dateiNameText = " " + downloadDO.getFilename() +
@@ -225,7 +235,7 @@ public class DownloadDOOverviewPanel
                         getPartList(downloadDO);
                     if (paused){
                     	// wurde moeglicherweise waehrend des Ziehens der Partliste gestoppt
-                    	return;
+                    	return false;
                     }
                 }
                 catch(WebSiteNotFoundException wsnfE){
@@ -233,32 +243,34 @@ public class DownloadDOOverviewPanel
                     partList = null;
                 }
                 if (isInterrupted()){
-                    return;
+                    return false;
                 }
                 if (partList == null) {
                     actualDLDateiName.setText("");
-                    actualDlOverviewTable.setPartList(null);
+                    actualDlOverviewTable.setPartList(null, null);
                 }
                 else {
-                    actualDlOverviewTable.setPartList(partList);                                
+                    actualDlOverviewTable.setPartList(partList, new Integer(downloadDO.getId()));                                
                     String tmp = verfuegbar.replaceFirst("%s", 
                     		decimalFormat.format(partList.getProzentVerfuegbar()));
                     actualDLDateiName.setText(dateiNameText + " - " + tmp);
                 }
+    			return true;
         	}
         	else{
         		paused = true;
+    			return false;
         	}
         }
 
-        private void workDownloadSourceDO(DownloadSourceDO downloadSoureDO) {
+        private boolean workDownloadSourceDO(DownloadSourceDO downloadSoureDO) {
 			PartListDO partList;
 			try {
 				partList = ApplejuiceFassade.getInstance().getPartList(
 						downloadSoureDO);
                 if (paused){
                 	// wurde moeglicherweise waehrend des Ziehens der Partliste gestoppt
-                	return;
+                	return false;
                 }
 			} catch (WebSiteNotFoundException ex) {
 				// Core ist wahrscheinlich zurzeit ueberlastet
@@ -267,7 +279,7 @@ public class DownloadDOOverviewPanel
 			if (partList == null) {
 				actualDLDateiName.setText("");
 			} else {
-				actualDlOverviewTable.setPartList(partList);
+				actualDlOverviewTable.setPartList(partList, new Integer(downloadSoureDO.getId()));
 				StringBuffer tmp = new StringBuffer();
 				tmp.append(downloadSoureDO.getFilename());
 				tmp.append(" (");
@@ -277,6 +289,7 @@ public class DownloadDOOverviewPanel
 						.format(partList.getProzentVerfuegbar())));				
 				actualDLDateiName.setText(tmp.toString());
 			}
+			return false;
 		}
         
         public void setDownloadDO(DownloadDO downloadDO){
@@ -311,7 +324,7 @@ public class DownloadDOOverviewPanel
         private void clear(){
         	paused = true;
             actualDLDateiName.setText("");
-            actualDlOverviewTable.setPartList(null);
+            actualDlOverviewTable.setPartList(null, null);
         }
         
         public void pause(){

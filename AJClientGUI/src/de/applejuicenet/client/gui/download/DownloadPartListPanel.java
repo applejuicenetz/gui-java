@@ -58,6 +58,7 @@ public class DownloadPartListPanel extends JPanel implements
 	private String quellen;
 	private String uebertragen;
 	private MouseEvent savedMouseEvent = null;
+	private Integer id = null;
 
 	private DownloadPartListPanel() {
 		super(new BorderLayout());
@@ -77,7 +78,7 @@ public class DownloadPartListPanel extends JPanel implements
 		if (partListDO != null && image != null) {
 			if (height != (int) getSize().getHeight()
 					|| width != (int) getSize().getWidth()) {
-				setPartList(partListDO);
+				setPartList(partListDO, id);
 			}
 			g.setColor(getBackground());
 			g.fillRect(0, 0, width, height);
@@ -88,11 +89,35 @@ public class DownloadPartListPanel extends JPanel implements
 			super.paintComponent(g);
 		}
 	}
-
-	public synchronized void setPartList(PartListDO newPartListDO) {
+	
+	public synchronized void setPartList(PartListDO newPartListDO, Integer newId) {
 		try {
-			if (partListDO != null && partListDO != newPartListDO) {
+			boolean idChanged = false;
+			if (id == null){
+				idChanged = true;
+				id = newId;
+			}
+			if (id.longValue() != newId.longValue()){
+				idChanged = true;
+			}
+			if (idChanged){
 				partListDO.removeAllParts();
+			}
+			else if (partListDO != null && newPartListDO != null){
+				Part[] parts = partListDO.getParts();
+				Part[] newParts = newPartListDO.getParts();
+				if (parts.length == newParts.length){
+					boolean sameParts = true;
+					for (int i=0; i<parts.length; i++){
+						if (!parts[i].equals(newParts[i])){
+							sameParts = false;
+							break;
+						}
+					}
+					if(sameParts){
+						return;
+					}
+				}
 			}
 			partListDO = newPartListDO;
 			height = (int) getSize().getHeight();

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.15 2004/10/12 15:41:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.16 2004/12/01 14:12:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -116,6 +116,19 @@ public class PartListDO {
 
         public int getType() {
             return type;
+        }
+        
+        public boolean equals(Object obj){
+        	if(obj.getClass() != Part.class){
+        		return false;
+        	}
+        	if(((Part)obj).getFromPosition() != fromPosition){
+        		return false;
+        	}
+        	if(((Part)obj).getType() != type){
+        		return false;
+        	}
+        	return true;
         }
     }
 }
