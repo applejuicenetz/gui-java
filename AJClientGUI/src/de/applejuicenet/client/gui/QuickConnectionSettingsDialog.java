@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.gui.controller.OptionsManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.3 2003/09/04 10:13:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.4 2003/09/09 12:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.4  2003/09/09 12:28:15  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.3  2003/09/04 10:13:28  maj0r
  * Logger eingebaut.
  *
@@ -146,7 +149,7 @@ public class QuickConnectionSettingsDialog extends JDialog {
 
     private void speichereEinstellungen() throws InvalidPasswordException {
         try{
-            OptionsManager.getInstance().saveRemote(remotePanel.getRemoteConfiguration());
+            PropertiesManager.getOptionsManager().saveRemote(remotePanel.getRemoteConfiguration());
         }
         catch (Exception e)
         {

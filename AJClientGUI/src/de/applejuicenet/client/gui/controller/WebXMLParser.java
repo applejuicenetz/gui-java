@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.11 2003/08/29 19:34:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.12 2003/09/09 12:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.12  2003/09/09 12:28:15  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.11  2003/08/29 19:34:03  maj0r
  * Einige Aenderungen.
  * Version 0.17 Beta
@@ -77,7 +80,7 @@ public abstract class WebXMLParser
     public WebXMLParser(String xmlCommand, String parameters) {
         super();
         init(xmlCommand);
-        OptionsManager.getInstance().addSettingsListener(this);
+        PropertiesManager.getOptionsManager().addSettingsListener(this);
     }
 
     public WebXMLParser(String xmlCommand, String parameters,
@@ -89,7 +92,7 @@ public abstract class WebXMLParser
 
     private void init(String xmlCommand) {
         logger = Logger.getLogger(getClass());
-        ConnectionSettings rc = OptionsManager.getInstance().getRemoteSettings();
+        ConnectionSettings rc = PropertiesManager.getOptionsManager().getRemoteSettings();
         host = rc.getHost();
         password = rc.getOldPassword();
         if (host == null || host.length() == 0)

@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.26 2003/09/09 06:37:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.27 2003/09/09 12:28:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.27  2003/09/09 12:28:14  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.26  2003/09/09 06:37:36  maj0r
  * Wizard erweitert, aber noch nicht fertiggestellt.
  *
@@ -105,7 +108,7 @@ public class AppleJuiceClient {
     catch (IOException ioe) {
       ioe.printStackTrace();
     }
-    rootLogger.setLevel(OptionsManager.getInstance().getLogLevel());
+    rootLogger.setLevel(PropertiesManager.getOptionsManager().getLogLevel());
 
     try {
       String nachricht = "appleJuice-Core-GUI Version " + ApplejuiceFassade.GUI_VERSION + " wird gestartet...";
@@ -134,7 +137,7 @@ public class AppleJuiceClient {
                 getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
                                           "verbindungsfehler"}));
             nachricht = nachricht.replaceFirst("%s",
-                                               OptionsManager.getInstance().
+                                               PropertiesManager.getOptionsManager().
                                                getRemoteSettings().
                                                getHost());
             JOptionPane.showMessageDialog(dummyFrame, nachricht, titel,
@@ -146,7 +149,7 @@ public class AppleJuiceClient {
       }
       Splash splash = new Splash(IconManager.getInstance().getIcon("splashscreen").getImage());
       splash.show();
-      PositionManager lm = PositionManager.getInstance();
+      PositionManager lm = PropertiesManager.getPositionManager();
       AppleJuiceDialog theApp = new AppleJuiceDialog();
       if (lm.isLegal()){
           theApp.setLocation(lm.getMainXY());
@@ -164,7 +167,7 @@ public class AppleJuiceClient {
         logger.info(nachricht);
       System.out.println(nachricht);
       splash.dispose();
-        if (OptionsManager.getInstance().isErsterStart()){
+        if (PropertiesManager.getOptionsManager().isErsterStart()){
             WizardDialog wizardDialog = new WizardDialog(theApp, true);
             Dimension appDimension = wizardDialog.getSize();
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

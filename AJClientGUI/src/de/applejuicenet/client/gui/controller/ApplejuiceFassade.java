@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.31 2003/09/07 09:29:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.32 2003/09/09 12:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.32  2003/09/09 12:28:15  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.31  2003/09/07 09:29:55  maj0r
  * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
@@ -351,7 +354,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         }
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                   "/function/setsettings?password=" + password + "&" + parameters, false);
         }
@@ -390,7 +393,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     public boolean resumeDownload(int id) {
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/resumedownload?password=" + password + "&id=" + id, false);
         }
@@ -404,7 +407,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     public static boolean setPassword(String passwordAsMD5) {
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                   "/function/setpassword?password=" + password + "&newpassword=" + passwordAsMD5, false);
         }
@@ -418,7 +421,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     public boolean cancelDownload(int id) {
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/canceldownload?password=" + password + "&id=" + id, false);
         }
@@ -433,7 +436,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         logger.info("Clear list...");
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/cleandownloadlist?password=" + password, false);
         }
@@ -447,7 +450,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     public boolean pauseDownload(int id) {
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/pausedownload?password=" + password + "&id=" + id, false);
         }
@@ -461,7 +464,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     public boolean connectToServer(int id) {
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/serverlogin?password=" + password + "&id=" + id, false);
         }
@@ -475,7 +478,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     public boolean entferneServer(int id) {
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/removeserver?password=" + password + "&id=" + id, false);
         }
@@ -494,7 +497,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         }
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                   "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet, false);
         }
@@ -514,7 +517,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         logger.info("Downloade '" + link + "...");
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                   "/function/processlink?password=" + password + "&link=" + link, false);
         }
@@ -533,7 +536,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         }
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                   "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload
                                          , false);
@@ -546,7 +549,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     private static String getHost() {
-        String savedHost = OptionsManager.getInstance().getRemoteSettings().getHost();
+        String savedHost = PropertiesManager.getOptionsManager().getRemoteSettings().getHost();
         if (savedHost.length() == 0)
         {
             savedHost = "localhost";
@@ -557,7 +560,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     public static boolean istCoreErreichbar() {
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                            "/xml/information.xml?password=" + password);
         }
@@ -697,7 +700,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         }
         try
         {
-            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                   "/function/setsettings?password=" + password + "&" + parameters, false);
         }

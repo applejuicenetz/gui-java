@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.15 2003/09/04 10:13:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.16 2003/09/09 12:28:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.16  2003/09/09 12:28:14  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.15  2003/09/04 10:13:49  maj0r
  * Logger eingebaut.
  *
@@ -70,7 +73,7 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.OptionsManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 
@@ -97,7 +100,7 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
             init();
             settings = Settings.getSettings();
             LanguageSelector.getInstance().addLanguageListener(this);
-            OptionsManager.getInstance().addSettingsListener(this);
+            PropertiesManager.getOptionsManager().addSettingsListener(this);
         }
         catch (Exception e)
         {

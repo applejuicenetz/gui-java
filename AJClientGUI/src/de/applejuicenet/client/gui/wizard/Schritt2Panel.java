@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt2Panel.java,v 1.2 2003/09/09 06:37:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt2Panel.java,v 1.3 2003/09/09 12:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Schritt2Panel.java,v $
+ * Revision 1.3  2003/09/09 12:28:15  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.2  2003/09/09 06:37:36  maj0r
  * Wizard erweitert, aber noch nicht fertiggestellt.
  *
@@ -38,9 +41,11 @@ public class Schritt2Panel extends WizardPanel{
         textArea1.setWrapStyleWord(true);
         textArea2.setWrapStyleWord(true);
         textArea1.setLineWrap(true);
+        textArea1.setEditable(false);
         textArea2.setLineWrap(true);
         textArea1.setBackground(Color.WHITE);
         textArea2.setBackground(Color.WHITE);
+        textArea2.setEditable(false);
         setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;

@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.38 2003/09/07 09:29:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.39 2003/09/09 12:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,6 +40,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.39  2003/09/09 12:28:15  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.38  2003/09/07 09:29:55  maj0r
  * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
@@ -612,7 +615,7 @@ public class SharePanel
                 shareTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 TableColumnModel headerModel = shareTable.getTableHeader().getColumnModel();
                 int columnCount = headerModel.getColumnCount();
-                PositionManager pm = PositionManager.getInstance();
+                PositionManager pm = PropertiesManager.getPositionManager();
                 if (pm.isLegal()) {
                     int[] widths = pm.getShareWidths();
                     for (int i = 0; i < columnCount; i++) {

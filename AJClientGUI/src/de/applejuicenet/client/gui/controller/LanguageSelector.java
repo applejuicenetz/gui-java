@@ -8,7 +8,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.8 2003/09/09 06:37:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.9 2003/09/09 12:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.9  2003/09/09 12:28:15  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.8  2003/09/09 06:37:36  maj0r
  * Wizard erweitert, aber noch nicht fertiggestellt.
  *
@@ -43,8 +46,8 @@ public class LanguageSelector
             String path = System.getProperty("user.dir") + File.separator +
                     "language" +
                     File.separator;
-            OptionsManager op = OptionsManager.getInstance();
-            String datei = op.getSprache();
+            OptionsManager om = PropertiesManager.getOptionsManager();
+            String datei = om.getSprache();
             path += datei + ".xml";
             //zZ werden die Header der TableModel nicht aktualisiert, deshalb hier schon
             return new LanguageSelector(path);

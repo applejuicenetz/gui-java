@@ -1,6 +1,6 @@
 package de.applejuicenet.client.shared;
 
-import de.applejuicenet.client.gui.controller.OptionsManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 import java.awt.*;
 
@@ -24,12 +24,12 @@ public class Settings {
     }
 
     public static Settings getSettings(){
-        return OptionsManager.getInstance().getSettings();
+        return PropertiesManager.getOptionsManager().getSettings();
     }
 
     public void save(){
         if (dirty){
-            OptionsManager.getInstance().saveSettings(this);
+            PropertiesManager.getOptionsManager().saveSettings(this);
             dirty = false;
         }
     }

@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.10 2003/09/07 09:29:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.11 2003/09/09 12:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.11  2003/09/09 12:28:15  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.10  2003/09/07 09:29:55  maj0r
  * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
@@ -107,7 +110,7 @@ public class SearchPanel
                 initizialiced = true;
                 TableColumnModel headerModel = searchResultTable.getTableHeader().getColumnModel();
                 int columnCount = headerModel.getColumnCount();
-                PositionManager pm = PositionManager.getInstance();
+                PositionManager pm = PropertiesManager.getPositionManager();
                 if (pm.isLegal()) {
                     int[] widths = pm.getSearchWidths();
                     for (int i = 0; i < columnCount; i++) {

@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.45 2003/09/09 06:37:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.46 2003/09/09 12:28:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.46  2003/09/09 12:28:14  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.45  2003/09/09 06:37:36  maj0r
  * Wizard erweitert, aber noch nicht fertiggestellt.
  *
@@ -172,7 +175,7 @@ public class AppleJuiceDialog
         setJMenuBar(createMenuBar());
         String path = System.getProperty("user.dir") + File.separator + "language" +
                 File.separator;
-        path += OptionsManager.getInstance().getSprache() + ".xml";
+        path += PropertiesManager.getOptionsManager().getSprache() + ".xml";
         registerPane = new RegisterPanel(this);
         LanguageSelector ls = LanguageSelector.getInstance(path);
         addWindowListener(
@@ -318,7 +321,7 @@ public class AppleJuiceDialog
         try{
             String sprachText = LanguageSelector.getInstance().
                     getFirstAttrbuteByTagName(new String[]{"Languageinfo", "name"});
-            OptionsManager.getInstance().setSprache(sprachText);
+            PropertiesManager.getOptionsManager().setSprache(sprachText);
         }
         catch (Exception e){
             if (logger.isEnabledFor(Level.ERROR))
@@ -344,7 +347,7 @@ public class AppleJuiceDialog
             logger.info(nachricht);
         System.out.println(nachricht);
         einstellungenSpeichern();
-        PositionManager pm = PositionManager.getInstance();
+        PositionManager pm = PropertiesManager.getPositionManager();
         pm.setMainXY(p);
         pm.setMainDimension(dim);
         pm.setDownloadWidths(downloadWidths);
@@ -429,7 +432,7 @@ public class AppleJuiceDialog
                 String sprachText = LanguageSelector.getInstance(path + (String) it.next()).
                         getFirstAttrbuteByTagName(new String[]{"Languageinfo", "name"});
                 JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
-                if (OptionsManager.getInstance().getSprache().equalsIgnoreCase(sprachText))
+                if (PropertiesManager.getOptionsManager().getSprache().equalsIgnoreCase(sprachText))
                 {
                     rb.setSelected(true);
                 }

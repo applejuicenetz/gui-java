@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.8 2003/09/04 10:13:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.9 2003/09/09 12:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.9  2003/09/09 12:28:15  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.8  2003/09/04 10:13:28  maj0r
  * Logger eingebaut.
  *
@@ -128,7 +131,7 @@ public class ODStandardPanel
         JPanel panel8 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel8.add(new JLabel("Logging: "));
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        Level logLevel = OptionsManager.getInstance().getLogLevel();
+        Level logLevel = PropertiesManager.getOptionsManager().getLogLevel();
 
         LevelItem[] levelItems = new LevelItem[5];//{ "kein Logging", "alles", "Warnungen", "Fehler"};
         levelItems[0] = new LevelItem(Level.OFF, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "off"})));

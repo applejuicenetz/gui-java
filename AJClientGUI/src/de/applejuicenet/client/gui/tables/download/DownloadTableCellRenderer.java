@@ -8,10 +8,10 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.controller.OptionsManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.12 2003/09/02 16:06:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.13 2003/09/09 12:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.gui.controller.OptionsManager;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.13  2003/09/09 12:28:15  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.12  2003/09/02 16:06:26  maj0r
  * Downloadbaum komplett umgebaut.
  *
@@ -71,7 +74,7 @@ public class DownloadTableCellRenderer
     public DownloadTableCellRenderer(){
         super();
         settings = Settings.getSettings();
-        OptionsManager.getInstance().addSettingsListener(this);
+        PropertiesManager.getOptionsManager().addSettingsListener(this);
     }
 
   public Component getTableCellRendererComponent(JTable table,

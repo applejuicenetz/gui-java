@@ -6,7 +6,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.tables.download.IconGetter;
 import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.controller.OptionsManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.trees.share.DirectoryNode;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
@@ -24,7 +24,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.14 2003/09/05 09:47:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.15 2003/09/09 12:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +33,9 @@ import java.util.EventObject;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.15  2003/09/09 12:28:15  maj0r
+ * Wizard fertiggestellt.
+ *
  * Revision 1.14  2003/09/05 09:47:09  maj0r
  * Eine Klasse vertauscht.
  *
@@ -138,7 +141,7 @@ public class JTreeTable extends JTable{
 	    super(model);
         settings = Settings.getSettings();
         this.setCellRenderer(new IconNodeRenderer());
-        OptionsManager.getInstance().addSettingsListener(this);
+        PropertiesManager.getOptionsManager().addSettingsListener(this);
 	}
 
 	public void updateUI() {
@@ -311,7 +314,7 @@ public class JTreeTable extends JTable{
     public IconNodeRenderer(){
         super();
         settings = Settings.getSettings();
-        OptionsManager.getInstance().addSettingsListener(this);
+        PropertiesManager.getOptionsManager().addSettingsListener(this);
     }
 
     public Component getTreeCellRendererComponent(JTree tree, Object value,
