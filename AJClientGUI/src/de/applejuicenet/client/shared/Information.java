@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.3 2004/01/01 14:24:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.4 2004/01/29 13:47:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Information.java,v $
+ * Revision 1.4  2004/01/29 13:47:06  maj0r
+ * Setter eingefuegt.
+ *
  * Revision 1.3  2004/01/01 14:24:37  maj0r
  * Id wird nun auch ausgelesen.
  *
@@ -77,6 +80,30 @@ public class Information implements LanguageListener {
 
     public int getId() {
         return id;
+    }
+
+    public void setSessionUpload(long sessionUpload){
+        this.sessionUpload = sessionUpload;
+    }
+
+    public void setSessionDownload(long sessionDownload){
+        this.sessionDownload = sessionDownload;
+    }
+
+    public void setCredits(long credits){
+        this.credits = credits;
+    }
+
+    public void setUploadSpeed(long uploadSpeed){
+        this.uploadSpeed = uploadSpeed;
+    }
+
+    public void setDownloadSpeed(long downloadSpeed){
+        this.downloadSpeed = downloadSpeed;
+    }
+
+    public void setOpenConnections(long openConnections){
+        this.openConnections = openConnections;
     }
 
     public long getSessionUpload() {
