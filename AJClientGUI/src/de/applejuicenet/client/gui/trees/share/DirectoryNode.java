@@ -11,7 +11,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.4 2003/08/16 20:53:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.5 2003/08/17 16:13:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryNode.java,v $
+ * Revision 1.5  2003/08/17 16:13:11  maj0r
+ * Erstellen des DirectoryNode-Baumes korrigiert.
+ *
  * Revision 1.4  2003/08/16 20:53:40  maj0r
  * Kleinen Fehler korrigiert
  *
@@ -46,12 +49,12 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node{
         this.parent = null;
         this.directoryDO = null;
         children = new ArrayList();
-        DirectoryDO[] childDirectoryDO = ApplejuiceFassade.getInstance().getDirectory(null);
-        if (childDirectoryDO!=null && childDirectoryDO.length!=0){
+        ApplejuiceFassade.getInstance().getDirectory(null, this);
+        /*if (childDirectoryDO!=null && childDirectoryDO.length!=0){
             for(int i=0; i<childDirectoryDO.length; i++){
                 children.add(new DirectoryNode(this, childDirectoryDO[i]));
             }
-        }
+        } */
     }
 
     public int getChildCount() {
@@ -79,12 +82,7 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node{
             case DirectoryDO.TYPE_LAUFWERK:
                     return im.getIcon("laufwerk");
             case DirectoryDO.TYPE_ORDNER:
-                {
-                    if (directoryDO.isFileSystem())
-                        return im.getIcon("verzeichnislink");//im.getIcon("tree");
-                    else
-                        return im.getIcon("verzeichnislink");
-                }
+                    return im.getIcon("tree");
             case DirectoryDO.TYPE_RECHNER:
                     return im.getIcon("server");
             default:
@@ -102,25 +100,19 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node{
         return directoryDO.getName();
     }
 
-    public String getFullPath(){
-        if (directoryDO==null)
-            return "";
-        String path = parent.getFullPath();
-        if (path.length()!=0){
-            path += directoryDO.getSeparator();
+    public DirectoryNode addChild(DirectoryDO childDirectoryDO){
+        if (children==null){
+            children = new ArrayList();
         }
-        return path + directoryDO.getPath();
+        DirectoryNode childNode = new DirectoryNode(this, childDirectoryDO);
+        children.add(childNode);
+        return childNode;
     }
 
     protected Object[] getChildren() {
         if (children==null){
             children = new ArrayList();
-            DirectoryDO[] childDirectoryDO = ApplejuiceFassade.getInstance().getDirectory(getFullPath());
-            if (childDirectoryDO!=null && childDirectoryDO.length!=0){
-                for(int i=0; i<childDirectoryDO.length; i++){
-                    children.add(new DirectoryNode(this, childDirectoryDO[i]));
-                }
-            }
+            ApplejuiceFassade.getInstance().getDirectory(directoryDO.getPath(), this);
         }
         return children.toArray(new DirectoryNode[children.size()]);
     }
