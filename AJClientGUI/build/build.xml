@@ -82,10 +82,10 @@
    <target name="build-plugin-jar" description="builds plugin - build.xml needs to be modified">
       <delete includeEmptyDirs="true">
          <fileset dir="${basedir}/plugins" casesensitive="false">
-            <include name="**/ajIrcPlugin_1_3.jar"/>
+            <include name="**/ajIrcPlugin.jar"/>
          </fileset>
       </delete>
-	<jar destfile="${basedir}/plugins/ajIrcPlugin_1_3.jar">
+	<jar destfile="${basedir}/plugins/ajIrcPlugin.jar">
 		<fileset dir="${basedir}/plugin_src/ircplugin" includes="*.xml"/>
 		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
                 excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class
