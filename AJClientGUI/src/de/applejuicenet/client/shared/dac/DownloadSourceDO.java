@@ -5,17 +5,20 @@ import java.util.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.6 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.7 2003/06/30 19:46:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.7  2003/06/30 19:46:11  maj0r
+ * Sourcestil verbessert.
+ *
  * Revision 1.6  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefï¿½gt.
  *
  *
  */
@@ -26,7 +29,7 @@ public class DownloadSourceDO {
   public static final int VERSUCHEINDIREKT = 2;
   public static final int ROOT = 3;
 
-  boolean root;
+  private boolean root;
   private String dateiname;
   private int status;
   private String groesse;
@@ -105,7 +108,7 @@ public class DownloadSourceDO {
       return "Warteschlange";
     }
     else if (status == 1) {
-      return "Übertrage";
+      return "ï¿½bertrage";
     }
     else if (status == 2) {
       return "Versuche indirekt zu verbinden";

@@ -9,17 +9,20 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.13 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.14 2003/06/30 19:46:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.14  2003/06/30 19:46:11  maj0r
+ * Sourcestil verbessert.
+ *
  * Revision 1.13  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefï¿½gt.
  *
  *
  */
@@ -40,12 +43,12 @@ public class PowerDownloadPanel
   private JTextField ratio = new JTextField("2.2");
   private JTextField autoAb = new JTextField();
   private JTextField autoBis = new JTextField();
-  private JButton btnPdl = new JButton("Übernehmen");
-  private JButton btnAutoPdl = new JButton("Übernehmen");
+  private JButton btnPdl = new JButton("ï¿½bernehmen");
+  private JButton btnAutoPdl = new JButton("ï¿½bernehmen");
   private JLabel powerdownload = new JLabel("Powerdownload");
   private JLabel label6 = new JLabel(
-      "Wieviel willst Du maximal für 1 Byte bezahlen?");
-  private JLabel label7 = new JLabel("Für 1 Byte zahle");
+      "Wieviel willst Du maximal fï¿½r 1 Byte bezahlen?");
+  private JLabel label7 = new JLabel("Fï¿½r 1 Byte zahle");
   private JLabel label8 = new JLabel("Credits");
   private JLabel label9 = new JLabel("Automatischer Powerdownload");
   private JLabel label10 = new JLabel("ab ");
@@ -254,7 +257,7 @@ public class PowerDownloadPanel
   }
 
   void btnPdl_actionPerformed(ActionEvent e) {
-//    DataManager.getInstance().getDownloads(); war nur test für das model
+//    DataManager.getInstance().getDownloads(); war nur test fï¿½r das model
   }
 
   public void fireLanguageChanged() {

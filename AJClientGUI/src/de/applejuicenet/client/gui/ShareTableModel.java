@@ -8,20 +8,23 @@ import javax.swing.table.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ShareTableModel.java,v 1.4 2003/06/22 19:01:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ShareTableModel.java,v 1.5 2003/06/30 19:46:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareTableModel.java,v $
+ * Revision 1.5  2003/06/30 19:46:11  maj0r
+ * Sourcestil verbessert.
+ *
  * Revision 1.4  2003/06/22 19:01:55  maj0r
- * Laden des Shares nun erst nach Betätigen des Buttons "Erneut laden".
+ * Laden des Shares nun erst nach Betï¿½tigen des Buttons "Erneut laden".
  *
  * Revision 1.3  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefï¿½gt.
  *
  *
  */
@@ -29,7 +32,7 @@ import de.applejuicenet.client.shared.dac.*;
 public class ShareTableModel
     extends AbstractTableModel {
   final static String[] COL_NAMES = {
-      "Dateiname", "Größe", "Priorität"};
+      "Dateiname", "Grï¿½ï¿½e", "Prioritï¿½t"};
 
   ArrayList shares = new ArrayList();
 
@@ -106,7 +109,7 @@ public class ShareTableModel
       shares.clear();
       Iterator it = changedContent.values().iterator();
       while (it.hasNext()) {
-        shares.add((ShareDO) it.next());
+        shares.add(it.next());
       }
     }
     this.fireTableDataChanged();
