@@ -1,28 +1,11 @@
 package de.applejuicenet.client;
 
 import java.awt.*;
+import javax.swing.*;
 
 import de.applejuicenet.client.gui.*;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.exception.*;
-import de.applejuicenet.client.gui.controller.OptionsManager;
-import de.applejuicenet.client.shared.HtmlLoader;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import javax.swing.JOptionPane;
-import java.io.File;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.OutputStreamWriter;
-import java.io.FileInputStream;
-import java.io.BufferedWriter;
-import de.applejuicenet.client.gui.controller.WebXMPParser;
-import de.applejuicenet.client.gui.controller.DataManager;
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>

@@ -10,9 +10,10 @@ package de.applejuicenet.client.shared;
  */
 
 public abstract class ZeichenErsetzer {
-  public static String korrigiereUmlaute(String text){
-    if (text==null)
+  public static String korrigiereUmlaute(String text) {
+    if (text == null) {
       return "";
+    }
     String result = text.replaceAll("&uuml;", "ü");
     result = result.replaceAll("&Uuml;", "Ü");
     result = result.replaceAll("&auml;", "ä");
@@ -26,11 +27,13 @@ public abstract class ZeichenErsetzer {
     return result;
   }
 
-  public static String korrigiereUmlaute(String text, boolean revers){
-    if (text==null)
+  public static String korrigiereUmlaute(String text, boolean revers) {
+    if (text == null) {
       return "";
-    if (!revers)
+    }
+    if (!revers) {
       return korrigiereUmlaute(text);
+    }
     String result = text.replaceAll("ü", "&uuml;");
     result = result.replaceAll("Ü", "&Uuml;");
     result = result.replaceAll("ä", "&auml;");

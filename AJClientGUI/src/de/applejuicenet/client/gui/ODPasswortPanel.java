@@ -1,13 +1,10 @@
 package de.applejuicenet.client.gui;
 
+import java.awt.*;
 import javax.swing.*;
-import java.awt.GridBagLayout;
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.FlowLayout;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -18,7 +15,8 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @version 1.0
  */
 
-public class ODPasswortPanel extends JPanel {
+public class ODPasswortPanel
+    extends JPanel {
   private JLabel label1;
   private JLabel label2;
   private JLabel label3;
@@ -31,10 +29,11 @@ public class ODPasswortPanel extends JPanel {
     try {
       jbInit();
     }
-    catch(Exception e) {
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
+
   private void jbInit() throws Exception {
     setLayout(new BorderLayout());
     JPanel panel1 = new JPanel(new GridBagLayout());

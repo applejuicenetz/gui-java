@@ -35,6 +35,14 @@
   <property category="sys" name="Version" value="1.0"/>
   <property category="sys" name="VersionLabel" value="@version"/>
   <property category="sys" name="WorkingDirectory" value="."/>
+  <node name="Application" type="Archive">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="libraryStates.1" value="3:Xerces"/>
+    <property category="archiving" name="manifestMainClass" value="de.applejuicenet.client.AppleJuiceClient"/>
+    <property category="archiving" name="targetCompressed" value="1"/>
+    <property category="archiving" name="targetPath" value="AJCoreGUI.jar"/>
+  </node>
   <file path="language/deutsch.xml"/>
   <file path="language/english.xml"/>
   <file path="properties.xml"/>

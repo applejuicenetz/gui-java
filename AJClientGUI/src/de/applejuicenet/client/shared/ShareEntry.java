@@ -19,42 +19,45 @@ public class ShareEntry {
   private String dir;
   private int shareMode;
 
-  public ShareEntry(String dir, int shareMode){
+  public ShareEntry(String dir, int shareMode) {
     this.dir = dir;
     this.shareMode = shareMode;
   }
 
-  public ShareEntry(String dir, String shareMode){
+  public ShareEntry(String dir, String shareMode) {
     this.dir = dir;
     setShareMode(shareMode);
   }
 
-  public String toString(){
+  public String toString() {
     return dir;
   }
 
-  public void setDir(String dir){
+  public void setDir(String dir) {
     this.dir = dir;
   }
 
-  public void setShareMode(int shareMode){
+  public void setShareMode(int shareMode) {
     this.shareMode = shareMode;
   }
 
-  public void setShareMode(String shareMode){
-    if (shareMode.compareToIgnoreCase(sSUBDIRECTORY)==0)
+  public void setShareMode(String shareMode) {
+    if (shareMode.compareToIgnoreCase(sSUBDIRECTORY) == 0) {
       this.shareMode = SUBDIRECTORY;
-    else if (shareMode.compareToIgnoreCase(sSINGLEDIRECTORY)==0)
+    }
+    else if (shareMode.compareToIgnoreCase(sSINGLEDIRECTORY) == 0) {
       this.shareMode = SINGLEDIRECTORY;
-    else
+    }
+    else {
       this.shareMode = -1;
+    }
   }
 
-  public String getDir(){
+  public String getDir() {
     return dir;
   }
 
-  public int getShareMode(){
+  public int getShareMode() {
     return shareMode;
   }
 }

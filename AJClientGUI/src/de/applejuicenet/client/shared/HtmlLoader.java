@@ -2,14 +2,8 @@ package de.applejuicenet.client.shared;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
-import org.apache.xerces.impl.dv.util.*;
-import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.exception.*;
-import javax.xml.parsers.DocumentBuilder;
-import org.xml.sax.XMLReader;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -31,55 +25,65 @@ public abstract class HtmlLoader {
       InetAddress addr = InetAddress.getByName(host);
       Socket socket = new Socket(addr, 9851);
       PrintWriter out = new PrintWriter(
-      new BufferedWriter(
-      new OutputStreamWriter(
-      socket.getOutputStream())));
+          new BufferedWriter(
+          new OutputStreamWriter(
+          socket.getOutputStream())));
 
-      String methode ="";
-      if (method==HtmlLoader.GET)
-        methode="GET ";
-      else if (method==HtmlLoader.POST)
-        methode="POST ";
-      else
+      String methode = "";
+      if (method == HtmlLoader.GET) {
+        methode = "GET ";
+      }
+      else if (method == HtmlLoader.POST) {
+        methode = "POST ";
+      }
+      else {
         return "";
+      }
       out.println(methode + command + " HTTP/1.1");
       out.println();
       out.flush();
 
       BufferedReader in = new BufferedReader(
-      new InputStreamReader(
-      socket.getInputStream()));
+          new InputStreamReader(
+          socket.getInputStream()));
 
-      String inputLine="" ;
+      String inputLine = "";
       inputLine = in.readLine();
-      if (method==HtmlLoader.GET){
-        if (inputLine == null)
+      if (method == HtmlLoader.GET) {
+        if (inputLine == null) {
           throw new WebSiteNotFoundException(WebSiteNotFoundException.
                                              UNKNOWN_HOST);
+        }
         while (inputLine.indexOf("xml version") == -1) {
           inputLine = in.readLine();
-          if (inputLine == null)
+          if (inputLine == null) {
             throw new WebSiteNotFoundException(WebSiteNotFoundException.
                                                UNKNOWN_HOST);
+          }
         }
         urlContent += inputLine;
         while ( (inputLine = in.readLine()) != null) {
           urlContent += inputLine;
         }
       }
-      else{
-        if (inputLine.compareToIgnoreCase("HTTP/1.1 200 OK")==0)
+      else {
+        if (inputLine.compareToIgnoreCase("HTTP/1.1 200 OK") == 0) {
           urlContent = inputLine;
-        else
-          throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR);
+        }
+        else {
+          throw new WebSiteNotFoundException(WebSiteNotFoundException.
+                                             INPUT_ERROR);
+        }
       }
     }
     catch (SocketException sex) {
-      throw new WebSiteNotFoundException(WebSiteNotFoundException.AUTHORIZATION_REQUIRED);
+      throw new WebSiteNotFoundException(WebSiteNotFoundException.
+                                         AUTHORIZATION_REQUIRED);
     }
     catch (IOException sex) {
-      throw new WebSiteNotFoundException(WebSiteNotFoundException.AUTHORIZATION_REQUIRED);
+      throw new WebSiteNotFoundException(WebSiteNotFoundException.
+                                         AUTHORIZATION_REQUIRED);
     }
-   return urlContent;
+    return urlContent;
   }
 }

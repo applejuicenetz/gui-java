@@ -96,7 +96,7 @@ public class OptionsDialog
 
   private void speichern() {
     OptionsManager om = OptionsManager.getInstance();
-    if (standardPanel.isDirty() || verbindungPanel.isDirty()){
+    if (standardPanel.isDirty() || verbindungPanel.isDirty()) {
       om.saveAJSettings(ajSettings);
     }
     if (remotePanel.isDirty()) {
@@ -105,9 +105,13 @@ public class OptionsDialog
       }
       catch (InvalidPasswordException ex) {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "eingabefehler"}));
-        String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "options", "remote", "fehlertext"}));
-        JOptionPane.showMessageDialog(parent, nachricht, titel, JOptionPane.OK_OPTION);
+        String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "eingabefehler"}));
+        String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "remote", "fehlertext"}));
+        JOptionPane.showMessageDialog(parent, nachricht, titel,
+                                      JOptionPane.OK_OPTION);
       }
     }
     dispose();

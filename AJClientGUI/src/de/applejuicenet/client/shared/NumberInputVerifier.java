@@ -18,27 +18,31 @@ public class NumberInputVerifier
   private int max = 0;
   private int min = 0;
 
-  public NumberInputVerifier(){
+  public NumberInputVerifier() {
     limits = false;
   }
 
-  public NumberInputVerifier(int min, int max){
+  public NumberInputVerifier(int min, int max) {
     limits = true;
     this.min = min;
     this.max = max;
   }
+
   public void insertString(int offset, String str, AttributeSet attSet) throws
       BadLocationException {
-    if (str == null)
+    if (str == null) {
       return;
+    }
     String old = getText(0, getLength());
 
     try {
       int i = Integer.parseInt(str);
-      if (limits){
-        int gesamt = Integer.parseInt(old.substring(0, offset) + str + old.substring(offset));
-        if (gesamt < min || gesamt > max)
+      if (limits) {
+        int gesamt = Integer.parseInt(old.substring(0, offset) + str +
+                                      old.substring(offset));
+        if (gesamt < min || gesamt > max) {
           return;
+        }
       }
     }
     catch (NumberFormatException nfE) {

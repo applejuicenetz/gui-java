@@ -3,11 +3,9 @@ package de.applejuicenet.client.gui.tablerenderer;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
-import de.applejuicenet.client.shared.dac.ServerDO;
-import java.util.Date;
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.Version;
+
+import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.dac.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -26,9 +24,10 @@ public class DownloadTableCellRenderer
                                                  boolean hasFocus,
                                                  int row,
                                                  int column) {
-    DownloadNode node = (DownloadNode)((TreeTableModelAdapter)table.getModel()).nodeForRow(row);
+    DownloadNode node = (DownloadNode) ( (TreeTableModelAdapter) table.getModel()).
+        nodeForRow(row);
     DownloadSourceDO server = node.getDO();
-    if (column==9){
+    if (column == 9) {
       JPanel returnPanel = new JPanel(new BorderLayout());
       JLabel image = new JLabel();
 
@@ -56,19 +55,22 @@ public class DownloadTableCellRenderer
       if (server.getVersion() == null) {
         return returnPanel;
       }
-      else if (server.getVersion().getBetriebsSystem() == Version.WIN32)
+      else if (server.getVersion().getBetriebsSystem() == Version.WIN32) {
         image.setIcon(IconManager.getInstance().getIcon("winsymbol"));
-      else if (server.getVersion().getBetriebsSystem() == Version.LINUX)
+      }
+      else if (server.getVersion().getBetriebsSystem() == Version.LINUX) {
         image.setIcon(IconManager.getInstance().getIcon("linuxsymbol"));
 
         //mehr Icons kommen, wenn der Core mehr kann
+      }
       serverName.setText("  " + server.getVersion().getVersion());
       serverName.setFont(table.getFont());
       returnPanel.add(image, BorderLayout.WEST);
       returnPanel.add(serverName, BorderLayout.CENTER);
       return returnPanel;
-    } else if (column==6){
-      if (server.isRoot()){
+    }
+    else if (column == 6) {
+      if (server.isRoot()) {
         String prozent = server.getProzentGeladen();
         int i;
         if ( (i = prozent.indexOf(",")) != -1) {
@@ -81,20 +83,22 @@ public class DownloadTableCellRenderer
         progress.setStringPainted(true);
         return progress;
       }
-      else{
+      else {
         JLabel label1 = new JLabel();
         label1.setOpaque(true);
         if (isSelected) {
           label1.setBackground(table.getSelectionBackground());
           label1.setForeground(table.getSelectionForeground());
         }
-        else{
+        else {
           label1.setBackground(table.getBackground());
           label1.setForeground(table.getForeground());
         }
         return label1;
       }
     }
-    else return new JLabel("");
+    else {
+      return new JLabel("");
+    }
   }
 }

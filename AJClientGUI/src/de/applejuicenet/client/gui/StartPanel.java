@@ -2,14 +2,10 @@ package de.applejuicenet.client.gui;
 
 import java.awt.*;
 import javax.swing.*;
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.gui.controller.DataManager;
-import de.applejuicenet.client.shared.NetworkInfo;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import java.util.HashMap;
+
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -20,7 +16,9 @@ import java.util.HashMap;
  * @version 1.0
  */
 
-public class StartPanel extends JPanel implements LanguageListener, RegisterI, DataUpdateListener{
+public class StartPanel
+    extends JPanel
+    implements LanguageListener, RegisterI, DataUpdateListener {
   private static final Color APFEL_GRUEN = new Color(34, 146, 14);
 
   private JLabel warnungen;
@@ -38,10 +36,11 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI, D
     try {
       jbInit();
     }
-    catch(Exception e) {
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
+
   private void jbInit() throws Exception {
     setLayout(new BorderLayout());
 
@@ -59,7 +58,6 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI, D
     ImageIcon icon1 = im.getIcon("applejuicebanner");
     JLabel label1 = new JLabel(icon1);
     panel1.add(label1);
-
 
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;
@@ -81,7 +79,9 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI, D
 
     constraints.gridy = 1;
     constraints.insets.left = 15;
-    panel3.add(new JLabel("Version " + DataManager.getInstance().getCoreVersion().getVersion()), constraints);
+    panel3.add(new JLabel("Version " +
+                          DataManager.getInstance().getCoreVersion().getVersion()),
+               constraints);
 
     constraints.gridy = 2;
     constraints.insets.left = 5;
@@ -100,11 +100,11 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI, D
     constraints.gridy = 3;
     constraints.insets.left = 15;
     label7 = new JLabel();
-    if (netInfo.isFirewalled()){
+    if (netInfo.isFirewalled()) {
       label7.setForeground(Color.RED);
       label7.setText("Es ist möglich, dass Du hinter einer Firewall, einem Router, Proxy oder ähnlichem sitzt. Dies vermidert die Chance was zu laden.");
     }
-    else{
+    else {
       label7.setForeground(Color.BLACK);
       label7.setText("Alles klar.");
     }
@@ -118,9 +118,9 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI, D
     JLabel label4 = new JLabel(icon4);
     panel3.add(label4, constraints);
 
-
     constraints.gridx = 1;
-    nachrichten = new JLabel("<html><font><h2>Netzwerk, Neuigkeiten und Nachrichten</h2></font></html>");
+    nachrichten = new JLabel(
+        "<html><font><h2>Netzwerk, Neuigkeiten und Nachrichten</h2></font></html>");
     nachrichten.setForeground(APFEL_GRUEN);
     panel3.add(nachrichten, constraints);
 
@@ -137,7 +137,8 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI, D
     panel3.add(label5, constraints);
 
     constraints.gridx = 1;
-    netzwerk = new JLabel("<html><font><h2>appleJuice Netzwerk</h2></font></html>");
+    netzwerk = new JLabel(
+        "<html><font><h2>appleJuice Netzwerk</h2></font></html>");
     netzwerk.setForeground(APFEL_GRUEN);
     panel3.add(netzwerk, constraints);
 
@@ -149,7 +150,9 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI, D
     constraints.gridy = 8;
     constraints.insets.top = 5;
     label6 = new JLabel();
-    label6.setText(netInfo.getAJUserGesamtAsString() + " Benutzer haben " + netInfo.getAJAnzahlDateienAsString() + " Dateien ( " + netInfo.getAJGesamtShare(0) + " )" );
+    label6.setText(netInfo.getAJUserGesamtAsString() + " Benutzer haben " +
+                   netInfo.getAJAnzahlDateienAsString() + " Dateien ( " +
+                   netInfo.getAJGesamtShare(0) + " )");
     panel3.add(label6, constraints);
 
     constraints.insets.top = 0;
@@ -159,46 +162,70 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI, D
     add(panel4, BorderLayout.CENTER);
     languageSelector = LanguageSelector.getInstance();
     languageSelector.addLanguageListener(this);
-    DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.NETINFO_CHANGED);
+    DataManager.getInstance().addDataUpdateListener(this,
+        DataUpdateListener.NETINFO_CHANGED);
   }
 
-  public void registerSelected(){
+  public void registerSelected() {
 //    updateContent();
   }
 
-  private void updateContent(){
-    fireLanguageChanged();  //ein bischen missbraucht, aber schwachsinnig dies doppelt zu implementieren
+  private void updateContent() {
+    fireLanguageChanged(); //ein bischen missbraucht, aber schwachsinnig dies doppelt zu implementieren
   }
 
-  public void fireLanguageChanged(){
+  public void fireLanguageChanged() {
     NetworkInfo netInfo = DataManager.getInstance().getNetworkInfo();
-    netzwerk.setText("<html><font><h2>" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "html7"})) + "</h2></font></html>");
-    nachrichten.setText("<html><font><h2>" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "html13"})) + "</h2></font></html>");
-    deinClient.setText("<html><font><h2>" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "html1"})) + "</h2></font></html>");
-    if (netInfo.isFirewalled()){
+    netzwerk.setText("<html><font><h2>" +
+                     ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "html7"})) +
+                     "</h2></font></html>");
+    nachrichten.setText("<html><font><h2>" +
+                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "html13"})) +
+                        "</h2></font></html>");
+    deinClient.setText("<html><font><h2>" +
+                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "html1"})) +
+                       "</h2></font></html>");
+    if (netInfo.isFirewalled()) {
       label7.setForeground(Color.RED);
-      label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "firewallwarning", "caption"})));
+      label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+          getFirstAttrbuteByTagName(new String[] {"mainform", "firewallwarning",
+                                    "caption"})));
     }
-    else
+    else {
       label7.setText("");
-    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "html10"}));
+    }
+    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "html10"}));
     temp = temp.replaceFirst("%s", "<Kein Server>");
-    temp = temp.replaceFirst("%d", Integer.toString(DataManager.getInstance().getAllServer().size()));
+    temp = temp.replaceFirst("%d",
+                             Integer.toString(DataManager.getInstance().getAllServer().
+                                              size()));
     temp = temp.replaceAll("%s", "-");
     label9.setText(temp);
-    temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "status", "status2"}));
+    temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                             getFirstAttrbuteByTagName(new
+        String[] {"mainform", "status", "status2"}));
     temp = temp.replaceFirst("%d", netInfo.getAJUserGesamtAsStringWithPoints());
     temp = temp.replaceFirst("%d", netInfo.getAJAnzahlDateienAsStringWithPoints());
     temp = temp.replaceFirst("%s", netInfo.getAJGesamtShareWithPoints(0));
     label6.setText(temp);
-    warnungen.setText("<html><font><h2>" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "html15"})) + "</h2></font></html>");
+    warnungen.setText("<html><font><h2>" +
+                      ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "html15"})) +
+                      "</h2></font></html>");
   }
 
-  public void fireContentChanged(int type, Object content){
-    if (type != DataUpdateListener.NETINFO_CHANGED || !(content instanceof NetworkInfo))
+  public void fireContentChanged(int type, Object content) {
+    if (type != DataUpdateListener.NETINFO_CHANGED ||
+        ! (content instanceof NetworkInfo)) {
       return;
+    }
     NetworkInfo netInfo = (NetworkInfo) content;
-    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "status", "status2"}));
+    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "status", "status2"}));
     temp = temp.replaceFirst("%d", netInfo.getAJUserGesamtAsStringWithPoints());
     temp = temp.replaceFirst("%d", netInfo.getAJAnzahlDateienAsStringWithPoints());
     temp = temp.replaceFirst("%s", netInfo.getAJGesamtShareWithPoints(0));

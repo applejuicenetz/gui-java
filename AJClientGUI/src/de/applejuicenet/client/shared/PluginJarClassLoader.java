@@ -1,9 +1,6 @@
 package de.applejuicenet.client.shared;
 
-import java.io.*;
 import java.net.*;
-import java.util.*;
-import java.util.jar.*;
 
 import de.applejuicenet.client.gui.plugins.*;
 

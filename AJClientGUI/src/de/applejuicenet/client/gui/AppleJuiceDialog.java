@@ -1,21 +1,18 @@
 package de.applejuicenet.client.gui;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.*;
 
-import org.apache.xerces.impl.dv.util.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.exception.*;
-import de.applejuicenet.client.gui.plugins.PluginConnector;
-import javax.swing.event.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -55,15 +52,15 @@ public class AppleJuiceDialog
     }
   }
 
-  public void addPluginToHashSet(PluginConnector plugin){
+  public void addPluginToHashSet(PluginConnector plugin) {
     plugins.add(plugin);
   }
 
-  public PluginConnector[] getPlugins(){
+  public PluginConnector[] getPlugins() {
     return (PluginConnector[]) plugins.toArray(new PluginConnector[plugins.size()]);
   }
 
-  public static AppleJuiceDialog getApp(){
+  public static AppleJuiceDialog getApp() {
     return theApp;
   }
 
@@ -85,9 +82,9 @@ public class AppleJuiceDialog
       }
     });
     getContentPane().setLayout(new BorderLayout());
-    registerPane.addChangeListener(new ChangeListener(){
-      public void stateChanged(ChangeEvent e){
-        RegisterI register = (RegisterI)registerPane.getSelectedComponent();
+    registerPane.addChangeListener(new ChangeListener() {
+      public void stateChanged(ChangeEvent e) {
+        RegisterI register = (RegisterI) registerPane.getSelectedComponent();
         register.registerSelected();
       }
     });
@@ -149,10 +146,11 @@ public class AppleJuiceDialog
     System.exit(0);
   }
 
-  public static void closeWithErrormessage(String error){
-    JOptionPane.showMessageDialog(theApp, error, "Fehler!", JOptionPane.OK_OPTION);
+  public static void closeWithErrormessage(String error) {
+    JOptionPane.showMessageDialog(theApp, error, "Fehler!",
+                                  JOptionPane.OK_OPTION);
     einstellungenSpeichern();
-    System.exit(-1);
+    System.exit( -1);
   }
 
   protected JMenuBar createMenuBar() {
@@ -160,26 +158,29 @@ public class AppleJuiceDialog
         File.separator;
     File languagePath = new File(path);
     String[] tempListe = languagePath.list();
-    if (tempListe==null)
+    if (tempListe == null) {
       closeWithErrormessage("Der Ordner 'language' für die Sprachauswahl xml-Dateien ist nicht vorhanden.\r\nappleJuice wird beendet.");
+    }
     HashSet sprachDateien = new HashSet();
     for (int i = 0; i < tempListe.length; i++) {
       if (tempListe[i].indexOf(".xml") != -1) {
         sprachDateien.add(tempListe[i]);
       }
     }
-    if (sprachDateien.size()==0)
+    if (sprachDateien.size() == 0) {
       closeWithErrormessage("Es sind keine xml-Dateien für die Sprachauswahl im Ordner 'language' vorhanden.\r\nappleJuice wird beendet.");
 
+    }
     JMenuBar menuBar = new JMenuBar();
     optionenMenu = new JMenu("Extras");
     menuItem = new JMenuItem("Optionen");
-    menuItem.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent e){
+    menuItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
         OptionsDialog od = new OptionsDialog(_this);
         Dimension appDimension = od.getSize();
         Dimension screenSize = _this.getSize();
-        od.setLocation((screenSize.width-appDimension.width)/4, (screenSize.height-appDimension.height)/4);
+        od.setLocation( (screenSize.width - appDimension.width) / 4,
+                       (screenSize.height - appDimension.height) / 4);
         od.show();
       }
     });
@@ -229,13 +230,15 @@ public class AppleJuiceDialog
         getFirstAttrbuteByTagName(new String[] {"einstform", "caption"})));
     optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"javagui", "menu", "extras"})));
-    if (paused)
+    if (paused) {
       pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
           getFirstAttrbuteByTagName(new String[] {"javagui", "mainform",
                                     "fortsetzen"})));
-    else
+    }
+    else {
       pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
           getFirstAttrbuteByTagName(new String[] {"javagui", "mainform",
                                     "pause"})));
+    }
   }
 }

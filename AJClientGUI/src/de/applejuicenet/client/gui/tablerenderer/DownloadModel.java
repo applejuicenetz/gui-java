@@ -1,19 +1,13 @@
 package de.applejuicenet.client.gui.tablerenderer;
 
-import java.net.*;
 import java.util.*;
 
 import javax.swing.*;
 import javax.swing.tree.*;
 
-import de.applejuicenet.client.gui.controller.DataManager;
-import java.awt.Toolkit;
-import javax.swing.event.TreeModelListener;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.exception.*;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.dac.*;
 
 public class DownloadModel
     extends AbstractTreeTableModel
@@ -25,7 +19,7 @@ public class DownloadModel
       TreeTableModel.class, String.class, String.class, String.class, String.class,
       String.class, String.class, String.class, String.class, String.class};
 
-  public void setNames(String[] names){
+  public void setNames(String[] names) {
     cNames = names;
   }
 
@@ -34,34 +28,54 @@ public class DownloadModel
     loadHeader();
     HashMap downloads = DataManager.getInstance().getDownloads();
     Iterator it = downloads.values().iterator();
-    while (it.hasNext()){
+    while (it.hasNext()) {
       DownloadSourceDO download = (DownloadSourceDO) it.next();
       ( (DownloadNode) getRoot()).addChild(download);
     }
   }
 
-  public void fillTree(){
+  public void fillTree() {
     HashMap downloads = DataManager.getInstance().getDownloads();
     Iterator it = downloads.values().iterator();
-    while (it.hasNext()){
+    while (it.hasNext()) {
       DownloadSourceDO download = (DownloadSourceDO) it.next();
 //      DownloadNode node = ((DownloadNode) getRoot()).getChildrenMap().get(download.getId());
     }
   }
 
-  private void loadHeader(){
+  private void loadHeader() {
     LanguageSelector languageSelector = LanguageSelector.getInstance();
     cNames = new String[10];
-    cNames[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col0caption"}));
-    cNames[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col1caption"}));
-    cNames[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col2caption"}));
-    cNames[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col3caption"}));
-    cNames[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col4caption"}));
-    cNames[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col5caption"}));
-    cNames[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col6caption"}));
-    cNames[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col7caption"}));
-    cNames[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col8caption"}));
-    cNames[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col9caption"}));
+    cNames[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"mainform", "queue", "col0caption"}));
+    cNames[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"mainform", "queue", "col1caption"}));
+    cNames[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"mainform", "queue", "col2caption"}));
+    cNames[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"mainform", "queue", "col3caption"}));
+    cNames[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"mainform", "queue", "col4caption"}));
+    cNames[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"mainform", "queue", "col5caption"}));
+    cNames[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"mainform", "queue", "col6caption"}));
+    cNames[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"mainform", "queue", "col7caption"}));
+    cNames[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"mainform", "queue", "col8caption"}));
+    cNames[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"mainform", "queue", "col9caption"}));
   }
 
   protected DownloadSourceDO getDO(Object node) {
@@ -121,10 +135,12 @@ public class DownloadModel
         case 8:
           return download.getPowerdownload();
         case 9:
-          if (download.getVersion()!=null)
+          if (download.getVersion() != null) {
             return download.getVersion().getVersion();
-          else
+          }
+          else {
             return "";
+          }
         default:
           return "";
       }
@@ -151,7 +167,8 @@ class DownloadNode
     children = new HashMap();
     if (download.getSources() != null && download.getSources().length != 0) {
       for (int i = 0; i < download.getSources().length; i++) {
-        children.put(download.getSources()[i].getId(), new DownloadNode(download.getSources()[i]));
+        children.put(download.getSources()[i].getId(),
+                     new DownloadNode(download.getSources()[i]));
       }
     }
   }
@@ -172,7 +189,7 @@ class DownloadNode
   }
 
   public Icon getConvenientIcon() {
-    if (children.size()!=0) {
+    if (children.size() != 0) {
       return rootIcon;
     }
     if (download.getIntStatus() == DownloadSourceDO.UEBERTRAGE) {

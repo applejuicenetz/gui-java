@@ -1,16 +1,12 @@
 package de.applejuicenet.client.gui;
 
-import javax.swing.*;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.applejuicenet.client.shared.AJSettings;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
 
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -21,7 +17,8 @@ import java.awt.event.*;
  * @version 1.0
  */
 
-public class ODVerbindungPanel extends JPanel {
+public class ODVerbindungPanel
+    extends JPanel {
   private boolean dirty = false;
   private JLabel label1;
   private JLabel label2;
@@ -44,18 +41,17 @@ public class ODVerbindungPanel extends JPanel {
   private int anzahlDownloads = 0;
   private AJSettings ajSettings;
 
-
   public ODVerbindungPanel(AJSettings ajSettings) {
     this.ajSettings = ajSettings;
     try {
       jbInit();
     }
-    catch(Exception e) {
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  public boolean isDirty(){
+  public boolean isDirty() {
     return dirty;
   }
 
@@ -76,9 +72,9 @@ public class ODVerbindungPanel extends JPanel {
 
     anzahl.setText(Integer.toString(anzahlDownloads));
     anzahl.setDocument(new NumberInputVerifier(0, 1000));
-    anzahl.addFocusListener(new FocusAdapter(){
-      public void focusLost(FocusEvent e){
-        anzahlDownloads= Integer.parseInt(anzahl.getText());
+    anzahl.addFocusListener(new FocusAdapter() {
+      public void focusLost(FocusEvent e) {
+        anzahlDownloads = Integer.parseInt(anzahl.getText());
       }
     });
     maxVerbindungen.setDocument(new NumberInputVerifier());
@@ -87,11 +83,13 @@ public class ODVerbindungPanel extends JPanel {
     maxUpload.setHorizontalAlignment(JLabel.RIGHT);
     maxUpload.addFocusListener(new FocusAdapter() {
       public void focusLost(FocusEvent e) {
-        int untereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()), 0.2);
-        int obereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()), 0.6);
+        int untereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()),
+                                          0.2);
+        int obereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()),
+                                         0.6);
         kbSlider.setMinimum(untereGrenze);
         kbSlider.setMaximum(obereGrenze);
-        if (Long.parseLong(maxUpload.getText()) != ajSettings.getMaxUploadInKB()){
+        if (Long.parseLong(maxUpload.getText()) != ajSettings.getMaxUploadInKB()) {
           dirty = true;
           ajSettings.setMaxUpload(Long.parseLong(maxUpload.getText()) * 1024);
         }
@@ -101,9 +99,11 @@ public class ODVerbindungPanel extends JPanel {
     maxDownload.setHorizontalAlignment(JLabel.RIGHT);
     maxDownload.addFocusListener(new FocusAdapter() {
       public void focusLost(FocusEvent e) {
-        if (Long.parseLong(maxDownload.getText()) != ajSettings.getMaxDownloadInKB()){
+        if (Long.parseLong(maxDownload.getText()) !=
+            ajSettings.getMaxDownloadInKB()) {
           dirty = true;
-          ajSettings.setMaxDownload(Long.parseLong(maxDownload.getText()) * 1024);
+          ajSettings.setMaxDownload(Long.parseLong(maxDownload.getText()) *
+                                    1024);
         }
       }
     });
@@ -143,23 +143,26 @@ public class ODVerbindungPanel extends JPanel {
     btnPdlUp.addMouseListener(slotMA);
     btnPdlDown.addMouseListener(slotMA);
 
-    int untereGrenze = (int) Math.pow((double)ajSettings.getMaxUploadInKB(), 0.2);
-    int obereGrenze = (int) Math.pow((double)ajSettings.getMaxUploadInKB(), 0.6);
+    int untereGrenze = (int) Math.pow( (double) ajSettings.getMaxUploadInKB(),
+                                      0.2);
+    int obereGrenze = (int) Math.pow( (double) ajSettings.getMaxUploadInKB(),
+                                     0.6);
 
     kbSlider = new JSlider(untereGrenze, obereGrenze);
     kbSlider.setMajorTickSpacing(1);
     kbSlider.setMinorTickSpacing(1);
     kbSlider.setSnapToTicks(true);
-    kbSlider.addChangeListener(new ChangeListener(){
-      public void stateChanged(ChangeEvent e){
-        JSlider slider = (JSlider)e.getSource();
+    kbSlider.addChangeListener(new ChangeListener() {
+      public void stateChanged(ChangeEvent e) {
+        JSlider slider = (JSlider) e.getSource();
         kbSlot.setText(Integer.toString(slider.getValue()) + " kb/s");
         dirty = true;
         ajSettings.setSpeedPerSlot(slider.getValue());
       }
     });
 
-    automaticConnect = new JCheckBox(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+    automaticConnect = new JCheckBox(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "autoconn",
                                   "caption"})));
 
@@ -256,29 +259,32 @@ public class ODVerbindungPanel extends JPanel {
     kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
   }
 
-  class SlotMouseAdapter extends MouseAdapter{
+  class SlotMouseAdapter
+      extends MouseAdapter {
     public void mouseClicked(MouseEvent e) {
-      JLabel source = (JLabel)e.getSource();
-      if (source==btnPdlUp){
-        if (anzahlDownloads==1000)
+      JLabel source = (JLabel) e.getSource();
+      if (source == btnPdlUp) {
+        if (anzahlDownloads == 1000) {
           return;
+        }
         anzahlDownloads++;
       }
-      else if (source==btnPdlDown){
-        if (anzahlDownloads==0)
+      else if (source == btnPdlDown) {
+        if (anzahlDownloads == 0) {
           return;
+        }
         anzahlDownloads--;
       }
       anzahl.setText(Integer.toString(anzahlDownloads));
     }
 
-    public void mouseEntered(MouseEvent e){
+    public void mouseEntered(MouseEvent e) {
       JLabel source = (JLabel) e.getSource();
       source.setBorder(BorderFactory.createLineBorder(Color.black));
 
     }
 
-    public void mouseExited(MouseEvent e){
+    public void mouseExited(MouseEvent e) {
       JLabel source = (JLabel) e.getSource();
       source.setBorder(null);
     }

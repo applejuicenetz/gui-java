@@ -1,15 +1,14 @@
 package de.applejuicenet.client.gui;
 
-import javax.swing.*;
-import de.applejuicenet.client.gui.plugins.PluginConnector;
-import java.awt.BorderLayout;
-import java.util.Vector;
-import java.awt.Dimension;
-import java.awt.Color;
-import javax.swing.event.*;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
+import java.util.*;
 
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.plugins.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -20,7 +19,8 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
  * @version 1.0
  */
 
-public class ODPluginPanel extends JPanel {
+public class ODPluginPanel
+    extends JPanel {
   private JList pluginList;
   private JEditorPane beschreibung = new JEditorPane();
   private JLabel label1 = new JLabel();
@@ -35,14 +35,15 @@ public class ODPluginPanel extends JPanel {
     try {
       jbInit();
     }
-    catch(Exception e) {
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
+
   private void jbInit() throws Exception {
     PluginConnector[] plugins = theApp.getPlugins();
     Vector v = new Vector();
-    if (plugins.length!=0){
+    if (plugins.length != 0) {
       for (int i = 0; i < plugins.length; i++) {
         v.add(new PluginContainer(plugins[i]));
       }
@@ -50,22 +51,35 @@ public class ODPluginPanel extends JPanel {
     Dimension parentSize = theApp.getSize();
     beschreibung.setBackground(label1.getBackground());
     Dimension dim1 = beschreibung.getPreferredSize();
-    beschreibung.setPreferredSize(new Dimension(parentSize.width/3, beschreibung.getPreferredSize().height));
+    beschreibung.setPreferredSize(new Dimension(parentSize.width / 3,
+                                                beschreibung.getPreferredSize().
+                                                height));
     beschreibung.setEditable(false);
     pluginList = new JList(v);
-    pluginList.setPreferredSize(new Dimension(190, pluginList.getPreferredSize().height));
-    pluginList.addListSelectionListener(new ListSelectionListener(){
-      public void valueChanged(ListSelectionEvent e){
+    pluginList.setPreferredSize(new Dimension(190,
+                                              pluginList.getPreferredSize().height));
+    pluginList.addListSelectionListener(new ListSelectionListener() {
+      public void valueChanged(ListSelectionEvent e) {
         pluginList_valueChanged(e);
       }
     });
     setLayout(new BorderLayout());
     LanguageSelector languageSelector = LanguageSelector.getInstance();
-    label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"einstform", "Label11", "caption"})) + ":");
-    name = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "options", "plugins", "name"}));
-    version = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "options", "plugins", "version"}));
-    erlaeuterung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "options", "plugins", "beschreibung"}));
-    autor = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "options", "plugins", "autor"}));
+    label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"einstform", "Label11",
+                                  "caption"})) + ":");
+    name = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                             getFirstAttrbuteByTagName(new
+        String[] {"javagui", "options", "plugins", "name"}));
+    version = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                getFirstAttrbuteByTagName(new
+        String[] {"javagui", "options", "plugins", "version"}));
+    erlaeuterung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "options", "plugins",
+                                  "beschreibung"}));
+    autor = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                              getFirstAttrbuteByTagName(new
+        String[] {"javagui", "options", "plugins", "autor"}));
 
     add(label1, BorderLayout.NORTH);
     add(pluginList, BorderLayout.WEST);
@@ -73,28 +87,30 @@ public class ODPluginPanel extends JPanel {
     add(sp, BorderLayout.CENTER);
   }
 
-  class PluginContainer{
+  class PluginContainer {
     private PluginConnector plugin;
 
-    public PluginContainer(PluginConnector plugin){
+    public PluginContainer(PluginConnector plugin) {
       this.plugin = plugin;
     }
 
-    public String toString(){
+    public String toString() {
       return plugin.getTitle();
     }
 
-    public String getBeschreibung(){
+    public String getBeschreibung() {
       String text;
-      text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + autor + ":\r\n" + plugin.getAutor()
-          +"\r\n\r\n" + version  + ":\r\n" + plugin.getVersion()
-           + "\r\n\r\n" + erlaeuterung + ":\r\n" + plugin.getBeschreibung();
+      text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + autor + ":\r\n" +
+          plugin.getAutor()
+          + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion()
+          + "\r\n\r\n" + erlaeuterung + ":\r\n" + plugin.getBeschreibung();
       return text;
     }
   }
 
   void pluginList_valueChanged(ListSelectionEvent e) {
-    PluginContainer selected = (PluginContainer)((JList)e.getSource()).getSelectedValue();
+    PluginContainer selected = (PluginContainer) ( (JList) e.getSource()).
+        getSelectedValue();
     beschreibung.setText(selected.getBeschreibung());
   }
 }

@@ -1,7 +1,5 @@
 package de.applejuicenet.client.gui.listener;
 
-import java.util.HashMap;
-
 /**
  * <p>Title: AppleJuice Client-GUI</p>
  * <p>Description: </p>

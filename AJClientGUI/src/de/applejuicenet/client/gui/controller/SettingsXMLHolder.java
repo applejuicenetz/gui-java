@@ -1,11 +1,9 @@
 package de.applejuicenet.client.gui.controller;
 
-import java.util.HashMap;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
-import de.applejuicenet.client.shared.AJSettings;
-import de.applejuicenet.client.shared.ShareEntry;
-import java.util.HashSet;
+import java.util.*;
+
+import org.w3c.dom.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -16,14 +14,15 @@ import java.util.HashSet;
  * @version 1.0
  */
 
-public class SettingsXMLHolder extends WebXMPParser {
+public class SettingsXMLHolder
+    extends WebXMPParser {
   private AJSettings settings;
 
-  public SettingsXMLHolder(){
+  public SettingsXMLHolder() {
     super("/xml/settings.xml", "", false);
   }
 
-  public void update(){
+  public void update() {
     reload("");
     NodeList nodes = document.getElementsByTagName("nick");
     String nick = nodes.item(0).getFirstChild().getNodeValue();
@@ -32,13 +31,16 @@ public class SettingsXMLHolder extends WebXMPParser {
     nodes = document.getElementsByTagName("xmlport");
     long xmlPort = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
     nodes = document.getElementsByTagName("allowbrowse");
-    boolean allowBrowse = nodes.item(0).getFirstChild().getNodeValue().compareToIgnoreCase("true") == 0 ? true : false;
+    boolean allowBrowse = nodes.item(0).getFirstChild().getNodeValue().
+        compareToIgnoreCase("true") == 0 ? true : false;
     nodes = document.getElementsByTagName("maxupload");
     long maxUpload = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
     nodes = document.getElementsByTagName("maxdownload");
-    long maxDownload = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
+    long maxDownload = Long.parseLong(nodes.item(0).getFirstChild().
+                                      getNodeValue());
     nodes = document.getElementsByTagName("speedperslot");
-    int speedPerSlot = Integer.parseInt(nodes.item(0).getFirstChild().getNodeValue());
+    int speedPerSlot = Integer.parseInt(nodes.item(0).getFirstChild().
+                                        getNodeValue());
     nodes = document.getElementsByTagName("incomingdirectory");
     String incomingDir = nodes.item(0).getFirstChild().getNodeValue();
     nodes = document.getElementsByTagName("temporarydirectory");
@@ -52,10 +54,12 @@ public class SettingsXMLHolder extends WebXMPParser {
       ShareEntry entry = new ShareEntry(dir, shareMode);
       shareEntries.add(entry);
     }
-    settings = new AJSettings(nick, port, xmlPort, allowBrowse, maxUpload, maxDownload, speedPerSlot, incomingDir, tempDir, shareEntries);
+    settings = new AJSettings(nick, port, xmlPort, allowBrowse, maxUpload,
+                              maxDownload, speedPerSlot, incomingDir, tempDir,
+                              shareEntries);
   }
 
-  public AJSettings getAJSettings(){
+  public AJSettings getAJSettings() {
     update();
     return settings;
   }

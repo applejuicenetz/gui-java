@@ -9,12 +9,13 @@ package de.applejuicenet.client.gui.controller;
  * @version 1.0
  */
 
-public class InformationXMLHolder extends WebXMPParser {
-  public InformationXMLHolder(){
+public class InformationXMLHolder
+    extends WebXMPParser {
+  public InformationXMLHolder() {
     super("/xml/information.xml", "");
   }
 
-  public void update(){
+  public void update() {
 
   }
 }

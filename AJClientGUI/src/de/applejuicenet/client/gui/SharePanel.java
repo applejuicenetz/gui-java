@@ -1,19 +1,15 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import javax.swing.*;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
+import java.util.*;
+
 import java.awt.*;
+import javax.swing.*;
 import javax.swing.border.*;
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.gui.controller.DataManager;
-import java.util.HashMap;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import javax.swing.table.TableColumn;
-import de.applejuicenet.client.shared.AJSettings;
-import java.util.Iterator;
-import de.applejuicenet.client.shared.ShareEntry;
+import javax.swing.table.*;
+
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -24,7 +20,9 @@ import de.applejuicenet.client.shared.ShareEntry;
  * @version 1.0
  */
 
-public class SharePanel extends JPanel implements LanguageListener, RegisterI, DataUpdateListener{
+public class SharePanel
+    extends JPanel
+    implements LanguageListener, RegisterI, DataUpdateListener {
   private JPanel panelWest;
   private JPanel panelCenter;
   private JButton addFolderWithSubfolder = new JButton();
@@ -48,16 +46,17 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI, D
     try {
       jbInit();
     }
-    catch(Exception e) {
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
+
   private void jbInit() throws Exception {
     ajSettings = DataManager.getInstance().getAJSettings();
     Iterator it = ajSettings.getShareDirs().iterator();
-    while (it.hasNext()){
+    while (it.hasNext()) {
       ShareEntry entry = (ShareEntry) it.next();
-      ((DefaultListModel)folderList.getModel()).addElement(entry);
+      ( (DefaultListModel) folderList.getModel()).addElement(entry);
     }
 
     shareTable = new JTable();
@@ -93,9 +92,10 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI, D
     constraints.weighty = 1;
     panelWest.add(folderList, constraints);
 
-    for (int i=0; i<=250; i++)
+    for (int i = 0; i <= 250; i++) {
       cmbPrio.addItem(Integer.toString(i));
 
+    }
     JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
     panel1.add(neueListe);
     panel1.add(neuLaden);
@@ -117,34 +117,70 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI, D
 //    DataManager.getInstance().addShareListener(this);
   }
 
-  public void registerSelected(){
+  public void registerSelected() {
     HashMap shares = DataManager.getInstance().getShare();
   }
 
-  public void fireLanguageChanged(){
+  public void fireLanguageChanged() {
     LanguageSelector languageSelector = LanguageSelector.getInstance();
-    titledBorder1.setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "dirssheet", "caption"})));
-    titledBorder2.setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "filessheet", "caption"})));
-    addFolderWithSubfolder.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "addwsubdirsbtn", "caption"})));
-    addFolderWithSubfolder.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "addwsubdirsbtn", "hint"})));
-    addFolderWithoutSubfolder.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "addosubdirsbtn", "caption"})));
-    addFolderWithoutSubfolder.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "addosubdirsbtn", "hint"})));
-    removeFolder.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "deldirbtn", "caption"})));
-    removeFolder.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "deldirbtn", "hint"})));
-    startCheck.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "startsharecheck", "caption"})));
-    startCheck.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "startsharecheck", "hint"})));
+    titledBorder1.setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "dirssheet",
+                                  "caption"})));
+    titledBorder2.setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "filessheet",
+                                  "caption"})));
+    addFolderWithSubfolder.setText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "addwsubdirsbtn", "caption"})));
+    addFolderWithSubfolder.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "addwsubdirsbtn", "hint"})));
+    addFolderWithoutSubfolder.setText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "addosubdirsbtn", "caption"})));
+    addFolderWithoutSubfolder.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "addosubdirsbtn", "hint"})));
+    removeFolder.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "deldirbtn",
+                                  "caption"})));
+    removeFolder.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "deldirbtn", "hint"})));
+    startCheck.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "startsharecheck",
+                                  "caption"})));
+    startCheck.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "startsharecheck", "hint"})));
 
-    neueListe.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "newfilelist", "caption"})));
-    neueListe.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "newfilelist", "hint"})));
-    neuLaden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "sharereload", "caption"})));
-    neuLaden.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "sharereload", "hint"})));
-    prioritaetSetzen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "setprio", "caption"})));
-    prioritaetSetzen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "setprio", "hint"})));
-    prioritaetAufheben.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "clearprio", "caption"})));
-    prioritaetAufheben.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "clearprio", "hint"})));
+    neueListe.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "newfilelist",
+                                  "caption"})));
+    neueListe.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "newfilelist",
+                                  "hint"})));
+    neuLaden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "sharereload",
+                                  "caption"})));
+    neuLaden.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "sharereload",
+                                  "hint"})));
+    prioritaetSetzen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "setprio",
+                                  "caption"})));
+    prioritaetSetzen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "setprio", "hint"})));
+    prioritaetAufheben.setText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "clearprio", "caption"})));
+    prioritaetAufheben.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "clearprio", "hint"})));
   }
 
-  public void fireContentChanged(int type, Object content){
+  public void fireContentChanged(int type, Object content) {
 
   }
 }

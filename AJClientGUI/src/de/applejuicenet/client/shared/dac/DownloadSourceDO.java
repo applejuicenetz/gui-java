@@ -1,7 +1,8 @@
 package de.applejuicenet.client.shared.dac;
 
 import java.util.*;
-import de.applejuicenet.client.shared.Version;
+
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -33,12 +34,13 @@ public class DownloadSourceDO {
   private String id;
   private HashSet sources = new HashSet(); //contains DownloadSourceDO leafs
 
-  public DownloadSourceDO(boolean isRoot, String id, String dateiname, int status,
-                    String groesse,
-                    String bereitsGeladen, String prozentGeladen,
-                    String nochZuLaden, String geschwindigkeit,
-                    String restlicheZeit, String powerdownload,
-                    Version version, String nick, HashSet sources) {
+  public DownloadSourceDO(boolean isRoot, String id, String dateiname,
+                          int status,
+                          String groesse,
+                          String bereitsGeladen, String prozentGeladen,
+                          String nochZuLaden, String geschwindigkeit,
+                          String restlicheZeit, String powerdownload,
+                          Version version, String nick, HashSet sources) {
     root = isRoot;
     this.id = id;
     this.dateiname = dateiname;
@@ -55,17 +57,17 @@ public class DownloadSourceDO {
     this.sources = sources;
   }
 
-  public DownloadSourceDO(){ }
+  public DownloadSourceDO() {}
 
-  public void setGroesse(String groesse){
-    this.groesse=groesse;
+  public void setGroesse(String groesse) {
+    this.groesse = groesse;
   }
 
-  public String getId(){
+  public String getId() {
     return id;
   }
 
-  public boolean isRoot(){
+  public boolean isRoot() {
     return root;
   }
 
@@ -92,14 +94,18 @@ public class DownloadSourceDO {
   }
 
   public String getStatus() {
-    if (status==0)
+    if (status == 0) {
       return "Warteschlange";
-    else if (status==1)
+    }
+    else if (status == 1) {
       return "Übertrage";
-    else if (status==2)
+    }
+    else if (status == 2) {
       return "Versuche indirekt zu verbinden";
-    else if (status==3)
+    }
+    else if (status == 3) {
       return "";
+    }
     //to do
     return "";
   }
@@ -146,14 +152,15 @@ public class DownloadSourceDO {
   }
 
   public void addDownloadSource(DownloadSourceDO source) {
-    if (source!=null && !(sources.contains(source))) {
+    if (source != null && ! (sources.contains(source))) {
       sources.add(source);
     }
   }
 
   public DownloadSourceDO[] getSources() {
-    if (sources==null)
+    if (sources == null) {
       return null;
+    }
     return (DownloadSourceDO[]) sources.toArray(new DownloadSourceDO[sources.
                                                 size()]);
   }

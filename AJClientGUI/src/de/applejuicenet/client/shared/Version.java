@@ -41,10 +41,12 @@ public class Version {
 
   public String getBetriebsSystemAsString() {
     String result = "";
-    if (betriebsSystem == LINUX)
+    if (betriebsSystem == LINUX) {
       result = "Linux";
-    else if (betriebsSystem == WIN32)
+    }
+    else if (betriebsSystem == WIN32) {
       result = "Win32";
+    }
     return result;
   }
 
@@ -60,12 +62,14 @@ public class Version {
     this.programmierSprache = programmierSprache;
   }
 
-  public static int getOSTypByOSName(String OSName){
+  public static int getOSTypByOSName(String OSName) {
     int result = -1;
-    if (OSName.compareToIgnoreCase("Windows NT")==0)
+    if (OSName.compareToIgnoreCase("Windows NT") == 0) {
       result = WIN32;
-    else if (OSName.compareToIgnoreCase("Linux")==0)
+    }
+    else if (OSName.compareToIgnoreCase("Linux") == 0) {
       result = LINUX;
+    }
     return result;
   }
 }

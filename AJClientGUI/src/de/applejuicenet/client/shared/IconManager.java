@@ -1,12 +1,12 @@
 package de.applejuicenet.client.shared;
 
-import javax.swing.ImageIcon;
-import java.net.URL;
-import java.awt.Toolkit;
-import java.awt.Image;
-import java.util.Hashtable;
-import de.applejuicenet.client.shared.icons.DummyClass;
-import java.util.HashMap;
+import java.net.*;
+import java.util.*;
+
+import java.awt.*;
+import javax.swing.*;
+
+import de.applejuicenet.client.shared.icons.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>

@@ -39,91 +39,91 @@ public class AJSettings {
     this.shareDirs = shareDirs;
   }
 
-  public String getNick(){
+  public String getNick() {
     return nick;
   }
 
-  public void setNick(String nick){
+  public void setNick(String nick) {
     this.nick = nick;
   }
 
-  public long getPort(){
+  public long getPort() {
     return port;
   }
 
-  public void setPort(long port){
+  public void setPort(long port) {
     this.port = port;
   }
 
-  public long getXMLPort(){
+  public long getXMLPort() {
     return xmlPort;
   }
 
-  public void setXMLPort(long xmlPort){
+  public void setXMLPort(long xmlPort) {
     this.xmlPort = xmlPort;
   }
 
-  public boolean isBrowseAllowed(){
+  public boolean isBrowseAllowed() {
     return allowBrowse;
   }
 
-  public void setBrowseAllowed(boolean allow){
+  public void setBrowseAllowed(boolean allow) {
     this.allowBrowse = allow;
   }
 
-  public long getMaxUpload(){
+  public long getMaxUpload() {
     return maxUpload;
   }
 
-  public long getMaxUploadInKB(){
+  public long getMaxUploadInKB() {
     return maxUpload / 1024;
   }
 
-  public void setMaxUpload(long maxUpload){
+  public void setMaxUpload(long maxUpload) {
     this.maxUpload = maxUpload;
   }
 
-  public long getMaxDownload(){
+  public long getMaxDownload() {
     return maxDownload;
   }
 
-  public long getMaxDownloadInKB(){
+  public long getMaxDownloadInKB() {
     return maxDownload / 1024;
   }
 
-  public void setMaxDownload(long maxDownload){
+  public void setMaxDownload(long maxDownload) {
     this.maxDownload = maxDownload;
   }
 
-  public int getSpeedPerSlot(){
+  public int getSpeedPerSlot() {
     return speedPerSlot;
   }
 
-  public void setSpeedPerSlot(int speedPerSlot){
+  public void setSpeedPerSlot(int speedPerSlot) {
     this.speedPerSlot = speedPerSlot;
   }
 
-  public String getIncomingDir(){
+  public String getIncomingDir() {
     return incomingDir;
   }
 
-  public void setIncomingDir(String incomingDir){
+  public void setIncomingDir(String incomingDir) {
     this.incomingDir = incomingDir;
   }
 
-  public String getTempDir(){
+  public String getTempDir() {
     return tempDir;
   }
 
-  public void setTempDir(String tempDir){
+  public void setTempDir(String tempDir) {
     this.tempDir = tempDir;
   }
 
-  public HashSet getShareDirs(){
+  public HashSet getShareDirs() {
     return shareDirs;
   }
 
-  public void setShareDirs(HashSet shareDirs){
+  public void setShareDirs(HashSet shareDirs) {
     this.shareDirs = shareDirs;
   }
 }

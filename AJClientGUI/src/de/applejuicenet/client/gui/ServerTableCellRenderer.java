@@ -3,9 +3,9 @@ package de.applejuicenet.client.gui;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
-import de.applejuicenet.client.shared.dac.ServerDO;
-import java.util.Date;
-import de.applejuicenet.client.shared.IconManager;
+
+import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.dac.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -24,23 +24,27 @@ public class ServerTableCellRenderer
                                                  boolean hasFocus,
                                                  int row,
                                                  int column) {
-    ServerDO server = (ServerDO)((ServerTableModel)table.getModel()).getRow(row);
+    ServerDO server = (ServerDO) ( (ServerTableModel) table.getModel()).getRow(
+        row);
     JPanel returnPanel = new JPanel(new BorderLayout());
     JLabel image = null;
     long aktuelleZeit = System.currentTimeMillis();
     long tag = 24 * 60 * 60 * 1000;
 
-    if (server.getTimeLastSeen()==0 || server.getTimeLastSeen()<aktuelleZeit-tag)
+    if (server.getTimeLastSeen() == 0 ||
+        server.getTimeLastSeen() < aktuelleZeit - tag) {
       image = new JLabel(IconManager.getInstance().getIcon("aelter24h"));
-    else
+    }
+    else {
       image = new JLabel(IconManager.getInstance().getIcon("juenger24h"));
-    //mehr Icons kommen, wenn der Core mehr kann
+      //mehr Icons kommen, wenn der Core mehr kann
 
-    JLabel serverName = new JLabel("  " + (String)value);
+    }
+    JLabel serverName = new JLabel("  " + (String) value);
     serverName.setFont(table.getFont());
     returnPanel.add(image, BorderLayout.WEST);
     returnPanel.add(serverName, BorderLayout.CENTER);
-    if (isSelected){
+    if (isSelected) {
       returnPanel.setBackground(table.getSelectionBackground());
       returnPanel.setForeground(table.getSelectionForeground());
       image.setBackground(table.getSelectionBackground());
@@ -48,7 +52,7 @@ public class ServerTableCellRenderer
       image.setForeground(table.getSelectionForeground());
       serverName.setBackground(table.getSelectionForeground());
     }
-    else{
+    else {
       returnPanel.setBackground(table.getBackground());
       returnPanel.setForeground(table.getForeground());
       image.setBackground(table.getBackground());

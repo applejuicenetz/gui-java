@@ -1,12 +1,13 @@
 package de.applejuicenet.client.shared;
 
-import java.io.*;
 import java.util.*;
+
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.plaf.metal.*;
+import javax.swing.plaf.metal.MetalToolTipUI;
 
-public class MultiLineToolTipUI extends MetalToolTipUI {
+public class MultiLineToolTipUI
+    extends MetalToolTipUI {
   private String[] strs;
   private int maxWidth = 0;
 
@@ -17,15 +18,15 @@ public class MultiLineToolTipUI extends MetalToolTipUI {
     g.fillRect(0, 0, size.width, size.height);
     g.setColor(c.getForeground());
     if (strs != null) {
-      for (int i=0;i<strs.length;i++) {
-	g.drawString(strs[i], 3, (metrics.getHeight()) * (i+1));
+      for (int i = 0; i < strs.length; i++) {
+        g.drawString(strs[i], 3, (metrics.getHeight()) * (i + 1));
       }
     }
   }
 
   public Dimension getPreferredSize(JComponent c) {
     FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(c.getFont());
-    String tipText = ((JToolTip)c).getTipText();
+    String tipText = ( (JToolTip) c).getTipText();
     if (tipText == null) {
       tipText = "";
     }
@@ -42,11 +43,12 @@ public class MultiLineToolTipUI extends MetalToolTipUI {
     if (lines < 1) {
       strs = null;
       lines = 1;
-    } else {
+    }
+    else {
       strs = new String[lines];
-      int i=0;
-      for (Enumeration e = v.elements(); e.hasMoreElements() ;i++) {
-        strs[i] = (String)e.nextElement();
+      int i = 0;
+      for (Enumeration e = v.elements(); e.hasMoreElements(); i++) {
+        strs[i] = (String) e.nextElement();
       }
     }
     int height = metrics.getHeight() * lines;
@@ -54,4 +56,3 @@ public class MultiLineToolTipUI extends MetalToolTipUI {
     return new Dimension(maxWidth + 6, height + 4);
   }
 }
-

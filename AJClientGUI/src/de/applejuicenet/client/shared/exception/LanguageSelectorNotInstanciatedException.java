@@ -9,8 +9,9 @@ package de.applejuicenet.client.shared.exception;
  * @version 1.0
  */
 
-public class LanguageSelectorNotInstanciatedException extends Exception {
-  public LanguageSelectorNotInstanciatedException(){
+public class LanguageSelectorNotInstanciatedException
+    extends Exception {
+  public LanguageSelectorNotInstanciatedException() {
     super("Der LanguageSelector muss erst initialisiert werden.");
   }
 }

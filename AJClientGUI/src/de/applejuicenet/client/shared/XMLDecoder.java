@@ -12,7 +12,7 @@ public abstract class XMLDecoder {
   private String filePath;
   protected boolean webXML = false;
 
-  protected XMLDecoder(){}
+  protected XMLDecoder() {}
 
   protected XMLDecoder(String filePath) {
     File xmlFile = new File(filePath);
@@ -48,29 +48,31 @@ public abstract class XMLDecoder {
     }
   }
 
-  public Document getDocument(){
+  public Document getDocument() {
     return document;
   }
 
-  public String getFirstAttrbuteByTagName(String[] attributePath, boolean lastIsElement) {
-    if (!webXML)
+  public String getFirstAttrbuteByTagName(String[] attributePath,
+                                          boolean lastIsElement) {
+    if (!webXML) {
       return getFirstAttrbuteByTagName(attributePath);
-    else{
+    }
+    else {
       NodeList nodes = document.getChildNodes();
-      for (int i=0; i<attributePath.length; i++){
+      for (int i = 0; i < attributePath.length; i++) {
         for (int x = 0; x < nodes.getLength(); x++) {
           String test = nodes.item(x).getNodeName();
           if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
             if (i == attributePath.length - 1) {
               String result = "";
-              if (lastIsElement){
+              if (lastIsElement) {
                 Element e = (Element) nodes.item(x);
                 nodes = e.getChildNodes();
-                result =  nodes.item(0).getNodeValue();
+                result = nodes.item(0).getNodeValue();
               }
-              else{
+              else {
                 Element e = (Element) nodes.item(x);
-                result = e.getAttribute(attributePath[attributePath.length-1]);
+                result = e.getAttribute(attributePath[attributePath.length - 1]);
               }
               return result;
             }
@@ -88,54 +90,55 @@ public abstract class XMLDecoder {
 
   public String getFirstAttrbuteByTagName(String[] attributePath) {
     NodeList nodes = document.getChildNodes();
-    Node rootNode = nodes.item(0);   //Element "root"
+    Node rootNode = nodes.item(0); //Element "root"
     nodes = rootNode.getChildNodes();
-    for (int i=0; i<attributePath.length-1; i++){
-      for (int x=0; x<nodes.getLength(); x++){
+    for (int i = 0; i < attributePath.length - 1; i++) {
+      for (int x = 0; x < nodes.getLength(); x++) {
         String test = nodes.item(x).getNodeName();
-        if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])){
-          if (i == attributePath.length-2){
+        if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
+          if (i == attributePath.length - 2) {
             Element e = (Element) nodes.item(x);
-            return e.getAttribute(attributePath[attributePath.length-1]);
+            return e.getAttribute(attributePath[attributePath.length - 1]);
           }
-          else{
+          else {
             nodes = nodes.item(x).getChildNodes();
             break;
           }
         }
       }
     }
-    return "";  //Nicht gefunden
+    return ""; //Nicht gefunden
   }
 
   public void setAttributeByTagName(String[] attributePath, String newValue) {
     NodeList nodes = document.getChildNodes();
-    Node rootNode = nodes.item(0);   //Element "root"
+    Node rootNode = nodes.item(0); //Element "root"
     nodes = rootNode.getChildNodes();
-    for (int i=0; i<attributePath.length-1; i++){
-      for (int x=0; x<nodes.getLength(); x++){
+    for (int i = 0; i < attributePath.length - 1; i++) {
+      for (int x = 0; x < nodes.getLength(); x++) {
         String test = nodes.item(x).getNodeName();
-        if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])){
-          if (i == attributePath.length-2){
+        if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
+          if (i == attributePath.length - 2) {
             Element e = (Element) nodes.item(x);
-            e.setAttribute(attributePath[attributePath.length - 1], ZeichenErsetzer.korrigiereUmlaute(newValue, true));
+            e.setAttribute(attributePath[attributePath.length - 1],
+                           ZeichenErsetzer.korrigiereUmlaute(newValue, true));
             try {
               XMLSerializer xs = new XMLSerializer(new FileWriter(filePath),
-                                                   new OutputFormat(document,
-                  "UTF-8", true));
+                  new OutputFormat(document,
+                                   "UTF-8", true));
               xs.serialize(document);
             }
             catch (IOException ioE) {
               ioE.printStackTrace();
             }
           }
-          else{
+          else {
             nodes = nodes.item(x).getChildNodes();
             break;
           }
         }
       }
     }
-    return ;  //Nicht gefunden
+    return; //Nicht gefunden
   }
 }

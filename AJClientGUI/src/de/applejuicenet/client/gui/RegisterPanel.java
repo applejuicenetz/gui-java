@@ -1,21 +1,14 @@
 package de.applejuicenet.client.gui;
 
-import javax.swing.JTabbedPane;
-import java.net.URL;
-import java.awt.Image;
-import java.awt.Toolkit;
-import javax.swing.ImageIcon;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
-import java.io.File;
-import java.net.MalformedURLException;
-import de.applejuicenet.client.shared.PluginJarClassLoader;
-import de.applejuicenet.client.gui.plugins.PluginConnector;
-import de.applejuicenet.client.gui.controller.DataManager;
-import de.applejuicenet.client.shared.IconManager;
-import javax.swing.JFrame;
+import java.io.*;
+import java.net.*;
+
+import javax.swing.*;
+
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.gui.plugins.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -26,7 +19,9 @@ import javax.swing.JFrame;
  * @version 1.0
  */
 
-public class RegisterPanel extends JTabbedPane implements LanguageListener{
+public class RegisterPanel
+    extends JTabbedPane
+    implements LanguageListener {
   private StartPanel startPanel;
   private DownloadPanel downloadPanel;
   private SearchPanel searchPanel;
@@ -35,7 +30,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
   private SharePanel sharePanel;
   private AppleJuiceDialog parent;
 
-  public RegisterPanel(AppleJuiceDialog parent){
+  public RegisterPanel(AppleJuiceDialog parent) {
     this.parent = parent;
     init();
   }
@@ -72,12 +67,13 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
     loadPlugins();
   }
 
-  private void loadPlugins(){
-    String path = System.getProperty("user.dir") + File.separator + "plugins" + File.separator;
+  private void loadPlugins() {
+    String path = System.getProperty("user.dir") + File.separator + "plugins" +
+        File.separator;
     File pluginPath = new File(path);
     String[] tempListe = pluginPath.list();
     for (int i = 0; i < tempListe.length; i++) {
-      if (tempListe[i].indexOf(".jar")!=-1){
+      if (tempListe[i].indexOf(".jar") != -1) {
         URL url = null;
         try {
           url = new URL("file://" + path + tempListe[i]);
@@ -85,7 +81,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
         catch (MalformedURLException ex) {
           continue;
         }
-        try{
+        try {
           PluginJarClassLoader jarLoader = new PluginJarClassLoader(url);
           PluginConnector aPlugin = jarLoader.getPlugin();
           if (aPlugin != null) {
@@ -96,7 +92,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
             parent.addPluginToHashSet(aPlugin);
           }
         }
-        catch (Exception e){
+        catch (Exception e) {
           //Von einem Plugin lassen wir uns nicht beirren! ;-)
           e.printStackTrace();
         }
@@ -104,13 +100,31 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
     }
   }
 
-  public void fireLanguageChanged(){
+  public void fireLanguageChanged() {
     LanguageSelector languageSelector = LanguageSelector.getInstance();
-    setTitleAt(0, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "homesheet", "caption"})));
-    setTitleAt(1, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "sharesheet", "caption"})));
-    setTitleAt(2, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "seachsheet", "caption"})));
-    setTitleAt(3, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queuesheet", "caption"})));
-    setTitleAt(4, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploadsheet", "caption"})));
-    setTitleAt(5, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serversheet", "caption"})));
+    setTitleAt(0,
+               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                 getFirstAttrbuteByTagName(new String[] {
+        "mainform", "homesheet", "caption"})));
+    setTitleAt(1,
+               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                 getFirstAttrbuteByTagName(new String[] {
+        "mainform", "sharesheet", "caption"})));
+    setTitleAt(2,
+               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                 getFirstAttrbuteByTagName(new String[] {
+        "mainform", "seachsheet", "caption"})));
+    setTitleAt(3,
+               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                 getFirstAttrbuteByTagName(new String[] {
+        "mainform", "queuesheet", "caption"})));
+    setTitleAt(4,
+               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                 getFirstAttrbuteByTagName(new String[] {
+        "mainform", "uploadsheet", "caption"})));
+    setTitleAt(5,
+               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                 getFirstAttrbuteByTagName(new String[] {
+        "mainform", "serversheet", "caption"})));
   }
 }

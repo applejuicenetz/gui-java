@@ -9,8 +9,9 @@ package de.applejuicenet.client.shared.exception;
  * @version 1.0
  */
 
-public class NoIconAvailableException extends Exception {
-  public NoIconAvailableException(){
+public class NoIconAvailableException
+    extends Exception {
+  public NoIconAvailableException() {
     super("An der angebenen Stelle wurde kein Icon gefunden.");
   }
 }

@@ -15,43 +15,43 @@ public class RemoteConfiguration {
   private String oldPassword;
   private String newPassword;
 
-  public RemoteConfiguration(String host, String oldPassword, boolean use){
+  public RemoteConfiguration(String host, String oldPassword, boolean use) {
     this.host = host;
     this.oldPassword = oldPassword;
     this.use = use;
   }
 
-  public RemoteConfiguration(){}
+  public RemoteConfiguration() {}
 
-  public void setHost(String host){
+  public void setHost(String host) {
     this.host = host;
   }
 
-  public void useRemote(boolean use){
+  public void useRemote(boolean use) {
     this.use = use;
   }
 
-  public void setOldPassword(String oldPassword){
+  public void setOldPassword(String oldPassword) {
     this.oldPassword = oldPassword;
   }
 
-  public void setNewPassword(String newPassword){
+  public void setNewPassword(String newPassword) {
     this.newPassword = newPassword;
   }
 
-  public String getHost(){
+  public String getHost() {
     return host;
   }
 
-  public String getOldPassword(){
+  public String getOldPassword() {
     return oldPassword;
   }
 
-  public String getNewPassword(){
+  public String getNewPassword() {
     return newPassword;
   }
 
-  public boolean isRemoteUsed(){
+  public boolean isRemoteUsed() {
     return use;
   }
 }

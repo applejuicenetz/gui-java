@@ -1,9 +1,9 @@
 package de.applejuicenet.client.gui.controller;
 
-import java.util.HashMap;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
-import de.applejuicenet.client.shared.dac.ShareDO;
+import java.util.*;
+
+import org.w3c.dom.*;
+import de.applejuicenet.client.shared.dac.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -14,24 +14,26 @@ import de.applejuicenet.client.shared.dac.ShareDO;
  * @version 1.0
  */
 
-public class ShareXMLHolder extends WebXMPParser {
+public class ShareXMLHolder
+    extends WebXMPParser {
   private HashMap shareMap;
 
-  public ShareXMLHolder(){
+  public ShareXMLHolder() {
     super("/xml/share.xml", "");
   }
 
-  public void update(){
+  public void update() {
     reload("");
     updateShare();
   }
 
-  private void updateShare(){
+  private void updateShare() {
     if (shareMap == null) {
       shareMap = new HashMap();
     }
-    if (document==null)
+    if (document == null) {
       reload("");
+    }
     NodeList nodes = document.getElementsByTagName("share");
     HashMap changedShare = new HashMap();
     for (int i = 0; i < nodes.getLength(); i++) {
@@ -46,7 +48,7 @@ public class ShareXMLHolder extends WebXMPParser {
     shareMap.putAll(changedShare);
   }
 
-  public HashMap getShare(){
+  public HashMap getShare() {
     updateShare();
     return shareMap;
   }

@@ -39,18 +39,24 @@ public class DataManager { //Singleton-Implementierung
 
   public void addDataUpdateListener(DataUpdateListener listener, int type) {
     HashSet listenerSet = null;
-    if (type == DataUpdateListener.DOWNLOAD_CHANGED)
+    if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
       listenerSet = downloadListener;
-    else if (type == DataUpdateListener.NETINFO_CHANGED)
+    }
+    else if (type == DataUpdateListener.NETINFO_CHANGED) {
       listenerSet = networkInfoListener;
-    else if (type == DataUpdateListener.SERVER_CHANGED)
+    }
+    else if (type == DataUpdateListener.SERVER_CHANGED) {
       listenerSet = serverListener;
-    else if (type == DataUpdateListener.SHARE_CHANGED)
+    }
+    else if (type == DataUpdateListener.SHARE_CHANGED) {
       listenerSet = shareListener;
-    else if (type == DataUpdateListener.UPLOAD_CHANGED)
+    }
+    else if (type == DataUpdateListener.UPLOAD_CHANGED) {
       listenerSet = uploadListener;
-    else
+    }
+    else {
       return;
+    }
     if (! (listenerSet.contains(listener))) {
       listenerSet.add(listener);
     }
@@ -84,14 +90,16 @@ public class DataManager { //Singleton-Implementierung
     modifiedTimer = new Timer(1000, modifiedAction);
   }
 
-  public void startXMLCheck(){
-    if (!modifiedTimer.isRunning())
+  public void startXMLCheck() {
+    if (!modifiedTimer.isRunning()) {
       modifiedTimer.start();
+    }
   }
 
-  public void stopXMLCheck(){
-    if (modifiedTimer.isRunning())
+  public void stopXMLCheck() {
+    if (modifiedTimer.isRunning()) {
       modifiedTimer.stop();
+    }
   }
 
   public AJSettings getAJSettings() {
@@ -246,7 +254,8 @@ public class DataManager { //Singleton-Implementierung
       NetworkInfo content = modifiedXML.getNetworkInfo();
       Iterator it = networkInfoListener.iterator();
       while (it.hasNext()) {
-        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.NETINFO_CHANGED, content);
+        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+            NETINFO_CHANGED, content);
       }
     }
   }

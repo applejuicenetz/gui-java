@@ -1,18 +1,16 @@
 package de.applejuicenet.client.gui;
 
+import java.util.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.*;
 
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.exception.*;
-import javax.swing.table.TableColumnModel;
-import java.util.HashMap;
-import de.applejuicenet.client.gui.controller.DataManager;
-import de.applejuicenet.client.shared.dac.ServerDO;
-import javax.swing.table.TableColumn;
+import de.applejuicenet.client.shared.dac.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -59,10 +57,11 @@ public class ServerPanel
     popup.add(new JSeparator());
     popup.add(item3);
 
-    item1.addActionListener(new ActionListener(){
-      public void actionPerformed(ActionEvent ae){
+    item1.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
         int selected = serverTable.getSelectedRow();
-        ServerDO server = (ServerDO)((ServerTableModel)serverTable.getModel()).getRow(selected);
+        ServerDO server = (ServerDO) ( (ServerTableModel) serverTable.getModel()).
+            getRow(selected);
         DataManager.connectToServer(server.getID());
       }
     });
@@ -85,7 +84,7 @@ public class ServerPanel
         setCursor(new Cursor(Cursor.HAND_CURSOR));
       }
 
-      public void mouseClicked(MouseEvent e){
+      public void mouseClicked(MouseEvent e) {
         //to do
       }
     });
@@ -95,11 +94,12 @@ public class ServerPanel
     panel1.add(new JLabel(), constraints);
     add(panel1, BorderLayout.NORTH);
     serverTable = new JTable();
-    serverTable.setModel(new ServerTableModel(DataManager.getInstance().getAllServer()));
+    serverTable.setModel(new ServerTableModel(DataManager.getInstance().
+                                              getAllServer()));
     TableColumn tc = serverTable.getColumnModel().getColumn(0);
     tc.setCellRenderer(new ServerTableCellRenderer());
     serverTable.addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent me){
+      public void mousePressed(MouseEvent me) {
         if (SwingUtilities.isRightMouseButton(me)) {
           Point p = me.getPoint();
           int iRow = serverTable.rowAtPoint(p);
@@ -115,7 +115,7 @@ public class ServerPanel
         maybeShowPopup(e);
       }
 
-      private void maybeShowPopup(MouseEvent e){
+      private void maybeShowPopup(MouseEvent e) {
         if (e.isPopupTrigger()) {
           popup.show(serverTable, e.getX(), e.getY());
         }
@@ -124,40 +124,59 @@ public class ServerPanel
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(serverTable);
     add(aScrollPane, BorderLayout.CENTER);
-    DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.SERVER_CHANGED);
+    DataManager.getInstance().addDataUpdateListener(this,
+        DataUpdateListener.SERVER_CHANGED);
   }
 
-  public void registerSelected(){
+  public void registerSelected() {
     DataManager.getInstance().updateModifiedXML();
   }
 
-  public void fireContentChanged(int type, Object content){
-    if (type != DataUpdateListener.SERVER_CHANGED || !(content instanceof HashMap))
+  public void fireContentChanged(int type, Object content) {
+    if (type != DataUpdateListener.SERVER_CHANGED ||
+        ! (content instanceof HashMap)) {
       return;
+    }
     int selected = serverTable.getSelectedRow();
-    ( (ServerTableModel) serverTable.getModel()).setTable((HashMap)content);
-    if (selected != -1 && selected < serverTable.getRowCount())
+    ( (ServerTableModel) serverTable.getModel()).setTable( (HashMap) content);
+    if (selected != -1 && selected < serverTable.getRowCount()) {
       serverTable.setRowSelectionInterval(selected, selected);
 
+    }
   }
 
   public void fireLanguageChanged() {
     LanguageSelector languageSelector = LanguageSelector.getInstance();
     sucheServer.setText("<html><font><u>" +
                         ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"mainform", "Label11", "caption"})) +
+        getFirstAttrbuteByTagName(new String[] {"mainform", "Label11",
+                                  "caption"})) +
                         "</u></font></html>");
     String[] columns = new String[4];
-    columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col0caption"}));
-    columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col1caption"}));
-    columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col3caption"}));
-    columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col5caption"}));
-    item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "connserv" ,"caption"})));
-    item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "delserv" ,"caption"})));
-    item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "addserv" ,"caption"})));
+    columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist",
+                                  "col0caption"}));
+    columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist",
+                                  "col1caption"}));
+    columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist",
+                                  "col3caption"}));
+    columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist",
+                                  "col5caption"}));
+    item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "connserv",
+                                  "caption"})));
+    item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "delserv",
+                                  "caption"})));
+    item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "addserv",
+                                  "caption"})));
 
     TableColumnModel tcm = serverTable.getColumnModel();
-    for (int i=0; i<tcm.getColumnCount(); i++){
+    for (int i = 0; i < tcm.getColumnCount(); i++) {
       tcm.getColumn(i).setHeaderValue(columns[i]);
     }
   }

@@ -1,18 +1,14 @@
 package de.applejuicenet.client.gui;
 
-import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-import de.applejuicenet.client.gui.controller.DataManager;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import java.util.HashMap;
+import java.util.*;
 
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.*;
+
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -23,7 +19,9 @@ import java.util.HashMap;
  * @version 1.0
  */
 
-public class UploadPanel extends JPanel implements LanguageListener, RegisterI, DataUpdateListener{
+public class UploadPanel
+    extends JPanel
+    implements LanguageListener, RegisterI, DataUpdateListener {
   private JTable uploadDataTable;
   private int anzahlClients = 0;
   private JLabel label1 = new JLabel("0 Clients in Deiner Uploadliste");
@@ -32,7 +30,7 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI, 
     try {
       jbInit();
     }
-    catch(Exception e) {
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -53,7 +51,8 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI, 
     panel2.setLayout(new BorderLayout());
     panel2.add(panel, BorderLayout.WEST);
     add(panel2, BorderLayout.SOUTH);
-    DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.UPLOAD_CHANGED);
+    DataManager.getInstance().addDataUpdateListener(this,
+        DataUpdateListener.UPLOAD_CHANGED);
   }
 
   public void fireLanguageChanged() {
@@ -62,25 +61,40 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI, 
         getFirstAttrbuteByTagName(new String[] {"mainform", "uplcounttext"}));
     label1.setText(temp.replaceAll("%d", Integer.toString(anzahlClients)));
     String[] columns = new String[6];
-    columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col0caption"}));
-    columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col1caption"}));
-    columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col2caption"}));
-    columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col3caption"}));
-    columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col4caption"}));
-    columns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploads" ,"col5caption"}));
+    columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
+                                  "col0caption"}));
+    columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
+                                  "col1caption"}));
+    columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
+                                  "col2caption"}));
+    columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
+                                  "col3caption"}));
+    columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
+                                  "col4caption"}));
+    columns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
+                                  "col5caption"}));
     TableColumnModel tcm = uploadDataTable.getColumnModel();
-    for (int i=0; i<tcm.getColumnCount(); i++){
+    for (int i = 0; i < tcm.getColumnCount(); i++) {
       tcm.getColumn(i).setHeaderValue(columns[i]);
     }
   }
 
-  public void fireContentChanged(int type, Object content){
-    if (type != DataUpdateListener.UPLOAD_CHANGED || !(content instanceof HashMap))
+  public void fireContentChanged(int type, Object content) {
+    if (type != DataUpdateListener.UPLOAD_CHANGED ||
+        ! (content instanceof HashMap)) {
       return;
-    ((UploadDataTableModel)uploadDataTable.getModel()).setTable((HashMap)content);
+    }
+    ( (UploadDataTableModel) uploadDataTable.getModel()).setTable( (HashMap)
+        content);
   }
 
-  public void registerSelected(){
+  public void registerSelected() {
 //    DataManager.getInstance().updateModifiedXML();
   }
 }

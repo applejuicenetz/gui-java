@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<options sprache="deutsch">
-		<remote host="localhost" passwort="" use="1"/><proxy ip="" pass="" port="0" use="0" user=""/>
-	</options>
+    <options sprache="deutsch">
+        <remote host="localhost" passwort="" use="1"/>
+    </options>
 </root>

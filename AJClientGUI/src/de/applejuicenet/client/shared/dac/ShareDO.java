@@ -15,38 +15,38 @@ public class ShareDO {
   private String size;
   private String checksum;
 
-  public ShareDO(String id, String filename, String size, String checksum){
+  public ShareDO(String id, String filename, String size, String checksum) {
     this.id = id;
     this.filename = filename;
     this.size = size;
     this.checksum = checksum;
   }
 
-  public void setFilename(String filename){
+  public void setFilename(String filename) {
     this.filename = filename;
   }
 
-  public void setSize(String size){
+  public void setSize(String size) {
     this.size = size;
   }
 
-  public void setChecksum(String checksum){
+  public void setChecksum(String checksum) {
     this.checksum = checksum;
   }
 
-  public String getId(){
+  public String getId() {
     return id;
   }
 
-  public String getFilename(){
+  public String getFilename() {
     return filename;
   }
 
-  public String getSize(){
+  public String getSize() {
     return size;
   }
 
-  public String getCheckSum(){
+  public String getCheckSum() {
     return checksum;
   }
 

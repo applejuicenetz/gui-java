@@ -1,35 +1,14 @@
 package de.applejuicenet.client.gui;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import java.awt.*;
-import javax.swing.table.TableColumn;
-import de.applejuicenet.client.gui.tablerenderer.JTreeTable;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import java.util.HashSet;
-import de.applejuicenet.client.shared.Version;
-import de.applejuicenet.client.gui.tablerenderer.DownloadModel;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.exception.*;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-import javax.swing.JPopupMenu;
-import javax.swing.JMenuItem;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
-import de.applejuicenet.client.gui.tablerenderer.DownloadTableCellRenderer;
-import javax.swing.SwingUtilities;
-import de.applejuicenet.client.gui.tablerenderer.TreeTableModelAdapter;
-import de.applejuicenet.client.gui.controller.DataManager;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import java.util.HashMap;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.table.*;
+
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.gui.tablerenderer.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -40,7 +19,9 @@ import java.util.HashMap;
  * @version 1.0
  */
 
-public class DownloadPanel extends JPanel implements LanguageListener, RegisterI{
+public class DownloadPanel
+    extends JPanel
+    implements LanguageListener, RegisterI {
   private JTextField downloadLink = new JTextField();
   private JButton btnStartDownload = new JButton("Download");
   private PowerDownloadPanel powerDownloadPanel = new PowerDownloadPanel();
@@ -59,7 +40,6 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
   JMenuItem item4;
   JMenuItem item5;
   JMenuItem item6;
-
 
   public DownloadPanel() {
     try {
@@ -119,18 +99,19 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
     tc.setCellRenderer(renderer);
     tc2.setCellRenderer(renderer);
 
-
     downloadTable.addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent e){
+      public void mouseClicked(MouseEvent e) {
         Point p = e.getPoint();
-        if (e.getClickCount()==2 && downloadTable.columnAtPoint(p)!=0){
-          TreeTableModelAdapter model = (TreeTableModelAdapter)downloadTable.getModel();
+        if (e.getClickCount() == 2 && downloadTable.columnAtPoint(p) != 0) {
+          TreeTableModelAdapter model = (TreeTableModelAdapter) downloadTable.
+              getModel();
           int selectedRow = downloadTable.getSelectedRow();
-          ((TreeTableModelAdapter)downloadTable.getModel()).expandOrCollapseRow(selectedRow);
+          ( (TreeTableModelAdapter) downloadTable.getModel()).
+              expandOrCollapseRow(selectedRow);
         }
       }
 
-      public void mousePressed(MouseEvent me){
+      public void mousePressed(MouseEvent me) {
         Point p = me.getPoint();
         int iRow = downloadTable.rowAtPoint(p);
         int iCol = downloadTable.columnAtPoint(p);
@@ -144,7 +125,7 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
         maybeShowPopup(e);
       }
 
-      private void maybeShowPopup(MouseEvent e){
+      private void maybeShowPopup(MouseEvent e) {
         if (e.isPopupTrigger()) {
           popup.show(downloadTable, e.getX(), e.getY());
         }
@@ -192,45 +173,89 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
     add(bottomPanel, BorderLayout.SOUTH);
   }
 
-  public void registerSelected(){
+  public void registerSelected() {
 //    DataManager.getInstance().updateModifiedXML();
   }
 
-  public void fireLanguageChanged(){
-      LanguageSelector languageSelector = LanguageSelector.getInstance();
-      String text = languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label14", "caption"});
-      linkLabel.setText(ZeichenErsetzer.korrigiereUmlaute(text));
-      btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "downlajfsp", "caption"})));
-      btnStartDownload.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "downlajfsp", "hint"})));
-      String[] tableColumns = new String[10];
-      tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col0caption"}));
-      tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col1caption"}));
-      tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col2caption"}));
-      tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col3caption"}));
-      tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col4caption"}));
-      tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col5caption"}));
-      tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col6caption"}));
-      tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col7caption"}));
-      tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col8caption"}));
-      tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col9caption"}));
+  public void fireLanguageChanged() {
+    LanguageSelector languageSelector = LanguageSelector.getInstance();
+    String text = languageSelector.getFirstAttrbuteByTagName(new String[] {
+        "mainform", "Label14", "caption"});
+    linkLabel.setText(ZeichenErsetzer.korrigiereUmlaute(text));
+    btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "downlajfsp",
+                                  "caption"})));
+    btnStartDownload.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "downlajfsp", "hint"})));
+    String[] tableColumns = new String[10];
+    tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                  "col0caption"}));
+    tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                  "col1caption"}));
+    tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                  "col2caption"}));
+    tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                  "col3caption"}));
+    tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                  "col4caption"}));
+    tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                  "col5caption"}));
+    tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                  "col6caption"}));
+    tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                  "col7caption"}));
+    tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                  "col8caption"}));
+    tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                  "col9caption"}));
 
-      TableColumnModel tcm = downloadTable.getColumnModel();
-      for (int i=0; i<tcm.getColumnCount(); i++){
-        tcm.getColumn(i).setHeaderValue(tableColumns[i]);
-      }
+    TableColumnModel tcm = downloadTable.getColumnModel();
+    for (int i = 0; i < tcm.getColumnCount(); i++) {
+      tcm.getColumn(i).setHeaderValue(tableColumns[i]);
+    }
 
-      label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label4", "caption"})));
-      label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label3", "caption"})));
-      label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label2", "caption"})));
-      label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label1", "caption"})));
+    label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "Label4", "caption"})));
+    label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "Label3", "caption"})));
+    label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "Label2", "caption"})));
+    label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "Label1", "caption"})));
 
-      item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "canceldown" ,"caption"})));
-      String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "pausedown" ,"caption"}));
-      temp+="/" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "resumedown" ,"caption"}));
-      item2.setText(temp);
-      item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "powerdownload" ,"caption"})));
-      item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "renamefile" ,"caption"})));
-      item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "changetarget" ,"caption"})));
-      item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Clearfinishedentries1" ,"caption"})));
+    item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "canceldown",
+                                  "caption"})));
+    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "pausedown",
+                                  "caption"}));
+    temp += "/" +
+        ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                          getFirstAttrbuteByTagName(new String[] {
+        "mainform", "resumedown", "caption"}));
+    item2.setText(temp);
+    item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "powerdownload",
+                                  "caption"})));
+    item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "renamefile",
+                                  "caption"})));
+    item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "changetarget",
+                                  "caption"})));
+    item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform",
+                                  "Clearfinishedentries1", "caption"})));
   }
 }

@@ -52,7 +52,7 @@ public class ODStandardPanel
     }
   }
 
-  public boolean isDirty(){
+  public boolean isDirty() {
     return dirty;
   }
 
@@ -62,7 +62,7 @@ public class ODStandardPanel
     port.setText(Long.toString(ajSettings.getPort()));
     nick.setText(ajSettings.getNick());
     cmbAllowBrowse.setSelected(ajSettings.isBrowseAllowed());
-    port.addFocusListener(new FocusAdapter(){
+    port.addFocusListener(new FocusAdapter() {
       public void focusLost(FocusEvent e) {
         if (ajSettings.getPort() != Integer.parseInt(port.getText())) {
           dirty = true;
@@ -70,7 +70,7 @@ public class ODStandardPanel
         }
       }
     });
-    nick.addFocusListener(new FocusAdapter(){
+    nick.addFocusListener(new FocusAdapter() {
       public void focusLost(FocusEvent e) {
         if (ajSettings.getNick().compareTo(nick.getText()) != 0) {
           dirty = true;
@@ -78,7 +78,7 @@ public class ODStandardPanel
         }
       }
     });
-    temp.addFocusListener(new FocusAdapter(){
+    temp.addFocusListener(new FocusAdapter() {
       public void focusLost(FocusEvent e) {
         if (ajSettings.getTempDir().compareTo(temp.getText()) != 0) {
           dirty = true;
@@ -86,7 +86,7 @@ public class ODStandardPanel
         }
       }
     });
-    incoming.addFocusListener(new FocusAdapter(){
+    incoming.addFocusListener(new FocusAdapter() {
       public void focusLost(FocusEvent e) {
         if (ajSettings.getIncomingDir().compareTo(incoming.getText()) != 0) {
           dirty = true;
@@ -94,7 +94,7 @@ public class ODStandardPanel
         }
       }
     });
-    cmbAllowBrowse.addItemListener(new ItemListener(){
+    cmbAllowBrowse.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent e) {
         if (ajSettings.isBrowseAllowed() != cmbAllowBrowse.isSelected()) {
           dirty = true;

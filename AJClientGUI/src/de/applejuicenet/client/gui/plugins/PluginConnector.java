@@ -1,15 +1,14 @@
 package de.applejuicenet.client.gui.plugins;
 
-import javax.swing.JPanel;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import javax.swing.ImageIcon;
-import java.net.URL;
-import java.awt.Toolkit;
-import java.awt.Image;
-import de.applejuicenet.client.shared.exception.NoIconAvailableException;
-import de.applejuicenet.client.gui.RegisterI;
-import java.util.HashMap;
+import java.net.*;
+import java.util.*;
+
+import java.awt.*;
+import javax.swing.*;
+
+import de.applejuicenet.client.gui.*;
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.shared.exception.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -20,12 +19,13 @@ import java.util.HashMap;
  * @version 1.0
  */
 
-public abstract class PluginConnector extends JPanel implements LanguageListener, DataUpdateListener, RegisterI{
+public abstract class PluginConnector
+    extends JPanel
+    implements LanguageListener, DataUpdateListener, RegisterI {
   /*Diese Datei sollte nicht verändert werden!
     Um ein Plugin zu erstellen, muss diese Klasse überschrieben werden.
     Die Plugin Klasse muss zwingend AppleJuicePlugin.java heissen.
     Beim Pluginstart wird automatisch der Standardkonstruktor aufgerufen, alle anderen werden ignoriert.*/
-
 
   //Titel, der als Reitertext ausgegeben wird
   public abstract String getTitle();
@@ -44,15 +44,15 @@ public abstract class PluginConnector extends JPanel implements LanguageListener
 
   /*Das Icon, welches in der Lasche angezeigt werden soll, es muss als icon.gif im package plugins gespeichert
     werden, damit es später an die richtige Stelle im jar-Archiv wandert (ca. 16x16)*/
-  public ImageIcon getIcon() throws NoIconAvailableException{
+  public ImageIcon getIcon() throws NoIconAvailableException {
     ImageIcon icon;
-    try{
+    try {
       URL url = getClass().getResource("icon.gif");
       Image img = Toolkit.getDefaultToolkit().getImage(url);
       icon = new ImageIcon();
       icon.setImage(img);
     }
-    catch(Exception e){
+    catch (Exception e) {
       throw new NoIconAvailableException();
     }
     return icon;

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.text.*;
+import java.util.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -19,7 +19,7 @@ public class ServerDO {
   private String port;
   private long timeLastSeen;
 
-  public ServerDO(int id, String name, String host, String port, long lastSeen){
+  public ServerDO(int id, String name, String host, String port, long lastSeen) {
     this.id = id;
     this.name = name;
     this.host = host;
@@ -27,61 +27,65 @@ public class ServerDO {
     timeLastSeen = lastSeen;
   }
 
-  public String getName(){
+  public String getName() {
     return name;
   }
 
-  public void setName(String name){
+  public void setName(String name) {
     this.name = name;
   }
 
-  public String getHost(){
+  public String getHost() {
     return host;
   }
 
-  public void setHost(String host){
+  public void setHost(String host) {
     this.host = host;
   }
 
-  public String getPort(){
+  public String getPort() {
     return port;
   }
 
-  public void setPort(String port){
+  public void setPort(String port) {
     this.port = port;
   }
 
-  public long getTimeLastSeen(){
+  public long getTimeLastSeen() {
     return timeLastSeen;
   }
 
-  public void setTimeLastSeen(long timeLastSeen){
+  public void setTimeLastSeen(long timeLastSeen) {
     this.timeLastSeen = timeLastSeen;
   }
 
-  public int getID(){
+  public int getID() {
     return id;
   }
 
-  public String getIDasString(){
+  public String getIDasString() {
     return Integer.toString(id);
   }
 
-  public String getTimeLastSeenAsString(){
-    if (timeLastSeen==0)
+  public String getTimeLastSeenAsString() {
+    if (timeLastSeen == 0) {
       return "";
-    else{
+    }
+    else {
       SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
       return formatter.format(new Date(timeLastSeen));
     }
   }
 
-  public boolean equals(Object obj){
-    if (!(obj instanceof ServerDO))
+  public boolean equals(Object obj) {
+    if (! (obj instanceof ServerDO)) {
       return false;
-    if (id == ((ServerDO)obj).getID() )
+    }
+    if (id == ( (ServerDO) obj).getID()) {
       return true;
-    else
+    }
+    else {
       return false;
+    }
   }
 }

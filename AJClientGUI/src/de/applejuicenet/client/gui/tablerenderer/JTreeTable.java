@@ -1,7 +1,5 @@
 package de.applejuicenet.client.gui.tablerenderer;
 
-import java.net.*;
-
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -9,10 +7,6 @@ import javax.swing.tree.*;
 
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
-import java.util.Hashtable;
-import java.util.HashMap;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.IconManager;
 
 public class JTreeTable
     extends JTable
@@ -38,13 +32,15 @@ public class JTreeTable
 
     setShowGrid(false);
     setIntercellSpacing(new Dimension(0, 0));
-    DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
+    DataManager.getInstance().addDataUpdateListener(this,
+        DataUpdateListener.DOWNLOAD_CHANGED);
   }
 
   public void fireContentChanged(int type, Object content) {
-    if (type != DataUpdateListener.DOWNLOAD_CHANGED)
+    if (type != DataUpdateListener.DOWNLOAD_CHANGED) {
       return;
-    ((TreeTableModelAdapter)getModel()).fillTree();
+    }
+    ( (TreeTableModelAdapter) getModel()).fillTree();
     repaint();
   }
 
@@ -111,9 +107,10 @@ public class JTreeTable
       super.getTreeCellRendererComponent(tree, value,
                                          sel, expanded, leaf, row, hasFocus);
 
-      Icon icon = ((DownloadNode)value).getConvenientIcon();
-      if (icon!=null)
+      Icon icon = ( (DownloadNode) value).getConvenientIcon();
+      if (icon != null) {
         setIcon(icon);
+      }
       return this;
     }
   }

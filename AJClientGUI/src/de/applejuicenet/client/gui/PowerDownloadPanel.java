@@ -1,19 +1,12 @@
 package de.applejuicenet.client.gui;
 
-import java.net.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import de.applejuicenet.client.gui.controller.DataManager;
-import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
-import de.applejuicenet.client.shared.MultiLineToolTip;
-import de.applejuicenet.client.shared.MultiLineToolTipUI;
-import de.applejuicenet.client.shared.IconManager;
+
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.shared.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -25,7 +18,8 @@ import de.applejuicenet.client.shared.IconManager;
  */
 
 public class PowerDownloadPanel
-    extends JPanel implements LanguageListener {
+    extends JPanel
+    implements LanguageListener {
   GridBagLayout gridBagLayout1 = new GridBagLayout();
   private JRadioButton btnInaktiv = new JRadioButton();
   private JRadioButton btnAktiv = new JRadioButton();
@@ -42,13 +36,13 @@ public class PowerDownloadPanel
   private JButton btnPdl = new JButton("Übernehmen");
   private JButton btnAutoPdl = new JButton("Übernehmen");
   private JLabel powerdownload = new JLabel("Powerdownload");
-  private JLabel label6 = new JLabel("Wieviel willst Du maximal für 1 Byte bezahlen?");
+  private JLabel label6 = new JLabel(
+      "Wieviel willst Du maximal für 1 Byte bezahlen?");
   private JLabel label7 = new JLabel("Für 1 Byte zahle");
   private JLabel label8 = new JLabel("Credits");
   private JLabel label9 = new JLabel("Automatischer Powerdownload");
   private JLabel label10 = new JLabel("ab ");
   private JLabel label11 = new JLabel("bis ");
-
 
   public PowerDownloadPanel() {
     try {
@@ -92,7 +86,7 @@ public class PowerDownloadPanel
     IconManager im = IconManager.getInstance();
     ImageIcon icon = im.getIcon("hint");
 
-    btnHint = new JLabel(icon){
+    btnHint = new JLabel(icon) {
       public JToolTip createToolTip() {
         MultiLineToolTip tip = new MultiLineToolTip();
         tip.setComponent(this);
@@ -129,7 +123,6 @@ public class PowerDownloadPanel
     btnPdlUp = new JLabel(icon2);
     ImageIcon icon3 = im.getIcon("decrease");
     btnPdlDown = new JLabel(icon3);
-
 
     btnPdlUp.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
@@ -169,7 +162,7 @@ public class PowerDownloadPanel
     label9.setOpaque(true);
     label9.setBackground(Color.blue);
     tempPanel2.add(label9, BorderLayout.CENTER);
-    btnHint2 = new JLabel(icon){
+    btnHint2 = new JLabel(icon) {
       public JToolTip createToolTip() {
         MultiLineToolTip tip = new MultiLineToolTip();
         tip.setComponent(this);
@@ -257,23 +250,48 @@ public class PowerDownloadPanel
 //    DataManager.getInstance().getDownloads(); war nur test für das model
   }
 
-  public void fireLanguageChanged(){
-      LanguageSelector languageSelector = LanguageSelector.getInstance();
-      powerdownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "powerdownload", "caption"})));
-      label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label6", "caption"})));
-      btnInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "powerinactive", "caption"})));
-      btnAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "poweractive", "caption"})));
-      label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label7", "caption"})));
-      label8.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Label8", "caption"})));
-      label9.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "label1"})));
-      btnAutoInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "rbInaktiv"})));
-      btnAutoAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "rbAktiv"})));
-      label10.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "pdlAb"})));
-      label11.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "pdlBis"})));
-      String ok = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab", "btnOK"}));
-      btnAutoPdl.setText(ok);
-      btnPdl.setText(ok);
-      btnHint.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "tooltipps", "powerdownload"})));
-      btnHint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "tooltipps", "autopowerdownload"})));
+  public void fireLanguageChanged() {
+    LanguageSelector languageSelector = LanguageSelector.getInstance();
+    powerdownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "powerdownload",
+                                  "caption"})));
+    label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "Label6", "caption"})));
+    btnInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "powerinactive",
+                                  "caption"})));
+    btnAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "poweractive",
+                                  "caption"})));
+    label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "Label7", "caption"})));
+    label8.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "Label8", "caption"})));
+    label9.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab",
+                                  "label1"})));
+    btnAutoInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab",
+                                  "rbInaktiv"})));
+    btnAutoAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab",
+                                  "rbAktiv"})));
+    label10.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab",
+                                  "pdlAb"})));
+    label11.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "downloadtab",
+                                  "pdlBis"})));
+    String ok = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+        String[] {"javagui", "downloadtab", "btnOK"}));
+    btnAutoPdl.setText(ok);
+    btnPdl.setText(ok);
+    btnHint.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "tooltipps",
+                                  "powerdownload"})));
+    btnHint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "tooltipps",
+                                  "autopowerdownload"})));
   }
 }
