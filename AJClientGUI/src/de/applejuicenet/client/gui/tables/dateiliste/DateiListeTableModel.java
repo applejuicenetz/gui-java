@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.7 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.8 2004/02/25 14:20:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.dac.ShareDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DateiListeTableModel.java,v $
+ * Revision 1.8  2004/02/25 14:20:33  maj0r
+ * Automatische Sortierung nach Dateiname eingebaut.
+ *
  * Revision 1.7  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -48,12 +51,33 @@ public class DateiListeTableModel
         "Name", "Größe"};
 
     private HashMap dateien = new HashMap();
+    private Object[] sortedChildren;
 
     public Object getRow(int row) {
         if (row < dateien.size()) {
-            return dateien.values().toArray()[row];
+            return sortedChildren[row];
         }
         return null;
+    }
+
+    private Object[] sortChildren(){
+        Object[] children = dateien.values().toArray();
+        Object tmp;
+        int n = children.length;
+        for (int i = 0; i < n - 1; i++) {
+            int k = i;
+            for (int j = i + 1; j < n; j++) {
+                if (((((ShareDO)children[j]).getShortfilename().compareToIgnoreCase(
+                    ((ShareDO)children[k]).getShortfilename()))) < 0) {
+                    k = j;
+                }
+            }
+            tmp = children[i];
+            children[i] = children[k];
+            children[k] = tmp;
+        }
+        sortedChildren = children;
+        return sortedChildren;
     }
 
     public Object getValueAt(int row, int column) {
@@ -61,7 +85,7 @@ public class DateiListeTableModel
             return "";
         }
 
-        ShareDO shareDO = (ShareDO) dateien.values().toArray()[row];
+        ShareDO shareDO = (ShareDO) sortedChildren[row];
         if (shareDO == null) {
             return "";
         }
@@ -103,6 +127,7 @@ public class DateiListeTableModel
                 addNodes( (ShareNode) it.next());
             }
         }
+        sortChildren();
         fireTableDataChanged();
     }
 
@@ -110,6 +135,7 @@ public class DateiListeTableModel
         Object toRemove = getRow(row);
         if (toRemove != null) {
             dateien.remove(Integer.toString( ( (ShareDO) toRemove).getId()));
+            sortChildren();
             fireTableDataChanged();
         }
     }
