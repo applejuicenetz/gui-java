@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.165 2004/11/24 12:42:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.166 2004/11/29 10:50:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -49,7 +49,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 public class ApplejuiceFassade {
 	//CVS-Beispiel 0.60.0-1-CVS
-    public static final String GUI_VERSION = "0.60.0-6-CVS";
+    public static final String GUI_VERSION = "0.60.0-8-CVS";
     public static final String MIN_NEEDED_CORE_VERSION = "0.30.145.610";
 
     public static final String ERROR_MESSAGE = "Unbehandelte Exception";
@@ -980,21 +980,30 @@ public class ApplejuiceFassade {
         return savedHost;
     }
 
-    public synchronized boolean istCoreErreichbar() {
+    /**
+     * 
+     * 0 = connection
+     * 1 = wrong password
+     * 2 = no connection 
+     * 
+     */
+    public synchronized int istCoreErreichbar() {
         try {
             String password = OptionsManagerImpl.getInstance().
                 getRemoteSettings().getOldPassword();
             String result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                          "/xml/information.xml?password=" +
                                          password);
-            if (result.compareTo("wrong password") == 0){
-                return false;
+            if (result.startsWith("wrong password")){
+                return 1;
+            }
+            if (result.indexOf("<applejuice>") == -1){
+                return 2;
             }
         }
         catch (WebSiteNotFoundException ex) {
-            return false;
+            return 2;
         }
-        coreErreichbar = true;
         if (links != null){
             Iterator it = links.iterator();
             while (it.hasNext()){
@@ -1004,7 +1013,7 @@ public class ApplejuiceFassade {
             links.clear();
             links = null;
         }
-        return true;
+        return 0;
     }
 
     public Version getCoreVersion() {
