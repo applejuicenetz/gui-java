@@ -18,15 +18,18 @@ import java.util.Iterator;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.31 2003/11/19 17:05:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.32 2003/11/24 21:12:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.32  2003/11/24 21:12:35  maj0r
+ * Hier trat merkwuerdigerweise ein Bug auf, spezielleres Logging fuer bessere Auswertung eingebaut.
+ *
  * Revision 1.31  2003/11/19 17:05:20  maj0r
  * Autom. Pwdl ueberarbeitet.
  *
@@ -501,7 +504,15 @@ public class PowerDownloadPanel
                 if (!btnInaktiv.isSelected())
                 {
                     String temp = ratio.getText();
-                    double power = Double.parseDouble(temp);
+                    double power = 2.2;
+                    try{
+                        power = Double.parseDouble(temp);
+                    }
+                    catch (NumberFormatException nfE) {
+                        if (logger.isEnabledFor(Level.ERROR))
+                            logger.error("Unbehandelte Exception", nfE);
+                        ratio.setText("2.2");
+                    }
                     powerDownload = (int) (power * 10 - 10);
                 }
                 ArrayList temp = new ArrayList();
