@@ -32,7 +32,7 @@ import java.net.URLEncoder;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.50 2003/12/22 13:56:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.51 2003/12/29 10:54:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,10 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.51  2003/12/29 10:54:57  maj0r
+ * Bug #4 gefixt (Danke an muhviestarr).
+ * Shareanzeige bei Prioritaetenaenderung gefixt.
+ *
  * Revision 1.50  2003/12/22 13:56:14  maj0r
  * Kleine Bug behoben, der sich beim Einbau eines Thread eingeschlichen hat.
  *
@@ -339,40 +343,29 @@ public class SharePanel
                 prioritaetAufheben.setEnabled(false);
                 prioritaetSetzen.setEnabled(false);
                 neuLaden.setEnabled(false);
-                final SwingWorker worker = new SwingWorker() {
-                    public Object construct() {
+                new Thread() {
+                    public void run() {
                         try{
                             int prio = ((Integer) cmbPrio.getSelectedItem()).intValue();
                             Object[] values = shareTable.getSelectedItems();
-                            if (values == null)
-                                return null;
-                            ShareNode shareNode = null;
-                            for (int i = 0; i < values.length; i++)
-                            {
-                                shareNode = (ShareNode) values[i];
-                                shareNode.setPriority(prio);
+                            synchronized (values){
+                                if (values == null)
+                                    return;
+                                ShareNode shareNode = null;
+                                for (int i = 0; i < values.length; i++) {
+                                    shareNode = (ShareNode) values[i];
+                                    shareNode.setPriority(prio);
+                                }
                             }
+                            shareNeuLaden();
                         }
                         catch (Exception e)
                         {
                             if (logger.isEnabledFor(Level.ERROR))
                                 logger.error("Unbehandelte Exception", e);
                         }
-                        return null;
                     }
-
-                    public void finished() {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                shareTable.updateUI();
-                                prioritaetAufheben.setEnabled(true);
-                                prioritaetSetzen.setEnabled(true);
-                                neuLaden.setEnabled(true);
-                            }
-                        });
-                    }
-                };
-                worker.start();
+                }.start();
             }
         });
 
@@ -455,58 +448,7 @@ public class SharePanel
 
         neuLaden.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                prioritaetAufheben.setEnabled(false);
-                prioritaetSetzen.setEnabled(false);
-                neuLaden.setEnabled(false);
-                final SwingWorker worker = new SwingWorker() {
-                    public Object construct() {
-                        try{
-                            ShareNode rootNode = shareModel.getRootNode();
-                            rootNode.removeAllChildren();
-                            HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
-                            Iterator iterator = shares.values().iterator();
-                            int anzahlDateien = 0;
-                            double size = 0;
-                            int anzahlArray;
-                            ShareDO shareDO;
-                            String filename;
-                            String path;
-                            ShareNode superParentNode;
-                            ShareNode parentNode;
-                            while (iterator.hasNext())
-                            {
-                                shareDO = (ShareDO) iterator.next();
-                                rootNode.addChild(shareDO);
-                                size += shareDO.getSize();
-                                anzahlDateien++;
-                            }
-                            size = size / 1048576;
-                            dateiGroesse = Double.toString(size);
-                            if (dateiGroesse.indexOf(".") + 3 < dateiGroesse.length())
-                            {
-                                dateiGroesse = dateiGroesse.substring(0, dateiGroesse.indexOf(".") + 3) + " MB";
-                            }
-                            String temp = eintraege;
-                            temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
-                            temp = temp.replaceFirst("%s", dateiGroesse);
-                            dateien.setText(temp);
-                        }
-                        catch (Exception e)
-                        {
-                            if (logger.isEnabledFor(Level.ERROR))
-                                logger.error("Unbehandelte Exception", e);
-                        }
-                        return null;
-                    }
-
-                    public void finished() {
-                        shareTable.updateUI();
-                        prioritaetAufheben.setEnabled(true);
-                        prioritaetSetzen.setEnabled(true);
-                        neuLaden.setEnabled(true);
-                    }
-                };
-                worker.start();
+                shareNeuLaden();
             }
         });
 
@@ -597,6 +539,61 @@ public class SharePanel
                 }
             }
         });
+    }
+
+    private void shareNeuLaden(){
+        prioritaetAufheben.setEnabled(false);
+        prioritaetSetzen.setEnabled(false);
+        neuLaden.setEnabled(false);
+        final SwingWorker worker = new SwingWorker() {
+            public Object construct() {
+                try{
+                    ShareNode rootNode = shareModel.getRootNode();
+                    rootNode.removeAllChildren();
+                    HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
+                    Iterator iterator = shares.values().iterator();
+                    int anzahlDateien = 0;
+                    double size = 0;
+                    int anzahlArray;
+                    ShareDO shareDO;
+                    String filename;
+                    String path;
+                    ShareNode superParentNode;
+                    ShareNode parentNode;
+                    while (iterator.hasNext())
+                    {
+                        shareDO = (ShareDO) iterator.next();
+                        rootNode.addChild(shareDO);
+                        size += shareDO.getSize();
+                        anzahlDateien++;
+                    }
+                    size = size / 1048576;
+                    dateiGroesse = Double.toString(size);
+                    if (dateiGroesse.indexOf(".") + 3 < dateiGroesse.length())
+                    {
+                        dateiGroesse = dateiGroesse.substring(0, dateiGroesse.indexOf(".") + 3) + " MB";
+                    }
+                    String temp = eintraege;
+                    temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
+                    temp = temp.replaceFirst("%s", dateiGroesse);
+                    dateien.setText(temp);
+                }
+                catch (Exception e)
+                {
+                    if (logger.isEnabledFor(Level.ERROR))
+                        logger.error("Unbehandelte Exception", e);
+                }
+                return null;
+            }
+
+            public void finished() {
+                shareTable.updateUI();
+                prioritaetAufheben.setEnabled(true);
+                prioritaetSetzen.setEnabled(true);
+                neuLaden.setEnabled(true);
+            }
+        };
+        worker.start();
     }
 
     private void initShareSelectionTree() {

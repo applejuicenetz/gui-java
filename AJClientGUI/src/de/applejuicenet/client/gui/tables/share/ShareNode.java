@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.14 2003/12/18 10:48:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.15 2003/12/29 10:54:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.15  2003/12/29 10:54:57  maj0r
+ * Bug #4 gefixt (Danke an muhviestarr).
+ * Shareanzeige bei Prioritaetenaenderung gefixt.
+ *
  * Revision 1.14  2003/12/18 10:48:03  maj0r
  * Bei der Sortierung werden nun Ordner zuerst gelistet.
  *
@@ -250,7 +254,6 @@ public class ShareNode
 
     public void setPriority(int prio) {
         if (isLeaf()) {
-            shareDO.setPrioritaet(prio);
             ApplejuiceFassade.getInstance().setPrioritaet(shareDO.getId(), prio);
         }
         else {
