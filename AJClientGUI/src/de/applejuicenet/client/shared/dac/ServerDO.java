@@ -44,7 +44,7 @@ public class ServerDO {
   }
 
   public String getPort(){
-    return name;
+    return port;
   }
 
   public void setPort(String port){
