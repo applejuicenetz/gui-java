@@ -6,9 +6,11 @@ import java.util.HashSet;
 
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
+import javax.swing.Icon;
+import de.applejuicenet.client.gui.tables.Node;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.9 2004/02/18 17:24:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.10 2004/02/27 16:48:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +19,9 @@ import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
+ * Revision 1.10  2004/02/27 16:48:27  maj0r
+ * Suchergebnisse werden nun, wenn moeglich mit einem sprechenden Icon angezeigt.
+ *
  * Revision 1.9  2004/02/18 17:24:21  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -144,6 +149,13 @@ public class Search {
         private ArrayList fileNames = new ArrayList();
         private HashSet keys = new HashSet();
 
+        public static final String TYPE_PDF = "pdf";
+        public static final String TYPE_IMAGE = "image";
+        public static final String TYPE_MOVIE = "movie";
+        public static final String TYPE_UNKNOWN = "treeRoot";
+
+        private String type = TYPE_UNKNOWN;
+
         public SearchEntry(int id, int searchId, String checksumme, long groesse) {
             this.id = id;
             this.searchId = searchId;
@@ -153,6 +165,10 @@ public class Search {
 
         public int getId() {
             return id;
+        }
+
+        public Icon getTypeIcon(){
+            return IconManager.getInstance().getIcon(type);
         }
 
         public int getSearchId(){
@@ -174,11 +190,50 @@ public class Search {
             return groesseAsString;
         }
 
+        private void recalculatePossibleFileType(){
+            FileName[] fileNames = getFileNames();
+            int pdf = 0;
+            int image = 0;
+            int movie = 0;
+            int currentMax = 0;
+            for (int i=0; i<fileNames.length; i++){
+                String fileNameType = fileNames[i].getFileType();
+                if (fileNameType.equals(TYPE_UNKNOWN)){
+                    continue;
+                }
+                else if (fileNameType.equals(TYPE_PDF)){
+                    pdf++;
+                    if (pdf>currentMax){
+                        currentMax = pdf;
+                        type = TYPE_PDF;
+                    }
+                }
+                else if (fileNameType.equals(TYPE_IMAGE)){
+                    image++;
+                    if (image>currentMax){
+                        currentMax = image;
+                        type = TYPE_IMAGE;
+                    }
+                }
+                else if (fileNameType.equals(TYPE_MOVIE)){
+                    image++;
+                    if (image>currentMax){
+                        currentMax = movie;
+                        type = TYPE_MOVIE;
+                    }
+                }
+            }
+            if (pdf == image){
+                type = TYPE_UNKNOWN;
+            }
+        }
+
         public void addFileName(FileName fileName) {
             String key = fileName.getDateiName();
             if (!keys.contains(key)) {
                 keys.add(key);
                 fileNames.add(fileName);
+                recalculatePossibleFileType();
                 setChanged(true);
             }
             else {
@@ -198,13 +253,15 @@ public class Search {
             return (FileName[]) fileNames.toArray(new FileName[fileNames.size()]);
         }
 
-        public class FileName {
+        public class FileName implements Node{
             private String dateiName;
             private int haeufigkeit;
+            private String fileType = TYPE_UNKNOWN;
 
             public FileName(String dateiName, int haeufigkeit) {
                 this.dateiName = dateiName;
                 this.haeufigkeit = haeufigkeit;
+                calculatePossibleFileType();
             }
 
             public String getDateiName() {
@@ -217,6 +274,31 @@ public class Search {
 
             public void setHaeufigkeit(int haeufigkeit) {
                 this.haeufigkeit = haeufigkeit;
+            }
+
+            public String getFileType(){
+                return fileType;
+            }
+
+            public Icon getConvenientIcon() {
+                return IconManager.getInstance().getIcon(fileType);
+            }
+
+            private void calculatePossibleFileType(){
+                if (dateiName.endsWith(".pdf")){
+                    fileType = TYPE_PDF;
+                }
+                else if (dateiName.endsWith(".bmp") || dateiName.endsWith(".jpg")
+                         || dateiName.endsWith(".tif") || dateiName.endsWith(".png")
+                         || dateiName.endsWith(".pcx")){
+                    fileType = TYPE_IMAGE;
+                }
+                else if (dateiName.endsWith(".mpg") || dateiName.endsWith(".avi")
+                         || dateiName.endsWith(".mov") || dateiName.endsWith(".mpeg")
+                         || dateiName.endsWith(".dat") || dateiName.endsWith(".ra")
+                         || dateiName.endsWith(".vob")){
+                    fileType = TYPE_MOVIE;
+                }
             }
         }
     }
