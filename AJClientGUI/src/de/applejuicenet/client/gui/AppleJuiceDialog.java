@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.81 2004/01/19 17:44:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.82 2004/01/20 10:34:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.82  2004/01/20 10:34:07  maj0r
+ * Focus bei der Anzeige des Dialogs nach Verstecken per TrayIcon korrigiert.
+ *
  * Revision 1.81  2004/01/19 17:44:49  maj0r
  * ajl-Listen koennen nun ueber das Menue importiert werden.
  *
@@ -493,8 +496,10 @@ public class AppleJuiceDialog
                             if ( (evt.getModifiers() & MouseEvent.BUTTON1_MASK) !=
                                 0 &&
                                 evt.getClickCount() == 2) {
+                               AppleJuiceDialog dialog = AppleJuiceDialog.getApp();
                                 if (!isVisible()) {
-                                    setVisible(true);
+                                    dialog.setVisible(true);
+                                    dialog.requestFocus();
                                 }
                                 else {
                                     setVisible(false);
@@ -1175,7 +1180,6 @@ public class AppleJuiceDialog
                   public void stateChanged(ChangeEvent e) {
                       JSlider slider = (JSlider) e.getSource();
                       label1.setText(Integer.toString(slider.getValue()) + " kb/s");
-                      ajSettings.setMaxUpload(slider.getValue() * 1024);
                   }
               });
               downloadSlider.addChangeListener(new ChangeListener() {
@@ -1186,16 +1190,30 @@ public class AppleJuiceDialog
               });
               uploadSlider.addMouseListener(new MouseAdapter(){
                   public void mouseReleased(MouseEvent e){
-                      long down = downloadSlider.getValue() * 1024;
-                      long up = uploadSlider.getValue() * 1024;
-                      ApplejuiceFassade.getInstance().setMaxUpAndDown(up, down);
+                      if (uploadSlider.getValue() < uploadSlider.getMaximum()
+                          && uploadSlider.getValue() > 0){
+                          long down = downloadSlider.getValue() * 1024;
+                          long up = uploadSlider.getValue() * 1024;
+                          ApplejuiceFassade.getInstance().setMaxUpAndDown(up,
+                              down);
+                      }
+                      else{
+                          uploadSlider.setValue((int) ajSettings.getMaxUploadInKB());
+                      }
                   }
               });
               downloadSlider.addMouseListener(new MouseAdapter(){
                   public void mouseReleased(MouseEvent e){
-                      long down = downloadSlider.getValue() * 1024;
-                      long up = uploadSlider.getValue() * 1024;
-                      ApplejuiceFassade.getInstance().setMaxUpAndDown(up, down);
+                      if (downloadSlider.getValue() < downloadSlider.getMaximum()
+                          && downloadSlider.getValue() > 0){
+                          long down = downloadSlider.getValue() * 1024;
+                          long up = uploadSlider.getValue() * 1024;
+                          ApplejuiceFassade.getInstance().setMaxUpAndDown(up,
+                              down);
+                      }
+                      else{
+                          downloadSlider.setValue((int) ajSettings.getMaxDownloadInKB());
+                      }
                   }
               });
               SwingUtilities.invokeLater(new Runnable(){
