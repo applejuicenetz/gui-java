@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.1 2003/08/11 14:10:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.2 2003/08/11 15:34:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.2  2003/08/11 15:34:45  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.1  2003/08/11 14:10:27  maj0r
  * DownloadPartList eingefügt.
  * Diverse Änderungen.
@@ -82,11 +85,9 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
         {
             this.downloadDO = downloadDO;
             PartListDO partListDO = DataManager.getInstance().getDownloadPartList(downloadDO);
-            actualDLDateiName.setText(partListDO.getDownloadDO().getFilename());
+            actualDLDateiName.setText(downloadDO.getFilename() + " (" + downloadDO.getTemporaryFileNumber() + ".data)");
             remove(actualDlOverviewTable);
             actualDlOverviewTable = new JPanel(new GridBagLayout());
-            int height = actualDlOverviewTable.getHeight()/11;
-            int width = actualDlOverviewTable.getWidth()/11;
             GridBagConstraints constraints = new GridBagConstraints();
             constraints.anchor = GridBagConstraints.WEST;
             constraints.fill = GridBagConstraints.BOTH;

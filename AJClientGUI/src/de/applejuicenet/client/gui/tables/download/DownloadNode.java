@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.6 2003/08/09 10:56:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.7 2003/08/11 15:34:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadNode.java,v $
+ * Revision 1.7  2003/08/11 15:34:45  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.6  2003/08/09 10:56:38  maj0r
  * DownloadTabelle weitergeführt.
  *
@@ -105,7 +108,9 @@ public class DownloadNode implements Node {
         DownloadSourceDO[] sources = downloadDO.getSources();
         DownloadNode child = null;
         for (int i=0; i<sources.length; i++){
-            if (!existent.containsChild(new MapSetStringKey(sources[i].getId()))){
+            if (!existent.containsChild(
+                    new MapSetStringKey(
+                            sources[i].getId()))){
                 //neue Source
                 child = new DownloadNode(sources[i]);
                 existent.addChild(child);
