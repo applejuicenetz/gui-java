@@ -3,7 +3,7 @@ package de.applejuicenet.client.gui.plugins.ircplugin;
 import java.util.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/Doku/plugin_example/de/applejuicenet/client/gui/plugins/ircplugin/Attic/myParser.java,v 1.2 2003/08/28 15:53:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/myParser.java,v 1.1 2003/09/12 06:32:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.util.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: myParser.java,v $
+ * Revision 1.1  2003/09/12 06:32:17  maj0r
+ * Nur verschoben.
+ *
  * Revision 1.2  2003/08/28 15:53:02  maj0r
  * NullPointer behoben und Header eingefuegt.
  *

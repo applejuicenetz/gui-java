@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/Doku/plugin_example/de/applejuicenet/client/gui/plugins/ircplugin/Attic/XdccIrc.java,v 1.5 2003/08/29 06:49:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.1 2003/09/12 06:32:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import de.applejuicenet.client.shared.SwingWorker;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: XdccIrc.java,v $
+ * Revision 1.1  2003/09/12 06:32:17  maj0r
+ * Nur verschoben.
+ *
  * Revision 1.5  2003/08/29 06:49:32  maj0r
  * NullPointer behoben.
  * Version 1.21
