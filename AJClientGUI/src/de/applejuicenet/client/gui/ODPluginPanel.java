@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.6 2003/06/30 19:46:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.7 2003/09/04 06:27:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODPluginPanel.java,v $
+ * Revision 1.7  2003/09/04 06:27:53  maj0r
+ * Muell entfernt.
+ *
  * Revision 1.6  2003/06/30 19:46:11  maj0r
  * Sourcestil verbessert.
  *
@@ -60,7 +63,6 @@ public class ODPluginPanel
     }
     Dimension parentSize = theApp.getSize();
     beschreibung.setBackground(label1.getBackground());
-    Dimension dim1 = beschreibung.getPreferredSize();
     beschreibung.setPreferredSize(new Dimension(parentSize.width / 3,
                                                 beschreibung.getPreferredSize().
                                                 height));
