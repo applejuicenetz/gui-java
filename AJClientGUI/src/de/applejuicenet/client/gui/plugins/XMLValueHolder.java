@@ -13,13 +13,13 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public class PluginsPropertiesXMLHolder extends DefaultHandler{
+public class XMLValueHolder extends DefaultHandler{
     private Logger logger;
     private XMLReader xr = null;
     private HashMap xmlContents = new HashMap();
     private StringBuffer key = new StringBuffer();
 
-    public PluginsPropertiesXMLHolder(String xmlString) {
+    public XMLValueHolder(String xmlString) {
         logger = Logger.getLogger(getClass());
         try {
             Class parser = SAXParser.class;

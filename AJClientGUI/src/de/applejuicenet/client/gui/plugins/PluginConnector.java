@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import java.util.HashMap;
 
 /**
  * <p>Titel: AppleJuice Core-GUI</p>
@@ -25,21 +26,31 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 
 public abstract class PluginConnector
     extends JPanel
-    implements LanguageListener, DataUpdateListener, RegisterI {
+    implements DataUpdateListener, RegisterI {
 
     private final ImageIcon pluginIcon;
-    private final PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder;
+    private final XMLValueHolder xMLValueHolder;
+    private final HashMap languageFiles;
+    private XMLValueHolder currentLanguageFile;
 
-    protected PluginConnector(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder, ImageIcon icon){
-        if (pluginsPropertiesXMLHolder == null || icon == null){
+    protected PluginConnector(XMLValueHolder xMLValueHolder, HashMap languageFiles, ImageIcon icon){
+        if (xMLValueHolder == null || icon == null || languageFiles == null){
             throw new RuntimeException("Plugin nicht richtig implementiert");
         }
-        this.pluginsPropertiesXMLHolder = pluginsPropertiesXMLHolder;
+        this.xMLValueHolder = xMLValueHolder;
+        this.languageFiles = languageFiles;
         pluginIcon = icon;
     }
 
-    public final String getXMLAttributeByTagName(String identifier){
-        return pluginsPropertiesXMLHolder.getXMLAttributeByTagName(identifier);
+    public final void setLanguage(String language){
+        if (languageFiles.containsKey(language)){
+            currentLanguageFile = (XMLValueHolder)languageFiles.get(language);
+            fireLanguageChanged();
+        }
+    }
+
+    public final String getGeneralXMLAttributeByTagName(String identifier){
+        return xMLValueHolder.getXMLAttributeByTagName(identifier);
     }
 
     /**
@@ -47,7 +58,7 @@ public abstract class PluginConnector
      * @return String: Titel, der als Reitertext ausgegeben wird
      */
     public final String getTitle(){
-        return getXMLAttributeByTagName(".root.general.title.value");
+        return getGeneralXMLAttributeByTagName(".root.general.title.value");
     }
 
     /**
@@ -55,7 +66,7 @@ public abstract class PluginConnector
      * @return String: Versions-Nr
      */
     public final String getVersion(){
-        return getXMLAttributeByTagName(".root.general.version.value");
+        return getGeneralXMLAttributeByTagName(".root.general.version.value");
     }
 
     /**
@@ -63,7 +74,15 @@ public abstract class PluginConnector
      * @return String: Name des Autors
      */
     public final String getAutor(){
-        return getXMLAttributeByTagName(".root.general.author.value");
+        return getGeneralXMLAttributeByTagName(".root.general.author.value");
+    }
+
+    /**
+     *
+     * @return String: Kontaktadresse
+     */
+    public final String getContact(){
+        return getGeneralXMLAttributeByTagName(".root.general.contact.value");
     }
 
     /**
@@ -71,7 +90,7 @@ public abstract class PluginConnector
      * @return boolean: Liefert true zurück, wenn das Plugin eine sichtbare Oberflaeche haben soll, sonst false
      */
     public final boolean istReiter(){
-        return getXMLAttributeByTagName(".root.general.istab.value").toLowerCase().equals("true");
+        return getGeneralXMLAttributeByTagName(".root.general.istab.value").toLowerCase().equals("true");
     }
 
     /**
@@ -79,7 +98,17 @@ public abstract class PluginConnector
      * @return String: Liefert eine Kurzbeschreibung des Plugins zurück.
      */
     public final String getBeschreibung(){
-        return getXMLAttributeByTagName(".root.general.description.value");
+        String result = "";
+        if (currentLanguageFile!=null){
+            result = currentLanguageFile.getXMLAttributeByTagName(".root.language.description.value");
+        }
+        if (result.length() == 0){
+            return getGeneralXMLAttributeByTagName(
+                ".root.general.description.value");
+        }
+        else{
+            return result;
+        }
     }
 
     /**
@@ -115,6 +144,15 @@ public abstract class PluginConnector
      * zB kann an dieser Stelle eine eigene xml-Datei zur Anpassung der eigenen Panels ausgewertet werden
      **/
     public abstract void fireLanguageChanged();
+
+    public final String getLanguageString(String identifier){
+        if (currentLanguageFile!=null){
+            return currentLanguageFile.getXMLAttributeByTagName(identifier);
+        }
+        else{
+            return "";
+        }
+    }
 
     /**
      * Wird automatisch aufgerufen, wenn neue Informationen vom Server
