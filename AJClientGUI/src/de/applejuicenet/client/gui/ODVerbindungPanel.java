@@ -9,9 +9,10 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import javax.swing.Icon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.12 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.13 2004/01/25 10:16:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODVerbindungPanel.java,v $
+ * Revision 1.13  2004/01/25 10:16:42  maj0r
+ * Optionenmenue ueberarbeitet.
+ *
  * Revision 1.12  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -42,7 +46,7 @@ import org.apache.log4j.Logger;
  */
 
 public class ODVerbindungPanel
-        extends JPanel {
+        extends JPanel implements OptionsRegister{
     private boolean dirty = false;
     private JLabel label1;
     private JLabel label2;
@@ -58,6 +62,8 @@ public class ODVerbindungPanel
     private JTextField maxVerbindungenProTurn = new JTextField();
     private AJSettings ajSettings;
     private Logger logger;
+    private Icon menuIcon;
+    private String menuText;
 
     public ODVerbindungPanel(AJSettings ajSettings) {
         logger = Logger.getLogger(getClass());
@@ -78,6 +84,8 @@ public class ODVerbindungPanel
     }
 
     private void jbInit() throws Exception {
+        IconManager im = IconManager.getInstance();
+        menuIcon = im.getIcon("opt_verbindung");
         setLayout(new BorderLayout());
         JPanel panel1 = new JPanel(new GridBagLayout());
 
@@ -171,6 +179,8 @@ public class ODVerbindungPanel
         label5 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options",
                                                                                                      "verbindung", "label5"})));
+        menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+           getFirstAttrbuteByTagName(new String[]{"einstform", "connectionsheet", "caption"}));
         kbSlot = new JLabel();
 
         int untereGrenze = (int) Math.pow((double) ajSettings.getMaxUploadInKB(),
@@ -277,5 +287,13 @@ public class ODVerbindungPanel
         kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
         automaticConnect.setSelected(ajSettings.isAutoConnect());
         maxVerbindungenProTurn.setText(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()));
+    }
+
+    public Icon getIcon() {
+        return menuIcon;
+    }
+
+    public String getMenuText() {
+        return menuText;
     }
 }

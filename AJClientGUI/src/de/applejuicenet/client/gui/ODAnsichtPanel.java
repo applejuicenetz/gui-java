@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.7 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.8 2004/01/25 10:16:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODAnsichtPanel.java,v $
+ * Revision 1.8  2004/01/25 10:16:42  maj0r
+ * Optionenmenue ueberarbeitet.
+ *
  * Revision 1.7  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -51,13 +54,15 @@ import org.apache.log4j.Level;
  *
  */
 
-public class ODAnsichtPanel extends JPanel {
+public class ODAnsichtPanel extends JPanel implements OptionsRegister{
     private JLabel farbeFertigerDownload = new JLabel("      ");
     private JLabel farbeQuelle = new JLabel("      ");
     private Settings settings;
     JCheckBox cmbAktiv = new JCheckBox();
     JCheckBox cmbDownloadUebersicht = new JCheckBox();
     private Logger logger;
+    private Icon menuIcon;
+    private String menuText;
 
     public ODAnsichtPanel() {
         logger = Logger.getLogger(getClass());
@@ -73,6 +78,8 @@ public class ODAnsichtPanel extends JPanel {
 
     private void init() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
+        IconManager im = IconManager.getInstance();
+        menuIcon = im.getIcon("opt_ansicht");
         cmbDownloadUebersicht.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
                                                        "downloadansicht"})));
@@ -98,7 +105,6 @@ public class ODAnsichtPanel extends JPanel {
                 settings.setFarbenAktiv(cmbAktiv.isSelected());
             }
         });
-        IconManager im = IconManager.getInstance();
         ImageIcon icon = im.getIcon("hint");
         JLabel hint1 = new JLabel(icon) {
             public JToolTip createToolTip() {
@@ -142,6 +148,8 @@ public class ODAnsichtPanel extends JPanel {
         panel1.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
                                                        "quelle"}))), constraints);
+        menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+             getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht", "caption"}));
         constraints.gridx = 1;
         constraints.gridy = 1;
         panel1.add(farbeFertigerDownload, constraints);
@@ -168,6 +176,14 @@ public class ODAnsichtPanel extends JPanel {
                 logger.error("Unbehandelte Exception", e);
             return false;
         }
+    }
+
+    public Icon getIcon() {
+        return menuIcon;
+    }
+
+    public String getMenuText() {
+        return menuText;
     }
 
     class ColorChooserMouseAdapter

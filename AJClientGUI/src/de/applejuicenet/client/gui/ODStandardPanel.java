@@ -38,7 +38,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.21 2004/01/05 19:17:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.22 2004/01/25 10:16:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,6 +47,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.22  2004/01/25 10:16:42  maj0r
+ * Optionenmenue ueberarbeitet.
+ *
  * Revision 1.21  2004/01/05 19:17:18  maj0r
  * Bug #56 gefixt (Danke an MeineR)
  * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
@@ -105,7 +108,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  */
 
 public class ODStandardPanel
-    extends JPanel {
+    extends JPanel implements OptionsRegister {
     private boolean dirty = false;
     private boolean xmlPortDirty = false;
     private JLabel label1 = new JLabel();
@@ -136,6 +139,8 @@ public class ODStandardPanel
     private JCheckBox loadPlugins = new JCheckBox();
     private Logger logger;
     private ConnectionSettings remote;
+    private Icon menuIcon;
+    private String menuText;
 
     public ODStandardPanel(JDialog parent, AJSettings ajSettings,
                            ConnectionSettings remote) {
@@ -182,6 +187,8 @@ public class ODStandardPanel
 
     private void init() throws Exception {
         OptionsManager optionsManager = PropertiesManager.getOptionsManager();
+        IconManager im = IconManager.getInstance();
+        menuIcon = im.getIcon("opt_standard");
         port.setDocument(new NumberInputVerifier());
         xmlPort.setDocument(new NumberInputVerifier());
         temp.setText(ajSettings.getTempDir());
@@ -241,7 +248,9 @@ public class ODStandardPanel
                                       ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
             "options", "logging", "off"})));
-
+        menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"einstform", "standardsheet",
+                                                                                                  "caption"}));
         cmbLog = new JComboBox(levelItems);
         cmbLog.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -340,7 +349,6 @@ public class ODStandardPanel
 
         loadPlugins.setSelected(optionsManager.shouldLoadPluginsOnStartup());
 
-        IconManager im = IconManager.getInstance();
         ImageIcon icon = im.getIcon("hint");
         hint1 = new JLabel(icon) {
             public JToolTip createToolTip() {
@@ -536,6 +544,14 @@ public class ODStandardPanel
 
     public boolean isXmlPortDirty() {
         return xmlPortDirty;
+    }
+
+    public Icon getIcon() {
+        return menuIcon;
+    }
+
+    public String getMenuText() {
+        return menuText;
     }
 
     class DirectoryChooserMouseAdapter

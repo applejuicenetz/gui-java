@@ -10,9 +10,10 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import javax.swing.Icon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.6 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.7 2004/01/25 10:16:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +22,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODProxyPanel.java,v $
+ * Revision 1.7  2004/01/25 10:16:42  maj0r
+ * Optionenmenue ueberarbeitet.
+ *
  * Revision 1.6  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -35,7 +39,7 @@ import org.apache.log4j.Logger;
  */
 
 public class ODProxyPanel
-        extends JPanel {
+        extends JPanel implements OptionsRegister{
     private boolean dirty = false;
     private JLabel label1;
     private JLabel label2;
@@ -48,6 +52,8 @@ public class ODProxyPanel
     private JCheckBox use = new JCheckBox();
     private ProxySettings proxySettings;
     private Logger logger;
+    private Icon menuIcon;
+    private String menuText;
 
     public ODProxyPanel() {
         logger = Logger.getLogger(getClass());
@@ -63,6 +69,8 @@ public class ODProxyPanel
     }
 
     private void init() throws Exception {
+        IconManager im = IconManager.getInstance();
+        menuIcon = im.getIcon("opt_proxy");
         setLayout(new BorderLayout());
         JPanel panel1 = new JPanel(new GridBagLayout());
         FlowLayout flowL = new FlowLayout();
@@ -87,6 +95,8 @@ public class ODProxyPanel
         use.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options", "proxy",
                                                                                                      "verwenden"})));
+       menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+           getFirstAttrbuteByTagName(new String[]{"javagui", "options", "proxy", "caption"}));
         host.setText(proxySettings.getHost());
         host.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
@@ -186,5 +196,13 @@ public class ODProxyPanel
 
     public boolean isDirty() {
         return dirty;
+    }
+
+    public Icon getIcon() {
+        return menuIcon;
+    }
+
+    public String getMenuText() {
+        return menuText;
     }
 }

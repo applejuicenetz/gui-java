@@ -21,9 +21,11 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import javax.swing.JDialog;
+import javax.swing.Icon;
+import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.10 2004/01/01 15:30:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.11 2004/01/25 10:16:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +34,9 @@ import javax.swing.JDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginPanel.java,v $
+ * Revision 1.11  2004/01/25 10:16:42  maj0r
+ * Optionenmenue ueberarbeitet.
+ *
  * Revision 1.10  2004/01/01 15:30:21  maj0r
  * Plugins koennen nun ein JPanel zB fuer Optionen implementieren.
  * Dieses wird dann im Optionendialog angezeigt.
@@ -55,7 +60,7 @@ import javax.swing.JDialog;
  */
 
 public class ODPluginPanel
-    extends JPanel {
+    extends JPanel implements OptionsRegister{
     private JList pluginList;
     private JEditorPane beschreibung = new JEditorPane();
     private JLabel label1 = new JLabel();
@@ -68,6 +73,8 @@ public class ODPluginPanel
     private Logger logger;
     private PluginConnector selectedPluginConnector = null;
     private JDialog parentDialog;
+    private Icon menuIcon;
+    private String menuText;
 
     public ODPluginPanel(JDialog parent) {
         logger = Logger.getLogger(getClass());
@@ -84,6 +91,8 @@ public class ODPluginPanel
     }
 
     private void init() throws Exception {
+        IconManager im = IconManager.getInstance();
+        menuIcon = im.getIcon("opt_plugins");
         PluginConnector[] plugins = theApp.getPlugins();
         einstellungen.setVisible(false);
         Vector v = new Vector();
@@ -131,6 +140,8 @@ public class ODPluginPanel
             getFirstAttrbuteByTagName(new
                                       String[] {"javagui", "options", "plugins",
                                       "einstellungen"})));
+        menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[]{"einstform", "TabSheet1", "caption"}));
 
         add(label1, BorderLayout.NORTH);
         add(pluginList, BorderLayout.WEST);
@@ -194,5 +205,13 @@ public class ODPluginPanel
             selectedPluginConnector = selected.getPlugin();
             einstellungen.setVisible(true);
         }
+    }
+
+    public Icon getIcon() {
+        return menuIcon;
+    }
+
+    public String getMenuText() {
+        return menuText;
     }
 }

@@ -8,9 +8,10 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import javax.swing.Icon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.9 2004/01/03 17:29:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.10 2004/01/25 10:16:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODConnectionPanel.java,v $
+ * Revision 1.10  2004/01/25 10:16:42  maj0r
+ * Optionenmenue ueberarbeitet.
+ *
  * Revision 1.9  2004/01/03 17:29:01  maj0r
  * Dialog bei fehlgeschlagenem Verbindungsversuch überarbeitet.
  *
@@ -56,7 +60,7 @@ import org.apache.log4j.Logger;
  */
 
 public class ODConnectionPanel
-        extends JPanel {
+        extends JPanel implements OptionsRegister{
     private boolean dirty = false;
     private JLabel label1;
     private JLabel label2;
@@ -70,6 +74,8 @@ public class ODConnectionPanel
     private Logger logger;
     private boolean showPort = false;
     private QuickConnectionSettingsDialog quickConnectionSettingsDialog;
+    private Icon menuIcon;
+    private String menuText;
 
     public ODConnectionPanel(ConnectionSettings remote, QuickConnectionSettingsDialog quickConnectionSettingsDialog) {
         logger = Logger.getLogger(getClass());
@@ -106,6 +112,8 @@ public class ODConnectionPanel
 
     private void init() throws Exception {
         setLayout(new BorderLayout());
+        IconManager im = IconManager.getInstance();
+        menuIcon = im.getIcon("opt_passwort");
         JPanel panel1 = new JPanel(new GridBagLayout());
         FlowLayout flowL = new FlowLayout();
         flowL.setAlignment(FlowLayout.RIGHT);
@@ -121,6 +129,8 @@ public class ODConnectionPanel
         label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options", "remote",
                                                                                                      "passwortNeu"})));
+        menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+           getFirstAttrbuteByTagName(new String[]{"einstform", "pwsheet", "caption"}));
         label4 = new JLabel("Port");
 
         host.setText(remote.getHost());
@@ -240,5 +250,13 @@ public class ODConnectionPanel
         label1.setEnabled(enable);
         label2.setEnabled(enable);
         label3.setEnabled(enable);
+    }
+
+    public Icon getIcon() {
+        return menuIcon;
+    }
+
+    public String getMenuText() {
+        return menuText;
     }
 }
