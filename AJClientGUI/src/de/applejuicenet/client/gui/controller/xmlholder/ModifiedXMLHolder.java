@@ -23,7 +23,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.5 2004/01/07 16:15:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.6 2004/01/24 08:10:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.6  2004/01/24 08:10:24  maj0r
+ * Anzahl der Verbindungsversuche eingebaut.
+ *
  * Revision 1.5  2004/01/07 16:15:20  maj0r
  * Warnmeldung bezueglich 30-Minuten-Sperre bei manuellem Serverwechsel eingebaut.
  *
@@ -794,6 +797,7 @@ public class ModifiedXMLHolder
             String name = null;
             String host = null;
             long lastseen;
+            int versuche;
             String port = null;
             ServerDO server = null;
             MapSetStringKey key;
@@ -808,6 +812,7 @@ public class ModifiedXMLHolder
                     serverDO.setHost(e.getAttribute("host"));
                     serverDO.setTimeLastSeen(Long.parseLong(e.getAttribute(
                         "lastseen")));
+                    serverDO.setVersuche(Integer.parseInt(e.getAttribute("connectiontry")));
                     serverDO.setPort(e.getAttribute("port"));
                 }
                 else {
@@ -816,7 +821,8 @@ public class ModifiedXMLHolder
                     host = e.getAttribute("host");
                     lastseen = Long.parseLong(e.getAttribute("lastseen"));
                     port = e.getAttribute("port");
-                    server = new ServerDO(id, name, host, port, lastseen);
+                    versuche = Integer.parseInt(e.getAttribute("connectiontry"));
+                    server = new ServerDO(id, name, host, port, lastseen, versuche);
                     serverMap.put(new MapSetStringKey(id_key), server);
                 }
             }

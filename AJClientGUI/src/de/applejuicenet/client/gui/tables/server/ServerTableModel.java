@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.gui.shared.SortableTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.6 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.7 2004/01/24 08:10:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.shared.SortableTableModel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerTableModel.java,v $
+ * Revision 1.7  2004/01/24 08:10:24  maj0r
+ * Anzahl der Verbindungsversuche eingebaut.
+ *
  * Revision 1.6  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -53,7 +56,7 @@ import de.applejuicenet.client.gui.shared.SortableTableModel;
 public class ServerTableModel
     extends AbstractTableModel implements SortableTableModel{
   final static String[] COL_NAMES = {
-      "Name", "DynIP", "Port", "Letztes mal online"};
+      "Name", "DynIP", "Port", "Verbindungsversuche", "Letztes mal online"};
 
   private TableSorter sorter;
   private ArrayList servers = new ArrayList();
@@ -89,27 +92,20 @@ public class ServerTableModel
       return "";
     }
 
-    String s;
     switch (column) {
       case 0:
-        s = server.getName();
-        break;
+        return server.getName();
       case 1:
-        s = server.getHost();
-        break;
+        return server.getHost();
       case 2:
-        s = server.getPort();
-        break;
+        return server.getPort();
       case 3:
-        s = server.getTimeLastSeenAsString();
-        break;
+        return new Integer(server.getVersuche());
+      case 4:
+        return server.getTimeLastSeenAsString();
       default:
-        s = "Fehler";
+        return "";
     }
-    if (s == null) {
-      s = "";
-    }
-    return s;
   }
 
   public int getColumnCount() {
@@ -128,7 +124,12 @@ public class ServerTableModel
   }
 
   public Class getClass(int index) {
-    return String.class;
+      if (index==3){
+          return Number.class;
+      }
+      else{
+          return String.class;
+      }
   }
 
   public void setTable(HashMap changedContent) {
@@ -156,6 +157,7 @@ public class ServerTableModel
         oldServer.setHost(server.getHost());
         oldServer.setName(server.getName());
         oldServer.setPort(server.getPort());
+        oldServer.setVersuche(server.getVersuche());
         oldServer.setTimeLastSeen(server.getTimeLastSeen());
         oldServer.setConnected(server.isConnected());
         oldServer.setTryConnect(server.isTryConnect());

@@ -45,7 +45,7 @@ import javax.swing.JOptionPane;
 import de.applejuicenet.client.shared.Information;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.47 2004/01/21 14:16:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.48 2004/01/24 08:10:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -54,6 +54,9 @@ import de.applejuicenet.client.shared.Information;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.48  2004/01/24 08:10:08  maj0r
+ * Anzahl der Verbindungsversuche eingebaut.
+ *
  * Revision 1.47  2004/01/21 14:16:35  maj0r
  * Icons ins Kontextmenue eingebaut.
  *
@@ -462,7 +465,7 @@ public class ServerPanel
             sucheServer.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                  getFirstAttrbuteByTagName(new String[]{"mainform", "Label11",
                  "caption"})));
-            String[] columns = new String[4];
+            String[] columns = new String[5];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"mainform",
                                           "serverlist",
@@ -476,6 +479,10 @@ public class ServerPanel
                                           "serverlist",
                                           "col3caption"}));
             columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui",
+                                          "serverform",
+                                          "col4caption"}));
+            columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"mainform",
                                           "serverlist",
                                           "col5caption"}));
@@ -543,5 +550,6 @@ public class ServerPanel
     }
 
     public void lostSelection() {
+
     }
 }

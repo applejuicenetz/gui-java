@@ -3,7 +3,7 @@ package de.applejuicenet.client.gui.shared;
 import java.util.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/TableSorter.java,v 1.2 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/TableSorter.java,v 1.3 2004/01/24 08:10:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.util.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: TableSorter.java,v $
+ * Revision 1.3  2004/01/24 08:10:24  maj0r
+ * Anzahl der Verbindungsversuche eingebaut.
+ *
  * Revision 1.2  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -69,17 +72,16 @@ public class TableSorter {
       return 1;
     }
     else {
-      Class type = model.getColumnClass(column);
-      if (type.getSuperclass() == Number.class) {
+      if (o1.getClass().getSuperclass() == Number.class) {
         return compare( (Number) o1, (Number) o2);
       }
-      else if (type == String.class) {
+      else if (o1.getClass() == String.class) {
         return ( (String) o1).compareTo( (String) o2);
       }
-      else if (type == Date.class) {
+      else if (o1.getClass() == Date.class) {
         return compare( (Date) o1, (Date) o2);
       }
-      else if (type == Boolean.class) {
+      else if (o1.getClass() == Boolean.class) {
         return compare( (Boolean) o1, (Boolean) o2);
       }
       else {
