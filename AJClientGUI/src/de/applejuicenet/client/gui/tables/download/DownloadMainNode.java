@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.4 2003/12/30 20:15:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import java.util.ArrayList;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadMainNode.java,v $
+ * Revision 1.4  2003/12/30 20:15:55  maj0r
+ * Kleine Anpassung, damit das Umbenennen von Downloads funktioniert.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -40,7 +43,7 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
     public static final int REST_DOWNLOADS = 2;
 
     private int type;
-    private String text;
+    private String text = "";
 
     private DownloadMainNode[] children;
     private DownloadDO downloadDO;
@@ -52,7 +55,6 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
 
     public DownloadMainNode(DownloadDO downloadDO){
         type = ROOT_NODE;
-        text = downloadDO.getFilename();
         this.downloadDO = downloadDO;
         children = new DownloadMainNode[3];
         children[0] = new DownloadMainNode(downloadDO, LOADING_DOWNLOADS);
@@ -172,7 +174,7 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
 
     public String toString() {
         if (type==ROOT_NODE)
-            return text;
+            return downloadDO.getFilename();
         else{
             return text + " (" + getChildCount() + ")";
         }
