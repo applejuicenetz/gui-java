@@ -25,7 +25,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.26 2003/08/26 09:49:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.27 2003/08/26 14:04:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +34,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.27  2003/08/26 14:04:23  maj0r
+ * ShareTree-Event-Behandlung fertiggestellt.
+ *
  * Revision 1.26  2003/08/26 09:49:01  maj0r
  * ShareTree weitgehend fertiggestellt.
  *
@@ -95,17 +98,12 @@ import java.io.File;
 public class SharePanel
         extends JPanel
         implements LanguageListener, RegisterI {
-    private JPanel panelWest;
     private JPanel panelCenter;
-    private JButton addFolderWithSubfolder = new JButton();
-    private JButton addFolderWithoutSubfolder = new JButton();
-    private JButton removeFolder = new JButton();
-    private JButton startCheck = new JButton();
-    private JList folderList = new JList(new DefaultListModel());
     private JTree folderTree = new JTree();
     private TitledBorder titledBorder1;
     private TitledBorder titledBorder2;
     private JLabel dateien = new JLabel();
+    private MouseAdapter treeMouseAdapter;
 
     private JButton neueListe = new JButton();
     private JButton neuLaden = new JButton();
@@ -122,6 +120,7 @@ public class SharePanel
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem item1;
     private JMenuItem item2;
+    private JMenuItem item3;
 
     private int anzahlDateien = 0;
     private String dateiGroesse = "0 MB";
@@ -140,25 +139,22 @@ public class SharePanel
 
     private void jbInit() throws Exception {
         //todo
-        addFolderWithSubfolder.setEnabled(false);
-        addFolderWithoutSubfolder.setEnabled(false);
-        startCheck.setEnabled(false);
         neueListe.setEnabled(false);
         prioritaetSetzen.setEnabled(false);
         prioritaetAufheben.setEnabled(false);
 
-        item1 = new JMenuItem("Verbinden");
-        item2 = new JMenuItem("Löschen");
+        item1 = new JMenuItem();
+        item2 = new JMenuItem();
+        item3 = new JMenuItem();
         popup.add(item1);
         popup.add(item2);
+        popup.add(item3);
 
         shareModel = new ShareModel(new ShareNode(null, "/"));
         shareTable = new JTreeTable(shareModel);
         titledBorder1 = new TitledBorder("Test");
         titledBorder2 = new TitledBorder("Tester");
         setLayout(new BorderLayout());
-        panelWest = new JPanel(new GridBagLayout());
-        panelWest.setBorder(titledBorder1);
         panelCenter = new JPanel(new BorderLayout());
         panelCenter.setBorder(titledBorder2);
 
@@ -265,35 +261,8 @@ public class SharePanel
                 shareTable.updateUI();
             }
         });
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-
         cmbPrio.setEditable(true);
-        panelWest.add(addFolderWithSubfolder, constraints);
 
-        constraints.gridy = 1;
-        panelWest.add(addFolderWithoutSubfolder, constraints);
-
-        constraints.gridy = 2;
-        panelWest.add(new JScrollPane(folderTree), constraints);
-
-        constraints.gridy = 3;
-        panelWest.add(removeFolder, constraints);
-
-        constraints.gridy = 4;
-        panelWest.add(startCheck, constraints);
-
-        constraints.gridy = 5;
-        constraints.weighty = 1;
-        panelWest.add(new JScrollPane(folderList), constraints);
-
-        for (int i = 1; i <= 250; i++)
-        {
-            cmbPrio.addItem(Integer.toString(i));
-        }
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel1.add(neueListe);
         panel1.add(neuLaden);
@@ -305,60 +274,72 @@ public class SharePanel
         panelCenter.add(new JScrollPane(shareTable), BorderLayout.CENTER);
         panelCenter.add(dateien, BorderLayout.SOUTH);
 
-        removeFolder.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                entferneOrdner();
-            }
-        });
-        add(panelWest, BorderLayout.WEST);
+        JScrollPane aScrollPane = new JScrollPane(folderTree);
+        aScrollPane.setBorder(BorderFactory.createTitledBorder("Verzeichnisse"));
+        add(aScrollPane, BorderLayout.WEST);
         add(panelCenter, BorderLayout.CENTER);
 
-        TableColumn tc = shareTable.getColumnModel().getColumn(1);
-        folderTree.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent me) {
-                if (SwingUtilities.isRightMouseButton(me))
-                {
-                    Point p = me.getPoint();
-                    int iRow = folderTree.getRowForLocation(p.x, p.y);
-                    folderTree.setSelectionRow(iRow);
-                }
-                maybeShowPopup(me);
-            }
+        treeMouseAdapter = new TreeMouseAdapter();
+        LanguageSelector.getInstance().addLanguageListener(this);
 
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-                maybeShowPopup(e);
-            }
-
-            private void maybeShowPopup(MouseEvent e) {
-                if (e.isPopupTrigger())
-                {
-                    popup.show(folderTree, e.getX(), e.getY());
+        item1.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                HashSet shares = ajSettings.getShareDirs();
+                DirectoryNode node = (DirectoryNode)folderTree.getLastSelectedPathComponent();
+                if (node!=null){
+                    String path = node.getDO().getPath();
+                    ShareEntry entry = new ShareEntry(path, ShareEntry.SUBDIRECTORY);
+                    shares.add(entry);
+                    ApplejuiceFassade.getInstance().setShare(shares);
+                    DirectoryNode.setShareDirs(shares);
+                    folderTree.updateUI();
                 }
             }
         });
 
-        LanguageSelector.getInstance().addLanguageListener(this);
-    }
-
-    private void entferneOrdner() {
-        HashSet shares = ajSettings.getShareDirs();
-        Object[] selected = folderList.getSelectedValues();
-        if (selected != null && selected.length != 0)
-        {
-            removeFolder.setEnabled(false);
-            for (int i = 0; i < selected.length; i++)
-            {
-                shares.remove(selected[i]);
+        item2.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                HashSet shares = ajSettings.getShareDirs();
+                DirectoryNode node = (DirectoryNode)folderTree.getLastSelectedPathComponent();
+                if (node!=null){
+                    String path = node.getDO().getPath();
+                    ShareEntry entry = new ShareEntry(path, ShareEntry.SINGLEDIRECTORY);
+                    shares.add(entry);
+                    ApplejuiceFassade.getInstance().setShare(shares);
+                    DirectoryNode.setShareDirs(shares);
+                    folderTree.updateUI();
+                }
             }
-            ApplejuiceFassade.getInstance().setShare(shares);
-            initShareList();
-            DirectoryNode.setShareDirs(shares);
-            folderTree.updateUI();
-        }
+        });
+
+        item3.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                HashSet shares = ajSettings.getShareDirs();
+                DirectoryNode node = (DirectoryNode)folderTree.getLastSelectedPathComponent();
+                if (node!=null){
+                    String path = node.getDO().getPath();
+                    Iterator it = shares.iterator();
+                    ShareEntry toRemove = null;
+                    while (it.hasNext()){
+                        toRemove = (ShareEntry)it.next();
+                        if (toRemove.getDir().compareToIgnoreCase(path)==0){
+                            break;
+                        }
+                        toRemove = null;
+                    }
+                    if (toRemove!=null){
+                        shares.remove(toRemove);
+                        ApplejuiceFassade.getInstance().setShare(shares);
+                        DirectoryNode.setShareDirs(shares);
+                        folderTree.updateUI();
+                    }
+                }
+            }
+        });
     }
 
     private void initShareSelectionTree() {
+        folderTree.removeMouseListener(treeMouseAdapter);
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));
         folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
         final SwingWorker worker2 = new SwingWorker() {
@@ -366,28 +347,11 @@ public class SharePanel
                 ShareSelectionTreeModel treeModel = new ShareSelectionTreeModel();
                 folderTree.setModel(treeModel);
                 folderTree.setRootVisible(false);
+                folderTree.addMouseListener(treeMouseAdapter);
                 return null;
             }
         };
         worker2.start();
-    }
-
-    private void initShareList() {
-        final SwingWorker worker = new SwingWorker() {
-            public Object construct() {
-                removeFolder.setEnabled(false);
-                ((DefaultListModel) folderList.getModel()).removeAllElements();
-                Iterator it = ajSettings.getShareDirs().iterator();
-                while (it.hasNext())
-                {
-                    ShareEntry entry = (ShareEntry) it.next();
-                    ((DefaultListModel) folderList.getModel()).addElement(entry);
-                }
-                removeFolder.setEnabled(true);
-                return null;
-            }
-        };
-        worker.start();
     }
 
     public void registerSelected() {
@@ -396,7 +360,6 @@ public class SharePanel
             ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
             DirectoryNode.setShareDirs(ajSettings.getShareDirs());
             treeInitialisiert = true;
-            initShareList();
             initShareSelectionTree();
         }
     }
@@ -415,31 +378,9 @@ public class SharePanel
         item2.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
                                                                         "addosubdirsbtn", "caption"})));
-        addFolderWithSubfolder.setText(ZeichenErsetzer.korrigiereUmlaute(
+        item3.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                        "addwsubdirsbtn", "caption"})));
-        addFolderWithSubfolder.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                        "addwsubdirsbtn", "hint"})));
-        addFolderWithoutSubfolder.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                        "addosubdirsbtn", "caption"})));
-        addFolderWithoutSubfolder.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                        "addosubdirsbtn", "hint"})));
-        removeFolder.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "deldirbtn",
-                                                                                                      "caption"})));
-        removeFolder.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                        "deldirbtn", "hint"})));
-        startCheck.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                             getFirstAttrbuteByTagName(new String[]{"mainform", "startsharecheck",
-                                                                                                    "caption"})));
-        startCheck.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                        "startsharecheck", "hint"})));
-
+                                                                        "deldirbtn", "caption"})));
         neueListe.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                             getFirstAttrbuteByTagName(new String[]{"mainform", "newfilelist",
                                                                                                    "caption"})));
@@ -494,6 +435,44 @@ public class SharePanel
         else
         {
             dateien.setText("");
+        }
+    }
+
+    class TreeMouseAdapter extends MouseAdapter {
+        public void mousePressed(MouseEvent me) {
+            if (SwingUtilities.isRightMouseButton(me))
+            {
+                Point p = me.getPoint();
+                int iRow = folderTree.getRowForLocation(p.x, p.y);
+                folderTree.setSelectionRow(iRow);
+            }
+            maybeShowPopup(me);
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            super.mouseReleased(e);
+            maybeShowPopup(e);
+        }
+
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger())
+            {
+                DirectoryNode node = (DirectoryNode)folderTree.getLastSelectedPathComponent();
+                popup.removeAll();
+                int nodeShareMode = node.getShareMode();
+                if (nodeShareMode==DirectoryNode.NOT_SHARED
+                    || nodeShareMode==DirectoryNode.SHARED_SOMETHING
+                    || nodeShareMode==DirectoryNode.SHARED_SUB){
+                    popup.add(item1);
+                    popup.add(item2);
+                    popup.show(folderTree, e.getX(), e.getY());
+                }
+                else if (nodeShareMode==DirectoryNode.SHARED_WITH_SUB
+                    || nodeShareMode==DirectoryNode.SHARED_WITHOUT_SUB){
+                    popup.add(item3);
+                    popup.show(folderTree, e.getX(), e.getY());
+                }
+            }
         }
     }
 }
