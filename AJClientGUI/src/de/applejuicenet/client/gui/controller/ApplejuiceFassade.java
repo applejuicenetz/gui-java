@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -38,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.147 2004/06/28 08:17:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.148 2004/06/28 15:47:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -194,6 +193,22 @@ public class ApplejuiceFassade {
         return versioninfo.toString();
     }
 
+    public String getOptionsInformation() {
+        /* *** JavaCore: 0.30.145.610 * JavaGUI: 0.59.4 ***        */
+        StringBuffer versioninfo = new StringBuffer();
+        AJSettings settings = getCurrentAJSettings();
+        versioninfo.append("ok|*** max Verb.: " + settings.getMaxConnections());
+        versioninfo.append(" * max Up: " + settings.getMaxUploadInKB());
+        versioninfo.append(" * max Down: " + settings.getMaxDownloadInKB());
+        versioninfo.append(" * kb/Slot: " + settings.getSpeedPerSlot());
+        versioninfo.append(" * Verb./10 Sek: " + settings.getMaxNewConnectionsPerTurn());
+        versioninfo.append(" * max Quellen/Datei: " + settings.getMaxSourcesPerFile());
+        versioninfo.append(" * Core-Port: " + settings.getPort());
+        versioninfo.append(" * GUI-Port: " + settings.getXMLPort());
+        versioninfo.append(" ***");
+        return versioninfo.toString();
+    }
+
     public void addDataUpdateListener(DataUpdateListener listener, int type) {
         try {
             String key = Integer.toString(type);
@@ -235,29 +250,9 @@ public class ApplejuiceFassade {
         if (getCoreVersion() == null){
             return;
         }
-        StringTokenizer token1 = new StringTokenizer(
-            getCoreVersion().getVersion(), ".");
-        StringTokenizer token2 = new StringTokenizer(
-            ApplejuiceFassade.MIN_NEEDED_CORE_VERSION, ".");
-        if (token1.countTokens() != 4 ||
-            token2.countTokens() != 4) {
-            return;
-        }
-        String[] foundCore = new String[4];
-        String[] neededCore = new String[4];
-        for (int i = 0; i < 4; i++) {
-            foundCore[i] = token1.nextToken();
-            neededCore[i] = token2.nextToken();
-        }
-        boolean coreTooOld = false;
-        for (int i = 0; i < 4; i++) {
-            if (Integer.parseInt(foundCore[i]) <
-                Integer.parseInt(neededCore[i])) {
-                coreTooOld = true;
-                break;
-            }
-        }
-        if (coreTooOld) {
+        Version neededVersion = new Version();
+        neededVersion.setVersion(ApplejuiceFassade.MIN_NEEDED_CORE_VERSION);       
+        if (getCoreVersion().compareTo(neededVersion) == -1){
             StringBuffer fehlerText = new StringBuffer(ZeichenErsetzer.korrigiereUmlaute(
                 LanguageSelector.getInstance().getFirstAttrbuteByTagName(".root.javagui.startup.corezualt")));
             int pos = fehlerText.indexOf("%s");

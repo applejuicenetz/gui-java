@@ -1,38 +1,17 @@
 package de.applejuicenet.client.shared;
 
+import java.util.StringTokenizer;
+
 import javax.swing.ImageIcon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.13 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.14 2004/06/28 15:47:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: Version.java,v $
- * Revision 1.13  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.12  2004/01/28 13:04:48  maj0r
- * Fehlende Symbole eingefuegt.
- *
- * Revision 1.11  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.10  2003/08/11 14:42:13  maj0r
- * Versions-Icon-Beschaffung in die Klasse Version verschoben.
- *
- * Revision 1.9  2003/08/04 14:28:55  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.8  2003/07/03 19:11:16  maj0r
- * DownloadTable überarbeitet.
- *
- * Revision 1.7  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -122,5 +101,33 @@ public class Version {
                 return IconManager.getInstance().getIcon("unbekanntsymbol");
             }
         }
+    }
+    
+    public int compareTo(Version version){
+    	if ( versionNr.compareToIgnoreCase(version.getVersion()) == 0 ){
+    		return 0;
+    	}
+        StringTokenizer token1 = new StringTokenizer(versionNr, ".");
+        StringTokenizer token2 = new StringTokenizer(version.getVersion(), ".");
+        if (token1.countTokens() != 4 ||
+            token2.countTokens() != 4) {
+        	// alles Mist
+            return 0;
+        }
+        String[] foundCore = new String[4];
+        String[] neededCore = new String[4];
+        for (int i = 0; i < 4; i++) {
+            foundCore[i] = token1.nextToken();
+            neededCore[i] = token2.nextToken();
+        }
+        boolean coreTooOld = false;
+        for (int i = 0; i < 4; i++) {
+            if (Integer.parseInt(foundCore[i]) <
+                Integer.parseInt(neededCore[i])) {
+                coreTooOld = true;
+                return -1;
+            }
+        }
+    	return 1;
     }
 }
