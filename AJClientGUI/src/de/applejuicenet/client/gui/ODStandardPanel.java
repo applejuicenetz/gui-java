@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.9 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.10 2003/09/10 13:15:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.10  2003/09/10 13:15:47  maj0r
+ * Veraltete Option "Browsen erlauben" entfernt.
+ *
  * Revision 1.9  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -60,7 +63,6 @@ public class ODStandardPanel
     private JLabel hint5;
     private JDialog parent;
     private AJSettings ajSettings;
-    private JCheckBox cmbAllowBrowse = new JCheckBox();
     private JComboBox cmbLog;
     private Logger logger;
 
@@ -96,7 +98,6 @@ public class ODStandardPanel
         incoming.setBackground(Color.WHITE);
         port.setText(Long.toString(ajSettings.getPort()));
         nick.setText(ajSettings.getNick());
-        cmbAllowBrowse.setSelected(ajSettings.isBrowseAllowed());
         port.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
                 if (ajSettings.getPort() != Integer.parseInt(port.getText()))
@@ -115,18 +116,6 @@ public class ODStandardPanel
                 }
             }
         });
-        cmbAllowBrowse.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (ajSettings.isBrowseAllowed() != cmbAllowBrowse.isSelected())
-                {
-                    dirty = true;
-                    ajSettings.setBrowseAllowed(cmbAllowBrowse.isSelected());
-                }
-            }
-        });
-
-        JPanel panel7 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        panel7.add(cmbAllowBrowse);
 
         JPanel panel8 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel8.add(new JLabel("Logging: "));
@@ -178,10 +167,6 @@ public class ODStandardPanel
         label5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                          getFirstAttrbuteByTagName(new String[]{"einstform", "Label14",
                                                                                                 "caption"})));
-
-        cmbAllowBrowse.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                 getFirstAttrbuteByTagName(new String[]{"einstform", "browallow",
-                                                                                                        "caption"})));
 
         IconManager im = IconManager.getInstance();
         ImageIcon icon = im.getIcon("hint");
@@ -308,13 +293,8 @@ public class ODStandardPanel
         constraints.gridy = 5;
         constraints.gridx = 0;
         constraints.gridwidth = 1;
-        panel6.add(panel7, constraints);
-        constraints.gridy = 6;
         panel6.add(panel8, constraints);
-        constraints.gridy = 5;
         constraints.gridx = 1;
-        panel6.add(hint4, constraints);
-        constraints.gridy = 6;
         panel6.add(hint5, constraints);
 
         add(panel6, BorderLayout.NORTH);
