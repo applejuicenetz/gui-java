@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
+import de.applejuicenet.client.fassade.exception.WrongPasswordException;
 
 public abstract class HtmlLoader {
 
@@ -19,7 +20,7 @@ public abstract class HtmlLoader {
 
 	public static String getHtmlXMLContent(String host, Integer port,
 			int method, String command, boolean withResult)
-			throws WebSiteNotFoundException {
+			throws WebSiteNotFoundException, WrongPasswordException {
 		int ajPort = port.intValue();
 		StringBuffer urlContent = new StringBuffer();
 		try {
@@ -62,7 +63,7 @@ public abstract class HtmlLoader {
 									WebSiteNotFoundException.UNKNOWN_HOST);
 						}
 						if (inputLine.indexOf("/wrongpassword") != -1) {
-							return "wrong password";
+							throw new WrongPasswordException();
 						}
 						if (inputLine.indexOf("invalid id") != -1) {
 							return "";

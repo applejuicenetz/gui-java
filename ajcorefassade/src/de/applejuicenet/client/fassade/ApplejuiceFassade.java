@@ -33,7 +33,10 @@ import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.fassade.entity.ShareEntry.SHAREMODE;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
+import de.applejuicenet.client.fassade.exception.WrongPasswordException;
+import de.applejuicenet.client.fassade.listener.CoreConnectionSettingsListener;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.listener.CoreConnectionSettingsListener.ITEM;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
@@ -60,8 +63,8 @@ import de.applejuicenet.client.fassade.tools.MD5Encoder;
  * 
  */
 
-public class ApplejuiceFassade {
-	public static final String FASSADE_VERSION = "F-1.0";
+public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
+	public static final String FASSADE_VERSION = "F-1.01";
 	
 	public static final String MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
 	public static final String ERROR_MESSAGE = "Unbehandelte Exception";
@@ -86,10 +89,10 @@ public class ApplejuiceFassade {
 	// Thread
 	private Thread workerThread;
 
-	public ApplejuiceFassade(String host, Integer port, String password,
-			boolean passwordIsPlaintext) throws IllegalArgumentException {
-		coreHolder = new CoreConnectionSettingsHolder(host, port, password,
-				passwordIsPlaintext);
+	public ApplejuiceFassade(CoreConnectionSettingsHolder coreConnectionSettingsHolder) 
+			throws IllegalArgumentException {
+		coreHolder = coreConnectionSettingsHolder;
+		coreHolder.addListener(this);
 		modifiedXML = new ModifiedXMLHolder(coreHolder, this);
 		DataUpdateInformer downloadInformer = new DataUpdateInformer(
 				DATALISTENER_TYPE.DOWNLOAD_CHANGED) {
@@ -244,6 +247,7 @@ public class ApplejuiceFassade {
 	public void stopXMLCheck() {
 		if (workerThread != null) {
 			workerThread.interrupt();
+			workerThread = null;
 		}
 	}
 
@@ -395,7 +399,12 @@ public class ApplejuiceFassade {
 				informDataUpdateListener(DATALISTENER_TYPE.INFORMATION_CHANGED);
 			}
 			return true;
-		} catch (RuntimeException re) {
+		}
+		catch (WrongPasswordException wpE){
+			stopXMLCheck();
+			throw wpE;
+		}
+		catch (RuntimeException re) {
 			// connection to core lost, next try
 			return false;
 		} catch (Exception e) {
@@ -563,6 +572,7 @@ public class ApplejuiceFassade {
 				"/function/setpassword?password="
 						+ coreHolder.getCorePassword() + "&newpassword="
 						+ newPassword, false);
+		coreHolder.setCorePassword(password, false);
 	}
 
 	public void cancelDownload(List<Download> downloads)
@@ -792,14 +802,14 @@ public class ApplejuiceFassade {
 					.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
 					"/xml/information.xml?password="
 							+ coreHolder.getCorePassword());
-			if (result.startsWith("wrong password")) {
-				return 1;
-			}
 			if (result.indexOf("<applejuice>") == -1) {
 				return 2;
 			}
 		} catch (WebSiteNotFoundException ex) {
 			return 2;
+		}
+		catch (WrongPasswordException wpE){
+			return 1;
 		}
 		return 0;
 	}
@@ -916,5 +926,8 @@ public class ApplejuiceFassade {
 
 	public NetworkInfo getNetworkInfo() {
 		return modifiedXML.getNetworkInfo();
+	}
+
+	public void fireSettingsChanged(ITEM item, String oldValue, String newValue) {
 	}
 }

@@ -805,13 +805,15 @@ public class ModifiedXMLHolder extends DefaultHandler {
 
 	public synchronized void reload() {
 		boolean reloadSession = false;
+		Securer securer = new Securer();
 		try {
 			reloadInProgress = true;
 			checkForValidSession();
-			Securer securer = new Securer();
 			securer.start();
 			String xmlString = getXMLString(filter);
-			checkForValidResult(xmlString, securer);
+			if (!securer.isInterrupted()) {
+				securer.interrupt();
+			}
 			downloadEvents.clear();
 			downloadSourceEvent = false;
 			xr.parse(new InputSource(new StringReader(xmlString)));
@@ -843,6 +845,11 @@ public class ModifiedXMLHolder extends DefaultHandler {
 			reloadSession = true;
 		} catch (IllegalArgumentException webSiteNotFound) {
 			reloadSession = true;
+		} catch (RuntimeException rE) {
+			if (!securer.isInterrupted()) {
+				securer.interrupt();
+			}
+			throw rE;
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
