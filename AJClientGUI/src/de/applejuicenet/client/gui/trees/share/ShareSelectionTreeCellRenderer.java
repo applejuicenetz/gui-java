@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/ShareSelectionTreeCellRenderer.java,v 1.4 2003/08/26 14:04:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/ShareSelectionTreeCellRenderer.java,v 1.5 2003/08/26 19:46:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareSelectionTreeCellRenderer.java,v $
+ * Revision 1.5  2003/08/26 19:46:35  maj0r
+ * Sharebereich weiter vervollstaendigt.
+ *
  * Revision 1.4  2003/08/26 14:04:23  maj0r
  * ShareTree-Event-Behandlung fertiggestellt.
  *
@@ -37,9 +40,9 @@ public class ShareSelectionTreeCellRenderer extends JPanel implements TreeCellRe
     private JLabel text = new JLabel();
 
     public ShareSelectionTreeCellRenderer() {
-        setLayout(new FlowLayout(FlowLayout.LEFT));
         iconLabel1.setOpaque(true);
         iconLabel2.setOpaque(true);
+        setLayout(new FlowLayout(FlowLayout.LEFT));
         text.setOpaque(true);
         add(iconLabel1);
         add(iconLabel2);
@@ -93,6 +96,6 @@ public class ShareSelectionTreeCellRenderer extends JPanel implements TreeCellRe
         if (dimension3.height > height)
             height = dimension3.height;
         width += dimension3.width;
-        return new Dimension(width+15, height+2);
+        return new Dimension(width+15, height+4);
     }
 }

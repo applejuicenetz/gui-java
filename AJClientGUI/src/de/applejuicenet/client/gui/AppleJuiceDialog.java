@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.35 2003/08/25 15:54:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.36 2003/08/26 19:46:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.36  2003/08/26 19:46:34  maj0r
+ * Sharebereich weiter vervollstaendigt.
+ *
  * Revision 1.35  2003/08/25 15:54:49  maj0r
  * Memory-Anzeige eingebaut.
  *
@@ -81,7 +84,7 @@ public class AppleJuiceDialog
         extends JFrame
         implements LanguageListener, DataUpdateListener {
 
-    public static final String GUI_VERSION = "0.14 Beta";
+    public static final String GUI_VERSION = "0.15 Beta";
 
     RegisterPanel registerPane;
     JLabel[] statusbar = new JLabel[6];

@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.12 2003/08/25 13:17:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.13 2003/08/26 19:46:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.13  2003/08/26 19:46:34  maj0r
+ * Sharebereich weiter vervollstaendigt.
+ *
  * Revision 1.12  2003/08/25 13:17:46  maj0r
  * Muell entfernt.
  *
@@ -127,7 +130,7 @@ import org.apache.log4j.Level;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String DATAMANAGER_VERSION = "0.14 Beta";
+    public static final String DATAMANAGER_VERSION = "0.15 Beta";
 
     private HashSet downloadListener;
     private HashSet shareListener;

@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.tables.server.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.tables.server.ServerTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.24 2003/08/20 16:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.25 2003/08/26 19:46:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.gui.tables.server.ServerTableModel;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.25  2003/08/26 19:46:34  maj0r
+ * Sharebereich weiter vervollstaendigt.
+ *
  * Revision 1.24  2003/08/20 16:18:51  maj0r
  * Server koennen nun entfernt werden.
  *
@@ -69,7 +72,6 @@ public class ServerPanel
     private JPopupMenu popup = new JPopupMenu();
     JMenuItem item1;
     JMenuItem item2;
-    JMenuItem item3;
 
     public ServerPanel() {
         try
@@ -88,13 +90,8 @@ public class ServerPanel
 
         item1 = new JMenuItem("Verbinden");
         item2 = new JMenuItem("Löschen");
-        item3 = new JMenuItem("Server hinzufügen");
-        //todo
-        item3.setEnabled(false);
         popup.add(item1);
         popup.add(item2);
-        popup.add(new JSeparator());
-        popup.add(item3);
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int selected = serverTable.getSelectedRow();
@@ -190,8 +187,7 @@ public class ServerPanel
                 }
             }
         });
-        JScrollPane aScrollPane = new JScrollPane();
-        aScrollPane.getViewport().add(serverTable);
+        JScrollPane aScrollPane = new JScrollPane(serverTable);
         add(aScrollPane, BorderLayout.CENTER);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
                                                               DataUpdateListener.SERVER_CHANGED);
@@ -240,10 +236,6 @@ public class ServerPanel
         item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                         getFirstAttrbuteByTagName(new String[]{"mainform", "delserv",
                                                                                                "caption"})));
-        item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                        getFirstAttrbuteByTagName(new String[]{"mainform", "addserv",
-                                                                                               "caption"})));
-
         TableColumnModel tcm = serverTable.getColumnModel();
         for (int i = 0; i < tcm.getColumnCount(); i++)
         {

@@ -14,18 +14,20 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.NodeAlreadyExistsException;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.gui.tables.JTreeTable;
+import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.share.ShareModel;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeModel;
 import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeCellRenderer;
 import de.applejuicenet.client.gui.trees.share.DirectoryNode;
+import de.applejuicenet.client.gui.trees.share.DirectoryTree;
 import de.applejuicenet.client.gui.trees.WaitNode;
 
 import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.27 2003/08/26 14:04:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.28 2003/08/26 19:46:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +36,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.28  2003/08/26 19:46:34  maj0r
+ * Sharebereich weiter vervollstaendigt.
+ *
  * Revision 1.27  2003/08/26 14:04:23  maj0r
  * ShareTree-Event-Behandlung fertiggestellt.
  *
@@ -99,7 +104,7 @@ public class SharePanel
         extends JPanel
         implements LanguageListener, RegisterI {
     private JPanel panelCenter;
-    private JTree folderTree = new JTree();
+    private DirectoryTree folderTree = new DirectoryTree();
     private TitledBorder titledBorder1;
     private TitledBorder titledBorder2;
     private JLabel dateien = new JLabel();
@@ -140,8 +145,40 @@ public class SharePanel
     private void jbInit() throws Exception {
         //todo
         neueListe.setEnabled(false);
-        prioritaetSetzen.setEnabled(false);
-        prioritaetAufheben.setEnabled(false);
+
+        cmbPrio.setEditable(false);
+        for (int i=1; i<251; i++){
+            cmbPrio.addItem(new Integer(i));
+        }
+        prioritaetAufheben.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                Object[] values = getSelectedShareTableItems();
+                if (values==null)
+                    return;
+                ShareNode shareNode = null;
+                for (int i=0; i<values.length; i++){
+                    shareNode = (ShareNode)values[i];
+                    if (shareNode.isLeaf()){
+                        ApplejuiceFassade.getInstance().setPrioritaet(Integer.parseInt(shareNode.getDO().getId()), 1);
+                    }
+                }
+            }
+        });
+        prioritaetSetzen.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                int prio = ((Integer)cmbPrio.getSelectedItem()).intValue();
+                Object[] values = getSelectedShareTableItems();
+                if (values==null)
+                    return;
+                ShareNode shareNode = null;
+                for (int i=0; i<values.length; i++){
+                    shareNode = (ShareNode)values[i];
+                    if (shareNode.isLeaf()){
+                        ApplejuiceFassade.getInstance().setPrioritaet(Integer.parseInt(shareNode.getDO().getId()), prio);
+                    }
+                }
+            }
+        });
 
         item1 = new JMenuItem();
         item2 = new JMenuItem();
@@ -261,7 +298,6 @@ public class SharePanel
                 shareTable.updateUI();
             }
         });
-        cmbPrio.setEditable(true);
 
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel1.add(neueListe);
@@ -275,11 +311,12 @@ public class SharePanel
         panelCenter.add(dateien, BorderLayout.SOUTH);
 
         JScrollPane aScrollPane = new JScrollPane(folderTree);
-        aScrollPane.setBorder(BorderFactory.createTitledBorder("Verzeichnisse"));
+        aScrollPane.setBorder(titledBorder1);
         add(aScrollPane, BorderLayout.WEST);
         add(panelCenter, BorderLayout.CENTER);
 
         treeMouseAdapter = new TreeMouseAdapter();
+
         LanguageSelector.getInstance().addLanguageListener(this);
 
         item1.addActionListener(new ActionListener(){
@@ -336,6 +373,23 @@ public class SharePanel
                 }
             }
         });
+    }
+
+    public Object[] getSelectedShareTableItems() {
+        int count = shareTable.getSelectedRowCount();
+        Object[] result = null;
+        if (count == 1) {
+            result = new Object[count];
+            result[0] = ((TreeTableModelAdapter) shareTable.getModel()).nodeForRow(shareTable.getSelectedRow());
+        }
+        else if (count > 1) {
+            result = new Object[count];
+            int[] indizes = shareTable.getSelectedRows();
+            for (int i = 0; i < indizes.length; i++) {
+                result[i] = ((TreeTableModelAdapter) shareTable.getModel()).nodeForRow(i);
+            }
+        }
+        return result;
     }
 
     private void initShareSelectionTree() {
