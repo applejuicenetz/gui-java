@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.92 2004/02/04 14:44:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.93 2004/02/04 16:10:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.93  2004/02/04 16:10:46  maj0r
+ * Titel im Fehlerdialog geaendert.
+ *
  * Revision 1.92  2004/02/04 14:44:05  maj0r
  * Fehler beim Speichern der Einstellungen korrigiert.
  *
@@ -445,7 +448,7 @@ public class AppleJuiceDialog
     }
 
     private void init() throws Exception {
-        String titel = "AppleJuice Client";
+        String titel = "appleJuice Client";
         IconManager im = IconManager.getInstance();
         Image image = im.getIcon("applejuice").getImage();
         setTitle(titel);
@@ -723,7 +726,7 @@ public class AppleJuiceDialog
 
     public static void closeWithErrormessage(String error,
                                              boolean speichereEinstellungen) {
-        JOptionPane.showMessageDialog(theApp, error, "Fehler!",
+        JOptionPane.showMessageDialog(theApp, error, "appleJuice Client",
                                       JOptionPane.OK_OPTION);
         if (rewriteProperties) {
             restorePropertiesXml();
