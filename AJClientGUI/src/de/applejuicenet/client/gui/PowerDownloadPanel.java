@@ -13,6 +13,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.MultiLineToolTipUI;
+import de.applejuicenet.client.shared.IconManager;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -88,8 +89,9 @@ public class PowerDownloadPanel
     });
     tempPanel.add(powerdownload, BorderLayout.CENTER);
 
-    URL url = getClass().getResource("hint.gif");
-    ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
+    IconManager im = IconManager.getInstance();
+    ImageIcon icon = im.getIcon("hint");
+
     btnHint = new JLabel(icon){
       public JToolTip createToolTip() {
         MultiLineToolTip tip = new MultiLineToolTip();
@@ -115,11 +117,9 @@ public class PowerDownloadPanel
     JPanel tempFlowPanel = new JPanel();
     tempFlowPanel.setLayout(new FlowLayout());
     tempFlowPanel.add(label7);
-    url = getClass().getResource("upload.gif");
-    ImageIcon icon2 = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
+    ImageIcon icon2 = im.getIcon("upload");
     btnPdlUp = new JLabel(icon2);
-    url = getClass().getResource("download.GIF");
-    ImageIcon icon3 = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
+    ImageIcon icon3 = im.getIcon("download");
     btnPdlDown = new JLabel(icon3);
     btnPdlUp.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {

@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.controller.DataManager;
+import de.applejuicenet.client.shared.IconManager;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -46,35 +47,22 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
     uploadPanel = new UploadPanel();
     searchPanel = new SearchPanel();
     serverPanel = new ServerPanel();
-    URL url = getClass().getResource("start.GIF");
-    Image img=Toolkit.getDefaultToolkit().getImage(url);
-    ImageIcon icon = new ImageIcon();
-    icon.setImage(img);
+
+    IconManager im = IconManager.getInstance();
+
+    ImageIcon icon = im.getIcon("start");
     addTab("Start", icon, startPanel);
 
-    url = getClass().getResource("suchen.gif");
-    img = Toolkit.getDefaultToolkit().getImage(url);
-    ImageIcon icon2 = new ImageIcon();
-    icon2.setImage(img);
+    ImageIcon icon2 = im.getIcon("suchen");
     addTab("Suchen", icon2, searchPanel);
 
-
-    url = getClass().getResource("download.GIF");
-    img = Toolkit.getDefaultToolkit().getImage(url);
-    ImageIcon icon3 = new ImageIcon();
-    icon3.setImage(img);
+    ImageIcon icon3 = im.getIcon("download");
     addTab("Download", icon3, downloadPanel);
 
-    url = getClass().getResource("upload.gif");
-    img = Toolkit.getDefaultToolkit().getImage(url);
-    ImageIcon icon4 = new ImageIcon();
-    icon4.setImage(img);
+    ImageIcon icon4 = im.getIcon("upload");
     addTab("Upload", icon4, uploadPanel);
 
-    url = getClass().getResource("server.gif");
-    img = Toolkit.getDefaultToolkit().getImage(url);
-    ImageIcon icon5 = new ImageIcon();
-    icon5.setImage(img);
+    ImageIcon icon5 = im.getIcon("server");
     addTab("Server", icon5, serverPanel);
 
     loadPlugins();

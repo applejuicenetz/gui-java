@@ -153,14 +153,11 @@ class DownloadNode
 
   private void initIcons() {
     if (rootIcon == null) {
-      URL url = getClass().getResource("treeRoot.gif");
-      rootIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
-      url = getClass().getResource("treeUebertrage.gif");
-      uebertrageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
-      url = getClass().getResource("treeWarteschlange.gif");
-      warteschlangeIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
-      url = getClass().getResource("treeIndirekt.gif");
-      indirektIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
+      IconManager im = IconManager.getInstance();
+      rootIcon = im.getIcon("treeRoot");
+      uebertrageIcon = im.getIcon("treeUebertrage");
+      warteschlangeIcon = im.getIcon("treeWarteschlange");
+      indirektIcon = im.getIcon("treeIndirekt");
     }
   }
 

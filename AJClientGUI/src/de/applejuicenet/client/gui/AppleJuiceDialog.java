@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.shared.IconManager;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -47,8 +48,8 @@ public class AppleJuiceDialog
 
   private void jbInit() throws Exception {
     setTitle("AppleJuice Client");
-    URL url = getClass().getResource("applejuice.gif");
-    Image img = Toolkit.getDefaultToolkit().getImage(url);
+
+    Image img = IconManager.getInstance().getIcon("applejuice").getImage();
     setIconImage(img);
     setJMenuBar(createMenuBar());
     String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
