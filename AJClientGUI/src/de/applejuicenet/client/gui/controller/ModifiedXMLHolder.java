@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.23 2003/08/19 15:57:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.24 2003/08/21 15:13:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.24  2003/08/21 15:13:29  maj0r
+ * Auf Thread umgebaut.
+ *
  * Revision 1.23  2003/08/19 15:57:21  maj0r
  * Gesamtgeschwindigkeit wird nun angezeigt.
  *
@@ -120,7 +123,7 @@ public class ModifiedXMLHolder
         return netInfo;
     }
 
-    public void update() {
+    public synchronized void update() {
         reload("");
         updateIDs();
         updateServer();
@@ -136,14 +139,18 @@ public class ModifiedXMLHolder
             if (tryConnectToServer != -1)
             {
                 ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
-                status[0] = "Verbinde...";
-                status[1] = serverDO.getName();
+                if (serverDO!=null){
+                    status[0] = "Verbinde...";
+                    status[1] = serverDO.getName();
+                }
             }
             else if (connectedWithServerId != -1)
             {
                 ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(connectedWithServerId)));
-                status[0] = "Verbunden...";
-                status[1] = serverDO.getName();
+                if (serverDO!=null){
+                    status[0] = "Verbunden...";
+                    status[1] = serverDO.getName();
+                }
             }
             else
             {

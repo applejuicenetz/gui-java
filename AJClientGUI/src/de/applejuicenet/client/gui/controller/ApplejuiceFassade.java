@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.6 2003/08/20 20:08:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.7 2003/08/21 15:13:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.7  2003/08/21 15:13:29  maj0r
+ * Auf Thread umgebaut.
+ *
  * Revision 1.6  2003/08/20 20:08:25  maj0r
  * Version auf 0.11 erhoeht.
  *
@@ -125,8 +128,11 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     private SettingsXMLHolder settingsXML = null;
     private DirectoryXMLHolder directoryXML = null;
     private Version coreVersion;
-    private Timer modifiedTimer;
     private HashMap share = null;
+
+    //Thread
+    private boolean runThread;
+    private SwingWorker workerThread;
 
     private static int checkInProgress = 0;
 
@@ -196,8 +202,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     updateModifiedXML();
                 }
             };
-            modifiedTimer = new Timer(1000, modifiedAction);
-            modifiedTimer.stop();
         }
         catch (Exception e)
         {
@@ -207,17 +211,28 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public void startXMLCheck() {
-        if (!modifiedTimer.isRunning())
-        {
-            modifiedTimer.start();
-        }
+        runThread = true;
+        final SwingWorker worker = new SwingWorker() {
+                    public Object construct() {
+                        while (runThread){
+                            updateModifiedXML();
+                        }
+                        return null;
+                    }
+                    public void finished() {
+                        runThread = false;
+                    }
+                };
+        workerThread = worker;
+        worker.start();
+        if (logger.isEnabledFor(Level.INFO))
+            logger.info("WorkerThread gestartet...");
     }
 
     public void stopXMLCheck() {
-        if (modifiedTimer.isRunning())
-        {
-            modifiedTimer.stop();
-        }
+        workerThread.interrupt();
+        if (logger.isEnabledFor(Level.INFO))
+            logger.info("WorkerThread beendet...");
     }
 
     public PartListDO getDownloadPartList(DownloadDO downloadDO) {
@@ -277,16 +292,22 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public synchronized void updateModifiedXML() {
-        if (checkInProgress != 0)
-            return;
-        checkInProgress++;
-        modifiedXML.update();
-        informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
-        informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
-        informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
-        informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
-        informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
-        checkInProgress--;
+        try
+        {
+            if (checkInProgress != 0)
+                return;
+            checkInProgress++;
+            modifiedXML.update();
+            informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
+            informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
+            informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
+            informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
+            informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
+            checkInProgress--;
+            wait(2000);
+        }
+        catch (InterruptedException e)
+        {}
     }
 
     public boolean resumeDownload(String id) {

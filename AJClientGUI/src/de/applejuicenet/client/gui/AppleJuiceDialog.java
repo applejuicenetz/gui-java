@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.30 2003/08/20 20:08:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.31 2003/08/21 15:13:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.31  2003/08/21 15:13:29  maj0r
+ * Auf Thread umgebaut.
+ *
  * Revision 1.30  2003/08/20 20:08:24  maj0r
  * Version auf 0.11 erhoeht.
  *
@@ -193,6 +196,7 @@ public class AppleJuiceDialog
     if (logger.isEnabledFor(Level.INFO))
       logger.info(nachricht);
     System.out.println(nachricht);
+    ApplejuiceFassade.getInstance().stopXMLCheck();
     einstellungenSpeichern();
     System.exit(0);
   }
