@@ -199,6 +199,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 
 	private static AppleJuiceDialog theApp;
 
+	private String firewallWarning;
+	
 	public static void initThemes() {
 		try {
 			themesInitialized = true;
@@ -1033,6 +1035,12 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.javagui.menu.deaktivieren")));
 
+			firewallWarning = ZeichenErsetzer
+					.korrigiereUmlaute(languageSelector
+					.getFirstAttrbuteByTagName(".root.mainform.firewallwarning.caption"));
+			if (firewalled) {
+				statusbar[0].setToolTipText(firewallWarning);
+			} 
 			if (useTrayIcon) {
 				popupAboutMenuItem.setText(menuItemUeber.getText());
 				popupAboutMenuItem.setToolTipText(menuItemUeber
@@ -1064,9 +1072,11 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							firewalled = !firewalled;
 							if (firewalled){
 								statusbar[0].setIcon(IconManager.getInstance().getIcon("firewall"));
+								statusbar[0].setToolTipText(firewallWarning);
 							}
 							else{
 								statusbar[0].setIcon(null);
+								statusbar[0].setToolTipText(null);
 							}
 						}
 					} catch (Exception e) {
