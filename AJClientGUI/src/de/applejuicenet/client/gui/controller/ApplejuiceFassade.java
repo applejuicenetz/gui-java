@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.1 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.2 2003/08/16 18:40:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.2  2003/08/16 18:40:25  maj0r
+ * Passworteingabe korrigiert.
+ *
  * Revision 1.1  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -292,9 +295,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return true;
     }
 
-    public boolean setPassword(String passwordAsMD5) {
+    public static boolean setPassword(String passwordAsMD5) {
         String result;
-        logger.info("Setting Password...");
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();

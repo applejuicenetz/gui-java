@@ -13,7 +13,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.19 2003/08/16 17:50:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.20 2003/08/16 18:40:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.20  2003/08/16 18:40:25  maj0r
+ * Passworteingabe korrigiert.
+ *
  * Revision 1.19  2003/08/16 17:50:06  maj0r
  * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
  * DownloaduebersichtTabelle kann deaktiviert werden.
@@ -191,19 +194,12 @@ public class OptionsManager
     public void saveRemote(RemoteConfiguration remote) throws
             InvalidPasswordException {
         if (!remote.getNewPassword().equalsIgnoreCase("")) {
-            String altPasswort = getFirstAttrbuteByTagName(new String[]{"options", "remote",
-                                                                        "passwort"});
-            if (altPasswort.compareTo(remote.getOldPassword()) == 0) {
-                ApplejuiceFassade.getInstance().setPassword(remote.getNewPassword());
-                setAttributeByTagName(new String[]{"options", "remote", "passwort"},
-                        remote.getNewPassword());
-            }
-            else {
-                throw new InvalidPasswordException();
-            }
+            setAttributeByTagName(new String[]{"options", "remote", "host"}
+                    , remote.getHost());
+            ApplejuiceFassade.setPassword(remote.getNewPassword());
+            setAttributeByTagName(new String[]{"options", "remote", "passwort"},
+                    remote.getNewPassword());
         }
-        setAttributeByTagName(new String[]{"options", "remote", "host"}
-                , remote.getHost());
     }
 
     public boolean saveAJSettings(AJSettings ajSettings) {
