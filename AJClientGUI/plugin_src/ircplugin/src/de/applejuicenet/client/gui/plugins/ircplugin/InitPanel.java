@@ -171,7 +171,8 @@ public class InitPanel extends JPanel implements ActionListener {
 				}
 			
 				doc.insertString(doc.getLength(), 
-						message.toLowerCase().substring(0, message.indexOf(httpIdentifier)), 
+						message.substring(0, 
+								message.toLowerCase().indexOf(httpIdentifier)), 
 						attributes);
 				message = message.substring(message.toLowerCase().indexOf(httpIdentifier));
 				int index = message.indexOf(" ");
