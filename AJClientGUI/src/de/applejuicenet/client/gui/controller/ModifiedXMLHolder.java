@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.5 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.6 2003/06/22 16:24:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.6  2003/06/22 16:24:09  maj0r
+ * Umrechnung korrigiert.
+ *
  * Revision 1.5  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -105,8 +108,10 @@ public class ModifiedXMLHolder
     }
     bytes = bytes / faktor;
     String result = Double.toString(bytes);
-    if (result.indexOf(".") != -1) {
-      result = result.substring(0, result.indexOf(".") + 3);
+    int pos = result.indexOf(".");
+    if (pos != -1) {
+      if (pos + 2 < result.length())
+        result = result.substring(0, pos + 3);
       result = result.replace('.', ',');
     }
     if (faktor == 1) {
@@ -140,8 +145,10 @@ public class ModifiedXMLHolder
     }
     bytes = bytes / faktor;
     String result = Double.toString(bytes);
-    if (result.indexOf(".") != -1) {
-      result = result.substring(0, result.indexOf(".") + 3);
+    int pos = result.indexOf(".");
+    if (pos != -1) {
+      if (pos + 2 < result.length())
+        result = result.substring(0, pos + 3);
       result = result.replace('.', ',');
     }
     if (faktor == 1) {
