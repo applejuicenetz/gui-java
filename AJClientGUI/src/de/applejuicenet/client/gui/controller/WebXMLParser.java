@@ -11,19 +11,15 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import de.applejuicenet.client.gui.controller.xmlholder.
-    DownloadPartListXMLHolder;
-import de.applejuicenet.client.gui.controller.xmlholder.UserPartListXMLHolder;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.XMLDecoder;
-import de.applejuicenet.client.shared.exception.PartlistException;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.28 2004/02/17 14:42:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.29 2004/02/18 20:44:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +28,9 @@ import javax.xml.parsers.ParserConfigurationException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.29  2004/02/18 20:44:37  maj0r
+ * Bugs #223 und #224 behoben.
+ *
  * Revision 1.28  2004/02/17 14:42:57  maj0r
  * Bug #220 gefixt (Danke an dsp2004)
  * OutOfMemoryError behoben.
@@ -130,7 +129,6 @@ public abstract class WebXMLParser
     private String host;
     private String xmlCommand;
     private long timestamp = 0;
-    private boolean firstRun = true;
     private boolean useTimestamp = false;
     private String password;
     private Logger logger;
@@ -226,11 +224,7 @@ public abstract class WebXMLParser
                     x = ( (SAXException) e).getException();
                 }
             }
-            if (getClass() == DownloadPartListXMLHolder.class
-                || getClass() == UserPartListXMLHolder.class) {
-                throw new PartlistException();
-            }
-            else if (logger.isEnabledFor(Level.ERROR)) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 String zeit = Long.toString(System.currentTimeMillis());
                 String path = System.getProperty("user.dir") + File.separator +
                     "logs";

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.3 2004/02/18 18:57:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.4 2004/02/18 20:44:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListXMLHolder.java,v $
+ * Revision 1.4  2004/02/18 20:44:37  maj0r
+ * Bugs #223 und #224 behoben.
+ *
  * Revision 1.3  2004/02/18 18:57:23  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -84,6 +87,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 import org.apache.log4j.Level;
+import org.apache.xerces.parsers.SAXParser;
 
 public class PartListXMLHolder
     extends DefaultHandler {
@@ -112,9 +116,8 @@ public class PartListXMLHolder
                 host.compareTo("127.0.0.1") != 0) {
                 zipMode = "mode=zip&";
             }
-            System.setProperty("org.xml.sax.parser",
-                               "org.apache.xerces.parsers.SAXParser");
-            xr = XMLReaderFactory.createXMLReader();
+            Class parser = SAXParser.class;
+            xr = XMLReaderFactory.createXMLReader(parser.getName());
             xr.setContentHandler(this);
         }
         catch (Exception ex) {
@@ -148,10 +151,6 @@ public class PartListXMLHolder
             }
             else if (attr.getLocalName(i).equals("type")){
                 type = Integer.parseInt(attr.getValue(i));
-            }
-            else{
-/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));*/
             }
         }
         partListDO.addPart(partListDO.new Part(startPosition, type));
@@ -207,9 +206,6 @@ public class PartListXMLHolder
             return partListDO;
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)){
-                logger.error("Unbehandelte Exception", e);
-            }
             return null;
         }
     }

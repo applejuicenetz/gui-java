@@ -15,9 +15,10 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.dac.ShareDO;
+import org.apache.xerces.parsers.SAXParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.6 2004/02/18 18:43:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.7 2004/02/18 20:44:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +27,9 @@ import de.applejuicenet.client.shared.dac.ShareDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.7  2004/02/18 20:44:37  maj0r
+ * Bugs #223 und #224 behoben.
+ *
  * Revision 1.6  2004/02/18 18:43:04  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -101,27 +105,28 @@ public class ShareXMLHolder
 
     public ShareXMLHolder() {
         logger = Logger.getLogger(getClass());
-        xmlCommand = "/xml/share.xml?";
-        ConnectionSettings rc = PropertiesManager.getOptionsManager().
-            getRemoteSettings();
-        host = rc.getHost();
-        password = rc.getOldPassword();
-        if (host == null || host.length() == 0) {
-            host = "localhost";
-        }
-        if (host.compareToIgnoreCase("localhost") != 0 &&
-            host.compareTo("127.0.0.1") != 0) {
-            xmlCommand += "mode=zip&";
-        }
-        xmlCommand += "password=" + password;
         try {
-            System.setProperty("org.xml.sax.parser",
-                               "org.apache.xerces.parsers.SAXParser");
-            xr = XMLReaderFactory.createXMLReader();
+            xmlCommand = "/xml/share.xml?";
+            ConnectionSettings rc = PropertiesManager.getOptionsManager().
+                getRemoteSettings();
+            host = rc.getHost();
+            password = rc.getOldPassword();
+            if (host == null || host.length() == 0) {
+                host = "localhost";
+            }
+            if (host.compareToIgnoreCase("localhost") != 0 &&
+                host.compareTo("127.0.0.1") != 0) {
+                xmlCommand += "mode=zip&";
+            }
+            xmlCommand += "password=" + password;
+            Class parser = SAXParser.class;
+            xr = XMLReaderFactory.createXMLReader(parser.getName());
             xr.setContentHandler( this );
         }
-        catch (SAXException ex) {
-            ex.printStackTrace();
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 

@@ -30,9 +30,10 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
+import org.apache.xerces.parsers.SAXParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.20 2004/02/18 18:57:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.21 2004/02/18 20:44:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +42,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.21  2004/02/18 20:44:37  maj0r
+ * Bugs #223 und #224 behoben.
+ *
  * Revision 1.20  2004/02/18 18:57:23  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -99,9 +103,8 @@ public class ModifiedXMLHolder
                 zipMode = "mode=zip&";
             }
             xmlCommand = "/xml/modified.xml";
-            System.setProperty("org.xml.sax.parser",
-                               "org.apache.xerces.parsers.SAXParser");
-            xr = XMLReaderFactory.createXMLReader();
+            Class parser = SAXParser.class;
+            xr = XMLReaderFactory.createXMLReader(parser.getName());
             xr.setContentHandler(this);
         }
         catch (Exception ex) {

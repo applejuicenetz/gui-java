@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/NetworkServerXMLHolder.java,v 1.4 2004/02/18 18:57:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/NetworkServerXMLHolder.java,v 1.5 2004/02/18 20:44:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: NetworkServerXMLHolder.java,v $
+ * Revision 1.5  2004/02/18 20:44:37  maj0r
+ * Bugs #223 und #224 behoben.
+ *
  * Revision 1.4  2004/02/18 18:57:23  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -37,6 +40,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import org.apache.log4j.Level;
+import org.apache.xerces.parsers.SAXParser;
 
 public class NetworkServerXMLHolder
     extends DefaultHandler {
@@ -48,9 +52,8 @@ public class NetworkServerXMLHolder
     private NetworkServerXMLHolder() {
         logger = Logger.getLogger(getClass());
         try {
-            System.setProperty("org.xml.sax.parser",
-                               "org.apache.xerces.parsers.SAXParser");
-            xr = XMLReaderFactory.createXMLReader();
+            Class parser = SAXParser.class;
+            xr = XMLReaderFactory.createXMLReader(parser.getName());
             xr.setContentHandler( this );
         }
         catch (Exception ex) {
