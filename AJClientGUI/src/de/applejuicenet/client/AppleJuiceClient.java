@@ -37,7 +37,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import de.applejuicenet.client.gui.ConnectFrame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.45 2003/12/29 11:00:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.46 2003/12/29 15:20:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,6 +46,9 @@ import de.applejuicenet.client.gui.ConnectFrame;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.46  2003/12/29 15:20:05  maj0r
+ * Neue Versionupdatebenachrichtigung fertiggestellt.
+ *
  * Revision 1.45  2003/12/29 11:00:58  maj0r
  * Taskbareintrag auch fuer den Splashscreen eingebaut.
  *
@@ -396,31 +399,31 @@ public class AppleJuiceClient {
                             int versionsInfoModus = PropertiesManager.
                                 getOptionsManager().getVersionsinfoModus();
                             boolean showInfo = false;
-                            boolean release = false;
-                            boolean major = false;
-                            boolean minor = false;
+                            boolean versionUpdate = false;
+                            boolean importantUpdate = false;
+                            boolean cosmeticUpdate = false;
                             if (Integer.parseInt(versionInternet[0]) >
                                 Integer.parseInt(aktuelleVersion[0])) {
-                                release = true;
+                                versionUpdate = true;
                             }
                             else if (Integer.parseInt(versionInternet[1]) >
                                      Integer.parseInt(aktuelleVersion[1])) {
-                                major = true;
+                                importantUpdate = true;
                             }
                             else if (Integer.parseInt(versionInternet[2]) >
                                      Integer.parseInt(aktuelleVersion[2])) {
-                                minor = true;
+                                cosmeticUpdate = true;
                             }
                             if (versionsInfoModus==2
-                                && (minor || major || release )){
+                                && (cosmeticUpdate || importantUpdate || versionUpdate )){
                                 showInfo = true;
                             }
                             else if(versionsInfoModus==1
-                                    && (major || release)){
+                                    && (importantUpdate || versionUpdate)){
                                 showInfo = true;
                             }
                             else if(versionsInfoModus==0
-                                    && release){
+                                    && versionUpdate){
                                 showInfo = true;
                             }
                             if (showInfo) {

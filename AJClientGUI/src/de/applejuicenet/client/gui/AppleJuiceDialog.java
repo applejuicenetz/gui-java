@@ -23,7 +23,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import com.l2fprod.gui.plaf.skin.Skin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.65 2003/12/29 09:49:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.66 2003/12/29 15:20:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.66  2003/12/29 15:20:05  maj0r
+ * Neue Versionupdatebenachrichtigung fertiggestellt.
+ *
  * Revision 1.65  2003/12/29 09:49:35  maj0r
  * Bug #1 gefixt (Danke an muhviestarr).
  * Look and Feel beim Verbindungsdialog korrigiert.
@@ -765,7 +768,7 @@ public class AppleJuiceDialog
         xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xmlData.append("<root>");
         xmlData.append("    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\" themes=\"true\" defaulttheme=\"aquathemepack\"");
-        xmlData.append("             linklistenerport=\"8768\" versionsinfo=\"2\" >");
+        xmlData.append("             linklistenerport=\"8768\" versionsinfo=\"1\" >");
         xmlData.append("        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>");
         xmlData.append("        <logging level=\"INFO\"/>");
         xmlData.append("        <download uebersicht=\"true\"/>");

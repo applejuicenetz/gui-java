@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.16 2003/12/29 09:39:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.17 2003/12/29 15:20:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.17  2003/12/29 15:20:05  maj0r
+ * Neue Versionupdatebenachrichtigung fertiggestellt.
+ *
  * Revision 1.16  2003/12/29 09:39:21  maj0r
  * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
  *
@@ -85,6 +88,7 @@ public class ODStandardPanel
     private JDialog parent;
     private AJSettings ajSettings;
     private JComboBox cmbLog;
+    private JComboBox updateInfoModus;
     private Logger logger;
     private ConnectionSettings remote;
 
@@ -110,6 +114,16 @@ public class ODStandardPanel
 
     public Level getLogLevel() {
         return ((LevelItem) cmbLog.getSelectedItem()).getLevel();
+    }
+
+    public int getVersionsinfoModus(){
+        if (updateInfoModus.getSelectedIndex()==-1){
+            return 1;
+        }
+        else{
+            UpdateInfoItem selectedItem = (UpdateInfoItem)updateInfoModus.getSelectedItem();
+            return selectedItem.getModus();
+        }
     }
 
     private void init() throws Exception {
@@ -184,6 +198,45 @@ public class ODStandardPanel
         cmbLog.setSelectedIndex(index);
 
         panel8.add(cmbLog);
+
+        updateInfoModus = new JComboBox();
+        UpdateInfoItem item0 = new UpdateInfoItem(0, ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "standard", "updateinfo0"})));
+        UpdateInfoItem item1 = new UpdateInfoItem(1, ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "standard", "updateinfo1"})));
+        UpdateInfoItem item2 = new UpdateInfoItem(2, ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "standard", "updateinfo2"})));
+        updateInfoModus.addItem(item0);
+        updateInfoModus.addItem(item1);
+        updateInfoModus.addItem(item2);
+        int infoModus = PropertiesManager.getOptionsManager().getVersionsinfoModus();
+        switch (infoModus){
+            case 0:{
+                updateInfoModus.setSelectedItem(item0);
+                break;
+            }
+            case 1:{
+                updateInfoModus.setSelectedItem(item1);
+                break;
+            }
+            case 2:{
+                updateInfoModus.setSelectedItem(item2);
+                break;
+            }
+            default:{
+                updateInfoModus.setSelectedIndex(-1);
+            }
+        }
+        updateInfoModus.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                dirty = true;
+            }
+        });
+        JPanel panel9 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JLabel label10 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "standard", "updateinfotext"})));
+        panel9.add(label10);
+        panel9.add(updateInfoModus);
 
         setLayout(new BorderLayout());
         port.setHorizontalAlignment(JLabel.RIGHT);
@@ -341,6 +394,9 @@ public class ODStandardPanel
         panel6.add(panel8, constraints);
         constraints.gridx = 1;
         panel6.add(hint5, constraints);
+        constraints.gridy = 6;
+        constraints.gridx = 0;
+        panel6.add(panel9, constraints);
 
         add(panel6, BorderLayout.NORTH);
     }
@@ -404,6 +460,24 @@ public class ODStandardPanel
 
         public Level getLevel() {
             return level;
+        }
+
+        public String toString() {
+            return bezeichnung;
+        }
+    }
+
+    class UpdateInfoItem {
+        private int modus;
+        private String bezeichnung;
+
+        public UpdateInfoItem(int modus, String bezeichnung) {
+            this.modus = modus;
+            this.bezeichnung = bezeichnung;
+        }
+
+        public int getModus() {
+            return modus;
         }
 
         public String toString() {

@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.25 2003/12/29 09:39:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.26 2003/12/29 15:20:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.26  2003/12/29 15:20:05  maj0r
+ * Neue Versionupdatebenachrichtigung fertiggestellt.
+ *
  * Revision 1.25  2003/12/29 09:39:21  maj0r
  * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
  *
@@ -173,8 +176,10 @@ public class OptionsDialog
             if (standardPanel.isDirty() || verbindungPanel.isDirty())
             {
                 om.saveAJSettings(ajSettings);
-                if (standardPanel.isDirty())
+                if (standardPanel.isDirty()){
                     om.setLogLevel(standardPanel.getLogLevel());
+                    om.setVersionsinfoModus(standardPanel.getVersionsinfoModus());
+                }
                 etwasGeaendert = true;
             }
             if (remotePanel.isDirty() || standardPanel.isXmlPortDirty())

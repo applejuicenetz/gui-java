@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.14 2003/12/29 07:23:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.15 2003/12/29 15:20:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.15  2003/12/29 15:20:05  maj0r
+ * Neue Versionupdatebenachrichtigung fertiggestellt.
+ *
  * Revision 1.14  2003/12/29 07:23:18  maj0r
  * Begonnen, auf neues Versionupdateinformationssystem umzubauen.
  *
@@ -328,11 +331,14 @@ public class PropertiesManager
                 logger.error("properties.xml neu erstellt", e);
             AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
                                                    "Die Datei wird neu erstellt.", false);
-            return 2;
+            return 1;
         }
     }
 
     public void setVersionsinfoModus(int versionsinfoModus) {
+        if (versionsinfoModus<0 || versionsinfoModus>2){
+            versionsinfoModus = 1;
+        }
         setAttributeByTagName(new String[]{"options", "versionsinfo"}, Integer.toString(versionsinfoModus));
     }
 
