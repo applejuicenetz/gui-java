@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import java.net.InetAddress;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.9 2004/06/15 09:43:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.10 2004/06/25 13:16:47 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -77,6 +77,11 @@ public class LinkListener
                                     getOutputStream());
                                 out.println(ApplejuiceFassade.getInstance().
                                             getStats());
+                            }
+                            else if (command.startsWith("getajinfo")) {
+                                PrintStream out = new PrintStream(client.
+                                    getOutputStream());
+                                out.println(ApplejuiceFassade.getInstance().getVersionInformation());
                             }
                         }
                     }
