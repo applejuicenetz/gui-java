@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared.dac;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.11 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.12 2004/02/09 07:30:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.12  2004/02/09 07:30:13  maj0r
+ * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
+ *
  * Revision 1.11  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -46,6 +49,11 @@ public class UploadDO {
     public static final int VERSUCHE_INDIREKTE_VERBINDUNG = 6;
     public static final int KEINE_VERBINDUNG_MOEGLICH = 7;
 
+    public static final int STATE_UNBBEKANNT = 0;
+    public static final int STATE_DIREKT_VERBUNDEN = 1;
+    public static final int STATE_VERSUCHE_INDIREKTE_VERBINDUNG = 2;
+    public static final int STATE_INDIREKT_VERBUNDEN = 3;
+
     private final int uploadID;
     private String dateiName;
     private int shareFileID;
@@ -57,10 +65,11 @@ public class UploadDO {
     private long actualUploadPosition;
     private int speed;
     private int prioritaet;
+    private int directstate;
 
     public UploadDO(int uploadID, int shareFileID, Version version, int status,
                     String nick, long uploadFrom, long uploadTo,
-                    long actualUploadPosition, int speed, int prioritaet) {
+                    long actualUploadPosition, int speed, int prioritaet, int directstate) {
         this.uploadID = uploadID;
         this.shareFileID = shareFileID;
         this.version = version;
@@ -76,7 +85,7 @@ public class UploadDO {
     public UploadDO(int uploadID, int shareFileID, Version version,
                     String status,
                     String nick, long uploadFrom, long uploadTo,
-                    long actualUploadPosition, int speed, int prioritaet) {
+                    long actualUploadPosition, int speed, int prioritaet, int directstate) {
         this.uploadID = uploadID;
         this.shareFileID = shareFileID;
         this.version = version;
@@ -119,6 +128,14 @@ public class UploadDO {
 
     public int getStatus() {
         return status;
+    }
+
+    public int getDirectState() {
+        return directstate;
+    }
+
+    public void setDirectState(int directstate){
+        this.directstate = directstate;
     }
 
     public String getStatusAsString() {

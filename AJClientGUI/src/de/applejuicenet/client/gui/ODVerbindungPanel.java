@@ -24,7 +24,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.14 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.15 2004/02/09 07:28:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +33,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODVerbindungPanel.java,v $
+ * Revision 1.15  2004/02/09 07:28:24  maj0r
+ * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
+ *
  * Revision 1.14  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -69,8 +72,10 @@ public class ODVerbindungPanel
     private JLabel label3;
     private JLabel label4;
     private JLabel label5;
+    private JLabel label6;
     private JLabel kbSlot;
     private JCheckBox automaticConnect;
+    private JTextField maxSourcesPerFile = new JTextField();
     private JTextField maxVerbindungen = new JTextField();
     private JTextField maxUpload = new JTextField();
     private JTextField maxDownload = new JTextField();
@@ -112,6 +117,7 @@ public class ODVerbindungPanel
         JPanel panel7 = new JPanel(new GridBagLayout());
         JPanel panel8 = new JPanel(new GridBagLayout());
         JPanel panel10 = new JPanel(new GridBagLayout());
+        JPanel panel12 = new JPanel(new GridBagLayout());
         FlowLayout flowL = new FlowLayout();
         flowL.setAlignment(FlowLayout.RIGHT);
         JPanel panel9 = new JPanel(flowL);
@@ -161,6 +167,24 @@ public class ODVerbindungPanel
                 }
             }
         });
+        maxSourcesPerFile.setDocument(new NumberInputVerifier());
+        maxSourcesPerFile.setHorizontalAlignment(JLabel.RIGHT);
+        maxSourcesPerFile.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
+                long wert = Long.parseLong(maxSourcesPerFile.getText());
+                if (wert != ajSettings.getMaxSourcesPerFile()) {
+                    if (wert < 1 ) {
+                        maxSourcesPerFile.setText(Long.toString(ajSettings.
+                            getMaxSourcesPerFile()));
+                    }
+                    else {
+                        dirty = true;
+                        ajSettings.setMaxSourcesPerFile(Long.parseLong(
+                            maxSourcesPerFile.getText()));
+                    }
+                }
+            }
+        });
         maxVerbindungenProTurn.setDocument(new NumberInputVerifier());
         maxVerbindungenProTurn.setHorizontalAlignment(JLabel.RIGHT);
         maxVerbindungenProTurn.addFocusListener(new FocusAdapter() {
@@ -196,6 +220,9 @@ public class ODVerbindungPanel
         label5 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"javagui", "options",
                                       "verbindung", "label5"})));
+        label6 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "verbindung", "label6"})));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"einstform",
                                       "connectionsheet", "caption"}));
@@ -272,6 +299,13 @@ public class ODVerbindungPanel
         panel10.add(maxVerbindungenProTurn, constraints);
         constraints.weightx = 0;
 
+        constraints.gridx = 0;
+        panel12.add(label6, constraints);
+        constraints.gridx = 1;
+        constraints.weightx = 1;
+        panel12.add(maxSourcesPerFile, constraints);
+        constraints.weightx = 0;
+
         panel9.add(automaticConnect);
 
         constraints.gridx = 0;
@@ -294,6 +328,8 @@ public class ODVerbindungPanel
         constraints.gridy = 7;
         panel1.add(panel10, constraints);
         constraints.gridy = 8;
+        panel1.add(panel12, constraints);
+        constraints.gridy = 9;
         panel1.add(panel9, constraints);
 
         add(panel1, BorderLayout.NORTH);
@@ -306,6 +342,7 @@ public class ODVerbindungPanel
         automaticConnect.setSelected(ajSettings.isAutoConnect());
         maxVerbindungenProTurn.setText(Long.toString(ajSettings.
             getMaxNewConnectionsPerTurn()));
+        maxSourcesPerFile.setText(Long.toString(ajSettings.getMaxSourcesPerFile()));
     }
 
     public Icon getIcon() {

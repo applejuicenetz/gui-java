@@ -11,7 +11,7 @@ import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.ShareEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.5 2004/02/09 07:28:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.ShareEntry;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SettingsXMLHolder.java,v $
+ * Revision 1.5  2004/02/09 07:28:24  maj0r
+ * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
+ *
  * Revision 1.4  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -90,6 +93,9 @@ public class SettingsXMLHolder
             nodes = document.getElementsByTagName("maxconnections");
             long maxConnections = Long.parseLong(nodes.item(0).getFirstChild().
                                                  getNodeValue());
+            nodes = document.getElementsByTagName("maxsourcesperfile");
+            long maxSourcesPerFile = Long.parseLong(nodes.item(0).getFirstChild().
+                                                 getNodeValue());
             nodes = document.getElementsByTagName("autoconnect");
             boolean autoConnect = new Boolean(nodes.item(0).getFirstChild().
                                               getNodeValue()).booleanValue();
@@ -122,7 +128,7 @@ public class SettingsXMLHolder
                                       maxDownload, speedPerSlot, incomingDir,
                                       tempDir,
                                       shareEntries, maxConnections, autoConnect,
-                                      maxNewConnectionsPerTurn);
+                                      maxNewConnectionsPerTurn, maxSourcesPerFile);
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {

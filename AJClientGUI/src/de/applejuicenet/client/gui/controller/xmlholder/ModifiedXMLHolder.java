@@ -23,7 +23,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.14 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.15 2004/02/09 07:28:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.15  2004/02/09 07:28:24  maj0r
+ * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
+ *
  * Revision 1.14  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -862,6 +865,7 @@ public class ModifiedXMLHolder
             long uploadTo;
             long actualUploadPos;
             int speed;
+            int directstate;
             String idKey = null;
             synchronized (uploadMap) {
                 ShareDO shareDO;
@@ -879,6 +883,8 @@ public class ModifiedXMLHolder
                         upload.setNick(e.getAttribute("nick"));
                         upload.setStatus(Integer.parseInt(e.getAttribute(
                             "status")));
+                        upload.setDirectState(Integer.parseInt(e.getAttribute(
+                            "directstate")));
                         upload.setUploadFrom(Long.parseLong(e.getAttribute(
                             "uploadfrom")));
                         upload.setUploadTo(Long.parseLong(e.getAttribute(
@@ -901,6 +907,7 @@ public class ModifiedXMLHolder
                         prioritaet = Integer.parseInt(e.getAttribute("priority"));
                         nick = e.getAttribute("nick");
                         status = e.getAttribute("status");
+                        directstate = Integer.parseInt(e.getAttribute("directstate"));
                         uploadFrom = Long.parseLong(e.getAttribute("uploadfrom"));
                         uploadTo = Long.parseLong(e.getAttribute("uploadto"));
                         actualUploadPos = Long.parseLong(e.getAttribute(
@@ -910,7 +917,7 @@ public class ModifiedXMLHolder
                                               nick,
                                               uploadFrom, uploadTo,
                                               actualUploadPos,
-                                              speed, prioritaet);
+                                              speed, prioritaet, directstate);
                         if (share == null) {
                             share = ApplejuiceFassade.getInstance().getShare(false);
                         }

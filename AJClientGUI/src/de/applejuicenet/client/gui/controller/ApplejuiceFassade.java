@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.106 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.107 2004/02/09 07:30:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -567,6 +567,9 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 parameters += "&maxconnections=" +
                     URLEncoder.encode(Long.toString(ajSettings.
                     getMaxConnections()), "UTF-8");
+                parameters += "&maxsourcesperfile=" +
+                    URLEncoder.encode(Long.toString(ajSettings.
+                    getMaxSourcesPerFile()), "UTF-8");
                 parameters += "&autoconnect=" +
                     URLEncoder.encode(Boolean.toString(ajSettings.isAutoConnect()),
                                       "UTF-8");

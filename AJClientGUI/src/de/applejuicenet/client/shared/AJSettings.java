@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared;
 import java.util.HashSet;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/AJSettings.java,v 1.7 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/AJSettings.java,v 1.8 2004/02/09 07:28:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.util.HashSet;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AJSettings.java,v $
+ * Revision 1.8  2004/02/09 07:28:24  maj0r
+ * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
+ *
  * Revision 1.7  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -43,13 +46,15 @@ public class AJSettings {
     private String tempDir;
     private HashSet shareDirs;
     private long maxNewConnectionsPerTurn;
+    private long maxSourcesPerFile;
 
     public AJSettings(String nick, long port, long xmlPort,
                       long maxUpload, long maxDownload,
                       int speedPerSlot, String incomingDir, String tempDir,
                       HashSet shareDirs, long maxConnections,
                       boolean autoConnect,
-                      long maxNewConnectionsPerTurn) {
+                      long maxNewConnectionsPerTurn,
+                      long maxSourcesPerFile) {
         this.nick = nick;
         this.port = port;
         this.xmlPort = xmlPort;
@@ -62,6 +67,7 @@ public class AJSettings {
         this.maxConnections = maxConnections;
         this.autoConnect = autoConnect;
         this.maxNewConnectionsPerTurn = maxNewConnectionsPerTurn;
+        this.maxSourcesPerFile = maxSourcesPerFile;
     }
 
     public String getNick() {
@@ -70,6 +76,14 @@ public class AJSettings {
 
     public void setNick(String nick) {
         this.nick = nick;
+    }
+
+    public long getMaxSourcesPerFile(){
+        return maxSourcesPerFile;
+    }
+
+    public void setMaxSourcesPerFile(long maxSourcesPerFile) {
+        this.maxSourcesPerFile = maxSourcesPerFile;
     }
 
     public long getPort() {
