@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.170 2004/12/03 17:31:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.171 2004/12/04 10:21:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -528,10 +528,14 @@ public class ApplejuiceFassade {
     }
 
     public void setMaxUpAndDown(final long maxUp,
-                                             final long maxDown) {
+                                             long maxDown) {
     	if (maxUp <= 0 || maxDown <= 0){
     		return;
     	}
+    	if (maxDown == 0){
+    	    maxDown = 1;
+    	}
+    	final long down = maxDown;
         new Thread() {
             public void run() {
                 try {
@@ -539,7 +543,7 @@ public class ApplejuiceFassade {
                     parameters += "MaxUpload=" +
                         Long.toString(maxUp);
                     parameters += "&MaxDownload=" +
-                        Long.toString(maxDown);
+                        Long.toString(down);
                     String password = OptionsManagerImpl.getInstance().
                         getRemoteSettings().getOldPassword();
                     HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
@@ -942,6 +946,8 @@ public class ApplejuiceFassade {
     					|| subdir.indexOf(ApplejuiceFassade.separator) == 0) {
     				subdir = subdir.substring(1);
     			}
+    			subdir = subdir.replaceAll("..", "_");
+    			subdir = subdir.replaceAll(":", "_");
     		}
 
             String password = OptionsManagerImpl.getInstance().
