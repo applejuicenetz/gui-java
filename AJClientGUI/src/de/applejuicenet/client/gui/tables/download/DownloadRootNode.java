@@ -11,7 +11,7 @@ import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.17 2004/01/07 18:37:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.18 2004/01/12 07:27:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.18  2004/01/12 07:27:44  maj0r
+ * Sortierung an neue ausblendbare Header angepasst.
+ *
  * Revision 1.17  2004/01/07 18:37:21  maj0r
  * Sortierung korrigiert.
  *
@@ -311,10 +314,10 @@ public class DownloadRootNode
                           getSpeedInBytes());
         }
         else if (sort == SORT_STATUS) {
-            o1 = DownloadModel.getStatusForDownload( ( (DownloadMainNode)
-                childNodes[row1]).getDownloadDO());
-            o2 = DownloadModel.getStatusForDownload( ( (DownloadMainNode)
-                childNodes[row2]).getDownloadDO());
+            o1 =  ( (DownloadMainNode)
+                childNodes[row1]).getDownloadDO().getStatusAsString();
+            o2 = ( (DownloadMainNode)
+                childNodes[row2]).getDownloadDO().getStatusAsString();
         }
 
         if (o1 == null && o2 == null) {
