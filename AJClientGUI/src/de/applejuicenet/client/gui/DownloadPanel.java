@@ -11,12 +11,19 @@ import de.applejuicenet.client.gui.tablerenderer.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author Maj0r
- * @version 1.0
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.21 2003/06/10 12:31:03 maj0r Exp $
+ *
+ * <p>Titel: AppleJuice Client-GUI</p>
+ * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: open-source</p>
+ *
+ * @author: Maj0r <AJCoreGUI@maj0r.de>
+ *
+ * $Log: DownloadPanel.java,v $
+ * Revision 1.21  2003/06/10 12:31:03  maj0r
+ * Historie eingefügt.
+ *
+ *
  */
 
 public class DownloadPanel

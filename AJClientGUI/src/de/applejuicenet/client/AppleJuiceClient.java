@@ -7,18 +7,17 @@ import de.applejuicenet.client.gui.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
-/*
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.10 2003/06/10 12:01:50 maj0r Exp $
+/**
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.11 2003/06/10 12:31:03 maj0r Exp $
  *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author Maj0r
- * @version 1.0
+ * <p>Titel: AppleJuice Client-GUI</p>
+ * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: open-source</p>
+ *
+ * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
- * Revision 1.10  2003/06/10 12:01:50  maj0r
+ * Revision 1.11  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
  *

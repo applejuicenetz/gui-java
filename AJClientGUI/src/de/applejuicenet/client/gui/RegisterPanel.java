@@ -11,12 +11,19 @@ import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author Maj0r
- * @version 1.0
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.14 2003/06/10 12:31:03 maj0r Exp $
+ *
+ * <p>Titel: AppleJuice Client-GUI</p>
+ * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: open-source</p>
+ *
+ * @author: Maj0r <AJCoreGUI@maj0r.de>
+ *
+ * $Log: RegisterPanel.java,v $
+ * Revision 1.14  2003/06/10 12:31:03  maj0r
+ * Historie eingefügt.
+ *
+ *
  */
 
 public class RegisterPanel
@@ -104,27 +111,33 @@ public class RegisterPanel
     LanguageSelector languageSelector = LanguageSelector.getInstance();
     setTitleAt(0,
                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new String[] {
+                                                 getFirstAttrbuteByTagName(new
+        String[] {
         "mainform", "homesheet", "caption"})));
     setTitleAt(1,
                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new String[] {
+                                                 getFirstAttrbuteByTagName(new
+        String[] {
         "mainform", "sharesheet", "caption"})));
     setTitleAt(2,
                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new String[] {
+                                                 getFirstAttrbuteByTagName(new
+        String[] {
         "mainform", "seachsheet", "caption"})));
     setTitleAt(3,
                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new String[] {
+                                                 getFirstAttrbuteByTagName(new
+        String[] {
         "mainform", "queuesheet", "caption"})));
     setTitleAt(4,
                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new String[] {
+                                                 getFirstAttrbuteByTagName(new
+        String[] {
         "mainform", "uploadsheet", "caption"})));
     setTitleAt(5,
                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new String[] {
+                                                 getFirstAttrbuteByTagName(new
+        String[] {
         "mainform", "serversheet", "caption"})));
   }
 }
