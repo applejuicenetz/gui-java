@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/RemoteConfiguration.java,v 1.3 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/RemoteConfiguration.java,v 1.4 2003/07/01 14:51:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RemoteConfiguration.java,v $
+ * Revision 1.4  2003/07/01 14:51:56  maj0r
+ * Fehler bei null-Werten korrigiert.
+ *
  * Revision 1.3  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -47,14 +50,20 @@ public class RemoteConfiguration {
   }
 
   public String getHost() {
+      if (host==null)
+          host = "";
     return host;
   }
 
   public String getOldPassword() {
+      if (oldPassword==null)
+          oldPassword = "";
     return oldPassword;
   }
 
   public String getNewPassword() {
+    if (newPassword==null)
+        newPassword = "";
     return newPassword;
   }
 
