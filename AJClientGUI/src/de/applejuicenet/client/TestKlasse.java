@@ -10,6 +10,7 @@ public class TestKlasse {
     String test = "test";
     boolean wahr = true;
     int k=3;
+    int g=67;
 
     public TestKlasse(int i) {
         this.i = i;
