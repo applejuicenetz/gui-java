@@ -1,25 +1,48 @@
 package de.applejuicenet.client.gui;
 
-import java.util.*;
-
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
-
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.dac.*;
-import de.applejuicenet.client.gui.shared.SortButtonRenderer;
+import java.util.HashMap;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.shared.HeaderListener;
+import de.applejuicenet.client.gui.shared.SortButtonRenderer;
 import de.applejuicenet.client.gui.tables.server.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.tables.server.ServerTableModel;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.40 2003/12/26 19:26:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.41 2003/12/27 14:02:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +51,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.41  2003/12/27 14:02:15  maj0r
+ * Bug #1232 fixed (Danke an muhviestarr)
+ * Legende fuer die Servertabelle eingebaut.
+ *
  * Revision 1.40  2003/12/26 19:26:40  maj0r
  * Bug #1231 fixed (Danke an muhviestarr)
  * Gridlines werden nun in der Servertabelle nicht mehr angezeigt.
@@ -72,7 +99,7 @@ import org.apache.log4j.Level;
  * Ein Panel entfernt. War ohne Funktion.
  *
  * Revision 1.27  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.26  2003/09/04 10:13:28  maj0r
  * Logger eingebaut.
@@ -115,14 +142,14 @@ import org.apache.log4j.Level;
  */
 
 public class ServerPanel
-        extends JPanel
-        implements LanguageListener, DataUpdateListener, RegisterI {
+    extends JPanel
+    implements LanguageListener, DataUpdateListener, RegisterI {
 
     public static ServerPanel _this;
 
     private JTable serverTable;
     private JLabel sucheServer = new JLabel(
-            "<html><font><u>mehr Server gibt es hier</u></font></html>");
+        "<html><font><u>mehr Server gibt es hier</u></font></html>");
     private JPopupMenu popup = new JPopupMenu();
     private JPopupMenu popup2 = new JPopupMenu();
     private JPopupMenu popup3 = new JPopupMenu();
@@ -132,20 +159,23 @@ public class ServerPanel
     private JMenuItem item4;
     private JMenuItem item5;
     private JMenuItem item6;
+    private JLabel verbunden = new JLabel();
+    private JLabel versucheZuVerbinden = new JLabel();
+    private JLabel aelter24h = new JLabel();
+    private JLabel juenger24h = new JLabel();
     private Logger logger;
     private boolean initizialiced = false;
 
     public ServerPanel() {
         _this = this;
         logger = Logger.getLogger(getClass());
-        try
-        {
+        try {
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -168,8 +198,9 @@ public class ServerPanel
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int selected = serverTable.getSelectedRow();
-                ServerDO server = (ServerDO) ((ServerTableModel) serverTable.getModel()).
-                        getRow(selected);
+                ServerDO server = (ServerDO) ( (ServerTableModel) serverTable.
+                                              getModel()).
+                    getRow(selected);
                 ApplejuiceFassade.getInstance().connectToServer(server.getID());
                 SoundPlayer.getInstance().playSound(SoundPlayer.VERBINDEN);
             }
@@ -177,13 +208,15 @@ public class ServerPanel
         ActionListener loescheServerListener = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int selected[] = serverTable.getSelectedRows();
-                if (selected.length>0){
+                if (selected.length > 0) {
                     ServerDO server = null;
-                    for (int i=0; i<selected.length; i++){
-                        server = (ServerDO) ((ServerTableModel) serverTable.getModel()).
-                                getRow(selected[i]);
-                        if (server!=null){
-                            ApplejuiceFassade.getInstance().entferneServer(server.getID());
+                    for (int i = 0; i < selected.length; i++) {
+                        server = (ServerDO) ( (ServerTableModel) serverTable.
+                                             getModel()).
+                            getRow(selected[i]);
+                        if (server != null) {
+                            ApplejuiceFassade.getInstance().entferneServer(
+                                server.getID());
                         }
                     }
                 }
@@ -193,14 +226,19 @@ public class ServerPanel
         item6.addActionListener(loescheServerListener);
         ActionListener newServerListener = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                NewServerDialog newServerDialog = new NewServerDialog(AppleJuiceDialog.getApp(), true);
+                NewServerDialog newServerDialog = new NewServerDialog(
+                    AppleJuiceDialog.getApp(), true);
                 Dimension appDimension = newServerDialog.getSize();
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                newServerDialog.setLocation((screenSize.width - appDimension.width)/2,
-                               (screenSize.height - appDimension.height)/2);
+                Dimension screenSize = Toolkit.getDefaultToolkit().
+                    getScreenSize();
+                newServerDialog.setLocation( (screenSize.width -
+                                              appDimension.width) / 2,
+                                            (screenSize.height -
+                                             appDimension.height) / 2);
                 newServerDialog.show();
-                if (newServerDialog.isLegal()){
-                    ApplejuiceFassade.getInstance().processLink(newServerDialog.getLink());
+                if (newServerDialog.isLegal()) {
+                    ApplejuiceFassade.getInstance().processLink(newServerDialog.
+                        getLink());
                 }
             }
         };
@@ -227,11 +265,12 @@ public class ServerPanel
             }
 
             public void mouseClicked(MouseEvent e) {
-                Thread worker = new Thread(){
-                    public void run(){
-                        String[] server = PropertiesManager.getOptionsManager().getActualServers();
+                Thread worker = new Thread() {
+                    public void run() {
+                        String[] server = PropertiesManager.getOptionsManager().
+                            getActualServers();
                         ApplejuiceFassade af = ApplejuiceFassade.getInstance();
-                        for (int i=0; i<server.length; i++){
+                        for (int i = 0; i < server.length; i++) {
                             af.processLink(server[i]);
                         }
                     }
@@ -247,12 +286,12 @@ public class ServerPanel
         serverTable = new JTable();
         serverTable.setModel(new ServerTableModel());
         serverTable.setShowGrid(false);
-        serverTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        serverTable.setSelectionMode(ListSelectionModel.
+                                     MULTIPLE_INTERVAL_SELECTION);
         SortButtonRenderer renderer = new SortButtonRenderer();
         TableColumnModel model = serverTable.getColumnModel();
         int n = model.getColumnCount();
-        for (int i = 0; i < n; i++)
-        {
+        for (int i = 0; i < n; i++) {
             model.getColumn(i).setHeaderRenderer(renderer);
             model.getColumn(i).setPreferredWidth(model.getColumn(i).getWidth());
         }
@@ -266,7 +305,7 @@ public class ServerPanel
         aScrollPane.setBackground(serverTable.getBackground());
         serverTable.getTableHeader().setBackground(serverTable.getBackground());
         aScrollPane.getViewport().setOpaque(false);
-        MouseAdapter popupMouseAdapter = new MouseAdapter(){
+        MouseAdapter popupMouseAdapter = new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
                 super.mouseReleased(me);
                 maybeShowPopup(me);
@@ -278,35 +317,35 @@ public class ServerPanel
             }
 
             private void maybeShowPopup(MouseEvent e) {
-                if (e.isPopupTrigger())
-                {
+                if (e.isPopupTrigger()) {
                     int selectedRow = serverTable.rowAtPoint(e.getPoint());
-                    if (selectedRow!=-1){
-                        if (serverTable.getSelectedRowCount() == 0){
+                    if (selectedRow != -1) {
+                        if (serverTable.getSelectedRowCount() == 0) {
                             serverTable.setRowSelectionInterval(selectedRow,
                                 selectedRow);
                         }
-                        else{
-                            int[] currentSelectedRows = serverTable.getSelectedRows();
-                            for (int i=0; i<currentSelectedRows.length; i++){
-                                if (currentSelectedRows[i]==selectedRow){
+                        else {
+                            int[] currentSelectedRows = serverTable.
+                                getSelectedRows();
+                            for (int i = 0; i < currentSelectedRows.length; i++) {
+                                if (currentSelectedRows[i] == selectedRow) {
                                     selectedRow = -1;
                                     break;
                                 }
                             }
-                            if (selectedRow!=-1){
+                            if (selectedRow != -1) {
                                 serverTable.setRowSelectionInterval(selectedRow,
                                     selectedRow);
                             }
                         }
                     }
-                    if (serverTable.getSelectedRowCount()==1){
+                    if (serverTable.getSelectedRowCount() == 1) {
                         popup.show(aScrollPane, e.getX(), e.getY());
                     }
-                    else if (serverTable.getSelectedRowCount()>1){
+                    else if (serverTable.getSelectedRowCount() > 1) {
                         popup3.show(aScrollPane, e.getX(), e.getY());
                     }
-                    else{
+                    else {
                         popup2.show(aScrollPane, e.getX(), e.getY());
                     }
                 }
@@ -315,25 +354,46 @@ public class ServerPanel
         aScrollPane.addMouseListener(popupMouseAdapter);
         serverTable.addMouseListener(popupMouseAdapter);
         add(aScrollPane, BorderLayout.CENTER);
+        JPanel legende = new JPanel(new FlowLayout());
+        IconManager im = IconManager.getInstance();
+        ImageIcon icon1 = im.getIcon("serververbunden");
+        ImageIcon icon2 = im.getIcon("serverversuche");
+        ImageIcon icon3 = im.getIcon("aelter24h");
+        ImageIcon icon4 = im.getIcon("juenger24h");
+        JLabel label1 = new JLabel(icon1);
+        JLabel label2 = new JLabel(icon2);
+        JLabel label3 = new JLabel(icon3);
+        JLabel label4 = new JLabel(icon4);
+        legende.add(label1);
+        legende.add(verbunden);
+        legende.add(label2);
+        legende.add(versucheZuVerbinden);
+        legende.add(label3);
+        legende.add(aelter24h);
+        legende.add(label4);
+        legende.add(juenger24h);
+        add(legende, BorderLayout.SOUTH);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
-                                                              DataUpdateListener.SERVER_CHANGED);
+            DataUpdateListener.SERVER_CHANGED);
     }
 
     public void registerSelected() {
-        if (!initizialiced){
+        if (!initizialiced) {
             initizialiced = true;
-            TableColumnModel headerModel = serverTable.getTableHeader().getColumnModel();
+            TableColumnModel headerModel = serverTable.getTableHeader().
+                getColumnModel();
             int columnCount = headerModel.getColumnCount();
             PositionManager pm = PropertiesManager.getPositionManager();
-            if (pm.isLegal()){
+            if (pm.isLegal()) {
                 int[] widths = pm.getServerWidths();
-                for (int i=0; i<columnCount; i++){
+                for (int i = 0; i < columnCount; i++) {
                     headerModel.getColumn(i).setPreferredWidth(widths[i]);
                 }
             }
-            else{
-                for (int i=0; i<columnCount; i++){
-                    headerModel.getColumn(i).setPreferredWidth(serverTable.getWidth()/columnCount);
+            else {
+                for (int i = 0; i < columnCount; i++) {
+                    headerModel.getColumn(i).setPreferredWidth(serverTable.
+                        getWidth() / columnCount);
                 }
             }
             serverTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -341,79 +401,99 @@ public class ServerPanel
     }
 
     public void fireContentChanged(int type, Object content) {
-        try{
-            if (type == DataUpdateListener.SERVER_CHANGED)
-            {
+        try {
+            if (type == DataUpdateListener.SERVER_CHANGED) {
                 int[] selected = serverTable.getSelectedRows();
-                ((ServerTableModel) serverTable.getModel()).setTable((HashMap) content);
-                if (selected.length != 0)
-                {
-                    for (int i=0; i<selected.length; i++){
-                        serverTable.getSelectionModel().addSelectionInterval(selected[i], selected[i]);
+                ( (ServerTableModel) serverTable.getModel()).setTable( (HashMap)
+                    content);
+                if (selected.length != 0) {
+                    for (int i = 0; i < selected.length; i++) {
+                        serverTable.getSelectionModel().addSelectionInterval(
+                            selected[i], selected[i]);
                     }
                 }
             }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void fireLanguageChanged() {
-        try{
+        try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-/*            sucheServer.setText("<html><font><u>" +
-                                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                  getFirstAttrbuteByTagName(new String[]{"mainform", "Label11",
-                                                                                                         "caption"})) +
-                                "</u></font></html>");*/
+            /*            sucheServer.setText("<html><font><u>" +
+                 ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                 getFirstAttrbuteByTagName(new String[]{"mainform", "Label11",
+                 "caption"})) +
+                                            "</u></font></html>");*/
             String[] columns = new String[4];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
-                                                                                                  "col0caption"}));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "serverlist",
+                                          "col0caption"}));
             columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
-                                                                                                  "col1caption"}));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "serverlist",
+                                          "col1caption"}));
             columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
-                                                                                                  "col3caption"}));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "serverlist",
+                                          "col3caption"}));
             columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
-                                                                                                  "col5caption"}));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "serverlist",
+                                          "col5caption"}));
             item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "connserv",
-                                                                                                   "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "connserv",
+                                          "caption"})));
             item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "delserv",
-                                                                                                   "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "delserv",
+                                          "caption"})));
             item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "addserv",
-                                                                                                   "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "addserv",
+                                          "caption"})));
             item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "addserv",
-                                                                                                   "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "addserv",
+                                          "caption"})));
             item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "addserv",
-                                                                                                   "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "addserv",
+                                          "caption"})));
             item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "delserv",
-                                                                                                   "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "delserv",
+                                          "caption"})));
+            verbunden.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
+                                          "verbunden"})));
+            versucheZuVerbinden.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
+                                          "verbinden"})));
+            aelter24h.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
+                                          "aelter24h"})));
+            juenger24h.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
+                                          "juenger24h"})));
+
             TableColumnModel tcm = serverTable.getColumnModel();
-            for (int i = 0; i < tcm.getColumnCount(); i++)
-            {
+            for (int i = 0; i < tcm.getColumnCount(); i++) {
                 tcm.getColumn(i).setHeaderValue(columns[i]);
             }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    public int[] getColumnWidths(){
+    public int[] getColumnWidths() {
         TableColumnModel tcm = serverTable.getColumnModel();
         int[] widths = new int[tcm.getColumnCount()];
         for (int i = 0; i < tcm.getColumnCount(); i++) {
