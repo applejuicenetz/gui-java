@@ -19,7 +19,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.30 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.31 2004/01/08 07:48:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.31  2004/01/08 07:48:22  maj0r
+ * Wenn das Panel nicht selektiert ist, wird die Tabelle nun nicht mehr aktualisiert.
+ *
  * Revision 1.30  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -107,6 +110,7 @@ public class UploadPanel
     private UploadDataTableModel uploadDataTableModel;
     private boolean initizialiced = false;
     private Logger logger;
+    private boolean panelSelected = false;
 
     public UploadPanel() {
         logger = Logger.getLogger(getClass());
@@ -201,7 +205,9 @@ public class UploadPanel
             if (type == DataUpdateListener.UPLOAD_CHANGED)
             {
                 uploadDataTableModel.setTable((HashMap) content);
-                uploadDataTable.updateUI();
+                if (panelSelected){
+                    uploadDataTable.updateUI();
+                }
                 anzahlClients = uploadDataTableModel.getRowCount();
                 label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
             }
@@ -226,6 +232,7 @@ public class UploadPanel
     public void registerSelected() {
         try
         {
+            panelSelected = true;
             if (!initizialiced)
             {
                 initizialiced = true;
@@ -249,6 +256,7 @@ public class UploadPanel
                 }
                 uploadDataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             }
+            uploadDataTable.updateUI();
         }
         catch (Exception ex)
         {
@@ -258,5 +266,6 @@ public class UploadPanel
     }
 
     public void lostSelection() {
+        panelSelected = false;
     }
 }

@@ -45,7 +45,7 @@ import javax.swing.JOptionPane;
 import de.applejuicenet.client.shared.Information;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.45 2004/01/07 16:15:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.46 2004/01/08 07:48:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -54,6 +54,9 @@ import de.applejuicenet.client.shared.Information;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.46  2004/01/08 07:48:22  maj0r
+ * Wenn das Panel nicht selektiert ist, wird die Tabelle nun nicht mehr aktualisiert.
+ *
  * Revision 1.45  2004/01/07 16:15:20  maj0r
  * Warnmeldung bezueglich 30-Minuten-Sperre bei manuellem Serverwechsel eingebaut.
  *
@@ -394,25 +397,32 @@ public class ServerPanel
     }
 
     public void registerSelected() {
-        if (!initizialiced) {
-            initizialiced = true;
-            TableColumnModel headerModel = serverTable.getTableHeader().
-                getColumnModel();
-            int columnCount = headerModel.getColumnCount();
-            PositionManager pm = PropertiesManager.getPositionManager();
-            if (pm.isLegal()) {
-                int[] widths = pm.getServerWidths();
-                for (int i = 0; i < columnCount; i++) {
-                    headerModel.getColumn(i).setPreferredWidth(widths[i]);
+        try {
+            if (!initizialiced) {
+                initizialiced = true;
+                TableColumnModel headerModel = serverTable.getTableHeader().
+                    getColumnModel();
+                int columnCount = headerModel.getColumnCount();
+                PositionManager pm = PropertiesManager.getPositionManager();
+                if (pm.isLegal()) {
+                    int[] widths = pm.getServerWidths();
+                    for (int i = 0; i < columnCount; i++) {
+                        headerModel.getColumn(i).setPreferredWidth(widths[i]);
+                    }
                 }
-            }
-            else {
-                for (int i = 0; i < columnCount; i++) {
-                    headerModel.getColumn(i).setPreferredWidth(serverTable.
-                        getWidth() / columnCount);
+                else {
+                    for (int i = 0; i < columnCount; i++) {
+                        headerModel.getColumn(i).setPreferredWidth(serverTable.
+                            getWidth() / columnCount);
+                    }
                 }
+                serverTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             }
-            serverTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 

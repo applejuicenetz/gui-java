@@ -55,7 +55,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.79 2004/01/06 20:00:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.80 2004/01/08 07:48:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,6 +64,9 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.80  2004/01/08 07:48:22  maj0r
+ * Wenn das Panel nicht selektiert ist, wird die Tabelle nun nicht mehr aktualisiert.
+ *
  * Revision 1.79  2004/01/06 20:00:22  maj0r
  * Bug #67 gefixt (Danke an dsp2004)
  * Probleme mit der Funktion automatisch Partliste anzeigen korrigiert
@@ -285,6 +288,7 @@ public class DownloadPanel
     private boolean isDownloadUebersicht;
     private String neuerDateiname;
     private String neuesVerzeichnis;
+    private boolean panelSelected = false;
 
     private DownloadPartListWatcher downloadPartListWatcher = new
         DownloadPartListWatcher();
@@ -834,9 +838,10 @@ public class DownloadPanel
     }
 
     public void registerSelected() {
-        downloadDOOverviewPanel.enableHoleListButton(false);
-        if (!initialized) {
-            try {
+        try {
+            downloadDOOverviewPanel.enableHoleListButton(false);
+            panelSelected = true;
+            if (!initialized) {
                 initialized = true;
                 int width = aScrollPane.getWidth() - 18;
                 TableColumnModel headerModel = downloadTable.getTableHeader().
@@ -857,10 +862,11 @@ public class DownloadPanel
                 }
                 downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             }
-            catch (Exception e) {
-                if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error("Unbehandelte Exception", e);
-                }
+            downloadTable.updateUI();
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
             }
         }
     }
@@ -991,7 +997,9 @@ public class DownloadPanel
                 ( (DownloadRootNode) downloadModel.getRoot()).setDownloadMap(
                     downloads);
                 DownloadDirectoryNode.setDownloads(downloads);
-                downloadTable.updateUI();
+                if (panelSelected){
+                    downloadTable.updateUI();
+                }
             }
         }
         catch (Exception e) {
@@ -1002,6 +1010,7 @@ public class DownloadPanel
     }
 
     public void lostSelection() {
+        panelSelected = false;
         downloadPartListWatcher.setDownloadNode(null);
         downloadDOOverviewPanel.setDownloadDO(null);
     }
