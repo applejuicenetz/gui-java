@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.20 2004/01/05 19:17:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.21 2004/01/12 07:26:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.21  2004/01/12 07:26:10  maj0r
+ * Tabellenspalte nun ueber Headerkontextmenue ein/ausblendbar.
+ *
  * Revision 1.20  2004/01/05 19:17:19  maj0r
  * Bug #56 gefixt (Danke an MeineR)
  * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
@@ -153,6 +156,8 @@ public class PropertiesManager
     private int[] uploadWidths;
     private int[] serverWidths;
     private int[] shareWidths;
+    private boolean[] downloadVisibilities;
+    private boolean[] uploadVisibilities;
 
     private static String path;
 
@@ -675,6 +680,27 @@ public class PropertiesManager
                 shareWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column0"}));
                 shareWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column1"}));
                 shareWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column2"}));
+
+                downloadVisibilities = new boolean[10];
+                downloadVisibilities[0] = true;
+                downloadVisibilities[1] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column1"})).booleanValue();
+                downloadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column2"})).booleanValue();
+                downloadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column3"})).booleanValue();
+                downloadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column4"})).booleanValue();
+                downloadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column5"})).booleanValue();
+                downloadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column6"})).booleanValue();
+                downloadVisibilities[7] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column7"})).booleanValue();
+                downloadVisibilities[8] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column8"})).booleanValue();
+                downloadVisibilities[9] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column9"})).booleanValue();
+
+                uploadVisibilities = new boolean[10];
+                uploadVisibilities[0] = true;
+                uploadVisibilities[1] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column1"})).booleanValue();
+                uploadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column2"})).booleanValue();
+                uploadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column3"})).booleanValue();
+                uploadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column4"})).booleanValue();
+                uploadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column5"})).booleanValue();
+                uploadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column6"})).booleanValue();
             }
             boolean use = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "use"})).booleanValue();
             String host = getFirstAttrbuteByTagName(new String[]{"options", "proxy", "host"});
@@ -732,6 +758,24 @@ public class PropertiesManager
             setAttributeByTagName(new String[]{"options", "location", "share", "column0"}, shareWidths[0]);
             setAttributeByTagName(new String[]{"options", "location", "share", "column1"}, shareWidths[1]);
             setAttributeByTagName(new String[]{"options", "location", "share", "column2"}, shareWidths[2]);
+
+            setAttributeByTagName(new String[]{"options", "visibility", "download", "column1"}, Boolean.toString(downloadVisibilities[1]));
+            setAttributeByTagName(new String[]{"options", "visibility", "download", "column2"}, Boolean.toString(downloadVisibilities[2]));
+            setAttributeByTagName(new String[]{"options", "visibility", "download", "column3"}, Boolean.toString(downloadVisibilities[3]));
+            setAttributeByTagName(new String[]{"options", "visibility", "download", "column4"}, Boolean.toString(downloadVisibilities[4]));
+            setAttributeByTagName(new String[]{"options", "visibility", "download", "column5"}, Boolean.toString(downloadVisibilities[5]));
+            setAttributeByTagName(new String[]{"options", "visibility", "download", "column6"}, Boolean.toString(downloadVisibilities[6]));
+            setAttributeByTagName(new String[]{"options", "visibility", "download", "column7"}, Boolean.toString(downloadVisibilities[7]));
+            setAttributeByTagName(new String[]{"options", "visibility", "download", "column8"}, Boolean.toString(downloadVisibilities[8]));
+            setAttributeByTagName(new String[]{"options", "visibility", "download", "column9"}, Boolean.toString(downloadVisibilities[9]));
+
+            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column1"}, Boolean.toString(uploadVisibilities[1]));
+            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column2"}, Boolean.toString(uploadVisibilities[2]));
+            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column3"}, Boolean.toString(uploadVisibilities[3]));
+            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column4"}, Boolean.toString(uploadVisibilities[4]));
+            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column5"}, Boolean.toString(uploadVisibilities[5]));
+            setAttributeByTagName(new String[]{"options", "visibility", "upload", "column6"}, Boolean.toString(uploadVisibilities[6]));
+
             saveDom();
         }
         catch (Exception e)
@@ -791,5 +835,27 @@ public class PropertiesManager
 
     public void setShareWidths(int[] shareWidths) {
         this.shareWidths = shareWidths;
+    }
+
+    public void setDownloadColumnVisible(int column, boolean visible) {
+        if (column != 0){
+            downloadVisibilities[column] = visible;
+            save();
+        }
+    }
+
+    public boolean[] getDownloadColumnVisibilities() {
+        return downloadVisibilities;
+    }
+
+    public void setUploadColumnVisible(int column, boolean visible) {
+        if (column != 0){
+            uploadVisibilities[column] = visible;
+            save();
+        }
+    }
+
+    public boolean[] getUploadColumnVisibilities() {
+        return uploadVisibilities;
     }
 }

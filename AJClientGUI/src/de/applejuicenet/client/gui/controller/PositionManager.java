@@ -3,7 +3,7 @@ package de.applejuicenet.client.gui.controller;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManager.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManager.java,v 1.5 2004/01/12 07:26:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PositionManager.java,v $
+ * Revision 1.5  2004/01/12 07:26:10  maj0r
+ * Tabellenspalte nun ueber Headerkontextmenue ein/ausblendbar.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -53,4 +56,12 @@ public interface PositionManager {
     public int[] getShareWidths();
 
     public void setShareWidths(int[] shareWidths);
+
+    public void setDownloadColumnVisible(int column, boolean visible);
+
+    public boolean[] getDownloadColumnVisibilities();
+
+    public void setUploadColumnVisible(int column, boolean visible);
+
+    public boolean[] getUploadColumnVisibilities();
 }

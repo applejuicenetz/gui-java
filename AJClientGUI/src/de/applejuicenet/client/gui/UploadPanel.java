@@ -30,9 +30,14 @@ import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import javax.swing.table.JTableHeader;
 import java.awt.event.MouseMotionAdapter;
+import javax.swing.JPopupMenu;
+import javax.swing.table.TableColumn;
+import javax.swing.JCheckBoxMenuItem;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.34 2004/01/09 19:21:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.35 2004/01/12 07:26:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +46,9 @@ import java.awt.event.MouseMotionAdapter;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.35  2004/01/12 07:26:10  maj0r
+ * Tabellenspalte nun ueber Headerkontextmenue ein/ausblendbar.
+ *
  * Revision 1.34  2004/01/09 19:21:17  maj0r
  * Kleine Korrekturen.
  *
@@ -134,6 +142,10 @@ public class UploadPanel
     private Logger logger;
     private boolean panelSelected = false;
 
+    private JPopupMenu columnPopup = new JPopupMenu();
+    private TableColumn[] columns = new TableColumn[7];
+    private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[columns.length];
+
     public UploadPanel() {
         logger = Logger.getLogger(getClass());
         _this = this;
@@ -169,8 +181,29 @@ public class UploadPanel
             UploadTablePercentCellRenderer());
         uploadDataTable.getColumnModel().getColumn(6).setCellRenderer(new
             UploadTableVersionCellRenderer());
-/*        JTableHeader header = uploadDataTable.getTableHeader();
-        header.addMouseMotionListener(new HeaderDragListener(header));*/
+
+        TableColumnModel model = uploadDataTable.getColumnModel();
+        for (int i=0; i<columns.length; i++){
+            columns[i] = model.getColumn(i);
+            columnPopupItems[i] = new JCheckBoxMenuItem((String)columns[i].getHeaderValue());
+            final int x = i;
+            columnPopupItems[i].addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent ae){
+                    if (columnPopupItems[x].isSelected()){
+                        uploadDataTable.getColumnModel().addColumn(columns[x]);
+                        PropertiesManager.getPositionManager().setUploadColumnVisible(x, true);
+                    }
+                    else{
+                        uploadDataTable.getColumnModel().removeColumn(columns[x]);
+                        PropertiesManager.getPositionManager().setUploadColumnVisible(x, false);
+                    }
+                }
+            });
+            columnPopup.add(columnPopupItems[i]);
+        }
+        columnPopupItems[0].setEnabled(false);
+
+        uploadDataTable.getTableHeader().addMouseListener(new HeaderPopupListener());
 
         JScrollPane aScrollPane = new JScrollPane(uploadDataTable);
         aScrollPane.setBackground(uploadDataTable.getBackground());
@@ -194,33 +227,32 @@ public class UploadPanel
             getFirstAttrbuteByTagName(new String[] {"mainform", "uplcounttext"}));
         label1.setText(clientText.replaceAll("%d",
                                              Integer.toString(anzahlClients)));
-        String[] columns = new String[7];
-        columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        String[] columnsText = new String[7];
+        columnsText[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
                                       "col0caption"}));
-        columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        columnsText[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
                                       "col3caption"}));
-        columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        columnsText[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
                                       "col1caption"}));
-        columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        columnsText[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
                                       "col2caption"}));
-        columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        columnsText[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
                                       "col6caption"}));
-        columns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        columnsText[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
                                       "col4caption"}));
-        columns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        columnsText[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
                                       "col5caption"}));
-        TableColumnModel tcm = uploadDataTable.getColumnModel();
-        for (int i = 0; i < tcm.getColumnCount(); i++) {
-            tcm.getColumn(i).setHeaderValue(columns[i]);
+        for (int i = 0; i < columns.length; i++) {
+            columns[i].setHeaderValue(columnsText[i]);
         }
-        tcm.getColumn(0).setPreferredWidth(100);
+        columns[0].setPreferredWidth(100);
     }
 
     public void fireContentChanged(int type, Object content) {
@@ -243,10 +275,9 @@ public class UploadPanel
     }
 
     public int[] getColumnWidths() {
-        TableColumnModel tcm = uploadDataTable.getColumnModel();
-        int[] widths = new int[tcm.getColumnCount()];
-        for (int i = 0; i < tcm.getColumnCount(); i++) {
-            widths[i] = tcm.getColumn(i).getWidth();
+        int[] widths = new int[columns.length];
+        for (int i = 0; i < columns.length; i++) {
+            widths[i] = columns[i].getWidth();
         }
         return widths;
     }
@@ -262,8 +293,12 @@ public class UploadPanel
                 PositionManager pm = PropertiesManager.getPositionManager();
                 if (pm.isLegal()) {
                     int[] widths = pm.getUploadWidths();
-                    for (int i = 0; i < columnCount; i++) {
-                        headerModel.getColumn(i).setPreferredWidth(widths[i]);
+                    boolean[] visibilies = pm.getUploadColumnVisibilities();
+                    for (int i = 0; i < columns.length; i++) {
+                        columns[i].setPreferredWidth(widths[i]);
+                        if (!visibilies[i]){
+                            uploadDataTable.removeColumn(columns[i]);
+                        }
                     }
                 }
                 else {
@@ -287,24 +322,38 @@ public class UploadPanel
         panelSelected = false;
     }
 
-/*    class HeaderDragListener
-         extends MouseMotionAdapter {
-         private JTableHeader header;
+    class HeaderPopupListener extends MouseAdapter {
+        private TableColumnModel model;
 
-         public HeaderDragListener(JTableHeader header) {
-             this.header = header;
-         }
+        public HeaderPopupListener(){
+            model = uploadDataTable.getColumnModel();
+            columnPopupItems[0].setSelected(true);
+        }
 
-         public void mouseDragged(MouseEvent e) {
-             int col = header.columnAtPoint(e.getPoint());
-             if (col == 0) {
-                 header.setDraggedColumn(null);
-                 header.setDraggedDistance(0);
-             }
-             else{
-                 super.mouseDragged(e);
-             }
-         }
+        public void mousePressed(MouseEvent me) {
+           super.mousePressed(me);
+           maybeShowPopup(me);
+       }
 
-     }*/
+       public void mouseReleased(MouseEvent e) {
+           super.mouseReleased(e);
+           maybeShowPopup(e);
+       }
+
+       private void maybeShowPopup(MouseEvent e){
+           if (e.isPopupTrigger()){
+               for (int i=1; i<columns.length; i++){
+                   try{
+                       model.getColumnIndex(columns[i].getIdentifier());
+                       columnPopupItems[i].setSelected(true);
+                   }
+                   catch (IllegalArgumentException niaE)
+                   {
+                       columnPopupItems[i].setSelected(false);
+                   }
+               }
+               columnPopup.show(uploadDataTable.getTableHeader(), e.getX(), e.getY());
+           }
+       }
+   }
 }
