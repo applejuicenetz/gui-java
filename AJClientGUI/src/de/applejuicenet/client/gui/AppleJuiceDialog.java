@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.41 2003/09/04 22:12:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.42 2003/09/05 09:02:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.42  2003/09/05 09:02:26  maj0r
+ * Threadverwendung verbessert.
+ *
  * Revision 1.41  2003/09/04 22:12:45  maj0r
  * Logger verfeinert.
  * Threadbeendigung korrigiert.
@@ -112,6 +115,7 @@ public class AppleJuiceDialog
     private boolean paused = false;
     private static Logger logger;
     private JLabel memory = new JLabel();
+    private Thread memoryWorker;
 
     private static AppleJuiceDialog theApp;
 
@@ -221,27 +225,36 @@ public class AppleJuiceDialog
         dm.addDataUpdateListener(this,
                                  DataUpdateListener.STATUSBAR_CHANGED);
 
-        final SwingWorker worker = new SwingWorker() {
-            public Object construct() {
-                Runtime runtime = Runtime.getRuntime();
-                while (1 == 1)
-                {
-                    try
+        memoryWorker = new Thread() {
+            public void run() {
+                if (logger.isEnabledFor(Level.DEBUG))
+                    logger.debug("MemoryWorkerThread gestartet. " + memoryWorker);
+                try{
+                    Runtime runtime = Runtime.getRuntime();
+                    while (!isInterrupted())
                     {
-                        final long free = runtime.freeMemory();
-                        final long total = runtime.totalMemory();
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                memory.setText("Mem: U/T " + parseGroesse(total-free) + " / " + parseGroesse(total));
-                            }
-                        });
-                        Thread.sleep(5000);
-                    }
-                    catch (InterruptedException e)
-                    {
-                        e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                            final long free = runtime.freeMemory();
+                            final long total = runtime.totalMemory();
+                            SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    memory.setText("Mem: U/T " + parseGroesse(total-free) + " / " + parseGroesse(total));
+                                }
+                            });
+                        try{
+                            sleep(5000);
+                        }
+                        catch (InterruptedException e){
+                            interrupt();
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    if (logger.isEnabledFor(Level.ERROR))
+                        logger.error("Unbehandelte Exception", e);
+                }
+                if (logger.isEnabledFor(Level.DEBUG))
+                    logger.debug("MemoryWorkerThread beendet. " + memoryWorker);
             }
 
             private String parseGroesse(long groesse) {
@@ -256,9 +269,8 @@ public class AppleJuiceDialog
                 return result + " MB";
             }
         };
-        worker.start();
-
         dm.startXMLCheck();
+        memoryWorker.start();
     }
 
     public Dimension getPreferredSize() {
@@ -281,6 +293,9 @@ public class AppleJuiceDialog
 
     private void closeDialog(WindowEvent evt) {
         setVisible(false);
+        if (memoryWorker!=null){
+            memoryWorker.interrupt();
+        }
         ApplejuiceFassade.getInstance().stopXMLCheck();
         String nachricht = "appleJuice-Core-GUI wird beendet...";
         if (logger.isEnabledFor(Level.INFO))
