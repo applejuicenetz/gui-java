@@ -23,7 +23,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import com.l2fprod.gui.plaf.skin.Skin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.67 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.68 2003/12/29 16:35:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.68  2003/12/29 16:35:12  maj0r
+ * Look and Feel Verwendung korrigiert.
+ *
  * Revision 1.67  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -202,7 +205,7 @@ public class AppleJuiceDialog
     public static boolean rewriteProperties = false;
     private boolean firstChange = true;
     private MemoryMonitorDialog memoryMonitorDialog;
-    private HashMap themes = new HashMap();
+    private static HashMap themes = new HashMap();
     private String themeSupportTitel;
     private String themeSupportNachricht;
     private boolean automaticPwdlEnabled = false;
@@ -247,6 +250,7 @@ public class AppleJuiceDialog
                     }
                     shortName = temp.substring(index1 + 1, index2);
                     aSkin = SkinLookAndFeel.loadThemePack(skinUrl);
+                    themes.put(shortName, aSkin);
                     if (shortName.compareToIgnoreCase(defaultTheme) == 0) {
                         standardSkin = aSkin;
                     }
@@ -335,7 +339,6 @@ public class AppleJuiceDialog
             statusbar[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
             statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
         }
-//        pause.setFont(new java.awt.Font("SansSerif", 0, 11));
         memory.setIcon(IconManager.getInstance().getIcon("mmonitor"));
         memory.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){
@@ -585,7 +588,6 @@ public class AppleJuiceDialog
                 it = themesDateien.iterator();
                 ButtonGroup lafGroup2 = new ButtonGroup();
                 Skin standardSkin = null;
-                Skin aSkin = null;
                 String temp;
                 String shortName = "";
                 String defaultTheme = PropertiesManager.getOptionsManager().
@@ -599,11 +601,9 @@ public class AppleJuiceDialog
                         continue;
                     }
                     shortName = temp.substring(index1 + 1, index2);
-//                    aSkin = SkinLookAndFeel.loadThemePack(skinUrl);
                     final JCheckBoxMenuItem rb = new JCheckBoxMenuItem(
                         shortName);
                     if (shortName.compareToIgnoreCase(defaultTheme) == 0) {
-                        standardSkin = aSkin;
                         rb.setSelected(true);
                     }
                     rb.addItemListener(new ItemListener() {
@@ -613,12 +613,8 @@ public class AppleJuiceDialog
                             }
                         }
                     });
-                    themes.put(shortName, aSkin);
                     lafGroup2.add(rb);
                     themesMenu.add(rb);
-                }
-                if (standardSkin == null) {
-                    standardSkin = aSkin;
                 }
                 themesMenu.add(new JSeparator());
                 JMenuItem menuItem = new JMenuItem();
@@ -629,7 +625,6 @@ public class AppleJuiceDialog
                     }
                 });
                 themesMenu.add(menuItem);
-//                SkinLookAndFeel.setSkin(standardSkin);
             }
             else{
                 JMenuItem menuItem = new JMenuItem();
@@ -716,18 +711,6 @@ public class AppleJuiceDialog
                                                                    getFirstAttrbuteByTagName(new String[]{"javagui", "menu", "extras"})));
             themesMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                  getFirstAttrbuteByTagName(new String[]{"javagui", "menu", "themes"})));
-/*            if (paused)
-            {
-                pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                getFirstAttrbuteByTagName(new String[]{"javagui", "mainform",
-                                                                                                       "fortsetzen"})));
-            }
-            else
-            {
-                pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                getFirstAttrbuteByTagName(new String[]{"javagui", "mainform",
-                                                                                                       "pause"})));
-            }*/
         }
         catch (Exception e){
             if (logger.isEnabledFor(Level.ERROR))
