@@ -34,7 +34,6 @@ import de.applejuicenet.client.gui.controller.event.DownloadDataPropertyChangeEv
 import de.applejuicenet.client.gui.download.table.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
 import de.applejuicenet.client.gui.download.table.DownloadRootNode;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.Settings;
@@ -848,7 +847,6 @@ public class DownloadController extends GuiController {
 	public void componentLostSelection() {
 		panelSelected = false;
 		downloadPartListWatcher.setDownloadNode(null);
-		downloadPanel.getDownloadDOOverviewPanel().setDownloadDO(null);
 	}
 
 	protected void languageChanged() {
@@ -956,25 +954,7 @@ public class DownloadController extends GuiController {
 	}
 
 	protected void contentChanged(int type, final Object content) {
-		if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
-		    ApplejuiceFassade.getInstance().removeDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
-		    Map downloads = (Map) content;
-			((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
-			DownloadDirectoryNode.setDownloads(downloads);
-			if (panelSelected) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						try {
-								downloadPanel.getDownloadTable().updateUI();
-						} catch (Exception e) {
-							if (logger.isEnabledFor(Level.ERROR)) {
-								logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-							}
-						}
-					}
-				});
-			}
-		}
+		// wird jetzt ueber die neuen Events verarbeitet
 	}
 
 }

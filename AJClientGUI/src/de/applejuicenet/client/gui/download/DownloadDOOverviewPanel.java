@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.3 2004/12/01 13:08:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,7 +44,7 @@ public class DownloadDOOverviewPanel
     private JLabel label1 = new JLabel();
     private Logger logger;
     private JButton holeListe = new JButton();
-    private Thread partListWorkerThread = null;
+    private PartListWorkerThread partListWorkerThread = null;
     private DownloadPanel downloadPanel;
     private String verfuegbar;
     private DecimalFormat decimalFormat = new DecimalFormat("#.##");
@@ -123,69 +123,17 @@ public class DownloadDOOverviewPanel
 
     public void setDownloadDO(DownloadDO downloadDO) {
         try {
-            if (downloadDO == null) {
-                if (partListWorkerThread != null){
-                    partListWorkerThread.interrupt();
-                    partListWorkerThread = null;
-                }
-                actualDLDateiName.setText("");
-                actualDlOverviewTable.setPartList(null);
-            }
-            else if (downloadDO.getStatus() != DownloadDO.FERTIGSTELLEN &&
-                     downloadDO.getStatus() != DownloadDO.FERTIG) {
-                final DownloadDO tempDO = downloadDO;
-                if (partListWorkerThread != null){
-                    partListWorkerThread.interrupt();
-                }
-                partListWorkerThread = new Thread() {
-                    public void run() {
-                    	String dateiNameText = " " + tempDO.getFilename() +
-                        	" (" + tempDO.getTemporaryFileNumber() + ".data) ";
-                        actualDLDateiName.setText(dateiNameText);
-                        actualDlOverviewTable.setPartList(null);
-                        PartListDO partList = null;
-                        while (!isInterrupted()) {
-                            try{
-                                partList = ApplejuiceFassade.getInstance().
-                                    getPartList(tempDO);
-                            }
-                            catch(WebSiteNotFoundException wsnfE){
-                                // Core ist wahrscheinlich zurzeit ueberlastet
-                                partList = null;
-                            }
-                            if (isInterrupted()){
-                                break;
-                            }
-                            if (partList == null) {
-                                interrupt();
-                                actualDLDateiName.setText("");
-                                actualDlOverviewTable.setPartList(null);
-                            }
-                            else {
-                                actualDlOverviewTable.setPartList(partList);                                
-                                String tmp = verfuegbar.replaceFirst("%s", 
-                                		decimalFormat.format(partList.getProzentVerfuegbar()));
-                                actualDLDateiName.setText(dateiNameText + " - " + tmp);
-								try {
-                                    sleep(2000);
-                                }
-                                catch (InterruptedException iE) {
-                                    interrupt();
-                                }
-                            }
-                        }
-                    }
-                };
-                partListWorkerThread.start();
-            }
+            if (partListWorkerThread == null){
+	            partListWorkerThread = new PartListWorkerThread();
+	            partListWorkerThread.start();
+	        }
+            partListWorkerThread.setDownloadDO(downloadDO);
         }
         catch (Exception e) {
             if (partListWorkerThread != null){
-                partListWorkerThread.interrupt();
+            	partListWorkerThread.cancel();
                 partListWorkerThread = null;
             }
-            actualDLDateiName.setText("");
-            actualDlOverviewTable.setPartList(null);
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
@@ -194,49 +142,17 @@ public class DownloadDOOverviewPanel
 
     public void setDownloadSourceDO(DownloadSourceDO downloadSourceDO) {
         try {
-            if (downloadSourceDO == null) {
-                if (partListWorkerThread != null){
-                    partListWorkerThread.interrupt();
-                    partListWorkerThread = null;
-                }
-                actualDLDateiName.setText("");
-                actualDlOverviewTable.setPartList(null);
-            }
-            else {
-                final DownloadSourceDO tempDO = downloadSourceDO;
-                if (partListWorkerThread != null){
-                    partListWorkerThread.interrupt();
-                }
-                partListWorkerThread = new Thread() {
-                    public void run() {
-                        actualDLDateiName.setText(tempDO.getFilename() + " (" +
-                                                  tempDO.getNickname() + ")");
-                        actualDlOverviewTable.setPartList(null);
-                        PartListDO partList;
-                        try {
-                            partList = ApplejuiceFassade.getInstance().
-                                getPartList(tempDO);
-                        }
-                        catch (WebSiteNotFoundException ex) {
-                            // Core ist wahrscheinlich zurzeit ueberlastet
-                            partList = null;
-                        }
-                        if (partList == null) {
-                            interrupt();
-                            actualDLDateiName.setText("");
-                        }
-                        else {
-                            actualDlOverviewTable.setPartList(partList);
-                            String tmp = verfuegbar.replaceFirst("%s", 
-                            		decimalFormat.format(partList.getProzentVerfuegbar()));
-                            actualDLDateiName.setText(actualDLDateiName.getText() + " - " + tmp);
-                        }
-                    }
-                };
-                partListWorkerThread.start();
-            }
+            if (partListWorkerThread == null){
+	            partListWorkerThread = new PartListWorkerThread();
+	            partListWorkerThread.start();
+	        }
+            partListWorkerThread.setDownloadSourceDO(downloadSourceDO);
         }
         catch (Exception e) {
+            if (partListWorkerThread != null){
+            	partListWorkerThread.cancel();
+                partListWorkerThread = null;
+            }
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
@@ -266,6 +182,146 @@ public class DownloadDOOverviewPanel
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
+        }
+    }
+    
+    private class PartListWorkerThread extends Thread {
+    	private Object objectDO = null;
+    	private boolean paused = true;
+    	
+        public void run() {
+        	while(true && !interrupted()){
+        		if (paused){
+        			try{
+	        			sleep(2000);
+	        			continue;
+	                }
+	                catch (InterruptedException iE) {
+	                    interrupt();
+	                }
+        		}
+            	if (objectDO == null){
+            		paused = true;
+            		continue;
+            	}
+            	if (objectDO.getClass() == DownloadDO.class){
+            		workDownloadDO((DownloadDO)objectDO);
+            	}
+            	else{
+            		paused = true;
+            		workDownloadSourceDO((DownloadSourceDO)objectDO);
+            	}
+        	}
+        }
+        
+        private void workDownloadDO(DownloadDO downloadDO){
+        	if (downloadDO.getStatus() != DownloadDO.FERTIGSTELLEN 
+        			&& downloadDO.getStatus() != DownloadDO.FERTIG){
+            	String dateiNameText = " " + downloadDO.getFilename() +
+            	" (" + downloadDO.getTemporaryFileNumber() + ".data) ";
+	            PartListDO partList = null;
+                try{
+                    partList = ApplejuiceFassade.getInstance().
+                        getPartList(downloadDO);
+                    if (paused){
+                    	// wurde moeglicherweise waehrend des Ziehens der Partliste gestoppt
+                    	return;
+                    }
+                }
+                catch(WebSiteNotFoundException wsnfE){
+                    // Core ist wahrscheinlich zurzeit ueberlastet
+                    partList = null;
+                }
+                if (isInterrupted()){
+                    return;
+                }
+                if (partList == null) {
+                    actualDLDateiName.setText("");
+                    actualDlOverviewTable.setPartList(null);
+                }
+                else {
+                    actualDlOverviewTable.setPartList(partList);                                
+                    String tmp = verfuegbar.replaceFirst("%s", 
+                    		decimalFormat.format(partList.getProzentVerfuegbar()));
+                    actualDLDateiName.setText(dateiNameText + " - " + tmp);
+                }
+        	}
+        	else{
+        		paused = true;
+        	}
+        }
+
+        private void workDownloadSourceDO(DownloadSourceDO downloadSoureDO) {
+			PartListDO partList;
+			try {
+				partList = ApplejuiceFassade.getInstance().getPartList(
+						downloadSoureDO);
+                if (paused){
+                	// wurde moeglicherweise waehrend des Ziehens der Partliste gestoppt
+                	return;
+                }
+			} catch (WebSiteNotFoundException ex) {
+				// Core ist wahrscheinlich zurzeit ueberlastet
+				partList = null;
+			}
+			if (partList == null) {
+				actualDLDateiName.setText("");
+			} else {
+				actualDlOverviewTable.setPartList(partList);
+				StringBuffer tmp = new StringBuffer();
+				tmp.append(downloadSoureDO.getFilename());
+				tmp.append(" (");
+				tmp.append(downloadSoureDO.getNickname());
+				tmp.append(") - ");
+				tmp.append(verfuegbar.replaceFirst("%s", decimalFormat
+						.format(partList.getProzentVerfuegbar())));				
+				actualDLDateiName.setText(tmp.toString());
+			}
+		}
+        
+        public void setDownloadDO(DownloadDO downloadDO){
+        	paused = true;
+        	if (downloadDO == null){
+        		clear();
+        	}
+        	if (objectDO != downloadDO){
+	        	objectDO = downloadDO;
+            	if (objectDO == null){
+            		clear();
+            	}
+            	else{
+            		paused = false;
+            	}
+        	}
+        }
+
+        public void setDownloadSourceDO(DownloadSourceDO downloadSoureDO){
+        	paused = true;
+        	if (objectDO != downloadSoureDO){
+	        	objectDO = downloadSoureDO;
+            	if (objectDO == null){
+            		clear();
+            	}
+            	else{
+            		paused = false;            		
+            	}
+        	}
+        }
+        
+        private void clear(){
+        	paused = true;
+            actualDLDateiName.setText("");
+            actualDlOverviewTable.setPartList(null);
+        }
+        
+        public void pause(){
+        	paused = true;
+        }
+        
+        public void cancel(){
+        	paused = true;
+        	interrupt();
+        	clear();
         }
     }
 }

@@ -19,7 +19,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.4 2004/10/29 13:59:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.5 2004/12/01 13:08:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -298,10 +298,8 @@ public class StartController extends GuiController {
 						temp = new StringBuffer(verbindungenText);
 						pos = temp.indexOf("%d");
 						if (pos != -1) {
-							temp
-									.replace(pos, pos + 2, Long
-											.toString(information
-													.getOpenConnections()));
+							temp.replace(pos, pos + 2, Long.toString(
+									information.getOpenConnections()));
 						}
 						startPanel.getLblVerbindungen().setText(temp.toString());
 					} catch (Exception e) {

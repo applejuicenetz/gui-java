@@ -39,7 +39,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.49 2004/11/30 20:54:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.50 2004/12/01 13:08:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -84,6 +84,7 @@ public class ModifiedXMLHolder
     private Map attributes = new HashMap();
     
 	private Vector downloadEvents = new Vector();
+	private boolean downloadSourceEvent;
 
     private static DataPropertyChangeInformer downloadPropertyChangeInformer;
     
@@ -388,7 +389,6 @@ public class ModifiedXMLHolder
         String downloadKey = Integer.toString(downloadId);
         DownloadDO downloadDO = (DownloadDO) downloadMap.get(downloadKey);
         DownloadSourceDO downloadSourceDO = null;
-        boolean newDownloadSource = false;
         if (downloadDO != null) {
             downloadSourceDO = downloadDO.getSourceById(id);
             if (downloadSourceDO == null) {
@@ -396,27 +396,16 @@ public class ModifiedXMLHolder
                 downloadDO.addSource(downloadSourceDO);
                 sourcenZuDownloads.put(Integer.toString(id),
                                        downloadDO);
-                newDownloadSource = true;
             }
         }
         else{
             downloadSourceDO = new DownloadSourceDO(id);
             downloadSourcesToDo.add(downloadSourceDO);
-            newDownloadSource = true;
         }
         downloadSourceDO.setDownloadId(downloadId);
         checkUserMap(downloadSourceDO, attributes);
         attributes.clear();
-        if (newDownloadSource){
-    		downloadEvents.add(new DownloadDataPropertyChangeEvent(
-    		        downloadSourceDO, DownloadDataPropertyChangeEvent.SOURCE_ADDED, 
-    		        downloadSourceDO, null));
-        }
-        else{
-    		downloadEvents.add(new DownloadDataPropertyChangeEvent(
-    		        downloadSourceDO, DownloadDataPropertyChangeEvent.SOURCE_CHANGED, 
-    		        downloadSourceDO, null));
-        }
+        downloadSourceEvent = true;
     }
 
     private void checkDownloadMap(DownloadDO downloadDO, Map userAttributes, boolean newDownload){
@@ -537,10 +526,7 @@ public class ModifiedXMLHolder
                         id);
                     downloadDO.removeSource(id);
                     sourcenZuDownloads.remove(id);
-                	downloadEvents.add(
-        	        		new DownloadDataPropertyChangeEvent(
-        	        				downloadMap, DownloadDataPropertyChangeEvent.SOURCE_REMOVED, 
-        	        				id, null));
+                    downloadSourceEvent = true;
                     continue;
                 }
                 else if (searchMap.containsKey(id)) {
@@ -847,6 +833,7 @@ public class ModifiedXMLHolder
             String xmlString = getXMLString(filter);
             checkForValidResult(xmlString, securer);
             downloadEvents.clear();
+            downloadSourceEvent = false;
             xr.parse(new InputSource(
                 new StringReader(xmlString)));
             parseRest();
@@ -860,6 +847,13 @@ public class ModifiedXMLHolder
                 checkCount++;
             }
             securer = null;
+            if (downloadSourceEvent){
+            	downloadEvents.add(
+    	        		new DownloadDataPropertyChangeEvent(
+    	        				downloadMap, DownloadDataPropertyChangeEvent.A_SOURCE_CHANGED, 
+    	        				null, null));
+
+            }
     		if (downloadEvents.size() > 0){
     	        downloadPropertyChangeInformer.propertyChanged(
     	        		new DownloadDataPropertyChangeEvent(downloadEvents));
