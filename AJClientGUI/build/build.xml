@@ -113,8 +113,9 @@
          </fileset>
       </delete>
 	<jar destfile="${basedir}/plugins/VersionChecker.jar">
+		<fileset dir="${basedir}/plugin_src/versionchecker" includes="plugin_properties.xml"/>
 		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
-							  		excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+                excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
          </jar>
    </target>
 
