@@ -74,6 +74,7 @@ public class DownloadController extends GuiController {
 	private String dialogTitel;
 	private String downloadAbbrechen;
 	private DownloadPartListWatcher downloadPartListWatcher;
+	private boolean firstUpdate = true;
 	
 	private DownloadController() {
 		super();
@@ -159,11 +160,6 @@ public class DownloadController extends GuiController {
 				new DownloadTablePopupListener(this, downloadPanel.getDownloadTable()
 						, MAYBE_SHOW_POPUP));
 		LanguageSelector.getInstance().addLanguageListener(this);
-/*		ApplejuiceFassade.getInstance().addDataUpdateListener(this,
-				DataUpdateListener.DOWNLOAD_CHANGED);*/
-		Map downloads = ApplejuiceFassade.getInstance().getDownloadsSnapshot();
-		((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
-		DownloadDirectoryNode.setDownloads(downloads);
 		ApplejuiceFassade.getInstance().getDownloadPropertyChangeInformer().
 			addDataPropertyChangeListener(
 				new DownloadPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
@@ -250,6 +246,12 @@ public class DownloadController extends GuiController {
 	}
 	
 	private synchronized void downloadPropertyChanged(DataPropertyChangeEvent evt){
+	    if (firstUpdate){
+	        firstUpdate = false;
+			Map downloads = ApplejuiceFassade.getInstance().getDownloadsSnapshot();
+			((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
+			DownloadDirectoryNode.setDownloads(downloads);
+	    }
 		boolean tmpSort = false;
 		if (evt.isEventContainer()){
 			DataPropertyChangeEvent[] events = evt.getNestedEvents();
@@ -266,25 +268,18 @@ public class DownloadController extends GuiController {
 			}
 		}
 		final boolean sort = tmpSort;
-    	System.out.println("event");
-		try{
-	        SwingUtilities.invokeLater(new Runnable() {
-	            public void run() {
-	            	System.out.println("update");
-	            	if (sort){
-		            	downloadPanel.getDownloadModel().sortNextRefresh(sort);
-		            	downloadPanel.getDownloadTable().updateUI();
-		            	downloadPanel.getDownloadModel().sortNextRefresh(false);
-	            	}
-	            	else{
-		            	downloadPanel.getDownloadTable().updateUI();
-	            	}
-	            }
-	        });
-		}
-        catch(Exception e){
-        	e.printStackTrace();
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            	if (sort){
+	            	downloadPanel.getDownloadModel().sortNextRefresh(sort);
+	            	downloadPanel.getDownloadTable().updateUI();
+	            	downloadPanel.getDownloadModel().sortNextRefresh(false);
+            	}
+            	else{
+	            	downloadPanel.getDownloadTable().updateUI();
+            	}
+            }
+        });
 	}
 	
 	private boolean handleDownloadDataPropertyChangeEvent(DownloadDataPropertyChangeEvent event){

@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadRootNode.java,v 1.3 2004/11/30 18:03:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadRootNode.java,v 1.4 2004/11/30 19:17:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -55,6 +55,10 @@ public class DownloadRootNode
     }
     
     public Object[] getChildren() {
+        if (!initialized) {
+            return new Object[] {
+                new WaitNode()};
+        }
         if (downloads == null) {
             return null;
         }
@@ -64,10 +68,6 @@ public class DownloadRootNode
     }
 
     public Object[] getChildrenWithSort() {
-        if (!initialized) {
-            return new Object[] {
-                new WaitNode()};
-        }
         if (downloads == null) {
             return null;
         }
