@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.43 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.44 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -61,6 +61,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.44  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.43  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -211,7 +214,7 @@ public class PowerDownloadPanel
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -516,12 +519,12 @@ public class PowerDownloadPanel
         }
         catch (InstantiationException e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
         catch (IllegalAccessException e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
         autoPwdlThread = policy;
@@ -583,7 +586,7 @@ public class PowerDownloadPanel
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
             return new AutomaticPowerdownloadPolicy[0];
         }
@@ -636,7 +639,7 @@ public class PowerDownloadPanel
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -654,7 +657,7 @@ public class PowerDownloadPanel
                     }
                     catch (NumberFormatException nfE) {
                         if (logger.isEnabledFor(Level.ERROR)) {
-                            logger.error("Unbehandelte Exception", nfE);
+                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, nfE);
                         }
                         ratio.setText("2.2");
                     }
@@ -681,7 +684,7 @@ public class PowerDownloadPanel
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -728,7 +731,7 @@ public class PowerDownloadPanel
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -772,7 +775,7 @@ public class PowerDownloadPanel
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }

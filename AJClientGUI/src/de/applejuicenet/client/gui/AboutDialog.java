@@ -30,7 +30,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.16 2004/03/03 15:33:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.17 2004/03/05 15:49:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +39,9 @@ import java.util.List;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AboutDialog.java,v $
+ * Revision 1.17  2004/03/05 15:49:38  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.16  2004/03/03 15:33:30  maj0r
  * PMD-Optimierung
  *
@@ -112,7 +115,7 @@ public class AboutDialog
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -152,7 +155,7 @@ public class AboutDialog
             }
             catch (Exception e) {
                 if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error("Unbehandelte Exception", e);
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                 }
             }
             worker = new Thread() {
@@ -223,7 +226,7 @@ public class AboutDialog
                     }
                     catch (Exception e) {
                         if (logger.isEnabledFor(Level.ERROR)) {
-                            logger.error("Unbehandelte Exception", e);
+                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                         }
                     }
                     if (logger.isEnabledFor(Level.DEBUG)) {

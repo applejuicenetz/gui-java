@@ -13,6 +13,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import java.util.Map;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 public class XMLValueHolder extends DefaultHandler{
     private Logger logger;
@@ -31,7 +32,7 @@ public class XMLValueHolder extends DefaultHandler{
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }

@@ -58,7 +58,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.62 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.63 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -67,6 +67,9 @@ import de.applejuicenet.client.shared.dac.ShareDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.63  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.62  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -296,7 +299,7 @@ public class SharePanel
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -437,7 +440,7 @@ public class SharePanel
                         }
                         catch (Exception e) {
                             if (logger.isEnabledFor(Level.ERROR)) {
-                                logger.error("Unbehandelte Exception", e);
+                                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                             }
                         }
                         return null;
@@ -482,7 +485,7 @@ public class SharePanel
                         }
                         catch (Exception e) {
                             if (logger.isEnabledFor(Level.ERROR)) {
-                                logger.error("Unbehandelte Exception", e);
+                                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                             }
                         }
                     }
@@ -562,7 +565,7 @@ public class SharePanel
                         }
                         catch (Exception e) {
                             if (logger.isEnabledFor(Level.ERROR)) {
-                                logger.error("Unbehandelte Exception", e);
+                                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                             }
                         }
                         return null;
@@ -710,7 +713,7 @@ public class SharePanel
                 }
                 catch (Exception e) {
                     if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error("Unbehandelte Exception", e);
+                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                     }
                 }
                 return null;
@@ -782,7 +785,7 @@ public class SharePanel
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -859,7 +862,7 @@ public class SharePanel
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -877,7 +880,7 @@ public class SharePanel
             }
             catch (Exception ex) {
                 if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error("Unbehandelte Exception", ex);
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
                 }
             }
         }
@@ -889,7 +892,7 @@ public class SharePanel
             }
             catch (Exception ex) {
                 if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error("Unbehandelte Exception", ex);
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
                 }
             }
         }
@@ -921,7 +924,7 @@ public class SharePanel
             }
             catch (Exception ex) {
                 if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error("Unbehandelte Exception", ex);
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
                 }
             }
         }

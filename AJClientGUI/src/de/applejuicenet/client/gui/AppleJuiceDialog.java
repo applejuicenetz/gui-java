@@ -77,7 +77,7 @@ import java.util.Set;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.106 2004/03/03 15:33:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.107 2004/03/05 15:49:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -86,6 +86,9 @@ import java.util.Map;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.107  2004/03/05 15:49:38  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.106  2004/03/03 15:33:30  maj0r
  * PMD-Optimierung
  *
@@ -471,7 +474,7 @@ public class AppleJuiceDialog
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -486,7 +489,7 @@ public class AppleJuiceDialog
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -746,7 +749,7 @@ public class AppleJuiceDialog
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -997,7 +1000,7 @@ public class AppleJuiceDialog
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
             return null;
         }
@@ -1048,7 +1051,7 @@ public class AppleJuiceDialog
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -1189,7 +1192,7 @@ public class AppleJuiceDialog
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -1229,7 +1232,7 @@ public class AppleJuiceDialog
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }

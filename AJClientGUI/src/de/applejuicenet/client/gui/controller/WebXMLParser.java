@@ -19,7 +19,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.30 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.31 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import javax.xml.parsers.ParserConfigurationException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.31  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.30  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -178,26 +181,31 @@ public abstract class WebXMLParser
         webXML = true;
     }
 
+    private String getCommand(String parameters){
+        String command = xmlCommand + "?";
+        if (parameters.indexOf("mode=zip") == -1) {
+            command += zipMode;
+        }
+        if (useTimestamp) {
+            command += "password=" + password + "&timestamp=" +
+                timestamp + parameters;
+        }
+        else {
+            if (parameters.length() != 0) {
+                command += "password=" + password + "&" + parameters;
+            }
+            else {
+                command += "password=" + password;
+            }
+        }
+        return command;
+    }
+
     public void reload(String parameters, boolean throwWebSiteNotFoundException) throws
         Exception {
         String xmlData = null;
         try {
-            String command = xmlCommand + "?";
-            if (parameters.indexOf("mode=zip") == -1) {
-                command += zipMode;
-            }
-            if (useTimestamp) {
-                command += "password=" + password + "&timestamp=" +
-                    timestamp + parameters;
-            }
-            else {
-                if (parameters.length() != 0) {
-                    command += "password=" + password + "&" + parameters;
-                }
-                else {
-                    command += "password=" + password;
-                }
-            }
+            String command = getCommand(parameters);
             xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
                 command);
             if (xmlData.length() == 0) {

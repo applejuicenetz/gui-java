@@ -10,9 +10,10 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.ShareEntry;
 import java.util.Set;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.7 2004/03/03 17:27:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.8 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +22,9 @@ import java.util.Set;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SettingsXMLHolder.java,v $
+ * Revision 1.8  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.7  2004/03/03 17:27:55  maj0r
  * PMD-Optimierung
  *
@@ -140,7 +144,7 @@ public class SettingsXMLHolder
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }

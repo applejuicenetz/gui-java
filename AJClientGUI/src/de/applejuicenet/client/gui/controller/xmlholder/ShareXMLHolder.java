@@ -17,9 +17,10 @@ import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import org.apache.xerces.parsers.SAXParser;
 import java.util.Map;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.8 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.9 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +29,9 @@ import java.util.Map;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.9  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.8  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -129,7 +133,7 @@ public class ShareXMLHolder
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -197,7 +201,7 @@ public class ShareXMLHolder
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }

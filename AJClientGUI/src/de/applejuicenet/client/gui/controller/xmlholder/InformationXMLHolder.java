@@ -19,7 +19,7 @@ import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/InformationXMLHolder.java,v 1.3 2004/02/27 15:05:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/InformationXMLHolder.java,v 1.4 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: InformationXMLHolder.java,v $
+ * Revision 1.4  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.3  2004/02/27 15:05:19  maj0r
  * Auf SAX umgebastelt.
  *
@@ -78,7 +81,7 @@ public class InformationXMLHolder
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)){
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -103,7 +106,7 @@ public class InformationXMLHolder
             }
             catch (Exception ex) {
                 if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error("Unbehandelte Exception", ex);
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
                 }
             }
         }

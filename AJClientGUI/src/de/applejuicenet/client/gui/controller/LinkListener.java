@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.4 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.5 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: LinkListener.java,v $
+ * Revision 1.5  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.4  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -53,7 +56,7 @@ public class LinkListener
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -75,7 +78,7 @@ public class LinkListener
                 }
                 catch (Exception e) {
                     if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error("Unbehandelte Exception", e);
+                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                     }
                     client.close();
                     return;
@@ -85,7 +88,7 @@ public class LinkListener
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }

@@ -9,9 +9,10 @@ import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.SoundPlayer;
 import java.util.Map;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.25 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.26 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,9 @@ import java.util.Map;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.26  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.25  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -169,7 +173,7 @@ public class DownloadDO
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
             return "";
         }
@@ -344,7 +348,7 @@ public class DownloadDO
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
             return "";
         }
@@ -362,7 +366,7 @@ public class DownloadDO
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
         return speed;
@@ -381,7 +385,7 @@ public class DownloadDO
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
         return geladen;
@@ -496,7 +500,7 @@ public class DownloadDO
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
             return "";
         }

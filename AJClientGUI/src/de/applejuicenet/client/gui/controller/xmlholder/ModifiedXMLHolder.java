@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.31 2004/03/03 17:27:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.32 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,6 +45,9 @@ import java.util.Set;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.32  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.31  2004/03/03 17:27:55  maj0r
  * PMD-Optimierung
  *
@@ -144,7 +147,7 @@ public class ModifiedXMLHolder
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)){
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -785,7 +788,7 @@ public class ModifiedXMLHolder
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)){
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -796,7 +799,7 @@ public class ModifiedXMLHolder
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
             return false;
         }

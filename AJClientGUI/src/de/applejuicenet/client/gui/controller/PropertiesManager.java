@@ -28,7 +28,7 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.37 2004/03/04 18:31:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.38 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +37,9 @@ import java.util.Set;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.38  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.37  2004/03/04 18:31:15  maj0r
  * Nicht vorhandene Unterverzeichnisse muessen nacheinander erzeugt werden.
  *
@@ -206,6 +209,9 @@ public class PropertiesManager
     extends XMLDecoder
     implements OptionsManager, PositionManager, ProxyManager {
     private static PropertiesManager instance = null;
+    private static final String PROPERTIES_ERROR = "Fehler beim Zugriff auf die properties.xml. " +
+                "Die Datei wird neu erstellt.";
+    private static final String PROPERTIES_ERROR_MESSAGE = "properties.xml neu erstellt";
     private Logger logger;
     private Set settingsListener = new HashSet();
     private Set connectionSettingsListener = new HashSet();
@@ -292,9 +298,7 @@ public class PropertiesManager
                     "xml-Serialisierung fehlgeschlagen. properties.xml neu erstellt",
                     e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
         }
     }
 
@@ -354,11 +358,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return null;
         }
     }
@@ -375,11 +377,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return "";
         }
     }
@@ -403,11 +403,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return "";
         }
     }
@@ -418,9 +416,7 @@ public class PropertiesManager
         String temp = getStandardBrowser();
         if (temp.compareTo(browser) != 0) {
             AppleJuiceDialog.rewriteProperties = true;
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
         }
     }
 
@@ -436,11 +432,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return false;
         }
     }
@@ -462,11 +456,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return false;
         }
     }
@@ -489,11 +481,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return false;
         }
     }
@@ -513,11 +503,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return 1;
         }
     }
@@ -542,11 +530,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return -1;
         }
     }
@@ -568,11 +554,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return false;
         }
     }
@@ -599,11 +583,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return false;
         }
     }
@@ -645,11 +627,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return null;
         }
     }
@@ -738,11 +718,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return null;
         }
     }
@@ -800,11 +778,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return null;
         }
     }
@@ -1042,11 +1018,9 @@ public class PropertiesManager
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("properties.xml neu erstellt", e);
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(
-                "Fehler beim Zugriff auf die properties.xml. " +
-                "Die Datei wird neu erstellt.", false);
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
         }
     }
 
@@ -1244,7 +1218,7 @@ public class PropertiesManager
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }

@@ -43,9 +43,10 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dnd.DndTargetAdapter;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.10 2004/02/25 13:57:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.11 2004/03/05 15:49:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -54,6 +55,9 @@ import de.applejuicenet.client.shared.dnd.DndTargetAdapter;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DateiListeDialog.java,v $
+ * Revision 1.11  2004/03/05 15:49:38  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.10  2004/02/25 13:57:53  maj0r
  * Bug #246 gefixt (Danke an mail_tom62)
  * Nun koennen auch bei "voller" Dateilistetabelle im Sharebereich neue Dateien hinein gezogen werden.
@@ -189,7 +193,7 @@ public class DateiListeDialog
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -275,7 +279,7 @@ public class DateiListeDialog
                 }
                 catch (Exception ex) {
                     if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error("Unbehandelte Exception", ex);
+                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
                     }
                 }
             }
@@ -347,7 +351,7 @@ public class DateiListeDialog
                 }
                 catch (Exception e) {
                     if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error("Unbehandelte Exception", e);
+                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                     }
                     event.getDropTargetContext().dropComplete(false);
                 }

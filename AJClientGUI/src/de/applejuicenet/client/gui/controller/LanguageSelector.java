@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.19 2004/03/04 19:18:41 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.20 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import java.util.Set;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.20  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.19  2004/03/04 19:18:41  maj0r
  * Ausgabe korrigiert.
  *
@@ -100,7 +103,7 @@ public class LanguageSelector
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -133,7 +136,7 @@ public class LanguageSelector
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
     }

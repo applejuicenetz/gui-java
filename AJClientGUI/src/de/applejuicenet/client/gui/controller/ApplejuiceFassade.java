@@ -3,7 +3,7 @@ package de.applejuicenet.client.gui.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +27,6 @@ import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Information;
-import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.shared.Version;
@@ -37,7 +36,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.126 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.127 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -51,14 +50,10 @@ public class ApplejuiceFassade {
     public static final String GUI_VERSION = "0.56.1";
     public static final String MIN_NEEDED_CORE_VERSION = "0.29.135.208";
 
-    private Set downloadListener;
-    private Set searchListener;
-    private Set shareListener;
-    private Set uploadListener;
-    private Set serverListener;
-    private Set networkInfoListener;
-    private Set speedListener;
-    private Set informationListener;
+    public static final String ERROR_MESSAGE = "Unbehandelte Exception";
+
+    private Map informer = new HashMap();
+
     public static String separator;
     private ModifiedXMLHolder modifiedXML = null;
     private InformationXMLHolder informationXML = null;
@@ -86,61 +81,80 @@ public class ApplejuiceFassade {
     private ApplejuiceFassade() {
         logger = Logger.getLogger(getClass());
         try {
-            downloadListener = new HashSet();
-            searchListener = new HashSet();
-            serverListener = new HashSet();
-            uploadListener = new HashSet();
-            shareListener = new HashSet();
-            networkInfoListener = new HashSet();
-            speedListener = new HashSet();
-            informationListener = new HashSet();
-
             //load XMLs
             modifiedXML = ModifiedXMLHolder.getInstance();
+
+            DataUpdateInformer downloadInformer = new DataUpdateInformer(DataUpdateListener.DOWNLOAD_CHANGED){
+                protected Object getContentObject() {
+                    return modifiedXML.getDownloads();
+                }
+            };
+            informer.put(Integer.toString(downloadInformer.getDataUpdateListenerType()), downloadInformer);
+            DataUpdateInformer searchInformer = new DataUpdateInformer(DataUpdateListener.SEARCH_CHANGED){
+                protected Object getContentObject() {
+                    return modifiedXML.getSearchs();
+                }
+            };
+            informer.put(Integer.toString(searchInformer.getDataUpdateListenerType()), searchInformer);
+            DataUpdateInformer serverInformer = new DataUpdateInformer(DataUpdateListener.SERVER_CHANGED){
+                protected Object getContentObject() {
+                    return modifiedXML.getServer();
+                }
+            };
+            informer.put(Integer.toString(serverInformer.getDataUpdateListenerType()), serverInformer);
+            DataUpdateInformer uploadInformer = new DataUpdateInformer(DataUpdateListener.UPLOAD_CHANGED){
+                protected Object getContentObject() {
+                    return modifiedXML.getUploads();
+                }
+            };
+            informer.put(Integer.toString(uploadInformer.getDataUpdateListenerType()), uploadInformer);
+            DataUpdateInformer shareInformer = new DataUpdateInformer(DataUpdateListener.SHARE_CHANGED){
+                protected Object getContentObject() {
+                    return shareXML.getShare();
+                }
+            };
+            informer.put(Integer.toString(shareInformer.getDataUpdateListenerType()), shareInformer);
+            DataUpdateInformer networkInformer = new DataUpdateInformer(DataUpdateListener.NETINFO_CHANGED){
+                protected Object getContentObject() {
+                    return modifiedXML.getNetworkInfo();
+                }
+            };
+            informer.put(Integer.toString(networkInformer.getDataUpdateListenerType()), networkInformer);
+            DataUpdateInformer speedInformer = new DataUpdateInformer(DataUpdateListener.SPEED_CHANGED){
+                protected Object getContentObject() {
+                    return modifiedXML.getSpeeds();
+                }
+            };
+            informer.put(Integer.toString(speedInformer.getDataUpdateListenerType()), speedInformer);
+            DataUpdateInformer informationInformer = new DataUpdateInformer(DataUpdateListener.INFORMATION_CHANGED){
+                protected Object getContentObject() {
+                    return modifiedXML.getInformation();
+                }
+            };
+            informer.put(Integer.toString(informationInformer.getDataUpdateListenerType()), informationInformer);
+
             informationXML = InformationXMLHolder.getInstance();
             directoryXML = new DirectoryXMLHolder();
             shareXML = new ShareXMLHolder();
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
 
     public void addDataUpdateListener(DataUpdateListener listener, int type) {
         try {
-            if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
-                downloadListener.add(listener);
-            }
-            else if (type == DataUpdateListener.NETINFO_CHANGED) {
-                networkInfoListener.add(listener);
-            }
-            else if (type == DataUpdateListener.SERVER_CHANGED) {
-                serverListener.add(listener);
-            }
-            else if (type == DataUpdateListener.SHARE_CHANGED) {
-                shareListener.add(listener);
-            }
-            else if (type == DataUpdateListener.UPLOAD_CHANGED) {
-                uploadListener.add(listener);
-            }
-            else if (type == DataUpdateListener.SPEED_CHANGED) {
-                speedListener.add(listener);
-            }
-            else if (type == DataUpdateListener.SEARCH_CHANGED) {
-                searchListener.add(listener);
-            }
-            else if (type == DataUpdateListener.INFORMATION_CHANGED) {
-                informationListener.add(listener);
-            }
-            else {
-                return;
+            String key = Integer.toString(type);
+            if (informer.containsKey(key)){
+                DataUpdateInformer anInformer = (DataUpdateInformer)informer.get(key);
+                anInformer.addDataUpdateListener(listener);
             }
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -185,6 +199,24 @@ public class ApplejuiceFassade {
         }
     }
 
+    private int tryUpdate(int versuch){
+        int anzahl = versuch;
+        if (updateModifiedXML()) {
+            anzahl = 0;
+        }
+        else {
+            anzahl++;
+            if (anzahl == 3) {
+                if (logger.isEnabledFor(Level.INFO)) {
+                    logger.info("Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.");
+                }
+                AppleJuiceDialog.closeWithErrormessage(
+                    "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
+            }
+        }
+        return anzahl;
+    }
+
     public void startXMLCheck() {
         workerThread = new Thread() {
             public void run() {
@@ -198,20 +230,8 @@ public class ApplejuiceFassade {
                         checkForValidCore();
                     }
                     while (!isInterrupted()) {
-                        if (updateModifiedXML()) {
-                            versuch = 0;
-                        }
-                        else {
-                            versuch++;
-                            if (versuch == 3) {
-                                if (logger.isEnabledFor(Level.INFO)) {
-                                    logger.info("Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.");
-                                }
-                                AppleJuiceDialog.closeWithErrormessage(
-                                    "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
-                            }
-                        }
                         try {
+                            versuch = tryUpdate(versuch);
                             sleep(2000);
                         }
                         catch (InterruptedException e) {
@@ -221,7 +241,7 @@ public class ApplejuiceFassade {
                 }
                 catch (Exception e) {
                     if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error("Unbehandelte Exception", e);
+                        logger.error(ERROR_MESSAGE, e);
                     }
                 }
                 if (logger.isEnabledFor(Level.DEBUG)) {
@@ -240,7 +260,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -299,7 +319,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
         return settingsXML.getAJSettings();
@@ -316,7 +336,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
             return null;
         }
@@ -340,7 +360,7 @@ public class ApplejuiceFassade {
                 }
                 catch (Exception e) {
                     if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error("Unbehandelte Exception", e);
+                        logger.error(ERROR_MESSAGE, e);
                     }
                 }
             }
@@ -382,7 +402,7 @@ public class ApplejuiceFassade {
             }
             catch (UnsupportedEncodingException ex1) {
                 if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error("Unbehandelte Exception", ex1);
+                    logger.error(ERROR_MESSAGE, ex1);
                 }
             }
             String password = PropertiesManager.getOptionsManager().
@@ -393,7 +413,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -433,7 +453,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
             return false;
         }
@@ -455,7 +475,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -470,7 +490,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -509,7 +529,7 @@ public class ApplejuiceFassade {
                             }
                             catch (Exception e) {
                                 if (logger.isEnabledFor(Level.ERROR)) {
-                                    logger.error("Unbehandelte Exception", e);
+                                    logger.error(ERROR_MESSAGE, e);
                                 }
                             }
 
@@ -553,7 +573,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -569,7 +589,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -584,7 +604,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -619,7 +639,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -635,7 +655,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -656,7 +676,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -671,7 +691,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -691,7 +711,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -711,7 +731,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -747,7 +767,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -774,7 +794,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -815,91 +835,15 @@ public class ApplejuiceFassade {
 
     public void informDataUpdateListener(int type) {
         try {
-            switch (type) {
-                case DataUpdateListener.DOWNLOAD_CHANGED: {
-                    Map content = modifiedXML.getDownloads();
-                    Iterator it = downloadListener.iterator();
-                    while (it.hasNext()) {
-                        ( (DataUpdateListener) it.next()).fireContentChanged(
-                            DataUpdateListener.
-                            DOWNLOAD_CHANGED, content);
-                    }
-                    break;
-                }
-                case DataUpdateListener.UPLOAD_CHANGED: {
-                    Map content = modifiedXML.getUploads();
-                    Iterator it = uploadListener.iterator();
-                    while (it.hasNext()) {
-                        ( (DataUpdateListener) it.next()).fireContentChanged(
-                            DataUpdateListener.
-                            UPLOAD_CHANGED, content);
-                    }
-                    break;
-                }
-                case DataUpdateListener.SERVER_CHANGED: {
-                    Map content = modifiedXML.getServer();
-                    Iterator it = serverListener.iterator();
-                    while (it.hasNext()) {
-                        ( (DataUpdateListener) it.next()).fireContentChanged(
-                            DataUpdateListener.
-                            SERVER_CHANGED, content);
-                    }
-                    break;
-                }
-                case DataUpdateListener.SHARE_CHANGED: {
-                    Map content = shareXML.getShare();
-                    Iterator it = shareListener.iterator();
-                    while (it.hasNext()) {
-                        ( (DataUpdateListener) it.next()).fireContentChanged(
-                            DataUpdateListener.
-                            SHARE_CHANGED, content);
-                    }
-                    break;
-                }
-                case DataUpdateListener.NETINFO_CHANGED: {
-                    NetworkInfo content = modifiedXML.getNetworkInfo();
-                    Iterator it = networkInfoListener.iterator();
-                    while (it.hasNext()) {
-                        ( (DataUpdateListener) it.next()).fireContentChanged(
-                            DataUpdateListener.
-                            NETINFO_CHANGED, content);
-                    }
-                    break;
-                }
-                case DataUpdateListener.SPEED_CHANGED: {
-                    Map content = modifiedXML.getSpeeds();
-                    Iterator it = speedListener.iterator();
-                    while (it.hasNext()) {
-                        ( (DataUpdateListener) it.next()).fireContentChanged(
-                            DataUpdateListener.SPEED_CHANGED, content);
-                    }
-                    break;
-                }
-                case DataUpdateListener.SEARCH_CHANGED: {
-                    Map content = modifiedXML.getSearchs();
-                    Iterator it = searchListener.iterator();
-                    while (it.hasNext()) {
-                        ( (DataUpdateListener) it.next()).fireContentChanged(
-                            DataUpdateListener.SEARCH_CHANGED, content);
-                    }
-                    break;
-                }
-                case DataUpdateListener.INFORMATION_CHANGED: {
-                    Information content = modifiedXML.getInformation();
-                    Iterator it = informationListener.iterator();
-                    while (it.hasNext()) {
-                        ( (DataUpdateListener) it.next()).fireContentChanged(
-                            DataUpdateListener.INFORMATION_CHANGED, content);
-                    }
-                    break;
-                }
-                default:
-                    break;
+            String key = Integer.toString(type);
+            if (informer.containsKey(key)){
+                DataUpdateInformer anInformer = (DataUpdateInformer)informer.get(key);
+                anInformer.informDataUpdateListener();
             }
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -912,7 +856,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
         return share;
@@ -935,7 +879,7 @@ public class ApplejuiceFassade {
                         URLEncoder.encode(shareEntry.getDir(), "UTF-8");
                 }
                 catch (UnsupportedEncodingException e) {
-                    logger.error("Unbehandelte Exception", e);
+                    logger.error(ERROR_MESSAGE, e);
                 }
                 parameters += "&sharesub" + i + "=" +
                     (shareEntry.getShareMode() == ShareEntry.SUBDIRECTORY ?
@@ -950,7 +894,7 @@ public class ApplejuiceFassade {
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }

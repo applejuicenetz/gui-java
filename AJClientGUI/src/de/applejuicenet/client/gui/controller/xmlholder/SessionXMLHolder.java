@@ -14,9 +14,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SessionXMLHolder.java,v 1.4 2004/02/24 14:12:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SessionXMLHolder.java,v 1.5 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +26,9 @@ import de.applejuicenet.client.shared.HtmlLoader;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SessionXMLHolder.java,v $
+ * Revision 1.5  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.4  2004/02/24 14:12:53  maj0r
  * DOM->SAX-Umstellung
  *
@@ -82,7 +86,7 @@ public class SessionXMLHolder
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -130,7 +134,7 @@ public class SessionXMLHolder
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
             return "";
         }

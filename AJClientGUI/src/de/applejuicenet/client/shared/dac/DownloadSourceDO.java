@@ -11,9 +11,10 @@ import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Version;
 import javax.swing.JTable;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.23 2004/02/25 16:20:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.24 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +23,9 @@ import javax.swing.JTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.24  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.23  2004/02/25 16:20:01  maj0r
  * ProgressBar auf opaque=false gesetzt.
  * VersionLabel und ProgressBar wird nur bei tatsaechlicher Wertaenderung aktualisiert.
@@ -219,7 +223,7 @@ public class DownloadSourceDO
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
             return "";
         }
@@ -263,7 +267,7 @@ public class DownloadSourceDO
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
             return "";
         }

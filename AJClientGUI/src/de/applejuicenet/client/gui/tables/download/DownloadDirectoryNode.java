@@ -15,7 +15,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.12 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.13 2004/03/05 15:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDirectoryNode.java,v $
+ * Revision 1.13  2004/03/05 15:49:39  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.12  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -108,6 +111,27 @@ public class DownloadDirectoryNode
         }
     }
 
+    private boolean shouldSort(DownloadDO downloadDO, List oldNodes){
+        if (downloadDO.getTargetDirectory().compareToIgnoreCase(
+            verzeichnis) == 0) {
+            boolean found = false;
+            for (int i = 0; i < children.size(); i++) {
+                if ( ( (DownloadMainNode) children.get(i)).
+                    getDownloadDO().getId()
+                    == downloadDO.getId()) {
+                    oldNodes.remove(children.get(i));
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                children.add(new DownloadMainNode(downloadDO));
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Object[] getChildren() {
         if (downloads == null) {
             return null;
@@ -122,22 +146,8 @@ public class DownloadDirectoryNode
             }
             while (it.hasNext()) {
                 downloadDO = (DownloadDO) it.next();
-                if (downloadDO.getTargetDirectory().compareToIgnoreCase(
-                    verzeichnis) == 0) {
-                    boolean found = false;
-                    for (int i = 0; i < children.size(); i++) {
-                        if ( ( (DownloadMainNode) children.get(i)).
-                            getDownloadDO().getId()
-                            == downloadDO.getId()) {
-                            oldNodes.remove(children.get(i));
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        children.add(new DownloadMainNode(downloadDO));
-                        newSort = true;
-                    }
+                if (shouldSort(downloadDO, oldNodes)) {
+                    newSort = true;
                 }
             }
             for (int i = 0; i < oldNodes.size(); i++) {
@@ -227,27 +237,27 @@ public class DownloadDirectoryNode
             return childNodes;
         }
         else {
-            int n = childNodes.length;
+            sortedChildNodes = childNodes;
+            int n = sortedChildNodes.length;
             Object tmp;
             for (int i = 0; i < n - 1; i++) {
                 int k = i;
                 for (int j = i + 1; j < n; j++) {
                     if (isAscent) {
-                        if (compare(childNodes, j, k) < 0) {
+                        if (compare(sortedChildNodes, j, k) < 0) {
                             k = j;
                         }
                     }
                     else {
-                        if (compare(childNodes, j, k) > 0) {
+                        if (compare(sortedChildNodes, j, k) > 0) {
                             k = j;
                         }
                     }
                 }
-                tmp = childNodes[i];
-                childNodes[i] = childNodes[k];
-                childNodes[k] = tmp;
+                tmp = sortedChildNodes[i];
+                sortedChildNodes[i] = sortedChildNodes[k];
+                sortedChildNodes[k] = tmp;
             }
-            sortedChildNodes = childNodes;
             return sortedChildNodes;
         }
     }
