@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/Attic/StandardAutomaticPwdlPolicy.java,v 1.3 2003/11/19 17:05:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/Attic/StandardAutomaticPwdlPolicy.java,v 1.4 2003/11/19 19:27:41 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StandardAutomaticPwdlPolicy.java,v $
+ * Revision 1.4  2003/11/19 19:27:41  maj0r
+ * Handhabung korrigiert.
+ *
  * Revision 1.3  2003/11/19 17:05:20  maj0r
  * Autom. Pwdl ueberarbeitet.
  *
@@ -99,32 +102,19 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
                 while (it.hasNext())
                 {
                     tmpDownloadDO = (DownloadDO) it.next();
-                    if ((tmpDownloadDO.getProzentGeladen() > maxProzent[0] ||
-                        tmpDownloadDO.getProzentGeladen() > maxProzent[1] )
+                    if (tmpDownloadDO.getProzentGeladen() > maxProzent[1]
                             && (tmpDownloadDO.getStatus() == DownloadDO.PAUSIERT
                             || tmpDownloadDO.getStatus() == DownloadDO.SUCHEN_LADEN))
                     {
-                        if (maxProzent[0]==-1){
-                            zuordnen(0, tmpDownloadDO);
-                        }
-                        else if (maxProzent[1]==-1){
-                            zuordnen(1, tmpDownloadDO);
-                        }
-                        else if (maxProzent[0]>maxProzent[1]){
-                            if (tmpDownloadDO.getProzentGeladen() > maxProzent[1]){
-                                zuordnen(1, tmpDownloadDO);
-                            }
-                            else{
-                                zuordnen(0, tmpDownloadDO);
-                            }
+                        if (tmpDownloadDO.getProzentGeladen() > maxProzent[0]){
+                            maxProzent[1] = maxProzent[0];
+                            maxProzentId[1] = maxProzentId[0];
+                            maxProzent[0] = tmpDownloadDO.getProzentGeladen();
+                            maxProzentId[0] = tmpDownloadDO.getId();
                         }
                         else{
-                            if (tmpDownloadDO.getProzentGeladen() > maxProzent[0]){
-                                zuordnen(0, tmpDownloadDO);
-                            }
-                            else{
-                                zuordnen(1, tmpDownloadDO);
-                            }
+                            maxProzent[1] = tmpDownloadDO.getProzentGeladen();
+                            maxProzentId[1] = tmpDownloadDO.getId();
                         }
                     }
                     ids[temp] = tmpDownloadDO.getId();
@@ -144,14 +134,11 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         sleep(30000);
     }
 
-    private void zuordnen(int id, DownloadDO downloadDO){
-        maxProzent[id] = downloadDO.getProzentGeladen();
-        maxProzentId[id] = downloadDO.getId();
-    }
-
     public void informPaused() {
         maxProzentId[0] = -1;
         maxProzentId[1] = -1;
+        maxProzent[0] = -1;
+        maxProzent[1] = -1;
     }
 
     public String getVersion() {
