@@ -16,6 +16,8 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
@@ -43,7 +45,7 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dnd.DndTargetAdapter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.9 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.10 2004/02/25 13:57:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -52,6 +54,10 @@ import de.applejuicenet.client.shared.dnd.DndTargetAdapter;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DateiListeDialog.java,v $
+ * Revision 1.10  2004/02/25 13:57:53  maj0r
+ * Bug #246 gefixt (Danke an mail_tom62)
+ * Nun koennen auch bei "voller" Dateilistetabelle im Sharebereich neue Dateien hinein gezogen werden.
+ *
  * Revision 1.9  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -97,24 +103,28 @@ public class DateiListeDialog
         init();
     }
 
+    private void removeSelectedColumn(){
+        int[] selected = table.getSelectedRows();
+        if (selected.length > 0) {
+            DateiListeTableModel model = (DateiListeTableModel)
+                table.getModel();
+            for (int i = selected.length-1; i >=0; i--) {
+                model.removeRow(selected[i]);
+            }
+        }
+    }
+
     private void init() {
         try {
             JMenuItem item1 = new JMenuItem("Entfernen");
             item1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
-                    int[] selected = table.getSelectedRows();
-                    if (selected.length > 0) {
-                        DateiListeTableModel model = (DateiListeTableModel)
-                            table.getModel();
-                        for (int i = 0; i < selected.length; i++) {
-                            model.removeRow(selected[i]);
-                        }
-                    }
+                    removeSelectedColumn();
                 }
             });
             popup.add(item1);
             table.setModel(new DateiListeTableModel());
-            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             getContentPane().setLayout(new GridBagLayout());
             JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
             IconManager im = IconManager.getInstance();
@@ -137,39 +147,18 @@ public class DateiListeDialog
             constraints.gridy = 2;
             constraints.weighty = 1;
             JScrollPane scroll = new JScrollPane(table);
-            scroll.setDropTarget(new DropTarget(scroll, new DndTargetAdapter() {
-                protected Object getTarget(Point point) {
-                    return this;
-                }
-
-                public void drop(DropTargetDropEvent event) {
-                    Transferable tr = event.getTransferable();
-                    if (tr.isDataFlavorSupported(new DataFlavor(DataFlavor.
-                        javaJVMLocalObjectMimeType, "ShareNodesTransferer"))) {
-                        try {
-                            event.acceptDrop(DnDConstants.ACTION_COPY);
-                            Object[] transfer = (Object[]) tr.getTransferData(
-                                new DataFlavor(DataFlavor.
-                                               javaJVMLocalObjectMimeType,
-                                               "ShareNodesTransferer"));
-                            if (transfer != null && transfer.length != 0) {
-                                DateiListeTableModel model = (
-                                    DateiListeTableModel) table.getModel();
-                                for (int i = 0; i < transfer.length; i++) {
-                                    model.addNodes( (ShareNode) transfer[i]);
-                                }
-                            }
-                        }
-                        catch (Exception e) {
-                            if (logger.isEnabledFor(Level.ERROR)) {
-                                logger.error("Unbehandelte Exception", e);
-                            }
-                            event.getDropTargetContext().dropComplete(false);
-                        }
+            scroll.setDropTarget(new DropTarget(scroll, new ListeDndTargetAdapter()));
+            table.setDropTarget(new DropTarget(table, new ListeDndTargetAdapter()));
+            table.addKeyListener(new KeyAdapter() {
+                public void keyPressed(KeyEvent ke) {
+                    if (ke.getKeyCode() == KeyEvent.VK_DELETE) {
+                        removeSelectedColumn();
                     }
-                    event.getDropTargetContext().dropComplete(true);
+                    else {
+                        super.keyPressed(ke);
+                    }
                 }
-            }));
+            });
             table.addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent me) {
                     if (SwingUtilities.isRightMouseButton(me)) {
@@ -330,6 +319,40 @@ public class DateiListeDialog
 
         public String getDescription() {
             return "HTML-Dateien";
+        }
+    }
+
+    private class ListeDndTargetAdapter extends DndTargetAdapter{
+        protected Object getTarget(Point point) {
+            return this;
+        }
+
+        public void drop(DropTargetDropEvent event) {
+            Transferable tr = event.getTransferable();
+            if (tr.isDataFlavorSupported(new DataFlavor(DataFlavor.
+                javaJVMLocalObjectMimeType, "ShareNodesTransferer"))) {
+                try {
+                    event.acceptDrop(DnDConstants.ACTION_COPY);
+                    Object[] transfer = (Object[]) tr.getTransferData(
+                        new DataFlavor(DataFlavor.
+                                       javaJVMLocalObjectMimeType,
+                                       "ShareNodesTransferer"));
+                    if (transfer != null && transfer.length != 0) {
+                        DateiListeTableModel model = (
+                            DateiListeTableModel) table.getModel();
+                        for (int i = 0; i < transfer.length; i++) {
+                            model.addNodes( (ShareNode) transfer[i]);
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    if (logger.isEnabledFor(Level.ERROR)) {
+                        logger.error("Unbehandelte Exception", e);
+                    }
+                    event.getDropTargetContext().dropComplete(false);
+                }
+            }
+            event.getDropTargetContext().dropComplete(true);
         }
     }
 }
