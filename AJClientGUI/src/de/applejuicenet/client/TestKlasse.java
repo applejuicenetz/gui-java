@@ -8,4 +8,5 @@ public class TestKlasse {
     int x=3;
     int h=2;
     String test = "test";
+    boolean wahr = true;
 }
