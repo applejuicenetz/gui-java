@@ -7,8 +7,8 @@ import java.awt.Window;
 public class TrayDummyComponent
     extends Window {
 
-    public TrayDummyComponent() {
-        super(new Frame("TrayDummy"));
+    public TrayDummyComponent(Frame parentFrame) {
+        super(parentFrame);
     }
 
     public Point getLocationOnScreen() {

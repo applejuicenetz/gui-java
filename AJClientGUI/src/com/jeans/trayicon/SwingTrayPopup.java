@@ -8,13 +8,14 @@ import java.awt.event.MouseListener;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
+import java.awt.Frame;
 
 public class SwingTrayPopup
     extends JPopupMenu {
 
     // Swing popup menu for a TrayIcon
-    WindowsTrayIcon m_Icon;
-    MouseListener m_Listener;
+    private WindowsTrayIcon m_Icon;
+    private MouseListener m_Listener;
 
     public SwingTrayPopup() {
     }

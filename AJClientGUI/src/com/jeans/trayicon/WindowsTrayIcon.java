@@ -52,6 +52,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
+import java.awt.Frame;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
  * WindowsTrayIcon
@@ -424,7 +426,7 @@ public class WindowsTrayIcon {
 
     public static TrayDummyComponent getDummyComponent() {
         if (m_Dummy == null) {
-            m_Dummy = new TrayDummyComponent();
+            m_Dummy = new TrayDummyComponent(AppleJuiceDialog.getApp());
         }
         return m_Dummy;
     }

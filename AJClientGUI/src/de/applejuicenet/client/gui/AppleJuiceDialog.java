@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.87 2004/01/26 16:48:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.88 2004/01/26 19:26:41 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.88  2004/01/26 19:26:41  maj0r
+ * TrayIcon hat nun einen richtigen Parent erhalten.
+ *
  * Revision 1.87  2004/01/26 16:48:07  maj0r
  * Fehler beim TrayIcon-Menue behoben.
  *
@@ -403,10 +406,9 @@ public class AppleJuiceDialog
         super();
         logger = Logger.getLogger(getClass());
         try {
+            theApp = this;
             init();
             pack();
-            _this = this;
-            theApp = this;
             LanguageSelector.getInstance().addLanguageListener(this);
         }
         catch (Exception e) {
