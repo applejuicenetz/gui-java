@@ -16,50 +16,22 @@ import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ProxySettings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.11 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.12 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ODProxyPanel.java,v $
- * Revision 1.11  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.10  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.9  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.8  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.7  2004/01/25 10:16:42  maj0r
- * Optionenmenue ueberarbeitet.
- *
- * Revision 1.6  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.5  2003/09/12 13:31:55  maj0r
- * Bugs behoben.
- *
- * Revision 1.4  2003/09/12 13:19:26  maj0r
- * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
- * Version 0.30
- *
  *
  */
 

@@ -31,200 +31,22 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.LinkListener;
 import de.applejuicenet.client.gui.controller.PositionManager;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.66 2004/03/09 16:25:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.67 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: AppleJuiceClient.java,v $
- * Revision 1.66  2004/03/09 16:25:16  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.65  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.64  2004/03/03 12:36:07  maj0r
- * Modifizierbare und potenziell modifizierbare Dateien bei Nicht-Windows-System verschoben.
- *
- * Revision 1.63  2004/02/26 11:50:31  maj0r
- * Soundausgabe bei korrektem Login korrigiert.
- *
- * Revision 1.62  2004/02/20 16:13:33  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.61  2004/02/06 10:49:03  maj0r
- * Loggen der verwendeten Java-Version.
- *
- * Revision 1.60  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.59  2004/01/30 16:32:47  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.58  2004/01/29 15:52:33  maj0r
- * Bug #153 umgesetzt (Danke an jr17)
- * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
- *
- * Revision 1.57  2004/01/25 10:18:55  maj0r
- * Nervenden Dialog ausgeblendet.
- *
- * Revision 1.56  2004/01/12 09:36:09  maj0r
- * Positionierung korrigiert.
- *
- * Revision 1.55  2004/01/09 11:40:03  maj0r
- * Bei Vollbild werden nun fixe Leisten wie eine Taskleiste beachtet.
- *
- * Revision 1.54  2004/01/09 11:38:53  maj0r
- * Bei Vollbild werden nun fixe Leisten wie eine Taskleiste beachtet.
- *
- * Revision 1.53  2004/01/05 13:22:43  maj0r
- * Wenn eine neue Version gefunden wird, kann diese nun direkt mit dem Standardbrowser herunter geladen werden.
- *
- * Revision 1.52  2003/12/30 21:09:54  maj0r
- * Versionskontrolle geaendert.
- *
- * Revision 1.51  2003/12/30 15:31:18  maj0r
- * Das GUI wird jetzt beim Start beendet, wenn bereits eine Instanz vorhanden ist.
- *
- * Revision 1.50  2003/12/30 13:42:24  maj0r
- * Tippfehler berichtigt.
- *
- * Revision 1.49  2003/12/30 13:40:06  maj0r
- * Ueberpruefung auf gueltige Javaversion eingebaut.
- *
- * Revision 1.48  2003/12/29 16:35:28  maj0r
- * Taskbareinbau verbessert.
- *
- * Revision 1.47  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.46  2003/12/29 15:20:05  maj0r
- * Neue Versionupdatebenachrichtigung fertiggestellt.
- *
- * Revision 1.45  2003/12/29 11:00:58  maj0r
- * Taskbareintrag auch fuer den Splashscreen eingebaut.
- *
- * Revision 1.44  2003/12/29 10:31:58  maj0r
- * Bug #2 gefixt (Danke an muhviestarr).
- * Wenn das Gui nicht zur Core verbinden kann, hat das GUI nun einen Taskbareintrag.
- *
- * Revision 1.43  2003/12/29 09:49:35  maj0r
- * Bug #1 gefixt (Danke an muhviestarr).
- * Look and Feel beim Verbindungsdialog korrigiert.
- *
- * Revision 1.42  2003/12/29 07:23:18  maj0r
- * Begonnen, auf neues Versionupdateinformationssystem umzubauen.
- *
- * Revision 1.41  2003/12/27 21:14:24  maj0r
- * Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
- *
- * Revision 1.40  2003/12/27 09:54:28  maj0r
- * Splashscreen wird nun frueher angezeigt (Danke an muhviestarr).
- *
- * Revision 1.39  2003/11/25 14:32:46  maj0r
- * -help Parameter eingebaut.
- *
- * Revision 1.38  2003/11/25 14:22:37  maj0r
- * Parameteruebergabe an das GUI geaendert.
- *
- * Revision 1.37  2003/11/19 11:54:07  maj0r
- * LinkListener fertiggestellt.
- *
- * Revision 1.36  2003/11/18 17:01:12  maj0r
- * Erste Version des LinkListener eingebaut.
- *
- * Revision 1.35  2003/11/18 16:41:50  maj0r
- * Erste Version des LinkListener eingebaut.
- * Themes koennen nun ueber die properties.xml komplett deaktiviert werden.
- *
- * Revision 1.34  2003/11/16 12:34:23  maj0r
- * Themes einngebaut (Danke an LinuxDoc)
- *
- * Revision 1.33  2003/10/31 19:04:58  maj0r
- * Sounds eingebaut.
- *
- * Revision 1.32  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.31  2003/10/02 13:42:17  maj0r
- * Fensterpositionierung fuer ersten Start korrigiert.
- *
- * Revision 1.30  2003/10/01 20:10:44  maj0r
- * Bischen Logging hinzu gefuegt.
- *
- * Revision 1.29  2003/09/12 13:19:26  maj0r
- * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
- * Version 0.30
- *
- * Revision 1.28  2003/09/11 08:39:29  maj0r
- * Start durch Einbau von Threads beschleunigt.
- *
- * Revision 1.27  2003/09/09 12:28:14  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.26  2003/09/09 06:37:36  maj0r
- * Wizard erweitert, aber noch nicht fertiggestellt.
- *
- * Revision 1.25  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
- *
- * Revision 1.24  2003/09/06 14:57:55  maj0r
- * Splashscreenausblendung verlagert.
- *
- * Revision 1.23  2003/09/05 12:07:28  maj0r
- * Logdateinamen auf 24 Stunden korrigiert.
- *
- * Revision 1.22  2003/08/29 19:34:03  maj0r
- * Einige Aenderungen.
- * Version 0.17 Beta
- *
- * Revision 1.21  2003/08/25 08:01:21  maj0r
- * SplashScreen-Bild geaendert.
- *
- * Revision 1.20  2003/08/24 19:43:23  maj0r
- * Splashscreen eingefuegt.
- *
- * Revision 1.19  2003/08/22 10:54:25  maj0r
- * Klassen umbenannt.
- * ConnectionSettings ueberarbeitet.
- *
- * Revision 1.18  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.17  2003/07/01 14:52:45  maj0r
- * Wenn kein Core gefunden wird, können nun die entsprechenden Einstellungen beim Start der GUI angepasst werden.
- *
- * Revision 1.16  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingefügt.
- * Servertabelle kann nun spaltenweise sortiert werden.
- *
- * Revision 1.15  2003/06/24 12:06:49  maj0r
- * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
- *
- * Revision 1.14  2003/06/22 20:03:54  maj0r
- * Konsolenausgaben hinzugefuegt.
- *
- * Revision 1.13  2003/06/22 19:54:45  maj0r
- * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefuegt.
- *
- * Revision 1.12  2003/06/22 19:02:58  maj0r
- * Fehlernachricht bei nicht erreichbarem Core geaendert.
- *
- * Revision 1.11  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
  *
  */
 
@@ -468,7 +290,7 @@ public class AppleJuiceClient {
                 splash.setVisible(true);
             }
             SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
-            PositionManager lm = PropertiesManager.getPositionManager();
+            PositionManager lm = PositionManagerImpl.getInstance();
             final AppleJuiceDialog theApp = new AppleJuiceDialog();
             if (lm.isLegal()) {
                 theApp.setLocation(lm.getMainXY());

@@ -6,7 +6,6 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.Settings;
@@ -15,76 +14,13 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.19 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.20 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: DownloadTableCellRenderer.java,v $
- * Revision 1.19  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.18  2004/01/09 15:33:35  maj0r
- * Spalten der Downloadtabelle koennen nun ordentlich verschoben werden.
- *
- * Revision 1.17  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.16  2003/10/16 12:06:51  maj0r
- * Diverse Schoenheitskorrekturen.
- *
- * Revision 1.15  2003/10/15 09:06:10  maj0r
- * Prozentanzeige nur bei aktiven Uebertragungen anzeigen.
- *
- * Revision 1.14  2003/10/02 11:15:13  maj0r
- * Kleinen Anzeigefehler korrigiert.
- *
- * Revision 1.13  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.12  2003/09/02 16:06:26  maj0r
- * Downloadbaum komplett umgebaut.
- *
- * Revision 1.11  2003/08/16 17:50:42  maj0r
- * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
- * DownloaduebersichtTabelle kann deaktiviert werden.
- *
- * Revision 1.10  2003/08/11 19:42:51  maj0r
- * Fertig-Status-Farbe korrigiert.
- *
- * Revision 1.9  2003/08/11 14:42:13  maj0r
- * Versions-Icon-Beschaffung in die Klasse Version verschoben.
- *
- * Revision 1.8  2003/08/10 21:08:18  maj0r
- * Diverse Änderungen.
- *
- * Revision 1.7  2003/08/09 10:56:38  maj0r
- * DownloadTabelle weitergeführt.
- *
- * Revision 1.6  2003/07/06 20:00:19  maj0r
- * DownloadTable bearbeitet.
- *
- * Revision 1.5  2003/07/04 06:43:51  maj0r
- * Diverse Änderungen am DownloadTableModel.
- *
- * Revision 1.4  2003/07/03 19:11:16  maj0r
- * DownloadTable überarbeitet.
- *
- * Revision 1.3  2003/07/02 13:54:34  maj0r
- * JTreeTable komplett überarbeitet.
- *
- * Revision 1.2  2003/07/01 18:41:39  maj0r
- * Struktur verändert.
- *
- * Revision 1.1  2003/07/01 18:34:28  maj0r
- * Struktur verändert.
- *
- * Revision 1.4  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
  *
  */
 

@@ -18,7 +18,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
@@ -26,157 +26,15 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.48 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.49 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: StartPanel.java,v $
- * Revision 1.48  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.47  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.46  2004/02/27 13:19:38  maj0r
- * Pruefung auf gueltigen Core eingebaut.
- * Um das zu pruefen, duerfen die Nachrichten im Startbereich erst spaeter geladen werden.
- *
- * Revision 1.45  2004/02/24 15:55:08  maj0r
- * Link zur FAQ im Startbereich hinzugefuegt.
- *
- * Revision 1.44  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.43  2004/02/09 14:49:44  maj0r
- * Startbereich scrollbar gemacht, wenn die Darstellung zu klein ist.
- *
- * Revision 1.42  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.41  2004/02/04 14:26:05  maj0r
- * Bug #185 gefixt (Danke an muhviestarr)
- * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
- *
- * Revision 1.40  2004/01/05 17:08:05  maj0r
- * Ungueltige URLs abfangen.
- *
- * Revision 1.39  2004/01/05 14:13:13  maj0r
- * Links im Startbereich sind jetzt anklickbar, sofern ein Standardbrowser ausgewaehlt ist.
- *
- * Revision 1.38  2003/12/31 15:46:48  maj0r
- * Bug #19 gefixt (Danke an dsp2004)
- * Stringverwendung in StringBuffer umgebaut.
- *
- * Revision 1.37  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.36  2003/12/29 09:39:21  maj0r
- * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
- *
- * Revision 1.35  2003/12/28 10:31:31  maj0r
- * Nullpointer behoben der auftrat, wenn der verbundene Server keinen Namen hat (Danke an paderborner).
- *
- * Revision 1.34  2003/12/27 13:33:18  maj0r
- * Text von Netzwerk, Neuigkeiten und Nachrichten ist nun auch schwarz (Danke an muhviestarr).
- * Die Ueberschrift "Warnungen" auf der Startseite wird nun ausgeblendet, wenn es keine Warnungen gibt (Danke an muhviestarr).
- *
- * Revision 1.33  2003/12/17 11:06:30  maj0r
- * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
- *
- * Revision 1.32  2003/10/21 11:36:32  maj0r
- * Infos werden nun ueber einen Listener geholt.
- *
- * Revision 1.31  2003/10/09 15:42:52  maj0r
- * Bug behoben, dass nicht immer der aktuell verbundene Server angezeigt wurde.
- *
- * Revision 1.30  2003/10/05 11:54:48  maj0r
- * Kleinen Fehler behoben.
- *
- * Revision 1.29  2003/10/05 11:48:36  maj0r
- * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
- * Userpartlisten werden angezeigt.
- * Downloadpartlisten werden alle 15 Sek. aktualisiert.
- *
- * Revision 1.28  2003/10/04 15:48:04  maj0r
- * Unnoetige Imports entfernt.
- *
- * Revision 1.27  2003/10/04 15:47:13  maj0r
- * Schoenheitskorrektur
- *
- * Revision 1.26  2003/10/01 20:10:44  maj0r
- * Bischen Logging hinzu gefuegt.
- *
- * Revision 1.25  2003/09/12 13:19:26  maj0r
- * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
- * Version 0.30
- *
- * Revision 1.24  2003/09/11 08:39:30  maj0r
- * Start durch Einbau von Threads beschleunigt.
- *
- * Revision 1.23  2003/09/11 06:54:15  maj0r
- * Auf neues Sessions-Prinzip umgebaut.
- * Sprachenwechsel korrigert, geht nun wieder flott.
- *
- * Revision 1.22  2003/09/06 16:25:39  maj0r
- * Newsanfrage an neue Domain angepasst.
- * HtmlLoader korrigiert.
- *
- * Revision 1.21  2003/09/06 14:50:50  maj0r
- * Fehlerbehandlung verbessert.
- *
- * Revision 1.20  2003/09/04 10:13:28  maj0r
- * Logger eingebaut.
- *
- * Revision 1.19  2003/08/28 10:57:04  maj0r
- * Versionierung geaendert und erhoeht.
- * Version 0.16 Beta.
- *
- * Revision 1.18  2003/08/25 13:18:35  maj0r
- * Farbe in ein geiles Rot geaendert,
- *
- * Revision 1.17  2003/08/20 07:49:50  maj0r
- * Programmstart beschleunigt.
- *
- * Revision 1.16  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.15  2003/08/12 11:08:23  maj0r
- * Anzeige korrigiert.
- *
- * Revision 1.14  2003/08/11 16:52:39  maj0r
- * Ausgabefehler korrigiert.
- *
- * Revision 1.13  2003/08/11 14:10:28  maj0r
- * DownloadPartList eingefügt.
- * Diverse Änderungen.
- *
- * Revision 1.12  2003/08/09 16:47:42  maj0r
- * Diverse Änderungen.
- *
- * Revision 1.11  2003/08/03 19:54:05  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.10  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.9  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingefügt.
- * Servertabelle kann nun spaltenweise sortiert werden.
- *
- * Revision 1.8  2003/06/13 15:07:30  maj0r
- * Versionsanzeige hinzugefügt.
- * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
- *
- * Revision 1.7  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
  *
  */
 

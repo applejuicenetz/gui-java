@@ -26,125 +26,22 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
-import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.40 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.41 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: OptionsDialog.java,v $
- * Revision 1.40  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.39  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.38  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.37  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.36  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.35  2004/01/29 15:52:33  maj0r
- * Bug #153 umgesetzt (Danke an jr17)
- * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
- *
- * Revision 1.34  2004/01/27 07:12:04  maj0r
- * Muell entfernt.
- *
- * Revision 1.33  2004/01/26 19:38:36  maj0r
- * Menueleiste ueberarbeitet.
- *
- * Revision 1.32  2004/01/25 10:16:42  maj0r
- * Optionenmenue ueberarbeitet.
- *
- * Revision 1.31  2004/01/21 14:29:05  maj0r
- * Icons eingebaut.
- *
- * Revision 1.30  2004/01/05 19:17:18  maj0r
- * Bug #56 gefixt (Danke an MeineR)
- * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
- *
- * Revision 1.29  2004/01/05 11:54:21  maj0r
- * Standardbrowser kann nun definiert werden.
- *
- * Revision 1.28  2004/01/01 15:30:21  maj0r
- * Plugins koennen nun ein JPanel zB fuer Optionen implementieren.
- * Dieses wird dann im Optionendialog angezeigt.
- *
- * Revision 1.27  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.26  2003/12/29 15:20:05  maj0r
- * Neue Versionupdatebenachrichtigung fertiggestellt.
- *
- * Revision 1.25  2003/12/29 09:39:21  maj0r
- * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
- *
- * Revision 1.24  2003/12/27 19:06:33  maj0r
- * Im Verbindungsfenster geht nun ein einfaches <Enter> (Danke an muhviestarr).
- *
- * Revision 1.23  2003/10/31 16:24:58  maj0r
- * Soundeffekte fuer diverse Ereignisse eingefuegt.
- *
- * Revision 1.22  2003/10/14 15:43:52  maj0r
- * An pflegbaren Xml-Port angepasst.
- *
- * Revision 1.21  2003/09/12 13:19:26  maj0r
- * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
- * Version 0.30
- *
- * Revision 1.20  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.19  2003/09/04 10:13:28  maj0r
- * Logger eingebaut.
- *
- * Revision 1.18  2003/08/25 18:02:10  maj0r
- * Sprachberuecksichtigung und Tooltipps eingebaut.
- *
- * Revision 1.17  2003/08/24 14:59:59  maj0r
- * Version 0.14
- * Diverse Aenderungen.
- *
- * Revision 1.16  2003/08/22 10:54:25  maj0r
- * Klassen umbenannt.
- * ConnectionSettings ueberarbeitet.
- *
- * Revision 1.15  2003/08/16 17:49:56  maj0r
- * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
- * DownloaduebersichtTabelle kann deaktiviert werden.
- *
- * Revision 1.14  2003/08/15 18:31:36  maj0r
- * Farbdialog in Optionen eingebaut.
- *
- * Revision 1.13  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.12  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.11  2003/06/24 12:06:49  maj0r
- * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
- *
- * Revision 1.10  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
  *
  */
 

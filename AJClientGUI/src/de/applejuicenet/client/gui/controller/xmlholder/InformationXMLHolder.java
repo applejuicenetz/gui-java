@@ -13,46 +13,19 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Version;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/InformationXMLHolder.java,v 1.5 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/InformationXMLHolder.java,v 1.6 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: InformationXMLHolder.java,v $
- * Revision 1.5  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.4  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.3  2004/02/27 15:05:19  maj0r
- * Auf SAX umgebastelt.
- *
- * Revision 1.2  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.1  2003/12/31 16:13:31  maj0r
- * Refactoring.
- *
- * Revision 1.5  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.4  2003/06/22 19:00:27  maj0r
- * Basisklasse umbenannt.
- *
- * Revision 1.3  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
  *
  */
 

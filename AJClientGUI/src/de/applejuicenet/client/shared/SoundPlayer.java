@@ -11,44 +11,16 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.log4j.Logger;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.8 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.9 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: SoundPlayer.java,v $
- * Revision 1.8  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.7  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.6  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.5  2003/12/18 12:50:53  maj0r
- * Bug bei der Wiedergabe von Sounds korrigiert (Danke an mrbond).
- * Sounddevice wird nun nach Ausgabe eines Sounds wieder freigegeben.
- *
- * Revision 1.4  2003/11/05 11:01:35  maj0r
- * Fehler bei der Soundausgabe bei fehlerhaften Sounddateien (z.B. falsches Format) oder fehlendem Sounddevice behoben.
- *
- * Revision 1.3  2003/10/31 19:04:58  maj0r
- * Sounds eingebaut.
- *
- * Revision 1.2  2003/10/31 16:24:58  maj0r
- * Soundeffekte fuer diverse Ereignisse eingefuegt.
- *
- * Revision 1.1  2003/10/31 11:31:45  maj0r
- * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
- *
  *
  */
 

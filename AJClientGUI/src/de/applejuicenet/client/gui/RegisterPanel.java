@@ -2,6 +2,9 @@ package de.applejuicenet.client.gui;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.swing.DefaultSingleSelectionModel;
 import javax.swing.ImageIcon;
@@ -9,107 +12,23 @@ import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipEntry;
-import java.util.HashSet;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.37 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.38 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: RegisterPanel.java,v $
- * Revision 1.37  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.36  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.35  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.34  2004/03/03 12:36:07  maj0r
- * Modifizierbare und potenziell modifizierbare Dateien bei Nicht-Windows-System verschoben.
- *
- * Revision 1.33  2004/03/03 11:56:53  maj0r
- * Sprachunterstuetzung fuer Plugins eingebaut.
- *
- * Revision 1.32  2004/03/02 17:37:10  maj0r
- * Pluginverwendung vereinfacht.
- *
- * Revision 1.31  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.30  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.29  2004/02/04 14:26:05  maj0r
- * Bug #185 gefixt (Danke an muhviestarr)
- * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
- *
- * Revision 1.28  2004/01/14 15:19:59  maj0r
- * Laden von Plugins verbessert.
- * Muell oder nicht standardkonforme Plugins im Plugin-Ordner werden nun korrekt behandelt.
- *
- * Revision 1.27  2004/01/05 19:17:18  maj0r
- * Bug #56 gefixt (Danke an MeineR)
- * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
- *
- * Revision 1.26  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.25  2003/12/17 11:06:29  maj0r
- * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
- *
- * Revision 1.24  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.23  2003/09/04 10:13:28  maj0r
- * Logger eingebaut.
- *
- * Revision 1.22  2003/08/27 16:44:42  maj0r
- * Unterstuetzung fuer DragNDrop teilweise eingebaut.
- *
- * Revision 1.21  2003/08/20 10:52:51  maj0r
- * JarClassloader korrigiert.
- *
- * Revision 1.20  2003/08/16 17:49:56  maj0r
- * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
- * DownloaduebersichtTabelle kann deaktiviert werden.
- *
- * Revision 1.19  2003/07/08 20:28:23  maj0r
- * Logger eingefügt.
- *
- * Revision 1.18  2003/07/01 14:53:12  maj0r
- * Unnützen Krimskram entfernt.
- *
- * Revision 1.17  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingefügt.
- * Servertabelle kann nun spaltenweise sortiert werden.
- *
- * Revision 1.16  2003/06/22 19:54:45  maj0r
- * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
- *
- * Revision 1.15  2003/06/13 15:07:30  maj0r
- * Versionsanzeige hinzugefügt.
- * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
- *
- * Revision 1.14  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
  *
  */
 

@@ -21,37 +21,19 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/UpdateInformationDialog.java,v 1.5 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/UpdateInformationDialog.java,v 1.6 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: UpdateInformationDialog.java,v $
- * Revision 1.5  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.4  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.3  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.2  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.1  2004/01/05 13:22:43  maj0r
- * Wenn eine neue Version gefunden wird, kann diese nun direkt mit dem Standardbrowser herunter geladen werden.
- *
  *
  */
 

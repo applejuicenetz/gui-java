@@ -29,101 +29,25 @@ import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.27 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.28 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ODStandardPanel.java,v $
- * Revision 1.27  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.26  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.25  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.24  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.23  2004/02/04 14:57:20  maj0r
- * Bug #94 gefixt (Danke an error666)
- * Zulaessige Werte für Core-Port und XML-Port sind 1024<x<=32000.
- *
- * Revision 1.22  2004/01/25 10:16:42  maj0r
- * Optionenmenue ueberarbeitet.
- *
- * Revision 1.21  2004/01/05 19:17:18  maj0r
- * Bug #56 gefixt (Danke an MeineR)
- * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
- *
- * Revision 1.20  2004/01/05 11:54:21  maj0r
- * Standardbrowser kann nun definiert werden.
- *
- * Revision 1.19  2004/01/05 07:28:59  maj0r
- * Begonnen einen Standardwebbrowser einzubauen.
- *
- * Revision 1.18  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.17  2003/12/29 15:20:05  maj0r
- * Neue Versionupdatebenachrichtigung fertiggestellt.
- *
- * Revision 1.16  2003/12/29 09:39:21  maj0r
- * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
- *
- * Revision 1.15  2003/12/27 21:14:24  maj0r
- * Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
- *
- * Revision 1.14  2003/10/27 13:00:17  maj0r
- * Ist im Core noch nicht implementiert und deshalb erstmal wieder aus dem GUI geflogen (Danke an xcalibur).
- *
- * Revision 1.13  2003/10/14 15:43:52  maj0r
- * An pflegbaren Xml-Port angepasst.
- *
- * Revision 1.12  2003/10/13 12:37:48  maj0r
- * Bug behoben.
- *
- * Revision 1.11  2003/09/11 06:54:15  maj0r
- * Auf neues Sessions-Prinzip umgebaut.
- * Sprachenwechsel korrigert, geht nun wieder flott.
- *
- * Revision 1.10  2003/09/10 13:15:47  maj0r
- * Veraltete Option "Browsen erlauben" entfernt.
- *
- * Revision 1.9  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.8  2003/09/04 10:13:28  maj0r
- * Logger eingebaut.
- *
- * Revision 1.7  2003/08/24 14:59:59  maj0r
- * Version 0.14
- * Diverse Aenderungen.
- *
- * Revision 1.6  2003/06/24 12:06:49  maj0r
- * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
- *
- * Revision 1.5  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
  *
  */
 

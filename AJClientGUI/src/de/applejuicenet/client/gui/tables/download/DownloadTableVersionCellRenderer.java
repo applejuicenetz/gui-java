@@ -5,13 +5,23 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+
+/**
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableVersionCellRenderer.java,v 1.5 2004/03/09 16:50:27 maj0r Exp $
+ *
+ * <p>Titel: AppleJuice Client-GUI</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: General Public License</p>
+ *
+ * @author: Maj0r <aj@tkl-soft.de>
+ *
+ */
 
 public class DownloadTableVersionCellRenderer
     implements TableCellRenderer, DataUpdateListener {

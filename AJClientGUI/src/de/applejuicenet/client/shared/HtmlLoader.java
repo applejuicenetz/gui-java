@@ -11,85 +11,19 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
-import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.27 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.28 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: HtmlLoader.java,v $
- * Revision 1.27  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.26  2004/03/06 19:08:59  maj0r
- * Zusaetzliche Pruefung eingebaut, die greift, wenn man auf einen entfernten Core ohne gesetztes Passwort zugreift.
- *
- * Revision 1.25  2004/02/20 14:59:13  maj0r
- * Loglevel bei nicht gefundener Webseite geaendert.
- *
- * Revision 1.24  2004/02/17 15:26:38  maj0r
- * Bug #219 gefixt (Danke an uselessplayer)
- * 100%-CPU bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt.
- *
- * Revision 1.23  2004/02/12 13:22:54  maj0r
- * Mehr Logging fuer WebSiteNotFoundException eingebaut.
- *
- * Revision 1.22  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.21  2004/02/02 15:38:38  maj0r
- * Deprecation behoben.
- *
- * Revision 1.20  2004/02/02 15:12:32  maj0r
- * Kommunikation GUI<->Core erfolgt nun gezipped.
- *
- * Revision 1.19  2004/01/28 07:59:47  maj0r
- * Holen von xmls beschleunigt.
- *
- * Revision 1.18  2004/01/01 14:26:53  maj0r
- * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
- *
- * Revision 1.17  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.16  2003/10/14 19:21:23  maj0r
- * Korrekturen zur Xml-Port-Verwendung.
- *
- * Revision 1.15  2003/10/14 15:43:52  maj0r
- * An pflegbaren Xml-Port angepasst.
- *
- * Revision 1.14  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
- *
- * Revision 1.13  2003/09/06 16:25:39  maj0r
- * Newsanfrage an neue Domain angepasst.
- * HtmlLoader korrigiert.
- *
- * Revision 1.12  2003/08/28 06:55:59  maj0r
- * Erweiter, so dass nun auch GET/POST ohne Returnwert ausgefuehrt werden koennen.
- *
- * Revision 1.11  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.10  2003/08/09 16:47:42  maj0r
- * Diverse Aenderungen.
- *
- * Revision 1.9  2003/07/04 10:35:42  maj0r
- * Lesen des Sockets geht nun wesentlich schneller.
- * Share wird daher wesentlich schneller angezeigt.
- *
- * Revision 1.8  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
  *
  */
 

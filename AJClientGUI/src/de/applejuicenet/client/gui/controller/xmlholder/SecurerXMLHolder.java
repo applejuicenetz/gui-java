@@ -12,49 +12,21 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SecurerXMLHolder.java,v 1.8 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SecurerXMLHolder.java,v 1.9 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: SecurerXMLHolder.java,v $
- * Revision 1.8  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.7  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.6  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.5  2004/02/24 14:12:53  maj0r
- * DOM->SAX-Umstellung
- *
- * Revision 1.4  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.3  2004/01/30 16:32:31  maj0r
- * Verbindung sollte nun auch bei belasteten Verbindungen aufgebaut werden.
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.2  2004/01/29 13:47:57  maj0r
- * Während des ersten Holens der Quellen wird nun alle 5 Seks die Statuszeile aktualisiert.
- *
- * Revision 1.1  2004/01/28 12:34:46  maj0r
- * Session wird nun besser aufrecht erhalten.
- *
  *
  */
 

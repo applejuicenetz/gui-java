@@ -5,6 +5,8 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -17,7 +19,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Information;
@@ -32,67 +34,15 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
-import java.util.Map;
-import java.util.Set;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.33 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.34 2004/03/09 16:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ModifiedXMLHolder.java,v $
- * Revision 1.33  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.32  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.31  2004/03/03 17:27:55  maj0r
- * PMD-Optimierung
- *
- * Revision 1.30  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.29  2004/03/01 15:41:43  maj0r
- * IP wird nun korrekt angezeigt.
- *
- * Revision 1.28  2004/02/27 13:19:38  maj0r
- * Pruefung auf gueltigen Core eingebaut.
- * Um das zu pruefen, duerfen die Nachrichten im Startbereich erst spaeter geladen werden.
- *
- * Revision 1.27  2004/02/24 14:12:53  maj0r
- * DOM->SAX-Umstellung
- *
- * Revision 1.26  2004/02/24 08:49:32  maj0r
- * Bug #240 gefixt (Danke an computer.ist.org)
- * Bug behoben, der im VersionChecker zu einer NoSuchElementException fuehrte.
- *
- * Revision 1.25  2004/02/21 20:37:28  maj0r
- * Beim ersten Abrufen der Userliste muss Timestamp=0 verwendet werden.
- *
- * Revision 1.24  2004/02/19 17:13:46  maj0r
- * Serververwendung korrigiert.
- *
- * Revision 1.22  2004/02/19 09:53:13  maj0r
- * Serverauswertung korrigiert.
- *
- * Revision 1.21  2004/02/18 20:44:37  maj0r
- * Bugs #223 und #224 behoben.
- *
- * Revision 1.20  2004/02/18 18:57:23  maj0r
- * Von DOM auf SAX umgebaut.
- *
- * Revision 1.19  2004/02/18 18:43:04  maj0r
- * Von DOM auf SAX umgebaut.
- *
- * Revision 1.18  2004/02/18 17:24:21  maj0r
- * Von DOM auf SAX umgebaut.
- *
  *
  */
 
