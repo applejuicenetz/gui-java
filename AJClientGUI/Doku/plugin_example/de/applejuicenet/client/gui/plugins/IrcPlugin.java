@@ -16,9 +16,9 @@ import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
  * @version 1.0
  */
 
-public class IrcPlugin1_1 extends PluginConnector {
+public class IrcPlugin extends PluginConnector {
 
-    public IrcPlugin1_1() {
+    public IrcPlugin() {
         setLayout(new BorderLayout());
         add(new XdccIrc(), BorderLayout.CENTER);
         String classname = getClass().toString();
@@ -28,7 +28,6 @@ public class IrcPlugin1_1 extends PluginConnector {
     }
 
     public void fireLanguageChanged() {
-//    System.out.println("Sprache wurde geändert");
     }
 
     /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
@@ -37,7 +36,6 @@ public class IrcPlugin1_1 extends PluginConnector {
     }
 
     public void registerSelected() {
-//    System.out.println("Reiter wurde angeklickt.");
     }
 
     public String getTitle() {
@@ -54,7 +52,7 @@ public class IrcPlugin1_1 extends PluginConnector {
     }
 
     public String getVersion() {
-        return "1.1";
+        return "1.2";
     }
 
     public boolean istReiter() {

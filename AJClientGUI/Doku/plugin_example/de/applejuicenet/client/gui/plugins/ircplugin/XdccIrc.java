@@ -11,9 +11,10 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/Doku/plugin_example/de/applejuicenet/client/gui/plugins/ircplugin/Attic/XdccIrc.java,v 1.3 2003/08/28 15:53:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/Doku/plugin_example/de/applejuicenet/client/gui/plugins/ircplugin/Attic/XdccIrc.java,v 1.4 2003/08/28 16:19:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +23,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: XdccIrc.java,v $
+ * Revision 1.4  2003/08/28 16:19:29  maj0r
+ * Auf SwingWorker umgebaut und Hauptklasse umbenannt.
+ *
  * Revision 1.3  2003/08/28 15:53:02  maj0r
  * NullPointer behoben und Header eingefuegt.
  *
@@ -29,12 +33,13 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  */
 
 public class XdccIrc
-        extends JPanel
-        implements Runnable {
+        extends JPanel {
     JButton connectButton;
     JButton cancelButton;
     JButton editButton;
     JButton removeButton;
+
+    boolean interrupted;
 
     String host = "localhost";
     int port = 6667;
@@ -135,8 +140,8 @@ public class XdccIrc
         Toolkit theKit = java.awt.Toolkit.getDefaultToolkit();
         Dimension dm = theKit.getScreenSize();
         setBounds(dm.width / 6, dm.height / 6,
-                (dm.width * 5) / 8, // width
-                (dm.height * 2) / 3 // height
+                  (dm.width * 5) / 8, // width
+                  (dm.height * 2) / 3 // height
         );
 
         setVisible(true);
@@ -147,7 +152,8 @@ public class XdccIrc
         public void windowClosing(WindowEvent e) {
             Window win = e.getWindow();
             win.setVisible(false);
-            if (toServer != null) {
+            if (toServer != null)
+            {
                 parseSendToCommand("QUIT ConnectionClosed.");
             }
             System.exit(0);
@@ -176,10 +182,12 @@ public class XdccIrc
         nickJTextField1 = new JTextField(25);
         nickJTextField1.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
-                if (nickJTextField1.getText().length() != 0) {
+                if (nickJTextField1.getText().length() != 0)
+                {
                     connectButton.setEnabled(true);
                 }
-                else {
+                else
+                {
                     connectButton.setEnabled(false);
                 }
             }
@@ -240,23 +248,28 @@ public class XdccIrc
         connectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // OK, let's set the nickname if user has mentioned it
-                if (nickJTextField1.getText().length() == 0) {
+                if (nickJTextField1.getText().length() == 0)
+                {
                     dialog.dispose();
                     return;
                 }
 
-                if (nickJTextField1.getText() != null) {
+                if (nickJTextField1.getText() != null)
+                {
                     setNickname(nickJTextField1.getText());
                 }
-                if (nickJTextField1.getText() == null) {
+                if (nickJTextField1.getText() == null)
+                {
                     Random random = new Random();
                     setNickname("XDCC" + Integer.toString(random.nextInt(99999)));
                 }
-                if (nickJTextField2.getText() != null) {
+                if (nickJTextField2.getText() != null)
+                {
                     nickname2 = nickJTextField2.getText();
                 }
 
-                if (nickJTextField3.getText() != null) {
+                if (nickJTextField3.getText() != null)
+                {
                     nickname3 = nickJTextField3.getText();
                 }
 
@@ -308,7 +321,8 @@ public class XdccIrc
      * Connect tries to establish a connection to host in port
      */
     private void connect() {
-        try {
+        try
+        {
             chatSocket = new Socket(host, port);
             fromServer = new BufferedReader(new InputStreamReader(
                     chatSocket.getInputStream()));
@@ -316,10 +330,11 @@ public class XdccIrc
                     chatSocket.getOutputStream()));
             Component aComponent = tabbedPane.getComponentAt(0);
             ((InitPanel) aComponent).setTitleArea(nickname + " connected to: " +
-                    host + ":" + port);
+                                                  host + ":" + port);
             //debugOut = new PrintWriter(new FileWriter(new File("Debug.txt")));
         }
-        catch (IOException e) {
+        catch (IOException e)
+        {
             System.err.println("Connection refused to: " + host + ":" + port);
         }
     }
@@ -346,10 +361,12 @@ public class XdccIrc
     public void changeNickname(String oldNickname, String newNickname) {
         int totalTabs = tabbedPane.getTabCount();
 
-        for (int i = 0; i < totalTabs; i++) {
+        for (int i = 0; i < totalTabs; i++)
+        {
             Component aComponent = tabbedPane.getComponentAt(i);
 
-            if (aComponent instanceof ChannelPanel) {
+            if (aComponent instanceof ChannelPanel)
+            {
                 // Do channel processing
                 // At first remove the old nickname from the userNameBox
                 ((ChannelPanel) aComponent).updateUserArea(oldNickname, "remove");
@@ -357,10 +374,11 @@ public class XdccIrc
 
                 // Now let's post a sensible comment on the channel Panel
                 ((ChannelPanel) aComponent).updateTextArea(oldNickname +
-                        " changes nickname to " +
-                        newNickname);
+                                                           " changes nickname to " +
+                                                           newNickname);
             }
-            else if (aComponent instanceof UserPanel) {
+            else if (aComponent instanceof UserPanel)
+            {
                 // Do UserPanel processing
                 // Actually this process was done in the NICK handling part....
             }
@@ -376,11 +394,14 @@ public class XdccIrc
         String blank = "";
         int len = nickname.length();
 
-        if (len >= formatlen) {
+        if (len >= formatlen)
+        {
             return nickname;
         }
-        else {
-            for (int i = 0; i < (formatlen - len); i++) {
+        else
+        {
+            for (int i = 0; i < (formatlen - len); i++)
+            {
                 blank = blank + " ";
             }
         }
@@ -393,68 +414,71 @@ public class XdccIrc
         return realname;
     }
 
-    private Thread listener;
-
-    // Starting to listen something from the IRC server.
-    // Don't forget to take a look at the run() method
-    // --- cause that is where exact job is done.
     public void start() { //synchronized void start()
-        listener = new Thread(this);
-        listener.setDaemon(true);
-        listener.start();
-    }
+        interrupted = false;
+        final SwingWorker worker = new SwingWorker() {
+                    public Object construct() {
+                        try
+                        {
+                            while (!interrupted)
+                            {
+                                String line = fromServer.readLine();
+                                if (line != null)
+                                {
+                                    parseFromServer(line);
+                                }
+                                else
+                                {
+                                    interrupted = true;
+                                    // a null line indicates that our server has
+                                    // closed the connection, right?
+                                    tabUpdate("Init Window",
+                                              "READ a null line, server closed the connection or network is fucked.");
+                                    closeAll();
 
-    // Starts listening something from the IRC server.
-    // As soon as it receives something from the IRC
-    // server, it sends the 'received-data' to 'parseFromServer'
-    // --- so take a look at 'parseFromServer'. 'parseFromServer'
-    // is the most responsible party that does all the necessary
-    // processing of 'replies' or IRC server.
-    public void run() {
-        try {
-            while (!Thread.interrupted()) {
-                String line = fromServer.readLine();
-                if (line != null) {
-                    parseFromServer(line);
-                }
-                else {
-                    // a null line indicates that our server has
-                    // closed the connection, right?
-                    tabUpdate("Init Window",
-                            "READ a null line, server closed the connection or network is fucked.");
-                    closeAll();
+                                    try
+                                    {
+                                        wait(5000);
+                                    }
+                                    catch (InterruptedException e)
+                                    {
+                                        e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                                    }
+                                }
+                            }
+                        }
 
-                    try {
-                        // sleeping for 5 seconds!
-                        listener.sleep(5000);
+                        catch (IOException e)
+                        {
+                            System.out.println(
+                                    "Read Exception from Server. Exception is something like:");
+                            System.out.println(e);
+                        }
+                        return null;
                     }
-                    catch (InterruptedException e) {
+
+                    public void finished() {
+                        SwingUtilities.invokeLater(new Runnable(){
+                            public void run(){
+                                connectStartRegister();
+                            }
+                        });
                     }
-
-                    listener = null;
-
-                    // Now let's connect again
-                    connectStartRegister();
-                }
-            }
-        }
-
-        catch (IOException e) {
-            System.out.println(
-                    "Read Exception from Server. Exception is something like:");
-            System.out.println(e);
-        }
+                };
+        worker.start();
     }
 
     // Close everything and sleeps for few seconds
     public void closeAll() {
         // So, let's shutdown everything
-        try {
+        try
+        {
             chatSocket.close();
             fromServer.close();
             toServer.close();
         }
-        catch (IOException e) {
+        catch (IOException e)
+        {
             System.out.println("chatSocket.close() thrown an IOException or");
             System.out.println("fromServer.close() thrown an IOException or");
             System.out.println("toServer.close() thrown an IOException");
@@ -470,35 +494,42 @@ public class XdccIrc
     public void parseFromServer(String lineFromServer) throws IOException {
         myParser parser = new myParser(lineFromServer);
         String command = parser.getCommand();
-        if (command.equals("PING")) {
+        if (command.equals("PING"))
+        {
             parseSendToCommand("PONG :" + parser.getTrailing());
         }
-        else if (command.equals("JOIN")) {
+        else if (command.equals("JOIN"))
+        {
             String channelName = parser.getTrailing();
-            if (channelName.startsWith("#")) {
+            if (channelName.startsWith("#"))
+            {
                 channelName = channelName.substring(1);
                 int indexOfChannel = findTab(tabbedPane, "#" + channelName);
-                if (indexOfChannel == -1) { // Channel Tab doesn't exist
+                if (indexOfChannel == -1)
+                { // Channel Tab doesn't exist
                     ChannelPanel channel = addChannel(tabbedPane, channelName);
                     indexOfChannel = findTab(tabbedPane, "#" + channelName);
                     tabbedPane.setSelectedIndex(indexOfChannel);
                     channel.updateTextArea("*** Now talking in: " + parser.getTrailing());
                     if (tabbedPane.getSelectedIndex() !=
-                            findTab(tabbedPane, "#" + channelName)) {
+                            findTab(tabbedPane, "#" + channelName))
+                    {
                         tabbedPane.setBackgroundAt(findTab(tabbedPane, "#" + channelName),
-                                Color.red);
+                                                   Color.red);
                     }
                     tabbedPane.revalidate();
 
                     // channel.updateUserArea(parser.getNick(), "add");
                 }
-                else { // channelName tab exists!
+                else
+                { // channelName tab exists!
                     ChannelPanel channel = (ChannelPanel) tabbedPane.getComponentAt(
                             indexOfChannel);
                     channel.updateTextArea("---> JOIN: " + parser.getNick() + " (" +
-                            parser.getUser() + "@" +
-                            parser.getHost() + ")");
-                    if (tabbedPane.getSelectedIndex() != indexOfChannel) {
+                                           parser.getUser() + "@" +
+                                           parser.getHost() + ")");
+                    if (tabbedPane.getSelectedIndex() != indexOfChannel)
+                    {
                         tabbedPane.setBackgroundAt(indexOfChannel, Color.red);
                     }
                     tabbedPane.revalidate();
@@ -507,86 +538,101 @@ public class XdccIrc
                 }
             }
         }
-        else if (command.equals("PRIVMSG")) {
+        else if (command.equals("PRIVMSG"))
+        {
             // handle PRIVMSG
             String destination = parser.getMiddle();
-            if (destination.startsWith("#")) {
+            if (destination.startsWith("#"))
+            {
                 // it's a channel!
                 String channelName = destination.substring(1);
 
 // MSG Received....!
 
                 int indexOfChannel = findTab(tabbedPane, destination);
-                if (indexOfChannel != -1) { // A connection/tab already exists!
+                if (indexOfChannel != -1)
+                { // A connection/tab already exists!
                     Component aComponent = tabbedPane.getComponentAt(indexOfChannel);
-                    if (aComponent instanceof ChannelPanel) {
+                    if (aComponent instanceof ChannelPanel)
+                    {
                         String trailing;
                         String nick;
                         nick = parser.getNick();
                         trailing = parser.getTrailing();
-                        if (trailing.indexOf(1) != -1) { //is this a CTCP
+                        if (trailing.indexOf(1) != -1)
+                        { //is this a CTCP
                             //remove \001 from Beginning and End of CTCP msg
                             trailing = trailing.substring(1, trailing.length() - 1);
                             ((ChannelPanel) aComponent).updateTextArea(
                                     formatNickname("[" + nick + "] ") + trailing);
                         }
                         String bracketFermeture = "a";
-                        if (trailing.indexOf("[") != -1) {
+                        if (trailing.indexOf("[") != -1)
+                        {
                             bracketFermeture = String.valueOf(trailing.charAt(trailing.
-                                    indexOf("[") + 5));
+                                                                              indexOf("[") + 5));
                             //System.out.println("bracketFermeture = " + bracketFermeture + " trailing = " + trailing);
                         }
-                        if (nick.equals(nickname)) {
+                        if (nick.equals(nickname))
+                        {
                             //System.out.println("Color ReD!");
                             //((ChannelPanel)aComponent).textArea.setDisabledTextColor(new Color(255,0,0));
                             ((ChannelPanel) aComponent).updateTextArea(
                                     formatNickname("<" + nick + "> ") + trailing);
                         }
-                        else {
+                        else
+                        {
                             //System.out.println("Color GreeN!");
                             //((ChannelPanel)aComponent).textArea.setDisabledTextColor(new Color(0,0,255));
                             ((ChannelPanel) aComponent).updateTextArea(
                                     formatNickname("<" + nick + "> ") + trailing);
                         }
-                        if (tabbedPane.getSelectedIndex() != indexOfChannel) {
+                        if (tabbedPane.getSelectedIndex() != indexOfChannel)
+                        {
                             tabbedPane.setBackgroundAt(indexOfChannel, Color.red);
                         }
                         tabbedPane.revalidate();
                     }
                 }
-                else { // A connection/tab doesn't exists, so create one!
+                else
+                { // A connection/tab doesn't exists, so create one!
                     ChannelPanel channel = addChannel(tabbedPane, channelName);
                     channel.updateTextArea(
                             formatNickname("<" + parser.getNick() + "> ") + "> " +
                             parser.getTrailing());
                     if (tabbedPane.getSelectedIndex() !=
-                            findTab(tabbedPane, "#" + channelName)) {
+                            findTab(tabbedPane, "#" + channelName))
+                    {
                         tabbedPane.setBackgroundAt(findTab(tabbedPane, "#" + channelName),
-                                Color.red);
+                                                   Color.red);
                     }
                     tabbedPane.revalidate();
                 }
 
             } //if (destination.startsWith("#"))
-            else { //if (!destination.equalsIgnoreCase(getNickname()))
+            else
+            { //if (!destination.equalsIgnoreCase(getNickname()))
                 // it's from a user
 
                 int indexOfUser = findTab(tabbedPane, parser.getNick());
 
-                if (indexOfUser == -1) {
+                if (indexOfUser == -1)
+                {
                     UserPanel userPanel = addUser(tabbedPane, parser.getNick()); //if tab doesnt exist
                     // Add the real username@hostname in title of tabbedPane
                     userPanel.setTitleArea(parser.getNick() + "!" + parser.getUser() +
-                            "@" + parser.getHost());
+                                           "@" + parser.getHost());
                 }
 
                 indexOfUser = findTab(tabbedPane, parser.getNick());
 
-                if (indexOfUser != -1) { // A user connection/tab already exists!
+                if (indexOfUser != -1)
+                { // A user connection/tab already exists!
                     Component aComponent = tabbedPane.getComponentAt(indexOfUser);
                     UserPanel userPanel = (UserPanel) aComponent;
 
-                    if (aComponent instanceof UserPanel) {
+                    if (aComponent instanceof UserPanel)
+                    {
                         String ctcpCommand;
                         String trailing;
                         String dccPort;
@@ -596,20 +642,25 @@ public class XdccIrc
                         char firstOne = 1;
 
                         trailing = parser.getTrailing();
-                        if (trailing.indexOf(1) != -1) { //is this a CTCP
-                            if (trailing.indexOf(" ") != -1) {
+                        if (trailing.indexOf(1) != -1)
+                        { //is this a CTCP
+                            if (trailing.indexOf(" ") != -1)
+                            {
                                 ctcpCommand = trailing.substring(1, trailing.indexOf(" "));
                             }
-                            else {
+                            else
+                            {
                                 ctcpCommand = trailing.substring(1, trailing.indexOf(1, 2));
                             }
 
-                            if (ctcpCommand.equalsIgnoreCase("PING")) {
+                            if (ctcpCommand.equalsIgnoreCase("PING"))
+                            {
                                 parseSendToCommand("NOTICE " + parser.getNick() + " " +
-                                        trailing);
+                                                   trailing);
                             }
 
-                            else if (ctcpCommand.equalsIgnoreCase("VERSION")) {
+                            else if (ctcpCommand.equalsIgnoreCase("VERSION"))
+                            {
                                 String versionReply = "NOTICE " + parser.getNick() + " " +
                                         firstOne + ctcpCommand + " Using Xdcc IRC:v0.1b:Java" +
                                         firstOne;
@@ -619,16 +670,18 @@ public class XdccIrc
 
                             userPanel.updateTextArea(
                                     formatNickname("••• ¢ CTCP " + ctcpCommand +
-                                    " received from " + parser.getNick()));
+                                                   " received from " + parser.getNick()));
                         } // if (trailing.indexOf(1) != -1)  //is this a CTCP
 
-                        else { // regular privmsg
+                        else
+                        { // regular privmsg
                             userPanel.updateTextArea(
                                     formatNickname("<" + parser.getNick() + "> ") + trailing);
 
                             //update le tout
                         }
-                        if (tabbedPane.getSelectedIndex() != indexOfUser) {
+                        if (tabbedPane.getSelectedIndex() != indexOfUser)
+                        {
                             tabbedPane.setBackgroundAt(indexOfUser, Color.red);
                         }
                         tabbedPane.revalidate();
@@ -637,49 +690,59 @@ public class XdccIrc
             } // else (Msg from a user..)
         } //else if (command.equals("PRIVMSG"))
 
-        else if (command.equals("PART")) {
+        else if (command.equals("PART"))
+        {
             // Let's grab the channel name
             String channelName = parser.getParams();
             int index = channelName.indexOf("#");
             int index2 = channelName.indexOf(":");
-            if (index2 != -1) {
+            if (index2 != -1)
+            {
                 channelName = channelName.substring(index, index2 - 1);
             }
-            else {
+            else
+            {
                 channelName = channelName.substring(index);
             }
 
-            if (channelName.startsWith("#")) {
+            if (channelName.startsWith("#"))
+            {
                 channelName = channelName.substring(1);
 
                 int indexOfChannel = findTab(tabbedPane, "#" + channelName);
-                if (indexOfChannel != -1) { // Tab doesn't exist. Do nothing
+                if (indexOfChannel != -1)
+                { // Tab doesn't exist. Do nothing
                     Component aComponent = tabbedPane.getComponentAt(indexOfChannel);
-                    if (aComponent instanceof ChannelPanel) {
+                    if (aComponent instanceof ChannelPanel)
+                    {
                         ((ChannelPanel) aComponent).updateTextArea("<--- PART: " +
-                                parser.getNick());
+                                                                   parser.getNick());
                         ((ChannelPanel) aComponent).updateUserArea(parser.getNick(),
-                                "remove");
+                                                                   "remove");
                     }
 
                     // Ok, let's remove the tab if the user who left the channel is you
-                    if (parser.getNick().equals(getNickname())) {
+                    if (parser.getNick().equals(getNickname()))
+                    {
                         tabbedPane.removeTabAt(indexOfChannel);
                     }
                 }
             }
 
         }
-        else if (command.equals("QUIT")) {
+        else if (command.equals("QUIT"))
+        {
             //??????????????????????????
             //Find what channel user is on and direct Quit msg to correct channel(s)
             tabUpdate("Init Window",
-                    parser.getNick() + " has quit (" + parser.getTrailing() + ")");
+                      parser.getNick() + " has quit (" + parser.getTrailing() + ")");
         }
-        else if (command.equals("NICK")) {
+        else if (command.equals("NICK"))
+        {
             // handle NICK --- When a user changes its nickname
             int index = findTab(tabbedPane, parser.getNick());
-            if (index != -1) {
+            if (index != -1)
+            {
                 // setting the user tab title to changed nickname
                 tabbedPane.setTitleAt(index, parser.getTrailing());
 
@@ -688,7 +751,8 @@ public class XdccIrc
                 temp.setName(parser.getTrailing());
             }
 
-            if (parser.getNick().equalsIgnoreCase(getNickname())) {
+            if (parser.getNick().equalsIgnoreCase(getNickname()))
+            {
                 setNickname(parser.getTrailing());
             }
 
@@ -700,13 +764,15 @@ public class XdccIrc
 
             changeNickname(oldNickname, newNickname);
         }
-        else if (command.equals("NOTICE")) {
+        else if (command.equals("NOTICE"))
+        {
             // handle NOTICE (à arranger: savoir de qui elle vient et la mettre au bon endroit)
             tabUpdate("Init Window",
-                    "NOTICE FROM: " + parser.getNick() + " ---> " +
-                    parser.getTrailing());
+                      "NOTICE FROM: " + parser.getNick() + " ---> " +
+                      parser.getTrailing());
         }
-        else if (command.equals("KICK")) {
+        else if (command.equals("KICK"))
+        {
             // handle KICK
             String kickedNick;
             String kickedChannel;
@@ -717,27 +783,31 @@ public class XdccIrc
             int indexOfChannel = findTab(tabbedPane, kickedChannel);
             ChannelPanel channel = (ChannelPanel) tabbedPane.getComponentAt(
                     indexOfChannel);
-            if (!(kickedNick.equals(getNickname()))) {
+            if (!(kickedNick.equals(getNickname())))
+            {
                 channel.updateTextArea("<- KICK: " + kickedNick + " by " +
-                        parser.getNick() + " (" + parser.getTrailing() +
-                        ")");
+                                       parser.getNick() + " (" + parser.getTrailing() +
+                                       ")");
                 channel.updateUserArea(kickedNick, "remove");
             }
-            else { // You have been kicked...
+            else
+            { // You have been kicked...
                 tabbedPane.removeTabAt(indexOfChannel);
                 tabUpdate("Init Window",
-                        "You have been kicked from " + kickedChannel + " by " +
-                        parser.getNick() + " because " + parser.getTrailing());
+                          "You have been kicked from " + kickedChannel + " by " +
+                          parser.getNick() + " because " + parser.getTrailing());
             }
         }
         else if (command.equals("001") || // RPL_WELCOME
                 command.equals("002") || // RPL_YOURHOST
                 command.equals("003") || // RPL_CREATED
-                command.equals("004")) { // RPL_MYINFO
+                command.equals("004"))
+        { // RPL_MYINFO
             // successful registration
             tabUpdate("Init Window", parser.getTrailing());
         }
-        else if (command.equals("005")) {
+        else if (command.equals("005"))
+        {
             // RPL_BOUNCE (Server settings)
             //tabUpdate("Init Window", "005 " + lineFromServer);
             //tabUpdate("Init Window", "005 " + parser.getTrailing());
@@ -753,24 +823,27 @@ public class XdccIrc
                 command.equals("259") ||
                 command.equals("265") ||
                 command.equals("266")
-        ) {
+        )
+        {
             tabUpdate("Init Window", parser.getTrailing());
         }
 
 //252 & 254 = num IRCOP and Total Channels
-        else if (command.equals("252")) {
+        else if (command.equals("252"))
+        {
             String numThing;
             numThing = lineFromServer.substring(lineFromServer.indexOf("252") + 5 +
-                    nickname.length(),
-                    lineFromServer.indexOf(":", 2));
+                                                nickname.length(),
+                                                lineFromServer.indexOf(":", 2));
             tabUpdate("Init Window", numThing + " " + parser.getTrailing());
         }
 
-        else if (command.equals("254")) {
+        else if (command.equals("254"))
+        {
             String numThing;
             numThing = lineFromServer.substring(lineFromServer.indexOf("254") + 5 +
-                    nickname.length(),
-                    lineFromServer.indexOf(":", 2));
+                                                nickname.length(),
+                                                lineFromServer.indexOf(":", 2));
             tabUpdate("Init Window", numThing + " " + parser.getTrailing());
         }
 
@@ -778,10 +851,11 @@ public class XdccIrc
         else if (command.equals("471") ||
                 command.equals("473") ||
                 command.equals("475")
-        ) {
+        )
+        {
             String channel;
             channel = lineFromServer.substring(lineFromServer.indexOf("#"),
-                    lineFromServer.indexOf(":", 2));
+                                               lineFromServer.indexOf(":", 2));
             tabUpdate("Init Window", parser.getTrailing() + " (" + channel + ")");
         }
 
@@ -790,12 +864,14 @@ public class XdccIrc
                 command.equals("374") ||
                 command.equals("375") ||
                 command.equals("376")
-        ) {
+        )
+        {
             //tabUpdate("Init Window", "371-376 " + parser.getTrailing());
             //tabUpdate("Init Window", "Skipping MOTD!");
         }
         else if (command.equals("311") // RPL_WHOISUSER
-        ) {
+        )
+        {
             // Ok, let's see how we can process PROCESS
             StringTokenizer st = new StringTokenizer(parser.getParams(), " \r\n");
             //StringTokenizer st = new StringTokenizer(parser.getParams(), " ");
@@ -805,25 +881,31 @@ public class XdccIrc
                     whoMode = "",
                     whoRealName = "";
 
-            for (int i = 0; st.hasMoreTokens();) {
+            for (int i = 0; st.hasMoreTokens();)
+            {
                 String aToken = st.nextToken();
-                if (i == 1) {
+                if (i == 1)
+                {
                     whoNick = aToken;
                 }
-                else if (i == 2) {
+                else if (i == 2)
+                {
                     whoUser = aToken;
                 }
-                else if (i == 3) {
+                else if (i == 3)
+                {
                     whoHost = aToken;
                 }
-                else if (i == 4) {
+                else if (i == 4)
+                {
                     whoMode = aToken;
                 }
-                else if (i == 5) {
+                else if (i == 5)
+                {
                     //à vérifier!!!!!!!!!!!!!!
                     String paramsWhois = parser.getParams();
                     whoRealName = paramsWhois.substring(paramsWhois.indexOf(aToken) + 1,
-                            paramsWhois.length());
+                                                        paramsWhois.length());
                     //whoRealName = aToken.substring(1);
                 }
 
@@ -833,28 +915,33 @@ public class XdccIrc
             // Let's show the messages in the Init Window
             tabUpdate("Init Window", "Whois info for " + whoNick);
             tabUpdate("Init Window",
-                    "  " + whoNick + "!" + whoUser + "@" + whoHost + " " +
-                    whoRealName);
+                      "  " + whoNick + "!" + whoUser + "@" + whoHost + " " +
+                      whoRealName);
         }
-        else if (command.equals("312")) {
+        else if (command.equals("312"))
+        {
             String whoNick = "",
                     whoServer = "",
                     whoServerInfo = "";
 
             StringTokenizer st = new StringTokenizer(parser.getParams(), " \r\n");
-            for (int i = 0; st.hasMoreTokens();) {
+            for (int i = 0; st.hasMoreTokens();)
+            {
                 String aToken = st.nextToken();
-                if (i == 1) {
+                if (i == 1)
+                {
                     whoNick = aToken;
                 }
-                else if (i == 2) {
+                else if (i == 2)
+                {
                     whoServer = aToken;
                 }
-                else if (i == 3) {
+                else if (i == 3)
+                {
                     //à vérifier!!!!!!!!!!!!!! ainsi que whois realname
                     String paramsWhois = parser.getParams();
                     whoServerInfo = paramsWhois.substring(paramsWhois.indexOf(aToken) + 1,
-                            paramsWhois.length());
+                                                          paramsWhois.length());
                     //whoServerInfo = aToken.substring(aToken.length());
                 }
 
@@ -864,17 +951,21 @@ public class XdccIrc
             // Let's update the Init Window
             tabUpdate("Init Window", "  Server: " + whoServer + " " + whoServerInfo);
         }
-        else if (command.equals("313")) {
+        else if (command.equals("313"))
+        {
             tabUpdate("Init Window", "  Operator: " + lineFromServer);
         }
-        else if (command.equals("317")) {
+        else if (command.equals("317"))
+        {
             String seconds = "",
                     trailing = "";
             trailing = parser.getTrailing();
             StringTokenizer st = new StringTokenizer(parser.getParams(), " \r\n");
-            for (int i = 0; st.hasMoreTokens();) {
+            for (int i = 0; st.hasMoreTokens();)
+            {
                 String aToken = st.nextToken();
-                if (i == 2) {
+                if (i == 2)
+                {
                     seconds = aToken;
                     break;
                 }
@@ -883,19 +974,24 @@ public class XdccIrc
             }
             tabUpdate("Init Window", " Idle time: " + seconds + " " + trailing);
         }
-        else if (command.equals("318")) {
+        else if (command.equals("318"))
+        {
             tabUpdate("Init Window", parser.getTrailing());
         }
-        else if (command.equals("319")) {
+        else if (command.equals("319"))
+        {
             tabUpdate("Init Window", "  Channels: " + parser.getTrailing());
         }
-        else if (command.equals("301")) { // RPL_AWAY
+        else if (command.equals("301"))
+        { // RPL_AWAY
             StringTokenizer st = new StringTokenizer(parser.getParams(), " \r\n");
             String awayNickname = "",
                     awayReason = "";
-            for (int i = 0; st.hasMoreTokens();) {
+            for (int i = 0; st.hasMoreTokens();)
+            {
                 String aToken = st.nextToken();
-                if (i == 1) {
+                if (i == 1)
+                {
                     awayNickname = aToken;
                     break;
                 }
@@ -903,26 +999,31 @@ public class XdccIrc
                 i++;
             }
             tabUpdate("Init Window",
-                    awayNickname + " is away for \"" + parser.getTrailing() + "\"");
+                      awayNickname + " is away for \"" + parser.getTrailing() + "\"");
         }
-        else if (command.equals("305")) { // RPL_UNAWAY
+        else if (command.equals("305"))
+        { // RPL_UNAWAY
             System.out.println("305: " + lineFromServer);
         }
 
-        else if (command.equals("333")) { // RPL_UNAWAY
+        else if (command.equals("333"))
+        { // RPL_UNAWAY
             System.out.println(lineFromServer + " --> Channel SYNCH time ??????");
         }
 
 // used or not ???????
         else if (command.equals("332") // RPL_TOPIC
-        ) {
+        )
+        {
             String topicChannelName = "",
                     topicTopic = "";
 
             StringTokenizer st = new StringTokenizer(parser.getParams(), " \r\n");
-            for (int i = 0; st.hasMoreTokens();) {
+            for (int i = 0; st.hasMoreTokens();)
+            {
                 String aToken = st.nextToken();
-                if (i == 1) {
+                if (i == 1)
+                {
                     topicChannelName = aToken;
                     break;
                 }
@@ -931,34 +1032,41 @@ public class XdccIrc
             }
 
             int indexOfChannel = findTab(tabbedPane, topicChannelName);
-            if (indexOfChannel != -1) {
+            if (indexOfChannel != -1)
+            {
                 Component aComponent = tabbedPane.getComponentAt(indexOfChannel);
-                if (aComponent instanceof ChannelPanel) {
+                if (aComponent instanceof ChannelPanel)
+                {
                     ((ChannelPanel) aComponent).setTitleArea(parser.getTrailing());
                 }
             }
         }
         else if (command.equals("TOPIC")
-        ) {
+        )
+        {
             String topicChannelName = "";
 
             StringTokenizer st = new StringTokenizer(parser.getParams(), " \r\n");
-            if (st.hasMoreTokens()) {
+            if (st.hasMoreTokens())
+            {
                 topicChannelName = st.nextToken();
 
             }
             int indexOfChannel = findTab(tabbedPane, topicChannelName);
-            if (indexOfChannel != -1) {
+            if (indexOfChannel != -1)
+            {
                 Component aComponent = tabbedPane.getComponentAt(indexOfChannel);
-                if (aComponent instanceof ChannelPanel) {
+                if (aComponent instanceof ChannelPanel)
+                {
                     ((ChannelPanel) aComponent).setTitleArea(parser.getTrailing());
                     ((ChannelPanel) aComponent).updateTextArea("TOPIC: " +
-                            parser.getTrailing() + "(" + parser.getNick() + ")");
+                                                               parser.getTrailing() + "(" + parser.getNick() + ")");
                 }
             }
         }
         else if (command.equals("353") //
-        ) {
+        )
+        {
             String channelName = parser.getMiddle();
             int index = channelName.lastIndexOf("#");
             channelName = channelName.substring(index);
@@ -967,9 +1075,11 @@ public class XdccIrc
             int indexOfChannel = findTab(tabbedPane, channelName);
 
             // If the channelName tab exists!
-            if (indexOfChannel != -1) {
+            if (indexOfChannel != -1)
+            {
                 Component aComponent = tabbedPane.getComponentAt(indexOfChannel);
-                if (aComponent instanceof ChannelPanel) {
+                if (aComponent instanceof ChannelPanel)
+                {
                     // All the usernames are in trailing!
                     String trailing = parser.getTrailing();
 
@@ -979,7 +1089,8 @@ public class XdccIrc
                     // How many users are there?
                     int totalTokens = st.countTokens();
 
-                    for (int i = 0; i < totalTokens; i++) {
+                    for (int i = 0; i < totalTokens; i++)
+                    {
                         // a username/nickname
                         String tempnickname = st.nextToken();
 
@@ -988,58 +1099,69 @@ public class XdccIrc
                     }
                 }
             }
-            else { // channelName tab doesn't exist!
+            else
+            { // channelName tab doesn't exist!
             }
         }
 
-        else if (command.equals("404")) {
+        else if (command.equals("404"))
+        {
             tabUpdate("Init Window",
-                    "ERROR: Cannot send msg to channel! " + lineFromServer);
+                      "ERROR: Cannot send msg to channel! " + lineFromServer);
         }
 
-        else if (command.equals("421")) {
+        else if (command.equals("421"))
+        {
             tabUpdate("Init Window", "ERROR: Command not found! " + lineFromServer);
         }
 
-        else if (command.equals("442")) {
+        else if (command.equals("442"))
+        {
             tabUpdate("Init Window",
-                    "ERROR: You're not on that channel! " + lineFromServer);
+                      "ERROR: You're not on that channel! " + lineFromServer);
         }
 
-        else if (command.equals("443")) {
+        else if (command.equals("443"))
+        {
             tabUpdate("Init Window",
-                    "ERROR: User is already on that channel! " + lineFromServer);
+                      "ERROR: User is already on that channel! " + lineFromServer);
         }
 
-        else if (command.equals("461")) {
+        else if (command.equals("461"))
+        {
             tabUpdate("Init Window",
-                    "ERROR: Need more params for this command! " + lineFromServer);
+                      "ERROR: Need more params for this command! " + lineFromServer);
         }
 
-        else if (command.equals("482")) {
+        else if (command.equals("482"))
+        {
             tabUpdate("Init Window",
-                    "ERROR: You must be channel operator for this! " + lineFromServer);
+                      "ERROR: You must be channel operator for this! " + lineFromServer);
         }
 
-        else if (command.equals("433")) {
+        else if (command.equals("433"))
+        {
             tabUpdate("Init Window",
-                    nickname + " already in use " + parser.getTrailing());
+                      nickname + " already in use " + parser.getTrailing());
 
             String newNickname;
             newNickname = JOptionPane.showInputDialog(" Change current nickname: " +
-                    getNickname() + " to: ",
-                    nickname);
+                                                      getNickname() + " to: ",
+                                                      nickname);
 
-            if (newNickname != null) {
+            if (newNickname != null)
+            {
                 nickname = newNickname;
                 Component aComponent = tabbedPane.getComponentAt(0);
                 ((InitPanel) aComponent).setTitleArea(newNickname + " connected to: " +
-                        host + ":" + port);
+                                                      host + ":" + port);
                 parseSendToCommand("NICK " + newNickname);
             }
         }
-        else {
-            if (lineFromServer.indexOf("MODE") != -1) {
+        else
+        {
+            if (lineFromServer.indexOf("MODE") != -1)
+            {
                 String nickCommand;
                 String modeReceiver;
                 String modeReceived;
@@ -1047,43 +1169,50 @@ public class XdccIrc
                 String channelsMode;
                 temp = lineFromServer.substring(1, lineFromServer.indexOf(" "));
                 nickCommand = temp;
-                if (temp.indexOf("!") != -1) {
+                if (temp.indexOf("!") != -1)
+                {
                     nickCommand = temp.substring(0, temp.indexOf("!"));
                 }
                 temp = lineFromServer.substring(lineFromServer.indexOf(" ",
-                        lineFromServer.indexOf(" ") + 1));
+                                                                       lineFromServer.indexOf(" ") + 1));
                 temp = temp.substring(temp.indexOf(" "));
 // User mode
-                if (temp.indexOf(":") != -1) {
+                if (temp.indexOf(":") != -1)
+                {
                     modeReceiver = temp.substring(0, temp.indexOf(":") - 1);
                     modeReceived = temp.substring(temp.indexOf(":") + 1);
                     tabUpdate("Init Window",
-                            nickCommand + " sets MODE: " + modeReceived + " " +
-                            modeReceiver);
+                              nickCommand + " sets MODE: " + modeReceived + " " +
+                              modeReceiver);
                 }
 // Channel mode
-                else {
+                else
+                {
                     channelsMode = temp.substring(1, temp.indexOf(" ", 1));
                     modeReceived = temp.substring(temp.indexOf(" ", 1) + 1, temp.length());
 
                     int indexOfChannel = findTab(tabbedPane, channelsMode);
-                    if (indexOfChannel != -1) {
+                    if (indexOfChannel != -1)
+                    {
                         Component aComponent = tabbedPane.getComponentAt(indexOfChannel);
-                        if (aComponent instanceof ChannelPanel) {
+                        if (aComponent instanceof ChannelPanel)
+                        {
                             ((ChannelPanel) aComponent).updateTextArea(nickCommand +
-                                    " sets MODE: " + modeReceived);
+                                                                       " sets MODE: " + modeReceived);
                         }
                     }
 //				tabUpdate("Init Window", nickCommand + " sets MODE: " + modeReceiver + " for channel: " + channelsMode);
                 }
             }
-            else if (lineFromServer.indexOf(" 366 ") != -1) {
+            else if (lineFromServer.indexOf(" 366 ") != -1)
+            {
                 ;
             }
             //System.out.println("END of Channel name list.");
-            else {
+            else
+            {
                 tabUpdate("Init Window",
-                        "Command not found (lineFromServer): " + lineFromServer);
+                          "Command not found (lineFromServer): " + lineFromServer);
             }
         }
     }
@@ -1091,11 +1220,13 @@ public class XdccIrc
     private int findTab(final JTabbedPane tabbedPane, String title) {
         int totalTabs = tabbedPane.getTabCount();
 
-        for (int i = 0; i < totalTabs; i++) {
+        for (int i = 0; i < totalTabs; i++)
+        {
             String tabTitle = tabbedPane.getTitleAt(i);
 
             // Let's see whether tabbedPane title and title matches!
-            if (tabTitle.equalsIgnoreCase(title)) {
+            if (tabTitle.equalsIgnoreCase(title))
+            {
                 return i;
             }
         }
@@ -1107,25 +1238,32 @@ public class XdccIrc
     private int tabUpdate(String tabTitle, String message) {
         int indexOfTab = findTab(tabbedPane, tabTitle);
 
-        if (indexOfTab != -1) {
+        if (indexOfTab != -1)
+        {
             Component aComponent = tabbedPane.getComponentAt(indexOfTab);
-            if (aComponent instanceof ChannelPanel) {
+            if (aComponent instanceof ChannelPanel)
+            {
                 ((ChannelPanel) aComponent).updateTextArea(message);
-                if (tabbedPane.getSelectedIndex() != indexOfTab) {
+                if (tabbedPane.getSelectedIndex() != indexOfTab)
+                {
                     tabbedPane.setBackgroundAt(indexOfTab, Color.red);
                 }
                 tabbedPane.revalidate();
             }
-            else if (aComponent instanceof UserPanel) {
+            else if (aComponent instanceof UserPanel)
+            {
                 ((UserPanel) aComponent).updateTextArea(message);
-                if (tabbedPane.getSelectedIndex() != indexOfTab) {
+                if (tabbedPane.getSelectedIndex() != indexOfTab)
+                {
                     tabbedPane.setBackgroundAt(indexOfTab, Color.red);
                 }
                 tabbedPane.revalidate();
             }
-            else if (aComponent instanceof InitPanel) {
+            else if (aComponent instanceof InitPanel)
+            {
                 ((InitPanel) aComponent).updateTextArea(message);
-                if (tabbedPane.getSelectedIndex() != indexOfTab) {
+                if (tabbedPane.getSelectedIndex() != indexOfTab)
+                {
                     tabbedPane.setBackgroundAt(indexOfTab, Color.red);
                 }
                 tabbedPane.revalidate();
@@ -1148,7 +1286,8 @@ public class XdccIrc
         JMenuItem item = menu.add(action);
 
         KeyStroke keystroke = (KeyStroke) action.getValue(action.ACCELERATOR_KEY);
-        if (keystroke != null) {
+        if (keystroke != null)
+        {
             item.setAccelerator(keystroke);
 
         }
@@ -1172,7 +1311,8 @@ public class XdccIrc
 
     private void setSelectedTab() {
         // to return a selected tab to it's original color
-        if (tabbedPane.getModel().isSelected()) {
+        if (tabbedPane.getModel().isSelected())
+        {
             int index = tabbedPane.getSelectedIndex();
 
             // setting a background color to null makes
@@ -1189,10 +1329,12 @@ public class XdccIrc
         userName = JOptionPane.showInputDialog(
                 " Input a nickname to talk privately ");
 
-        if (userName != null) {
+        if (userName != null)
+        {
             addUser(tabbedPane, userName);
         }
-        else {
+        else
+        {
             System.out.println("You can do /msg nickname your message");
             System.out.println("to send a private message to nickname");
         }
@@ -1203,21 +1345,27 @@ public class XdccIrc
 
         channelName = JOptionPane.showInputDialog(" Please Enter a Channel Name ");
 
-        if (channelName != null) {
-            if (channelName.startsWith("#")) {
+        if (channelName != null)
+        {
+            if (channelName.startsWith("#"))
+            {
                 tabUpdate("Init Window", "Trying to join: " + channelName);
-                if (toServer != null) {
+                if (toServer != null)
+                {
                     parseSendToCommand("JOIN " + channelName);
                 }
             }
-            else {
+            else
+            {
                 tabUpdate("Init Window", "Trying to join: #" + channelName);
-                if (toServer != null) {
+                if (toServer != null)
+                {
                     parseSendToCommand("JOIN #" + channelName);
                 }
             }
         }
-        else {
+        else
+        {
             tabUpdate("Init Window", "No channel name specified.");
         }
     }
@@ -1226,17 +1374,20 @@ public class XdccIrc
         String newNickname;
 
         newNickname = JOptionPane.showInputDialog(" Change current nickname: " +
-                getNickname() + " to: ");
+                                                  getNickname() + " to: ");
 
-        if (newNickname != null) {
-            if (toServer != null) {
+        if (newNickname != null)
+        {
+            if (toServer != null)
+            {
                 Component aComponent = tabbedPane.getComponentAt(0);
                 ((InitPanel) aComponent).setTitleArea(nickname + " connected to: " +
-                        host + ":" + port);
+                                                      host + ":" + port);
                 parseSendToCommand("NICK " + newNickname);
             }
         }
-        else {
+        else
+        {
             tabUpdate("Init Window", "No nickname specified.");
         }
     }
@@ -1247,8 +1398,10 @@ public class XdccIrc
         whoisNickname = JOptionPane.showInputDialog(
                 " Check Info of(Input nickname): ");
 
-        if (whoisNickname != null) {
-            if (toServer != null) {
+        if (whoisNickname != null)
+        {
+            if (toServer != null)
+            {
                 parseSendToCommand("WHOIS " + whoisNickname);
             }
         }
@@ -1265,11 +1418,13 @@ public class XdccIrc
     private ChannelPanel addChannel(final JTabbedPane tabbedPane, String name) {
         ChannelPanel channel;
 
-        if (name.startsWith("#")) {
+        if (name.startsWith("#"))
+        {
             channel = new ChannelPanel(name);
             tabbedPane.add(channel, name);
         }
-        else {
+        else
+        {
             channel = new ChannelPanel("#" + name);
             tabbedPane.add(channel, "#" + name);
         }
@@ -1283,7 +1438,8 @@ public class XdccIrc
 
         index = tabbedPane.indexOfTab(name);
 
-        if (index != -1 && index >= 0) {
+        if (index != -1 && index >= 0)
+        {
             tabbedPane.removeTabAt(index);
         }
 
@@ -1299,7 +1455,8 @@ public class XdccIrc
 
         ConnectionAction(String name, KeyStroke keystroke) {
             this(name);
-            if (keystroke != null) {
+            if (keystroke != null)
+            {
                 putValue(ACCELERATOR_KEY, keystroke);
             }
         }
@@ -1350,10 +1507,12 @@ public class XdccIrc
             Object source = e.getSource();
 
             // let's take care of textField
-            if (source == textField) {
+            if (source == textField)
+            {
                 String message = textField.getText();
 
-                if (message.startsWith("/")) {
+                if (message.startsWith("/"))
+                {
                     // commands that start with "/"
                     message = message.substring(1);
                     textArea.append(message + "\n");
@@ -1361,7 +1520,8 @@ public class XdccIrc
 
                     parseSendToCommand(message);
                 }
-                else {
+                else
+                {
                     // update textArea
                     textArea.append(message + "\n");
                     textField.setText("");
@@ -1384,7 +1544,8 @@ public class XdccIrc
             textArea.append(message + "\n");
 
             int newCaretPosition = textArea.getCaretPosition();
-            if (newCaretPosition == oldCaretPosition) {
+            if (newCaretPosition == oldCaretPosition)
+            {
                 textArea.setCaretPosition(oldCaretPosition + (message + "\n").length());
             }
         }
@@ -1393,57 +1554,68 @@ public class XdccIrc
     private void analyzeCommand(String message) {
         CommandInterpreter cmdI = new CommandInterpreter(message);
 
-        if (cmdI.getCommand().equals("JOIN")) {
+        if (cmdI.getCommand().equals("JOIN"))
+        {
             parseSendToCommand(cmdI.getCommand() + " " +
-                    cmdI.getParam1() + " " +
-                    cmdI.getMessage());
+                               cmdI.getParam1() + " " +
+                               cmdI.getMessage());
         }
         else if (cmdI.getCommand().equals("PART") ||
-                cmdI.getCommand().equals("LEAVE")) {
+                cmdI.getCommand().equals("LEAVE"))
+        {
             parseSendToCommand("PART " +
-                    cmdI.getParam1() + " :" +
-                    cmdI.getMessage());
+                               cmdI.getParam1() + " :" +
+                               cmdI.getMessage());
         }
-        else if (cmdI.getCommand().equals("QUIT")) {
+        else if (cmdI.getCommand().equals("QUIT"))
+        {
             parseSendToCommand("QUIT :" +
-                    cmdI.getParam1() + " " +
-                    cmdI.getMessage());
+                               cmdI.getParam1() + " " +
+                               cmdI.getMessage());
         }
-        else if (cmdI.getCommand().equals("WHOIS")) {
+        else if (cmdI.getCommand().equals("WHOIS"))
+        {
             parseSendToCommand("WHOIS " +
-                    cmdI.getParam1() + " " +
-                    cmdI.getMessage());
+                               cmdI.getParam1() + " " +
+                               cmdI.getMessage());
         }
-        else if (cmdI.getCommand().equals("MSG")) {
+        else if (cmdI.getCommand().equals("MSG"))
+        {
             parseSendToCommand("PRIVMSG " +
-                    cmdI.getParam1() + " :" +
-                    cmdI.getMessage());
+                               cmdI.getParam1() + " :" +
+                               cmdI.getMessage());
         }
-        else if (cmdI.getCommand().equals("CTCP")) {
+        else if (cmdI.getCommand().equals("CTCP"))
+        {
             parseSendToCommand("PRIVMSG " +
-                    cmdI.getParam1() + " :" + 1 +
-                    cmdI.getMessage() + 1);
+                               cmdI.getParam1() + " :" + 1 +
+                               cmdI.getMessage() + 1);
         }
-        else if (cmdI.getCommand().equals("NICK")) {
+        else if (cmdI.getCommand().equals("NICK"))
+        {
             parseSendToCommand("NICK " + cmdI.getParam1());
         }
-        else if (cmdI.getCommand().equals("TOPIC")) {
-            if (cmdI.getMessage().equals("")) {
+        else if (cmdI.getCommand().equals("TOPIC"))
+        {
+            if (cmdI.getMessage().equals(""))
+            {
                 parseSendToCommand(cmdI.getCommand() + " " +
-                        cmdI.getParam1() + " :");
+                                   cmdI.getParam1() + " :");
             }
-            else {
+            else
+            {
                 System.out.println("Sending a message: " + cmdI.getCommand() + " " +
-                        cmdI.getParam1() + " :" + cmdI.getMessage());
+                                   cmdI.getParam1() + " :" + cmdI.getMessage());
                 parseSendToCommand(cmdI.getCommand() + " " +
-                        cmdI.getParam1() + " :" +
-                        cmdI.getMessage());
+                                   cmdI.getParam1() + " :" +
+                                   cmdI.getMessage());
             }
         }
-        else {
+        else
+        {
             parseSendToCommand(cmdI.getCommand() + " :" +
-                    cmdI.getParam1() + " " +
-                    cmdI.getMessage());
+                               cmdI.getParam1() + " " +
+                               cmdI.getMessage());
         }
     }
 
@@ -1489,8 +1661,8 @@ public class XdccIrc
             sp2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
             JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                    sp1,
-                    sp2);
+                                                  sp1,
+                                                  sp2);
             splitPane.setOneTouchExpandable(true);
             //System.out.println(getSize().width);
             //splitPane.setDividerLocation(getSize().width - 100);
@@ -1516,28 +1688,32 @@ public class XdccIrc
             Object source = e.getSource();
 
             // let's take care of textField
-            if (source == textField) {
+            if (source == textField)
+            {
                 String message = textField.getText();
 
                 // let's send to server
-                if (message.startsWith("/")) {
+                if (message.startsWith("/"))
+                {
                     // commands that start with "/"
                     // message = message.substring(1);
                     analyzeCommand(message);
                     textField.setText("");
                 }
-                else {
+                else
+                {
                     // A private message to channel!
                     parseSendToCommand("PRIVMSG " + name + " :" + message);
 
                     // let's update textArea
                     // textArea.append(textField.getText() + "\n");
                     updateTextArea(formatNickname("<" + getNickname() + "> ") +
-                            textField.getText());
+                                   textField.getText());
                     resetTextField();
                 }
             }
-            else if (source == closeButton) {
+            else if (source == closeButton)
+            {
                 closeChannel(tabbedPane, name);
 
                 // Let's send a sensible message
@@ -1546,11 +1722,13 @@ public class XdccIrc
         }
 
         public void valueChanged(ListSelectionEvent e) {
-            if (e.getValueIsAdjusting() == false) {
-                if (userList.getSelectedIndex() != -1) {
+            if (e.getValueIsAdjusting() == false)
+            {
+                if (userList.getSelectedIndex() != -1)
+                {
                     tabUpdate("Init Window",
-                            "Nickname: " + userList.getSelectedValue().toString() +
-                            " was selected.");
+                              "Nickname: " + userList.getSelectedValue().toString() +
+                              " was selected.");
                 }
             }
         }
@@ -1569,17 +1747,20 @@ public class XdccIrc
             textArea.append(message + "\n");
 
             int newCaretPosition = textArea.getCaretPosition();
-            if (newCaretPosition == oldCaretPosition) {
+            if (newCaretPosition == oldCaretPosition)
+            {
                 textArea.setCaretPosition(oldCaretPosition + (message + "\n").length());
             }
         }
 
         public void updateUserArea(String username, String command) {
-            if (command.equals("add")) {
+            if (command.equals("add"))
+            {
                 usernameList.add(username);
             }
 
-            else if (command.equals("remove")) {
+            else if (command.equals("remove"))
+            {
                 usernameList.remove(username);
             }
         }
@@ -1642,26 +1823,30 @@ public class XdccIrc
             Object source = e.getSource();
 
             // let's take care of textField
-            if (source == textField) {
+            if (source == textField)
+            {
                 String message = textField.getText();
 
                 // let's send to the server
-                if (message.startsWith("/")) {
+                if (message.startsWith("/"))
+                {
                     // A command
                     analyzeCommand(message);
                     textField.setText("");
                 }
-                else {
+                else
+                {
                     // A normal private message to send to the user
                     parseSendToCommand("PRIVMSG " + name + " :" + message);
 
                     // let's update textArea
                     updateTextArea(formatNickname("<" + getNickname() + "> ") +
-                            textField.getText());
+                                   textField.getText());
                     resetTextField();
                 }
             }
-            else if (source == closeButton) {
+            else if (source == closeButton)
+            {
                 closeChannel(tabbedPane, name);
             }
         }
@@ -1675,7 +1860,8 @@ public class XdccIrc
             textArea.append(message + "\n");
 
             int newCaretPosition = textArea.getCaretPosition();
-            if (newCaretPosition == oldCaretPosition) {
+            if (newCaretPosition == oldCaretPosition)
+            {
                 textArea.setCaretPosition(oldCaretPosition + (message + "\n").length());
             }
         }
