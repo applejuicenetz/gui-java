@@ -15,7 +15,7 @@ import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.22 2003/06/13 15:07:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.23 2003/06/22 19:54:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.23  2003/06/22 19:54:45  maj0r
+ * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
+ *
  * Revision 1.22  2003/06/13 15:07:30  maj0r
  * Versionsanzeige hinzugefügt.
  * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
@@ -160,10 +163,12 @@ public class AppleJuiceDialog
     System.exit(0);
   }
 
-  public static void closeWithErrormessage(String error) {
+  public static void closeWithErrormessage(String error, boolean speichereEinstellungen) {
     JOptionPane.showMessageDialog(theApp, error, "Fehler!",
                                   JOptionPane.OK_OPTION);
-    einstellungenSpeichern();
+    if (speichereEinstellungen)
+      einstellungenSpeichern();
+    System.out.println("Fehler: " + error);
     System.exit( -1);
   }
 
@@ -171,10 +176,10 @@ public class AppleJuiceDialog
     String path = System.getProperty("user.dir") + File.separator + "language" +
         File.separator;
     File languagePath = new File(path);
-    String[] tempListe = languagePath.list();
-    if (tempListe == null) {
-      closeWithErrormessage("Der Ordner 'language' für die Sprachauswahl xml-Dateien ist nicht vorhanden.\r\nappleJuice wird beendet.");
+    if (!languagePath.isDirectory()) {
+      closeWithErrormessage("Der Ordner 'language' für die Sprachauswahl xml-Dateien ist nicht vorhanden.\r\nappleJuice wird beendet.", false);
     }
+    String[] tempListe = languagePath.list();
     HashSet sprachDateien = new HashSet();
     for (int i = 0; i < tempListe.length; i++) {
       if (tempListe[i].indexOf(".xml") != -1) {
@@ -182,8 +187,7 @@ public class AppleJuiceDialog
       }
     }
     if (sprachDateien.size() == 0) {
-      closeWithErrormessage("Es sind keine xml-Dateien für die Sprachauswahl im Ordner 'language' vorhanden.\r\nappleJuice wird beendet.");
-
+      closeWithErrormessage("Es sind keine xml-Dateien für die Sprachauswahl im Ordner 'language' vorhanden.\r\nappleJuice wird beendet.", false);
     }
     JMenuBar menuBar = new JMenuBar();
     optionenMenu = new JMenu("Extras");

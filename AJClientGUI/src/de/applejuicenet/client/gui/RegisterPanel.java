@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.15 2003/06/13 15:07:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.16 2003/06/22 19:54:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.16  2003/06/22 19:54:45  maj0r
+ * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
+ *
  * Revision 1.15  2003/06/13 15:07:30  maj0r
  * Versionsanzeige hinzugefügt.
  * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
@@ -82,6 +85,10 @@ public class RegisterPanel
     String path = System.getProperty("user.dir") + File.separator + "plugins" +
         File.separator;
     File pluginPath = new File(path);
+    if (!pluginPath.isDirectory()){
+      System.out.println("Warnung: Kein Verzeichnis 'plugins' vorhanden!");
+      return;
+    }
     String[] tempListe = pluginPath.list();
     for (int i = 0; i < tempListe.length; i++) {
       if (tempListe[i].indexOf(".jar") != -1) {
