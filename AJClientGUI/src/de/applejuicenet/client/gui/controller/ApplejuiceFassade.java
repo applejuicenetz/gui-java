@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.95 2004/01/14 15:27:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.96 2004/01/19 17:45:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -853,23 +853,29 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         }
     }
 
-    public void processLink(String link) {
-        try {
-            if (link == null || link.length() == 0) {
-                System.out.print("Warnung: Ungueltiger Link uebergeben!");
-                return;
+    public synchronized void processLink(final String link) {
+        new Thread() {
+            public void run() {
+                try {
+                    if (link == null || link.length() == 0) {
+                        if (logger.isEnabledFor(Level.INFO)) {
+                            logger.info("Ungueltiger Link uebergeben: " + link);
+                        }
+                        return;
+                    }
+                    String password = PropertiesManager.getOptionsManager().
+                        getRemoteSettings().getOldPassword();
+                    HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                 "/function/processlink?password=" +
+                                                 password + "&link=" + link, false);
+                }
+                catch (Exception e) {
+                    if (logger.isEnabledFor(Level.ERROR)) {
+                        logger.error("Unbehandelte Exception", e);
+                    }
+                }
             }
-            String password = PropertiesManager.getOptionsManager().
-                getRemoteSettings().getOldPassword();
-            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                         "/function/processlink?password=" +
-                                         password + "&link=" + link, false);
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
-        }
+        }.start();
     }
 
     public void setPowerDownload(int[] id, int powerDownload) {
