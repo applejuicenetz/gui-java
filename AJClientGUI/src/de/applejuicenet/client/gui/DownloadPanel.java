@@ -20,7 +20,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.41 2003/09/04 06:26:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.42 2003/09/04 09:27:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.42  2003/09/04 09:27:25  maj0r
+ * DownloadPartListe fertiggestellt.
+ *
  * Revision 1.41  2003/09/04 06:26:49  maj0r
  * Partlist korrigiert. Wird momentan beim Resize nicht neugezeichnet.
  *
@@ -305,7 +308,6 @@ public class DownloadPanel
             }
             downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         }
-        downloadDOOverviewPanel.setDownloadDO(null);
     }
 
     public void fireLanguageChanged() {
