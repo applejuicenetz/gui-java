@@ -61,7 +61,7 @@ public class TrayIconPopupSimpleItem
     // Owner of this menu item
     protected WindowsTrayIcon m_TrayIcon;
     // Action m_Listeners for menu item
-    private Vector m_Listeners;
+    private Vector<ActionListener> m_Listeners;
 
     /**
      * Create a new menu item
@@ -88,7 +88,7 @@ public class TrayIconPopupSimpleItem
      */
     public void addActionListener(ActionListener listener) {
         if (m_Listeners == null) {
-            m_Listeners = new Vector();
+            m_Listeners = new Vector<ActionListener>();
         }
         m_Listeners.addElement(listener);
     }

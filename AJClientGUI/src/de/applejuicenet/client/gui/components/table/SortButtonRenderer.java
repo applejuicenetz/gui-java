@@ -11,7 +11,7 @@ import javax.swing.table.TableCellRenderer;
 
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/SortButtonRenderer.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/SortButtonRenderer.java,v 1.3 2005/03/23 06:59:58 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,13 +32,13 @@ public class SortButtonRenderer
     private static Font textFont = new JTable().getFont();
 
     private int pushedColumn;
-    private Hashtable state;
+    private Hashtable<Integer,Integer> state;
     private JButton downButton, upButton;
     private boolean isPressed;
 
     public SortButtonRenderer() {
         pushedColumn = -1;
-        state = new Hashtable();
+        state = new Hashtable<Integer,Integer>();
 
         setMargin(new Insets(0, 0, 0, 0));
         setHorizontalTextPosition(LEFT);

@@ -16,7 +16,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.util.DownloadCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.8 2005/03/23 06:59:58 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.9 2005/03/23 07:04:03 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -106,7 +106,7 @@ public class DownloadDirectoryNode
         boolean newSort = false;
         synchronized (this) {
             Iterator it = downloads.values().iterator();
-            ArrayList oldNodes = new ArrayList();
+            ArrayList<DownloadMainNode> oldNodes = new ArrayList<DownloadMainNode>();
             for (int i = 0; i < children.size(); i++) {
                 oldNodes.add(children.get(i));
             }

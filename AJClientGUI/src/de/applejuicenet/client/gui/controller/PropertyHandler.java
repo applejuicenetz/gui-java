@@ -19,7 +19,7 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
 public class PropertyHandler {
 	private Logger logger;
 	
-	private HashSet listener = null;
+	private HashSet<PropertyChangeListener> listener = null;
 	private String path;
 	private Properties props;
 	private String beschreibung;
@@ -162,7 +162,7 @@ public class PropertyHandler {
 
 	public boolean addPropertyChangeListener(PropertyChangeListener propertyChangeListener){
 		if (listener == null){
-			listener = new HashSet();
+			listener = new HashSet<PropertyChangeListener>();
 		}
 		return listener.add(propertyChangeListener);
 	}

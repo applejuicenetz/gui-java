@@ -264,7 +264,7 @@ public class DownloadController extends GuiController {
 	private synchronized void downloadPropertyChanged(DataPropertyChangeEvent evt){
 		if (isFirstDownloadPropertyChanged){
 			isFirstDownloadPropertyChanged = false;
-			Map downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+			Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
 			((DownloadRootNode) downloadPanel.getDownloadModel().
                     getRoot()).setDownloadMap(downloads);
 			DownloadDirectoryNode.setDownloads(downloads);
@@ -895,7 +895,7 @@ public class DownloadController extends GuiController {
 					int[] widths = pm.getDownloadWidths();
 					boolean[] visibilies = pm.getDownloadColumnVisibilities();
 					int[] indizes = pm.getDownloadColumnIndizes();
-					ArrayList visibleColumns = new ArrayList();
+					ArrayList<TableColumn> visibleColumns = new ArrayList<TableColumn>();
 					for (int i = 0; i < columns.length; i++) {
 						columns[i].setPreferredWidth(widths[i]);
 						downloadPanel.getDownloadTable().

@@ -1057,7 +1057,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 	}
 
 	public ConnectionSettings[] getConnectionsSet() {
-		ArrayList connectionSet = new ArrayList();
+		ArrayList<ConnectionSettings> connectionSet = new ArrayList<ConnectionSettings>();
 		for (int i = 0;; i++) {
 			ConnectionSettings temp = new ConnectionSettings();
 			temp.setHost(propertyHandler.get("options_remote" + i + "_host"));

@@ -30,7 +30,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.54 2005/03/14 09:36:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.55 2005/03/23 07:01:50 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -165,7 +165,7 @@ public class RegisterPanel
         }
         String[] tempListe = pluginPath.list();
         PluginJarClassLoader jarLoader = null;
-        HashSet plugins = new HashSet();
+        HashSet<PluginConnector> plugins = new HashSet<PluginConnector>();
         for (int i = 0; i < tempListe.length; i++) {
             if (tempListe[i].toLowerCase().endsWith(".jar")) {
                 URL url = null;

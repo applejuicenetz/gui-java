@@ -16,7 +16,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.27 2005/01/24 10:40:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.28 2005/03/23 06:59:58 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,7 +31,7 @@ public class LanguageSelector
 
     private static LanguageSelector instance = null;
 
-    private Set languageListener = new HashSet();
+    private Set<LanguageListener> languageListener = new HashSet<LanguageListener>();
     private CharArrayWriter contents = new CharArrayWriter();
     private static Logger logger = Logger.getLogger(LanguageSelector.class);
     private StringBuffer key = new StringBuffer();

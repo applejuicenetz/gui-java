@@ -79,7 +79,7 @@ public class TrayIconPopup
      ****************************************************************************************************************/
 
     // Vector containing menu items
-    protected Vector mVector = new Vector();
+    protected Vector<TrayIconPopupItem> mVector = new Vector<TrayIconPopupItem>();
     // Name of popup menu (only needed for submenus)
     protected String mItem;
 

@@ -235,7 +235,7 @@ public class WindowsTrayIcon {
      */
     public void addActionListener(ActionListener listener) {
         if (m_ActList == null) {
-            m_ActList = new Vector();
+            m_ActList = new Vector<ActionListener>();
             clickEnable(this, m_ID, true);
         }
         m_ActList.addElement(listener);
@@ -247,7 +247,7 @@ public class WindowsTrayIcon {
 
     public void addMouseListener(MouseListener listener) {
         if (m_MouseList == null) {
-            m_MouseList = new Vector();
+            m_MouseList = new Vector<MouseListener>();
             clickEnable(this, m_ID, true);
         }
         m_MouseList.addElement(listener);
@@ -417,7 +417,8 @@ public class WindowsTrayIcon {
 // Each icon can have a popup menu - activated when user right clicks the icon
     private TrayIconPopup m_Popup;
 // Each icon can have any number of ActionListeners - notified when user clicks (left/right) the icon
-    private Vector m_ActList, m_MouseList;
+    private Vector<ActionListener> m_ActList;
+    private Vector<MouseListener> m_MouseList;
 // Each application can have one WindowsMessageCallback - notified when another app uses sendWindowsMessage
     private static TrayIconCallback m_WMessageCallback;
 

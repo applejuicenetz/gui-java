@@ -476,8 +476,6 @@ public class DownloadPanel extends TklPanel {
 		downloadTable.getTableHeader().setBackground(
 				downloadTable.getBackground());
 		aScrollPane.getViewport().setOpaque(false);
-		downloadTable.addMouseListener(new MouseAdapter() {
-		});
 		topPanel.add(aScrollPane, constraints);
 
 		constraints.gridx = 0;
