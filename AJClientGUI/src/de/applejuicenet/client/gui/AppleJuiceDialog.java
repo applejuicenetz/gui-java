@@ -1,20 +1,5 @@
 package de.applejuicenet.client.gui;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -33,6 +18,21 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -60,22 +60,33 @@ import javax.swing.filechooser.FileFilter;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
 import com.jeans.trayicon.SwingTrayPopup;
 import com.jeans.trayicon.WindowsTrayIcon;
 import com.l2fprod.gui.plaf.skin.Skin;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+
 import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.dac.ServerDO;
+import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.fassade.shared.Information;
+import de.applejuicenet.client.fassade.shared.NetworkInfo;
+import de.applejuicenet.client.fassade.shared.ProxySettings;
+import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.about.AboutDialog;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.gui.download.DownloadController;
 import de.applejuicenet.client.gui.download.DownloadPanel;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.memorymonitor.MemoryMonitorDialog;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
@@ -86,15 +97,9 @@ import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.gui.share.SharePanel;
 import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.gui.upload.UploadPanel;
-import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.LookAFeel;
-import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.SoundPlayer;
-import de.applejuicenet.client.shared.WebsiteContentLoader;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
  * $Header:
@@ -119,6 +124,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		DataUpdateListener {
 
+	//CVS-Beispiel 0.60.0-1-CVS
+    public static final String GUI_VERSION = "0.70.0-1-CVS";
+	
 	private static Logger logger = Logger.getLogger(AppleJuiceDialog.class);
 	private static Map themes = null;
 	public static boolean rewriteProperties = false;
@@ -170,7 +178,9 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	private String invalidLink;
 	private String linkFailure;
 	private String dialogTitel;
-
+	private String verbunden;
+    private String verbinden;
+    private String nichtVerbunden;
 	
 	public static void initThemes() {
 		try {
@@ -273,7 +283,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	}
 
 	private void init() throws Exception {
-		titel = "appleJuice Client (GUI " + ApplejuiceFassade.GUI_VERSION + ")";
+		titel = "appleJuice Client (GUI " + AppleJuiceDialog.GUI_VERSION 
+		 	+ "/" + ApplejuiceFassade.FASSADE_VERSION + ")";
 		IconManager im = IconManager.getInstance();
 		Image image = im.getIcon("applejuice").getImage();
 		setTitle(titel);
@@ -476,7 +487,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		ToolTipManager.sharedInstance().setInitialDelay(1);
 		ToolTipManager.sharedInstance().setDismissDelay(50000);
 		fireLanguageChanged();
-		ApplejuiceFassade dm = ApplejuiceFassade.getInstance();
+		ApplejuiceFassade dm = AppleJuiceClient.getAjFassade();
 		dm.addDataUpdateListener(this, DataUpdateListener.INFORMATION_CHANGED);
 		dm.addDataUpdateListener(this, DataUpdateListener.NETINFO_CHANGED);
 		dm.startXMLCheck();
@@ -535,7 +546,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	}
 
 	private void closeDialog(WindowEvent evt) {
-		ApplejuiceFassade.getInstance().stopXMLCheck();
+		AppleJuiceClient.getAjFassade().stopXMLCheck();
 		if (rewriteProperties) {
 			PropertiesManager.restoreProperties();
 		}
@@ -561,7 +572,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		if (rewriteProperties) {
 			PropertiesManager.restoreProperties();
 		} else {
-			ApplejuiceFassade.getInstance().stopXMLCheck();
+			AppleJuiceClient.getAjFassade().stopXMLCheck();
 		}
 		String nachricht = "appleJuice-Core-GUI wird beendet...";
 		Logger aLogger = Logger.getLogger(AppleJuiceDialog.class.getName());
@@ -646,7 +657,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							JOptionPane.YES_NO_OPTION,
 							JOptionPane.WARNING_MESSAGE);
 					if (result == JOptionPane.YES_OPTION) {
-						ApplejuiceFassade.getInstance().exitCore();
+						AppleJuiceClient.getAjFassade().shutdownCore();
 					}
 				}
 			});
@@ -892,8 +903,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		if (i == JFileChooser.APPROVE_OPTION) {
 			final File file = fileChooser.getSelectedFile();
 			if (file.isFile()) {
-				String[] dirs = ApplejuiceFassade.getInstance()
-				.getCurrentIncomingDirs();
+				String[] dirs = AppleJuiceClient.getAjFassade()
+					.getCurrentIncomingDirs();
 				IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(
 						AppleJuiceDialog.getApp(), dirs);
 				incomingDirSelectionDialog.setVisible(true);
@@ -925,8 +936,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							String filename = "";
 							String checksum = "";
 							String link = "";
-							ApplejuiceFassade af = ApplejuiceFassade
-									.getInstance();
+							ApplejuiceFassade af = AppleJuiceClient.getAjFassade();
 							final StringBuffer returnValues = new StringBuffer();
 							boolean somethingAdded = false;
 							while ((line = reader.readLine()) != null) {
@@ -936,7 +946,13 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 								if (size != null && checksum != null) {
 									link = "ajfsp://file|" + filename + "|"
 											+ checksum + "|" + size + "/";
-									String result = af.processLink(link, targetDir);
+									String result;
+									try {
+										result = af.processLink(link, targetDir);
+									} catch (IllegalArgumentException e) {
+										logger.error(e);
+										return;
+									}
 									if (result.indexOf("ok") == 0){
 									    returnValues.append("'" + link + "' OK\n");
 									    somethingAdded = true;
@@ -986,7 +1002,13 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	public void fireLanguageChanged() {
 		try {
 			LanguageSelector languageSelector = LanguageSelector.getInstance();
-			keinServer = ZeichenErsetzer
+			verbunden = languageSelector.getFirstAttrbuteByTagName(
+	            ".root.javagui.mainform.verbunden");
+	        verbinden = languageSelector.getFirstAttrbuteByTagName(
+	            ".root.javagui.mainform.verbinden");
+	        nichtVerbunden = languageSelector.getFirstAttrbuteByTagName(
+	            ".root.javagui.mainform.nichtverbunden");			
+            keinServer = ZeichenErsetzer
 					.korrigiereUmlaute(languageSelector
 							.getFirstAttrbuteByTagName(".root.javagui.mainform.keinserver"));
 			themeSupportTitel = ZeichenErsetzer
@@ -1127,7 +1149,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							firstChange = false;
 							SoundPlayer.getInstance().playSound(
 									SoundPlayer.GESTARTET);
-							String versionsNr = ApplejuiceFassade.getInstance()
+							String versionsNr = AppleJuiceClient.getAjFassade()
 									.getCoreVersion().getVersion();
 							titel = ZeichenErsetzer
 									.korrigiereUmlaute(LanguageSelector
@@ -1137,7 +1159,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 									+ " (Core "
 									+ versionsNr
 									+ " - GUI "
-									+ ApplejuiceFassade.GUI_VERSION + ")";
+									+ AppleJuiceDialog.GUI_VERSION  + "/" + 
+									ApplejuiceFassade.FASSADE_VERSION + ")";
 							setTitle(titel);
 							if (useTrayIcon) {
 								trayIcon.setToolTipText(titel);
@@ -1145,8 +1168,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							repaint();
 						}
 						Information information = (Information) content;
-						statusbar[0].setText(information
-								.getVerbindungsStatusAsString());
+						statusbar[0].setText(getVerbindungsStatusAsString(information));
 						if (information.getVerbindungsStatus() == Information.NICHT_VERBUNDEN) {
 							statusbar[1].setText(keinServer);
 						} else {
@@ -1210,7 +1232,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		popup.add(popupAboutMenuItem);
 		new Thread() {
 			public void run() {
-				final AJSettings ajSettings = ApplejuiceFassade.getInstance()
+				final AJSettings ajSettings = AppleJuiceClient.getAjFassade()
 						.getAJSettings();
 				if (ajSettings != null) {
 					long maxUpload = 50;
@@ -1271,10 +1293,14 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							if (uploadSlider.getValue() < uploadSlider
 									.getMaximum()
 									&& uploadSlider.getValue() > 0) {
-								long down = downloadSlider.getValue() * 1024;
-								long up = uploadSlider.getValue() * 1024;
-								ApplejuiceFassade.getInstance()
-										.setMaxUpAndDown(up, down);
+								Long down = new Long(downloadSlider.getValue() * 1024);
+								Long up = new Long(uploadSlider.getValue() * 1024);
+								try {
+									AppleJuiceClient.getAjFassade()
+											.setMaxUpAndDown(up, down);
+								} catch (IllegalArgumentException e1) {
+									logger.error(e1);
+								}
 							} else {
 								uploadSlider.setValue((int) ajSettings
 										.getMaxUploadInKB());
@@ -1286,10 +1312,14 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							if (downloadSlider.getValue() < downloadSlider
 									.getMaximum()
 									&& downloadSlider.getValue() > 0) {
-								long down = downloadSlider.getValue() * 1024;
-								long up = uploadSlider.getValue() * 1024;
-								ApplejuiceFassade.getInstance()
-										.setMaxUpAndDown(up, down);
+								Long down = new Long(downloadSlider.getValue() * 1024);
+								Long up = new Long(uploadSlider.getValue() * 1024);
+								try {
+									AppleJuiceClient.getAjFassade()
+											.setMaxUpAndDown(up, down);
+								} catch (IllegalArgumentException e1) {
+									logger.error(e1);
+								}
 							} else {
 								downloadSlider.setValue((int) ajSettings
 										.getMaxDownloadInKB());
@@ -1314,6 +1344,19 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		JOptionPane.showMessageDialog(theApp, information, "appleJuice Client",
 				JOptionPane.OK_OPTION);
 	}
+	
+	private String getVerbindungsStatusAsString(Information information){
+        switch (information.getVerbindungsStatus()) {
+            case Information.VERBUNDEN:
+                return verbunden;
+            case Information.NICHT_VERBUNDEN:
+                return nichtVerbunden;
+            case Information.VERSUCHE_ZU_VERBINDEN:
+                return verbinden;
+            default:
+                return "";
+        }
+	}	
 
 	private class TxtFileFilter extends FileFilter {
 		public boolean accept(File file) {
@@ -1359,8 +1402,9 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 					logger.debug("VersionWorkerThread gestartet. " + this);
 				}
 				try {
+					ProxySettings proxy = ProxyManagerImpl.getInstance().getProxySettings();
 					String downloadData = WebsiteContentLoader
-							.getWebsiteContent("http://www.tkl-soft.de", 80,
+							.getWebsiteContent(proxy, "http://www.tkl-soft.de", 80,
 									"/applejuice/version.txt");
 
 					if (downloadData.length() > 0) {
@@ -1369,7 +1413,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 								pos1);
 						StringTokenizer token1 = new StringTokenizer(
 								aktuellsteVersion, ".");
-						String guiVersion = ApplejuiceFassade.GUI_VERSION;
+						String guiVersion = AppleJuiceDialog.GUI_VERSION;
 						if (guiVersion.indexOf('-') != -1){
 							guiVersion = guiVersion.substring(0, guiVersion.indexOf('-'));
 						}

@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="needed_jars/skinlf.jar"/>
 	<classpathentry kind="lib" path="tools/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="tools/xml-apis.jar"/>
+	<classpathentry kind="src" path="/ajcorefassade"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

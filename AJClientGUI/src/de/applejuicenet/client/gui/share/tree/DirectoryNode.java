@@ -12,15 +12,15 @@ import javax.swing.Icon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.dac.DirectoryDO;
+import de.applejuicenet.client.fassade.shared.ShareEntry;
 import de.applejuicenet.client.gui.components.tree.ApplejuiceNode;
 import de.applejuicenet.client.gui.components.treetable.Node;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.ShareEntry;
-import de.applejuicenet.client.shared.dac.DirectoryDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/DirectoryNode.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/DirectoryNode.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -56,7 +56,8 @@ public class DirectoryNode
         this.parent = null;
         this.directoryDO = null;
         children = new ArrayList();
-        ApplejuiceFassade.getInstance().getDirectory(null, this);
+        //todo
+        //AppleJuiceClient.getAjFassade().getDirectory(null, this);
     }
 
     public static void setShareDirs(Set newShareDirs) {
@@ -205,7 +206,8 @@ public class DirectoryNode
     protected Object[] getChildren() {
         if (children == null) {
             children = new ArrayList();
-            ApplejuiceFassade.getInstance().getDirectory(directoryDO.getPath(), this);
+            //todo
+            //ApplejuiceFassade.getInstance().getDirectory(directoryDO.getPath(), this);
             sortChildren();
         }
         return children.toArray(new DirectoryNode[children.size()]);

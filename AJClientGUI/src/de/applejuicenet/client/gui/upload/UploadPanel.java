@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -17,13 +18,13 @@ import javax.swing.table.TableColumnModel;
 
 import org.apache.log4j.Level;
 
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.components.table.NormalHeaderRenderer;
 import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.upload.table.UploadDataTableModel;
 import de.applejuicenet.client.gui.upload.table.UploadTablePercentCellRenderer;

@@ -1,14 +1,13 @@
 package de.applejuicenet.client.gui.controller;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
 
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
@@ -18,15 +17,16 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
 import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.LookAFeel;
-import de.applejuicenet.client.shared.ProxySettings;
 import de.applejuicenet.client.shared.Settings;
-import de.applejuicenet.client.shared.exception.IllegalArgumentException;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
@@ -106,7 +106,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 
 	static PropertiesManager getInstance() {
 		if (instance == null) {
-			instance = new PropertiesManager(ApplejuiceFassade
+			instance = new PropertiesManager(AppleJuiceClient
 					.getPropertiesPath());
 		}
 		return instance;
@@ -114,7 +114,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 
 	static PositionManager getPositionManager() {
 		if (instance == null) {
-			instance = new PropertiesManager(ApplejuiceFassade
+			instance = new PropertiesManager(AppleJuiceClient
 					.getPropertiesPath());
 		}
 		return instance;
@@ -638,7 +638,11 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 	public void saveRemote(ConnectionSettings remote)
 			throws InvalidPasswordException {
 		propertyHandler.put("options_remote_host", remote.getHost());
-		ApplejuiceFassade.setPassword(remote.getNewPassword());
+		try {
+			AppleJuiceClient.getAjFassade().setPassword(remote.getNewPassword(), true);
+		} catch (de.applejuicenet.client.fassade.exception.IllegalArgumentException e) {
+			logger.error(e);
+		}
 		propertyHandler.put("options_remote_passwort", remote.getNewPassword());
 		propertyHandler.put("options_remote_port", remote.getXmlPort());
 		informConnectionSettingsListener(getRemoteSettings());
@@ -652,7 +656,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 	}
 
 	public void saveAJSettings(AJSettings ajSettings) {
-		ApplejuiceFassade.getInstance().saveAJSettings(ajSettings);
+		AppleJuiceClient.getAjFassade().saveAJSettings(ajSettings);
 	}
 
 	private boolean isVeraltet() {
@@ -662,7 +666,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 	public static void restoreProperties() {
 		PropertyHandler aPropertyHandler = null;
 		try {
-			aPropertyHandler = new PropertyHandler(ApplejuiceFassade
+			aPropertyHandler = new PropertyHandler(AppleJuiceClient
 					.getPropertiesPath(), "appleJuice-Java-GUI Propertyfile",
 					false);
 			aPropertyHandler.put("options_dialogzeigen", true);

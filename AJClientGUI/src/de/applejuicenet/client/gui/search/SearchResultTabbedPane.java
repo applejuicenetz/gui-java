@@ -5,15 +5,17 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.Icon;
 import javax.swing.JTabbedPane;
 
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.shared.Search;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.Search;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultTabbedPane.java,v 1.3 2004/12/06 18:31:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultTabbedPane.java,v 1.4 2005/01/18 17:35:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -50,7 +52,12 @@ public class SearchResultTabbedPane extends JTabbedPane
             Rectangle rect = icon.getBounds();
             if (rect.contains(e.getX(), e.getY())){
                 removeTabAt(tabNumber);
-                ApplejuiceFassade.getInstance().cancelSearch(icon.getSearch());
+                try {
+					AppleJuiceClient.getAjFassade().cancelSearch(icon.getSearch());
+				} catch (IllegalArgumentException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         }
     }

@@ -5,13 +5,13 @@ import java.util.Map;
 
 import javax.swing.Icon;
 
+import de.applejuicenet.client.fassade.shared.Search;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.Search;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/table/Attic/SearchNode.java,v 1.2 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/table/Attic/SearchNode.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -54,7 +54,7 @@ public class SearchNode
             return IconManager.getInstance().getIcon("treeRoot");
         }
         else{
-            return ( (Search.SearchEntry) valueObject).getTypeIcon();
+            return IconManager.getInstance().getIcon(((Search.SearchEntry)valueObject).getFileType());
         }
     }
 

@@ -14,7 +14,7 @@ import java.util.Properties;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import de.applejuicenet.client.shared.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
 
 public class PropertyHandler {
 	private Logger logger;

@@ -7,11 +7,15 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.shared.WebsiteContentLoader;
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.shared.ProxySettings;
+import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/NachrichtenWorker.java,v 1.2 2004/10/15 13:34:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/NachrichtenWorker.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,18 +44,20 @@ public class NachrichtenWorker extends Thread {
 			logger.debug("NachrichtenWorkerThread gestartet. " + this);
 		}
 		try {
-			String coreVersion = ApplejuiceFassade.getInstance()
+			String coreVersion = AppleJuiceClient.getAjFassade()
 					.getCoreVersion().getVersion();
-			version.setText("<html>GUI: " + ApplejuiceFassade.GUI_VERSION
-					+ "<br>Core: " + coreVersion + "</html>");
+			version.setText("<html>GUI: " + AppleJuiceDialog.GUI_VERSION  + "/" + 
+					ApplejuiceFassade.FASSADE_VERSION +
+					"<br>Core: " + coreVersion + "</html>");
 			String nachricht = "verwendeter Core: " + coreVersion;
 			if (logger.isEnabledFor(Level.INFO)) {
 				logger.info(nachricht);
 			}
-			String htmlText = WebsiteContentLoader.getWebsiteContent(
+			ProxySettings proxy = ProxyManagerImpl.getInstance().getProxySettings();
+			String htmlText = WebsiteContentLoader.getWebsiteContent(proxy, 
 					"http://www.applejuicenet.org", 80,
 					"/inprog/news.php?version="
-							+ ApplejuiceFassade.getInstance()
+							+ AppleJuiceClient.getAjFassade()
 									.getCoreVersion().getVersion());
 
 			int pos = htmlText.toLowerCase().indexOf("<html>");

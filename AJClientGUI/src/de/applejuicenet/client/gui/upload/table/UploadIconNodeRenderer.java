@@ -5,10 +5,10 @@ import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.JTree;
 
+import de.applejuicenet.client.fassade.controller.dac.UploadDO;
 import de.applejuicenet.client.gui.components.treetable.DefaultIconNodeRenderer;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.components.util.IconGetter;
-import de.applejuicenet.client.shared.dac.UploadDO;
 
 public class UploadIconNodeRenderer extends DefaultIconNodeRenderer{
 

@@ -23,15 +23,15 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODVerbindungPanel.java,v 1.2 2004/11/22 16:25:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODVerbindungPanel.java,v 1.3 2005/01/18 17:35:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -340,7 +340,7 @@ public class ODVerbindungPanel
     }
 
     public void reloadSettings() {
-        AJSettings ajSettings2 = ApplejuiceFassade.getInstance().getAJSettings();
+        AJSettings ajSettings2 = AppleJuiceClient.getAjFassade().getAJSettings();
         /*
         ajSettings.setAutoConnect(ajSettings2.isAutoConnect());
         ajSettings.setIncomingDir(ajSettings2.getIncomingDir());

@@ -1,11 +1,13 @@
 package de.applejuicenet.client.gui.upload.table;
 
 import java.awt.Component;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import de.applejuicenet.client.fassade.controller.dac.UploadDO;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
-import de.applejuicenet.client.shared.dac.UploadDO;
+import de.applejuicenet.client.shared.util.UploadDOCalculator;
 
 public class UploadTableWholeLoadedPercentCellRenderer
     extends DefaultTableCellRenderer {
@@ -23,7 +25,7 @@ public class UploadTableWholeLoadedPercentCellRenderer
                 isSelected, hasFocus, row, column);
         }
         else {
-            Component c = ((UploadDO) obj).getWholeLoadedProgressbarComponent(table, value);
+            Component c = UploadDOCalculator.getWholeLoadedProgressbarComponent((UploadDO) obj); 
             if (isSelected) {
                 c.setBackground(table.getSelectionBackground());
             }

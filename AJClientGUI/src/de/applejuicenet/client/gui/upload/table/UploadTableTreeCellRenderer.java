@@ -3,15 +3,16 @@ package de.applejuicenet.client.gui.upload.table;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import de.applejuicenet.client.fassade.controller.dac.UploadDO;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.components.util.IconGetter;
-import de.applejuicenet.client.shared.dac.UploadDO;
-import javax.swing.Icon;
 
 public class UploadTableTreeCellRenderer
     extends DefaultTableCellRenderer {

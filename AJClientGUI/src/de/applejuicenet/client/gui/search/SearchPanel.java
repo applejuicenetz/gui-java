@@ -1,8 +1,5 @@
 package de.applejuicenet.client.gui.search;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -12,6 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,18 +22,19 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.shared.Search;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.RegisterI;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.SoundPlayer;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.6 2004/12/07 08:25:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.7 2005/01/18 17:35:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -119,15 +121,19 @@ public class SearchPanel
             public void actionPerformed(ActionEvent ae) {
                 String suchText = suchbegriff.getText();
                 if (suchText.length() != 0) {
-                    ApplejuiceFassade.getInstance().startSearch(suchText);
-                    suchbegriff.setSelectionStart(0);
-                    suchbegriff.setSelectionEnd(suchText.length());
-                    SoundPlayer.getInstance().playSound(SoundPlayer.SUCHEN);
+                	try {
+						AppleJuiceClient.getAjFassade().startSearch(suchText);
+						suchbegriff.setSelectionStart(0);
+						suchbegriff.setSelectionEnd(suchText.length());
+						SoundPlayer.getInstance().playSound(SoundPlayer.SUCHEN);
+					} catch (IllegalArgumentException e) {
+						logger.error(e);
+					}
                 }
             }
         });
 
-        ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+        AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
             DataUpdateListener.SEARCH_CHANGED);
     }
 

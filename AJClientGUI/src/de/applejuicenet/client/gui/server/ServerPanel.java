@@ -1,7 +1,5 @@
 package de.applejuicenet.client.gui.server;
 
-import java.util.HashMap;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -33,24 +33,26 @@ import javax.swing.table.TableColumnModel;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.dac.ServerDO;
+import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.shared.Information;
+import de.applejuicenet.client.fassade.shared.NetworkInfo;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.server.table.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.server.table.ServerTableModel;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.Information;
-import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.SoundPlayer;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
  * $Header:
@@ -149,10 +151,10 @@ public class ServerPanel extends JPanel implements LanguageListener,
 				int selected = serverTable.getSelectedRow();
 				ServerDO server = (ServerDO) ((ServerTableModel) serverTable
 						.getModel()).getRow(selected);
-				ApplejuiceFassade af = ApplejuiceFassade.getInstance();
+				ApplejuiceFassade af = AppleJuiceClient.getAjFassade();
 				if (af.getInformation().getVerbindungsStatus() == Information.VERBUNDEN) {
 					NetworkInfo netInfo = af.getNetworkInfo();
-					long timestamp = af.getLastCoreTimestamp();
+					long timestamp = af.getLastCoreTimestamp().longValue();
 					if (timestamp == 0) {
 						/*
 						 * Es wurden noch keine Referenzdaten geholt. Wir nehmen
@@ -177,8 +179,12 @@ public class ServerPanel extends JPanel implements LanguageListener,
 						}
 					}
 				}
-				ApplejuiceFassade.getInstance().connectToServer(server.getID());
-				SoundPlayer.getInstance().playSound(SoundPlayer.VERBINDEN);
+				try {
+					AppleJuiceClient.getAjFassade().connectToServer(server);
+					SoundPlayer.getInstance().playSound(SoundPlayer.VERBINDEN);
+				} catch (IllegalArgumentException e) {
+					logger.error(e);
+				}
 			}
 		});
 		ActionListener loescheServerListener = new ActionListener() {
@@ -190,8 +196,11 @@ public class ServerPanel extends JPanel implements LanguageListener,
 						server = (ServerDO) ((ServerTableModel) serverTable
 								.getModel()).getRow(selected[i]);
 						if (server != null) {
-							ApplejuiceFassade.getInstance().entferneServer(
-									server.getID());
+							try {
+								AppleJuiceClient.getAjFassade().entferneServer(server);
+							} catch (IllegalArgumentException e) {
+								logger.error(e);
+							}
 						}
 					}
 				}
@@ -235,7 +244,11 @@ public class ServerPanel extends JPanel implements LanguageListener,
 					final String link = newServerDialog.getLink();
 					new Thread() {
 						public void run() {
-							ApplejuiceFassade.getInstance().processLink(link, "");
+							try {
+								AppleJuiceClient.getAjFassade().processLink(link, "");
+							} catch (IllegalArgumentException e) {
+								logger.error(e);
+							}
 						}
 					}.start();
 				}
@@ -257,13 +270,17 @@ public class ServerPanel extends JPanel implements LanguageListener,
 			public void actionPerformed(ActionEvent ae) {
 				Thread worker = new Thread() {
 					public void run() {
-						ApplejuiceFassade af = ApplejuiceFassade.getInstance();
+						ApplejuiceFassade af = AppleJuiceClient.getAjFassade();
 						String[] server = af.getNetworkKnownServers();
 						if (server == null || server.length == 0) {
 							return;
 						}
 						for (int i = 0; i < server.length; i++) {
-							af.processLink(server[i], "");
+							try {
+								af.processLink(server[i], "");
+							} catch (IllegalArgumentException e) {
+								logger.error(e);
+							}
 						}
 					}
 				};
@@ -361,7 +378,7 @@ public class ServerPanel extends JPanel implements LanguageListener,
 		legende.add(label4);
 		legende.add(juenger24h);
 		add(legende, BorderLayout.SOUTH);
-		ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+		AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
 				DataUpdateListener.SERVER_CHANGED);
 	}
 

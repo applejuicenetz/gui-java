@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
+import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 public class DownloadPartListWatcher {
 	private Object nodeObject = null;

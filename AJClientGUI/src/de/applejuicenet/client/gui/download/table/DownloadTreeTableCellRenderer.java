@@ -5,14 +5,14 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.tree.TreeModel;
 
+import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
+import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.components.treetable.DefaultIconNodeRenderer;
 import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRenderer;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.shared.Settings;
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 public class DownloadTreeTableCellRenderer extends DefaultTreeTableCellRenderer
 	implements DataUpdateListener{

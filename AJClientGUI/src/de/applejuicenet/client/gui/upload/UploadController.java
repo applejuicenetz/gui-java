@@ -18,18 +18,19 @@ import javax.swing.table.TableColumnModel;
 
 import org.apache.log4j.Level;
 
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.dac.ShareDO;
+import de.applejuicenet.client.fassade.controller.dac.UploadDO;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.components.util.Value;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.dac.ShareDO;
-import de.applejuicenet.client.shared.dac.UploadDO;
 
 public class UploadController extends GuiController {
 
@@ -55,7 +56,7 @@ public class UploadController extends GuiController {
 		try{
 			init();
 			LanguageSelector.getInstance().addLanguageListener(this);
-			ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+			AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
 					DataUpdateListener.UPLOAD_CHANGED);
 		} catch (Exception e) {
 			if (logger.isEnabledFor(Level.ERROR)) {
@@ -162,7 +163,7 @@ public class UploadController extends GuiController {
 		if (selectedItem.getClass() == UploadDO.class) {
 			String shareFileId = ((UploadDO) selectedItem)
 					.getShareFileIDAsString();
-			Map share = ApplejuiceFassade.getInstance().getShare(false);
+			Map share = AppleJuiceClient.getAjFassade().getShare(false);
 			if (share.containsKey(shareFileId)) {
 				ShareDO shareDO = (ShareDO) share.get(shareFileId);
 				if (shareDO != null) {
@@ -308,7 +309,7 @@ public class UploadController extends GuiController {
 						anzahlClients = uploadPanel.getTableModel().getRowCount();
 						String tmp = clientText.replaceAll("%d", Integer
 								.toString(anzahlClients));
-						long maxUploadPos = ApplejuiceFassade.getInstance()
+						long maxUploadPos = AppleJuiceClient.getAjFassade()
 								.getInformation().getMaxUploadPositions();
 						if (anzahlClients >= maxUploadPos) {
 							tmp += " (" + warteschlangeVoll + ")";

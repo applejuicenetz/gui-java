@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -14,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
@@ -23,23 +25,24 @@ import javax.swing.table.TableColumnModel;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.shared.FileTypeHelper;
+import de.applejuicenet.client.fassade.shared.Search;
+import de.applejuicenet.client.fassade.shared.Search.SearchEntry;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.search.table.SearchNode;
 import de.applejuicenet.client.gui.search.table.SearchResultTableModel;
 import de.applejuicenet.client.gui.search.table.SearchResultTreeTableCellRenderer;
-import de.applejuicenet.client.shared.FileTypeHelper;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.SoundPlayer;
-import de.applejuicenet.client.shared.Search.SearchEntry;
-import javax.swing.JToggleButton;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.8 2004/12/07 08:25:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.9 2005/01/18 17:35:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -104,7 +107,11 @@ public class SearchResultPanel
         sucheAbbrechen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 sucheAbbrechen.setEnabled(false);
-                ApplejuiceFassade.getInstance().cancelSearch(search);
+                try {
+					AppleJuiceClient.getAjFassade().cancelSearch(search);
+				} catch (IllegalArgumentException e) {
+					logger.error(e);
+				}
             }
         });
         popup.add(item1);
@@ -248,28 +255,32 @@ public class SearchResultPanel
     private void processLink(final String link){
         new Thread(){
             public void run(){
-				final String result = ApplejuiceFassade.getInstance().processLink(link, "");
-				SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
-				if (result.indexOf("ok") != 0){
-				    SwingUtilities.invokeLater(new Runnable(){
-				        public void run(){
-				            String message = null;
-							if (result.indexOf("already downloaded") != -1){
-							    message = alreadyLoaded.replaceAll("%s", link);
-							}
-							else if (result.indexOf("incorrect link") != -1){
-							    message = invalidLink.replaceAll("%s", link);
-							}
-							else if (result.indexOf("failure") != -1){
-							    message = linkFailure;
-							}
-							if (message != null){
-								JOptionPane.showMessageDialog(AppleJuiceDialog
-										.getApp(), message, dialogTitel,
-										JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-							}
-				        }
-				    });
+				try {
+					final String result = AppleJuiceClient.getAjFassade().processLink(link, "");
+					SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
+					if (result.indexOf("ok") != 0){
+					    SwingUtilities.invokeLater(new Runnable(){
+					        public void run(){
+					            String message = null;
+								if (result.indexOf("already downloaded") != -1){
+								    message = alreadyLoaded.replaceAll("%s", link);
+								}
+								else if (result.indexOf("incorrect link") != -1){
+								    message = invalidLink.replaceAll("%s", link);
+								}
+								else if (result.indexOf("failure") != -1){
+								    message = linkFailure;
+								}
+								if (message != null){
+									JOptionPane.showMessageDialog(AppleJuiceDialog
+											.getApp(), message, dialogTitel,
+											JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+								}
+					        }
+					    });
+					}
+				} catch (IllegalArgumentException e) {
+					logger.error(e);
 				}
             }
         }.start();

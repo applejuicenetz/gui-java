@@ -1,8 +1,5 @@
 package de.applejuicenet.client.gui.about;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,19 +17,24 @@ import java.awt.event.WindowEvent;
 import java.awt.image.CropImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -146,7 +148,8 @@ public class AboutDialog
             catch (InterruptedException x) {
                 //kein Bild da, dann kack drauf ;-)
             }
-            version.setText("Version " + ApplejuiceFassade.GUI_VERSION);
+            version.setText("Version " + AppleJuiceDialog.GUI_VERSION 
+            		 + "/" + ApplejuiceFassade.FASSADE_VERSION);
             Font font = version.getFont();
             font = new Font(font.getName(), Font.PLAIN, font.getSize());
             version.setFont(font);

@@ -1,11 +1,5 @@
 package de.applejuicenet.client.gui.download;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -22,6 +16,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,22 +37,23 @@ import javax.swing.SwingConstants;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.shared.Information;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.PolicyJarClassLoader;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.3 2005/01/18 17:35:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -370,9 +371,9 @@ public class PowerDownloadPanel
                 oeffneAutomPwdlEinstellungen();
             }
         });
-        ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+        AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
             DataUpdateListener.INFORMATION_CHANGED);
-        ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+        AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
             DataUpdateListener.DOWNLOAD_CHANGED);
     }
 
@@ -657,8 +658,8 @@ public class PowerDownloadPanel
                             downloadDO = (DownloadDO) it.next();
                             if (downloadDO.getStatus() ==
                                 DownloadDO.SUCHEN_LADEN) {
-                                ApplejuiceFassade.getInstance().pauseDownload(new int[] {
-                                    downloadDO.getId()});
+                            	AppleJuiceClient.getAjFassade().pauseDownload(new DownloadDO[] {
+                                    downloadDO});
                             }
                         }
                     }

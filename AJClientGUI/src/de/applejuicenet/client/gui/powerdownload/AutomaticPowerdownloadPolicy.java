@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.powerdownload;
 
+import java.awt.Frame;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -7,13 +8,14 @@ import java.util.Set;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.gui.download.PowerDownloadPanel;
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import java.awt.Frame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.15 2004/10/15 15:54:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.16 2005/01/18 17:35:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,8 +35,7 @@ public abstract class AutomaticPowerdownloadPolicy
 
     //diese Variable auf false setzen, um das automatische Pausieren von Dateien zu verhindern
     protected boolean shouldPause = true;
-    protected ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.
-        getInstance();
+    protected ApplejuiceFassade applejuiceFassade = AppleJuiceClient.getAjFassade();
 
     public final void run() {
         try {
@@ -122,16 +123,14 @@ public abstract class AutomaticPowerdownloadPolicy
             Map downloads = applejuiceFassade.getDownloadsSnapshot();
             synchronized (downloads) {
                 Iterator it = downloads.values().iterator();
-                int[] ids = new int[downloads.size()];
                 int temp = 0;
-                DownloadDO downloadDO = null;
+                DownloadDO[] dos = new DownloadDO[downloads.size()];
                 while (it.hasNext()) {
-                    downloadDO = (DownloadDO) it.next();
-                    ids[temp] = downloadDO.getId();
+                    dos[temp] = (DownloadDO) it.next();
                     temp++;
                 }
-                applejuiceFassade.pauseDownload(ids);
-                applejuiceFassade.setPowerDownload(ids, 0);
+                applejuiceFassade.pauseDownload(dos);
+                applejuiceFassade.setPowerDownload(dos, new Integer(0));
             }
         }
         catch (Exception ex) {

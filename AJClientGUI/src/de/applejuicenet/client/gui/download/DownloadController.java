@@ -20,30 +20,32 @@ import javax.swing.table.TableColumn;
 
 import org.apache.log4j.Level;
 
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
+import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.controller.dac.ServerDO;
+import de.applejuicenet.client.fassade.controller.dac.ShareDO;
+import de.applejuicenet.client.fassade.event.DataPropertyChangeEvent;
+import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
+import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.shared.Information;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.components.util.Value;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
-import de.applejuicenet.client.gui.controller.event.DataPropertyChangeEvent;
-import de.applejuicenet.client.gui.controller.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.gui.download.table.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
 import de.applejuicenet.client.gui.download.table.DownloadRootNode;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
-import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.SoundPlayer;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.dac.ServerDO;
-import de.applejuicenet.client.shared.dac.ShareDO;
 
 public class DownloadController extends GuiController {
 	
@@ -124,7 +126,7 @@ public class DownloadController extends GuiController {
 				new GuiControllerActionListener(this, PARTLISTE_ANZEIGEN_PER_BUTTON));
 		downloadPanel.getBtnPowerDownload().addActionListener(
 				new GuiControllerActionListener(this, START_POWERDOWNLOAD));
-        if (ApplejuiceFassade.getInstance().isLocalhost()){
+        if (AppleJuiceClient.getAjFassade().isLocalhost()){
         	downloadPanel.getMnuOpenWithProgram().addActionListener(
         			new GuiControllerActionListener(this, OPEN_WITH_PROGRAM));
         }
@@ -164,12 +166,12 @@ public class DownloadController extends GuiController {
 				new DownloadTablePopupListener(this, downloadPanel.getDownloadTable()
 						, MAYBE_SHOW_POPUP));
 		LanguageSelector.getInstance().addLanguageListener(this);
-		ApplejuiceFassade.getInstance().getDownloadPropertyChangeInformer().
+		AppleJuiceClient.getAjFassade().getDownloadPropertyChangeInformer().
 			addDataPropertyChangeListener(
 				new DownloadPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
 
 		JComboBox targetDirs = downloadPanel.getTargetDirField();
-		String[] dirs = ApplejuiceFassade.getInstance().getCurrentIncomingDirs();
+		String[] dirs = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
 		for (int i = 0; i < dirs.length; i++) {
 			targetDirs.addItem(dirs[i]);
             if (dirs[i].equals("")) {
@@ -262,7 +264,7 @@ public class DownloadController extends GuiController {
 	private synchronized void downloadPropertyChanged(DataPropertyChangeEvent evt){
 		if (isFirstDownloadPropertyChanged){
 			isFirstDownloadPropertyChanged = false;
-			Map downloads = ApplejuiceFassade.getInstance().getDownloadsSnapshot();
+			Map downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
 			((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
 			DownloadDirectoryNode.setDownloads(downloads);
 		}
@@ -336,7 +338,7 @@ public class DownloadController extends GuiController {
 	}
 	
 	private void clearReadyDownloads(){
-		ApplejuiceFassade.getInstance().cleanDownloadList();
+		AppleJuiceClient.getAjFassade().cleanDownloadList();
 		downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
 		downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(false);
 		downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
@@ -414,17 +416,12 @@ public class DownloadController extends GuiController {
                 ArrayList temp = new ArrayList();
                 for (int i = 0; i < selectedItems.length; i++) {
                     if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                        temp.add(new Integer( ( (DownloadMainNode)
-                                               selectedItems[i]).getDownloadDO().
-                                             getId()));
+                        temp.add(( (DownloadMainNode) selectedItems[i]).getDownloadDO());
                     }
                 }
-                int[] ids = new int[temp.size()];
-                for (int i = 0; i < temp.size(); i++) {
-                    ids[i] = ( (Integer) temp.get(i)).intValue();
-                }
-                ApplejuiceFassade.getInstance().setPowerDownload(ids,
-                    powerDownload);
+                DownloadDO[] toChange = (DownloadDO[])temp.toArray(new DownloadDO[temp.size()]);
+                AppleJuiceClient.getAjFassade().setPowerDownload(toChange,
+                    new Integer(powerDownload));
                 if (downloadPanel.getBtnPowerDownloadAktiv().isSelected()) {
                     SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
                 }
@@ -553,8 +550,12 @@ public class DownloadController extends GuiController {
 					return;
 				} else {
 					if (downloadDO.getFilename().compareTo(neuerName) != 0) {
-						ApplejuiceFassade.getInstance().renameDownload(
-								downloadDO.getId(), neuerName);
+						try {
+							AppleJuiceClient.getAjFassade().renameDownload(
+									downloadDO, neuerName);
+						} catch (IllegalArgumentException e) {
+							logger.error(e);
+						}
 					}
 				}
 			}
@@ -565,27 +566,26 @@ public class DownloadController extends GuiController {
 		Object[] selectedItems = getSelectedDownloadItems();
 		if (selectedItems != null && selectedItems.length != 0
 				&& !downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
-			ArrayList indizesPausieren = new ArrayList();
+			final ArrayList pausieren = new ArrayList();
 			for (int i = 0; i < selectedItems.length; i++) {
 				if (selectedItems[i].getClass() == DownloadMainNode.class) {
 					DownloadDO downloadDO = ((DownloadMainNode) selectedItems[i])
 							.getDownloadDO();
 					if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
-						indizesPausieren.add(new Integer(downloadDO.getId()));
+						pausieren.add(downloadDO);
 					}
 				}
 			}
-			int size = indizesPausieren.size();
-			if (size > 0) {
-				final int[] pausieren = new int[size];
-				for (int i = 0; i < size; i++) {
-					pausieren[i] = ((Integer) indizesPausieren.get(i))
-							.intValue();
-				}
+			if (pausieren.size() > 0) {
 				new Thread() {
 					public void run() {
-						ApplejuiceFassade.getInstance()
-								.pauseDownload(pausieren);
+						DownloadDO[] toPause = 
+							(DownloadDO[]) pausieren.toArray(new DownloadDO[pausieren.size()]);
+						try {
+							AppleJuiceClient.getAjFassade().pauseDownload(toPause);
+						} catch (IllegalArgumentException e) {
+							logger.error(e);
+						}
 					}
 				}.start();
 			}
@@ -596,27 +596,26 @@ public class DownloadController extends GuiController {
 		Object[] selectedItems = getSelectedDownloadItems();
 		if (selectedItems != null && selectedItems.length != 0
 				&& !downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
-			ArrayList indizesFortsetzen = new ArrayList();
+			final ArrayList fortsetzen = new ArrayList();
 			for (int i = 0; i < selectedItems.length; i++) {
 				if (selectedItems[i].getClass() == DownloadMainNode.class) {
 					DownloadDO downloadDO = ((DownloadMainNode) selectedItems[i])
 							.getDownloadDO();
 					if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
-						indizesFortsetzen.add(new Integer(downloadDO.getId()));
+						fortsetzen.add(downloadDO);
 					}
 				}
 			}
-			int size = indizesFortsetzen.size();
-			if (size > 0) {
-				final int[] fortsetzen = new int[size];
-				for (int i = 0; i < size; i++) {
-					fortsetzen[i] = ((Integer) indizesFortsetzen.get(i))
-							.intValue();
-				}
+			if (fortsetzen.size() > 0) {
 				new Thread() {
 					public void run() {
-						ApplejuiceFassade.getInstance().resumeDownload(
-								fortsetzen);
+						DownloadDO[] toContinue = 
+							(DownloadDO[]) fortsetzen.toArray(new DownloadDO[fortsetzen.size()]);
+						try {
+							AppleJuiceClient.getAjFassade().resumeDownload(toContinue);
+						} catch (IllegalArgumentException e) {
+							logger.error(e);
+						}
 					}
 				}.start();
 			}
@@ -638,28 +637,32 @@ public class DownloadController extends GuiController {
 			downloadPanel.getDownloadLinkField().setText("");
 		    Thread linkThread = new Thread(){
 		        public void run(){
-					final String result = ApplejuiceFassade.getInstance().processLink(link, targetDir);
-					SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
-					if (result.indexOf("ok") != 0){
-					    SwingUtilities.invokeLater(new Runnable(){
-					        public void run(){
-					            String message = null;
-								if (result.indexOf("already downloaded") != -1){
-								    message = alreadyLoaded.replaceAll("%s", link);
-								}
-								else if (result.indexOf("incorrect link") != -1){
-								    message = invalidLink.replaceAll("%s", link);
-								}
-								else if (result.indexOf("failure") != -1){
-								    message = linkFailure;
-								}
-								if (message != null){
-									JOptionPane.showMessageDialog(AppleJuiceDialog
-											.getApp(), message, dialogTitel,
-											JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-								}
-					        }
-					    });
+					try {
+						final String result = AppleJuiceClient.getAjFassade().processLink(link, targetDir);
+						SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
+						if (result.indexOf("ok") != 0){
+						    SwingUtilities.invokeLater(new Runnable(){
+						        public void run(){
+						            String message = null;
+									if (result.indexOf("already downloaded") != -1){
+									    message = alreadyLoaded.replaceAll("%s", link);
+									}
+									else if (result.indexOf("incorrect link") != -1){
+									    message = invalidLink.replaceAll("%s", link);
+									}
+									else if (result.indexOf("failure") != -1){
+									    message = linkFailure;
+									}
+									if (message != null){
+										JOptionPane.showMessageDialog(AppleJuiceDialog
+												.getApp(), message, dialogTitel,
+												JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+									}
+						        }
+						    });
+						}
+					} catch (IllegalArgumentException e) {
+						logger.error(e);
 					}
 		        }
 		    };
@@ -672,7 +675,7 @@ public class DownloadController extends GuiController {
 		if (selectedItems == null || selectedItems.length == 0) {
 			return;
 		}
-		String[] dirs = ApplejuiceFassade.getInstance()
+		String[] dirs = AppleJuiceClient.getAjFassade()
 				.getCurrentIncomingDirs();
 		IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(
 				AppleJuiceDialog.getApp(), dirs);
@@ -695,8 +698,12 @@ public class DownloadController extends GuiController {
 				downloadDO = ((DownloadMainNode) selectedItems[i])
 						.getDownloadDO();
 				if (downloadDO.getTargetDirectory().compareTo(neuerName) != 0) {
-					ApplejuiceFassade.getInstance().setTargetDir(
-							downloadDO.getId(), neuerName);
+					try {
+						AppleJuiceClient.getAjFassade().setTargetDir(
+								downloadDO, neuerName);
+					} catch (IllegalArgumentException e) {
+						logger.error(e);
+					}
 				}
 			}
 		}
@@ -712,7 +719,7 @@ public class DownloadController extends GuiController {
 						.getDownloadDO();
 			} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
 				DownloadSourceDO downloadSourceDO = (DownloadSourceDO) selectedItems[0];
-				Map downloads = ApplejuiceFassade.getInstance()
+				Map downloads = AppleJuiceClient.getAjFassade()
 						.getDownloadsSnapshot();
 				String key = Integer.toString(downloadSourceDO
 						.getDownloadId());
@@ -721,15 +728,19 @@ public class DownloadController extends GuiController {
 			if (downloadDO != null) {
                 String programToExecute = OptionsManagerImpl.getInstance().getOpenProgram();
                 if (programToExecute.length() != 0){
-					int shareId = downloadDO.getShareId();
-					ShareDO shareDO = (ShareDO)ApplejuiceFassade.getInstance().getObjectById(shareId);
-					if (shareDO != null){
-                        String filename = shareDO.getFilename();
-            			try {
-            				Runtime.getRuntime().exec(new String[] { programToExecute, filename });
-            			} catch (Exception ex) {
-            				//nix zu tun
-            			}
+					Integer shareId = new Integer(downloadDO.getShareId());
+					try {
+						ShareDO shareDO = (ShareDO)AppleJuiceClient.getAjFassade().getObjectById(shareId);
+						if (shareDO != null){
+						    String filename = shareDO.getFilename();
+							try {
+								Runtime.getRuntime().exec(new String[] { programToExecute, filename });
+							} catch (Exception ex) {
+								//nix zu tun
+							}
+						}
+					} catch (IllegalArgumentException e) {
+						logger.error(e);
 					}
 				}
 			}
@@ -754,7 +765,7 @@ public class DownloadController extends GuiController {
 				copyToClipboard = true;
 			} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
 				DownloadSourceDO downloadSourceDO = (DownloadSourceDO) selectedItems[0];
-				Map downloads = ApplejuiceFassade.getInstance()
+				Map downloads = AppleJuiceClient.getAjFassade()
 						.getDownloadsSnapshot();
 				String key = Integer.toString(downloadSourceDO
 						.getDownloadId());
@@ -767,10 +778,9 @@ public class DownloadController extends GuiController {
 				}
 			}
 			if (copyToClipboard) {
-				long port = ApplejuiceFassade.getInstance()
+				long port = AppleJuiceClient.getAjFassade()
 						.getAJSettings().getPort();
-				Information information = ApplejuiceFassade
-						.getInstance().getInformation();
+				Information information = AppleJuiceClient.getAjFassade().getInformation();
 				toCopy.append("|");
 				toCopy.append(information.getExterneIP());
 				toCopy.append(":");
@@ -811,8 +821,7 @@ public class DownloadController extends GuiController {
 				cb.setContents(contents, null);
 			} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
 				DownloadSourceDO downloadSourceDO = (DownloadSourceDO) selectedItems[0];
-				Map downloads = ApplejuiceFassade.getInstance()
-						.getDownloadsSnapshot();
+				Map downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
 				String key = Integer.toString(downloadSourceDO
 						.getDownloadId());
 				DownloadDO downloadDO = (DownloadDO) downloads.get(key);
@@ -835,28 +844,27 @@ public class DownloadController extends GuiController {
 					.getApp(), downloadAbbrechen, dialogTitel,
 					JOptionPane.YES_NO_OPTION);
 			if (result == JOptionPane.YES_OPTION) {
-				ArrayList indizesAbbrechen = new ArrayList();
+				final ArrayList abbrechen = new ArrayList();
 				for (int i = 0; i < selectedItems.length; i++) {
 					if (selectedItems[i].getClass() == DownloadMainNode.class) {
 						DownloadDO downloadDO = ((DownloadMainNode) selectedItems[i])
 								.getDownloadDO();
-						indizesAbbrechen.add(new Integer(downloadDO
-								.getId()));
+						abbrechen.add(downloadDO);
 					}
 				}
-				int size = indizesAbbrechen.size();
-				if (size > 0) {
-					final int[] abbrechen = new int[size];
-					for (int i = 0; i < size; i++) {
-						abbrechen[i] = ((Integer) indizesAbbrechen
-								.get(i)).intValue();
-					}
+				if (abbrechen.size() > 0) {
 					new Thread() {
 						public void run() {
-							ApplejuiceFassade.getInstance()
-									.cancelDownload(abbrechen);
-							SoundPlayer.getInstance().playSound(
-									SoundPlayer.ABGEBROCHEN);
+							DownloadDO[] toCancel = 
+								(DownloadDO[])abbrechen.toArray(new DownloadDO[abbrechen.size()]);
+							try {
+								AppleJuiceClient.getAjFassade()
+										.cancelDownload(toCancel);
+								SoundPlayer.getInstance().playSound(
+										SoundPlayer.ABGEBROCHEN);
+							} catch (IllegalArgumentException e) {
+								logger.error(e);
+							}
 						}
 					}.start();
 				}

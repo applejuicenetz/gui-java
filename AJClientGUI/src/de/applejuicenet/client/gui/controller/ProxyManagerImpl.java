@@ -1,9 +1,9 @@
 package de.applejuicenet.client.gui.controller;
 
-import de.applejuicenet.client.shared.ProxySettings;
+import de.applejuicenet.client.fassade.shared.ProxySettings;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/ProxyManagerImpl.java,v 1.2 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/ProxyManagerImpl.java,v 1.3 2005/01/18 17:35:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

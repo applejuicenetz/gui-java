@@ -7,18 +7,19 @@ import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Level;
 
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.dac.ServerDO;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.shared.Information;
+import de.applejuicenet.client.fassade.shared.NetworkInfo;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.util.Value;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.shared.Information;
-import de.applejuicenet.client.shared.NetworkInfo;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.6 2004/12/07 12:59:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.7 2005/01/18 17:35:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -69,9 +70,9 @@ public class StartController extends GuiController {
 		startPanel.getNachrichtenPane().addHyperlinkListener(hyperlinkAdapter);
 		startPanel.getFaqPane().addHyperlinkListener(hyperlinkAdapter);
 
-		ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+		AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
 				DataUpdateListener.NETINFO_CHANGED);
-		ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+		AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
 				DataUpdateListener.INFORMATION_CHANGED);
 		LanguageSelector.getInstance().addLanguageListener(this);
 	}
@@ -157,7 +158,7 @@ public class StartController extends GuiController {
 		}
 		pos = temp.indexOf("%d");
 		if (pos != -1) {
-			Map servers = ApplejuiceFassade.getInstance().getAllServer();
+			Map servers = AppleJuiceClient.getAjFassade().getAllServer();
 			int count;
 			if (servers != null) {
 				count = servers.size();
@@ -287,9 +288,8 @@ public class StartController extends GuiController {
 							pos = temp.indexOf("%d");
 							if (pos != -1) {
 								temp.replace(pos, pos + 2, Integer
-										.toString(ApplejuiceFassade
-												.getInstance().getAllServer()
-												.size()));
+										.toString(AppleJuiceClient.getAjFassade()
+												.getAllServer().size()));
 							}
 						}
 						startPanel.getLblVerbindungsnachricht().setText(temp.toString());

@@ -12,8 +12,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+
 import java.util.Map;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 public class XMLValueHolder extends DefaultHandler{
     private Logger logger;

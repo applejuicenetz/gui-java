@@ -2,19 +2,21 @@ package de.applejuicenet.client.gui.download.table;
 
 import java.awt.Color;
 import java.awt.Component;
+
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
+import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.shared.Settings;
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.shared.util.DownloadSourceCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTablePercentCellRenderer.java,v 1.2 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTablePercentCellRenderer.java,v 1.3 2005/01/18 17:35:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -102,7 +104,7 @@ public class DownloadTablePercentCellRenderer
                                            boolean hasFocus,
                                            int row,
                                            int column) {
-        Component c = downloadSourceDO.getProgressbarComponent(table, value);
+        Component c = DownloadSourceCalculator.getProgressbarComponent(downloadSourceDO);
         if (isSelected) {
             c.setBackground(selectionBackground);
         }

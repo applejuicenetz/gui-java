@@ -1,21 +1,22 @@
 package de.applejuicenet.client.gui.download.table;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
+import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.util.DownloadDOCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.4 2004/12/10 10:11:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.5 2005/01/18 17:35:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,7 +27,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  */
 
 public class DownloadDirectoryNode
-    implements Node, DownloadNode, DownloadColumnValue, DownloadColumnComponent {
+    implements Node, DownloadNode, DownloadColumnComponent {
 
     public static final int SORT_NO_SORT = -1;
     public static final int SORT_DOWNLOADNAME = 0;
@@ -160,46 +161,6 @@ public class DownloadDirectoryNode
         return IconManager.getInstance().getIcon("tree");
     }
 
-    public String getColumn0() {
-        return getVerzeichnis();
-    }
-
-    public String getColumn1() {
-        return "";
-    }
-
-    public String getColumn2() {
-        return "";
-    }
-
-    public String getColumn3() {
-        return "";
-    }
-
-    public String getColumn4() {
-        return "";
-    }
-
-    public String getColumn5() {
-        return "";
-    }
-
-    public String getColumn6() {
-        return "";
-    }
-
-    public String getColumn7() {
-        return "";
-    }
-
-    public String getColumn8() {
-        return "";
-    }
-
-    public String getColumn9() {
-        return "";
-    }
-
     private Object[] sort(Object[] childNodes) {
         speziellIsAscent = isAscent;
         speziellSort = sort;
@@ -289,10 +250,10 @@ public class DownloadDirectoryNode
                           getSpeedInBytes());
         }
         else if (sort == SORT_STATUS) {
-            o1 = ( (DownloadMainNode)
-                  childNodes[row1]).getDownloadDO().getStatusAsString();
-            o2 = ( (DownloadMainNode)
-                  childNodes[row2]).getDownloadDO().getStatusAsString();
+            o1 = ( DownloadDOCalculator.getStatusAsString(((DownloadMainNode)
+                  childNodes[row1]).getDownloadDO()));
+            o2 = ( DownloadDOCalculator.getStatusAsString(((DownloadMainNode)
+                    childNodes[row2]).getDownloadDO()));
         }
 
         if (o1 == null && o2 == null) {

@@ -12,13 +12,13 @@ import javax.swing.JTextPane;
 
 import org.apache.log4j.Level;
 
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.shared.Information;
+import de.applejuicenet.client.fassade.shared.NetworkInfo;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.Information;
-import de.applejuicenet.client.shared.NetworkInfo;
 
 /**
  * $Header:

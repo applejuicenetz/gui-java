@@ -1,16 +1,16 @@
 package de.applejuicenet.client.gui.download.table;
 
+import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
+import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.4 2004/12/09 10:04:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.5 2005/01/18 17:35:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -116,41 +116,39 @@ public class DownloadModel
     }
 
     public Object getValueAt(Object node, int column) {
-        DownloadColumnValue columnValue = null;
+        Object columnValue = null;
         if (node.getClass() == DownloadMainNode.class &&
             ( (DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
-            columnValue = (DownloadColumnValue) ( (DownloadMainNode) node).
-                getDownloadDO();
+            columnValue = ( (DownloadMainNode) node).getDownloadDO();
         }
-        else if (node instanceof DownloadColumnValue) {
-            columnValue = (DownloadColumnValue) node;
+        else if (node instanceof DownloadSourceDO) {
+            columnValue = node;
         }
         if (columnValue != null) {
             switch (column) {
                 case 0:
-                    return columnValue.getColumn0();
+                    return DownloadColumnValue.getColumn0(columnValue);
                 case 1:
-                    return columnValue.getColumn1();
+                    return DownloadColumnValue.getColumn1(columnValue);
                 case 2:
-                    return columnValue.getColumn2();
+                    return DownloadColumnValue.getColumn2(columnValue);
                 case 3:
-                    return columnValue.getColumn3();
+                    return DownloadColumnValue.getColumn3(columnValue);
                 case 4:
-                    return columnValue.getColumn4();
+                    return DownloadColumnValue.getColumn4(columnValue);
                 case 5:
-                    return columnValue.getColumn5();
+                    return DownloadColumnValue.getColumn5(columnValue);
                 case 6:
-                    return columnValue.getColumn6();
+                    return DownloadColumnValue.getColumn6(columnValue);
                 case 7:
-                    return columnValue.getColumn7();
+                    return DownloadColumnValue.getColumn7(columnValue);
                 case 8:
-                    return columnValue.getColumn8();
+                    return DownloadColumnValue.getColumn8(columnValue);
                 case 9:
-                    return columnValue.getColumn9();
+                    return DownloadColumnValue.getColumn9(columnValue);
                 default:
                     return "";
             }
-
         }
         return "";
     }

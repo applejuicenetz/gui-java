@@ -28,27 +28,31 @@ import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.fassade.shared.ProxySettings;
+import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.UpdateInformationDialog;
 import de.applejuicenet.client.gui.components.listener.KeyStates;
 import de.applejuicenet.client.gui.connect.ConnectFrame;
 import de.applejuicenet.client.gui.connect.QuickConnectionSettingsDialog;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.LinkListener;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.gui.wizard.WizardDialog;
-import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
-import de.applejuicenet.client.shared.WebsiteContentLoader;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.88 2004/12/03 17:31:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.89 2005/01/18 17:35:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -63,6 +67,20 @@ public class AppleJuiceClient {
     private static String fileAppenderPath;
     private static HTMLLayout layout;
     public static Splash splash = null;
+    private static ApplejuiceFassade ajFassade = null;
+    
+    public static ApplejuiceFassade getAjFassade() {
+    	if (ajFassade == null){
+        	ConnectionSettings rm = OptionsManagerImpl.getInstance().getRemoteSettings();
+        	try {
+				ajFassade = new ApplejuiceFassade(rm.getHost(), new Integer(rm.getXmlPort()), 
+						rm.getOldPassword(), false);
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} 
+    	}
+    	return ajFassade;
+    }
 
     public static HTMLLayout getLoggerHtmlLayout() {
         return layout;
@@ -199,7 +217,7 @@ public class AppleJuiceClient {
                             System.exit(1);
                         }
                         else{
-                            ApplejuiceFassade.getInstance().processLink(link, "");
+                        	getAjFassade().processLink(link, "");
                         }
                     }
                 }
@@ -271,7 +289,8 @@ public class AppleJuiceClient {
 
         try {
             String nachricht = "appleJuice-Core-GUI Version " +
-                ApplejuiceFassade.GUI_VERSION + " wird gestartet...";
+            	AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION + 
+				" wird gestartet...";
             ConnectFrame connectFrame = new ConnectFrame();
             splash = new Splash(connectFrame,
                                 IconManager.getInstance().getIcon(
@@ -319,10 +338,12 @@ public class AppleJuiceClient {
             if (!showDialog) {
                 showDialog = keyDown;
             }
-            ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.getInstance();
             boolean firstTry = keyDown ? false : true;
             int erreichbarkeit = 2;
-            while (showDialog || (erreichbarkeit = applejuiceFassade.istCoreErreichbar()) != 0) {
+            if (ajFassade == null) {
+            	getAjFassade();
+            }
+            while (showDialog || (erreichbarkeit = ajFassade.isCoreAvailable()) != 0) {
                 splash.setVisible(false);
                 if (!showDialog) {
                 	if (erreichbarkeit == 2){
@@ -413,7 +434,7 @@ public class AppleJuiceClient {
             System.out.println(nachricht);
             splash.dispose();
             if (processLink) {
-                ApplejuiceFassade.getInstance().processLink(link, "");
+            	ajFassade.processLink(link, "");
             }
             if (OptionsManagerImpl.getInstance().isErsterStart()) {
                 showConnectionWizard(theApp);
@@ -424,8 +445,9 @@ public class AppleJuiceClient {
                         logger.debug("VersionWorkerThread gestartet. " + this);
                     }
                     try {
+                    	ProxySettings proxy = ProxyManagerImpl.getInstance().getProxySettings();
                         String downloadData = WebsiteContentLoader.
-                            getWebsiteContent("http://www.tkl-soft.de", 80,
+                            getWebsiteContent(proxy, "http://www.tkl-soft.de", 80,
                                               "/applejuice/version.txt");
 
                         if (downloadData.length() > 0) {
@@ -434,7 +456,7 @@ public class AppleJuiceClient {
                                 pos1);
                             StringTokenizer token1 = new StringTokenizer(
                                 aktuellsteVersion, ".");
-    						String guiVersion = ApplejuiceFassade.GUI_VERSION;
+    						String guiVersion = AppleJuiceDialog.GUI_VERSION;
     						if (guiVersion.indexOf('-') != -1){
     							guiVersion = guiVersion.substring(0, guiVersion.indexOf('-'));
     						}
@@ -539,5 +561,27 @@ public class AppleJuiceClient {
                                   appDimension.height) / 2);
         wizardDialog.setVisible(true);
         return wizardDialog.isRegularClosed();
+    }
+
+    public static String getPropertiesPath(){
+        if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1){
+            String dir = System.getProperty("user.home") + File.separator +
+                "appleJuice";
+            File directory = new File(dir);
+            if (!directory.isDirectory()){
+                directory.mkdir();
+            }
+            dir += File.separator + "gui";
+            directory = new File(dir);
+            if (!directory.isDirectory()) {
+                directory.mkdir();
+            }
+            dir += File.separator + "ajgui.properties";
+            return dir;
+        }
+        else{
+            return System.getProperty("user.dir") + File.separator +
+                "ajgui.properties";
+        }
     }
 }

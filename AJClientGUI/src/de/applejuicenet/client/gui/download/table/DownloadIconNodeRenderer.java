@@ -5,15 +5,15 @@ import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.JTree;
 
+import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
+import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.components.treetable.DefaultIconNodeRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.components.util.IconGetter;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.shared.Settings;
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 public class DownloadIconNodeRenderer extends DefaultIconNodeRenderer 
 	implements DataUpdateListener {

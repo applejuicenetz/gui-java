@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.9 2004/12/08 10:11:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.10 2005/01/18 17:35:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,14 +23,16 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
+import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.controller.dac.PartListDO;
+import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.dac.PartListDO;
-import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 public class DownloadDOOverviewPanel
     extends JPanel
@@ -250,7 +252,7 @@ public class DownloadDOOverviewPanel
             	}
 	            PartListDO partList = null;
                 try{
-                    partList = ApplejuiceFassade.getInstance().
+                    partList = AppleJuiceClient.getAjFassade().
                         getPartList(downloadDO);
                 }
                 catch(WebSiteNotFoundException wsnfE){
@@ -276,7 +278,7 @@ public class DownloadDOOverviewPanel
 				downloadSoureDO.getNickname() + ")";
 			actualDLDateiName.setText(tmp);
 			try {
-				partList = ApplejuiceFassade.getInstance().getPartList(
+				partList = AppleJuiceClient.getAjFassade().getPartList(
 						downloadSoureDO);
 			} catch (WebSiteNotFoundException ex) {
 				// Core ist wahrscheinlich zurzeit ueberlastet

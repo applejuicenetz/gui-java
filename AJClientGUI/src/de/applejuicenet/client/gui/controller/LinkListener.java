@@ -10,10 +10,14 @@ import java.net.Socket;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+
 import java.net.InetAddress;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.12 2004/12/03 17:31:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.13 2005/01/18 17:35:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,17 +69,18 @@ public class LinkListener
                         if (line.indexOf("-link=") != -1) {
                             String link = getLinkFromReadLine(line);
                             if (link != null) {
-                                ApplejuiceFassade.getInstance().processLink(
+                            	AppleJuiceClient.getAjFassade().processLink(
                                     link, "");
                             }
                         }
-                        else if (line.indexOf("-command=") != -1) {
+                        //todo
+/*                        else if (line.indexOf("-command=") != -1) {
                             String command = line.substring(line.indexOf(
                                 "-command=") + 9).toLowerCase();
                             if (command.startsWith("getajstats")) {
                                 PrintStream out = new PrintStream(client.
                                     getOutputStream());
-                                out.println(ApplejuiceFassade.getInstance().
+                                out.println(AppleJuiceClient.getAjFassade().
                                             getStats());
                             }
                             else if (command.startsWith("getajinfo")) {
@@ -83,7 +88,7 @@ public class LinkListener
                                     getOutputStream());
                                 out.println(ApplejuiceFassade.getInstance().getVersionInformation());
                             }
-                        }
+                        }*/
                     }
                     catch (Exception e) {
                         if (logger.isEnabledFor(Level.ERROR)) {
