@@ -13,45 +13,13 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/MainNode.java,v 1.8 2004/03/03 17:27:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/MainNode.java,v 1.9 2004/05/28 15:32:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: MainNode.java,v $
- * Revision 1.8  2004/03/03 17:27:55  maj0r
- * PMD-Optimierung
- *
- * Revision 1.7  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.6  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.5  2004/02/09 14:21:32  maj0r
- * Icons für Upload-DirectStates eingebaut.
- *
- * Revision 1.4  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.3  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.2  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.1  2003/08/30 19:44:32  maj0r
- * Auf JTreeTable umgebaut.
- *
- * Revision 1.1  2003/08/24 19:37:25  maj0r
- * no message
- *
- * Revision 1.1  2003/08/22 11:34:15  maj0r
- * WarteNode eingefuegt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -128,7 +96,7 @@ public class MainNode
         }
     }
 
-    public UploadDO[] getChildrenByStatus(int statusToCheck){
+    public UploadDO[] getChildrenByStatus(int statusToCheck, boolean active){
         if (uploads == null) {
             return null;
         }
@@ -139,7 +107,16 @@ public class MainNode
             for (int i = 0; i < uploadsForThread.length; i++) {
                 if (uploadsForThread[i].getStatus() ==
                     statusToCheck) {
-                    children.add(uploadsForThread[i]);
+                    if (active){
+                        if (uploadsForThread[i].getDirectState() == UploadDO.STATE_DIREKT_VERBUNDEN){
+                            children.add(uploadsForThread[i]);
+                        }
+                    }
+                    else{
+                        if (uploadsForThread[i].getDirectState() != UploadDO.STATE_DIREKT_VERBUNDEN){
+                            children.add(uploadsForThread[i]);
+                        }
+                    }
                 }
             }
             return (UploadDO[]) children.toArray(new UploadDO[children.
@@ -153,30 +130,13 @@ public class MainNode
         }
         else{
             if (getType() == MainNode.LOADING_UPLOADS) {
-                return getChildrenByStatus(UploadDO.AKTIVE_UEBERTRAGUNG);
+                return getChildrenByStatus(UploadDO.AKTIVE_UEBERTRAGUNG, true);
             }
             else if (getType() == MainNode.WAITING_UPLOADS) {
-                return getChildrenByStatus(UploadDO.WARTESCHLANGE);
+                return getChildrenByStatus(UploadDO.WARTESCHLANGE, true);
             }
             else if (getType() == MainNode.REST_UPLOADS) {
-                if (uploads == null) {
-                    return null;
-                }
-                else {
-                    ArrayList children = new ArrayList();
-                    UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
-                        toArray(new UploadDO[uploads.size()]);
-                    for (int i = 0; i < uploadsForThread.length; i++) {
-                        if (uploadsForThread[i].getStatus() !=
-                            UploadDO.AKTIVE_UEBERTRAGUNG &&
-                            uploadsForThread[i].getStatus() !=
-                            UploadDO.WARTESCHLANGE) {
-                            children.add(uploadsForThread[i]);
-                        }
-                    }
-                    return (UploadDO[]) children.toArray(new UploadDO[children.
-                        size()]);
-                }
+                return getChildrenByStatus(UploadDO.WARTESCHLANGE, false);
             }
             else{
                 return null;
