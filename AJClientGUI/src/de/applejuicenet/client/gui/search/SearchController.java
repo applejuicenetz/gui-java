@@ -124,6 +124,10 @@ public class SearchController extends GuiController{
                 getFirstAttrbuteByTagName(".root.mainform.opensearches.caption"));
         searchPanel.getBearbeitungLbl().setText(
                 bearbeitung.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
+        searchPanel.getMnuEinfuegen()
+        .setText(ZeichenErsetzer
+                .korrigiereUmlaute(languageSelector
+                        .getFirstAttrbuteByTagName(".root.javagui.downloadform.einfuegen")));
     }
 
     protected void startFirstSearch() {

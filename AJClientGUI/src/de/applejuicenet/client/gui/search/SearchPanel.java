@@ -4,10 +4,20 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -19,12 +29,13 @@ import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.shared.IconManager;
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.10 2005/03/04 13:47:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.11 2005/03/07 12:42:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +54,8 @@ public class SearchPanel
     private TKLTextField suchbegriff = new TKLTextField();
     private TKLLabel suchen = new TKLLabel();
     private TKLLabel bearbeitung = new TKLLabel();
+    private JMenuItem einfuegen;
+    private JPopupMenu menu;
     private Logger logger;
 
     public SearchPanel(GuiController guiController) {
@@ -72,6 +85,10 @@ public class SearchPanel
     
     public SearchResultTabbedPane getSearchResultTabbedPane(){
         return resultPanel;      
+    }
+
+    public JMenuItem getMnuEinfuegen(){
+        return einfuegen;
     }
     
     private void init() throws Exception {
@@ -112,8 +129,44 @@ public class SearchPanel
                 }
             }
         });
+        menu = new JPopupMenu();
+        IconManager im = IconManager.getInstance();
+        einfuegen = new JMenuItem();
+        einfuegen.setIcon(im.getIcon("clipboard"));
+        einfuegen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                linkMenuActionPerformed(e);
+            }
+        });
+        menu.add(einfuegen);
+        suchbegriff.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    showLinkMenu(e.getX(), e.getY());
+                }
+            }
+        });
     }
 
+    private void showLinkMenu(int x, int y) {
+        menu.show(suchbegriff, x, y);
+    }
+
+    private void linkMenuActionPerformed(ActionEvent e) {
+        Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable transferable = cb.getContents(this);
+        if (transferable != null) {
+            String data = null;
+            try {
+                data = (String) transferable
+                        .getTransferData(DataFlavor.stringFlavor);
+                suchbegriff.setText(data);
+            } catch (Exception ex) {
+                suchbegriff.setText("Error");
+            }
+        }
+    }
+    
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
