@@ -35,7 +35,7 @@ import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.layout.Synchronizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.8 2005/02/21 17:37:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.9 2005/03/07 14:41:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -254,6 +254,8 @@ public class SharePanel extends TklPanel{
         splitPane.setRightComponent(panelCenter);
         splitPane.setBorder(null);
         add(splitPane, BorderLayout.CENTER);
+        
+        cmbPrio.disableDirtyComponent(true);
     }
 
     public int[] getColumnWidths() {
