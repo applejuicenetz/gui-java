@@ -8,8 +8,11 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import org.apache.log4j.Logger;
 
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.1 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.2 2003/08/16 20:53:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +21,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.2  2003/08/16 20:53:40  maj0r
+ * Kleinen Fehler korrigiert
+ *
  * Revision 1.1  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -39,7 +45,15 @@ public class DirectoryXMLHolder extends WebXMLParser {
         if (directory == null)
             directory = "";
 
-        reload("dir=" + directory);
+        try {
+            if (directory.length()==0)
+                reload("");
+            else
+                reload("directory=" + URLEncoder.encode(directory, "UTF-8"));
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+        }
         Element e = null;
         NodeList nodes = document.getElementsByTagName("dir");
         int nodesSize = nodes.getLength();

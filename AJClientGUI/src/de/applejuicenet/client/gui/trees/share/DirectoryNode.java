@@ -11,7 +11,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.3 2003/08/15 17:53:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.4 2003/08/16 20:53:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryNode.java,v $
+ * Revision 1.4  2003/08/16 20:53:40  maj0r
+ * Kleinen Fehler korrigiert
+ *
  * Revision 1.3  2003/08/15 17:53:54  maj0r
  * Tree fuer Shareauswahl fortgefuehrt, aber noch nicht fertiggestellt.
  *
@@ -78,7 +81,7 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node{
             case DirectoryDO.TYPE_ORDNER:
                 {
                     if (directoryDO.isFileSystem())
-                        return im.getIcon("tree");
+                        return im.getIcon("verzeichnislink");//im.getIcon("tree");
                     else
                         return im.getIcon("verzeichnislink");
                 }
@@ -112,12 +115,12 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node{
     protected Object[] getChildren() {
         if (children==null){
             children = new ArrayList();
-     /*       DirectoryDO[] childDirectoryDO = ApplejuiceFassade.getInstance().getDirectory(getFullPath());
+            DirectoryDO[] childDirectoryDO = ApplejuiceFassade.getInstance().getDirectory(getFullPath());
             if (childDirectoryDO!=null && childDirectoryDO.length!=0){
                 for(int i=0; i<childDirectoryDO.length; i++){
                     children.add(new DirectoryNode(this, childDirectoryDO[i]));
                 }
-            }    */
+            }
         }
         return children.toArray(new DirectoryNode[children.size()]);
     }
