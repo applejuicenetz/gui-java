@@ -39,7 +39,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.60 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.61 2004/02/06 10:49:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.61  2004/02/06 10:49:03  maj0r
+ * Loggen der verwendeten Java-Version.
+ *
  * Revision 1.60  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -393,10 +396,11 @@ public class AppleJuiceClient {
                 logger.info(nachricht);
             }
             System.out.println(nachricht);
-            nachricht = "erkanntes GUI-OS: " + System.getProperty("os.name");
             if (logger.isEnabledFor(Level.INFO)) {
+                nachricht = "erkanntes GUI-OS: " + System.getProperty("os.name");
                 logger.info(nachricht);
-
+                nachricht = "erkannte Java-Version: " + System.getProperty("java.version");
+                logger.info(nachricht);
             }
             String titel = null;
             LanguageSelector languageSelector = LanguageSelector.getInstance();
