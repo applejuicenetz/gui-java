@@ -66,7 +66,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.106 2004/04/15 16:06:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.107 2004/05/08 16:19:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -141,7 +141,18 @@ public class DownloadPanel
     }
 
     public void tryGetPartList() {
-        item7.doClick();
+        Object[] selectedItems = getSelectedDownloadItems();
+        if (selectedItems != null && selectedItems.length == 1) {
+            if (selectedItems[0].getClass() == DownloadMainNode.class
+                &&
+                ( (DownloadMainNode) selectedItems[0]).getType() ==
+                DownloadMainNode.ROOT_NODE) {
+                downloadPartListWatcher.setDownloadNode(selectedItems[0]);
+            }
+            else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
+                downloadPartListWatcher.setDownloadNode(selectedItems[0]);
+            }
+        }
     }
 
     private void init() throws Exception {
@@ -377,18 +388,7 @@ public class DownloadPanel
 
         item7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                Object[] selectedItems = getSelectedDownloadItems();
-                if (selectedItems != null && selectedItems.length == 1) {
-                    if (selectedItems[0].getClass() == DownloadMainNode.class
-                        &&
-                        ( (DownloadMainNode) selectedItems[0]).getType() ==
-                        DownloadMainNode.ROOT_NODE) {
-                        downloadPartListWatcher.setDownloadNode(selectedItems[0]);
-                    }
-                    else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
-                        downloadPartListWatcher.setDownloadNode(selectedItems[0]);
-                    }
-                }
+                tryGetPartList();
             }
         });
 
@@ -549,19 +549,6 @@ public class DownloadPanel
                     DownloadMainNode.ROOT_NODE) {
                     DownloadDO downloadDO = ( (DownloadMainNode) node).
                         getDownloadDO();
-                    if (!powerDownloadPanel.isAutomaticPwdlActive()) {
-                        powerDownloadPanel.btnPdl.setEnabled(true);
-                        if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
-                            || downloadDO.getStatus() == DownloadDO.PAUSIERT) {
-                            powerDownloadPanel.setPwdlValue(downloadDO.
-                                getPowerDownload());
-                        }
-                        else {
-                            downloadDOOverviewPanel.enableHoleListButton(false);
-                            powerDownloadPanel.btnPdl.setEnabled(false);
-                            powerDownloadPanel.setPwdlValue(0);
-                        }
-                    }
                     if (Settings.getSettings().isDownloadUebersicht()) {
                         downloadDOOverviewPanel.enableHoleListButton(false);
                         tryGetPartList();
@@ -575,19 +562,32 @@ public class DownloadPanel
                             downloadDOOverviewPanel.enableHoleListButton(false);
                         }
                     }
-                }
-                else if (node.getClass() == DownloadSourceDO.class) {
                     if (!powerDownloadPanel.isAutomaticPwdlActive()) {
                         powerDownloadPanel.btnPdl.setEnabled(true);
-                        powerDownloadPanel.setPwdlValue( ( (DownloadSourceDO)
-                            node).getPowerDownload());
+                        if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
+                            || downloadDO.getStatus() == DownloadDO.PAUSIERT) {
+                            powerDownloadPanel.setPwdlValue(downloadDO.
+                                getPowerDownload());
+                        }
+                        else {
+                            downloadDOOverviewPanel.enableHoleListButton(false);
+                            powerDownloadPanel.btnPdl.setEnabled(false);
+                            powerDownloadPanel.setPwdlValue(0);
+                        }
                     }
+                }
+                else if (node.getClass() == DownloadSourceDO.class) {
                     if (Settings.getSettings().isDownloadUebersicht()) {
                         downloadDOOverviewPanel.enableHoleListButton(false);
                         tryGetPartList();
                     }
                     else {
                         downloadDOOverviewPanel.enableHoleListButton(true);
+                    }
+                    if (!powerDownloadPanel.isAutomaticPwdlActive()) {
+                        powerDownloadPanel.btnPdl.setEnabled(true);
+                        powerDownloadPanel.setPwdlValue( ( (DownloadSourceDO)
+                            node).getPowerDownload());
                     }
                 }
                 else {
@@ -1228,38 +1228,32 @@ public class DownloadPanel
             nodeObject = node;
             worker = new Thread() {
                 public void run() {
-                    try {
-                        sleep(2000);
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                if (nodeObject.getClass() ==
-                                    DownloadMainNode.class
-                                    &&
-                                    ( (DownloadMainNode) nodeObject).
-                                    getType() ==
-                                    DownloadMainNode.ROOT_NODE) {
-                                    downloadDOOverviewPanel.setDownloadDO( ( (
-                                        DownloadMainNode) nodeObject).
-                                        getDownloadDO());
-                                }
-                                else if (nodeObject.getClass() ==
-                                         DownloadSourceDO.class) {
-                                    if ( ( (DownloadSourceDO) nodeObject).
-                                        getStatus() ==
-                                        DownloadSourceDO.IN_WARTESCHLANGE &&
-                                        ( (DownloadSourceDO) nodeObject).
-                                        getQueuePosition() > 20) {
-                                        return;
-                                    }
-                                    downloadDOOverviewPanel.setDownloadSourceDO( (
-                                        DownloadSourceDO) nodeObject);
-                                }
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            if (nodeObject.getClass() ==
+                                DownloadMainNode.class
+                                &&
+                                ( (DownloadMainNode) nodeObject).
+                                getType() ==
+                                DownloadMainNode.ROOT_NODE) {
+                                downloadDOOverviewPanel.setDownloadDO( ( (
+                                    DownloadMainNode) nodeObject).
+                                    getDownloadDO());
                             }
-                        });
-                    }
-                    catch (InterruptedException ex) {
-                        interrupt();
-                    }
+                            else if (nodeObject.getClass() ==
+                                     DownloadSourceDO.class) {
+                                if ( ( (DownloadSourceDO) nodeObject).
+                                    getStatus() ==
+                                    DownloadSourceDO.IN_WARTESCHLANGE &&
+                                    ( (DownloadSourceDO) nodeObject).
+                                    getQueuePosition() > 20) {
+                                    return;
+                                }
+                                downloadDOOverviewPanel.setDownloadSourceDO( (
+                                    DownloadSourceDO) nodeObject);
+                            }
+                        }
+                    });
                 }
             };
             worker.start();
