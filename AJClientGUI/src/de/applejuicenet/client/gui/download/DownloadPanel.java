@@ -368,7 +368,8 @@ public class DownloadPanel extends TklPanel {
         };
         downloadLink.ignoreStatus(STATUSFLAG.MODIFIED);
         downloadLink.addInvalidRule(downloadloadlinkRule);
-
+        downloadLink.ignoreInvalidRules(false);
+        
         targetDir.ignoreStatus(STATUSFLAG.MODIFIED);
         InvalidRule targetDirRule = new InvalidRule(){
             public boolean isInvalid(JComponent component){
