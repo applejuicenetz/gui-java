@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DownloadPartListXMLHolder.java,v 1.1 2003/08/11 14:10:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DownloadPartListXMLHolder.java,v 1.2 2003/09/01 06:27:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPartListXMLHolder.java,v $
+ * Revision 1.2  2003/09/01 06:27:35  maj0r
+ * Ueberarbeitet.
+ *
  * Revision 1.1  2003/08/11 14:10:28  maj0r
  * DownloadPartList eingefügt.
  * Diverse Änderungen.
@@ -50,7 +53,7 @@ public class DownloadPartListXMLHolder
     Element e = null;
     NodeList nodes = document.getElementsByTagName("fileinformation");
     e = (Element) nodes.item(0);
-    Long fileSize = new Long(e.getAttribute("filesize"));
+    long fileSize = new Long(e.getAttribute("filesize")).longValue();
     partListDO.setGroesse(fileSize);
     nodes = document.getElementsByTagName("part");
     int nodesSize = nodes.getLength();

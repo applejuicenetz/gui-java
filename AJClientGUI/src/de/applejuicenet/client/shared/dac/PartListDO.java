@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.2 2003/08/11 19:41:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.3 2003/09/01 06:27:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PartListDO.java,v $
+ * Revision 1.3  2003/09/01 06:27:35  maj0r
+ * Ueberarbeitet.
+ *
  * Revision 1.2  2003/08/11 19:41:09  maj0r
  * HashSet ggn ArrayList getauscht, um die Reihenfolge der Parts zu behalten.
  *
@@ -38,14 +41,14 @@ public class PartListDO {
     public static final Color COLOR_TYPE_10 = Color.BLUE;
 
     private DownloadDO downloadDO;
-    private Long groesse;
+    private long groesse;
     private ArrayList parts = new ArrayList();
 
     public PartListDO(DownloadDO downloadDO){
         this.downloadDO = downloadDO;
     }
 
-    public Long getGroesse() {
+    public long getGroesse() {
         return groesse;
     }
 
@@ -57,7 +60,7 @@ public class PartListDO {
         return (Part[])parts.toArray(new Part[parts.size()]);
     }
 
-    public void setGroesse(Long groesse) {
+    public void setGroesse(long groesse) {
         this.groesse = groesse;
     }
 

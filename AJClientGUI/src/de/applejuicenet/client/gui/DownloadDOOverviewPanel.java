@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.9 2003/08/24 14:59:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.10 2003/09/01 06:27:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.10  2003/09/01 06:27:35  maj0r
+ * Ueberarbeitet.
+ *
  * Revision 1.9  2003/08/24 14:59:59  maj0r
  * Version 0.14
  * Diverse Aenderungen.
@@ -122,61 +125,37 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
                 constraints.weightx = 1;
                 JLabel label1 = null;
                 PartListDO.Part[] parts = tempPartList.getParts();
-                int anzahlParts = parts.length;
-                int anzahlGanzeZeilen;
-                int anzahlProZeile;
-                if (anzahlParts>5120){
-                    anzahlGanzeZeilen = anzahlParts / 512;
-                    anzahlProZeile = 512;
+                int anzahl = 5632;
+                int anzahlZeile = 512;
+                int anzahlZeilen = 11;
+                if (tempPartList.getGroesse()<513){
+                    anzahl = (int) tempPartList.getGroesse();
+                    anzahlZeile = anzahl;
+                    anzahlZeilen = 1;
                 }
-                else if (anzahlParts<10){
-                    anzahlGanzeZeilen = 1;
-                    anzahlProZeile = anzahlParts;
+                else if (tempPartList.getGroesse()<5633){
+                    anzahl = (int)tempPartList.getGroesse() / anzahlZeilen * anzahlZeilen;
+                    anzahlZeile = anzahl/anzahlZeilen;
                 }
-                else if (anzahlParts<100){
-                    anzahlGanzeZeilen = anzahlParts / 10;
-                    anzahlProZeile = anzahlParts / anzahlGanzeZeilen;
-                }
-                else{
-                    anzahlGanzeZeilen = 10;
-                    anzahlProZeile = anzahlParts / anzahlGanzeZeilen;
-                }
-                if (anzahlProZeile>512)
-                    anzahlProZeile = 512;
-                int count = 0;
-                constraints.gridy = 0;
-                constraints.gridx = 0;
-                constraints.gridwidth = anzahlProZeile;
+                constraints.gridwidth = anzahlZeile;
                 actualDlOverviewTable.add(actualDLDateiName, constraints);
                 constraints.weighty = 1;
                 constraints.gridwidth = 1;
-                for (int i = 0; i < anzahlGanzeZeilen; i++)
-                {
+                int groesseProPart = (int) tempPartList.getGroesse() / anzahl;
+                long position = 0;
+                int partPos = 0;
+                for (int i=0; i<anzahlZeilen; i++){
                     constraints.gridy = i+1;
-                    for (int x = 0; x < anzahlProZeile; x++)
-                    {
-                        if (count<anzahlParts){
-                            constraints.gridx = x;
-                            label1 = new JLabel();
-                            label1.setOpaque(true);
-                            label1.setBackground(getColorByType(parts[count].getType()));
-                            actualDlOverviewTable.add(label1, constraints);
-                            count++;
+                    for (int x=0; x<anzahlZeile; x++){
+                        constraints.gridx = x;
+                        position += groesseProPart;
+                        while (parts[partPos].getFromPosition().longValue()<position && partPos<parts.length-1){
+                            partPos++;
                         }
-                    }
-                }
-                if (count < anzahlParts)
-                {
-                    constraints.gridy = anzahlGanzeZeilen+1;
-                    count = 0;
-                    for (int i = anzahlProZeile * anzahlGanzeZeilen; i < anzahlParts-1 ; i++)
-                    {
-                        constraints.gridx = count;
                         label1 = new JLabel();
                         label1.setOpaque(true);
-                        label1.setBackground(getColorByType(parts[i].getType()));
+                        label1.setBackground(getColorByType(parts[partPos].getType()));
                         actualDlOverviewTable.add(label1, constraints);
-                        count++;
                     }
                 }
                 add(actualDlOverviewTable, BorderLayout.CENTER);
