@@ -99,6 +99,8 @@ public class PowerDownloadPanel
         return tip;
       }
     };
+    btnHint.setOpaque(true);
+    btnHint.setBackground(Color.blue);
     tempPanel.add(btnHint, BorderLayout.EAST);
     backPanel.add(tempPanel, constraints);
     constraints.gridy = 1;
@@ -161,6 +163,9 @@ public class PowerDownloadPanel
         return tip;
       }
     };
+    btnHint2.setOpaque(true);
+    btnHint2.setBackground(Color.blue);
+
     tempPanel2.add(btnHint2, BorderLayout.EAST);
     backPanel.add(tempPanel2, constraints);
 
