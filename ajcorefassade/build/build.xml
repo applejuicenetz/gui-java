@@ -2,12 +2,14 @@
 <!DOCTYPE project []>
 <project name="ajcorefassade" default="create-jar" basedir="..">
 
+   <taskdef name="pack" classname="org.sadun.util.ant.Pack" classpath="${basedir}/tools/pack.jar"/>
+
    <!-- component directories ... -->
    <property name="srcdir"      location="${basedir}/src"/>
    <property name="compiledir"  location="${basedir}/classes"/>
 
-   <property name="xercesImpl.jar"            location="${basedir}/../AJClientGUI/tools/xercesImpl.jar"/>
-   <property name="xml-apis.jar"            location="${basedir}/../AJClientGUI/tools/xml-apis.jar"/>
+   <property name="xercesImpl.jar"            location="${basedir}/tools/xercesImpl.jar"/>
+   <property name="xml-apis.jar"            location="${basedir}/tools/xml-apis.jar"/>
    
    <path id="lib.path">
       <pathelement location="${xercesImpl.jar}"/>
@@ -38,17 +40,20 @@
    <target name="rebuild" depends="clean, compile" description="cleans and compiles ajcorefassade">
    </target>
 
-   <target name="create-jar" depends="rebuild" description="builds ajcorefassade">
-	<jar destfile="${basedir}/ajcorefassade.jar"
-		basedir="${compiledir}"
-		includes="de/**"
-		index="true">
-	    <manifest>
-	       <attribute name="Built-By" value="${user.name}"/>
-	    </manifest>
-	</jar>
+   <target name="create-jar" depends="compile" description="builds ajcorefassade.jar">
+	<pack classes="org.apache.xerces.parsers.XML11Configuration,
+			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl,org.apache.xerces.parsers.IntegratedParserConfiguration"
+	      targetJar="${basedir}/ajcorefassade.jar"
+	      excludePkg="java,javax,sun" >
+           <classpath>
+           	<pathelement path="${compiledir}"/>
+           	  <path refid="lib.path"/>
+           </classpath>
+	   <additionalclass name="org.apache.xerces.parsers.SAXParser"/>
+       <additionalfileset dir="${compiledir}" excludes="**/*.txt **/*.dep2"/>
+	</pack>
    </target>
-
+   
    <target name="complete" depends="create-jar" description="builds ajcorefassade">
    </target>
 </project>
