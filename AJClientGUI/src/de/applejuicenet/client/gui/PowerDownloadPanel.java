@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.27 2003/10/31 16:24:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.28 2003/11/03 21:17:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.28  2003/11/03 21:17:16  maj0r
+ * Kleinen Fehler im Pwdl-Textfeld behoben.
+ *
  * Revision 1.27  2003/10/31 16:24:58  maj0r
  * Soundeffekte fuer diverse Ereignisse eingefuegt.
  *
@@ -90,17 +93,18 @@ public class PowerDownloadPanel
     private JTextField ratio = new JTextField("2.2");
     private JTextField autoAb = new JTextField();
     private JTextField autoBis = new JTextField();
-    public JButton btnPdl = new JButton("�bernehmen");
-    private JButton btnAutoPdl = new JButton("�bernehmen");
+    public JButton btnPdl = new JButton("Uebernehmen");
+    private JButton btnAutoPdl = new JButton("Uebernehmen");
     private JLabel powerdownload = new JLabel("Powerdownload");
     private JLabel label6 = new JLabel(
-            "Wieviel willst Du maximal f�r 1 Byte bezahlen?");
-    private JLabel label7 = new JLabel("F�r 1 Byte zahle");
+            "Wieviel willst Du maximal fuer 1 Byte bezahlen?");
+    private JLabel label7 = new JLabel("Fuer 1 Byte zahle");
     private JLabel label8 = new JLabel("Credits");
     private JLabel label9 = new JLabel("Automatischer Powerdownload");
     private JLabel label10 = new JLabel("ab ");
     private JLabel label11 = new JLabel("bis ");
     private Logger logger;
+    private RatioFocusAdapter ratioFocusAdapter;
 
     private DownloadPanel parentPanel;
 
@@ -140,6 +144,8 @@ public class PowerDownloadPanel
         powerdownload.setForeground(Color.white);
         powerdownload.setOpaque(true);
         powerdownload.setBackground(BLUE_BACKGROUND);
+        ratioFocusAdapter = new RatioFocusAdapter();
+        ratio.addFocusListener(ratioFocusAdapter);
         ratio.setBackground(Color.white);
         ratio.setMinimumSize(new Dimension(50, 21));
         ratio.setPreferredSize(new Dimension(50, 21));
@@ -147,6 +153,7 @@ public class PowerDownloadPanel
         KeyAdapter ratioKlicker = new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    ratioFocusAdapter.focusLost(null);
                     btnPdl.doClick();
                 }
             }
@@ -213,34 +220,6 @@ public class PowerDownloadPanel
             public void mouseClicked(MouseEvent e) {
                 btnAktiv.setSelected(true);
                 alterRatio(false);
-            }
-        });
-        ratio.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent fe) {
-                try
-                {
-                    String temp = ratio.getText();
-                    temp = temp.replaceAll(",", ".");
-                    int pos = temp.lastIndexOf('.');
-                    if (pos != -1)
-                    {
-                        temp = temp.substring(0, pos + 2);
-                    }
-                    double pwdl = new Double(temp).doubleValue();
-                    if (pwdl < 2.2 || pwdl > 50)
-                    {
-                        ratio.setText("2.2");
-                    }
-                    else
-                    {
-                        ratio.setText(temp);
-                    }
-                    btnAktiv.setSelected(true);
-                }
-                catch (Exception ex)
-                {
-                    ratio.setText("2.2");
-                }
             }
         });
         constraints2.gridx = 1;
@@ -469,6 +448,35 @@ public class PowerDownloadPanel
         {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", ex);
+        }
+    }
+
+    private class RatioFocusAdapter extends FocusAdapter{
+        public void focusLost(FocusEvent fe) {
+            try
+            {
+                String temp = ratio.getText();
+                temp = temp.replaceAll(",", ".");
+                int pos = temp.lastIndexOf('.');
+                if (pos != -1)
+                {
+                    temp = temp.substring(0, pos + 2);
+                }
+                double pwdl = new Double(temp).doubleValue();
+                if (pwdl < 2.2 || pwdl > 50)
+                {
+                    ratio.setText("2.2");
+                }
+                else
+                {
+                    ratio.setText(temp);
+                }
+                btnAktiv.setSelected(true);
+            }
+            catch (Exception ex)
+            {
+                ratio.setText("2.2");
+            }
         }
     }
 }
