@@ -10,9 +10,10 @@ import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.6 2003/08/24 14:59:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.7 2003/08/26 06:20:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +22,9 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryNode.java,v $
+ * Revision 1.7  2003/08/26 06:20:10  maj0r
+ * Anpassungen an muhs neuen Tree.
+ *
  * Revision 1.6  2003/08/24 14:59:59  maj0r
  * Version 0.14
  * Diverse Aenderungen.
@@ -41,9 +45,15 @@ import java.util.ArrayList;
  */
 
 public class DirectoryNode extends DefaultMutableTreeNode implements Node, ApplejuiceNode{
+    public static final int NOT_SHARED = 0;
+    public static final int SHARED_WITH_SUB = 1;
+    public static final int SHARED_WITHOUT_SUB = 2;
+
     private DirectoryDO directoryDO;
     private ArrayList children = null;
     private DirectoryNode parent;
+
+    private int shareMode = NOT_SHARED;
 
     public DirectoryNode(DirectoryNode parent, DirectoryDO directoryDO) {
         this.parent = parent;
@@ -68,6 +78,34 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node, Apple
     public boolean isLeaf() {
         return false;
     }
+
+    public int getShareMode(){
+        return shareMode;
+    }
+
+    public void setShareMode(int shareMode){
+        this.shareMode = shareMode;
+        if (children==null || children.size()==0)
+            return;
+        else{
+            for (int i=0; i<children.size(); i++){
+                ((DirectoryNode)children.get(i)).setShareMode(shareMode);;
+            }
+        }
+   }
+
+    public Icon getShareModeIcon(){
+        IconManager im = IconManager.getInstance();
+        switch (shareMode){
+            case SHARED_WITH_SUB:
+                    return im.getIcon("sharedwsub");
+            case SHARED_WITHOUT_SUB:
+                    return im.getIcon("sharedwosub");
+            default:
+                return im.getIcon("notshared");
+        }
+    }
+
 
     public Icon getConvenientIcon() {
         if (directoryDO==null)

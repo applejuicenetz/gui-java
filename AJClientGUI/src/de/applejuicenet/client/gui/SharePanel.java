@@ -25,7 +25,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.24 2003/08/25 19:28:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.25 2003/08/26 06:20:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +34,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.25  2003/08/26 06:20:10  maj0r
+ * Anpassungen an muhs neuen Tree.
+ *
  * Revision 1.24  2003/08/25 19:28:52  maj0r
  * Anpassungen an muhs neuen Tree.
  *
@@ -291,8 +294,7 @@ public class SharePanel
     add(panelCenter, BorderLayout.CENTER);
 
     TableColumn tc = shareTable.getColumnModel().getColumn(1);
-    tc.setCellRenderer(new ShareTableCellRenderer());
-
+//    tc.setCellRenderer(new ShareTableCellRenderer());
       folderTree.addMouseListener(new MouseAdapter() {
           public void mousePressed(MouseEvent me) {
               if (SwingUtilities.isRightMouseButton(me))
