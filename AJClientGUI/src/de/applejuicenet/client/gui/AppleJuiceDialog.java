@@ -1458,4 +1458,12 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 		};
 		versionWorker.start();
 	}
+
+    public void informWrongPassword() {
+        LanguageSelector languageSelector = LanguageSelector.getInstance();
+        String nachricht = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.msgdlgtext3"));
+        SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
+        closeWithErrormessage(nachricht, true);
+    }
 }

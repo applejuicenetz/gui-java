@@ -29,7 +29,9 @@ import javax.swing.event.ChangeListener;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -37,7 +39,7 @@ import de.applejuicenet.client.gui.options.ODConnectionPanel;
 import de.applejuicenet.client.shared.ConnectionSettings;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/QuickConnectionSettingsDialog.java,v 1.4 2005/02/26 23:05:45 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/QuickConnectionSettingsDialog.java,v 1.5 2005/02/28 16:37:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -71,12 +73,10 @@ public class QuickConnectionSettingsDialog
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
-
+    
     private void init() {
         remote = OptionsManagerImpl.getInstance().getRemoteSettings();
         connectionSet = OptionsManagerImpl.getInstance().getConnectionsSet();
@@ -218,13 +218,20 @@ public class QuickConnectionSettingsDialog
 
     private void selChanged(ItemEvent itemEvent) {
         ConnectionSettings con = (ConnectionSettings) itemEvent.getItem();
-        this.remotePanel.setHost(con.getHost());
-        this.remotePanel.setXMLPort(Integer.toString(con.getXmlPort()));
-        this.remotePanel.updateUI();
+        remotePanel.setHost(con.getHost());
+        remotePanel.setXMLPort(Integer.toString(con.getXmlPort()));
+        remotePanel.updateUI();
     }
 
     private void speichereEinstellungen() {
         try {
+            CoreConnectionSettingsHolder ajConn = AppleJuiceClient.getCoreConnectionSettingsHolder();
+            if (ajConn != null) {
+                ajConn.setCoreHost(remotePanel.getHost());
+                ajConn.setCorePort(remotePanel.getPort());
+                ajConn.setCorePassword(remotePanel.getPassword(), true);
+            }
+            
             OptionsManagerImpl.getInstance().setConnectionsSet(getNeueConfigs(remote));
             OptionsManagerImpl.getInstance().onlySaveRemote(remote);
             if (dirty) {
@@ -234,9 +241,7 @@ public class QuickConnectionSettingsDialog
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -249,9 +254,9 @@ public class QuickConnectionSettingsDialog
         }
         ArrayList<ConnectionSettings> targets2Save = new ArrayList<ConnectionSettings>();
         targets2Save.add(remote);
-        for (int i = 0; i < this.connectionSet.length; i++) {
-            targets2Save.add(connectionSet[i]);
+        for (ConnectionSettings curVal : connectionSet) {
+            targets2Save.add(curVal);
         }
-        return (ConnectionSettings[])targets2Save.toArray(new ConnectionSettings[]{});
+        return targets2Save.toArray(new ConnectionSettings[]{});
     }
 }

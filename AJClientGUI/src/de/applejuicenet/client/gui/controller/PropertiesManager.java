@@ -640,7 +640,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 			throws InvalidPasswordException {
 		propertyHandler.put("options_remote_host", remote.getHost());
 		try {
-			AppleJuiceClient.getAjFassade().setPassword(remote.getNewPassword(), true);
+			AppleJuiceClient.getAjFassade().setPassword(remote.getNewPassword(), false);
 		} catch (de.applejuicenet.client.fassade.exception.IllegalArgumentException e) {
 			logger.error(e);
 		}

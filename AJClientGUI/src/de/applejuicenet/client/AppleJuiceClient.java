@@ -30,6 +30,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.ProxySettings;
@@ -53,7 +54,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.95 2005/02/18 16:14:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.96 2005/02/28 16:37:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -70,18 +71,24 @@ public class AppleJuiceClient {
     private static String fileAppenderPath;
     private static HTMLLayout layout;
     private static ApplejuiceFassade ajFassade = null;
+    private static CoreConnectionSettingsHolder conn = null;
     
     public static synchronized ApplejuiceFassade getAjFassade() {
     	if (ajFassade == null){
         	ConnectionSettings rm = OptionsManagerImpl.getInstance().getRemoteSettings();
         	try {
-				ajFassade = new ApplejuiceFassade(rm.getHost(), new Integer(rm.getXmlPort()), 
-						rm.getOldPassword(), false);
+                conn = new CoreConnectionSettingsHolder(
+                        rm.getHost(), new Integer(rm.getXmlPort()), rm.getOldPassword(), false);
+				ajFassade = new ApplejuiceFassade(conn);
 			} catch (IllegalArgumentException e) {
 				logger.error(e);
 			} 
     	}
     	return ajFassade;
+    }
+    
+    public static CoreConnectionSettingsHolder getCoreConnectionSettingsHolder() {
+        return conn;
     }
 
     public static HTMLLayout getLoggerHtmlLayout() {

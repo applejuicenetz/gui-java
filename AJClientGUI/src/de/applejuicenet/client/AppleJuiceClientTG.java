@@ -7,9 +7,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.exception.WrongPasswordException;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.6 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.7 2005/02/28 16:37:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,7 +22,8 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
  */
 
 public class AppleJuiceClientTG
-    extends ThreadGroup {
+        extends ThreadGroup {
+    
     private Logger logger;
 
     public AppleJuiceClientTG() {
@@ -29,12 +32,15 @@ public class AppleJuiceClientTG
     }
 
     public void uncaughtException(Thread t, Throwable e) {
-        if(e.getClass()==ArrayIndexOutOfBoundsException.class){
+        if(e.getClass() == ArrayIndexOutOfBoundsException.class){
             if (logger.isEnabledFor(Level.DEBUG)) {
                 logger.debug(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
-        else if (logger.isEnabledFor(Level.ERROR)) {
+        else if(e.getClass() == WrongPasswordException.class){
+            AppleJuiceDialog.getApp().informWrongPassword();
+        }
+        else {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
