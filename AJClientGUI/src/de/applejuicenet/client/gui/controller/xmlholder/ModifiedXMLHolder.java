@@ -36,7 +36,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.35 2004/04/30 14:14:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.36 2004/05/10 16:14:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -713,6 +713,7 @@ public class ModifiedXMLHolder
     }
 
     public void reload() {
+        boolean reloadSession = false;
         try {
             reloadInProgress = true;
             checkForValidSession();
@@ -720,8 +721,8 @@ public class ModifiedXMLHolder
             securer.start();
             String xmlString = getXMLString(filter);
             checkForValidResult(xmlString, securer);
-            xr.parse( new InputSource(
-               new StringReader( xmlString )) );
+            xr.parse(new InputSource(
+                new StringReader(xmlString)));
             parseRest();
             if (!securer.isInterrupted()) {
                 securer.interrupt();
@@ -736,6 +737,17 @@ public class ModifiedXMLHolder
             reloadInProgress = false;
         }
         catch (WebSiteNotFoundException webSiteNotFound) {
+            reloadSession = true;
+        }
+        catch (IllegalArgumentException webSiteNotFound) {
+            reloadSession = true;
+        }
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            }
+        }
+        if (reloadSession){
             SessionXMLHolder sessionHolder = SessionXMLHolder.getInstance();
             String sessionId = sessionHolder.getNewSessionId();
             reloadInProgress = false;
@@ -745,11 +757,6 @@ public class ModifiedXMLHolder
                     "Neue SessionId: " + sessionId);
             }
             throw new RuntimeException();
-        }
-        catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)){
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            }
         }
     }
 
