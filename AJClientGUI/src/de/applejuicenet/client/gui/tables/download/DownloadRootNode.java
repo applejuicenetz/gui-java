@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.7 2003/10/12 15:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.8 2003/10/12 16:34:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.8  2003/10/12 16:34:59  maj0r
+ * NullPointer behoben.
+ *
  * Revision 1.7  2003/10/12 15:57:55  maj0r
  * Kleinere Bugs behoben.
  * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
@@ -176,7 +179,9 @@ public class DownloadRootNode implements Node, DownloadNode {
     public void setSortCriteria(int sortCriteria, boolean isAscent) {
         sort = sortCriteria;
         this.isAscent = isAscent;
-        sort(sortedChildNodes);
+        if (sortedChildNodes!=null){
+            sort(sortedChildNodes);
+        }
     }
 
     private Object[] sort(DownloadMainNode[] childNodes) {
