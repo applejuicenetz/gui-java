@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.22 2003/08/29 19:34:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.23 2003/09/05 12:07:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.23  2003/09/05 12:07:28  maj0r
+ * Logdateinamen auf 24 Stunden korrigiert.
+ *
  * Revision 1.22  2003/08/29 19:34:03  maj0r
  * Einige Aenderungen.
  * Version 0.17 Beta
@@ -71,7 +74,7 @@ public class AppleJuiceClient {
     Logger rootLogger = Logger.getRootLogger();
     logger = Logger.getLogger(AppleJuiceClient.class.getName());
 
-    String datum = new SimpleDateFormat("ddMMyyyy_hhmmss").format(new Date(
+    String datum = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date(
         System.currentTimeMillis()));
     String dateiName;
     dateiName = datum + ".html";
