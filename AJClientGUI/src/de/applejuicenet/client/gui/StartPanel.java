@@ -1,14 +1,27 @@
 package de.applejuicenet.client.gui;
 
-import java.awt.*;
-import javax.swing.*;
-import org.apache.log4j.*;
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.shared.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.Information;
+import de.applejuicenet.client.shared.NetworkInfo;
+import de.applejuicenet.client.shared.WebsiteContentLoader;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.37 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.38 2003/12/31 15:46:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +30,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.38  2003/12/31 15:46:48  maj0r
+ * Bug #19 gefixt (Danke an dsp2004)
+ * Stringverwendung in StringBuffer umgebaut.
+ *
  * Revision 1.37  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -366,47 +383,76 @@ public class StartPanel
             }
             label9Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"mainform", "html10"}));
-            String temp = label9Text;
-            temp = temp.replaceFirst("%s", keinServer);
-            temp = temp.replaceFirst("%d",
-                                     Integer.toString(ApplejuiceFassade.
-                getInstance().
-                getAllServer().
-                size()));
-            label9.setText(temp);
+            StringBuffer temp = new StringBuffer(label9Text);
+            int pos = temp.indexOf("%s");
+            if (pos != -1){
+                temp.replace(pos, pos + 2, keinServer);
+            }
+            pos = temp.indexOf("%d");
+            if (pos != -1){
+                temp.replace(pos, pos + 2 , Integer.toString(ApplejuiceFassade.
+                    getInstance().
+                    getAllServer().
+                    size()));
+            }
+            label9.setText(temp.toString());
             label10Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"mainform", "status",
                                           "status0"}));
-            temp = label10Text;
-            if (information != null) {
-                temp = temp.replaceFirst("%d",
-                                         Long.toString(information.getOpenConnections()));
+            temp = new StringBuffer(label10Text);
+            pos = temp.indexOf("%d");
+            if (pos != -1){
+                if (information != null) {
+                    temp.replace(pos, pos + 2,
+                                             Long.toString(information.
+                        getOpenConnections()));
+                }
+                else {
+                    temp.replace(pos, pos + 2, "0");
+                }
             }
-            else {
-                temp = temp.replaceFirst("%d", "0");
-            }
-            label10.setText(temp);
+            label10.setText(temp.toString());
 
             label6Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new
                                           String[] {"mainform", "status",
                                           "status2"}));
-            temp = label6Text;
+            temp = new StringBuffer(label6Text);
             if (netInfo != null) {
-                temp = temp.replaceFirst("%d",
-                                         netInfo.getAJUserGesamtAsStringWithPoints());
-                temp = temp.replaceFirst("%d",
-                                         netInfo.getAJAnzahlDateienAsStringWithPoints());
-                temp = temp.replaceFirst("%s",
-                                         netInfo.getAJGesamtShareWithPoints(0));
+                pos = temp.indexOf("%d");
+                if (pos != -1){
+                    temp.replace(pos, pos + 2,
+                                        netInfo.
+                                        getAJUserGesamtAsStringWithPoints());
+                }
+                pos = temp.indexOf("%d");
+                if (pos != -1){
+                    temp.replace(pos, pos + 2, netInfo.
+                        getAJAnzahlDateienAsStringWithPoints());
+                }
+                pos = temp.indexOf("%s");
+                if (pos != -1){
+                    temp.replace(pos, pos + 2,
+                                             netInfo.getAJGesamtShareWithPoints(
+                        0));
+                }
             }
             else {
-                temp = temp.replaceFirst("%d", "0");
-                temp = temp.replaceFirst("%d", "0");
-                temp = temp.replaceFirst("%s", "0 MB");
+                pos = temp.indexOf("%d");
+                if (pos != -1){
+                    temp.replace(pos, pos + 2, "0");
+                }
+                pos = temp.indexOf("%d");
+                if (pos != -1){
+                    temp.replace(pos, pos + 2, "0");
+                }
+                pos = temp.indexOf("%s");
+                if (pos != -1){
+                    temp.replace(pos, pos + 2, "0 MB");
+                }
 
             }
-            label6.setText(temp);
+            label6.setText(temp.toString());
             warnungen.setText("<html><font><h2>" +
                               ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
@@ -426,13 +472,20 @@ public class StartPanel
                 netInfo = (NetworkInfo) content;
                 StringBuffer temp = new StringBuffer(label6Text);
                 int pos = temp.indexOf("%d");
-                temp.replace(pos, pos + 2,
-                             netInfo.getAJUserGesamtAsStringWithPoints());
+                if (pos != -1){
+                    temp.replace(pos, pos + 2,
+                                 netInfo.getAJUserGesamtAsStringWithPoints());
+                }
                 pos = temp.indexOf("%d");
-                temp.replace(pos, pos + 2,
-                             netInfo.getAJAnzahlDateienAsStringWithPoints());
+                if (pos != -1){
+                    temp.replace(pos, pos + 2,
+                                 netInfo.getAJAnzahlDateienAsStringWithPoints());
+                }
                 pos = temp.indexOf("%s");
-                temp.replace(pos, pos + 2, netInfo.getAJGesamtShareWithPoints(0));
+                if (pos != -1){
+                    temp.replace(pos, pos + 2,
+                                 netInfo.getAJGesamtShareWithPoints(0));
+                }
                 label6.setText(temp.toString());
                 if (netInfo.isFirewalled()) {
                     warnungen.setVisible(true);
@@ -447,31 +500,40 @@ public class StartPanel
             }
             else if (type == DataUpdateListener.INFORMATION_CHANGED) {
                 information = (Information) content;
-                String temp = label9Text;
+                StringBuffer temp = new StringBuffer(label9Text);
                 int pos = temp.indexOf("%s");
                 if (pos != -1) {
                     if (information.getVerbindungsStatus() ==
                         Information.VERBUNDEN) {
-                        temp = temp.replaceFirst("%s",
-                                                 information.getServerName());
+                        if (information.getServerName() == null
+                            || information.getServerName().length() == 0) {
+                            temp.replace(pos, pos + 2, "?");
+                        }
+                        else {
+                            temp.replace(pos, pos + 2,
+                                         information.getServerName());
+                        }
                     }
                     else {
-                        temp = temp.replaceFirst("%s", keinServer);
+                        temp.replace(pos, pos + 2, keinServer);
                     }
-                    if (temp.indexOf("%d") != -1) {
-                        temp = temp.replaceFirst("%d",
-                                                 Integer.toString(
+                    pos = temp.indexOf("%d");
+                    if (pos != -1) {
+                        temp.replace(pos, pos + 2, Integer.toString(
                             ApplejuiceFassade.
                             getInstance().
                             getAllServer().
                             size()));
                     }
                 }
-                label9.setText(temp);
-                temp = label10Text;
-                temp = temp.replaceFirst("%d",
-                                         Long.toString(information.getOpenConnections()));
-                label10.setText(temp);
+                label9.setText(temp.toString());
+                temp = new StringBuffer(label10Text);
+                pos = temp.indexOf("%d");
+                if (pos != -1) {
+                    temp.replace(pos, pos + 2, Long.toString(information.
+                        getOpenConnections()));
+                }
+                label10.setText(temp.toString());
             }
         }
         catch (Exception e) {
