@@ -34,9 +34,10 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import java.util.Map;
 import java.util.Set;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.32 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.33 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,6 +46,9 @@ import java.util.Set;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.33  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.32  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -129,7 +133,7 @@ public class ModifiedXMLHolder
     private ModifiedXMLHolder() {
         logger = Logger.getLogger(getClass());
         try {
-            ConnectionSettings rc = PropertiesManager.getOptionsManager().
+            ConnectionSettings rc = OptionsManagerImpl.getInstance().
                 getRemoteSettings();
             host = rc.getHost();
             password = rc.getOldPassword();

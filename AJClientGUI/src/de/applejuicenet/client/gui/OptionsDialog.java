@@ -32,9 +32,11 @@ import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.39 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.40 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +45,9 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.40  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.39  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -173,7 +178,7 @@ public class OptionsDialog
 
     private void init() throws Exception {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        remote = PropertiesManager.getOptionsManager().getRemoteSettings();
+        remote = OptionsManagerImpl.getInstance().getRemoteSettings();
 
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.einstform.caption")));
@@ -230,7 +235,7 @@ public class OptionsDialog
 
     private void speichern() {
         try {
-            OptionsManager om = PropertiesManager.getOptionsManager();
+            OptionsManager om = OptionsManagerImpl.getInstance();
             boolean etwasGeaendert;
             etwasGeaendert = ( (ODAnsichtPanel) optionPanels[4]).save();
             if ( ( (ODStandardPanel) optionPanels[0]).isDirty() ||
@@ -268,12 +273,12 @@ public class OptionsDialog
                 }
             }
             if ( ( (ODProxyPanel) optionPanels[3]).isDirty()) {
-                PropertiesManager.getProxyManager().saveProxySettings( ( (
+                ProxyManagerImpl.getInstance().saveProxySettings( ( (
                     ODProxyPanel) optionPanels[3]).getProxySettings());
                 etwasGeaendert = true;
             }
             if ( ( (ODAnsichtPanel) optionPanels[4]).isDirty()) {
-                PropertiesManager.getOptionsManager().
+                OptionsManagerImpl.getInstance().
                     showConnectionDialogOnStartup( ( (ODAnsichtPanel)
                     optionPanels[4]).shouldShowStartcreen());
                 etwasGeaendert = true;

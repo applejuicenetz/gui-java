@@ -30,7 +30,7 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.39 2004/03/08 07:11:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.40 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +39,9 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.40  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.39  2004/03/08 07:11:45  maj0r
  * Begonnen, JGoddies einzubauen.
  *
@@ -210,9 +213,9 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  *
  */
 
-public class PropertiesManager
+class PropertiesManager
     extends XMLDecoder
-    implements OptionsManager, PositionManager, ProxyManager {
+    implements OptionsManager, PositionManager, ProxyManager{
     private static PropertiesManager instance = null;
     private static final String PROPERTIES_ERROR = "Fehler beim Zugriff auf die properties.xml. " +
                 "Die Datei wird neu erstellt.";
@@ -246,47 +249,18 @@ public class PropertiesManager
         init();
     }
 
-    public static OptionsManager getOptionsManager() {
+    public static PropertiesManager getInstance() {
         if (instance == null) {
-            instance = new PropertiesManager(getPropertiesPath());
+            instance = new PropertiesManager(ApplejuiceFassade.getPropertiesPath());
         }
         return instance;
     }
 
     public static PositionManager getPositionManager() {
         if (instance == null) {
-            instance = new PropertiesManager(getPropertiesPath());
+            instance = new PropertiesManager(ApplejuiceFassade.getPropertiesPath());
         }
         return instance;
-    }
-
-    public static ProxyManager getProxyManager() {
-        if (instance == null) {
-            instance = new PropertiesManager(getPropertiesPath());
-        }
-        return instance;
-    }
-
-    public static String getPropertiesPath(){
-        if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1){
-            String dir = System.getProperty("user.home") + File.separator +
-                "appleJuice";
-            File directory = new File(dir);
-            if (!directory.isDirectory()){
-                directory.mkdir();
-            }
-            dir += File.separator + "gui";
-            directory = new File(dir);
-            if (!directory.isDirectory()) {
-                directory.mkdir();
-            }
-            dir += File.separator + "properties.xml";
-            return dir;
-        }
-        else{
-            return System.getProperty("user.dir") + File.separator +
-                "properties.xml";
-        }
     }
 
     private void saveDom() {

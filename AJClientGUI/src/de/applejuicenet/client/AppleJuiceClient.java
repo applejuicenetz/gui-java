@@ -37,9 +37,10 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.65 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.66 2004/03/09 16:25:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +49,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.66  2004/03/09 16:25:16  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.65  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -305,9 +309,9 @@ public class AppleJuiceClient {
                     }
                     if (args[i].indexOf("-link=") != -1) {
                         link = args[i].substring(6);
-                        int PORT = PropertiesManager.getOptionsManager().
+                        int PORT = OptionsManagerImpl.getInstance().
                             getLinkListenerPort();
-                        String passwort = PropertiesManager.getOptionsManager().
+                        String passwort = OptionsManagerImpl.getInstance().
                             getRemoteSettings().getOldPassword();
                         Socket socket = new Socket("localhost", PORT);
                         PrintStream out = new PrintStream(socket.
@@ -327,7 +331,7 @@ public class AppleJuiceClient {
             }
         }
         else {
-            int PORT = PropertiesManager.getOptionsManager().
+            int PORT = OptionsManagerImpl.getInstance().
                 getLinkListenerPort();
             try {
                 Socket socket = new Socket("localhost", PORT);
@@ -348,7 +352,7 @@ public class AppleJuiceClient {
         logger = Logger.getLogger(AppleJuiceClient.class.getName());
 
         try {
-            if (PropertiesManager.getOptionsManager().isThemesSupported()) {
+            if (OptionsManagerImpl.getInstance().isThemesSupported()) {
                 java.lang.reflect.Method method = JFrame.class.
                     getMethod("setDefaultLookAndFeelDecorated",
                               new Class[] {boolean.class});
@@ -372,7 +376,7 @@ public class AppleJuiceClient {
         layout = new HTMLLayout();
         layout.setTitle("appleJuice-Core-GUI-Log " + datum);
         layout.setLocationInfo(true);
-        Level logLevel = PropertiesManager.getOptionsManager().getLogLevel();
+        Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
         try {
             rootLogger.addAppender(new ConsoleAppender());
             String path;
@@ -426,7 +430,7 @@ public class AppleJuiceClient {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog = null;
             AppleJuiceDialog.initThemes();
-            boolean showDialog = PropertiesManager.getOptionsManager().
+            boolean showDialog = OptionsManagerImpl.getInstance().
                 shouldShowConnectionDialogOnStartup();
             while (showDialog || !ApplejuiceFassade.istCoreErreichbar()) {
                 splash.setVisible(false);
@@ -450,7 +454,7 @@ public class AppleJuiceClient {
                         languageSelector.
                         getFirstAttrbuteByTagName(".root.javagui.startup.verbindungsfehler"));
                     nachricht = nachricht.replaceFirst("%s",
-                        PropertiesManager.getOptionsManager().
+                        OptionsManagerImpl.getInstance().
                         getRemoteSettings().
                         getHost());
                     JOptionPane.showMessageDialog(connectFrame, nachricht,
@@ -503,7 +507,7 @@ public class AppleJuiceClient {
             if (processLink) {
                 ApplejuiceFassade.getInstance().processLink(link);
             }
-            if (PropertiesManager.getOptionsManager().isErsterStart()) {
+            if (OptionsManagerImpl.getInstance().isErsterStart()) {
                 WizardDialog wizardDialog = new WizardDialog(theApp, true);
                 Dimension appDimension = wizardDialog.getSize();
                 Dimension screenSize = Toolkit.getDefaultToolkit().
@@ -542,8 +546,8 @@ public class AppleJuiceClient {
                                 versionInternet[i] = token1.nextToken();
                                 aktuelleVersion[i] = token2.nextToken();
                             }
-                            int versionsInfoModus = PropertiesManager.
-                                getOptionsManager().getVersionsinfoModus();
+                            int versionsInfoModus = OptionsManagerImpl.getInstance().
+                                getVersionsinfoModus();
                             boolean showInfo = false;
                             boolean versionUpdate = false;
                             boolean importantUpdate = false;

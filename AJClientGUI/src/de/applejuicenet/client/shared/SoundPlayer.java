@@ -12,9 +12,10 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.7 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.8 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +24,9 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SoundPlayer.java,v $
+ * Revision 1.8  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.7  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -80,7 +84,7 @@ public class SoundPlayer {
 
     public void playSound(int sound) {
         try {
-            if (!PropertiesManager.getOptionsManager().isSoundEnabled()) {
+            if (!OptionsManagerImpl.getInstance().isSoundEnabled()) {
                 return;
             }
             File soundFile = null;

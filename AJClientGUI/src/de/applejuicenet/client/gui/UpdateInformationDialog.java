@@ -25,9 +25,10 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/UpdateInformationDialog.java,v 1.4 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/UpdateInformationDialog.java,v 1.5 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +37,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UpdateInformationDialog.java,v $
+ * Revision 1.5  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.4  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -185,7 +189,7 @@ public class UpdateInformationDialog
 
     private void executeLink(String link) {
         try {
-            String browser = PropertiesManager.getOptionsManager().
+            String browser = OptionsManagerImpl.getInstance().
                 getStandardBrowser();
             try {
                 Runtime.getRuntime().exec(new String[] {browser, link});

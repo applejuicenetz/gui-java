@@ -66,7 +66,6 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.PositionManager;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
@@ -77,9 +76,11 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.108 2004/03/08 07:11:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.109 2004/03/09 16:25:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -88,6 +89,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.109  2004/03/09 16:25:16  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.108  2004/03/08 07:11:45  maj0r
  * Begonnen, JGoddies einzubauen.
  *
@@ -421,7 +425,7 @@ public class AppleJuiceDialog
     public static void initThemes() {
         try {
             themesInitialized = true;
-            if (PropertiesManager.getOptionsManager().isThemesSupported()) {
+            if (OptionsManagerImpl.getInstance().isThemesSupported()) {
                 HashSet themesDateien = new HashSet();
                 File themesPath = new File(System.getProperty("user.dir") +
                                            File.separator + "themes");
@@ -453,7 +457,7 @@ public class AppleJuiceDialog
                 Skin aSkin = null;
                 String temp;
                 String shortName = "";
-                String defaultTheme = PropertiesManager.getOptionsManager().
+                String defaultTheme = OptionsManagerImpl.getInstance().
                     getDefaultTheme();
                 while (it.hasNext()) {
                     URL skinUrl = (URL) it.next();
@@ -526,14 +530,14 @@ public class AppleJuiceDialog
         menuItemDateiliste.setIcon(im.getIcon("speichern"));
 
         setJMenuBar(createMenuBar());
-        if (PropertiesManager.getOptionsManager().isThemesSupported()) {
+        if (OptionsManagerImpl.getInstance().isThemesSupported()) {
             SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
         }
 
         String path = System.getProperty("user.dir") + File.separator +
             "language" +
             File.separator;
-        path += PropertiesManager.getOptionsManager().getSprache() + ".xml";
+        path += OptionsManagerImpl.getInstance().getSprache() + ".xml";
         registerPane = new RegisterPanel(this);
         LanguageSelector.getInstance(path);
         addWindowListener(
@@ -662,7 +666,7 @@ public class AppleJuiceDialog
 
         sound.addActionListener(new ActionListener() {
             {
-                if (PropertiesManager.getOptionsManager().isSoundEnabled()) {
+                if (OptionsManagerImpl.getInstance().isSoundEnabled()) {
                     sound.setIcon(IconManager.getInstance().getIcon("soundon"));
                 }
                 else {
@@ -671,7 +675,7 @@ public class AppleJuiceDialog
             }
 
             public void actionPerformed(ActionEvent ae) {
-                OptionsManager om = PropertiesManager.getOptionsManager();
+                OptionsManager om = OptionsManagerImpl.getInstance();
                 om.enableSound(!om.isSoundEnabled());
                 if (om.isSoundEnabled()) {
                     sound.setIcon(IconManager.getInstance().getIcon("soundon"));
@@ -736,14 +740,14 @@ public class AppleJuiceDialog
         try {
             String sprachText = LanguageSelector.getInstance().
                 getFirstAttrbuteByTagName(".root.Languageinfo.name");
-            PropertiesManager.getOptionsManager().setSprache(sprachText);
+            OptionsManagerImpl.getInstance().setSprache(sprachText);
             int[] downloadWidths = DownloadPanel.getInstance().getColumnWidths();
             int[] uploadWidths = UploadPanel.getInstance().getColumnWidths();
             int[] serverWidths = ServerPanel.getInstance().getColumnWidths();
             int[] shareWidths = SharePanel.getInstance().getColumnWidths();
             Dimension dim = AppleJuiceDialog.getApp().getSize();
             Point p = AppleJuiceDialog.getApp().getLocationOnScreen();
-            PositionManager pm = PropertiesManager.getPositionManager();
+            PositionManager pm = PositionManagerImpl.getInstance();
             pm.setMainXY(p);
             pm.setMainDimension(dim);
             pm.setDownloadWidths(downloadWidths);
@@ -895,7 +899,7 @@ public class AppleJuiceDialog
                     (String) it.next()).
                     getFirstAttrbuteByTagName(".root.Languageinfo.name");
                 JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
-                if (PropertiesManager.getOptionsManager().getSprache().
+                if (OptionsManagerImpl.getInstance().getSprache().
                     equalsIgnoreCase(sprachText)) {
                     rb.setSelected(true);
                 }
@@ -923,7 +927,7 @@ public class AppleJuiceDialog
                 lafGroup.add(rb);
             }
             themesMenu = new JMenu("Themes");
-            if (PropertiesManager.getOptionsManager().isThemesSupported()) {
+            if (OptionsManagerImpl.getInstance().isThemesSupported()) {
                 HashSet themesDateien = new HashSet();
                 File themesPath = new File(System.getProperty("user.dir") +
                                            File.separator + "themes");
@@ -953,7 +957,7 @@ public class AppleJuiceDialog
                 ButtonGroup lafGroup2 = new ButtonGroup();
                 String temp;
                 String shortName = "";
-                String defaultTheme = PropertiesManager.getOptionsManager().
+                String defaultTheme = OptionsManagerImpl.getInstance().
                     getDefaultTheme();
                 while (it.hasNext()) {
                     URL skinUrl = (URL) it.next();
@@ -989,7 +993,7 @@ public class AppleJuiceDialog
                 themesMenu.add(menuItemDeaktivieren);
             }
             else {
-                final LookAFeel[] feels = PropertiesManager.getOptionsManager().getLookAndFeels();
+                final LookAFeel[] feels = OptionsManagerImpl.getInstance().getLookAndFeels();
                 ButtonGroup lafGroup2 = new ButtonGroup();
                 for (int i=0; i<feels.length; i++){
                     JCheckBoxLookAndFeelMenuItem lookAndFeelMenuItem = new JCheckBoxLookAndFeelMenuItem(feels[i]);
@@ -1047,7 +1051,7 @@ public class AppleJuiceDialog
         int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.this,
             themeSupportNachricht, themeSupportTitel, JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
-            PropertiesManager.getOptionsManager().
+            OptionsManagerImpl.getInstance().
                 enableThemeSupport(enable);
             closeDialog(null);
         }
@@ -1059,7 +1063,7 @@ public class AppleJuiceDialog
             if (aSkin != null) {
                 SkinLookAndFeel.setSkin(aSkin);
                 SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
-                PropertiesManager.getOptionsManager().setDefaultTheme(laf);
+                OptionsManagerImpl.getInstance().setDefaultTheme(laf);
             }
         }
         catch (Exception e) {
@@ -1382,7 +1386,7 @@ public class AppleJuiceDialog
     }
 
     private static void restorePropertiesXml() {
-        String dateiname = PropertiesManager.getPropertiesPath();
+        String dateiname = ApplejuiceFassade.getPropertiesPath();
         StringBuffer xmlData = new StringBuffer();
 
         xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");

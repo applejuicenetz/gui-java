@@ -30,9 +30,10 @@ import de.applejuicenet.client.gui.wizard.WizardPanel;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.10 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.11 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +42,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WizardDialog.java,v $
+ * Revision 1.11  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.10  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -127,7 +131,7 @@ public class WizardDialog
             public void windowClosing(WindowEvent evt) {
                 LanguageSelector.getInstance().removeLanguageListener(
                     WizardDialog.this);
-                PropertiesManager.getOptionsManager().setErsterStart(false);
+                OptionsManagerImpl.getInstance().setErsterStart(false);
                 dispose();
             }
         });
@@ -230,7 +234,7 @@ public class WizardDialog
                 getMaxNewConnectionsPro10Sek());
             ApplejuiceFassade.getInstance().saveAJSettings(ajSettings);
         }
-        PropertiesManager.getOptionsManager().setErsterStart(false);
+        OptionsManagerImpl.getInstance().setErsterStart(false);
         dispose();
     }
 

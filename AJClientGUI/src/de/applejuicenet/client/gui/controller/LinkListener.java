@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.5 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.6 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: LinkListener.java,v $
+ * Revision 1.6  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.5  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -47,7 +50,7 @@ public class LinkListener
     private Thread connect;
 
     public LinkListener() {
-        PORT = PropertiesManager.getOptionsManager().getLinkListenerPort();
+        PORT = OptionsManagerImpl.getInstance().getLinkListenerPort();
         logger = Logger.getLogger(getClass());
         try {
             listen = new ServerSocket(PORT);
@@ -98,7 +101,7 @@ public class LinkListener
             if (line == null) {
                 return false;
             }
-            String password = PropertiesManager.getOptionsManager().
+            String password = OptionsManagerImpl.getInstance().
                 getRemoteSettings().getOldPassword();
             if (line.substring(0, password.length()).compareTo(password) != 0) {
                 return false;

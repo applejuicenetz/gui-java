@@ -11,9 +11,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/WebsiteContentLoader.java,v 1.6 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/WebsiteContentLoader.java,v 1.7 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +23,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebsiteContentLoader.java,v $
+ * Revision 1.7  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.6  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -52,7 +56,7 @@ public abstract class WebsiteContentLoader {
         StringBuffer htmlContent = new StringBuffer();
         try {
             String tmpUrl = website + ":" + port + pfadAndparameters;
-            ProxySettings proxySettings = PropertiesManager.getProxyManager().
+            ProxySettings proxySettings = ProxyManagerImpl.getInstance().
                 getProxySettings();
             if (proxySettings.isUse()) {
                 System.getProperties().put("proxyHost", proxySettings.getHost());

@@ -17,9 +17,10 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Version;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/InformationXMLHolder.java,v 1.4 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/InformationXMLHolder.java,v 1.5 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +29,9 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: InformationXMLHolder.java,v $
+ * Revision 1.5  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.4  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -67,7 +71,7 @@ public class InformationXMLHolder
     private InformationXMLHolder() {
         logger = Logger.getLogger(getClass());
         try {
-            ConnectionSettings rc = PropertiesManager.getOptionsManager().
+            ConnectionSettings rc = OptionsManagerImpl.getInstance().
                 getRemoteSettings();
             host = rc.getHost();
             String password = rc.getOldPassword();

@@ -41,7 +41,6 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.shared.SortButtonRenderer;
@@ -62,9 +61,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.98 2004/03/05 15:49:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.99 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -73,6 +73,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.99  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.98  2004/03/05 15:49:38  maj0r
  * PMD-Optimierung
  *
@@ -774,9 +777,9 @@ public class DownloadPanel
                 public void actionPerformed(ActionEvent ae) {
                     if (columnPopupItems[x].isSelected()) {
                         downloadTable.getColumnModel().addColumn(columns[x]);
-                        PropertiesManager.getPositionManager().
+                        PositionManagerImpl.getInstance().
                             setDownloadColumnVisible(x, true);
-                        PropertiesManager.getPositionManager().
+                        PositionManagerImpl.getInstance().
                             setDownloadColumnIndex(
                             x,
                             downloadTable.getColumnModel().getColumnIndex(columns[
@@ -784,11 +787,11 @@ public class DownloadPanel
                     }
                     else {
                         downloadTable.getColumnModel().removeColumn(columns[x]);
-                        PropertiesManager.getPositionManager().
+                        PositionManagerImpl.getInstance().
                             setDownloadColumnVisible(x, false);
                         for (int y = 0; y < columns.length; y++) {
                             try {
-                                PropertiesManager.getPositionManager().
+                                PositionManagerImpl.getInstance().
                                     setDownloadColumnIndex(
                                     y,
                                     downloadTable.getColumnModel().
@@ -998,7 +1001,7 @@ public class DownloadPanel
         header.addMouseListener(new HeaderPopupListener());
         header.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                PositionManager pm = PropertiesManager.getPositionManager();
+                PositionManager pm = PositionManagerImpl.getInstance();
                 TableColumnModel columnModel = downloadTable.getColumnModel();
                 for (int i = 0; i < columns.length; i++) {
                     try {
@@ -1067,7 +1070,7 @@ public class DownloadPanel
             if (!initialized) {
                 initialized = true;
                 int width = aScrollPane.getWidth() - 18;
-                PositionManager pm = PropertiesManager.getPositionManager();
+                PositionManager pm = PositionManagerImpl.getInstance();
                 if (pm.isLegal()) {
                     int[] widths = pm.getDownloadWidths();
                     boolean[] visibilies = pm.getDownloadColumnVisibilities();

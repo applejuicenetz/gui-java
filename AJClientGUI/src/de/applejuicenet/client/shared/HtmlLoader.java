@@ -15,9 +15,10 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.26 2004/03/06 19:08:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.27 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.27  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.26  2004/03/06 19:08:59  maj0r
  * Zusaetzliche Pruefung eingebaut, die greift, wenn man auf einen entfernten Core ohne gesetztes Passwort zugreift.
  *
@@ -171,7 +175,7 @@ public abstract class HtmlLoader {
     public static String getHtmlXMLContent(String host, int method,
                                            String command, boolean withResult) throws
         WebSiteNotFoundException {
-        int ajPort = PropertiesManager.getOptionsManager().getRemoteSettings().
+        int ajPort = OptionsManagerImpl.getInstance().getRemoteSettings().
             getXmlPort();
         StringBuffer urlContent = new StringBuffer();
         try{

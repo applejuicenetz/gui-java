@@ -26,9 +26,10 @@ import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.12 2004/03/05 15:49:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.13 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +38,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODAnsichtPanel.java,v $
+ * Revision 1.13  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.12  2004/03/05 15:49:38  maj0r
  * PMD-Optimierung
  *
@@ -132,7 +136,7 @@ public class ODAnsichtPanel
                 settings.setDownloadUebersicht(cmbDownloadUebersicht.isSelected());
             }
         });
-        cmbStartscreenZeigen.setSelected(PropertiesManager.getOptionsManager().
+        cmbStartscreenZeigen.setSelected(OptionsManagerImpl.getInstance().
                                          shouldShowConnectionDialogOnStartup());
         cmbStartscreenZeigen.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {

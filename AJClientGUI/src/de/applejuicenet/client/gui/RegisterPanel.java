@@ -20,9 +20,10 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 import java.util.HashSet;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.36 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.37 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +32,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.37  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.36  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -179,7 +183,7 @@ public class RegisterPanel
         ImageIcon icon5 = im.getIcon("server");
         addTab("Server", icon5, serverPanel);
 
-        if (PropertiesManager.getOptionsManager().shouldLoadPluginsOnStartup()) {
+        if (OptionsManagerImpl.getInstance().shouldLoadPluginsOnStartup()) {
             loadPlugins();
         }
     }

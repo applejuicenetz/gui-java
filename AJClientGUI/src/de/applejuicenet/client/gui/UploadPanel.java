@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.tables.JTreeTable;
@@ -37,9 +36,10 @@ import de.applejuicenet.client.gui.tables.upload.UploadDataTableModel;
 import de.applejuicenet.client.gui.tables.upload.UploadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.43 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.44 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.44  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.43  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -226,9 +229,9 @@ public class UploadPanel
                 public void actionPerformed(ActionEvent ae) {
                     if (columnPopupItems[x].isSelected()) {
                         uploadDataTable.getColumnModel().addColumn(columns[x]);
-                        PropertiesManager.getPositionManager().
+                        PositionManagerImpl.getInstance().
                             setUploadColumnVisible(x, true);
-                        PropertiesManager.getPositionManager().
+                        PositionManagerImpl.getInstance().
                             setUploadColumnIndex(
                             x,
                             uploadDataTable.getColumnModel().getColumnIndex(columns[
@@ -236,11 +239,11 @@ public class UploadPanel
                     }
                     else {
                         uploadDataTable.getColumnModel().removeColumn(columns[x]);
-                        PropertiesManager.getPositionManager().
+                        PositionManagerImpl.getInstance().
                             setUploadColumnVisible(x, false);
                         for (int y = 0; y < columns.length; y++) {
                             try {
-                                PropertiesManager.getPositionManager().
+                                PositionManagerImpl.getInstance().
                                     setUploadColumnIndex(
                                     y,
                                     uploadDataTable.getColumnModel().
@@ -262,7 +265,7 @@ public class UploadPanel
         header.addMouseListener(new HeaderPopupListener());
         header.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                PositionManager pm = PropertiesManager.getPositionManager();
+                PositionManager pm = PositionManagerImpl.getInstance();
                 TableColumnModel columnModel = uploadDataTable.getColumnModel();
                 for (int i = 0; i < columns.length; i++) {
                     try {
@@ -361,7 +364,7 @@ public class UploadPanel
                 TableColumnModel headerModel = uploadDataTable.getTableHeader().
                     getColumnModel();
                 int columnCount = headerModel.getColumnCount();
-                PositionManager pm = PropertiesManager.getPositionManager();
+                PositionManager pm = PositionManagerImpl.getInstance();
                 if (pm.isLegal()) {
                     int[] widths = pm.getUploadWidths();
                     boolean[] visibilies = pm.getUploadColumnVisibilities();

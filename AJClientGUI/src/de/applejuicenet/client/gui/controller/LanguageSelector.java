@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.20 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.21 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import java.util.Set;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.21  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.20  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -113,7 +116,7 @@ public class LanguageSelector
             String path = System.getProperty("user.dir") + File.separator +
                 "language" +
                 File.separator;
-            OptionsManager om = PropertiesManager.getOptionsManager();
+            OptionsManager om = OptionsManagerImpl.getInstance();
             String datei = om.getSprache();
             path += datei + ".xml";
             //zZ werden die Header der TableModel nicht aktualisiert, deshalb hier schon

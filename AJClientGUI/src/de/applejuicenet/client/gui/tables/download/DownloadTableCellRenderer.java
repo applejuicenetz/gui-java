@@ -12,9 +12,10 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.18 2004/01/09 15:33:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.19 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +24,9 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.19  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.18  2004/01/09 15:33:35  maj0r
  * Spalten der Downloadtabelle koennen nun ordentlich verschoben werden.
  *
@@ -92,7 +96,7 @@ public class DownloadTableCellRenderer
     public DownloadTableCellRenderer() {
         super();
         settings = Settings.getSettings();
-        PropertiesManager.getOptionsManager().addSettingsListener(this);
+        OptionsManagerImpl.getInstance().addSettingsListener(this);
     }
 
     public Component getTableCellRendererComponent(JTable table,

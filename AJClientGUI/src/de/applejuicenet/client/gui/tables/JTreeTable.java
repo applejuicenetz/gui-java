@@ -33,9 +33,10 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.23 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.24 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,6 +45,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.24  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.23  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -179,7 +183,7 @@ public class JTreeTable
             super(model);
             settings = Settings.getSettings();
             this.setCellRenderer(new IconNodeRenderer());
-            PropertiesManager.getOptionsManager().addSettingsListener(this);
+            OptionsManagerImpl.getInstance().addSettingsListener(this);
         }
 
         public void updateUI() {
@@ -362,7 +366,7 @@ public class JTreeTable
         public IconNodeRenderer() {
             super();
             settings = Settings.getSettings();
-            PropertiesManager.getOptionsManager().addSettingsListener(this);
+            OptionsManagerImpl.getInstance().addSettingsListener(this);
         }
 
         public Component getTreeCellRendererComponent(JTree tree, Object value,

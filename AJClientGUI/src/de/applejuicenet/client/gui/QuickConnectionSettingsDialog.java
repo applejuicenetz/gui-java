@@ -28,9 +28,10 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.15 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.16 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +40,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.16  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.15  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -119,7 +123,7 @@ public class QuickConnectionSettingsDialog
     }
 
     private void init() {
-        remote = PropertiesManager.getOptionsManager().getRemoteSettings();
+        remote = OptionsManagerImpl.getInstance().getRemoteSettings();
         remotePanel = new ODConnectionPanel(remote, this, true);
         setTitle("appleJuice Client");
 
@@ -216,9 +220,9 @@ public class QuickConnectionSettingsDialog
 
     private void speichereEinstellungen(){
         try {
-            PropertiesManager.getOptionsManager().onlySaveRemote(remote);
+            OptionsManagerImpl.getInstance().onlySaveRemote(remote);
             if (dirty) {
-                PropertiesManager.getOptionsManager().
+                OptionsManagerImpl.getInstance().
                     showConnectionDialogOnStartup(!cmbNieWiederZeigen.
                                                   isSelected());
             }

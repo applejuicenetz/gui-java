@@ -11,6 +11,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 public class DownloadTablePercentCellRenderer
     implements TableCellRenderer, DataUpdateListener {
@@ -19,7 +20,7 @@ public class DownloadTablePercentCellRenderer
     public DownloadTablePercentCellRenderer() {
         super();
         settings = Settings.getSettings();
-        PropertiesManager.getOptionsManager().addSettingsListener(this);
+        OptionsManagerImpl.getInstance().addSettingsListener(this);
     }
 
     public Component getTableCellRendererComponent(JTable table,

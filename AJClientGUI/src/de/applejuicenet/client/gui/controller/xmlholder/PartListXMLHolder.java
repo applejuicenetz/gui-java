@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.7 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.8 2004/03/09 16:25:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListXMLHolder.java,v $
+ * Revision 1.8  2004/03/09 16:25:17  maj0r
+ * PropertiesManager besser gekapselt.
+ *
  * Revision 1.7  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -98,6 +101,7 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
 import org.apache.log4j.Level;
 import org.apache.xerces.parsers.SAXParser;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 public class PartListXMLHolder
     extends DefaultHandler {
@@ -115,7 +119,7 @@ public class PartListXMLHolder
     private PartListXMLHolder() {
         logger = Logger.getLogger(getClass());
         try {
-            ConnectionSettings rc = PropertiesManager.getOptionsManager().
+            ConnectionSettings rc = OptionsManagerImpl.getInstance().
                 getRemoteSettings();
             host = rc.getHost();
             password = rc.getOldPassword();
