@@ -43,7 +43,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.72 2004/06/14 17:15:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.73 2004/06/14 20:12:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -159,11 +159,11 @@ public class AppleJuiceClient {
                             String line = reader.readLine();
                             System.out.println(line);
                             socket.close();
-                            //war nur Linkprocessing, also GUI schliessen
                             System.exit(1);
                         }
                         else{
-//                            erstmal nix zu tun
+                            System.out.println("appleJuice-JavaGUI nicht gestartet");
+                            System.exit(1);
                         }
                     }
                     else if (args[i].indexOf("-link=") != -1) {
