@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.8 2003/08/10 21:08:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.9 2003/09/08 16:46:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODVerbindungPanel.java,v $
+ * Revision 1.9  2003/09/08 16:46:08  maj0r
+ * Ueberfluessige Einstellungen entfernt.
+ *
  * Revision 1.8  2003/08/10 21:08:18  maj0r
  * Diverse Änderungen.
  *
@@ -34,21 +37,12 @@ public class ODVerbindungPanel
   private JLabel label2;
   private JLabel label3;
   private JLabel label4;
-  private JLabel label5;
-  private JLabel label6;
-  private JLabel label7;
   private JLabel kbSlot;
   private JCheckBox automaticConnect;
   private JTextField maxVerbindungen = new JTextField();
   private JTextField maxUpload = new JTextField();
   private JTextField maxDownload = new JTextField();
-  private JTextField anzahl = new JTextField();
-  private JTextField url = new JTextField();
-  private JTextField pinggrenze = new JTextField();
   private JSlider kbSlider;
-  private JLabel btnPdlUp;
-  private JLabel btnPdlDown;
-  private int anzahlDownloads = 0;
   private AJSettings ajSettings;
 
   public ODVerbindungPanel(AJSettings ajSettings) {
@@ -80,13 +74,6 @@ public class ODVerbindungPanel
     flowL.setAlignment(FlowLayout.RIGHT);
     JPanel panel9 = new JPanel(flowL);
 
-    anzahl.setText(Integer.toString(anzahlDownloads));
-    anzahl.setDocument(new NumberInputVerifier(0, 1000));
-    anzahl.addFocusListener(new FocusAdapter() {
-      public void focusLost(FocusEvent e) {
-        anzahlDownloads = Integer.parseInt(anzahl.getText());
-      }
-    });
     maxVerbindungen.setDocument(new NumberInputVerifier());
     maxVerbindungen.setHorizontalAlignment(JLabel.RIGHT);
     maxVerbindungen.addFocusListener(new FocusAdapter() {
@@ -126,8 +113,6 @@ public class ODVerbindungPanel
         }
       }
     });
-    pinggrenze.setDocument(new NumberInputVerifier());
-
     LanguageSelector languageSelector = LanguageSelector.getInstance();
 
     label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
@@ -142,25 +127,7 @@ public class ODVerbindungPanel
     label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "Label13",
                                   "caption"})));
-    label5 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"einstform", "Label9",
-                                  "caption"})));
-    label6 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"einstform", "Label19",
-                                  "caption"})));
-    label7 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"einstform", "Label18",
-                                  "caption"})));
     kbSlot = new JLabel();
-
-    IconManager im = IconManager.getInstance();
-    ImageIcon icon2 = im.getIcon("increase");
-    btnPdlUp = new JLabel(icon2);
-    ImageIcon icon3 = im.getIcon("decrease");
-    btnPdlDown = new JLabel(icon3);
-    SlotMouseAdapter slotMA = new SlotMouseAdapter();
-    btnPdlUp.addMouseListener(slotMA);
-    btnPdlDown.addMouseListener(slotMA);
 
     int untereGrenze = (int) Math.pow( (double) ajSettings.getMaxUploadInKB(),
                                       0.2);
@@ -226,32 +193,6 @@ public class ODVerbindungPanel
     panel5.add(maxDownload, constraints);
     constraints.weightx = 0;
 
-    constraints.gridx = 0;
-    panel6.add(label5, constraints);
-    constraints.gridx = 1;
-    panel6.add(btnPdlUp, constraints);
-    constraints.gridx = 2;
-    constraints.weightx = 1;
-    constraints.insets.left = 0;
-    panel6.add(anzahl, constraints);
-    constraints.gridx = 3;
-    constraints.weightx = 0;
-    panel6.add(btnPdlDown, constraints);
-    constraints.insets.left = 5;
-
-    constraints.gridx = 0;
-    panel7.add(label6, constraints);
-    constraints.gridx = 1;
-    constraints.weightx = 1;
-    panel7.add(url, constraints);
-    constraints.weightx = 0;
-
-    constraints.gridx = 0;
-    panel8.add(label7, constraints);
-    constraints.gridx = 1;
-    constraints.weightx = 1;
-    panel8.add(pinggrenze, constraints);
-
     panel9.add(automaticConnect);
 
     constraints.gridx = 0;
@@ -282,36 +223,5 @@ public class ODVerbindungPanel
     kbSlider.setValue(ajSettings.getSpeedPerSlot());
     kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
     automaticConnect.setSelected(ajSettings.isAutoConnect());
-  }
-
-  class SlotMouseAdapter
-      extends MouseAdapter {
-    public void mouseClicked(MouseEvent e) {
-      JLabel source = (JLabel) e.getSource();
-      if (source == btnPdlUp) {
-        if (anzahlDownloads == 1000) {
-          return;
-        }
-        anzahlDownloads++;
-      }
-      else if (source == btnPdlDown) {
-        if (anzahlDownloads == 0) {
-          return;
-        }
-        anzahlDownloads--;
-      }
-      anzahl.setText(Integer.toString(anzahlDownloads));
-    }
-
-    public void mouseEntered(MouseEvent e) {
-      JLabel source = (JLabel) e.getSource();
-      source.setBorder(BorderFactory.createLineBorder(Color.black));
-
-    }
-
-    public void mouseExited(MouseEvent e) {
-      JLabel source = (JLabel) e.getSource();
-      source.setBorder(null);
-    }
   }
 }
