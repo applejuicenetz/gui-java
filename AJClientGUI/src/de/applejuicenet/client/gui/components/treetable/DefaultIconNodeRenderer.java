@@ -6,7 +6,7 @@ import javax.swing.Icon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import de.applejuicenet.client.gui.download.table.IconGetter;
+import de.applejuicenet.client.gui.components.util.IconGetter;
 
 public class DefaultIconNodeRenderer extends DefaultTreeCellRenderer {
 
