@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.4 2003/08/24 14:59:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.5 2003/08/25 07:23:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import java.util.HashMap;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.5  2003/08/25 07:23:25  maj0r
+ * Kleine Korrekturen.
+ *
  * Revision 1.4  2003/08/24 14:59:59  maj0r
  * Version 0.14
  * Diverse Aenderungen.
@@ -84,7 +87,7 @@ public class ShareNode implements Node {
   }
 
   public boolean isLeaf(){
-    if (children.size()==0){
+    if (shareDO!=null){
         return true;
     }
     else{

@@ -25,7 +25,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.22 2003/08/24 14:59:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.23 2003/08/25 07:23:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +34,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.23  2003/08/25 07:23:25  maj0r
+ * Kleine Korrekturen.
+ *
  * Revision 1.22  2003/08/24 14:59:59  maj0r
  * Version 0.14
  * Diverse Aenderungen.
@@ -150,6 +153,17 @@ public class SharePanel
           Iterator it = shareDirs.iterator();
           ShareNode directoryNode = null;
           String pfad;
+          try
+          {
+              pfad = ajSettings.getTempDir();
+              pfad = pfad.substring(0, pfad.length()-1);
+              directoryNode = new ShareNode(rootNode, pfad);
+          }
+          catch (NodeAlreadyExistsException e)
+          {
+              //Schon da, also brauchts den auch nicht.
+          }
+          rootNode.addDirectory(directoryNode);
           while (it.hasNext()){
               pfad = ((ShareEntry)it.next()).getDir();
               sharesArray.add(pfad);
@@ -301,7 +315,6 @@ public class SharePanel
       final SwingWorker worker = new SwingWorker() {
                   public Object construct() {
                       removeFolder.setEnabled(false);
-                      ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
                       ( (DefaultListModel) folderList.getModel()).removeAllElements();
                       Iterator it = ajSettings.getShareDirs().iterator();
                       while (it.hasNext()) {
@@ -317,6 +330,7 @@ public class SharePanel
 
   public void registerSelected() {
     if (!treeInitialisiert){
+        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
         treeInitialisiert = true;
         initShareList();
         initShareSelectionTree();
