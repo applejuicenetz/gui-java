@@ -75,7 +75,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.100 2004/02/26 15:12:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.101 2004/02/27 07:19:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -84,6 +84,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.101  2004/02/27 07:19:13  maj0r
+ * Loggerverwendung korrigiert.
+ *
  * Revision 1.100  2004/02/26 15:12:47  maj0r
  * Umgang mit ZeichenErsetzer korrigiert.
  *
@@ -343,6 +346,8 @@ public class AppleJuiceDialog
     extends JFrame
     implements LanguageListener, DataUpdateListener {
 
+    private static Logger logger = Logger.getLogger(AppleJuiceDialog.class);
+
     private RegisterPanel registerPane;
     private JLabel[] statusbar = new JLabel[6];
     private JMenu sprachMenu;
@@ -359,11 +364,9 @@ public class AppleJuiceDialog
     private JMenuItem popupOptionenMenuItem = new JMenuItem("Optionen");
     private JMenuItem popupAboutMenuItem = new JMenuItem("&Info");
     private JMenuItem popupShowHideMenuItem = new JMenuItem("%Show");
-    private JFrame _this;
     private JButton sound = new JButton();
     private JButton memory = new JButton();
     private String keinServer = "";
-    private static Logger logger;
     public static boolean rewriteProperties = false;
     private boolean firstChange = true;
     private MemoryMonitorDialog memoryMonitorDialog;
@@ -451,7 +454,6 @@ public class AppleJuiceDialog
 
     public AppleJuiceDialog() {
         super();
-        logger = Logger.getLogger(getClass());
         try {
             theApp = this;
             init();
