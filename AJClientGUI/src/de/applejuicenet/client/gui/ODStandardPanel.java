@@ -41,7 +41,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.31 2004/07/15 06:22:36 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.32 2004/07/22 14:13:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -133,7 +133,6 @@ public class ODStandardPanel
     private void init() throws Exception {
         OptionsManager optionsManager = OptionsManagerImpl.getInstance();
         IconManager im = IconManager.getInstance();
-        reloadSettings();
         menuIcon = im.getIcon("opt_standard");
         port.setDocument(new NumberInputVerifier());
         xmlPort.setDocument(new NumberInputVerifier());
@@ -269,6 +268,7 @@ public class ODStandardPanel
         setLayout(new BorderLayout());
         port.setHorizontalAlignment(JLabel.RIGHT);
         xmlPort.setHorizontalAlignment(JLabel.RIGHT);
+        reloadSettings();
         JPanel panel6 = new JPanel(new GridBagLayout());
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.einstform.Label2.caption")));

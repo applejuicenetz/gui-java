@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.23 2004/07/20 22:50:39 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.24 2004/07/22 14:13:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -93,7 +93,6 @@ public class ODAnsichtPanel
         farbeFertigerDownload.setOpaque(true);
         farbeFertigerDownload.addMouseListener(new ColorChooserMouseAdapter());
         farbeQuelle.setOpaque(true);
-        farbeQuelle.setBackground(settings.getQuelleHintergrundColor());
         farbeQuelle.addMouseListener(new ColorChooserMouseAdapter());
         OptionsManager om = OptionsManagerImpl.getInstance();
         cmbDownloadUebersicht.addChangeListener(new ChangeListener() {
@@ -296,6 +295,10 @@ public class ODAnsichtPanel
 
     public void reloadSettings() {
         settings = Settings.getSettings();
+        farbeQuelle.setBackground(settings.getQuelleHintergrundColor());
+        farbeFertigerDownload.setBackground(settings.getDownloadFertigHintergrundColor());        
+        cmbAktiv.setSelected(settings.isFarbenAktiv());
+        cmbDownloadUebersicht.setSelected(settings.isDownloadUebersicht());
         enableToolTip.setSelected(settings.isToolTipEnabled());
     }
 
