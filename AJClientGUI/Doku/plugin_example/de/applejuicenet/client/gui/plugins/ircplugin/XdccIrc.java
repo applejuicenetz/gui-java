@@ -1,16 +1,5 @@
 package de.applejuicenet.client.gui.plugins.ircplugin;
 
-/*
- * @(#) XDCC IRC	0.1	17/02/2002
- *
- * Copyright (c), 2002
- *
- * This program is used to get more easily XDCC Packs on IRC.
- * parseSendToCommand("command to send");
- * 	static PrintWriter toServer;
- *	public static void parseSendToCommand
- */
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -22,6 +11,22 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+
+/**
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/Doku/plugin_example/de/applejuicenet/client/gui/plugins/ircplugin/Attic/XdccIrc.java,v 1.3 2003/08/28 15:53:02 maj0r Exp $
+ *
+ * <p>Titel: AppleJuice Client-GUI</p>
+ * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: open-source</p>
+ *
+ * @author: Maj0r <AJCoreGUI@maj0r.de>
+ *
+ * $Log: XdccIrc.java,v $
+ * Revision 1.3  2003/08/28 15:53:02  maj0r
+ * NullPointer behoben und Header eingefuegt.
+ *
+ *
+ */
 
 public class XdccIrc
         extends JPanel
@@ -43,16 +48,8 @@ public class XdccIrc
     //3 = File Size
     //4 = Resume Position
     int numDcc = 0;
-    // nickname is used for distinguishing a user on a sever
-    // realname is any string. If you are a
-    // dumb you might set it to your real username on your
-    // ISP/server or whatever tht might be.
     String nickname;
     String realname;
-
-    // Menu bar and menu items
-
-    private Action newChannelAction;
 
     // Action to join a Channel
     private JButton joinChannelAction;
@@ -167,7 +164,6 @@ public class XdccIrc
         dialog = new JDialog(AppleJuiceDialog.getApp(), " Connection Info ", true);
         Border etched = BorderFactory.createEtchedBorder();
 
-        //String s = JOptionPane.showInputDialog(" Show message ");
         Container dialogContentPane = dialog.getContentPane();
 
         // Ok, let's make the UserInfo
@@ -749,9 +745,7 @@ public class XdccIrc
         }
         else if (command.equals("250") ||
                 command.equals("251") ||
-//		         command.equals("252") ||
                 command.equals("253") ||
-//                         command.equals("254") ||
                 command.equals("255") ||
                 command.equals("256") ||
                 command.equals("257") ||

@@ -26,75 +26,82 @@ package de.applejuicenet.client.gui.plugins.ircplugin;
  *
  */
 
-import java.io.*;
+/**
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/Doku/plugin_example/de/applejuicenet/client/gui/plugins/ircplugin/Attic/CommandInterpreter.java,v 1.2 2003/08/28 15:53:02 maj0r Exp $
+ *
+ * <p>Titel: AppleJuice Client-GUI</p>
+ * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: open-source</p>
+ *
+ * @author: Maj0r <AJCoreGUI@maj0r.de>
+ *
+ * $Log: CommandInterpreter.java,v $
+ * Revision 1.2  2003/08/28 15:53:02  maj0r
+ * NullPointer behoben und Header eingefuegt.
+ *
+ *
+ */
+
 import java.util.*;
 
 public class CommandInterpreter {
-  String lineToServer;
-  String command = "",
-      param1 = "",
-      message = "";
+    String lineToServer;
+    String command = "",
+    param1 = "",
+    message = "";
 
-  public CommandInterpreter(String lineToServer) {
-    this.lineToServer = lineToServer;
+    public CommandInterpreter(String lineToServer) {
+        this.lineToServer = lineToServer;
+        init_all();
+    }
 
-    init_all();
-  }
+    private void init_all() {
+        if (lineToServer.startsWith("/"))
+        {
+            StringTokenizer st = new StringTokenizer(lineToServer, " \r\n");
+            int totalTokens = st.countTokens();
+            if (totalTokens >= 3)
+            {
+                String temp = st.nextToken();
 
-  private void init_all() {
-    if (lineToServer.startsWith("/")) {
-      StringTokenizer st = new StringTokenizer(lineToServer, " \r\n");
-      int totalTokens = st.countTokens();
-      if (totalTokens >= 3) {
-        String temp = st.nextToken();
+                temp = temp.toUpperCase();
+                temp = temp.substring(1);
+                command = temp;
 
-        // command
-        temp = temp.toUpperCase();
-        temp = temp.substring(1);
-        command = temp;
+                temp = st.nextToken();
+                param1 = temp;
 
-        // param1
-        temp = st.nextToken();
-        param1 = temp;
+                temp = st.nextToken("\n");
+                if (temp.startsWith(" "))
+                {
+                    temp = temp.substring(1);
 
-        // message
-        temp = st.nextToken("\n");
-        if (temp.startsWith(" ")) {
-          temp = temp.substring(1);
+                }
+                message = temp;
+            }
+            else if (totalTokens == 2)
+            {
+                String temp = st.nextToken();
 
+                temp = temp.toUpperCase();
+                temp = temp.substring(1);
+                command = temp;
+
+                temp = st.nextToken();
+                param1 = temp;
+            }
         }
-        message = temp;
-      }
-      else if (totalTokens == 2) {
-        String temp = st.nextToken();
-
-        // command
-        temp = temp.toUpperCase();
-        temp = temp.substring(1);
-        command = temp;
-
-        // param1
-        temp = st.nextToken();
-        param1 = temp;
-      }
-      else {
-        // not a valid command
-      }
     }
-    else {
-      // not a command
+
+    public String getCommand() {
+        return command;
     }
-  }
 
-  public String getCommand() {
-    return command;
-  }
+    public String getParam1() {
+        return param1;
+    }
 
-  public String getParam1() {
-    return param1;
-  }
-
-  public String getMessage() {
-    return message;
-  }
+    public String getMessage() {
+        return message;
+    }
 }
