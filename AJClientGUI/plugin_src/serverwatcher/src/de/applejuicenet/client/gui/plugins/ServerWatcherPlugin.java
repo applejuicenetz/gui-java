@@ -31,9 +31,11 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.serverwatcher.NewServerDialog;
 import de.applejuicenet.client.gui.plugins.serverwatcher.ServerConfig;
 import de.applejuicenet.client.gui.plugins.serverwatcher.ServerXML;
+import de.applejuicenet.client.shared.ProxySettings;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.6 2004/03/03 12:49:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.7 2004/03/03 13:13:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -42,6 +44,9 @@ import de.applejuicenet.client.gui.plugins.serverwatcher.ServerXML;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerWatcherPlugin.java,v $
+ * Revision 1.7  2004/03/03 13:13:58  maj0r
+ * Pfad zur xml-Datei angepasst und Proxysupport eingebaut.
+ *
  * Revision 1.6  2004/03/03 12:49:26  maj0r
  * Sprachunterstuetzung eungebaut.
  *
@@ -180,7 +185,19 @@ public class ServerWatcherPlugin extends PluginConnector {
                         tmpUrl += "/status.htm";
                     }
                     URL url = new URL(tmpUrl);
+                    ProxySettings proxySettings = PropertiesManager.getProxyManager().
+                        getProxySettings();
+                    if (proxySettings.isUse()) {
+                        System.getProperties().put("proxyHost", proxySettings.getHost());
+                        System.getProperties().put("proxyPort",
+                                                   Integer.toString(proxySettings.
+                            getPort()));
+                    }
                     URLConnection uc = url.openConnection();
+                    if (proxySettings.isUse()) {
+                        uc.setRequestProperty("Proxy-Authorization",
+                                              "Basic " + proxySettings.getUserpass());
+                    }
                     uc.setRequestProperty("Authorization", "Basic " + server.getUserPass());
                     InputStream content = uc.getInputStream();
                     BufferedReader in =
@@ -188,6 +205,10 @@ public class ServerWatcherPlugin extends PluginConnector {
                     String line;
                     while ((line = in.readLine()) != null) {
                         htmlContent.append(line);
+                    }
+                    if (proxySettings.isUse()) {
+                        System.getProperties().remove("proxyHost");
+                        System.getProperties().remove("proxyPort");
                     }
                     statusText.setText("");
                 }

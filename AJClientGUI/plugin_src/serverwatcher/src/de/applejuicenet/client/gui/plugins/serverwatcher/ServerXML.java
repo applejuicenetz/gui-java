@@ -1,20 +1,21 @@
 package de.applejuicenet.client.gui.plugins.serverwatcher;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
-import de.applejuicenet.client.shared.*;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
-import org.apache.xml.serialize.XMLSerializer;
+import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
-import org.w3c.dom.NodeList;
+import org.apache.xml.serialize.XMLSerializer;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.Attr;
+import org.w3c.dom.NodeList;
+import de.applejuicenet.client.shared.XMLDecoder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerXML.java,v 1.1 2003/09/12 11:15:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerXML.java,v 1.2 2004/03/03 13:13:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +24,9 @@ import org.w3c.dom.Attr;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerXML.java,v $
+ * Revision 1.2  2004/03/03 13:13:58  maj0r
+ * Pfad zur xml-Datei angepasst und Proxysupport eingebaut.
+ *
  * Revision 1.1  2003/09/12 11:15:49  maj0r
  * Server lassen sich nun speichern und entfernen.
  * Version 1.1
@@ -43,8 +47,7 @@ public class ServerXML
     public static ServerConfig[] getServer() {
         try
         {
-            path = System.getProperty("user.dir") + File.separator + "plugins" + File.separator +
-                    "serverwatcher.xml";
+            path = getXMLPath();
             ServerXML connectionXML = new ServerXML(path);
             Element e = null;
             ArrayList serverConfigs = new ArrayList();
@@ -77,11 +80,25 @@ public class ServerXML
         }
     }
 
+    public static String getXMLPath(){
+        String path;
+        if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1){
+            path = System.getProperty("user.home") + File.separator +
+                "appleJuice" + File.separator + "gui" +
+                File.separator + "plugins" + File.separator +
+                "serverwatcher.xml";
+        }
+        else{
+            path = System.getProperty("user.dir") + File.separator + "plugins" + File.separator +
+                "serverwatcher.xml";
+        }
+        return path;
+    }
+
     public static void addServer(ServerConfig serverConfig) {
         try
         {
-            String path = System.getProperty("user.dir") + File.separator + "plugins" + File.separator +
-                    "serverwatcher.xml";
+            String path = getXMLPath();
             ServerXML connectionXML = new ServerXML(path);
 
             Element e = null;
@@ -136,8 +153,7 @@ public class ServerXML
     public static void removeServer(ServerConfig serverConfig) {
         try
         {
-            String path = System.getProperty("user.dir") + File.separator + "plugins" + File.separator +
-                    "serverwatcher.xml";
+            String path = getXMLPath();
             ServerXML connectionXML = new ServerXML(path);
 
             Element e = null;
