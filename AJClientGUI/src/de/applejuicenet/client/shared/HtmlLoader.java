@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.18 2004/01/01 14:26:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.19 2004/01/28 07:59:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.19  2004/01/28 07:59:47  maj0r
+ * Holen von xmls beschleunigt.
+ *
  * Revision 1.18  2004/01/01 14:26:53  maj0r
  * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
  *
@@ -96,8 +99,9 @@ public abstract class HtmlLoader {
         while(inputLine.indexOf("Content-Type: text")!=0){
             inputLine = in.readLine();
         }
-        while((inputLine = in.readLine()) != null){
-            urlContent.append(inputLine);
+        int gelesen;
+        while ((gelesen = in.read()) != -1){
+            urlContent.append((char)gelesen);
         }
       }
       catch (SocketException sex) {
@@ -145,14 +149,13 @@ public abstract class HtmlLoader {
           BufferedReader in = new BufferedReader(
               new InputStreamReader(
               socket.getInputStream()));
-
           String inputLine = in.readLine();
           if (method == HtmlLoader.GET) {
             if (inputLine == null) {
               throw new WebSiteNotFoundException(WebSiteNotFoundException.
                                                  UNKNOWN_HOST);
             }
-            while (inputLine.indexOf("xml version") == -1) {
+            while (inputLine.indexOf("Content-Length:") == -1) {
               inputLine = in.readLine();
               if (inputLine == null) {
                 throw new WebSiteNotFoundException(WebSiteNotFoundException.
@@ -162,9 +165,26 @@ public abstract class HtmlLoader {
                   return "";
               }
             }
-            urlContent.append(inputLine);
-            while((inputLine = in.readLine()) != null){
-                urlContent.append(inputLine);
+            long laenge = Long.parseLong(inputLine.substring(inputLine.indexOf(" ")+1));
+            in.skip(1);
+            char[] toRead = null;
+            int gelesen = 0;
+            while (laenge>0){
+                if (laenge>Integer.MAX_VALUE){
+                    toRead = new char[Integer.MAX_VALUE];
+                }
+                else{
+                    toRead = new char[(int)laenge];
+                }
+                gelesen = in.read(toRead);
+                if (gelesen < toRead.length){
+                    urlContent.append(toRead, 0, gelesen);
+                    laenge -= gelesen;
+                }
+                else{
+                    urlContent.append(toRead);
+                    laenge -= toRead.length;
+                }
             }
           }
           else {
@@ -185,7 +205,8 @@ public abstract class HtmlLoader {
           throw new WebSiteNotFoundException(WebSiteNotFoundException.
                                              AUTHORIZATION_REQUIRED);
         }
-        return urlContent.toString();
+        String test = urlContent.toString();
+        return test;
     }
 
     public static String getHtmlXMLContent(String host, int method, String command) throws
