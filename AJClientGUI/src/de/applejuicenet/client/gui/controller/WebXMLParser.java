@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.10 2003/08/22 10:54:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.11 2003/08/29 19:34:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.11  2003/08/29 19:34:03  maj0r
+ * Einige Aenderungen.
+ * Version 0.17 Beta
+ *
  * Revision 1.10  2003/08/22 10:54:25  maj0r
  * Klassen umbenannt.
  * ConnectionSettings ueberarbeitet.
@@ -143,26 +147,36 @@ public abstract class WebXMLParser
                 firstRun = !firstRun;
             }
         }
-        catch (SAXException sxe)
+        catch (Exception e)
         {
-            Exception x = sxe;
-            if (sxe.getException() != null)
-            {
-                x = sxe.getException();
+            Exception x = e;
+            if (e instanceof SAXException){
+                if (((SAXException)e).getException() != null)
+                {
+                    x = ((SAXException)e).getException();
+                }
             }
-            if (logger.isEnabledFor(Level.FATAL))
-                logger.fatal("Unbehandelte Exception", x);
+            if (logger.isEnabledFor(Level.ERROR)){
+                String zeit = Long.toString(System.currentTimeMillis());
+                String path = System.getProperty("user.dir") + File.separator +
+                    "logs";
+                File aFile = new File(path);
+                if (!aFile.exists()) {
+                  aFile.mkdir();
+                }
+                FileWriter fileWriter = null;
+                String dateiname = path + File.separator + zeit + ".exc";
+                try {
+                    fileWriter = new FileWriter(dateiname);
+                    fileWriter.write(xmlData);
+                    fileWriter.close();
+                }
+                catch (IOException ioE) {
+                    ioE.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                }
+                logger.error("Unbehandelte SAX-Exception -> Inhalt in " + dateiname, x);
+            }
             x.printStackTrace();
-
-        }
-        catch (ParserConfigurationException pce)
-        {
-            pce.printStackTrace();
-
-        }
-        catch (IOException ioe)
-        {
-            ioe.printStackTrace();
         }
     }
 

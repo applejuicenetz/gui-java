@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.21 2003/08/25 08:01:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.22 2003/08/29 19:34:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.22  2003/08/29 19:34:03  maj0r
+ * Einige Aenderungen.
+ * Version 0.17 Beta
+ *
  * Revision 1.21  2003/08/25 08:01:21  maj0r
  * SplashScreen-Bild geaendert.
  *
@@ -92,7 +96,7 @@ public class AppleJuiceClient {
     rootLogger.setLevel(OptionsManager.getInstance().getLogLevel());
 
     try {
-      String nachricht = "appleJuice-Core-GUI wird gestartet...";
+      String nachricht = "appleJuice-Core-GUI Version " + ApplejuiceFassade.GUI_VERSION + " wird gestartet...";
       if (logger.isEnabledFor(Level.INFO))
         logger.info(nachricht);
       System.out.println(nachricht);
