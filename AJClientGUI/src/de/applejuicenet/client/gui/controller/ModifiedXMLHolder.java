@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.8 2003/06/30 20:35:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.9 2003/07/01 14:59:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,10 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.9  2003/07/01 14:59:28  maj0r
+ * Keyverwendung bei HashSets und HashMaps korrigiert.
+ * Server-IDs werden nun abgeglichen, alte werden entfernt.
+ *
  * Revision 1.8  2003/06/30 20:35:50  maj0r
  * Code optimiert.
  *
@@ -33,9 +37,13 @@ import de.applejuicenet.client.shared.dac.*;
 
 public class ModifiedXMLHolder
     extends WebXMLParser {
-  private HashMap serverMap;
+  private HashSet serverIDs = new HashSet();
+  private HashSet downloadIDs = new HashSet();
+  private HashSet uploadIDs = new HashSet();
+
+  private HashMap serverMap = new HashMap();
   private HashMap downloadMap;
-  private HashMap uploadMap;
+  private HashMap uploadMap = new HashMap();
   private NetworkInfo netInfo;
   private String[] status = new String[5];
   int i = 0;
@@ -45,7 +53,7 @@ public class ModifiedXMLHolder
   }
 
   public HashMap getServer() {
-    updateServer();
+    //updateServer();
     return serverMap;
   }
 
@@ -66,6 +74,7 @@ public class ModifiedXMLHolder
 
   public void update() {
     reload("");
+    updateIDs();
     updateServer();
     updateDownloads();
     updateNetworkInfo();
@@ -166,6 +175,35 @@ public class ModifiedXMLHolder
     return result;
   }
 
+  private void updateIDs(){
+      serverIDs.clear();
+      uploadIDs.clear();
+      downloadIDs.clear();
+      Element e = null;
+      String id = null;
+      NodeList nodes = document.getElementsByTagName("serverid");
+      int size = nodes.getLength();
+      for (int i = 0; i < size; i++) {
+        e = (Element) nodes.item(i);
+        id = e.getAttribute("id");
+        serverIDs.add(new MapSetStringKey(id));
+      }
+      nodes = document.getElementsByTagName("uploadid");
+      size = nodes.getLength();
+      for (int i = 0; i < size; i++) {
+        e = (Element) nodes.item(i);
+        id = e.getAttribute("id");
+        uploadIDs.add(new MapSetStringKey(id));
+      }
+      nodes = document.getElementsByTagName("downloadid");
+      size = nodes.getLength();
+      for (int i = 0; i < size; i++) {
+        e = (Element) nodes.item(i);
+        id = e.getAttribute("id");
+        downloadIDs.add(new MapSetStringKey(id));
+      }
+  }
+
   private void updateDownloads() {
     if (downloadMap == null) {
       downloadMap = new HashMap();
@@ -189,14 +227,14 @@ public class ModifiedXMLHolder
       sourcen2.add(source);
       sourcen2.add(source2);
       DownloadSourceDO[] downloads = new DownloadSourceDO[2];
-      downloadMap.put("1002",
+      downloadMap.put(new MapSetStringKey("1002"),
                       new DownloadSourceDO(true, "1002", "dateiliste.mov",
                                            DownloadSourceDO.UEBERTRAGE,
                                            "1GB",
                                            "nix", "43", "100", "0 Kb",
                                            "?", "1:1", null,
                                            "", sourcen1));
-      downloadMap.put("1003", new DownloadSourceDO(true, "1003", "Film.avi",
+      downloadMap.put(new MapSetStringKey("1003"), new DownloadSourceDO(true, "1003", "Film.avi",
           DownloadSourceDO.WARTESCHLANGE,
           "1GB",
           "nix", "0", "100", "0 Kb", "?",
@@ -207,7 +245,7 @@ public class ModifiedXMLHolder
     else {
       //Dummy
       i++;
-      DownloadSourceDO download = (DownloadSourceDO) downloadMap.get("1003");
+      DownloadSourceDO download = (DownloadSourceDO) downloadMap.get(new MapSetStringKey("1003"));
       download.setProzentGeladen(Integer.toString(i));
       Version version = new Version("0.27.511", "Java",
                                     Version.LINUX);
@@ -221,9 +259,6 @@ public class ModifiedXMLHolder
   }
 
   private void updateUploads() {
-    if (uploadMap == null) {
-      uploadMap = new HashMap();
-    }
     NodeList nodes = document.getElementsByTagName("upload");
     HashMap changedUploads = new HashMap();
     int size = nodes.getLength();
@@ -241,11 +276,13 @@ public class ModifiedXMLHolder
     String uploadTo = null;
     String actualUploadPos = null;
     String speed = null;
+    MapSetStringKey shareIDKey = null;
     for (int i = 0; i < size; i++) {
       e = (Element) nodes.item(i);
       shareId = e.getAttribute("shareid");
-      if (uploadMap.containsKey(shareId)) {
-        upload = (UploadDO) uploadMap.get(shareId);
+      shareIDKey = new MapSetStringKey(shareId);
+      if (uploadMap.containsKey(shareIDKey)) {
+        upload = (UploadDO) uploadMap.get(shareIDKey);
         upload.setPrioritaet(e.getAttribute("priority"));
         upload.setNick(e.getAttribute("nick"));
         upload.setStatus(Integer.parseInt(e.getAttribute("status")));
@@ -270,18 +307,27 @@ public class ModifiedXMLHolder
         upload = new UploadDO(id, shareId, version, status, nick,
                                        uploadFrom, uploadTo, actualUploadPos,
                                        speed, prioritaet);
-        changedUploads.put(shareId, upload);
+        changedUploads.put(shareIDKey, upload);
       }
     }
     uploadMap.putAll(changedUploads);
   }
 
   private void updateServer() {
-    if (serverMap == null) {
-      serverMap = new HashMap();
-    }
     NodeList nodes = document.getElementsByTagName("server");
-    HashMap changedServer = new HashMap();
+    Iterator it = serverMap.keySet().iterator();
+    MapSetStringKey idKey = null;
+    ArrayList toRemove = new ArrayList();
+    while (it.hasNext()){
+        idKey = (MapSetStringKey) it.next();
+        if (!serverIDs.contains(idKey))
+        {
+            toRemove.add(idKey);
+        }
+    }
+    for (int i=0; i<toRemove.size(); i++){
+        serverMap.remove(toRemove.get(i));
+    }
     int size = nodes.getLength();
     Element e = null;
     String id_key = null;
@@ -300,9 +346,8 @@ public class ModifiedXMLHolder
       lastseen = Long.parseLong(e.getAttribute("lastseen"));
       port = e.getAttribute("port");
       server = new ServerDO(id, name, host, port, lastseen);
-      changedServer.put(id_key, server);
+      serverMap.put(new MapSetStringKey(id_key), server);
     }
-    serverMap.putAll(changedServer);
   }
 
   private void updateNetworkInfo() {
