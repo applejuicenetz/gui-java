@@ -42,7 +42,7 @@ import java.awt.event.AdjustmentEvent;
 import javax.swing.JLabel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.5 2004/05/29 14:10:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.6 2004/06/07 20:16:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -443,6 +443,9 @@ public class ChannelPanel
         }
         else if (message.indexOf("<--- QUIT:")!=-1){
             StyleConstants.setForeground(attributes, Color.RED);
+        }
+        else if (message.indexOf(">") == 0){
+            StyleConstants.setForeground(attributes, Color.MAGENTA);
         }
         else if (!withTimeStamp || index==-1){
             StyleConstants.setForeground(attributes, Color.GRAY);

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Random;
 import java.util.StringTokenizer;
 
@@ -32,10 +33,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
-import java.net.SocketException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.17 2004/05/29 14:18:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.18 2004/06/07 20:16:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -755,10 +755,17 @@ public class XdccIrc
             changeNickname(oldNickname, newNickname);
         }
         else if (command.equals("NOTICE")) {
-            // handle NOTICE (à arranger: savoir de qui elle vient et la mettre au bon endroit)
             tabUpdate("Init Window",
                       "NOTICE FROM: " + parser.getNick() + " ---> " +
                       parser.getTrailing());
+            Object reiter;
+            for (int i = 1; i < tabbedPane.getTabCount(); i++) {
+                reiter = tabbedPane.getComponentAt(i);
+                if (reiter.getClass() == ChannelPanel.class){
+                    ((ChannelPanel)reiter).updateTextArea(formatNickname(">" + parser.getNick() + "< ") +
+                        parser.getTrailing());
+                }
+            }
         }
         else if (command.equals("KICK")) {
             // handle KICK
@@ -1150,7 +1157,7 @@ public class XdccIrc
                                 modeReceived.indexOf(" "));
                             String names = modeReceived.substring(modeReceived.indexOf(" ") + 1);
                             String splits[] = names.split(" ");
-                            if (plusMinus == '-' || plusMinus == '+') {
+                            if ((plusMinus == '-' || plusMinus == '+') && modeReceived.charAt(1) != 'b') {
                                 for (int i = 0; i < splits.length; i++) {
                                     String name = splits[i];
                                     SortedListModel model = channel.
