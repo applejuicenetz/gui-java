@@ -12,7 +12,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.8 2003/08/16 17:50:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.9 2003/08/19 12:38:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.9  2003/08/19 12:38:47  maj0r
+ * Passworteingabe und md5 korrigiert.
+ *
  * Revision 1.8  2003/08/16 17:50:06  maj0r
  * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
  * DownloaduebersichtTabelle kann deaktiviert werden.
@@ -53,103 +56,113 @@ import de.applejuicenet.client.shared.exception.*;
  */
 
 public abstract class WebXMLParser
-    extends XMLDecoder {
-  private String host;
-  private String xmlCommand;
-  private long timestamp = 0;
-  private boolean firstRun = true;
-  private boolean useTimestamp = true;
-  private String password;
-  private Logger logger;
+        extends XMLDecoder {
+    private String host;
+    private String xmlCommand;
+    private long timestamp = 0;
+    private boolean firstRun = true;
+    private boolean useTimestamp = true;
+    private String password;
+    private Logger logger;
 
-  public WebXMLParser(String xmlCommand, String parameters) {
-    super();
-    init(xmlCommand);
-  }
+    public WebXMLParser(String xmlCommand, String parameters) {
+        super();
+        init(xmlCommand);
+    }
 
-  public WebXMLParser(String xmlCommand, String parameters,
-                      boolean useTimestamp) {
-    super();
-    this.useTimestamp = useTimestamp;
-    init(xmlCommand);
-  }
+    public WebXMLParser(String xmlCommand, String parameters,
+                        boolean useTimestamp) {
+        super();
+        this.useTimestamp = useTimestamp;
+        init(xmlCommand);
+    }
 
-  private void init(String xmlCommand){
-    logger = Logger.getLogger(getClass());
-    RemoteConfiguration rc = OptionsManager.getInstance().getRemoteSettings();
-    host = rc.getHost();
-    password = rc.getOldPassword();
-    if (host==null || host.length()==0)
-      host = "localhost";
-    this.xmlCommand = xmlCommand;
-    webXML = true;
-  }
+    private void init(String xmlCommand) {
+        logger = Logger.getLogger(getClass());
+        RemoteConfiguration rc = OptionsManager.getInstance().getRemoteSettings();
+        host = rc.getHost();
+        password = rc.getOldPassword();
+        if (host == null || host.length() == 0)
+            host = "localhost";
+        this.xmlCommand = xmlCommand;
+        webXML = true;
+    }
 
-  public void reload(String parameters) {
-    String xmlData = null;
-    try {
-      if (useTimestamp) {
-        xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                                            xmlCommand + "?password=" + password + "&timestamp=" +
-                                            timestamp + parameters);
-      }
-      else {
-        if (parameters.length()!=0){
-            xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                                                xmlCommand + "?password=" + password + "&" + parameters);
+    public void reload(String parameters) {
+        String xmlData = null;
+        try
+        {
+            if (useTimestamp)
+            {
+                xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
+                                                       xmlCommand + "?password=" + password + "&timestamp=" +
+                                                       timestamp + parameters);
+            }
+            else
+            {
+                if (parameters.length() != 0)
+                {
+                    xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
+                                                           xmlCommand + "?password=" + password + "&" + parameters);
+                }
+                else
+                {
+                    xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
+                                                           xmlCommand + "?password=" + password);
+                }
+            }
         }
-        else{
-            xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                                                xmlCommand + "?password=" + password);
+        catch (WebSiteNotFoundException ex)
+        {
+            AppleJuiceDialog.closeWithErrormessage(
+                    "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
         }
-      }
-    }
-    catch (WebSiteNotFoundException ex) {
-      AppleJuiceDialog.closeWithErrormessage(
-          "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
-    }
-    DocumentBuilderFactory factory =
-        DocumentBuilderFactory.newInstance();
-    try {
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      //todo
-      //was sind das fuer beschissene Zeichen??
-      xmlData = xmlData.replaceAll("&#8;", "");
-      xmlData = xmlData.replaceAll("&#12;", "");
-      document = builder.parse(new InputSource(new StringReader(xmlData)));
-      if (!firstRun) {
-        if (useTimestamp) {
-          timestamp = Long.parseLong(getFirstAttrbuteByTagName(new String[] {
-              "applejuice", "time"}
-              , true));
+        DocumentBuilderFactory factory =
+                DocumentBuilderFactory.newInstance();
+        try
+        {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            document = builder.parse(new InputSource(new StringReader(xmlData)));
+            if (!firstRun)
+            {
+                if (useTimestamp)
+                {
+                    timestamp = Long.parseLong(getFirstAttrbuteByTagName(new String[]{
+                        "applejuice", "time"}
+                                                                         , true));
+                }
+            }
+            else
+            {
+                firstRun = !firstRun;
+            }
         }
-      }
-      else {
-        firstRun = !firstRun;
-      }
-    }
-    catch (SAXException sxe) {
-      Exception x = sxe;
-      if (sxe.getException() != null) {
-        x = sxe.getException();
-      }
-      if (logger.isEnabledFor(Level.FATAL))
-        logger.fatal("Unbehandelte Exception", x);
-      x.printStackTrace();
+        catch (SAXException sxe)
+        {
+            Exception x = sxe;
+            if (sxe.getException() != null)
+            {
+                x = sxe.getException();
+            }
+            if (logger.isEnabledFor(Level.FATAL))
+                logger.fatal("Unbehandelte Exception", x);
+            x.printStackTrace();
 
-    }
-    catch (ParserConfigurationException pce) {
-      pce.printStackTrace();
+        }
+        catch (ParserConfigurationException pce)
+        {
+            pce.printStackTrace();
 
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
     }
-    catch (IOException ioe) {
-      ioe.printStackTrace();
+
+    public abstract void update();
+
+    public void setPassword(String password) {
+        this.password = password;
     }
-  }
-
-  public abstract void update();
-
-  public void setPassword(String password){
-      this.password = password;
-  }
 }

@@ -14,7 +14,7 @@ import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.3 2003/08/17 16:13:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.4 2003/08/19 12:38:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import java.io.UnsupportedEncodingException;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.4  2003/08/19 12:38:47  maj0r
+ * Passworteingabe und md5 korrigiert.
+ *
  * Revision 1.3  2003/08/17 16:13:11  maj0r
  * Erstellen des DirectoryNode-Baumes korrigiert.
  *
@@ -109,20 +112,6 @@ public class DirectoryXMLHolder extends WebXMLParser {
             if (name.compareToIgnoreCase("dir")==0){
                 getNodes(e, newNode);
             }
-/*            e = (Element) nodes.item(i);
-            name = e.getAttribute("name");
-            fileSystem = Boolean.getBoolean(e.getAttribute("isfilesystem"));
-            type = Integer.parseInt(e.getAttribute("type"));
-            path = e.getAttribute("path");
-            if (path.length()==0){
-                if (directory.length()!=0 && directory.lastIndexOf('\\')==directory.length()-1){
-                    path = directory + name;
-                }
-                else
-                    path = directory + separator + name;
-            }
-            directoryDO = new DirectoryDO(name, type, fileSystem, path);
-            DirectoryNode childNode = new DirectoryNode(directoryNode, directoryDO);     */
         }
     }
 

@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/RemoteConfiguration.java,v 1.5 2003/08/02 12:03:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/RemoteConfiguration.java,v 1.6 2003/08/19 12:38:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.security.NoSuchAlgorithmException;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RemoteConfiguration.java,v $
+ * Revision 1.6  2003/08/19 12:38:47  maj0r
+ * Passworteingabe und md5 korrigiert.
+ *
  * Revision 1.5  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -26,60 +29,71 @@ import java.security.NoSuchAlgorithmException;
  */
 
 public class RemoteConfiguration {
-  private String host;
-  private String oldPassword;
-  private String newPassword;
+    private String host;
+    private String oldPassword;
+    private String newPassword;
 
-  public RemoteConfiguration(String host, String oldPassword) {
-    this.host = host;
-    this.oldPassword = oldPassword;
-  }
-
-  public RemoteConfiguration() {}
-
-  public void setHost(String host) {
-    this.host = host;
-  }
-
-  public void setOldPassword(String oldPassword) {
-    this.oldPassword = getMD5(oldPassword);
-  }
-
-  public void setNewPassword(String newPassword) {
-    this.newPassword = getMD5(newPassword);
-  }
-
-  public String getHost() {
-      if (host==null)
-          host = "";
-    return host;
-  }
-
-  public String getOldPassword() {
-      if (oldPassword==null)
-          oldPassword = "";
-    return oldPassword;
-  }
-
-  public String getNewPassword() {
-    if (newPassword==null)
-        newPassword = "";
-    return newPassword;
-  }
-
-  private String getMD5 (String text){
-    byte[] intext = text.getBytes();
-    StringBuffer sb = new StringBuffer();
-    MessageDigest md5 = null;
-    try {
-        md5 = MessageDigest.getInstance("MD5");
-    } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+    public RemoteConfiguration(String host, String password) {
+        this.host = host;
+        if (password.length() == 0)
+            password = getMD5("");
+        this.oldPassword = password;
     }
-    byte[] md5rslt = md5.digest(intext);
-    for( int i = 0 ; i < md5rslt.length ; i++ ){
-        sb.append(Integer.toHexString( (0xff & md5rslt[i])));
+
+    public RemoteConfiguration() {
     }
-    return sb.toString();
-  }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = getMD5(oldPassword);
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = getMD5(newPassword);
+    }
+
+    public String getHost() {
+        if (host == null)
+            host = "";
+        return host;
+    }
+
+    public String getOldPassword() {
+        if (oldPassword == null)
+            oldPassword = "";
+        return oldPassword;
+    }
+
+    public String getNewPassword() {
+        if (newPassword == null)
+            newPassword = "";
+        return newPassword;
+    }
+
+    private String getMD5(String text) {
+        byte[] intext = text.getBytes();
+        MessageDigest md5 = null;
+        try
+        {
+            md5 = MessageDigest.getInstance("MD5");
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+        }
+        byte[] md5rslt = md5.digest(intext);
+
+        StringBuffer verifyMsg = new StringBuffer();
+        for (int i = 0; i < md5rslt.length; i++)
+        {
+            int hexChar = 0xFF & md5rslt[i];
+            String hexString = Integer.toHexString(hexChar);
+            hexString = (hexString.length() == 1) ? "0" + hexString : hexString;
+            verifyMsg.append(hexString);
+        }
+        return verifyMsg.toString();
+    }
 }
