@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.3 2003/09/01 06:27:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.4 2003/09/01 18:00:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PartListDO.java,v $
+ * Revision 1.4  2003/09/01 18:00:15  maj0r
+ * Wo es ging, DO auf primitiven Datentyp umgebaut.
+ * Status "geprueft" eingefuehrt.
+ *
  * Revision 1.3  2003/09/01 06:27:35  maj0r
  * Ueberarbeitet.
  *
@@ -27,6 +31,7 @@ import java.util.HashSet;
 import java.util.ArrayList;
 
 public class PartListDO {
+    public static final Color COLOR_TYPE_UEBERPRUEFT = Color.GREEN;
     public static final Color COLOR_TYPE_OK = Color.BLACK;
     public static final Color COLOR_TYPE_0 = Color.RED;
     public static final Color COLOR_TYPE_1 = new Color(25, 25, 250);
@@ -69,15 +74,15 @@ public class PartListDO {
     }
 
     public class Part{
-        private Long fromPosition;
+        private long fromPosition;
         private int type;
 
-        public Part(Long fromPosition, int type) {
+        public Part(long fromPosition, int type) {
             this.fromPosition = fromPosition;
             this.type = type;
         }
 
-        public Long getFromPosition() {
+        public long getFromPosition() {
             return fromPosition;
         }
 

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DownloadPartListXMLHolder.java,v 1.2 2003/09/01 06:27:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DownloadPartListXMLHolder.java,v 1.3 2003/09/01 18:00:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui.controller;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPartListXMLHolder.java,v $
+ * Revision 1.3  2003/09/01 18:00:15  maj0r
+ * Wo es ging, DO auf primitiven Datentyp umgebaut.
+ * Status "geprueft" eingefuehrt.
+ *
  * Revision 1.2  2003/09/01 06:27:35  maj0r
  * Ueberarbeitet.
  *
@@ -57,11 +61,11 @@ public class DownloadPartListXMLHolder
     partListDO.setGroesse(fileSize);
     nodes = document.getElementsByTagName("part");
     int nodesSize = nodes.getLength();
-    Long startPosition = null;
+    long startPosition;
     int type;
     for (int i = 0; i < nodesSize; i++) {
       e = (Element) nodes.item(i);
-      startPosition = new Long(e.getAttribute("fromposition"));
+      startPosition = Long.parseLong(e.getAttribute("fromposition"));
       type = new Integer(e.getAttribute("type")).intValue();
       partListDO.addPart(partListDO.new Part(startPosition, type));
     }

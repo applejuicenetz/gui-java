@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.10 2003/09/01 06:27:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.11 2003/09/01 18:00:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.11  2003/09/01 18:00:15  maj0r
+ * Wo es ging, DO auf primitiven Datentyp umgebaut.
+ * Status "geprueft" eingefuehrt.
+ *
  * Revision 1.10  2003/09/01 06:27:35  maj0r
  * Ueberarbeitet.
  *
@@ -144,17 +148,50 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
                 int groesseProPart = (int) tempPartList.getGroesse() / anzahl;
                 long position = 0;
                 int partPos = 0;
+                long mbStart;
+                long mbEnde;
+                int kleiner;
+                int groesstes;
+                boolean ueberprueft;
                 for (int i=0; i<anzahlZeilen; i++){
                     constraints.gridy = i+1;
                     for (int x=0; x<anzahlZeile; x++){
                         constraints.gridx = x;
                         position += groesseProPart;
-                        while (parts[partPos].getFromPosition().longValue()<position && partPos<parts.length-1){
+                        while (parts[partPos].getFromPosition()<position && partPos<parts.length-1){
                             partPos++;
                         }
                         label1 = new JLabel();
                         label1.setOpaque(true);
-                        label1.setBackground(getColorByType(parts[partPos].getType()));
+                        if (parts[partPos].getType()==-1){
+                            mbStart = position / 1048576 * 1048576;
+                            mbEnde = mbStart + 1048576;
+                            kleiner = partPos;
+                            groesstes = partPos;
+                            while (parts[kleiner].getFromPosition()>mbStart){
+                                kleiner--;
+                            }
+                            while (parts[groesstes].getFromPosition()<mbEnde){
+                                groesstes++;
+                            }
+                            groesstes--;
+                            ueberprueft = true;
+                            for (int l = kleiner; l<=groesstes; l++){
+                                if (parts[l].getType()!=-1){
+                                    ueberprueft = false;
+                                    break;
+                                }
+                            }
+                            if (ueberprueft){
+                                label1.setBackground(PartListDO.COLOR_TYPE_UEBERPRUEFT);
+                            }
+                            else{
+                                label1.setBackground(PartListDO.COLOR_TYPE_OK);
+                            }
+                        }
+                        else{
+                            label1.setBackground(getColorByType(parts[partPos].getType()));
+                        }
                         actualDlOverviewTable.add(label1, constraints);
                     }
                 }
@@ -167,7 +204,8 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
         if (!settings.isDownloadUebersicht()){
             remove(actualDlOverviewTable);
         }
-        else if (this.downloadDO != downloadDO)
+        else if (this.downloadDO != downloadDO && downloadDO.getStatus()!=DownloadDO.FERTIGSTELLEN &&
+                downloadDO.getStatus()!=DownloadDO.FERTIG)
         {
             this.downloadDO = downloadDO;
             final DownloadDO tempDO = downloadDO;
