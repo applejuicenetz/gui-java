@@ -30,18 +30,34 @@ public class UploadTablePercentCellRenderer
             UploadDO uploadDO = (UploadDO) obj;
             Color background = table.getBackground();
             Color foreground = table.getForeground();
-            String prozent = uploadDO.getDownloadPercentAsString();
-            JProgressBar progress = new JProgressBar(JProgressBar.HORIZONTAL, 0,
-                                                     100);
-            int pos = prozent.indexOf('.');
-            String balken = prozent;
-            if (pos!=-1){
-                balken = balken.substring(0, pos);
+            if (uploadDO.getStatus()==UploadDO.AKTIVE_UEBERTRAGUNG){
+                String prozent = uploadDO.getDownloadPercentAsString();
+                JProgressBar progress = new JProgressBar(JProgressBar.
+                    HORIZONTAL, 0,
+                    100);
+                int pos = prozent.indexOf('.');
+                String balken = prozent;
+                if (pos != -1) {
+                    balken = balken.substring(0, pos);
+                }
+                progress.setValue(Integer.parseInt(balken));
+                progress.setString(prozent + " %");
+                progress.setStringPainted(true);
+                return progress;
             }
-            progress.setValue(Integer.parseInt(balken));
-            progress.setString(prozent + " %");
-            progress.setStringPainted(true);
-            return progress;
+            else{
+                JLabel label1 = new JLabel();
+                label1.setOpaque(true);
+                if (isSelected) {
+                    label1.setBackground(table.getSelectionBackground());
+                    label1.setForeground(table.getSelectionForeground());
+                }
+                else {
+                    label1.setBackground(table.getBackground());
+                    label1.setForeground(table.getForeground());
+                }
+                return label1;
+            }
         }
     }
 }
