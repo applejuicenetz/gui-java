@@ -11,9 +11,7 @@ import javax.swing.table.*;
 
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.tables.download.DownloadModel;
-import de.applejuicenet.client.gui.tables.download.DownloadTableCellRenderer;
-import de.applejuicenet.client.gui.tables.download.DownloadNode;
+import de.applejuicenet.client.gui.tables.download.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
@@ -22,7 +20,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.39 2003/08/27 11:18:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.40 2003/09/02 16:08:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +29,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.40  2003/09/02 16:08:10  maj0r
+ * Downloadbaum komplett umgebaut.
+ *
  * Revision 1.39  2003/08/27 11:18:34  maj0r
  * Kleinen Fehler korrigiert.
  *
@@ -99,7 +100,6 @@ public class DownloadPanel
     private DownloadDOOverviewPanel downloadDOOverviewPanel = new DownloadDOOverviewPanel();
     private JTextField downloadLink = new JTextField();
     private JButton btnStartDownload = new JButton("Download");
-    private JPanel overviewPanel = new JPanel(new BorderLayout());
     private PowerDownloadPanel powerDownloadPanel;
     private JTreeTable downloadTable;
     private JLabel linkLabel = new JLabel("ajfsp-Link hinzufügen");
@@ -155,8 +155,8 @@ public class DownloadPanel
                             JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
                         for (int i = 0; i < selectedItems.length; i++) {
-                            if (((DownloadNode) selectedItems[i]).getNodeType() == DownloadNode.DOWNLOAD_NODE) {
-                                DownloadDO downloadDO = ((DownloadNode) selectedItems[i]).getDownloadDO();
+                            if (selectedItems[i].getClass() == DownloadMainNode.class) {
+                                DownloadDO downloadDO = ((DownloadMainNode)selectedItems[i]).getDownloadDO();
                                 ApplejuiceFassade.getInstance().cancelDownload(downloadDO.getId());
                             }
                         }
@@ -170,8 +170,8 @@ public class DownloadPanel
                 Object[] selectedItems = getSelectedDownloadItems();
                 if (selectedItems != null && selectedItems.length != 0) {
                     for (int i = 0; i < selectedItems.length; i++) {
-                        if (((DownloadNode) selectedItems[i]).getNodeType() == DownloadNode.DOWNLOAD_NODE) {
-                            DownloadDO downloadDO = ((DownloadNode) selectedItems[i]).getDownloadDO();
+                        if (selectedItems[i].getClass() == DownloadMainNode.class) {
+                            DownloadDO downloadDO = ((DownloadMainNode)selectedItems[i]).getDownloadDO();
                             if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
                                 ApplejuiceFassade.getInstance().resumeDownload(downloadDO.getId());
                             }
@@ -211,7 +211,6 @@ public class DownloadPanel
 
         downloadModel = new DownloadModel();
         downloadTable = new JTreeTable(downloadModel);
-        downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         DownloadTableCellRenderer renderer = new DownloadTableCellRenderer();
         for (int i = 1; i < downloadTable.getColumnModel().getColumnCount(); i++) {
@@ -231,15 +230,15 @@ public class DownloadPanel
                 super.mouseClicked(e);
                 Point p = e.getPoint();
                 int selectedRow = downloadTable.rowAtPoint(p);
-                DownloadNode node = (DownloadNode) ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(selectedRow);
+                Object node = ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(selectedRow);
                 if (downloadTable.columnAtPoint(p) != 0) {
                     if (e.getClickCount() == 2) {
                         ((TreeTableModelAdapter) downloadTable.getModel()).expandOrCollapseRow(selectedRow);
                     }
                 }
-                if (node.getNodeType() == DownloadNode.DOWNLOAD_NODE) {
+                if (node.getClass() == DownloadMainNode.class) {
                     powerDownloadPanel.btnPdl.setEnabled(true);
-                    downloadDOOverviewPanel.setDownloadDO(node.getDownloadDO());
+                    downloadDOOverviewPanel.setDownloadDO(((DownloadMainNode)node).getDownloadDO());
                 }
                 else {
                     powerDownloadPanel.btnPdl.setEnabled(false);
@@ -301,7 +300,7 @@ public class DownloadPanel
             for (int i=0; i<columnCount; i++){
                 headerModel.getColumn(i).setPreferredWidth(width/columnCount);
             }
-
+            downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         }
     }
 
@@ -378,18 +377,9 @@ public class DownloadPanel
     public void fireContentChanged(int type, Object content) {
         if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
             HashMap downloads = (HashMap) content;
-            if (downloads != null && downloads.size() != 0) {
-                Iterator it = downloads.values().iterator();
-                DownloadDO downloadDO = null;
-                DownloadNode node = null;
-                while (it.hasNext()) {
-                    downloadDO = (DownloadDO) it.next();
-                    node = new DownloadNode(downloadDO);
-
-                }
-                DownloadNode.clearOldNodes();
-                downloadTable.updateUI();
-            }
+            ((DownloadRootNode)downloadModel.getRoot()).setDownloadMap(downloads);
+            DownloadDirectoryNode.setDownloads(downloads);
+            downloadTable.updateUI();
         }
     }
 }

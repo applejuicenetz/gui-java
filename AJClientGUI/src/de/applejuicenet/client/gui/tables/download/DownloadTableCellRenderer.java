@@ -7,12 +7,11 @@ import javax.swing.table.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.dac.*;
-import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.11 2003/08/16 17:50:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.12 2003/09/02 16:06:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +20,9 @@ import de.applejuicenet.client.gui.controller.OptionsManager;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.12  2003/09/02 16:06:26  maj0r
+ * Downloadbaum komplett umgebaut.
+ *
  * Revision 1.11  2003/08/16 17:50:42  maj0r
  * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
  * DownloaduebersichtTabelle kann deaktiviert werden.
@@ -78,36 +80,25 @@ public class DownloadTableCellRenderer
                                                  boolean hasFocus,
                                                  int row,
                                                  int column) {
-    DownloadNode node = (DownloadNode) ( (TreeTableModelAdapter) table.getModel()).
-        nodeForRow(row);
-    switch (node.getNodeType()){
-        case DownloadNode.SOURCE_NODE:
-            {
-                return getComponentForSource(node, table, value, isSelected, hasFocus, row, column);
-            }
-        case DownloadNode.DOWNLOAD_NODE:
-            {
-                return getComponentForDownload(node, table, value, isSelected, hasFocus, row, column);
-            }
-        case DownloadNode.DIRECTORY_NODE:
-            {
-                return getComponentForDirectory(node, table, value, isSelected, hasFocus, row, column);
-            }
-        default:
-            {
-                return new JLabel("");
-            }
-    }
+    Object node = ( (TreeTableModelAdapter) table.getModel()).nodeForRow(row);
+    if (node.getClass()==DownloadSourceDO.class)
+        return getComponentForSource((DownloadSourceDO)node, table, value, isSelected, hasFocus, row, column);
+    else if (node.getClass()==DownloadMainNode.class)
+        return getComponentForDownload((DownloadMainNode)node, table, value, isSelected, hasFocus, row, column);
+    else if (node.getClass()==DownloadDirectoryNode.class)
+        return getComponentForDirectory((DownloadDirectoryNode)node, table, value, isSelected, hasFocus, row, column);
+    else
+        return new JLabel("");
   }
 
-  public Component getComponentForDownload(DownloadNode node, JTable table,
+  public Component getComponentForDownload(DownloadMainNode downloadMainNode, JTable table,
                                                  Object value,
                                                  boolean isSelected,
                                                  boolean hasFocus,
                                                  int row,
                                                  int column){
-    DownloadDO downloadDO = node.getDownloadDO();
-    if (column == 6) {
+    DownloadDO downloadDO = downloadMainNode.getDownloadDO();
+    if (column == 6 && downloadMainNode.getType()==DownloadMainNode.ROOT_NODE) {
         String prozent = downloadDO.getProzentGeladenAsString();
         String wert = null;
         int i;
@@ -124,6 +115,22 @@ public class DownloadTableCellRenderer
         progress.setStringPainted(true);
         return progress;
       }
+    else if(column!=6 && downloadMainNode.getType()!=DownloadMainNode.ROOT_NODE){
+        JLabel label1 = new JLabel();
+        label1.setOpaque(true);
+        if (isSelected) {
+          label1.setBackground(table.getSelectionBackground());
+          label1.setForeground(table.getSelectionForeground());
+        }
+        else {
+            if (downloadDO.getStatus()==DownloadDO.FERTIG && settings.isFarbenAktiv())
+              label1.setBackground(settings.getDownloadFertigHintergrundColor());
+            else
+              label1.setBackground(table.getBackground());
+            label1.setForeground(table.getForeground());
+        }
+        return label1;
+    }
     else {
       JLabel label1 = new JLabel();
       label1.setOpaque(true);
@@ -144,13 +151,12 @@ public class DownloadTableCellRenderer
     }
   }
 
-    public Component getComponentForSource(DownloadNode node, JTable table,
+    public Component getComponentForSource(DownloadSourceDO downloadSourceDO, JTable table,
                                                    Object value,
                                                    boolean isSelected,
                                                    boolean hasFocus,
                                                    int row,
                                                    int column){
-        DownloadSourceDO downloadSourceDO = node.getDownloadSourceDO();
         Color foreground = table.getForeground();
         if (column == 6) {
             String prozent = downloadSourceDO.getDownloadPercentAsString();
@@ -226,7 +232,7 @@ public class DownloadTableCellRenderer
       }
     }
 
-    public Component getComponentForDirectory(DownloadNode node, JTable table,
+    public Component getComponentForDirectory(DownloadDirectoryNode node, JTable table,
                                                    Object value,
                                                    boolean isSelected,
                                                    boolean hasFocus,

@@ -4,7 +4,6 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
-import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 
 import javax.swing.*;
@@ -15,7 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.3 2003/08/25 18:02:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.4 2003/09/02 16:08:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +23,9 @@ import java.awt.event.MouseAdapter;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODAnsichtPanel.java,v $
+ * Revision 1.4  2003/09/02 16:08:11  maj0r
+ * Downloadbaum komplett umgebaut.
+ *
  * Revision 1.3  2003/08/25 18:02:10  maj0r
  * Sprachberuecksichtigung und Tooltipps eingebaut.
  *

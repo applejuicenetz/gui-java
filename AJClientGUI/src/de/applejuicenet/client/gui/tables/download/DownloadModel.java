@@ -1,10 +1,5 @@
 package de.applejuicenet.client.gui.tables.download;
 
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.tree.*;
-
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
@@ -13,7 +8,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.12 2003/09/01 15:50:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.13 2003/09/02 16:06:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +17,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.13  2003/09/02 16:06:26  maj0r
+ * Downloadbaum komplett umgebaut.
+ *
  * Revision 1.12  2003/09/01 15:50:51  maj0r
  * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
  *
@@ -99,21 +97,35 @@ public class DownloadModel
       String.class, String.class, String.class, String.class, String.class};
 
   public DownloadModel() {
-    super(new DownloadNode());
+    super(new DownloadRootNode());
     LanguageSelector.getInstance().addLanguageListener(this);
   }
 
   protected Object[] getChildren(Object node) {
-    DownloadNode downloadNode = ( (DownloadNode) node);
-    return downloadNode.getChildren();
+      if (node.getClass()!=DownloadDO.class && node.getClass()!=DownloadSourceDO.class){
+          return ((DownloadNode)node).getChildren();
+      }
+      else if (node.getClass()==DownloadDO.class){
+          return ((DownloadDO)node).getSources();
+      }
+      return null;
   }
 
   public int getChildCount(Object node) {
-    return ((DownloadNode)node).getChildCount();
+      if (node.getClass()!=DownloadDO.class && node.getClass()!=DownloadSourceDO.class){
+          return ((DownloadNode)node).getChildCount();
+      }
+      else if (node.getClass()==DownloadDO.class){
+          return ((DownloadDO)node).getSources().length;
+      }
+      return 0;
   }
 
   public Object getChild(Object node, int i) {
-    return getChildren(node)[i];
+      Object[] obj = getChildren(node);
+      if (obj==null || i>obj.length-1)
+        return null;
+      return obj[i];
   }
 
   public int getColumnCount() {
@@ -129,9 +141,8 @@ public class DownloadModel
   }
 
   public Object getValueAt(Object node, int column) {
-    DownloadNode downloadNode = (DownloadNode)node;
-    if (downloadNode.getNodeType()==DownloadNode.DOWNLOAD_NODE){
-        DownloadDO downloadDO = downloadNode.getDownloadDO();
+    if (node.getClass()==DownloadMainNode.class){
+        DownloadDO downloadDO = ((DownloadMainNode)node).getDownloadDO();
         switch (column) {
           case 0:
                 return downloadDO.getFilename();
@@ -153,20 +164,16 @@ public class DownloadModel
             return "";
         }
     }
-    else if (downloadNode.getNodeType()==DownloadNode.DIRECTORY_NODE){
-        DownloadSourceDO downloadSourceDO = downloadNode.getDownloadSourceDO();
-        if (downloadSourceDO == null) {
-          return "";
-        }
+    else if (node.getClass()==DownloadDirectoryNode.class){
           switch (column) {
             case 0:
-                return downloadNode.getPfad();
+                return ((DownloadDirectoryNode)node).getVerzeichnis();
             default:
               return "";
           }
     }
-    else if (downloadNode.getNodeType()==DownloadNode.SOURCE_NODE){
-        DownloadSourceDO downloadSourceDO = downloadNode.getDownloadSourceDO();
+    else if (node.getClass()==DownloadSourceDO.class){
+        DownloadSourceDO downloadSourceDO = (DownloadSourceDO) node;
         if (downloadSourceDO == null) {
           return "";
         }

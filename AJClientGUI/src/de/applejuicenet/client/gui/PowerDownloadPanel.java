@@ -6,11 +6,12 @@ import javax.swing.*;
 
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.tables.download.DownloadNode;
+import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
 import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.21 2003/09/01 15:50:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.22 2003/09/02 16:08:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.22  2003/09/02 16:08:12  maj0r
+ * Downloadbaum komplett umgebaut.
+ *
  * Revision 1.21  2003/09/01 15:50:51  maj0r
  * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
  *
@@ -299,14 +303,14 @@ public class PowerDownloadPanel
       Object[] selectedItems = parentPanel.getSelectedDownloadItems();
       if (selectedItems!=null && selectedItems.length!=0){
           for (int i=0; i<selectedItems.length; i++){
-              if (((DownloadNode)selectedItems[i]).getNodeType() == DownloadNode.DOWNLOAD_NODE){
+              if (selectedItems[i].getClass() == DownloadMainNode.class){
                   int powerDownload = 0;
                   if (!btnInaktiv.isSelected()){
                       String temp = ratio.getText();
                       double power = Double.parseDouble(temp);
                       powerDownload = (int) (power * 10 - 10);
                   }
-                  ApplejuiceFassade.getInstance().setPowerDownload(((DownloadNode)selectedItems[i]).getId(), powerDownload);
+                  ApplejuiceFassade.getInstance().setPowerDownload(((DownloadMainNode)selectedItems[i]).getDownloadDO().getId(), powerDownload);
               }
           }
       }

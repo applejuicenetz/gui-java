@@ -14,11 +14,10 @@ import de.applejuicenet.client.gui.tables.upload.UploadDataTableModel;
 import de.applejuicenet.client.gui.tables.upload.UploadTableCellRenderer;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
-import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.20 2003/08/31 11:06:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.21 2003/09/02 16:08:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +26,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.21  2003/09/02 16:08:14  maj0r
+ * Downloadbaum komplett umgebaut.
+ *
  * Revision 1.20  2003/08/31 11:06:44  maj0r
  * Groesse der ersten Upload-Spalte geaendert.
  *
@@ -152,12 +154,8 @@ public class UploadPanel
     public void fireContentChanged(int type, Object content) {
         if (type == DataUpdateListener.UPLOAD_CHANGED ||
                 !(content instanceof HashMap)) {
-//            int selected = uploadDataTable.getSelectedRow();
             uploadDataTableModel.setTable((HashMap)content);
             uploadDataTable.updateUI();
-/*            if (selected != -1 && selected < uploadDataTable.getRowCount()) {
-              uploadDataTable.setRowSelectionInterval(selected, selected);
-            }*/
             anzahlClients = uploadDataTableModel.getRowCount();
             label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
         }
