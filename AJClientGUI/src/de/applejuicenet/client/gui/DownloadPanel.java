@@ -66,7 +66,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.107 2004/05/08 16:19:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.108 2004/06/15 15:31:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -105,7 +105,6 @@ public class DownloadPanel
     private String dialogTitel;
     private JMenuItem item7;
     private Logger logger;
-    private String neuerDateiname;
     private boolean panelSelected = false;
 
     private JPopupMenu columnPopup = new JPopupMenu();
@@ -1056,8 +1055,6 @@ public class DownloadPanel
             itemCopyToClipboardWithSources.setText(ZeichenErsetzer.
                 korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.getlinkwithsources")));
-            neuerDateiname = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.javagui.downloadform.neuerdateiname"));
             einfuegen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.downloadform.einfuegen")));
         }
