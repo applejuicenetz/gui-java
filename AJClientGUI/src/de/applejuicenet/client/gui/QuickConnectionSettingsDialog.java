@@ -17,7 +17,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -28,18 +27,20 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.13 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.14 2004/02/22 08:37:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.14  2004/02/22 08:37:59  maj0r
+ * Muell entfernt.
+ *
  * Revision 1.13  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
