@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.29 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.30 2004/02/24 14:22:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.30  2004/02/24 14:22:34  maj0r
+ * Bug #242 gefixt (Danke an Kossi-Jaki)
+ * Legende für Partliste um "aktive Uebertragung" erweitert.
+ *
  * Revision 1.29  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -138,6 +142,7 @@ public class DownloadDOOverviewPanel
     private DownloadPartListPanel actualDlOverviewTable = new
         DownloadPartListPanel();
     private JLabel actualDLDateiName = new JLabel();
+    private JLabel label5 = new JLabel("aktive Übertragung");
     private JLabel label4 = new JLabel("Vorhanden");
     private JLabel label3 = new JLabel("Nicht vorhanden");
     private JLabel label2 = new JLabel("In Ordnung");
@@ -170,27 +175,34 @@ public class DownloadDOOverviewPanel
         setLayout(new BorderLayout());
         JPanel tempPanel1 = new JPanel();
         tempPanel1.setLayout(new FlowLayout());
+
+        JLabel gelb = new JLabel("     ");
+        gelb.setOpaque(true);
+        gelb.setBackground(Color.YELLOW);
+        tempPanel1.add(gelb);
+        tempPanel1.add(label5);
+
         JLabel blau = new JLabel("     ");
         blau.setOpaque(true);
-        blau.setBackground(Color.blue);
+        blau.setBackground(Color.BLUE);
         tempPanel1.add(blau);
         tempPanel1.add(label4);
 
         JLabel red = new JLabel("     ");
         red.setOpaque(true);
-        red.setBackground(Color.red);
+        red.setBackground(Color.RED);
         tempPanel1.add(red);
         tempPanel1.add(label3);
 
         JLabel black = new JLabel("     ");
         black.setOpaque(true);
-        black.setBackground(Color.black);
+        black.setBackground(Color.BLACK);
         tempPanel1.add(black);
         tempPanel1.add(label2);
 
         JLabel green = new JLabel("     ");
         green.setOpaque(true);
-        green.setBackground(Color.green);
+        green.setBackground(Color.GREEN);
         tempPanel1.add(green);
         tempPanel1.add(label1);
 
@@ -305,6 +317,8 @@ public class DownloadDOOverviewPanel
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
+            label5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.javagui.downloadform.aktiveuebertragung")));
             label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.Label4.caption")));
             label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
