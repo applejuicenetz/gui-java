@@ -16,7 +16,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import java.net.Socket;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.36 2003/11/18 17:01:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.37 2003/11/19 11:54:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import java.net.Socket;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.37  2003/11/19 11:54:07  maj0r
+ * LinkListener fertiggestellt.
+ *
  * Revision 1.36  2003/11/18 17:01:12  maj0r
  * Erste Version des LinkListener eingebaut.
  *
@@ -116,8 +119,11 @@ public class AppleJuiceClient {
 
     public static void main(String[] args) {
         boolean processLink = false;
-        if (args != null && args.length == 1) {
+        if (args != null && (args.length == 1 || args.length==2)) {
             try {
+                if (args.length==2){
+                    System.setProperty("user.dir", args[1]);
+                }
                 int PORT = PropertiesManager.getOptionsManager().getLinkListenerPort();
                 String passwort = PropertiesManager.getOptionsManager().
                     getRemoteSettings().getOldPassword();
