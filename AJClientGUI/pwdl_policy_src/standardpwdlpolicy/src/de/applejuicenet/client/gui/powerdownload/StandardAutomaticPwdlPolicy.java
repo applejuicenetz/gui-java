@@ -9,45 +9,13 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.2 2004/03/03 15:37:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.3 2004/06/15 06:22:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: StandardAutomaticPwdlPolicy.java,v $
- * Revision 1.2  2004/03/03 15:37:12  maj0r
- * PMD-Optimierung
- *
- * Revision 1.1  2004/01/31 08:48:04  maj0r
- * PwdlPolicies werden jetzt wie Plugins als jars eingebunden.
- *
- * Revision 1.8  2004/01/30 16:32:47  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.7  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.6  2003/12/16 09:28:15  maj0r
- * Rundungsfehler beim automatischen Powerdownload behoben (Danke an garnichda).
- *
- * Revision 1.5  2003/11/24 12:47:08  maj0r
- * Bug beim autom. Pwdl behoben, der auftrat, wenn nur eine Datei im Download war.
- *
- * Revision 1.4  2003/11/19 19:27:41  maj0r
- * Handhabung korrigiert.
- *
- * Revision 1.3  2003/11/19 17:05:20  maj0r
- * Autom. Pwdl ueberarbeitet.
- *
- * Revision 1.2  2003/11/17 14:44:10  maj0r
- * Erste funktionierende Version des automatischen Powerdownloads eingebaut.
- *
- * Revision 1.1  2003/11/17 07:32:30  maj0r
- * Automatischen Pwdl begonnen.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -61,6 +29,7 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
     public StandardAutomaticPwdlPolicy() {}
 
     public boolean initAction() {
+        shouldPause = false;
         double wert = 0;
         boolean correctInput = false;
         while (!correctInput){
@@ -167,7 +136,7 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
                         temp++;
                     }
                     if (ids.length != 0) {
-                        applejuiceFassade.pauseDownload(ids);
+//                        applejuiceFassade.pauseDownload(ids);
                         applejuiceFassade.setPowerDownload(ids, 0);
                         applejuiceFassade.setPowerDownload(new int[] {
                             maxProzentId[
@@ -191,14 +160,13 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
     }
 
     public String getVersion() {
-        return "1.1";
+        return "1.2";
     }
 
     public String getDescription() {
         String description =
                 "Powerdownload wird fuer die beiden prozentual weitesten Downloads aktiviert." +
                 "Wenn einer fertig ist, wird der Naechste aktiviert." +
-                "Die restlichen Downloads werden pausiert." +
                 "Der Pwdl-Wert ist frei einstellbar.";
         return description;
     }
