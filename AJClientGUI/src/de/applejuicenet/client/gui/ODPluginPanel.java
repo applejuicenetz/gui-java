@@ -1,27 +1,41 @@
 package de.applejuicenet.client.gui;
 
-import java.util.*;
-
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.event.*;
-
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.plugins.*;
-import de.applejuicenet.client.shared.*;
+import java.util.Vector;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.9 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.10 2004/01/01 15:30:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginPanel.java,v $
+ * Revision 1.10  2004/01/01 15:30:21  maj0r
+ * Plugins koennen nun ein JPanel zB fuer Optionen implementieren.
+ * Dieses wird dann im Optionendialog angezeigt.
+ *
  * Revision 1.9  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -35,52 +49,54 @@ import org.apache.log4j.Logger;
  * Sourcestil verbessert.
  *
  * Revision 1.5  2003/06/10 12:31:03  maj0r
- * Historie eingef�gt.
+ * Historie eingefuegt.
  *
  *
  */
 
 public class ODPluginPanel
-        extends JPanel {
+    extends JPanel {
     private JList pluginList;
     private JEditorPane beschreibung = new JEditorPane();
     private JLabel label1 = new JLabel();
     private AppleJuiceDialog theApp;
+    private JButton einstellungen = new JButton();
     private String name;
     private String version;
     private String autor;
     private String erlaeuterung;
     private Logger logger;
+    private PluginConnector selectedPluginConnector = null;
+    private JDialog parentDialog;
 
-    public ODPluginPanel(JFrame parent) {
+    public ODPluginPanel(JDialog parent) {
         logger = Logger.getLogger(getClass());
-        try
-        {
-            theApp = (AppleJuiceDialog) parent;
+        try {
+            theApp = AppleJuiceDialog.getApp();
+            parentDialog = parent;
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     private void init() throws Exception {
         PluginConnector[] plugins = theApp.getPlugins();
+        einstellungen.setVisible(false);
         Vector v = new Vector();
-        if (plugins.length != 0)
-        {
-            for (int i = 0; i < plugins.length; i++)
-            {
+        if (plugins.length != 0) {
+            for (int i = 0; i < plugins.length; i++) {
                 v.add(new PluginContainer(plugins[i]));
             }
         }
         Dimension parentSize = theApp.getSize();
         beschreibung.setBackground(label1.getBackground());
         beschreibung.setPreferredSize(new Dimension(parentSize.width / 3,
-                                                    beschreibung.getPreferredSize().
-                                                    height));
+            beschreibung.getPreferredSize().
+            height));
         beschreibung.setEditable(false);
         pluginList = new JList(v);
         pluginList.setPreferredSize(new Dimension(190,
@@ -94,25 +110,47 @@ public class ODPluginPanel
         setLayout(new BorderLayout());
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new String[]{"einstform", "Label11",
-                                                                                                "caption"})) + ":");
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Label11",
+                                      "caption"})) + ":");
         name = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                  getFirstAttrbuteByTagName(new
-                                                         String[]{"javagui", "options", "plugins", "name"}));
+            String[] {"javagui", "options", "plugins", "name"}));
         version = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                    getFirstAttrbuteByTagName(new
-                                                            String[]{"javagui", "options", "plugins", "version"}));
+            getFirstAttrbuteByTagName(new
+                                      String[] {"javagui", "options", "plugins",
+                                      "version"}));
         erlaeuterung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new String[]{"javagui", "options", "plugins",
-                                                                                                "beschreibung"}));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "plugins",
+                                      "beschreibung"}));
         autor = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                   getFirstAttrbuteByTagName(new
-                                                          String[]{"javagui", "options", "plugins", "autor"}));
+            String[] {"javagui", "options", "plugins", "autor"}));
+        einstellungen.setText(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new
+                                      String[] {"javagui", "options", "plugins",
+                                      "einstellungen"})));
 
         add(label1, BorderLayout.NORTH);
         add(pluginList, BorderLayout.WEST);
+        JPanel panel1 = new JPanel(new BorderLayout());
+        JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel2.add(einstellungen);
         JScrollPane sp = new JScrollPane(beschreibung);
-        add(sp, BorderLayout.CENTER);
+        panel1.add(sp, BorderLayout.CENTER);
+        panel1.add(panel2, BorderLayout.SOUTH);
+        add(panel1, BorderLayout.CENTER);
+        einstellungen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                if (selectedPluginConnector != null){
+                    ODPluginOptionsDialog pluginOptionsDialog =
+                        new ODPluginOptionsDialog(parentDialog, selectedPluginConnector);
+                    pluginOptionsDialog.setResizable(true);
+                    pluginOptionsDialog.show();
+                }
+            }
+        });
     }
 
     class PluginContainer {
@@ -126,19 +164,35 @@ public class ODPluginPanel
             return plugin.getTitle();
         }
 
+        public PluginConnector getPlugin(){
+            return plugin;
+        }
+
         public String getBeschreibung() {
             String text;
-            text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + autor + ":\r\n" +
-                    plugin.getAutor()
-                    + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion()
-                    + "\r\n\r\n" + erlaeuterung + ":\r\n" + plugin.getBeschreibung();
+            text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + autor +
+                ":\r\n" +
+                plugin.getAutor()
+                + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion()
+                + "\r\n\r\n" + erlaeuterung + ":\r\n" + plugin.getBeschreibung();
             return text;
+        }
+
+        public JPanel getPluginOptionPanel() {
+            return plugin.getOptionPanel();
         }
     }
 
     void pluginList_valueChanged(ListSelectionEvent e) {
-        PluginContainer selected = (PluginContainer) ((JList) e.getSource()).
-                getSelectedValue();
+        PluginContainer selected = (PluginContainer) ( (JList) e.getSource()).
+            getSelectedValue();
         beschreibung.setText(selected.getBeschreibung());
+        if ( selected.getPluginOptionPanel() == null) {
+            einstellungen.setVisible(false);
+        }
+        else {
+            selectedPluginConnector = selected.getPlugin();
+            einstellungen.setVisible(true);
+        }
     }
 }
