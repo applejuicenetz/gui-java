@@ -6,7 +6,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.util.StringTokenizer;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Image;
@@ -14,7 +14,7 @@ import java.awt.Toolkit;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
+import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Level;
@@ -33,11 +33,9 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Appender;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.41 2003/12/27 21:14:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.42 2003/12/29 07:23:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,6 +44,9 @@ import org.apache.log4j.Appender;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.42  2003/12/29 07:23:18  maj0r
+ * Begonnen, auf neues Versionupdateinformationssystem umzubauen.
+ *
  * Revision 1.41  2003/12/27 21:14:24  maj0r
  * Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
  *
@@ -98,7 +99,7 @@ import org.apache.log4j.Appender;
  * Wizard erweitert, aber noch nicht fertiggestellt.
  *
  * Revision 1.25  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.24  2003/09/06 14:57:55  maj0r
  * Splashscreenausblendung verlagert.
@@ -153,11 +154,11 @@ public class AppleJuiceClient {
     private static String fileAppenderPath;
     private static HTMLLayout layout;
 
-    public static HTMLLayout getLoggerHtmlLayout(){
+    public static HTMLLayout getLoggerHtmlLayout() {
         return layout;
     }
 
-    public static String getLoggerFileAppenderPath(){
+    public static String getLoggerFileAppenderPath() {
         return fileAppenderPath;
     }
 
@@ -166,33 +167,37 @@ public class AppleJuiceClient {
         String link = "";
         if (args != null && args.length > 0) {
             try {
-                for (int i=0; i<args.length; i++){
-                    if (args[i].indexOf("-path=")!=-1){
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i].indexOf("-path=") != -1) {
                         System.setProperty("user.dir", args[i].substring(6));
                         break;
                     }
                 }
                 boolean hilfeAusgegeben = false;
-                for (int i=0; i<args.length; i++){
-                    if (args[i].compareTo("-help")==0){
-                        if (hilfeAusgegeben){
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i].compareTo("-help") == 0) {
+                        if (hilfeAusgegeben) {
                             continue;
                         }
                         System.out.println();
-                        System.out.println(" -help                       Diese Uebersicht.");
+                        System.out.println(
+                            " -help                       Diese Uebersicht.");
                         System.out.println(" -path=<pfad>                Ausfuehrpfad setzen. Alles im GUI ist relativ zu diesem.");
-                        System.out.println(" -link=<md5Passwort|link>    ajfsp-Link ans GUI uebergeben. " +
-                                           " Das GUI wird ggf gestartet.");
+                        System.out.println(
+                            " -link=<md5Passwort|link>    ajfsp-Link ans GUI uebergeben. " +
+                            " Das GUI wird ggf gestartet.");
                         System.out.println();
                         hilfeAusgegeben = true;
                     }
-                    if (args[i].indexOf("-link=")!=-1){
+                    if (args[i].indexOf("-link=") != -1) {
                         link = args[i].substring(6);
-                        int PORT = PropertiesManager.getOptionsManager().getLinkListenerPort();
+                        int PORT = PropertiesManager.getOptionsManager().
+                            getLinkListenerPort();
                         String passwort = PropertiesManager.getOptionsManager().
                             getRemoteSettings().getOldPassword();
                         Socket socket = new Socket("localhost", PORT);
-                        PrintStream out = new PrintStream(socket.getOutputStream());
+                        PrintStream out = new PrintStream(socket.
+                            getOutputStream());
                         out.println(passwort + "|" + link);
                         socket.close();
                         System.exit(0);
@@ -203,15 +208,15 @@ public class AppleJuiceClient {
                 //Keine bisherige GUI-Instanz vorhanden, also GUI oeffnen
                 processLink = true;
             }
-            catch(Exception e){
+            catch (Exception e) {
                 System.exit(1);
             }
         }
         Logger rootLogger = Logger.getRootLogger();
         logger = Logger.getLogger(AppleJuiceClient.class.getName());
 
-        try{
-            if (PropertiesManager.getOptionsManager().isThemesSupported()){
+        try {
+            if (PropertiesManager.getOptionsManager().isThemesSupported()) {
                 if (OS.isOneDotFour()) {
                     java.lang.reflect.Method method = JFrame.class.
                         getMethod("setDefaultLookAndFeelDecorated",
@@ -225,20 +230,20 @@ public class AppleJuiceClient {
                 }
             }
         }
-        catch(Exception e){
-            if (logger.isEnabledFor(Level.FATAL))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.FATAL)) {
                 logger.fatal("Programmabbruch", e);
+            }
         }
         String datum = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date(
-                System.currentTimeMillis()));
+            System.currentTimeMillis()));
         String dateiName;
         dateiName = datum + ".html";
         layout = new HTMLLayout();
         layout.setTitle("appleJuice-Core-GUI-Log " + datum);
         layout.setLocationInfo(true);
         Level logLevel = PropertiesManager.getOptionsManager().getLogLevel();
-        try
-        {
+        try {
             rootLogger.addAppender(new ConsoleAppender());
             String path = System.getProperty("user.dir") + File.separator +
                 "logs";
@@ -247,150 +252,199 @@ public class AppleJuiceClient {
                 aFile.mkdir();
             }
             fileAppenderPath = path + File.separator + dateiName;
-            if (logLevel != Level.OFF){
+            if (logLevel != Level.OFF) {
                 FileAppender fileAppender = new FileAppender(layout,
                     fileAppenderPath);
                 rootLogger.removeAllAppenders();
                 rootLogger.addAppender(fileAppender);
             }
         }
-        catch (IOException ioe)
-        {
+        catch (IOException ioe) {
             ioe.printStackTrace();
         }
         rootLogger.setLevel(logLevel);
 
-        try
-        {
-            String nachricht = "appleJuice-Core-GUI Version " + ApplejuiceFassade.GUI_VERSION + " wird gestartet...";
-            Splash splash = new Splash(IconManager.getInstance().getIcon("splashscreen").getImage());
+        try {
+            String nachricht = "appleJuice-Core-GUI Version " +
+                ApplejuiceFassade.GUI_VERSION + " wird gestartet...";
+            Splash splash = new Splash(IconManager.getInstance().getIcon(
+                "splashscreen").getImage());
             splash.show();
-            if (logger.isEnabledFor(Level.INFO))
+            if (logger.isEnabledFor(Level.INFO)) {
                 logger.info(nachricht);
+            }
             System.out.println(nachricht);
             nachricht = "erkanntes GUI-OS: " + System.getProperty("os.name");
-            if (logger.isEnabledFor(Level.INFO))
+            if (logger.isEnabledFor(Level.INFO)) {
                 logger.info(nachricht);
 
+            }
             Frame dummyFrame = new Frame();
-            Image img = IconManager.getInstance().getIcon("applejuice").getImage();
+            Image img = IconManager.getInstance().getIcon("applejuice").
+                getImage();
             dummyFrame.setIconImage(img);
             String titel = null;
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog = null;
             int versuche = 0;
-            while (!ApplejuiceFassade.istCoreErreichbar())
-            {
+            while (!ApplejuiceFassade.istCoreErreichbar()) {
 
                 versuche++;
                 titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                          getFirstAttrbuteByTagName(new String[]{"mainform", "caption"}));
+                    getFirstAttrbuteByTagName(new String[] {"mainform",
+                                              "caption"}));
                 nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "startup",
-                                                                                                     "fehlversuch"}));
+                    getFirstAttrbuteByTagName(new String[] {"javagui",
+                                              "startup",
+                                              "fehlversuch"}));
                 SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
                 JOptionPane.showMessageDialog(dummyFrame, nachricht, titel,
                                               JOptionPane.ERROR_MESSAGE);
                 remoteDialog = new QuickConnectionSettingsDialog(dummyFrame);
                 remoteDialog.show();
-                if (remoteDialog.getResult() == QuickConnectionSettingsDialog.ABGEBROCHEN)
-                {
-                    nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                  getFirstAttrbuteByTagName(new String[]{"javagui", "startup",
-                                                                                                         "verbindungsfehler"}));
+                if (remoteDialog.getResult() ==
+                    QuickConnectionSettingsDialog.ABGEBROCHEN) {
+                    nachricht = ZeichenErsetzer.korrigiereUmlaute(
+                        languageSelector.
+                        getFirstAttrbuteByTagName(new String[] {"javagui",
+                                                  "startup",
+                                                  "verbindungsfehler"}));
                     nachricht = nachricht.replaceFirst("%s",
-                                                       PropertiesManager.getOptionsManager().
-                                                       getRemoteSettings().
-                                                       getHost());
+                        PropertiesManager.getOptionsManager().
+                        getRemoteSettings().
+                        getHost());
                     JOptionPane.showMessageDialog(dummyFrame, nachricht, titel,
                                                   JOptionPane.OK_OPTION);
                     logger.fatal(nachricht);
                     System.out.println("Fehler: " + nachricht);
-                    System.exit(-1);
+                    System.exit( -1);
                 }
             }
-            if (versuche>0){
+            if (versuche > 0) {
                 SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
             }
             PositionManager lm = PropertiesManager.getPositionManager();
             final AppleJuiceDialog theApp = new AppleJuiceDialog();
-            if (lm.isLegal())
-            {
+            if (lm.isLegal()) {
                 theApp.setLocation(lm.getMainXY());
                 theApp.setSize(lm.getMainDimension());
             }
-            else
-            {
+            else {
                 theApp.setLocation(20, 20);
             }
             theApp.show();
             nachricht = "appleJuice-Core-GUI läuft...";
-            if (logger.isEnabledFor(Level.INFO))
+            if (logger.isEnabledFor(Level.INFO)) {
                 logger.info(nachricht);
+            }
             System.out.println(nachricht);
             splash.dispose();
             LinkListener linkListener = new LinkListener();
-            if (processLink){
+            if (processLink) {
                 ApplejuiceFassade.getInstance().processLink(link);
             }
-            if (PropertiesManager.getOptionsManager().isErsterStart())
-            {
+            if (PropertiesManager.getOptionsManager().isErsterStart()) {
                 WizardDialog wizardDialog = new WizardDialog(theApp, true);
                 Dimension appDimension = wizardDialog.getSize();
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                wizardDialog.setLocation((screenSize.width - appDimension.width) / 2,
-                                         (screenSize.height - appDimension.height) / 2);
+                Dimension screenSize = Toolkit.getDefaultToolkit().
+                    getScreenSize();
+                wizardDialog.setLocation( (screenSize.width -
+                                           appDimension.width) / 2,
+                                         (screenSize.height -
+                                          appDimension.height) / 2);
                 wizardDialog.show();
             }
             Thread versionWorker = new Thread() {
                 public void run() {
-                    if (logger.isEnabledFor(Level.DEBUG))
+                    if (logger.isEnabledFor(Level.DEBUG)) {
                         logger.debug("VersionWorkerThread gestartet. " + this);
-                    try
-                    {
+                    }
+                    try {
                         //http://download.berlios.de/applejuicejava/version.txt
-                        String strAktuellsteVersion = WebsiteContentLoader.getWebsiteContent("http://download.berlios.de", 80,
-                                                                                             "/applejuicejava/version.txt");
-                        if (strAktuellsteVersion.length() > 0)
-                        {
-                            int pos = ApplejuiceFassade.GUI_VERSION.indexOf(' ');
-                            double aktuelleVersion;
-                            if (pos != -1)
-                            {
-                                aktuelleVersion = Double.parseDouble(ApplejuiceFassade.GUI_VERSION.substring(0, pos));
+                        String strAktuellsteVersion = WebsiteContentLoader.
+                            getWebsiteContent("http://download.berlios.de", 80,
+                            "/applejuicejava/versionsinfo.txt");
+                        if (strAktuellsteVersion.length() > 0) {
+                            StringTokenizer token1 = new StringTokenizer(
+                                strAktuellsteVersion, ".");
+                            StringTokenizer token2 = new StringTokenizer(
+                                ApplejuiceFassade.GUI_VERSION, ".");
+                            if (token1.countTokens() != 3 ||
+                                token2.countTokens() != 3) {
+                                return;
                             }
-                            else
-                            {
-                                aktuelleVersion = Double.parseDouble(ApplejuiceFassade.GUI_VERSION);
+                            String[] versionInternet = new String[3];
+                            String[] aktuelleVersion = new String[3];
+                            for (int i = 0; i < 3; i++) {
+                                versionInternet[i] = token1.nextToken();
+                                aktuelleVersion[i] = token2.nextToken();
                             }
-                            double aktuellsteVersion = Double.parseDouble(strAktuellsteVersion);
-                            if (aktuellsteVersion > aktuelleVersion)
-                            {
-                                LanguageSelector ls = LanguageSelector.getInstance();
-                                String titel = ls.getFirstAttrbuteByTagName(new String[]{"javagui", "startup", "newversiontitel"});
-                                String nachricht = ls.getFirstAttrbuteByTagName(new String[]{"javagui", "startup", "newversionnachricht"});
-                                nachricht = nachricht.replaceFirst("%s", strAktuellsteVersion);
-                                JOptionPane.showMessageDialog(theApp, nachricht, titel,
-                                                              JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+                            int versionsInfoModus = PropertiesManager.
+                                getOptionsManager().getVersionsinfoModus();
+                            boolean showInfo = false;
+                            boolean release = false;
+                            boolean major = false;
+                            boolean minor = false;
+                            if (Integer.parseInt(versionInternet[0]) >
+                                Integer.parseInt(aktuelleVersion[0])) {
+                                release = true;
+                            }
+                            else if (Integer.parseInt(versionInternet[1]) >
+                                     Integer.parseInt(aktuelleVersion[1])) {
+                                major = true;
+                            }
+                            else if (Integer.parseInt(versionInternet[2]) >
+                                     Integer.parseInt(aktuelleVersion[2])) {
+                                minor = true;
+                            }
+                            if (versionsInfoModus==2
+                                && (minor || major || release )){
+                                showInfo = true;
+                            }
+                            else if(versionsInfoModus==1
+                                    && (major || release)){
+                                showInfo = true;
+                            }
+                            else if(versionsInfoModus==0
+                                    && release){
+                                showInfo = true;
+                            }
+                            if (showInfo) {
+                                LanguageSelector ls = LanguageSelector.
+                                    getInstance();
+                                String titel = ls.getFirstAttrbuteByTagName(new
+                                    String[] {"javagui", "startup",
+                                    "newversiontitel"});
+                                String nachricht = ls.getFirstAttrbuteByTagName(new
+                                    String[] {"javagui", "startup",
+                                    "newversionnachricht"});
+                                nachricht = nachricht.replaceFirst("%s",
+                                    strAktuellsteVersion);
+                                JOptionPane.showMessageDialog(theApp, nachricht,
+                                    titel,
+                                    JOptionPane.OK_OPTION |
+                                    JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
                     }
-                    catch (Exception e)
-                    {
-                        if (logger.isEnabledFor(Level.INFO))
-                            logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
+                    catch (Exception e) {
+                        if (logger.isEnabledFor(Level.INFO)) {
+                            logger.info(
+                                "Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
+                        }
                     }
-                    if (logger.isEnabledFor(Level.DEBUG))
+                    if (logger.isEnabledFor(Level.DEBUG)) {
                         logger.debug("VersionWorkerThread beendet. " + this);
+                    }
                 }
             };
             versionWorker.start();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.FATAL))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.FATAL)) {
                 logger.fatal("Programmabbruch", e);
-            System.exit(-1);
+            }
+            System.exit( -1);
         }
     }
 }

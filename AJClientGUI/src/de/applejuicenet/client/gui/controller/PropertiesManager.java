@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.13 2003/12/27 21:14:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.14 2003/12/29 07:23:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.14  2003/12/29 07:23:18  maj0r
+ * Begonnen, auf neues Versionupdateinformationssystem umzubauen.
+ *
  * Revision 1.13  2003/12/27 21:14:24  maj0r
  * Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
  *
@@ -310,6 +313,27 @@ public class PropertiesManager
 
     public void enableThemeSupport(boolean enable) {
         setAttributeByTagName(new String[]{"options", "themes"}, Boolean.toString(enable));
+    }
+
+    public int getVersionsinfoModus() {
+        try{
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "versionsinfo"});
+            int versioninfoModus = Integer.parseInt(temp);
+            return versioninfoModus;
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return 2;
+        }
+    }
+
+    public void setVersionsinfoModus(int versionsinfoModus) {
+        setAttributeByTagName(new String[]{"options", "versionsinfo"}, Integer.toString(versionsinfoModus));
     }
 
     public int getLinkListenerPort() {
