@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZeichenErsetzer.java,v 1.11 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZeichenErsetzer.java,v 1.12 2004/10/12 16:48:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -62,51 +62,6 @@ public abstract class ZeichenErsetzer {
             catch (Exception e) {
                 temp.replace(index, index + 7, "!Fehler!");
             }
-        }
-        return temp.toString();
-    }
-
-    public static String korrigiereUmlaute(String text, boolean revers) {
-        if (text == null) {
-            return "";
-        }
-        if (!revers) {
-            return korrigiereUmlaute(text);
-        }
-        StringBuffer temp = new StringBuffer(text);
-        int index;
-        while ( (index = temp.indexOf("\"")) != -1) {
-            temp.replace(index, 1, "\\\"");
-        }
-        while ( (index = temp.indexOf("ü")) != -1) {
-            temp.replace(index, 1, "&uuml;");
-        }
-        while ( (index = temp.indexOf("Ü")) != -1) {
-            temp.replace(index, 1, "&Uuml;");
-        }
-        while ( (index = temp.indexOf("ä")) != -1) {
-            temp.replace(index, 1, "&auml;");
-        }
-        while ( (index = temp.indexOf("Ä")) != -1) {
-            temp.replace(index, 1, "&Auml;");
-        }
-        while ( (index = temp.indexOf("ö")) != -1) {
-            temp.replace(index, 1, "&ouml;");
-        }
-        while ( (index = temp.indexOf("Ö")) != -1) {
-            temp.replace(index, 1, "&Ouml;");
-        }
-        while ( (index = temp.indexOf("ß")) != -1) {
-            temp.replace(index, 1, "&szlig;");
-        }
-        while ( (index = temp.indexOf("&")) != -1) {
-            temp.replace(index, 1, "&amp;");
-        }
-        while ( (index = temp.indexOf("<")) != -1) {
-            temp.replace(index, 1, "&lt;");
-        }
-        while ( (index = temp.indexOf(">")) != -1) {
-            temp.replace(index, 1, "&gt;");
         }
         return temp.toString();
     }

@@ -1,8 +1,11 @@
 package de.applejuicenet.client.shared;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -12,10 +15,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.23 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.24 2004/10/12 16:48:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -52,7 +56,7 @@ public abstract class XMLDecoder {
             DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse(xmlFile);
+            document = builder.parse(new InputSource(new InputStreamReader(new FileInputStream(xmlFile), "UTF-8"))); 
             this.filePath = xmlFile.getPath();
         }
         catch (SAXException sxe) {
@@ -62,6 +66,7 @@ public abstract class XMLDecoder {
             }
         }
         catch (Exception e) {
+        	e.printStackTrace()
             ;
         }
     }
@@ -157,9 +162,7 @@ public abstract class XMLDecoder {
                     i])) {
                     if (i == attributePathSize - 2) {
                         e = (Element) nodes.item(x);
-                        e.setAttribute(attributePath[attributePathSize - 1],
-                                       ZeichenErsetzer.korrigiereUmlaute(
-                            newValue, true));
+                        e.setAttribute(attributePath[attributePathSize - 1], newValue);
                         try {
                             xs = new XMLSerializer(new FileWriter(filePath),
                                 new OutputFormat(document,
