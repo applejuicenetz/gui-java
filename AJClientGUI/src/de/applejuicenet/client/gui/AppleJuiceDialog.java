@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.91 2004/02/04 14:26:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.92 2004/02/04 14:44:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.92  2004/02/04 14:44:05  maj0r
+ * Fehler beim Speichern der Einstellungen korrigiert.
+ *
  * Revision 1.91  2004/02/04 14:26:05  maj0r
  * Bug #185 gefixt (Danke an muhviestarr)
  * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
@@ -699,7 +702,6 @@ public class AppleJuiceDialog
     }
 
     private void closeDialog(WindowEvent evt) {
-        setVisible(false);
         ApplejuiceFassade.getInstance().stopXMLCheck();
         if (rewriteProperties) {
             restorePropertiesXml();
@@ -712,6 +714,7 @@ public class AppleJuiceDialog
         if (!rewriteProperties) {
             einstellungenSpeichern();
         }
+        setVisible(false);
         if (useTrayIcon) {
             WindowsTrayIcon.cleanUp();
         }
