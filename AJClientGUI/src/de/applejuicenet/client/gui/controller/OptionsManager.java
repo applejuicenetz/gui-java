@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.41 2004/04/06 14:44:31 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.42 2004/07/02 13:51:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -90,4 +90,8 @@ public interface OptionsManager {
     public ConnectionSettings[] getConnectionsSet();
 
     public void setConnectionsSet(ConnectionSettings[] set);
+
+    public void setOpenProgram(String path);
+
+    public String getOpenProgram();
 }

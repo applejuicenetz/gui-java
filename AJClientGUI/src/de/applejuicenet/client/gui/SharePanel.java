@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -36,6 +37,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.listener.LanguageListener;
@@ -58,7 +60,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.66 2004/04/14 10:08:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.67 2004/07/02 13:51:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -104,6 +106,7 @@ public class SharePanel
     private JMenuItem itemCopyToClipboard = new JMenuItem();
     private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
     private JMenuItem itemCopyToClipboardAsUBBCode = new JMenuItem();
+    private JMenuItem itemOpenWithProgram = new JMenuItem();
 
     private int anzahlDateien = 0;
     private String dateiGroesse = "0 MB";
@@ -144,6 +147,30 @@ public class SharePanel
         popup2.add(itemCopyToClipboard);
         popup2.add(itemCopyToClipboardWithSources);
         popup2.add(itemCopyToClipboardAsUBBCode);
+    	popup2.add(itemOpenWithProgram);
+        itemOpenWithProgram.setIcon(im.getIcon("folderopen"));
+        if (ApplejuiceFassade.getInstance().isLocalhost()){
+            itemOpenWithProgram.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    Object[] obj = shareTable.getSelectedItems();
+                    if ( ( (ShareNode) obj[0]).isLeaf()) {
+                        ShareDO shareDO = ( (ShareNode) obj[0]).getDO();
+                        String filename = shareDO.getFilename();
+                        String programToExecute = OptionsManagerImpl.getInstance().getOpenProgram();
+                        if (programToExecute.length() != 0){
+	            			try {
+	            				Runtime.getRuntime().exec(new String[] { programToExecute, filename });
+	            			} catch (Exception ex) {
+	            				//nix zu tun
+	            			}
+                        }
+                    }
+                }
+            });
+        }
+        else{
+        	itemOpenWithProgram.setEnabled(false);
+        }
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));
         folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
         itemCopyToClipboard.addActionListener(new ActionListener() {
@@ -646,6 +673,7 @@ public class SharePanel
                 languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.linkalsubbcode")));
             itemCopyToClipboardWithSources.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.getlinkwithsources")));
+            itemOpenWithProgram.setText("VLC");
             refresh.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.startsharecheck.caption")));
             refresh.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.

@@ -1379,6 +1379,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		xmlData.append("                </share>\r\n");
 		xmlData.append("        </columns>\r\n");
 		xmlData.append("        <browser file=\"\"/>\r\n");
+		xmlData.append("        <program file=\"-1\"/>\r\n");
 		xmlData
 				.append("        <proxy host=\"\" port=\"\" use=\"false\" userpass=\"=\"/>\r\n");
 		xmlData.append("    </options>\r\n");

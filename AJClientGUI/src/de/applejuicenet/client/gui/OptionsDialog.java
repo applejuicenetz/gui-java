@@ -35,7 +35,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.41 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.42 2004/07/02 13:51:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -175,9 +175,10 @@ public class OptionsDialog
                 etwasGeaendert = true;
             }
             if ( ( (ODAnsichtPanel) optionPanels[4]).isDirty()) {
-                OptionsManagerImpl.getInstance().
-                    showConnectionDialogOnStartup( ( (ODAnsichtPanel)
+                om.showConnectionDialogOnStartup( ( (ODAnsichtPanel)
                     optionPanels[4]).shouldShowStartcreen());
+                om.setOpenProgram( ( (ODAnsichtPanel)
+                        optionPanels[4]).getProgramPfad());
                 etwasGeaendert = true;
             }
             if (etwasGeaendert) {

@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.149 2004/06/29 18:31:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.150 2004/07/02 13:51:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -222,6 +222,16 @@ public class ApplejuiceFassade {
                 logger.error(ERROR_MESSAGE, e);
             }
         }
+    }
+    
+    public boolean isLocalhost(){
+    	String coreHost = OptionsManagerImpl.getInstance().getRemoteSettings().getHost();
+    	if (coreHost.compareToIgnoreCase("127.0.0.1") == 0 || coreHost.compareToIgnoreCase("localhost") == 0){
+    		return true;
+    	}
+    	else{
+    		return false;
+    	}
     }
 
     public static String getPropertiesPath(){

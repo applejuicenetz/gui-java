@@ -29,7 +29,7 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.47 2004/06/23 12:39:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.48 2004/07/02 13:51:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -251,6 +251,45 @@ class PropertiesManager
         setAttributeByTagName(new String[] {"options", "lookandfeels", "default", "name"}
                               , lookAFeel.getName());
     }
+
+	public void setOpenProgram(String path) {
+		if (path == null || path.length() == 0){
+			path = "-1";
+		}
+        setAttributeByTagName(new String[] {"options", "program", "file"}
+		        , path);
+		String temp = getOpenProgram();
+		if (temp.compareTo(path) != 0) {
+			AppleJuiceDialog.rewriteProperties = true;
+			AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+		}
+	}
+
+	public String getOpenProgram() {
+        try {
+            String temp = getFirstAttrbuteByTagName(new String[] {"options",
+                "program", "file"}); ;
+        	if (temp.compareTo("-1") == 0){
+        		return "";
+        	}
+        	else{
+        		if (temp.length() == 0){
+        			return null;
+        		}
+        		else{
+        			return temp;
+        		}
+        	}
+        }
+        catch (Exception e) {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
+            }
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+            return "";
+        }
+	}
 
     public String getStandardBrowser() {
         try {
@@ -686,7 +725,10 @@ class PropertiesManager
         if (xmlTest.length() == 0) {
             return true;
         }
-
+        xmlTest = getOpenProgram();
+        if (xmlTest == null){
+        	return true;
+        }
         return false;
     }
 

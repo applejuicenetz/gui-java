@@ -6,21 +6,28 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JToolTip;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.gui.ODStandardPanel.DirectoryChooserMouseAdapter;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
@@ -28,7 +35,7 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.15 2004/06/23 12:39:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.16 2004/07/02 13:51:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -51,6 +58,8 @@ public class ODAnsichtPanel
     private Icon menuIcon;
     private String menuText;
     private boolean dirty = false;
+    private JTextField openProgram = new JTextField();
+    private JLabel program = new JLabel("VLC ");
 
     public ODAnsichtPanel() {
         logger = Logger.getLogger(getClass());
@@ -87,13 +96,13 @@ public class ODAnsichtPanel
         farbeQuelle.addMouseListener(new ColorChooserMouseAdapter());
         cmbAktiv.setSelected(settings.isFarbenAktiv());
         cmbDownloadUebersicht.setSelected(settings.isDownloadUebersicht());
+        OptionsManager om = OptionsManagerImpl.getInstance();
         cmbDownloadUebersicht.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
                 settings.setDownloadUebersicht(cmbDownloadUebersicht.isSelected());
             }
         });
-        cmbStartscreenZeigen.setSelected(OptionsManagerImpl.getInstance().
-                                         shouldShowConnectionDialogOnStartup());
+        cmbStartscreenZeigen.setSelected(om.shouldShowConnectionDialogOnStartup());
         cmbStartscreenZeigen.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
                 dirty = true;
@@ -124,14 +133,64 @@ public class ODAnsichtPanel
         hint1.setToolTipText(tooltipp);
         hint2.setToolTipText(tooltipp);
 
-        JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridBagLayout());
+        openProgram.setEditable(false);
+        openProgram.setBackground(Color.WHITE);
+        openProgram.setText(om.getOpenProgram());
+        Icon icon2 = im.getIcon("folderopen");
+        JLabel selectProgram = new JLabel(icon2);
+        selectProgram.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                JLabel source = (JLabel) e.getSource();
+                source.setBorder(BorderFactory.createLineBorder(Color.black));
+            }
+
+            public void mouseClicked(MouseEvent e) {
+                JLabel source = (JLabel) e.getSource();
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogType(JFileChooser.FILES_ONLY);
+                fileChooser.setDialogTitle(program.getText());
+                if (openProgram.getText().length() != 0) {
+                    File tmpFile = new File(openProgram.getText());
+                    if (tmpFile.isFile()) {
+                        fileChooser.setCurrentDirectory(tmpFile);
+                    }
+                }
+                int returnVal = fileChooser.showOpenDialog(source);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File browserFile = fileChooser.getSelectedFile();
+                    if (browserFile.isFile()) {
+                    	openProgram.setText(browserFile.getPath());
+                        dirty = true;
+                    }
+                }
+            }
+
+            public void mouseExited(MouseEvent e) {
+                JLabel source = (JLabel) e.getSource();
+                source.setBorder(null);
+            }
+        });
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.insets.bottom = 5;
+
+        JPanel panel4 = new JPanel(new GridBagLayout());
+        panel4.add(program, constraints);
+        constraints.gridx = 1;
+        constraints.weightx = 1;
+        panel4.add(openProgram, constraints);
+        constraints.weightx = 0;
+        constraints.gridx = 2;
+        panel4.add(selectProgram, constraints);
+                
+        JPanel panel1 = new JPanel();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        panel1.setLayout(new GridBagLayout());
         panel1.setBorder(BorderFactory.createTitledBorder(ZeichenErsetzer.
             korrigiereUmlaute(languageSelector.
                               getFirstAttrbuteByTagName(".root.javagui.options.ansicht.hintergrundfarben"))));
@@ -160,10 +219,20 @@ public class ODAnsichtPanel
         panel1.add(hint2, constraints);
         JPanel panel2 = new JPanel(new BorderLayout());
         panel2.add(panel1, BorderLayout.NORTH);
-        JPanel panel3 = new JPanel(new BorderLayout());
-        panel3.add(cmbStartscreenZeigen, BorderLayout.NORTH);
-        panel3.add(cmbDownloadUebersicht, BorderLayout.SOUTH);
+        JPanel panel3 = new JPanel(new GridBagLayout());
+
+        constraints.insets.bottom = 0;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.weighty = 0;
+        panel3.add(panel4, constraints);
+        constraints.gridy = 1;
+        panel3.add(cmbStartscreenZeigen, constraints);
+        constraints.gridy = 2;
+        panel3.add(cmbDownloadUebersicht, constraints);
         panel2.add(panel3, BorderLayout.SOUTH);
+
         add(panel2, BorderLayout.WEST);
     }
 
@@ -194,6 +263,10 @@ public class ODAnsichtPanel
 
     public String getMenuText() {
         return menuText;
+    }
+
+    public String getProgramPfad() {
+        return openProgram.getText();
     }
 
     class ColorChooserMouseAdapter
