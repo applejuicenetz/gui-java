@@ -1,16 +1,15 @@
 package de.applejuicenet.client.gui.tables.download;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import javax.swing.Icon;
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
-import javax.swing.*;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.3 2003/12/30 20:52:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.4 2004/01/08 07:47:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,8 +18,11 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDirectoryNode.java,v $
+ * Revision 1.4  2004/01/08 07:47:49  maj0r
+ * Schoenheitssachen.
+ *
  * Revision 1.3  2003/12/30 20:52:19  maj0r
- * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
+     * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
  *
  * Revision 1.2  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
@@ -31,29 +33,31 @@ import java.util.Iterator;
  *
  */
 
-public class DownloadDirectoryNode implements Node, DownloadNode {
+public class DownloadDirectoryNode
+    implements Node, DownloadNode {
     private static HashMap downloads;
     private String verzeichnis;
     private ArrayList children = new ArrayList();
 
-    public DownloadDirectoryNode(String targetDir){
+    public DownloadDirectoryNode(String targetDir) {
         verzeichnis = targetDir;
     }
 
-    public static void setDownloads(HashMap downloadsMap){
-        if (downloads==null){
+    public static void setDownloads(HashMap downloadsMap) {
+        if (downloads == null) {
             downloads = downloadsMap;
         }
     }
 
-    public Object[] getChildren(){
-        if (downloads==null)
+    public Object[] getChildren() {
+        if (downloads == null) {
             return null;
-            DownloadDO downloadDO;
-            synchronized (this) {
+        }
+        DownloadDO downloadDO;
+        synchronized (this) {
             Iterator it = downloads.values().iterator();
             ArrayList oldNodes = new ArrayList();
-            for (int i=0; i<children.size(); i++){
+            for (int i = 0; i < children.size(); i++) {
                 oldNodes.add(children.get(i));
             }
             while (it.hasNext()) {
@@ -61,20 +65,21 @@ public class DownloadDirectoryNode implements Node, DownloadNode {
                 if (downloadDO.getTargetDirectory().compareToIgnoreCase(
                     verzeichnis) == 0) {
                     boolean found = false;
-                    for (int i=0; i<children.size(); i++){
-                        if (((DownloadMainNode)children.get(i)).getDownloadDO().getId()
-                            ==downloadDO.getId()){
+                    for (int i = 0; i < children.size(); i++) {
+                        if ( ( (DownloadMainNode) children.get(i)).
+                            getDownloadDO().getId()
+                            == downloadDO.getId()) {
                             oldNodes.remove(children.get(i));
                             found = true;
                             break;
                         }
                     }
-                    if (!found){
+                    if (!found) {
                         children.add(new DownloadMainNode(downloadDO));
                     }
                 }
             }
-            for (int i=0; i<oldNodes.size(); i++){
+            for (int i = 0; i < oldNodes.size(); i++) {
                 children.remove(oldNodes.get(i));
             }
         }
@@ -83,8 +88,9 @@ public class DownloadDirectoryNode implements Node, DownloadNode {
 
     public int getChildCount() {
         Object[] obj = getChildren();
-        if (obj==null)
+        if (obj == null) {
             return 0;
+        }
         return getChildren().length;
     }
 
@@ -92,7 +98,7 @@ public class DownloadDirectoryNode implements Node, DownloadNode {
         return verzeichnis;
     }
 
-    public boolean isLeaf(){
+    public boolean isLeaf() {
         return false;
     }
 
