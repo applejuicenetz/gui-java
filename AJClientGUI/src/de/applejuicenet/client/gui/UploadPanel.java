@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadTableCellRenderer;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.14 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.15 2003/08/18 14:51:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.15  2003/08/18 14:51:04  maj0r
+ * Anzeige korrigiert.
+ *
  * Revision 1.14  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -46,6 +49,7 @@ public class UploadPanel
     private JTable uploadDataTable;
     private int anzahlClients = 0;
     private JLabel label1 = new JLabel("0 Clients in Deiner Uploadliste");
+    private String clientText;
 
     public UploadPanel() {
         try {
@@ -83,9 +87,9 @@ public class UploadPanel
 
     public void fireLanguageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        clientText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[]{"mainform", "uplcounttext"}));
-        label1.setText(temp.replaceAll("%d", Integer.toString(anzahlClients)));
+        label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
         String[] columns = new String[7];
         columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
@@ -118,11 +122,16 @@ public class UploadPanel
         if (type == DataUpdateListener.UPLOAD_CHANGED ||
                 !(content instanceof HashMap)) {
             int selected = uploadDataTable.getSelectedRow();
-            ((UploadDataTableModel) uploadDataTable.getModel()).setTable((HashMap)
-                    content);
+            UploadDataTableModel model = (UploadDataTableModel) uploadDataTable.getModel();
+            model.setTable((HashMap)content);
             if (selected != -1 && selected < uploadDataTable.getRowCount()) {
               uploadDataTable.setRowSelectionInterval(selected, selected);
             }
+            if (anzahlClients!=model.getRowCount()){
+                System.out.println("Anzahl Uploads: " + model.getRowCount());
+            }
+            anzahlClients = model.getRowCount();
+            label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
         }
     }
 
