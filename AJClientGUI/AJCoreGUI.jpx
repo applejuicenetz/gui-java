@@ -3,11 +3,16 @@
 <project>
   <property category="generalFormatting" name="blockIndent" value="4"/>
   <property category="javaFormatting" name="alwaysClasses" value="1"/>
-  <property category="runtime" name="DefaultConfiguration" value="-1"/>
+  <property category="runtime" name="ConfigurationCount" value="1"/>
   <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.0" name="ConfigurationName" value="AJCoreGUI"/>
   <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
   <property category="runtime.0" name="application.class" value="de.applejuicenet.client.AppleJuiceClient"/>
+  <property category="runtime.1" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.1" name="ConfigurationName" value="AJCoreGUI mit Link"/>
+  <property category="runtime.1" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.1" name="application.class" value="de.applejuicenet.client.AppleJuiceClient"/>
+  <property category="runtime.1" name="application.parameters" value="ajfsp://file|Sexy-Wallpapers.(.by-Toyota.).rar|27D9CE5ED8A0D9DC2E47805D34DDE128|13696826/"/>
   <property category="serverservices" name="disabled.services" value="connector;jdatastore"/>
   <property category="serverservices" name="single.server.name" value="Tomcat 4.0"/>
   <property category="sys" name="AuthorLabel" value="@author"/>
