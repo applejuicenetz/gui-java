@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZeichenErsetzer.java,v 1.5 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZeichenErsetzer.java,v 1.6 2003/07/08 20:28:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ZeichenErsetzer.java,v $
+ * Revision 1.6  2003/07/08 20:28:08  maj0r
+ * Auf StringBuffer umgebaut.
+ *
  * Revision 1.5  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -17,40 +20,85 @@ package de.applejuicenet.client.shared;
  */
 
 public abstract class ZeichenErsetzer {
-  public static String korrigiereUmlaute(String text) {
-    if (text == null) {
-      return "";
-    }
-    String result = text.replaceAll("&uuml;", "ü");
-    result = result.replaceAll("&Uuml;", "Ü");
-    result = result.replaceAll("&auml;", "ä");
-    result = result.replaceAll("&Auml;", "Ä");
-    result = result.replaceAll("&ouml;", "ö");
-    result = result.replaceAll("&Ouml;", "Ö");
-    result = result.replaceAll("&szlig;", "ß");
-    result = result.replaceAll("&amp;", "");
-    result = result.replaceAll("&lt;", "<");
-    result = result.replaceAll("&gt;", ">");
-    return result;
-  }
 
-  public static String korrigiereUmlaute(String text, boolean revers) {
-    if (text == null) {
-      return "";
+    public static String korrigiereUmlaute(String text) {
+        if (text == null) {
+            return "";
+        }
+        StringBuffer temp = new StringBuffer(text);
+        int index;
+        while ((index = temp.indexOf("&uuml;")) != -1) {
+            temp.replace(index, index + 6, "ü");
+        }
+        while ((index = temp.indexOf("&Uuml;")) != -1) {
+            temp.replace(index, index + 6, "Ü");
+        }
+        while ((index = temp.indexOf("&auml;")) != -1) {
+            temp.replace(index, index + 6, "ä");
+        }
+        while ((index = temp.indexOf("&Auml;")) != -1) {
+            temp.replace(index, index + 6, "Ä");
+        }
+        while ((index = temp.indexOf("&ouml;")) != -1) {
+            temp.replace(index, index + 6, "ö");
+        }
+        while ((index = temp.indexOf("&Ouml;")) != -1) {
+            temp.replace(index, index + 6, "Ö");
+        }
+        while ((index = temp.indexOf("&szlig;")) != -1) {
+            temp.replace(index, index + 7, "ß");
+        }
+        while ((index = temp.indexOf("&amp;")) != -1) {
+            temp.replace(index, index + 5, "");
+        }
+        while ((index = temp.indexOf("&lt;")) != -1) {
+            temp.replace(index, index + 4, "<");
+        }
+        while ((index = temp.indexOf("&gt;")) != -1) {
+            temp.replace(index, index + 4, ">");
+        }
+        return temp.toString();
     }
-    if (!revers) {
-      return korrigiereUmlaute(text);
+
+    public static String korrigiereUmlaute(String text, boolean revers) {
+        if (text == null) {
+            return "";
+        }
+        if (!revers) {
+            return korrigiereUmlaute(text);
+        }
+        StringBuffer temp = new StringBuffer(text);
+        int index;
+        while ((index = temp.indexOf("ü")) != -1) {
+            temp.replace(index, 1, "&uuml;");
+        }
+        while ((index = temp.indexOf("Ü")) != -1) {
+            temp.replace(index, 1, "&Uuml;");
+        }
+        while ((index = temp.indexOf("ä")) != -1) {
+            temp.replace(index, 1, "&auml;");
+        }
+        while ((index = temp.indexOf("Ä")) != -1) {
+            temp.replace(index, 1, "&Auml;");
+        }
+        while ((index = temp.indexOf("ö")) != -1) {
+            temp.replace(index, 1, "&ouml;");
+        }
+        while ((index = temp.indexOf("Ö")) != -1) {
+            temp.replace(index, 1, "&Ouml;");
+        }
+        while ((index = temp.indexOf("ß")) != -1) {
+            temp.replace(index, 1, "&szlig;");
+        }
+        while ((index = temp.indexOf("&")) != -1) {
+            temp.replace(index, 1, "&amp;");
+        }
+        while ((index = temp.indexOf("<")) != -1) {
+            temp.replace(index, 1, "&lt;");
+        }
+        while ((index = temp.indexOf(">")) != -1) {
+            temp.replace(index, 1, "&gt;");
+        }
+        return temp.toString();
     }
-    String result = text.replaceAll("ü", "&uuml;");
-    result = result.replaceAll("Ü", "&Uuml;");
-    result = result.replaceAll("ä", "&auml;");
-    result = result.replaceAll("Ä", "&Auml;");
-    result = result.replaceAll("ö", "&ouml;");
-    result = result.replaceAll("Ö", "&Ouml;");
-    result = result.replaceAll("ß", "&szlig;");
-    result = result.replaceAll("&", "&amp;");
-    result = result.replaceAll("<", "&lt;");
-    result = result.replaceAll(">", "&gt;");
-    return result;
-  }
 }
