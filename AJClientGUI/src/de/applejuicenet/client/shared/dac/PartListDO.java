@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.8 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.9 2004/02/12 16:36:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListDO.java,v $
+ * Revision 1.9  2004/02/12 16:36:58  maj0r
+ * Anzeige der Teile, die zurzeit uebertragen werden (weiss bis dunkelgelb).
+ *
  * Revision 1.8  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -56,6 +59,13 @@ public class PartListDO {
     public static final Color COLOR_TYPE_8 = new Color(200, 200, 250);
     public static final Color COLOR_TYPE_9 = new Color(225, 225, 250);
     public static final Color COLOR_TYPE_10 = Color.BLUE;
+
+    public static final Color COLOR_READY_10 = new Color(255, 255, 255);
+    public static final Color COLOR_READY_30 = new Color(255, 255, 200);
+    public static final Color COLOR_READY_50 = new Color(255, 255, 0);
+    public static final Color COLOR_READY_70 = new Color(210, 210, 0);
+    public static final Color COLOR_READY_90 = new Color(176, 176, 0);
+    public static final Color COLOR_READY_100 = new Color(157, 157, 0);
 
     public static final int MAIN_PARTLIST = 0;
     public static final int SOURCE_PARTLIST = 1;

@@ -8,11 +8,13 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.14 2004/02/12 10:54:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.15 2004/02/12 16:36:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +23,9 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.15  2004/02/12 16:36:58  maj0r
+ * Anzeige der Teile, die zurzeit uebertragen werden (weiss bis dunkelgelb).
+ *
  * Revision 1.14  2004/02/12 10:54:03  maj0r
  * Darstellungsfehler in der Partliste behoben.
  *
@@ -83,7 +88,7 @@ public class DownloadPartListPanel
                 width != (int) getSize().getWidth()) {
                 setPartList(partListDO);
             }
-            g.setColor(Color.WHITE);
+            g.setColor(getBackground());
             g.fillRect(0, 0, width, height);
             g.drawImage(image, 0, 0, null);
         }
@@ -105,33 +110,45 @@ public class DownloadPartListPanel
                                           BufferedImage.TYPE_INT_ARGB);
                 Graphics graphics = tempImage.getGraphics();
                 int obenLinks = 0;
-                int obenRechts = 0;
+                int breite = 0;
                 Part[] parts = partListDO.getParts();
                 for (int i=0; i<parts.length-1; i++){
-                    obenRechts = obenLinks + (int)((parts[i+1].getFromPosition() - parts[i].getFromPosition()) / pixelSize);
-                    if (partListDO.getPartListType()==PartListDO.MAIN_PARTLIST){
-                        if (isGeprueft(partListDO, i)){
-                            graphics.setColor(PartListDO.COLOR_TYPE_UEBERPRUEFT);
-                        }
-                        else{
-                            graphics.setColor(getColorByType(parts[i].getType()));
-                        }
-                    }
-                    else{
-                        graphics.setColor(getColorByType(parts[i].getType()));
-                    }
-                    graphics.fillRect(obenLinks, 0, obenRechts, zeilenHoehe);
-                    obenLinks = obenRechts + 1;
+                    drawPart((partListDO.getPartListType()==PartListDO.MAIN_PARTLIST), graphics, pixelSize, parts[i].getType(), zeilenHoehe,
+                                         parts[i].getFromPosition(), parts[i+1].getFromPosition());
                 }
-                obenRechts = obenLinks + (int)((partListDO.getGroesse() - parts[parts.length-1].getFromPosition()) / pixelSize);
-                if (isGeprueft(partListDO, parts.length-1)){
-                    graphics.setColor(PartListDO.COLOR_TYPE_UEBERPRUEFT);
+                drawPart( (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST), graphics, pixelSize,
+                         parts[parts.length - 1].getType(), zeilenHoehe, parts[parts.length - 1].getFromPosition(),
+                         partListDO.getGroesse());
+                if (partListDO.getPartListType()==PartListDO.MAIN_PARTLIST){
+                    DownloadDO downloadDO = (DownloadDO)partListDO.getValueDO();
+                    if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
+                        DownloadSourceDO[] sources = downloadDO.getSources();
+                        for (int i = 0; i < sources.length; i++) {
+                            if (sources[i].getStatus() ==
+                                DownloadSourceDO.UEBERTRAGUNG) {
+                                obenLinks = sources[i].getDownloadFrom() /
+                                    pixelSize;
+                                breite = (sources[i].getDownloadTo() /
+                                    pixelSize) - obenLinks;
+                                graphics.setColor(getColorByProcent(sources[i].getReadyPercent()));
+                                graphics.fillRect(obenLinks, 0,
+                                                  breite, zeilenHoehe);
+                            }
+                        }
+                    }
                 }
                 else{
-                    graphics.setColor(getColorByType(parts[parts.length-1].getType()));
+                    DownloadSourceDO downloadSourceDO = (DownloadSourceDO)partListDO.getValueDO();
+                    if (downloadSourceDO.getStatus()==downloadSourceDO.UEBERTRAGUNG){
+                        obenLinks = downloadSourceDO.getDownloadFrom() /
+                            pixelSize;
+                        breite = (downloadSourceDO.getDownloadTo() /
+                            pixelSize) - obenLinks;
+                        graphics.setColor(getColorByProcent(downloadSourceDO.getReadyPercent()));
+                        graphics.fillRect(obenLinks, 0,
+                                          breite, zeilenHoehe);
+                    }
                 }
-                fertigSeit = -1;
-                graphics.fillRect(obenLinks, 0, obenRechts, zeilenHoehe);
                 image = new BufferedImage(width, height,
                                           BufferedImage.TYPE_INT_ARGB);
                 Graphics g = image.getGraphics();
@@ -150,27 +167,52 @@ public class DownloadPartListPanel
         }
     }
 
-    private boolean isGeprueft(PartListDO partListDO, int index){
-        if (partListDO.getPartListType()==PartListDO.MAIN_PARTLIST){
-            Part[] parts = partListDO.getParts();
-            if (parts[index].getType() == -1) {
-                if (fertigSeit == -1) {
-                    fertigSeit = parts[index].getFromPosition();
-                }
-                if ( (index < parts.length-1) && (parts[index + 1].getFromPosition() - fertigSeit) >= 1048576) {
-                    return true;
+    private void drawPart(boolean isMainList, Graphics graphics, int pixelSize, int partType, int zeilenHoehe, long currentFrom, long nextFrom){
+        int obenLinks = 0;
+        int breite = 0;
+        if (isMainList){
+            if (partType == -1) {
+                if (fertigSeit != -1) {
+                    return;
                 }
                 else {
-                    return false;
+                    fertigSeit = currentFrom;
                 }
             }
             else {
-                fertigSeit = -1;
-                return false;
+                if (fertigSeit != -1) {
+                    obenLinks = (int) (fertigSeit / pixelSize);
+                    int mbCount = (int) (currentFrom - fertigSeit) /
+                        1048576;
+                    breite = mbCount * 1048576 / pixelSize;
+                    graphics.setColor(PartListDO.COLOR_TYPE_UEBERPRUEFT);
+                    graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
+                    obenLinks += breite;
+                    breite = (int) (currentFrom / pixelSize) -
+                        obenLinks;
+                    graphics.setColor(PartListDO.COLOR_TYPE_OK);
+                    graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
+                    obenLinks = (int) currentFrom / pixelSize;
+                    breite = (int) (nextFrom / pixelSize) -
+                        obenLinks;
+                    graphics.setColor(getColorByType(partType));
+                    graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
+                    fertigSeit = -1;
+                }
+                else {
+                    obenLinks = (int) (currentFrom / pixelSize);
+                    breite = (int) (nextFrom / pixelSize) -
+                        obenLinks;
+                    graphics.setColor(getColorByType(partType));
+                    graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
+                }
             }
         }
         else{
-            return false;
+            obenLinks = (int)(currentFrom / pixelSize);
+            breite = (int)(nextFrom / pixelSize) - obenLinks;
+            graphics.setColor(getColorByType(partType));
+            graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
         }
     }
 
@@ -202,6 +244,27 @@ public class DownloadPartListPanel
                 return PartListDO.COLOR_TYPE_10;
             default:
                 return PartListDO.COLOR_TYPE_10;
+        }
+    }
+
+    private Color getColorByProcent(double percent){
+        if (percent<10){
+            return PartListDO.COLOR_READY_10;
+        }
+        else if (percent<30){
+            return PartListDO.COLOR_READY_30;
+        }
+        else if (percent<50){
+            return PartListDO.COLOR_READY_50;
+        }
+        else if (percent<70){
+            return PartListDO.COLOR_READY_70;
+        }
+        else if (percent<90){
+            return PartListDO.COLOR_READY_90;
+        }
+        else{
+            return PartListDO.COLOR_READY_100;
         }
     }
 }
