@@ -13,7 +13,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.21 2003/08/19 12:38:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.22 2003/08/22 10:54:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.22  2003/08/22 10:54:25  maj0r
+ * Klassen umbenannt.
+ * ConnectionSettings ueberarbeitet.
+ *
  * Revision 1.21  2003/08/19 12:38:47  maj0r
  * Passworteingabe und md5 korrigiert.
  *
@@ -66,6 +70,7 @@ public class OptionsManager
     private static OptionsManager instance = null;
     private Logger logger;
     private HashSet settingsListener = new HashSet();
+    private HashSet connectionSettingsListener = new HashSet();
 
     private OptionsManager(String path) {
         super(path);
@@ -87,10 +92,23 @@ public class OptionsManager
         }
     }
 
+    public void addConnectionSettingsListener(DataUpdateListener listener) {
+        if (!(connectionSettingsListener.contains(listener))) {
+            connectionSettingsListener.add(listener);
+        }
+    }
+
     private void informSettingsListener(Settings settings) {
         Iterator it = settingsListener.iterator();
         while (it.hasNext()) {
             ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.SETTINGS_CHANGED, settings);
+        }
+    }
+
+    private void informConnectionSettingsListener(ConnectionSettings settings) {
+        Iterator it = connectionSettingsListener.iterator();
+        while (it.hasNext()) {
+            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.CONNECTION_SETTINGS_CHANGED, settings);
         }
     }
 
@@ -184,23 +202,24 @@ public class OptionsManager
         informSettingsListener(settings);
     }
 
-    public RemoteConfiguration getRemoteSettings() {
+    public ConnectionSettings getRemoteSettings() {
         String host = "localhost";
         String passwort = "";
         host = getFirstAttrbuteByTagName(new String[]{"options", "remote",
                                                       "host"});
         passwort = getFirstAttrbuteByTagName(new String[]{"options",
                                                           "remote", "passwort"});
-        return new RemoteConfiguration(host, passwort);
+        return new ConnectionSettings(host, passwort);
     }
 
-    public void saveRemote(RemoteConfiguration remote) throws
+    public void saveRemote(ConnectionSettings remote) throws
             InvalidPasswordException {
         setAttributeByTagName(new String[]{"options", "remote", "host"}
                 , remote.getHost());
         ApplejuiceFassade.setPassword(remote.getNewPassword());
         setAttributeByTagName(new String[]{"options", "remote", "passwort"},
                 remote.getNewPassword());
+        informConnectionSettingsListener(getRemoteSettings());
     }
 
     public boolean saveAJSettings(AJSettings ajSettings) {

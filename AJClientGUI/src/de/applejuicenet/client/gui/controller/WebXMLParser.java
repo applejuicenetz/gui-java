@@ -8,11 +8,12 @@ import org.xml.sax.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.*;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.9 2003/08/19 12:38:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.10 2003/08/22 10:54:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +22,10 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.10  2003/08/22 10:54:25  maj0r
+ * Klassen umbenannt.
+ * ConnectionSettings ueberarbeitet.
+ *
  * Revision 1.9  2003/08/19 12:38:47  maj0r
  * Passworteingabe und md5 korrigiert.
  *
@@ -56,7 +61,7 @@ import de.applejuicenet.client.shared.exception.*;
  */
 
 public abstract class WebXMLParser
-        extends XMLDecoder {
+        extends XMLDecoder implements DataUpdateListener {
     private String host;
     private String xmlCommand;
     private long timestamp = 0;
@@ -68,6 +73,7 @@ public abstract class WebXMLParser
     public WebXMLParser(String xmlCommand, String parameters) {
         super();
         init(xmlCommand);
+        OptionsManager.getInstance().addSettingsListener(this);
     }
 
     public WebXMLParser(String xmlCommand, String parameters,
@@ -79,7 +85,7 @@ public abstract class WebXMLParser
 
     private void init(String xmlCommand) {
         logger = Logger.getLogger(getClass());
-        RemoteConfiguration rc = OptionsManager.getInstance().getRemoteSettings();
+        ConnectionSettings rc = OptionsManager.getInstance().getRemoteSettings();
         host = rc.getHost();
         password = rc.getOldPassword();
         if (host == null || host.length() == 0)
@@ -164,5 +170,14 @@ public abstract class WebXMLParser
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void fireContentChanged(int type, Object content) {
+        if (type==DataUpdateListener.CONNECTION_SETTINGS_CHANGED){
+            host = ((ConnectionSettings)content).getHost();
+            password = ((ConnectionSettings)content).getOldPassword();
+            if (host == null || host.length() == 0)
+                host = "localhost";
+        }
     }
 }

@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.18 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.19 2003/08/22 10:54:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.19  2003/08/22 10:54:25  maj0r
+ * Klassen umbenannt.
+ * ConnectionSettings ueberarbeitet.
+ *
  * Revision 1.18  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -92,7 +96,7 @@ public class AppleJuiceClient {
       dummyFrame.setIconImage(img);
       String titel = null;
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      QuickRemoteEinstellungDialog remoteDialog = null;
+      QuickConnectionSettingsDialog remoteDialog = null;
       while (!ApplejuiceFassade.istCoreErreichbar()) {
         titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
@@ -101,9 +105,9 @@ public class AppleJuiceClient {
                                         "fehlversuch"}));
         JOptionPane.showMessageDialog(dummyFrame, nachricht, titel,
                                       JOptionPane.ERROR_MESSAGE);
-        remoteDialog = new QuickRemoteEinstellungDialog(dummyFrame);
+        remoteDialog = new QuickConnectionSettingsDialog(dummyFrame);
         remoteDialog.show();
-        if (remoteDialog.getResult()==QuickRemoteEinstellungDialog.ABGEBROCHEN){
+        if (remoteDialog.getResult()==QuickConnectionSettingsDialog.ABGEBROCHEN){
             nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
                                           "verbindungsfehler"}));

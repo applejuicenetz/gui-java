@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.listener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/listener/Attic/DataUpdateListener.java,v 1.9 2003/08/16 17:50:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/listener/Attic/DataUpdateListener.java,v 1.10 2003/08/22 10:54:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui.listener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataUpdateListener.java,v $
+ * Revision 1.10  2003/08/22 10:54:25  maj0r
+ * Klassen umbenannt.
+ * ConnectionSettings ueberarbeitet.
+ *
  * Revision 1.9  2003/08/16 17:50:15  maj0r
  * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
  * DownloaduebersichtTabelle kann deaktiviert werden.
@@ -31,6 +35,7 @@ public interface DataUpdateListener {
   public static final int NETINFO_CHANGED = 4;
   public static final int STATUSBAR_CHANGED = 5;
   public static final int SETTINGS_CHANGED = 6;
+  public static final int CONNECTION_SETTINGS_CHANGED = 7;
 
   public void fireContentChanged(int type, Object content);
 }
