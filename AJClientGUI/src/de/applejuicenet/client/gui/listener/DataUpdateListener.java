@@ -9,6 +9,6 @@ package de.applejuicenet.client.gui.listener;
  * @version 1.0
  */
 
-public interface DownloadListener {
+public interface DataUpdateListener {
   public void fireContentChanged();
 }

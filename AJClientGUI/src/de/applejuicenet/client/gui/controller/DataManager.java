@@ -3,8 +3,9 @@ package de.applejuicenet.client.gui.controller;
 import de.applejuicenet.client.shared.DownloadSourceDO;
 import de.applejuicenet.client.shared.Version;
 import java.util.HashSet;
-import de.applejuicenet.client.gui.listener.DownloadListener;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import java.util.Iterator;
+import javax.swing.JLabel;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -20,8 +21,9 @@ public class DataManager {   //Singleton-Implementierung
   private HashSet downloadListener;
   private static DataManager instance = null;
   private static int x=0;
+  private JLabel[] statusbar;
 
-  public void addDownloadListener(DownloadListener listener){
+  public void addDownloadListener(DataUpdateListener listener){
     if (!(downloadListener.contains(listener)))
       downloadListener.add(listener);
   }
@@ -37,7 +39,7 @@ public class DataManager {   //Singleton-Implementierung
    downloads[0] = new DownloadSourceDO(true, "dateiliste.mov", DownloadSourceDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
    downloads[1] = new DownloadSourceDO(true, "Film.avi", DownloadSourceDO.WARTESCHLANGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
    //Dummy-Ende
-    downloads = getDownloads();
+   updateDownloads();
   }
 
   public static DataManager getInstance(){
@@ -47,13 +49,36 @@ public class DataManager {   //Singleton-Implementierung
     return instance;
   }
 
-  public DownloadSourceDO[] getDownloads(){
+  private void informDownloadListener(){
     Iterator it = downloadListener.iterator();
-      x++;
-      downloads[1].setGroesse(Integer.toString(x));
     while (it.hasNext()){
-      ((DownloadListener)it.next()).fireContentChanged();
+      ((DataUpdateListener)it.next()).fireContentChanged();
     }
+  }
+
+  public void addStatusbarForListen(JLabel[] statusbar){
+    this.statusbar = statusbar;
+    updateStatusbar();
+  }
+
+  public void updateStatusbar(){
+    //dummy
+    if (statusbar!=null){
+      statusbar[0].setText("Nicht verbunden");
+      statusbar[3].setText("Credits: 0,00 MB");
+      statusbar[4].setText("Version 0.30");
+    }
+  }
+
+  public DownloadSourceDO[] getDownloads(){
+    updateDownloads();
     return downloads;
+  }
+
+  public void updateDownloads(){
+    //dummy
+    x++;
+    downloads[1].setGroesse(Integer.toString(x));
+    informDownloadListener();
   }
 }

@@ -7,12 +7,12 @@ import javax.swing.*;
 import javax.swing.tree.*;
 
 import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.gui.listener.DownloadListener;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.controller.DataManager;
 
 public class DownloadModel
     extends AbstractTreeTableModel
-    implements TreeTableModel, DownloadListener {
+    implements TreeTableModel, DataUpdateListener {
 
   static protected String[] cNames = {
       "Dateiname", "Status", "Größe", "Bereits geladen", "Prozent geladen",

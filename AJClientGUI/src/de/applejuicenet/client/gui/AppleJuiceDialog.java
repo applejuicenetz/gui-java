@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
+import javax.swing.border.BevelBorder;
+import de.applejuicenet.client.gui.controller.DataManager;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -17,6 +19,7 @@ import java.net.URL;
 
 public class AppleJuiceDialog extends JFrame {
   RegisterPanel registerPane = new RegisterPanel();
+  JLabel[] statusbar = new JLabel[5];
 
   public AppleJuiceDialog() {
     super();
@@ -42,7 +45,34 @@ public class AppleJuiceDialog extends JFrame {
             }
         });
     this.getContentPane().setLayout(new BorderLayout());
-    getContentPane().add(registerPane,  BorderLayout.CENTER);
+    getContentPane().add(registerPane, BorderLayout.CENTER);
+
+    JPanel panel = new JPanel(new GridBagLayout());
+
+    for(int i=0; i<statusbar.length; i++){
+      statusbar[i] = new JLabel();
+      statusbar[i].setHorizontalAlignment(JLabel.RIGHT);
+      statusbar[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
+      statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
+    }
+    DataManager.getInstance().addStatusbarForListen(statusbar);
+    GridBagConstraints constraints = new GridBagConstraints();
+    constraints.anchor = GridBagConstraints.NORTH;
+    constraints.fill = GridBagConstraints.BOTH;
+    constraints.gridx = 0;
+    constraints.gridy = 0;
+    panel.add(statusbar[0], constraints);
+    constraints.gridx = 1;
+    constraints.weightx=1;
+    panel.add(statusbar[1], constraints);
+    constraints.weightx=0;
+    constraints.gridx = 2;
+    panel.add(statusbar[2], constraints);
+    constraints.gridx = 3;
+    panel.add(statusbar[3], constraints);
+    constraints.gridx = 4;
+    panel.add(statusbar[4], constraints);
+    getContentPane().add(panel, BorderLayout.SOUTH);
   }
 
   public Dimension getPreferredSize(){
