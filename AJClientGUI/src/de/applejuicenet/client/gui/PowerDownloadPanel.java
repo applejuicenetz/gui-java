@@ -18,7 +18,7 @@ import java.util.Iterator;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.35 2004/01/05 15:11:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.36 2004/01/12 07:26:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.36  2004/01/12 07:26:44  maj0r
+ * Auf JSplitPane umgebaut.
+ *
  * Revision 1.35  2004/01/05 15:11:19  maj0r
  * Bug #13 umgesetzt (Danke an HabkeineMail)
  * Powerdownload-Werte werden jetzt bei Klick auf einen Download / Quelle im Powerdownloadfeld angezeigt.
@@ -106,7 +109,6 @@ public class PowerDownloadPanel
         extends JPanel
         implements LanguageListener, DataUpdateListener {
     private final Color BLUE_BACKGROUND = new Color(118, 112, 148);
-    private GridBagLayout gridBagLayout1 = new GridBagLayout();
     private JRadioButton btnInaktiv = new JRadioButton();
     private JRadioButton btnAktiv = new JRadioButton();
     private JRadioButton btnAutoInaktiv = new JRadioButton();
@@ -161,7 +163,7 @@ public class PowerDownloadPanel
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
         JPanel backPanel = new JPanel();
-        backPanel.setLayout(gridBagLayout1);
+        backPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
@@ -374,7 +376,7 @@ public class PowerDownloadPanel
                 alterAutoPwdl();
             }
         });
-        add(backPanel, BorderLayout.NORTH);
+        add(new JScrollPane(backPanel), BorderLayout.NORTH);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.INFORMATION_CHANGED);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
     }
