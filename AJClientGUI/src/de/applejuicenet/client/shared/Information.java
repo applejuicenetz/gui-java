@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.4 2004/01/29 13:47:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.5 2004/02/04 13:10:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Information.java,v $
+ * Revision 1.5  2004/02/04 13:10:04  maj0r
+ * Aktuell verwendeter Server kann nun direkt ausgegeben werden.
+ *
  * Revision 1.4  2004/01/29 13:47:06  maj0r
  * Setter eingefuegt.
  *
@@ -27,6 +30,9 @@ package de.applejuicenet.client.shared;
 
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.shared.dac.ServerDO;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import java.util.HashMap;
 
 public class Information implements LanguageListener {
 
@@ -49,6 +55,7 @@ public class Information implements LanguageListener {
     private String serverName;
     private int verbindungsStatus;
     private String externeIP;
+    private int serverId;
 
     static{
         languageSelector = LanguageSelector.getInstance();
@@ -60,7 +67,7 @@ public class Information implements LanguageListener {
     private Information(){} //nur fuer den LanguageSelector
 
     public Information(int id, long sessionUpload, long sessionDownload, long credits, long uploadSpeed, long downloadSpeed,
-                       long openConnections, int verbindungsStatus, String serverName, String externeIP) {
+                       long openConnections, int verbindungsStatus, String serverName, String externeIP, ServerDO serverDO) {
         this.id = id;
         this.sessionUpload = sessionUpload;
         this.sessionDownload = sessionDownload;
@@ -76,6 +83,7 @@ public class Information implements LanguageListener {
             this.serverName = serverName;
         }
         this.externeIP = externeIP;
+        setServer(serverDO);
     }
 
     public int getId() {
@@ -92,6 +100,32 @@ public class Information implements LanguageListener {
 
     public void setCredits(long credits){
         this.credits = credits;
+    }
+
+    public void setServer(ServerDO serverDO){
+        if (serverDO == null){
+            serverId = -1;
+        }
+        else{
+            serverId = serverDO.getID();
+        }
+    }
+
+    public ServerDO getServerDO(){
+        if (serverId == -1){
+            return null;
+        }
+        else{
+            HashMap server = ApplejuiceFassade.getInstance().getAllServer();
+            ServerDO serverDO = (ServerDO)server.get(Integer.toString(serverId));
+            if (serverDO!=null){
+                return serverDO;
+            }
+            else{
+                serverId = -1;
+                return null;
+            }
+        }
     }
 
     public void setUploadSpeed(long uploadSpeed){
