@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.57 2003/10/31 16:24:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.58 2003/11/03 20:57:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.58  2003/11/03 20:57:03  maj0r
+ * Sortieren nach Status eingebaut.
+ *
  * Revision 1.57  2003/10/31 16:24:58  maj0r
  * Soundeffekte fuer diverse Ereignisse eingefuegt.
  *
@@ -202,20 +205,13 @@ public class DownloadPanel
         item4 = new JMenuItem("Umbenennen");
         item5 = new JMenuItem("Zielordner ändern");
         item6 = new JMenuItem("Fertige Übertragungen entfernen");
-/*        item7 = new JMenuItem("Download verstecken");
-        item8 = new JCheckBoxMenuItem("Versteckte Downloads anzeigen");*/
         //todo
         item4.setEnabled(false);
         item5.setEnabled(false);
         //
         popup.add(item1);
         popup.add(item2);
-/*        popup.add(item4);
-        popup.add(item5);*/
         popup.add(item6);
-/*        popup.add(new JPopupMenu.Separator());
-        popup.add(item7);
-        popup.add(item8);*/
 
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -288,29 +284,6 @@ public class DownloadPanel
                 ApplejuiceFassade.getInstance().cleanDownloadList();
             }
         });
-
-/*        item7.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                Object[] selectedItems = getSelectedDownloadItems();
-                if (selectedItems != null && selectedItems.length != 0) {
-                    DownloadRootNode root = (DownloadRootNode) downloadModel.getRoot();
-                    for (int i = 0; i < selectedItems.length; i++) {
-                        if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                            root.alterVerstecke((DownloadMainNode) selectedItems[i]);
-                        }
-                    }
-                    downloadTable.updateUI();
-                }
-            }
-        });
-
-        item8.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                DownloadRootNode root = (DownloadRootNode) downloadModel.getRoot();
-                root.enableVerstecke(!item8.isSelected());
-                downloadTable.updateUI();
-            }
-        });     */
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
@@ -391,8 +364,6 @@ public class DownloadPanel
 
             private void maybeShowPopup(MouseEvent e) {
                 if (e.isPopupTrigger()) {
-                    /*DownloadRootNode root = (DownloadRootNode) downloadModel.getRoot();
-                    item8.setSelected(!root.isVerstecktEnabled());*/
                     popup.show(downloadTable, e.getX(), e.getY());
                 }
             }
@@ -596,7 +567,7 @@ public class DownloadPanel
 
         public void mousePressed(MouseEvent e) {
             int col = header.columnAtPoint(e.getPoint());
-            if (col==1 || col==9){
+            if (col==9){
                 return;
             }
             renderer.setPressedColumn(col);
@@ -619,6 +590,11 @@ public class DownloadPanel
                 case 0:
                     {
                         rootNode.setSortCriteria(DownloadRootNode.SORT_DOWNLOADNAME, isAscent);
+                        break;
+                    }
+                case 1:
+                    {
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_STATUS, isAscent);
                         break;
                     }
                 case 2:
@@ -666,6 +642,5 @@ public class DownloadPanel
             renderer.setPressedColumn(-1);
             header.repaint();
         }
-
     }
 }

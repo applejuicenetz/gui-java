@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.10 2003/10/21 11:36:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.11 2003/11/03 20:57:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import java.util.Iterator;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.11  2003/11/03 20:57:03  maj0r
+ * Sortieren nach Status eingebaut.
+ *
  * Revision 1.10  2003/10/21 11:36:32  maj0r
  * Infos werden nun ueber einen Listener geholt.
  *
@@ -67,52 +70,17 @@ public class DownloadRootNode implements Node, DownloadNode {
     public static int SORT_PWDL = 5;
     public static int SORT_REST_ZU_LADEN = 6;
     public static int SORT_GESCHWINDIGKEIT = 7;
+    public static int SORT_STATUS = 7;
 
     private HashMap downloads;
 
     private HashMap childrenPath = new HashMap();
     private ArrayList children = new ArrayList();
-/*    private HashMap versteckteNodes = new HashMap();
-    private boolean versteckt = false;*/
 
     private int sort = SORT_NO_SORT;
     private boolean isAscent = true;
 
     private DownloadMainNode[] sortedChildNodes;
-
-/*    public void alterVerstecke(DownloadMainNode downloadMainNode) {
-        if (downloadMainNode.getType() == DownloadMainNode.ROOT_NODE) {
-            MapSetStringKey key = new MapSetStringKey(downloadMainNode.getDownloadDO().getId());
-            if (!versteckteNodes.containsKey(key)) {
-                versteckteNodes.put(key, downloadMainNode);
-            }
-            else {
-                Object node = versteckteNodes.get(key);
-                versteckteNodes.remove(key);
-                if (!children.contains(node)) {
-                    children.add(node);
-                }
-            }
-        }
-    }
-
-    public void enableVerstecke(boolean verstecke) {
-        versteckt = verstecke;
-        if (!versteckt) {
-            Iterator it = versteckteNodes.values().iterator();
-            Object node = null;
-            while (it.hasNext()) {
-                node = it.next();
-                if (!children.contains(node)) {
-                    children.add(node);
-                }
-            }
-        }
-    }
-
-    public boolean isVerstecktEnabled() {
-        return versteckt;
-    }*/
 
     public Object[] getChildren() {
         if (downloads == null)
@@ -129,7 +97,7 @@ public class DownloadRootNode implements Node, DownloadNode {
                 obj = children.get(i);
                 if (obj.getClass() == DownloadMainNode.class) {
                     key = new MapSetStringKey(((DownloadMainNode) obj).getDownloadDO().getId());
-                    if (!downloads.containsKey(key) /*|| (versteckt && versteckteNodes.containsKey(key))*/) {
+                    if (!downloads.containsKey(key)) {
                         children.remove(i);
                         sort = true;
                     }
@@ -142,9 +110,6 @@ public class DownloadRootNode implements Node, DownloadNode {
             while (it.hasNext()) {
                 downloadDO = (DownloadDO) it.next();
                 mapKey = new MapSetStringKey(downloadDO.getId());
-/*                if (versteckt && versteckteNodes.containsKey(mapKey)) {
-                    continue;
-                }*/
                 pfad = downloadDO.getTargetDirectory();
                 pathEntry = (PathEntry) childrenPath.get(mapKey);
                 if (pathEntry != null) {
@@ -255,6 +220,10 @@ public class DownloadRootNode implements Node, DownloadNode {
         else if (sort == SORT_GESCHWINDIGKEIT) {
             o1 = new Long(childNodes[row1].getDownloadDO().getSpeedInBytes());
             o2 = new Long(childNodes[row2].getDownloadDO().getSpeedInBytes());
+        }
+        else if (sort == SORT_STATUS) {
+            o1 = DownloadModel.getStatusForDownload(childNodes[row1].getDownloadDO());
+            o2 = DownloadModel.getStatusForDownload(childNodes[row2].getDownloadDO());
         }
 
         if (o1 == null && o2 == null) {

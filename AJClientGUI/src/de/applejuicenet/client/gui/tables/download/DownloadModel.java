@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.19 2003/11/03 15:45:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.20 2003/11/03 20:57:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.20  2003/11/03 20:57:03  maj0r
+ * Sortieren nach Status eingebaut.
+ *
  * Revision 1.19  2003/11/03 15:45:26  maj0r
  * Optimierungen.
  *
@@ -87,29 +90,29 @@ public class DownloadModel
   static protected String[] cNames = {"", "", "", "", "", "", "", "", "", ""};
 
   //Download-Stati
-  private String suchen = "";
-  private String laden = "";
-  private String keinPlatz = "";
-  private String fertigstellen = "";
-  private String fertig = "";
-  private String abbrechen = "";
-  private String abgebrochen = "";
+  private static String suchen = "";
+  private static String laden = "";
+  private static String keinPlatz = "";
+  private static String fertigstellen = "";
+  private static String fertig = "";
+  private static String abbrechen = "";
+  private static String abgebrochen = "";
 
   //Source-Stati
-  private String ungefragt = "";
-  private String versucheZuVerbinden = "";
-  private String ggstZuAlteVersion = "";
-  private String kannDateiNichtOeffnen = "";
-  private String warteschlange = "";
-  private String keineBrauchbarenParts = "";
-  private String uebertragung = "";
-  private String nichtGenugPlatz = "";
-  private String fertiggestellt = "";
-  private String keineVerbindungMoeglich = "";
-  private String pausiert = "";
-  private String position = "";
-  private String versucheIndirekt = "";
-  private String warteschlangeVoll = "";
+  private static String ungefragt = "";
+  private static String versucheZuVerbinden = "";
+  private static String ggstZuAlteVersion = "";
+  private static String kannDateiNichtOeffnen = "";
+  private static String warteschlange = "";
+  private static String keineBrauchbarenParts = "";
+  private static String uebertragung = "";
+  private static String nichtGenugPlatz = "";
+  private static String fertiggestellt = "";
+  private static String keineVerbindungMoeglich = "";
+  private static String pausiert = "";
+  private static String position = "";
+  private static String versucheIndirekt = "";
+  private static String warteschlangeVoll = "";
 
   static protected Class[] cTypes = {
       TreeTableModel.class, String.class, String.class, String.class, String.class,
@@ -271,16 +274,16 @@ public class DownloadModel
 
     private String getStatus(Object objectDO){
         if (objectDO.getClass()==DownloadDO.class){
-            return getStatusForDownload((DownloadDO)objectDO);
+            return DownloadModel.getStatusForDownload((DownloadDO)objectDO);
         }
         else if (objectDO.getClass()==DownloadSourceDO.class){
-            return getStatusForSource((DownloadSourceDO)objectDO);
+            return DownloadModel.getStatusForSource((DownloadSourceDO)objectDO);
         }
         else
             return "";
     }
 
-    private String getStatusForSource(DownloadSourceDO downloadSourceDO){
+    public static String getStatusForSource(DownloadSourceDO downloadSourceDO){
         switch(downloadSourceDO.getStatus()){
             case DownloadSourceDO.UNGEFRAGT:
                     return ungefragt;
@@ -317,7 +320,7 @@ public class DownloadModel
         }
     }
 
-    private String getStatusForDownload(DownloadDO downloadDO){
+    public static String getStatusForDownload(DownloadDO downloadDO){
         switch(downloadDO.getStatus()){
             case DownloadDO.PAUSIERT:
                 return pausiert;
