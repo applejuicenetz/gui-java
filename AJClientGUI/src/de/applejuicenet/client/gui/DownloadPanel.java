@@ -9,12 +9,15 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.gui.tables.download.DownloadTableCellRenderer;
+import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.25 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.26 2003/07/03 19:11:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +26,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.26  2003/07/03 19:11:16  maj0r
+ * DownloadTable überarbeitet.
+ *
  * Revision 1.25  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -197,6 +203,19 @@ public class DownloadPanel
 
   public void registerSelected() {
     //    nix zu tun
+      //test
+      Version version = new Version("0.01", Version.LINUX);
+      DownloadDO download = new DownloadDO("12", "24", "kjhh", "387636455", DownloadDO.SUCHEN_LADEN, "test1.rar", "filme", 1);
+      DownloadSourceDO source = new DownloadSourceDO("13", DownloadSourceDO.IN_WARTESCHLANGE, DownloadSourceDO.UNBEKANNT,
+              new Integer(100), new Integer(300), new Integer(230), new Integer(243), version, 4, 1, "test1.rar", "nickname");
+      download.addOrAlterSource(source);
+      DownloadNode node = new DownloadNode(download);
+      DownloadDO download2 = new DownloadDO("16", "14", "kjhh", "387635", DownloadDO.SUCHEN_LADEN, "test2.rar", "", 1);
+      DownloadSourceDO source2 = new DownloadSourceDO("18", DownloadSourceDO.IN_WARTESCHLANGE, DownloadSourceDO.UNBEKANNT,
+              new Integer(100), new Integer(300), new Integer(230), new Integer(243), version, 4, 1, "test2.rar", "maj0r");
+      download2.addOrAlterSource(source2);
+      DownloadNode node2 = new DownloadNode(download2);
+      downloadTable.updateUI();
   }
 
   public void fireLanguageChanged() {

@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.9 2003/07/01 14:59:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.10 2003/07/03 19:11:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.10  2003/07/03 19:11:16  maj0r
+ * DownloadTable überarbeitet.
+ *
  * Revision 1.9  2003/07/01 14:59:28  maj0r
  * Keyverwendung bei HashSets und HashMaps korrigiert.
  * Server-IDs werden nun abgeglichen, alte werden entfernt.
@@ -41,8 +44,10 @@ public class ModifiedXMLHolder
   private HashSet downloadIDs = new HashSet();
   private HashSet uploadIDs = new HashSet();
 
+  private HashMap sourcenZuDownloads = new HashMap();
+
   private HashMap serverMap = new HashMap();
-  private HashMap downloadMap;
+  private HashMap downloadMap = new HashMap();
   private HashMap uploadMap = new HashMap();
   private NetworkInfo netInfo;
   private String[] status = new String[5];
@@ -179,6 +184,7 @@ public class ModifiedXMLHolder
       serverIDs.clear();
       uploadIDs.clear();
       downloadIDs.clear();
+      sourcenZuDownloads.clear();
       Element e = null;
       String id = null;
       NodeList nodes = document.getElementsByTagName("serverid");
@@ -196,71 +202,150 @@ public class ModifiedXMLHolder
         uploadIDs.add(new MapSetStringKey(id));
       }
       nodes = document.getElementsByTagName("downloadid");
+      NodeList userNodes;
       size = nodes.getLength();
+      int userSize;
+      Element userElement = null;
+      MapSetStringKey downloadKey;
+      String userId;
       for (int i = 0; i < size; i++) {
         e = (Element) nodes.item(i);
         id = e.getAttribute("id");
-        downloadIDs.add(new MapSetStringKey(id));
+        downloadKey = new MapSetStringKey(id);
+        downloadIDs.add(downloadKey);
+        userNodes = e.getElementsByTagName("userid");
+        userSize = userNodes.getLength();
+        for (int x=0; x<userSize; x++){
+            userElement = (Element) userNodes.item(x);
+            userId = userElement.getAttribute("id");
+            sourcenZuDownloads.put(new MapSetStringKey(userId), downloadKey);
+        }
+      }
+      Iterator it = downloadMap.keySet().iterator();
+      MapSetStringKey key;
+      ArrayList toRemoveDownload = new ArrayList();
+      ArrayList toRemoveSources = new ArrayList();
+      DownloadDO downloadDO = null;
+      DownloadSourceDO[] sources = null;
+      while (it.hasNext()){
+          key = (MapSetStringKey)it.next();
+          if (!downloadIDs.contains(key)){
+              toRemoveDownload.add(key);
+          }
+          else{
+              downloadDO = (DownloadDO) downloadMap.get(key);
+              sources = downloadDO.getSources();
+              if (sources!=null){
+                for (int x=0; x<sources.length; x++){
+                    key = new MapSetStringKey(sources[x].getId());
+                    if (!sourcenZuDownloads.containsKey(key)){
+                        toRemoveSources.add(key);
+                    }
+                }
+              }
+          }
+      }
+      size = toRemoveDownload.size();
+      for (int i=0; i<size; i++){
+          downloadMap.remove(toRemoveDownload.get(i));
+      }
+      size = toRemoveSources.size();
+      for (int i=0; i<size; i++){
+          key = (MapSetStringKey)toRemoveSources.get(i);
+          downloadDO = (DownloadDO)sourcenZuDownloads.get(key);
+          downloadDO.removeSource(key.getValue());
       }
   }
 
   private void updateDownloads() {
-    if (downloadMap == null) {
-      downloadMap = new HashMap();
-      //Dummy-Implementierung
-      Version version = new Version("0.28.501", "Java",
-                                    Version.WIN32);
-      Version version2 = new Version("0.27.511", "Java",
-                                     Version.LINUX);
-      String versionText;
-      DownloadSourceDO source = new DownloadSourceDO(false, "1000",
-          "datei2.jpg",
-          DownloadSourceDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?",
-          "1:1", version, "Maj0r", null);
-      DownloadSourceDO source2 = new DownloadSourceDO(false, "1001",
-          "datei3.jpg",
-          DownloadSourceDO.VERSUCHEINDIREKT, "1GB", "nix", "0", "100", "0 Kb",
-          "?", "1:1", version2, "Maj0r", null);
-      HashSet sourcen1 = new HashSet();
-      sourcen1.add(source);
-      HashSet sourcen2 = new HashSet();
-      sourcen2.add(source);
-      sourcen2.add(source2);
-      DownloadSourceDO[] downloads = new DownloadSourceDO[2];
-      downloadMap.put(new MapSetStringKey("1002"),
-                      new DownloadSourceDO(true, "1002", "dateiliste.mov",
-                                           DownloadSourceDO.UEBERTRAGE,
-                                           "1GB",
-                                           "nix", "43", "100", "0 Kb",
-                                           "?", "1:1", null,
-                                           "", sourcen1));
-      downloadMap.put(new MapSetStringKey("1003"), new DownloadSourceDO(true, "1003", "Film.avi",
-          DownloadSourceDO.WARTESCHLANGE,
-          "1GB",
-          "nix", "0", "100", "0 Kb", "?",
-          "1:1", null,
-          "", sourcen2));
-      //Dummy-Ende
-    }
-    else {
-      //Dummy
-      i++;
-      DownloadSourceDO download = (DownloadSourceDO) downloadMap.get(new MapSetStringKey("1003"));
-      download.setProzentGeladen(Integer.toString(i));
-      Version version = new Version("0.27.511", "Java",
-                                    Version.LINUX);
-      DownloadSourceDO source = new DownloadSourceDO(false, Integer.toString(i),
-          "dateXY3.jpg",
-          DownloadSourceDO.VERSUCHEINDIREKT, "1GB", "nix", Integer.toString(i),
-          "100", "0 Kb",
-          "?", "1:1", version, "Maj0r", null);
-      download.addDownloadSource(source);
-    }
+      Element e = null;
+      String id = null;
+      String shareid = null;
+      String hash = null;
+      String fileSize = null;
+      String temp = null;
+      int status;
+      String filename = null;
+      String targetDirectory = null;
+      int powerDownload;
+      NodeList nodes = document.getElementsByTagName("download");
+      int size = nodes.getLength();
+      DownloadDO downloadDO = null;
+      for (int i = 0; i < size; i++) {
+        e = (Element) nodes.item(i);
+        id = e.getAttribute("id");
+        shareid = e.getAttribute("shareid");
+        hash = e.getAttribute("hash");
+        fileSize = e.getAttribute("size");
+        temp = e.getAttribute("status");
+        status = Integer.parseInt(temp);
+        filename = e.getAttribute("filename");
+        targetDirectory = e.getAttribute("targetdirectory");
+        temp = e.getAttribute("powerdownload");
+        powerDownload = Integer.parseInt(temp);
+
+        downloadDO = new DownloadDO(id, shareid, hash, fileSize, status, filename, targetDirectory, powerDownload);
+
+        downloadMap.put(new MapSetStringKey(id), downloadDO);
+      }
+
+      int directstate;
+      nodes = document.getElementsByTagName("user");
+      size = nodes.getLength();
+      Integer downloadFrom = null;
+      Integer downloadTo = null;
+      Integer actualDownloadPosition = null;
+      Integer speed = null;
+      Version version = null;
+      String versionNr = null;
+      String nickname = null;
+      int queuePosition;
+      int os;
+      DownloadSourceDO downloadSourceDO = null;
+      for (int i = 0; i < size; i++) {
+        e = (Element) nodes.item(i);
+        id = e.getAttribute("id");
+        temp = e.getAttribute("status");
+        status = Integer.parseInt(temp);
+        temp = e.getAttribute("directstate");
+        directstate = Integer.parseInt(temp);
+        if (status==DownloadSourceDO.UEBERTRAGUNG){
+            temp = e.getAttribute("downloadfrom");
+            downloadFrom = new Integer(Integer.parseInt(temp));
+            temp = e.getAttribute("downloadto");
+            downloadTo = new Integer(Integer.parseInt(temp));
+            temp = e.getAttribute("actualdownloadposition");
+            actualDownloadPosition = new Integer(Integer.parseInt(temp));
+            temp = e.getAttribute("speed");
+            speed = new Integer(Integer.parseInt(temp));
+        }
+        else{
+          downloadFrom = null;
+          downloadTo = null;
+          actualDownloadPosition = null;
+          speed = null;
+        }
+        versionNr = e.getAttribute("version");
+        temp = e.getAttribute("operatingsystem");
+        os = Integer.parseInt(temp);
+        version = new Version(versionNr, os);
+        temp = e.getAttribute("queueposition");
+        queuePosition = Integer.parseInt(temp);
+        temp = e.getAttribute("powerdownload");
+        powerDownload = Integer.parseInt(temp);
+        filename = e.getAttribute("filename");
+        nickname = e.getAttribute("nickname");
+        downloadSourceDO = new DownloadSourceDO(id, status, directstate, downloadFrom, downloadTo, actualDownloadPosition,
+                speed, version, queuePosition, powerDownload, filename, nickname);
+        downloadDO = (DownloadDO) sourcenZuDownloads.get(new MapSetStringKey(id));
+        if (downloadDO!=null){
+            downloadDO.addOrAlterSource(downloadSourceDO);
+        }
+      }
   }
 
   private void updateUploads() {
     NodeList nodes = document.getElementsByTagName("upload");
-    HashMap changedUploads = new HashMap();
     int size = nodes.getLength();
     Element e = null;
     String shareId = null;
@@ -295,7 +380,7 @@ public class ModifiedXMLHolder
         id = e.getAttribute("id");
         os = Integer.parseInt(e.getAttribute("operatingsystem"));
         versionsNr = e.getAttribute("version");
-        version = new Version(versionsNr, "Java", os);
+        version = new Version(versionsNr, os);
 
         prioritaet = e.getAttribute("priority");
         nick = e.getAttribute("nick");
@@ -307,10 +392,9 @@ public class ModifiedXMLHolder
         upload = new UploadDO(id, shareId, version, status, nick,
                                        uploadFrom, uploadTo, actualUploadPos,
                                        speed, prioritaet);
-        changedUploads.put(shareIDKey, upload);
+        uploadMap.put(shareIDKey, upload);
       }
     }
-    uploadMap.putAll(changedUploads);
   }
 
   private void updateServer() {

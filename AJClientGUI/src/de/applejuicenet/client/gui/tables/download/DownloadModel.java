@@ -9,10 +9,11 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.tables.TreeTableModel;
+import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.3 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.4 2003/07/03 19:11:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +22,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.4  2003/07/03 19:11:16  maj0r
+ * DownloadTable überarbeitet.
+ *
  * Revision 1.3  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -37,7 +41,7 @@ import de.applejuicenet.client.shared.dac.*;
  */
 
 public class DownloadModel
-    extends AbstractTreeTableModel{
+    extends AbstractTreeTableModel implements LanguageListener{
 
   static protected String[] cNames = {"", "", "", "", "", "", "", "", "", ""};
 
@@ -47,31 +51,12 @@ public class DownloadModel
 
   public DownloadModel() {
     super(new DownloadNode());
-    HashMap downloads = DataManager.getInstance().getDownloads();
-    Iterator it = downloads.values().iterator();
-    while (it.hasNext()) {
-      DownloadSourceDO download = (DownloadSourceDO) it.next();
-      ( (DownloadNode) getRoot()).addChild(download);
-    }
-  }
-
-  public void fillTree() {
-    HashMap downloads = DataManager.getInstance().getDownloads();
-    Iterator it = downloads.values().iterator();
-    while (it.hasNext()) {
-      DownloadSourceDO download = (DownloadSourceDO) it.next();
-//      DownloadNode node = ((DownloadNode) getRoot()).getChildrenMap().get(download.getId());
-    }
-  }
-
-  protected DownloadSourceDO getDO(Object node) {
-    DownloadNode fileNode = ( (DownloadNode) node);
-    return fileNode.getDO();
+    LanguageSelector.getInstance().addLanguageListener(this);
   }
 
   protected Object[] getChildren(Object node) {
-    DownloadNode fileNode = ( (DownloadNode) node);
-    return fileNode.getChildren();
+    DownloadNode downloadNode = ( (DownloadNode) node);
+    return downloadNode.getChildren();
   }
 
   public int getChildCount(Object node) {
@@ -96,43 +81,62 @@ public class DownloadModel
   }
 
   public Object getValueAt(Object node, int column) {
-    DownloadSourceDO download = getDO(node);
-    if (download == null) {
-      return "";
-    }
-    try {
-      switch (column) {
-        case 0:
-          return download.getDateiname();
-        case 1:
-          return download.getStatus();
-        case 2:
-          return download.getGroesse();
-        case 3:
-          return download.getBereitsGeladen();
-        case 4:
-          return download.getGeschwindigkeit();
-        case 5:
-          return download.getRestlicheZeit();
-        case 6:
-          return download.getProzentGeladen();
-        case 7:
-          return download.getNochZuLaden();
-        case 8:
-          return download.getPowerdownload();
-        case 9:
-          if (download.getVersion() != null) {
-            return download.getVersion().getVersion();
-          }
-          else {
+    DownloadNode downloadNode = (DownloadNode)node;
+    if (downloadNode.getNodeType()==DownloadNode.DOWNLOAD_NODE){
+        DownloadDO downloadDO = downloadNode.getDownloadDO();
+        switch (column) {
+          case 0:
+            {
+                return downloadDO.getFilename();
+            }
+          default:
             return "";
-          }
-        default:
-          return "";
-      }
+        }
     }
-    catch (SecurityException se) {}
-
+    else if (downloadNode.getNodeType()==DownloadNode.DIRECTORY_NODE){
+        DownloadSourceDO downloadSourceDO = downloadNode.getDownloadSourceDO();
+        if (downloadSourceDO == null) {
+          return "";
+        }
+          switch (column) {
+            case 0:
+                return downloadNode.getPfad();
+            default:
+              return "";
+          }
+    }
+    else if (downloadNode.getNodeType()==DownloadNode.SOURCE_NODE){
+        DownloadSourceDO downloadSourceDO = downloadNode.getDownloadSourceDO();
+        if (downloadSourceDO == null) {
+          return "";
+        }
+          switch (column) {
+            case 0:
+                return downloadSourceDO.getFilename();
+            case 1:
+                return Integer.toString(downloadSourceDO.getStatus());
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                break;
+            case 9:
+              if (downloadSourceDO.getVersion() != null) {
+                return downloadSourceDO.getVersion().getVersion();
+              }
+              else {
+                return "";
+              }
+            default:
+              return "";
+          }
+    }
     return null;
   }
+
+    public void fireLanguageChanged() {
+    }
 }

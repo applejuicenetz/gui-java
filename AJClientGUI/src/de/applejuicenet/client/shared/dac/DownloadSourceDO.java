@@ -5,7 +5,7 @@ import java.util.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.7 2003/06/30 19:46:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.8 2003/07/03 19:11:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.8  2003/07/03 19:11:16  maj0r
+ * DownloadTable überarbeitet.
+ *
  * Revision 1.7  2003/06/30 19:46:11  maj0r
  * Sourcestil verbessert.
  *
@@ -24,158 +27,144 @@ import de.applejuicenet.client.shared.*;
  */
 
 public class DownloadSourceDO {
-  public static final int WARTESCHLANGE = 0;
-  public static final int UEBERTRAGE = 1;
-  public static final int VERSUCHEINDIREKT = 2;
-  public static final int ROOT = 3;
+    //Status - IDs
+    public static final int UNGEFRAGT = 1;
+    public static final int VERSUCHE_ZU_VERBINDEN = 2;
+    public static final int GEGENSTELLE_HAT_ZU_ALTE_VERSION = 3;
+    public static final int GEGENSTELLE_KANN_DATEI_NICHT_OEFFNEN = 4;
+    public static final int IN_WARTESCHLANGE = 5;
+    public static final int KEINE_BRAUCHBAREN_PARTS = 6;
+    public static final int UEBERTRAGUNG = 7;
+    public static final int NICHT_GENUEGEND_PLATZ_AUF_DER_PLATTE = 8;
+    public static final int FERTIGGESTELLT = 9;
+    public static final int KEINE_VERBINDUNG_MOEGLICH = 11;
+    public static final int PAUSIERT = 13;
 
-  private boolean root;
-  private String dateiname;
-  private int status;
-  private String groesse;
-  private String bereitsGeladen;
-  private String prozentGeladen;
-  private String nochZuLaden;
-  private String geschwindigkeit;
-  private String restlicheZeit;
-  private String powerdownload;
-  private Version version;
-  private String nick;
-  private String id;
-  private HashSet sources = new HashSet(); //contains DownloadSourceDO leafs
+    //directstate - IDs
+    public static final int UNBEKANNT = 0;
+    public static final int DIREKTE_VERBINDUNG = 1;
+    public static final int INDIREKTE_VERBINDUNG = 2;
 
-  public DownloadSourceDO(boolean isRoot, String id, String dateiname,
-                          int status,
-                          String groesse,
-                          String bereitsGeladen, String prozentGeladen,
-                          String nochZuLaden, String geschwindigkeit,
-                          String restlicheZeit, String powerdownload,
-                          Version version, String nick, HashSet sources) {
-    root = isRoot;
-    this.id = id;
-    this.dateiname = dateiname;
-    this.status = status;
-    this.groesse = groesse;
-    this.bereitsGeladen = bereitsGeladen;
-    this.prozentGeladen = prozentGeladen;
-    this.nochZuLaden = nochZuLaden;
-    this.geschwindigkeit = geschwindigkeit;
-    this.restlicheZeit = restlicheZeit;
-    this.powerdownload = powerdownload;
-    this.version = version;
-    this.nick = nick;
-    this.sources = sources;
-  }
 
-  public DownloadSourceDO() {}
+    private String id;
+    private int status;
+    private int directstate;
+    private Integer downloadFrom;
+    private Integer downloadTo;
+    private Integer actualDownloadPosition;
+    private Integer speed;
+    private Version version;
+    private int queuePosition;
+    private int powerDownload;
+    private String filename;
+    private String nickname;
 
-  public void setGroesse(String groesse) {
-    this.groesse = groesse;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public boolean isRoot() {
-    return root;
-  }
-
-  public String getDateiname() {
-    if (root) {
-      return dateiname;
+    public DownloadSourceDO(String id, int status, int directstate, Integer downloadFrom, Integer downloadTo,
+                            Integer actualDownloadPosition, Integer speed, Version version, int queuePosition,
+                            int powerDownload, String filename, String nickname) {
+        this.id = id;
+        this.status = status;
+        this.directstate = directstate;
+        this.downloadFrom = downloadFrom;
+        this.downloadTo = downloadTo;
+        this.actualDownloadPosition = actualDownloadPosition;
+        this.speed = speed;
+        this.version = version;
+        this.queuePosition = queuePosition;
+        this.powerDownload = powerDownload;
+        this.filename = filename;
+        this.nickname = nickname;
     }
-    else {
-      return dateiname + " (" + getNick() + ")";
+
+    public int getStatus() {
+        return status;
     }
-  }
 
-  public String getNick() {
-    if (root) {
-      return "";
+    public void setStatus(int status) {
+        this.status = status;
     }
-    else {
-      return nick;
+
+    public int getDirectstate() {
+        return directstate;
     }
-  }
 
-  public int getIntStatus() {
-    return status;
-  }
-
-  public String getStatus() {
-    if (status == 0) {
-      return "Warteschlange";
+    public void setDirectstate(int directstate) {
+        this.directstate = directstate;
     }
-    else if (status == 1) {
-      return "ï¿½bertrage";
+
+    public Integer getDownloadFrom() {
+        return downloadFrom;
     }
-    else if (status == 2) {
-      return "Versuche indirekt zu verbinden";
+
+    public void setDownloadFrom(Integer downloadFrom) {
+        this.downloadFrom = downloadFrom;
     }
-    else if (status == 3) {
-      return "";
+
+    public Integer getDownloadTo() {
+        return downloadTo;
     }
-    //to do
-    return "";
-  }
 
-  public String getGroesse() {
-    return groesse;
-  }
-
-  public String getBereitsGeladen() {
-    return bereitsGeladen;
-  }
-
-  public void setProzentGeladen(String prozent) {
-    prozentGeladen = prozent;
-  }
-
-  public String getProzentGeladen() {
-    //to do
-    return prozentGeladen;
-  }
-
-  public String getNochZuLaden() {
-    //to do
-    return nochZuLaden;
-  }
-
-  public String getGeschwindigkeit() {
-    //to do
-    return geschwindigkeit;
-  }
-
-  public String getRestlicheZeit() {
-    //to do
-    return restlicheZeit;
-  }
-
-  public String getPowerdownload() {
-    return powerdownload;
-  }
-
-  public Version getVersion() {
-    //to do
-    return version;
-  }
-
-  public void addDownloadSource(DownloadSourceDO source) {
-    if (source != null && ! (sources.contains(source))) {
-      sources.add(source);
+    public void setDownloadTo(Integer downloadTo) {
+        this.downloadTo = downloadTo;
     }
-  }
 
-  public DownloadSourceDO[] getSources() {
-    if (sources == null) {
-      return null;
+    public Integer getActualDownloadPosition() {
+        return actualDownloadPosition;
     }
-    return (DownloadSourceDO[]) sources.toArray(new DownloadSourceDO[sources.
-                                                size()]);
-  }
 
-  public String toString() {
-    return getDateiname();
-  }
+    public void setActualDownloadPosition(Integer actualDownloadPosition) {
+        this.actualDownloadPosition = actualDownloadPosition;
+    }
+
+    public Integer getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(Integer speed) {
+        this.speed = speed;
+    }
+
+    public Version getVersion() {
+        return version;
+    }
+
+    public void setVersion(Version version) {
+        this.version = version;
+    }
+
+    public int getQueuePosition() {
+        return queuePosition;
+    }
+
+    public void setQueuePosition(int queuePosition) {
+        this.queuePosition = queuePosition;
+    }
+
+    public int getPowerDownload() {
+        return powerDownload;
+    }
+
+    public void setPowerDownload(int powerDownload) {
+        this.powerDownload = powerDownload;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getId() {
+        return id;
+    }
 }

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.7 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.8 2003/07/03 19:11:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Version.java,v $
+ * Revision 1.8  2003/07/03 19:11:16  maj0r
+ * DownloadTable überarbeitet.
+ *
  * Revision 1.7  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -17,17 +20,14 @@ package de.applejuicenet.client.shared;
  */
 
 public class Version {
-  public static int LINUX = 2;
-  public static int WIN32 = 1;
+  public static final int LINUX = 2;
+  public static final int WIN32 = 1;
 
   private String versionNr;
-  private String programmierSprache;
   private int betriebsSystem;
 
-  public Version(String versionNr, String programmierSprache,
-                 int betriebsSystem) {
+  public Version(String versionNr, int betriebsSystem) {
     this.versionNr = versionNr;
-    this.programmierSprache = programmierSprache;
     this.betriebsSystem = betriebsSystem;
   }
 
@@ -36,10 +36,6 @@ public class Version {
 
   public String getVersion() {
     return versionNr;
-  }
-
-  public String getProgrammierSprache() {
-    return programmierSprache;
   }
 
   public int getBetriebsSystem() {
@@ -63,10 +59,6 @@ public class Version {
 
   public void setVersion(String versionNr) {
     this.versionNr = versionNr;
-  }
-
-  public void setProgrammierSprache(String programmierSprache) {
-    this.programmierSprache = programmierSprache;
   }
 
   public static int getOSTypByOSName(String OSName) {
