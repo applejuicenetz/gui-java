@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.7 2004/02/18 17:24:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.8 2004/02/20 14:55:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Information.java,v $
+ * Revision 1.8  2004/02/20 14:55:02  maj0r
+ * Speicheroptimierungen.
+ *
  * Revision 1.7  2004/02/18 17:24:21  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -53,7 +56,6 @@ public class Information
     private static String nichtVerbunden;
     private static LanguageSelector languageSelector;
 
-    private int id;
     private long sessionUpload;
     private long sessionDownload;
     private long credits;
@@ -65,19 +67,6 @@ public class Information
     private String externeIP;
     private int serverId;
 
-    static {
-        languageSelector = LanguageSelector.getInstance();
-        Information info = new Information();
-        languageSelector.addLanguageListener(info);
-        info.fireLanguageChanged();
-    }
-
-    public Information() {} //nur fuer den LanguageSelector
-
-    public void setExterneIP(String externeIP){
-        this.externeIP = externeIP;
-    }
-
     public void setVerbindungsStatus(int verbindungsStatus){
         this.verbindungsStatus = verbindungsStatus;
         if (verbindungsStatus == NICHT_VERBUNDEN) {
@@ -85,24 +74,14 @@ public class Information
         }
     }
 
-    public Information(int id, long sessionUpload, long sessionDownload,
-                       long credits, long uploadSpeed, long downloadSpeed,
-                       long openConnections, int verbindungsStatus,
-                       String externeIP, ServerDO serverDO) {
-        this.id = id;
-        this.sessionUpload = sessionUpload;
-        this.sessionDownload = sessionDownload;
-        this.credits = credits;
-        this.uploadSpeed = uploadSpeed;
-        this.downloadSpeed = downloadSpeed;
-        this.openConnections = openConnections;
-        setVerbindungsStatus(verbindungsStatus);
-        this.externeIP = externeIP;
-        setServer(serverDO);
+    public Information(){
+        languageSelector = LanguageSelector.getInstance();
+        languageSelector.addLanguageListener(this);
+        fireLanguageChanged();
     }
 
-    public int getId() {
-        return id;
+    public void setExterneIP(String externeIP){
+        this.externeIP = externeIP;
     }
 
     public void setSessionUpload(long sessionUpload) {

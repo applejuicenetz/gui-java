@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.10 2004/02/12 18:10:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.11 2004/02/20 14:55:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListDO.java,v $
+ * Revision 1.11  2004/02/20 14:55:02  maj0r
+ * Speicheroptimierungen.
+ *
  * Revision 1.10  2004/02/12 18:10:27  maj0r
  * Farben etwas geaendert.
  *
@@ -98,6 +101,10 @@ public class PartListDO {
 
     public void addPart(Part aPart) {
         parts.add(aPart);
+    }
+
+    public void removeAllParts(){
+        parts.clear();
     }
 
     public Part[] getParts() {

@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.20 2004/02/19 13:34:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.21 2004/02/20 14:55:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.21  2004/02/20 14:55:02  maj0r
+ * Speicheroptimierungen.
+ *
  * Revision 1.20  2004/02/19 13:34:35  maj0r
  * Bild wird freigegeben, wenn die Partliste entfernt wird.
  *
@@ -110,6 +113,9 @@ public class DownloadPartListPanel
 
     public void setPartList(PartListDO partListDO) {
         try {
+            if (this.partListDO != null){
+                this.partListDO.removeAllParts();
+            }
             this.partListDO = partListDO;
             height = (int) getSize().getHeight();
             width = (int) getSize().getWidth();

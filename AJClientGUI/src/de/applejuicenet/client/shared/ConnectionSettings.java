@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/ConnectionSettings.java,v 1.4 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/ConnectionSettings.java,v 1.5 2004/02/20 14:55:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.security.NoSuchAlgorithmException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ConnectionSettings.java,v $
+ * Revision 1.5  2004/02/20 14:55:02  maj0r
+ * Speicheroptimierungen.
+ *
  * Revision 1.4  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -64,6 +67,10 @@ public class ConnectionSettings {
 
     public void setOldPassword(String oldPassword) {
         this.oldPassword = getMD5(oldPassword);
+    }
+
+    public void setOldMD5Password(String oldMD5Password) {
+        this.oldPassword = oldMD5Password;
     }
 
     public void setNewPassword(String newPassword) {

@@ -27,7 +27,7 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.31 2004/02/17 15:26:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.32 2004/02/20 14:55:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +36,9 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.32  2004/02/20 14:55:02  maj0r
+ * Speicheroptimierungen.
+ *
  * Revision 1.31  2004/02/17 15:26:38  maj0r
  * Bug #219 gefixt (Danke an uselessplayer)
  * 100%-CPU bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt.
@@ -192,6 +195,7 @@ public class PropertiesManager
     private Point mainXY;
     private Dimension mainDimension;
     private ProxySettings proxySettings;
+    private ConnectionSettings connectionSettings = null;
 
     private int[] downloadWidths;
     private int[] uploadWidths;
@@ -201,6 +205,7 @@ public class PropertiesManager
     private boolean[] uploadVisibilities;
     private int[] downloadIndex;
     private int[] uploadIndex;
+    private Settings settings = null;
 
     private static String path;
 
@@ -662,17 +667,17 @@ public class PropertiesManager
 
     public Settings getSettings() {
         try {
+            if (settings == null){
+                settings = new Settings();
+            }
             Color downloadFertigHintergrundColor = null;
             Color quelleHintergrundColor = null;
-            Boolean farbenAktiv = null;
-            Boolean downloadUebersicht = null;
-            Boolean loadPlugins = null;
+            boolean farbenAktiv;
+            boolean downloadUebersicht;
+            boolean loadPlugins;
             String temp;
-            temp = getFirstAttrbuteByTagName(new String[] {"options", "farben",
-                                             "aktiv"});
-            if (temp.length() != 0) {
-                farbenAktiv = new Boolean(temp);
-            }
+            farbenAktiv = getFirstAttrbuteByTagName(new String[] {"options", "farben",
+                                             "aktiv"}).equals("true");
             temp = getFirstAttrbuteByTagName(new String[] {"options", "farben",
                                              "hintergrund", "downloadFertig"});
             if (temp.length() != 0) {
@@ -684,20 +689,17 @@ public class PropertiesManager
             if (temp.length() != 0) {
                 quelleHintergrundColor = new Color(Integer.parseInt(temp));
             }
-            temp = getFirstAttrbuteByTagName(new String[] {"options",
+            downloadUebersicht = getFirstAttrbuteByTagName(new String[] {"options",
                                              "download",
-                                             "uebersicht"});
-            if (temp.length() != 0) {
-                downloadUebersicht = new Boolean(temp);
-            }
-            temp = getFirstAttrbuteByTagName(new String[] {"options",
-                                             "loadplugins"});
-            if (temp.length() != 0) {
-                loadPlugins = new Boolean(temp);
-            }
-            return new Settings(farbenAktiv, downloadFertigHintergrundColor,
-                                quelleHintergrundColor, downloadUebersicht,
-                                loadPlugins);
+                                             "uebersicht"}).equals("true");
+            loadPlugins = getFirstAttrbuteByTagName(new String[] {"options",
+                                             "loadplugins"}).equals("true");
+            settings.setFarbenAktiv(farbenAktiv);
+            settings.setDownloadFertigHintergrundColor(downloadFertigHintergrundColor);
+            settings.setQuelleHintergrundColor(quelleHintergrundColor);
+            settings.setDownloadUebersicht(downloadUebersicht);
+            settings.loadPluginsOnStartup(loadPlugins);
+            return settings;
         }
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
@@ -738,6 +740,9 @@ public class PropertiesManager
 
     public ConnectionSettings getRemoteSettings() {
         try {
+            if (connectionSettings == null){
+                connectionSettings = new ConnectionSettings();
+            }
             String host = "localhost";
             String passwort = "";
             int xmlPort = 9851;
@@ -748,7 +753,10 @@ public class PropertiesManager
             xmlPort = Integer.parseInt(getFirstAttrbuteByTagName(new String[] {
                 "options", "remote",
                 "port"}));
-            return new ConnectionSettings(host, passwort, xmlPort);
+            connectionSettings.setHost(host);
+            connectionSettings.setOldMD5Password(passwort);
+            connectionSettings.setXmlPort(xmlPort);
+            return connectionSettings;
         }
         catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
