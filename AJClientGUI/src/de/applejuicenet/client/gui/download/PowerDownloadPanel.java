@@ -55,7 +55,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.PolicyJarClassLoader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.9 2005/02/16 14:49:12 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.10 2005/02/16 15:57:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -443,6 +443,7 @@ public class PowerDownloadPanel
         }
         autoPwdlThread = policy;
         autoPwdlThread.setParentToInform(this);
+        autoPwdlThread.setPaused(true);
         autoPwdlThread.start();
         autoPwdlEinstellungen.setVisible(autoPwdlThread.hasPropertiesDialog());
     }
