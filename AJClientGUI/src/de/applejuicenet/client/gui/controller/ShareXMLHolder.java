@@ -1,12 +1,15 @@
 package de.applejuicenet.client.gui.controller;
 
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 import org.w3c.dom.*;
+import org.apache.log4j.Logger;
 import de.applejuicenet.client.shared.dac.*;
+import de.applejuicenet.client.shared.LoggerUtils;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.6 2003/07/01 06:17:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.7 2003/07/01 14:58:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +18,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.7  2003/07/01 14:58:07  maj0r
+ * Loggerüberwachung eingefügt und unnützen Kram entfernt.
+ *
  * Revision 1.6  2003/07/01 06:17:16  maj0r
  * Code optimiert.
  *
@@ -30,9 +36,11 @@ import de.applejuicenet.client.shared.dac.*;
 public class ShareXMLHolder
     extends WebXMLParser {
   private HashMap shareMap;
+  private Logger logger;
 
   public ShareXMLHolder() {
     super("/xml/share.xml", "");
+      logger = Logger.getLogger(getClass());
   }
 
   public void update() {
@@ -41,14 +49,20 @@ public class ShareXMLHolder
   }
 
   private void updateShare() {
+    String methode = "updateShare() -";
+    if (logger.isDebugEnabled()){
+        logger.debug(LoggerUtils.createDebugMessage(methode, LoggerUtils.EINTRITT));
+    }
     if (shareMap == null) {
       shareMap = new HashMap();
     }
     if (document == null) {
       reload("");
+      if (logger.isDebugEnabled()){
+          logger.debug(LoggerUtils.createDebugMessage(methode + " Geholt vom Server", LoggerUtils.DEFAULT));
+      }
     }
     NodeList nodes = document.getElementsByTagName("share");
-    HashMap changedShare = new HashMap();
     int nodesSize = nodes.getLength();
     Element e = null;
     String id_key = null;
@@ -63,9 +77,11 @@ public class ShareXMLHolder
       size = e.getAttribute("size");
       checksum = e.getAttribute("checksum");
       share = new ShareDO(id_key, filename, size, checksum);
-      changedShare.put(id_key, share);
+      shareMap.put(id_key, share);
     }
-    shareMap.putAll(changedShare);
+    if (logger.isDebugEnabled()){
+        logger.debug(LoggerUtils.createDebugMessage(methode, LoggerUtils.AUSTRITT));
+    }
   }
 
   public HashMap getShare() {
