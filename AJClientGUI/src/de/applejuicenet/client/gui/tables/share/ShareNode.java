@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.11 2003/12/16 17:05:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.12 2003/12/16 18:30:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.12  2003/12/16 18:30:06  maj0r
+ * Nun ist es auch wieder plattformunabhaengig.
+ *
  * Revision 1.11  2003/12/16 17:05:54  maj0r
  * Sharetabelle auf vielfachen Wunsch komplett überarbeitet.
  *
@@ -82,8 +85,18 @@ public class ShareNode
         path = "";
         if (parent != null) {
             String bisherigerPath = getCompletePath();
-            String restPath = shareDO.getFilename().substring(bisherigerPath.
-                length());
+            String restPath = shareDO.getFilename();
+            while (restPath.indexOf(ApplejuiceFassade.separator)==0){
+                restPath = restPath.substring(1);
+            }
+            if (bisherigerPath.length()!=0 && restPath.substring(0, bisherigerPath.
+                length()).compareTo(bisherigerPath)==0){
+                restPath = restPath.substring(bisherigerPath.
+                    length());
+            }
+            if (restPath.substring(0, 1).compareTo(ApplejuiceFassade.separator)==0){
+                restPath = restPath.substring(1);
+            }
             int pos = restPath.indexOf(ApplejuiceFassade.separator);
             if (pos != -1) {
                 path = restPath.substring(0, pos);
@@ -108,8 +121,13 @@ public class ShareNode
 
     public String getCompletePath() {
         if (parent != null) {
-            return parent.getCompletePath() + ApplejuiceFassade.separator +
-                path;
+            String parentPath = parent.getCompletePath();
+            if (parentPath.length()==0){
+                return path;
+            }
+            else{
+                return parentPath + ApplejuiceFassade.separator + path;
+            }
         }
         else {
             return path;
@@ -125,8 +143,11 @@ public class ShareNode
 
     public ShareNode addChild(ShareDO shareDOtoAdd) {
         String bisherigerPath = getCompletePath();
-        String restPath = shareDOtoAdd.getFilename().substring(bisherigerPath.
-            length());
+        String restPath = shareDOtoAdd.getFilename();
+        while (restPath.indexOf(ApplejuiceFassade.separator)==0){
+            restPath = restPath.substring(1);
+        }
+        restPath = restPath.substring(bisherigerPath.length());
         int pos = restPath.indexOf(ApplejuiceFassade.separator);
         while (pos == 0) {
             restPath = restPath.substring(pos + 1);
