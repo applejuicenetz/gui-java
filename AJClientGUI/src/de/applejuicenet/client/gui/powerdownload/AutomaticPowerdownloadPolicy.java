@@ -9,9 +9,12 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.shared.dac.DownloadDO;
+import java.awt.Dialog;
+import de.applejuicenet.client.gui.PowerDownloadPanel;
+import java.awt.Frame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.9 2004/06/15 06:22:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.10 2004/06/15 15:32:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,14 +28,14 @@ public abstract class AutomaticPowerdownloadPolicy
     extends Thread {
 
     private Set threads = new HashSet();
-    protected ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.
-        getInstance();
     private Logger logger = Logger.getLogger(getClass());
-
-    private boolean paused = true;
+    private PowerDownloadPanel parentToInformEnde = null;
+    private boolean paused = false;
 
     //diese Variable auf false setzen, um das automatische Pausieren von Dateien zu verhindern
     protected boolean shouldPause = true;
+    protected ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.
+        getInstance();
 
     public final void run() {
         try {
@@ -56,6 +59,19 @@ public abstract class AutomaticPowerdownloadPolicy
                 logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
+        if (parentToInformEnde != null){
+            parentToInformEnde.autoPwdlFinished();
+            parentToInformEnde = null;
+        }
+        if (threads != null){
+            threads.clear();
+        }
+        applejuiceFassade = null;
+        logger = null;
+    }
+
+    public final void setParentToInform(PowerDownloadPanel parentToInformEnde){
+        this.parentToInformEnde = parentToInformEnde;
     }
 
     public final boolean shouldPause() {
@@ -67,8 +83,13 @@ public abstract class AutomaticPowerdownloadPolicy
             Iterator it = threads.iterator();
             while (it.hasNext()) {
                 Object obj = it.next();
-                if (obj instanceof Thread) {
-                    ( (Thread) obj).interrupt();
+                try{
+                    if (obj != null && obj instanceof Thread) {
+                        ( (Thread) obj).interrupt();
+                    }
+                }
+                catch(Exception ex){
+                    logger.error("Fehler beim Beenden eines Threads in " + toString(), ex);
                 }
             }
             super.interrupt();
@@ -149,6 +170,16 @@ public abstract class AutomaticPowerdownloadPolicy
     public abstract void doAction() throws Exception;
 
     /**
+     *  Alle eigenen verwendeten Threads sollten mittels dieser Methode registriert werden.
+     *  So ist sichergestellt, dass diese beim Beenden des Autom. Pwdl beendet werden.
+     **/
+    protected final void addThreadToWatch(Thread aThread){
+        if (aThread != null){
+            threads.add(aThread);
+        }
+    }
+
+    /**
      *
      *  Wird aufgerufen um zu informieren, dass aktuell nicht mehr genug Credits
      *  vorhanden sind.
@@ -176,4 +207,17 @@ public abstract class AutomaticPowerdownloadPolicy
      *  toString wird fuer die Ausgabe in der Combobox verwendet
      */
     public abstract String toString();
+
+    /**
+     *  Diese Methode ueberschreiben, wenn bei aktivierten Autom. Pwdl ein Button
+     *  fuer Einstellungen eingeblendet werden soll
+     */
+    public boolean hasPropertiesDialog(){
+        return true;
+    }
+
+    /**
+     *  Diese Methode mit dem Öffnen und Auswerten des Einstellungendialogs ueberschreiben.
+     */
+    public void showPropertiesDialog(Frame parent){ }
 }

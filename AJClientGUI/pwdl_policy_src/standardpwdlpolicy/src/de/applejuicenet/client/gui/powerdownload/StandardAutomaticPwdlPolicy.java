@@ -7,9 +7,11 @@ import javax.swing.JOptionPane;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.dac.DownloadDO;
+import java.awt.Dialog;
+import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.3 2004/06/15 06:22:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.4 2004/06/15 15:32:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -136,7 +138,6 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
                         temp++;
                     }
                     if (ids.length != 0) {
-//                        applejuiceFassade.pauseDownload(ids);
                         applejuiceFassade.setPowerDownload(ids, 0);
                         applejuiceFassade.setPowerDownload(new int[] {
                             maxProzentId[
@@ -177,5 +178,9 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
 
     public String toString() {
         return "StandardPwdlPolicy Vers. " + getVersion();
+    }
+
+    public Dialog getPropertiesDialog(){
+        return new JDialog();
     }
 }

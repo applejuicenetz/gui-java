@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.46 2004/06/15 06:23:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.47 2004/06/15 15:32:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -92,6 +92,7 @@ public class PowerDownloadPanel
     private Logger logger;
     private RatioFocusAdapter ratioFocusAdapter;
     private JComboBox pwdlPolicies = new JComboBox();
+    private JButton autoPwdlEinstellungen = new JButton("Einstellungen");
 
     private int standardAutomaticPwdlAb = 200;
     private int standardAutomaticPwdlBis = 30;
@@ -100,6 +101,7 @@ public class PowerDownloadPanel
 
     private AutomaticPowerdownloadPolicy autoPwdlThread;
     private Information lastInformation;
+    private JPanel backPanel = new JPanel();
 
     public PowerDownloadPanel(DownloadPanel parentPanel) {
         logger = Logger.getLogger(getClass());
@@ -118,7 +120,6 @@ public class PowerDownloadPanel
     private void init() throws Exception {
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
-        JPanel backPanel = new JPanel();
         backPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
@@ -188,6 +189,8 @@ public class PowerDownloadPanel
         btnHint.setBackground(BLUE_BACKGROUND);
         tempPanel.add(btnHint, BorderLayout.EAST);
         backPanel.add(tempPanel, constraints);
+        constraints.insets.left = 5;
+        constraints.insets.right = 5;
         constraints.gridy = 1;
         backPanel.add(label6, constraints);
         constraints.gridwidth = 1;
@@ -272,7 +275,11 @@ public class PowerDownloadPanel
             }
         };
         tempPanel2.add(btnHint2, BorderLayout.EAST);
+        constraints.insets.left = 0;
+        constraints.insets.right = 0;
         backPanel.add(tempPanel2, constraints);
+        constraints.insets.left = 5;
+        constraints.insets.right = 5;
 
         constraints.gridwidth = 1;
         constraints.gridy = 8;
@@ -306,8 +313,22 @@ public class PowerDownloadPanel
         panel1.add(pwdlPolicies);
         panel1.add(btnHint3);
         backPanel.add(panel1, constraints);
+        constraints.insets.left = 0;
+        constraints.insets.right = 0;
+        JPanel panel2 = new JPanel(new GridBagLayout());
+        constraints.gridy = 0;
+        panel2.add(btnAutoInaktiv, constraints);
+        constraints.gridx = 1;
+        constraints.weightx = 1;
+        panel2.add(new JLabel(), constraints);
+        constraints.weightx = 0;
+        constraints.gridx = 2;
+        panel2.add(autoPwdlEinstellungen, constraints);
+        constraints.gridx = 0;
         constraints.gridy = 9;
-        backPanel.add(btnAutoInaktiv, constraints);
+        constraints.insets.left = 5;
+        constraints.insets.right = 5;
+        backPanel.add(panel2, constraints);
         constraints.gridy = 10;
         backPanel.add(btnAutoAktiv, constraints);
         constraints.gridy = 11;
@@ -344,13 +365,23 @@ public class PowerDownloadPanel
         backPanel.add(panel, constraints);
         constraints.gridy = 12;
         constraints.gridwidth = 3;
+        constraints.insets.bottom = 5;
         backPanel.add(btnAutoPdl, constraints);
         btnAutoPdl.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 alterAutoPwdl();
             }
         });
-        add(new JScrollPane(backPanel), BorderLayout.NORTH);
+        JScrollPane sp = new JScrollPane(backPanel);
+        sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        add(sp, BorderLayout.NORTH);
+        autoPwdlEinstellungen.setVisible(false);
+        autoPwdlEinstellungen.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                oeffneAutomPwdlEinstellungen();
+            }
+        });
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
             DataUpdateListener.INFORMATION_CHANGED);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
@@ -393,7 +424,6 @@ public class PowerDownloadPanel
                     autoPwdlThread.interrupt();
                     autoPwdlThread = null;
                 }
-                AppleJuiceDialog.getApp().informAutomaticPwdlEnabled(false);
             }
         }
     }
@@ -424,7 +454,25 @@ public class PowerDownloadPanel
             }
         }
         autoPwdlThread = policy;
+        autoPwdlThread.setParentToInform(this);
         autoPwdlThread.start();
+        autoPwdlEinstellungen.setVisible(autoPwdlThread.hasPropertiesDialog());
+    }
+
+    private void oeffneAutomPwdlEinstellungen(){
+        if (autoPwdlThread != null && autoPwdlThread.hasPropertiesDialog()){
+            autoPwdlThread.showPropertiesDialog(AppleJuiceDialog.getApp());
+        }
+    }
+
+    public void autoPwdlFinished(){
+        autoPwdlEinstellungen.setVisible(false);
+        autoPwdlThread = null;
+        AppleJuiceDialog.getApp().informAutomaticPwdlEnabled(false);
+    }
+
+    public Dimension getPreferredSize(){
+        return backPanel.getPreferredSize();
     }
 
     private void fillPwdlPolicies() {
@@ -587,7 +635,7 @@ public class PowerDownloadPanel
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            powerdownload.setText(ZeichenErsetzer.korrigiereUmlaute(
+            powerdownload.setText(" " + ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.powerdownload.caption")));
             label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
@@ -601,7 +649,7 @@ public class PowerDownloadPanel
                 getFirstAttrbuteByTagName(".root.mainform.Label7.caption")));
             label8.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.Label8.caption")));
-            label9.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            label9.setText(" " + ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.downloadtab.label1")));
             btnAutoInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
