@@ -1,11 +1,12 @@
-package de.applejuicenet.client.gui.shared;
+package de.applejuicenet.client.gui.components;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 public class GuiControllerActionListener implements ActionListener {
-	private int controllerActionId;
-	private GuiController guiController;
+	private final int controllerActionId;
+	private final GuiController guiController;
 	
 	public GuiControllerActionListener(GuiController guiController, int controllerActionId){
 		this.controllerActionId = controllerActionId;
