@@ -19,7 +19,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.27 2003/12/05 11:18:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.28 2003/12/17 11:06:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.28  2003/12/17 11:06:30  maj0r
+ * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
+ *
  * Revision 1.27  2003/12/05 11:18:02  maj0r
  * Workaround fürs Setzen der Hintergrundfarben der Scrollbereiche ausgebaut.
  *
@@ -247,5 +250,8 @@ public class UploadPanel
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", ex);
         }
+    }
+
+    public void lostSelection() {
     }
 }

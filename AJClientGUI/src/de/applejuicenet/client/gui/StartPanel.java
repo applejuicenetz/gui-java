@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.32 2003/10/21 11:36:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.33 2003/12/17 11:06:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.33  2003/12/17 11:06:30  maj0r
+ * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
+ *
  * Revision 1.32  2003/10/21 11:36:32  maj0r
  * Infos werden nun ueber einen Listener geholt.
  *
@@ -430,5 +433,8 @@ public class StartPanel
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
+    }
+
+    public void lostSelection() {
     }
 }

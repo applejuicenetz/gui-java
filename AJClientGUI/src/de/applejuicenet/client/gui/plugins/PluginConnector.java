@@ -12,7 +12,7 @@ import de.applejuicenet.client.gui.*;
 import de.applejuicenet.client.gui.listener.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.12 2003/09/13 11:31:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.13 2003/12/17 11:06:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import de.applejuicenet.client.gui.listener.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PluginConnector.java,v $
+ * Revision 1.13  2003/12/17 11:06:29  maj0r
+ * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
+ *
  * Revision 1.12  2003/09/13 11:31:30  maj0r
  * Verwendung vereinfacht.
  *
@@ -112,6 +115,8 @@ public abstract class PluginConnector
 
     //Wird aufgerufen, wenn der Reiter ausgewählt wird.
     public abstract void registerSelected();
+
+    public void lostSelection(){};
 
     /*Wird automatisch aufgerufen, wenn die Sprache geändert wurde.
       Ggf. kann an dieser Stelle eine eigene xml-Datei zur Anpassung der eigenen Panels ausgewertet werden*/

@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.24 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.25 2003/12/17 11:06:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.25  2003/12/17 11:06:29  maj0r
+ * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
+ *
  * Revision 1.24  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -87,8 +90,24 @@ public class RegisterPanel
         }
     }
 
+    private void tabFocusLost(int index){
+        RegisterI register = (RegisterI)getComponentAt(index);
+        if (register!=null){
+            register.lostSelection();
+        }
+    }
+
     private void init() {
         LanguageSelector.getInstance().addLanguageListener(this);
+        setModel(new DefaultSingleSelectionModel() {
+          public void setSelectedIndex(int index) {
+            int oldIndex = getSelectedIndex();
+            if (oldIndex!=-1){
+                tabFocusLost(oldIndex);
+            }
+            super.setSelectedIndex(index);
+          }
+        });
         startPanel = new StartPanel(parent);
         sharePanel = new SharePanel(parent);
         downloadPanel = new DownloadPanel();

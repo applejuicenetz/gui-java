@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.16 2003/12/16 14:51:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.17 2003/12/17 11:06:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.17  2003/12/17 11:06:29  maj0r
+ * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
+ *
  * Revision 1.16  2003/12/16 14:51:46  maj0r
  * Suche kann nun GUI-seitig abgebrochen werden.
  *
@@ -249,5 +252,8 @@ public class SearchPanel
         MapSetStringKey searchKey = new MapSetStringKey(aSearchResultPanel.getSearch().getId());
         searchIds.remove(searchKey);
         resultPanel.remove(aSearchResultPanel);
+    }
+
+    public void lostSelection() {
     }
 }
