@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.7 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.8 2003/06/13 15:07:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.8  2003/06/13 15:07:30  maj0r
+ * Versionsanzeige hinzugefügt.
+ * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
+ *
  * Revision 1.7  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -27,6 +31,8 @@ public class StartPanel
     extends JPanel
     implements LanguageListener, RegisterI, DataUpdateListener {
   private static final Color APFEL_GRUEN = new Color(34, 146, 14);
+
+  private AppleJuiceDialog parent;
 
   private JLabel warnungen;
   private JLabel deinClient;
@@ -39,7 +45,8 @@ public class StartPanel
 
   private LanguageSelector languageSelector;
 
-  public StartPanel() {
+  public StartPanel(AppleJuiceDialog parent) {
+    this.parent = parent;
     try {
       jbInit();
     }
@@ -86,7 +93,7 @@ public class StartPanel
 
     constraints.gridy = 1;
     constraints.insets.left = 15;
-    panel3.add(new JLabel("Version " +
+    panel3.add(new JLabel("GUI: " + parent.GUI_VERSION + " Controller: " + DataManager.DATAMANAGER_VERSION + " Core: " +
                           DataManager.getInstance().getCoreVersion().getVersion()),
                constraints);
 

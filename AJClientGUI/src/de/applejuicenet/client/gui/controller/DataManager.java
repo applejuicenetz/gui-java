@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.20 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.21 2003/06/13 15:07:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.21  2003/06/13 15:07:30  maj0r
+ * Versionsanzeige hinzugefügt.
+ * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
+ *
  * Revision 1.20  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -29,6 +33,8 @@ import de.applejuicenet.client.shared.exception.*;
  */
 
 public class DataManager { //Singleton-Implementierung
+  public static final String DATAMANAGER_VERSION = "0.02 Alpha";
+
   private HashSet downloadListener;
   private HashSet shareListener;
   private HashSet uploadListener;
