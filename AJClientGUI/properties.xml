@@ -9,15 +9,15 @@
         </farben>
         <location>
             <main height="" width="" x="" y=""/>
-            <download column0="96" column1="73" column2="96"
-                column3="96" column4="97" column5="96" column6="97"
-                column7="96" column8="97" column9="96"/>
-            <upload column0="159" column1="134" column2="134"
-                column3="134" column4="134" column5="134" column6="134"/>
-            <server column0="241" column1="241" column2="241" column3="240"/>
-            <search column0="130" column1="130" column2="130"
-                column3="129" column4="130" column5="129"/>
-            <share column0="248" column1="248" column2="247"/>
+            <download column0="111" column1="111" column2="111"
+                column3="110" column4="111" column5="110" column6="111"
+                column7="110" column8="111" column9="110"/>
+            <upload column0="179" column1="155" column2="154"
+                column3="155" column4="154" column5="155" column6="154"/>
+            <server column0="277" column1="276" column2="277" column3="276"/>
+            <search column0="154" column1="153" column2="154"
+                column3="153" column4="154" column5="153"/>
+            <share column0="295" column1="296" column2="295"/>
         </location>
     </options>
 </root>
