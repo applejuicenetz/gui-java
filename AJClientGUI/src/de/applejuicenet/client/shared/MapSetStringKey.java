@@ -1,15 +1,18 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/MapSetStringKey.java,v 1.4 2003/09/01 15:50:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/MapSetStringKey.java,v 1.5 2003/11/03 14:46:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MapSetStringKey.java,v $
+ * Revision 1.5  2003/11/03 14:46:39  maj0r
+ * Speicheroptimiert.
+ *
  * Revision 1.4  2003/09/01 15:50:51  maj0r
  * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
  *
@@ -17,7 +20,7 @@ package de.applejuicenet.client.shared;
  * Grosß-/Kleinschreibung ignorieren.
  *
  * Revision 1.2  2003/07/02 13:54:34  maj0r
- * JTreeTable komplett überarbeitet.
+ * JTreeTable komplett ueberarbeitet.
  *
  * Revision 1.1  2003/07/01 14:50:45  maj0r
  * Inner-Class Key ausgelagert und umbenannt.
@@ -26,35 +29,31 @@ package de.applejuicenet.client.shared;
  */
 
 public class MapSetStringKey {
-    private String value;
-    private int hashCode = -1;
+    private int hashCode;
 
     public MapSetStringKey(String value){
-        this.value = value;
+        generateHashCode(value);
     }
 
     public MapSetStringKey(int value){
-        this.value = Integer.toString(value);
-    }
-
-    public String getValue(){
-      return value;
+        generateHashCode(Integer.toString(value));
     }
 
     public boolean equals(Object object){
-        if (object == null || !(object instanceof MapSetStringKey))
+        if (object == null || (object.getClass()!=getClass()))
             return false;
-        return value.compareToIgnoreCase(((MapSetStringKey)object).getValue())==0;
+        return hashCode()==object.hashCode();
     }
 
-    public int hashCode() {
-      if (hashCode == -1) {
+    private void generateHashCode(String value){
         char[] ca = value.toLowerCase().toCharArray();
         int size = ca.length;
         for (int x = 0; x < size; x++) {
           hashCode += ca[x];
         }
-      }
-      return (hashCode);
+    }
+
+    public int hashCode() {
+      return hashCode;
     }
 }
