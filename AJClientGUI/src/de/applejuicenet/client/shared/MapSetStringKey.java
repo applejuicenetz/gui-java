@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/MapSetStringKey.java,v 1.2 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/MapSetStringKey.java,v 1.3 2003/08/25 07:22:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: MapSetStringKey.java,v $
+ * Revision 1.3  2003/08/25 07:22:47  maj0r
+ * Grosß-/Kleinschreibung ignorieren.
+ *
  * Revision 1.2  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -34,12 +37,12 @@ public class MapSetStringKey {
     public boolean equals(Object object){
         if (object == null || !(object instanceof MapSetStringKey))
             return false;
-        return value.compareTo(((MapSetStringKey)object).getValue())==0;
+        return value.compareToIgnoreCase(((MapSetStringKey)object).getValue())==0;
     }
 
     public int hashCode() {
       if (hashCode == -1) {
-        char[] ca = value.toCharArray();
+        char[] ca = value.toLowerCase().toCharArray();
         int size = ca.length;
         for (int x = 0; x < size; x++) {
           hashCode += ca[x];
