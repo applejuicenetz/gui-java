@@ -22,6 +22,7 @@ import java.io.OutputStreamWriter;
 import java.io.FileInputStream;
 import java.io.BufferedWriter;
 import de.applejuicenet.client.gui.controller.WebXMPParser;
+import de.applejuicenet.client.gui.controller.DataManager;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -34,25 +35,17 @@ import de.applejuicenet.client.gui.controller.WebXMPParser;
 
 public class AppleJuiceClient {
   public static void main(String[] args) {
-    if (OptionsManager.getInstance().getRemoteSettings().isRemoteUsed()) {
-
-      try {
-        //dummy
-        System.out.println(HtmlLoader.getHtmlContent("localhost", HtmlLoader.GET, "/xml/information.xml"));
-      }
-      catch (WebSiteNotFoundException ex) {
-        LanguageSelector languageSelector = LanguageSelector.getInstance();
-        String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
-        String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
-                                      "verbindungsfehler"}));
-        JOptionPane.showMessageDialog(new Frame(), nachricht, titel,
-                                      JOptionPane.OK_OPTION);
-        System.exit( -1);
-      }
+    if (!DataManager.istCoreErreichbar()) {
+      LanguageSelector languageSelector = LanguageSelector.getInstance();
+      String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+          getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
+      String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+          getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
+                                    "verbindungsfehler"}));
+      JOptionPane.showMessageDialog(new Frame(), nachricht, titel,
+                                    JOptionPane.OK_OPTION);
+      System.exit( -1);
     }
-
     AppleJuiceDialog theApp = new AppleJuiceDialog();
     Dimension appDimension = theApp.getSize();
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

@@ -20,7 +20,7 @@ public abstract class ZeichenErsetzer {
     result = result.replaceAll("&ouml;", "ö");
     result = result.replaceAll("&Ouml;", "Ö");
     result = result.replaceAll("&szlig;", "ß");
-    result = result.replaceAll("&amp;", "&");
+    result = result.replaceAll("&amp;", "");
     result = result.replaceAll("&lt;", "<");
     result = result.replaceAll("&gt;", ">");
     return result;

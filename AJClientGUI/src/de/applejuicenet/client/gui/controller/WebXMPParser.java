@@ -46,7 +46,9 @@ public class WebXMPParser extends XMLDecoder {
       xmlData = HtmlLoader.getHtmlContent(host, HtmlLoader.GET,
                                           xmlCommand + "?timestamp=" + timestamp + parameters);
     }
-    catch (WebSiteNotFoundException ex) {}
+    catch (WebSiteNotFoundException ex) {
+      ex.printStackTrace();
+    }
     DocumentBuilderFactory factory =
         DocumentBuilderFactory.newInstance();
     try {

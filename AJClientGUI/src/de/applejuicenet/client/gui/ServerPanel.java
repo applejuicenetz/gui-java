@@ -26,6 +26,13 @@ public class ServerPanel
   private JTable serverTable;
   private JLabel sucheServer = new JLabel(
       "<html><font><u>mehr Server gibt es hier</u></font></html>");
+  private JPopupMenu popup = new JPopupMenu();
+  JMenuItem item1;
+  JMenuItem item2;
+  JMenuItem item3;
+  JMenuItem item4;
+  JMenuItem item5;
+  JMenuItem item6;
 
   public ServerPanel() {
     try {
@@ -39,6 +46,20 @@ public class ServerPanel
   private void jbInit() throws Exception {
     setLayout(new BorderLayout());
     LanguageSelector.getInstance().addLanguageListener(this);
+
+    item1 = new JMenuItem("Abbrechen");
+    item2 = new JMenuItem("Pause/Fortsetzen");
+    item3 = new JMenuItem("Powerdownload");
+    item4 = new JMenuItem("Umbenennen");
+    item5 = new JMenuItem("Zielordner ändern");
+    item6 = new JMenuItem("Fertige Übertragungen entfernen");
+    popup.add(item1);
+    popup.add(item2);
+    popup.add(item3);
+    popup.add(item4);
+    popup.add(item5);
+    popup.add(item6);
+
     JPanel panel1 = new JPanel();
     panel1.setLayout(new GridBagLayout());
     GridBagConstraints constraints = new GridBagConstraints();
@@ -68,6 +89,14 @@ public class ServerPanel
     add(panel1, BorderLayout.NORTH);
     serverTable = new JTable();
     serverTable.setModel(new ServerTableModel(DataManager.getInstance().getAllServer()));
+    serverTable.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseReleased(MouseEvent e) {
+        super.mouseReleased(e);
+        if (e.isPopupTrigger()) {
+          popup.show(serverTable, e.getX(), e.getY());
+        }
+      }
+    });
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(serverTable);
     add(aScrollPane, BorderLayout.CENTER);
@@ -93,6 +122,14 @@ public class ServerPanel
     columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col1caption"}));
     columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col4caption"}));
     columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serverlist" ,"col5caption"}));
+    item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "canceldown" ,"caption"})));
+    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "pausedown" ,"caption"}));
+    temp+="/" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "resumedown" ,"caption"}));
+    item2.setText(temp);
+    item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "powerdownload" ,"caption"})));
+    item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "renamefile" ,"caption"})));
+    item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "changetarget" ,"caption"})));
+    item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "Clearfinishedentries1" ,"caption"})));
 
     TableColumnModel tcm = serverTable.getColumnModel();
     for (int i=0; i<tcm.getColumnCount(); i++){

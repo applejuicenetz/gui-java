@@ -88,6 +88,23 @@ public class DataManager {   //Singleton-Implementierung
   }
 
 
+  public static boolean istCoreErreichbar(){
+    OptionsManager om = OptionsManager.getInstance();
+    String savedHost = "localhost";
+    if (om.getRemoteSettings().isRemoteUsed()){
+      savedHost = OptionsManager.getInstance().getRemoteSettings().getHost();
+      if (savedHost.length() == 0)
+        savedHost = "localhost";
+    }
+    try {
+      String testData = HtmlLoader.getHtmlContent(savedHost, HtmlLoader.GET, "/xml/information.xml");
+    }
+    catch (WebSiteNotFoundException ex) {
+      return false;
+    }
+    return true;
+  }
+
   public void updateServer(){
     updateServer(true);
   }
