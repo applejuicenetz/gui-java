@@ -7,7 +7,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.17 2004/01/12 07:28:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.18 2004/02/12 16:35:41 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.18  2004/02/12 16:35:41  maj0r
+ * Getter fuer aktuelle runtergeladene Prozent hinzugefuegt.
+ *
  * Revision 1.17  2004/01/12 07:28:10  maj0r
  * Caching, Logging eingebaut.
  * Wiedergabe der Tabellenwerte vom Model ins Node umgebaut.
@@ -145,6 +148,13 @@ public class DownloadSourceDO
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public double getReadyPercent(){
+        if (actualDownloadPosition == -1 || downloadFrom == -1) {
+            return 0;
+        }
+        return (actualDownloadPosition - downloadFrom) *100 / getSize();
     }
 
     public String getDownloadPercentAsString() {
