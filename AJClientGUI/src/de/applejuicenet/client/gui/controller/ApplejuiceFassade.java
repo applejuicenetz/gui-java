@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import javax.swing.SwingUtilities;
 
@@ -32,9 +33,10 @@ import de.applejuicenet.client.shared.Version;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.123 2004/02/27 09:55:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.124 2004/02/27 13:19:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,6 +48,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 public class ApplejuiceFassade {
     public static final String GUI_VERSION = "0.56.1";
+    public static final String MIN_NEEDED_CORE_VERSION = "0.29.135.208";
 
     private HashSet downloadListener;
     private HashSet searchListener;
@@ -71,6 +74,38 @@ public class ApplejuiceFassade {
     private Thread workerThread;
 
     private Logger logger;
+
+    public static synchronized ApplejuiceFassade getInstance() {
+        if (instance == null) {
+            instance = new ApplejuiceFassade();
+        }
+        return instance;
+    }
+
+    private ApplejuiceFassade() {
+        logger = Logger.getLogger(getClass());
+        try {
+            downloadListener = new HashSet();
+            searchListener = new HashSet();
+            serverListener = new HashSet();
+            uploadListener = new HashSet();
+            shareListener = new HashSet();
+            networkInfoListener = new HashSet();
+            speedListener = new HashSet();
+            informationListener = new HashSet();
+
+            //load XMLs
+            modifiedXML = ModifiedXMLHolder.getInstance();
+            informationXML = new InformationXMLHolder();
+            directoryXML = new DirectoryXMLHolder();
+            shareXML = new ShareXMLHolder();
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
+        }
+    }
 
     public void addDataUpdateListener(DataUpdateListener listener, int type) {
         try {
@@ -109,40 +144,43 @@ public class ApplejuiceFassade {
         }
     }
 
-    private ApplejuiceFassade() {
-        logger = Logger.getLogger(getClass());
-        try {
-            downloadListener = new HashSet();
-            searchListener = new HashSet();
-            serverListener = new HashSet();
-            uploadListener = new HashSet();
-            shareListener = new HashSet();
-            networkInfoListener = new HashSet();
-            speedListener = new HashSet();
-            informationListener = new HashSet();
-
-            //load XMLs
-            modifiedXML = ModifiedXMLHolder.getInstance();
-            informationXML = new InformationXMLHolder();
-            directoryXML = new DirectoryXMLHolder();
-            informationXML.reload("", false);
-            shareXML = new ShareXMLHolder();
-
-            String versionsTag = informationXML.getFirstAttrbuteByTagName(new
-                String[] {
-                "applejuice", "generalinformation", "version"}
-                , true);
-            separator = informationXML.getFirstAttrbuteByTagName(new String[] {
-                "applejuice", "generalinformation", "filesystem", "seperator"}
-                , false);
-            coreVersion = new Version(versionsTag,
-                                      Version.getOSTypByOSName( (String) System.
-                getProperties().get("os.name")));
+    private void checkForValidCore(){
+        if (getCoreVersion() == null){
+            return;
         }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+        StringTokenizer token1 = new StringTokenizer(
+            getCoreVersion().getVersion(), ".");
+        StringTokenizer token2 = new StringTokenizer(
+            ApplejuiceFassade.MIN_NEEDED_CORE_VERSION, ".");
+        if (token1.countTokens() != 4 ||
+            token2.countTokens() != 4) {
+            return;
+        }
+        String[] foundCore = new String[4];
+        String[] neededCore = new String[4];
+        for (int i = 0; i < 4; i++) {
+            foundCore[i] = token1.nextToken();
+            neededCore[i] = token2.nextToken();
+        }
+        boolean coreTooOld = false;
+        for (int i = 0; i < 4; i++) {
+            if (Integer.parseInt(foundCore[i]) <
+                Integer.parseInt(neededCore[i])) {
+                coreTooOld = true;
+                break;
             }
+        }
+        if (coreTooOld) {
+            StringBuffer fehlerText = new StringBuffer(ZeichenErsetzer.korrigiereUmlaute(
+                LanguageSelector.getInstance().getFirstAttrbuteByTagName(".root.javagui.startup.corezualt")));
+            int pos = fehlerText.indexOf("%s");
+            if (pos !=-1){
+                fehlerText.replace(pos, pos + 2, MIN_NEEDED_CORE_VERSION);
+            }
+            if (logger.isEnabledFor(Level.INFO)) {
+                logger.info(fehlerText.toString());
+            }
+            AppleJuiceDialog.closeWithErrormessage(fehlerText.toString(), false);
         }
     }
 
@@ -154,6 +192,24 @@ public class ApplejuiceFassade {
                 }
                 try {
                     int versuch = 0;
+                    if (coreVersion == null){
+                        informationXML.reload("", false);
+                        String foundCore = informationXML.
+                            getFirstAttrbuteByTagName(new
+                            String[] {
+                            "applejuice", "generalinformation", "version"}
+                            , true);
+                        separator = informationXML.getFirstAttrbuteByTagName(new
+                            String[] {
+                            "applejuice", "generalinformation", "filesystem",
+                            "seperator"}
+                            , false);
+                        coreVersion = new Version(foundCore,
+                                                  Version.getOSTypByOSName( (
+                            String) System.
+                            getProperties().get("os.name")));
+                        checkForValidCore();
+                    }
                     while (!isInterrupted()) {
                         if (updateModifiedXML()) {
                             versuch = 0;
@@ -161,6 +217,9 @@ public class ApplejuiceFassade {
                         else {
                             versuch++;
                             if (versuch == 3) {
+                                if (logger.isEnabledFor(Level.INFO)) {
+                                    logger.info("Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.");
+                                }
                                 AppleJuiceDialog.closeWithErrormessage(
                                     "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
                             }
@@ -754,13 +813,6 @@ public class ApplejuiceFassade {
             return false;
         }
         return true;
-    }
-
-    public static synchronized ApplejuiceFassade getInstance() {
-        if (instance == null) {
-            instance = new ApplejuiceFassade();
-        }
-        return instance;
     }
 
     public Version getCoreVersion() {

@@ -75,7 +75,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.102 2004/02/27 09:54:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.103 2004/02/27 13:19:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -84,6 +84,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.103  2004/02/27 13:19:38  maj0r
+ * Pruefung auf gueltigen Core eingebaut.
+ * Um das zu pruefen, duerfen die Nachrichten im Startbereich erst spaeter geladen werden.
+ *
  * Revision 1.102  2004/02/27 09:54:18  maj0r
  * Standardthemepack geaendert.
  *
@@ -403,6 +407,12 @@ public class AppleJuiceDialog
                 File themesPath = new File(System.getProperty("user.dir") +
                                            File.separator + "themes");
                 if (!themesPath.isDirectory()) {
+                    if (logger.isEnabledFor(Level.INFO)) {
+                        logger.info(
+                            "Der Ordner" +
+                                          " für die Themes zip-Dateien ist nicht vorhanden." +
+                                          "\r\nappleJuice wird beendet.");
+                    }
                     closeWithErrormessage("Der Ordner" +
                                           " für die Themes zip-Dateien ist nicht vorhanden." +
                                           "\r\nappleJuice wird beendet.", false);
@@ -794,6 +804,11 @@ public class AppleJuiceDialog
                 File.separator;
             File languagePath = new File(path);
             if (!languagePath.isDirectory()) {
+                if (logger.isEnabledFor(Level.INFO)) {
+                    logger.info("Der Ordner " + path +
+                                      " für die Sprachauswahl xml-Dateien ist nicht vorhanden." +
+                                      "\r\nappleJuice wird beendet.");
+                }
                 closeWithErrormessage("Der Ordner " + path +
                                       " für die Sprachauswahl xml-Dateien ist nicht vorhanden." +
                                       "\r\nappleJuice wird beendet.", false);
@@ -806,6 +821,12 @@ public class AppleJuiceDialog
                 }
             }
             if (sprachDateien.size() == 0) {
+                if (logger.isEnabledFor(Level.INFO)) {
+                    logger.info(
+                        "Es sind keine xml-Dateien für die Sprachauswahl im Ordner " +
+                        path + " vorhanden." +
+                        "\r\nappleJuice wird beendet.");
+                }
                 closeWithErrormessage(
                     "Es sind keine xml-Dateien für die Sprachauswahl im Ordner " +
                     path + " vorhanden." +
@@ -888,6 +909,11 @@ public class AppleJuiceDialog
                 File themesPath = new File(System.getProperty("user.dir") +
                                            File.separator + "themes");
                 if (!themesPath.isDirectory()) {
+                    if (logger.isEnabledFor(Level.INFO)) {
+                        logger.info("Der Ordner " + path +
+                            " für die Themes zip-Dateien ist nicht vorhanden." +
+                            "\r\nappleJuice wird beendet.");
+                    }
                     closeWithErrormessage("Der Ordner " + path +
                                           " für die Themes zip-Dateien ist nicht vorhanden." +
                                           "\r\nappleJuice wird beendet.", false);
@@ -1079,13 +1105,6 @@ public class AppleJuiceDialog
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            String versionsNr = ApplejuiceFassade.getInstance().getCoreVersion().
-                getVersion();
-            titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.caption")) +
-                " (Core " + versionsNr +
-                " - GUI " + ApplejuiceFassade.GUI_VERSION + ")";
-            setTitle(titel);
             keinServer = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.keinserver"));
             themeSupportTitel = ZeichenErsetzer.korrigiereUmlaute(
@@ -1142,7 +1161,6 @@ public class AppleJuiceDialog
                 getFirstAttrbuteByTagName(".root.javagui.menu.deaktivieren")));
 
             if (useTrayIcon) {
-                trayIcon.setToolTipText(titel);
                 popupAboutMenuItem.setText(menuItemUeber.getText());
                 popupAboutMenuItem.setToolTipText(menuItemUeber.getToolTipText());
                 zeigen = ZeichenErsetzer.korrigiereUmlaute(
@@ -1169,6 +1187,17 @@ public class AppleJuiceDialog
                 if (firstChange) {
                     firstChange = false;
                     SoundPlayer.getInstance().playSound(SoundPlayer.GESTARTET);
+                    String versionsNr = ApplejuiceFassade.getInstance().getCoreVersion().
+                        getVersion();
+                    titel = ZeichenErsetzer.korrigiereUmlaute(LanguageSelector.getInstance().
+                        getFirstAttrbuteByTagName(".root.mainform.caption")) +
+                        " (Core " + versionsNr +
+                        " - GUI " + ApplejuiceFassade.GUI_VERSION + ")";
+                    setTitle(titel);
+                    if (useTrayIcon) {
+                        trayIcon.setToolTipText(titel);
+                    }
+                    repaint();
                 }
                 Information information = (Information) content;
                 statusbar[0].setText(information.getVerbindungsStatusAsString());

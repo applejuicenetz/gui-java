@@ -8,12 +8,14 @@ import java.util.Iterator;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.xerces.parsers.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.ConnectionSettings;
@@ -30,11 +32,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
-import org.apache.xerces.parsers.SAXParser;
-import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.27 2004/02/24 14:12:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.28 2004/02/27 13:19:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +43,10 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.28  2004/02/27 13:19:38  maj0r
+ * Pruefung auf gueltigen Core eingebaut.
+ * Um das zu pruefen, duerfen die Nachrichten im Startbereich erst spaeter geladen werden.
+ *
  * Revision 1.27  2004/02/24 14:12:53  maj0r
  * DOM->SAX-Umstellung
  *
@@ -848,6 +852,9 @@ public class ModifiedXMLHolder
             if (xmlString.indexOf("wrong password") != -1){
                 if (!securer.isInterrupted()) {
                     securer.interrupt();
+                }
+                if (logger.isEnabledFor(Level.INFO)){
+                    logger.info("Das Passwort wurde coreseitig geändert.\r\nDas GUI wird beendet.");
                 }
                 AppleJuiceDialog.closeWithErrormessage(
                     "Das Passwort wurde coreseitig geändert.\r\nDas GUI wird beendet.", true);

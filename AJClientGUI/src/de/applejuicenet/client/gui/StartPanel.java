@@ -28,7 +28,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.45 2004/02/24 15:55:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.46 2004/02/27 13:19:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +37,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.46  2004/02/27 13:19:38  maj0r
+ * Pruefung auf gueltigen Core eingebaut.
+ * Um das zu pruefen, duerfen die Nachrichten im Startbereich erst spaeter geladen werden.
+ *
  * Revision 1.45  2004/02/24 15:55:08  maj0r
  * Link zur FAQ im Startbereich hinzugefuegt.
  *
@@ -193,6 +197,7 @@ public class StartPanel
     private String label10Text;
     private String label6Text;
     private String firewallWarning;
+    private boolean firstChange = true;
 
     private String keinServer = "";
 
@@ -317,6 +322,7 @@ public class StartPanel
         constraints.insets.left = 15;
         nachrichten = new JTextPane();
         panel3.add(nachrichten, constraints);
+        nachrichten.setEditable(false);
 
         constraints.gridy++;
         constraints.insets.left = 5;
@@ -354,67 +360,6 @@ public class StartPanel
         add(scrollPane, BorderLayout.CENTER);
         languageSelector = LanguageSelector.getInstance();
         languageSelector.addLanguageListener(this);
-        Thread aktualisierungWorker = new Thread() {
-            public void run() {
-                if (logger.isEnabledFor(Level.DEBUG)) {
-                    logger.debug("AktualisierungsWorkerThread gestartet. " + this);
-                }
-                try {
-                    String coreVersion = ApplejuiceFassade.getInstance().
-                        getCoreVersion().getVersion();
-                    version.setText("<html>GUI: " +
-                                    ApplejuiceFassade.GUI_VERSION +
-                                    "<br>Core: " +
-                                    coreVersion +
-                                    "</html>");
-                    String nachricht = "verwendeter Core: " + coreVersion;
-                    if (logger.isEnabledFor(Level.INFO)) {
-                        logger.info(nachricht);
-
-                    }
-                    String htmlText = WebsiteContentLoader.getWebsiteContent(
-                        "http://www.applejuicenet.org", 80,
-                        "/inprog/news.php?version=" +
-                        ApplejuiceFassade.getInstance().getCoreVersion().
-                        getVersion());
-
-                    int pos = htmlText.toLowerCase().indexOf("<html>");
-                    if (pos != -1) {
-                        htmlText = htmlText.substring(pos);
-                    }
-                    else {
-                        htmlText = "<html>" + htmlText + "</html>";
-                    }
-                    nachrichten.setContentType("text/html");
-                    nachrichten.setEditable(false);
-                    nachrichten.setText(htmlText);
-                    nachrichten.setFont(label9.getFont());
-                    nachrichten.addHyperlinkListener(new HyperlinkListener() {
-                        public void hyperlinkUpdate(HyperlinkEvent e) {
-                            if (e.getEventType() ==
-                                HyperlinkEvent.EventType.ACTIVATED) {
-                                if (e.getURL() != null) {
-                                    String url = e.getURL().toString();
-                                    if (url.length() != 0) {
-                                        executeLink(url);
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-                catch (Exception e) {
-                    if (logger.isEnabledFor(Level.INFO)) {
-                        logger.info(
-                            "Versionsabhaengige Nachrichten konnten nicht geladen werden. Server down?");
-                    }
-                }
-                if (logger.isEnabledFor(Level.DEBUG)) {
-                    logger.debug("AktualisierungsWorkerThread beendet. " + this);
-                }
-            }
-        };
-        aktualisierungWorker.start();
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
             DataUpdateListener.NETINFO_CHANGED);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
@@ -563,6 +508,10 @@ public class StartPanel
     public void fireContentChanged(int type, Object content) {
         try {
             if (type == DataUpdateListener.NETINFO_CHANGED) {
+                if (firstChange){
+                    firstChange = false;
+                    new NachrichtenWorker().start();
+                }
                 netInfo = (NetworkInfo) content;
                 StringBuffer temp = new StringBuffer(label6Text);
                 int pos = temp.indexOf("%d");
@@ -639,4 +588,64 @@ public class StartPanel
 
     public void lostSelection() {
     }
+
+    private class NachrichtenWorker extends Thread{
+        public void run() {
+            if (logger.isEnabledFor(Level.DEBUG)) {
+                logger.debug("NachrichtenWorkerThread gestartet. " + this);
+            }
+            try {
+                String coreVersion = ApplejuiceFassade.getInstance().
+                    getCoreVersion().getVersion();
+                version.setText("<html>GUI: " +
+                                ApplejuiceFassade.GUI_VERSION +
+                                "<br>Core: " +
+                                coreVersion +
+                                "</html>");
+                String nachricht = "verwendeter Core: " + coreVersion;
+                if (logger.isEnabledFor(Level.INFO)) {
+                    logger.info(nachricht);
+                }
+                String htmlText = WebsiteContentLoader.getWebsiteContent(
+                    "http://www.applejuicenet.org", 80,
+                    "/inprog/news.php?version=" +
+                    ApplejuiceFassade.getInstance().getCoreVersion().
+                    getVersion());
+
+                int pos = htmlText.toLowerCase().indexOf("<html>");
+                if (pos != -1) {
+                    htmlText = htmlText.substring(pos);
+                }
+                else {
+                    htmlText = "<html>" + htmlText + "</html>";
+                }
+                nachrichten.setContentType("text/html");
+                nachrichten.setText(htmlText);
+                nachrichten.setFont(label9.getFont());
+                nachrichten.addHyperlinkListener(new HyperlinkListener() {
+                    public void hyperlinkUpdate(HyperlinkEvent e) {
+                        if (e.getEventType() ==
+                            HyperlinkEvent.EventType.ACTIVATED) {
+                            if (e.getURL() != null) {
+                                String url = e.getURL().toString();
+                                if (url.length() != 0) {
+                                    executeLink(url);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            catch (Exception e) {
+                if (logger.isEnabledFor(Level.INFO)) {
+                    logger.info(
+                        "Versionsabhaengige Nachrichten konnten nicht geladen werden. Server down?");
+                }
+            }
+            if (logger.isEnabledFor(Level.DEBUG)) {
+                logger.debug("NachrichtenWorkerThread beendet. " + this);
+            }
+        }
+    }
+
 }
