@@ -25,7 +25,7 @@ public class UploadTableTreeCellRenderer
         Object obj = ( (TreeTableModelAdapter) table.getModel()).nodeForRow(row);
         Color background = table.getBackground();
         Color foreground = table.getForeground();
-        if (obj.getClass() == MainNode.class) {
+        if (obj.getClass() == UploadMainNode.class) {
             JPanel returnPanel = new JPanel(new BorderLayout());
             JLabel image = new JLabel();
             JLabel text = new JLabel();
@@ -45,7 +45,7 @@ public class UploadTableTreeCellRenderer
                 image.setForeground(table.getForeground());
                 text.setBackground(table.getForeground());
             }
-            image.setIcon( ( (MainNode) obj).getConvenientIcon());
+            image.setIcon( ( (UploadMainNode) obj).getConvenientIcon());
             text.setText(" " + (String) value);
             text.setFont(table.getFont());
             returnPanel.add(image, BorderLayout.WEST);

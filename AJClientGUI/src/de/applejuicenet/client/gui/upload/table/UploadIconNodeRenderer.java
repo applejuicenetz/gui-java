@@ -24,6 +24,11 @@ public class UploadIconNodeRenderer extends DefaultIconNodeRenderer{
 		if (value.getClass() == UploadDO.class) {
 			c = super.getTreeCellRendererComponent(tree, ((UploadDO) value)
 					.getDateiName(), sel, expanded, leaf, row, hasFocus);
+		} else if (value.getClass() == UploadMainNode.class) {
+			c = super.getTreeCellRendererComponent(tree, ((UploadMainNode) value)
+					.toString()
+					+ " (" + ((UploadMainNode) value).getChildCount() + ")", sel,
+					expanded, leaf, row, hasFocus);
 		} else {
 			c = super.getTreeCellRendererComponent(tree, value, sel, expanded,
 					leaf, row, hasFocus);

@@ -18,7 +18,7 @@ public class UploadTableVersionCellRenderer
         int column) {
 
         Object obj = ( (TreeTableModelAdapter) table.getModel()).nodeForRow(row);
-        if (obj.getClass() == MainNode.class) {
+        if (obj.getClass() == UploadMainNode.class) {
             return super.getTableCellRendererComponent(table, value,
                 isSelected, hasFocus, row, column);
         }

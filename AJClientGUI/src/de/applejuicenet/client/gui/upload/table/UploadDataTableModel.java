@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.2 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.3 2004/11/23 13:24:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -42,13 +42,13 @@ public class UploadDataTableModel
     private String versucheIndirekteVerbindung;
     private String versucheZuVerbinden;
     private String warteschlange;
-    private MainNode mainNode;
+    private UploadMainNode mainNode;
 
     private Map uploads = null;
 
     public UploadDataTableModel() {
-        super(new MainNode());
-        mainNode = (MainNode)getRoot();
+        super(new UploadMainNode());
+        mainNode = (UploadMainNode)getRoot();
         LanguageSelector.getInstance().addLanguageListener(this);
     }
 
@@ -68,10 +68,10 @@ public class UploadDataTableModel
     }
 
     public Object getValueAt(Object node, int column) {
-        if (node.getClass() == MainNode.class &&
-            ( ( (MainNode) node).getType() == MainNode.LOADING_UPLOADS
-             || ( (MainNode) node).getType() == MainNode.WAITING_UPLOADS
-             || ( (MainNode) node).getType() == MainNode.REST_UPLOADS)) {
+        if (node.getClass() == UploadMainNode.class &&
+            ( ( (UploadMainNode) node).getType() == UploadMainNode.LOADING_UPLOADS
+             || ( (UploadMainNode) node).getType() == UploadMainNode.WAITING_UPLOADS
+             || ( (UploadMainNode) node).getType() == UploadMainNode.REST_UPLOADS)) {
             if (column == 0) {
                 return node.toString() + " (" + getChildCount(node) + ")";
             }
@@ -183,15 +183,15 @@ public class UploadDataTableModel
     }
 
     public int getChildCount(Object parent) {
-        if (parent.getClass() == MainNode.class) {
-            return ((MainNode)parent).getChildCount();
+        if (parent.getClass() == UploadMainNode.class) {
+            return ((UploadMainNode)parent).getChildCount();
         }
         return 0;
     }
 
     private Object[] getChildren(Object parent) {
-        if (parent.getClass() == MainNode.class) {
-            return ((MainNode)parent).getChildren();
+        if (parent.getClass() == UploadMainNode.class) {
+            return ((UploadMainNode)parent).getChildren();
         }
         return null;
     }
@@ -199,7 +199,7 @@ public class UploadDataTableModel
     public void setTable(Map content) {
         if (uploads == null) {
             uploads = content;
-            MainNode.setUploads(content);
+            UploadMainNode.setUploads(content);
         }
     }
 }
