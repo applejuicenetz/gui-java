@@ -1,325 +1,93 @@
 package de.applejuicenet.client.gui;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.zip.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.border.BevelBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.log4j.*;
-import com.jeans.trayicon.*;
-import com.l2fprod.gui.plaf.skin.*;
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.plugins.*;
-import de.applejuicenet.client.gui.tools.*;
-import de.applejuicenet.client.shared.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import com.jeans.trayicon.SwingTrayPopup;
+import com.jeans.trayicon.WindowsTrayIcon;
+import com.l2fprod.gui.plaf.skin.Skin;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.OptionsManager;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.gui.tools.MemoryMonitorDialog;
+import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.Information;
+import de.applejuicenet.client.shared.LookAFeel;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.112 2004/04/02 09:24:58 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.113 2004/04/02 12:16:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: AppleJuiceDialog.java,v $
- * Revision 1.112  2004/04/02 09:24:58  loevenwong
- * Einstellungen der Goodies werden jetzt auch gespeichert.
- *
- * Revision 1.111  2004/03/15 18:55:01  maj0r
- * Windowstheme darf nur auf Windowssystemen verwendet werden.
- *
- * Revision 1.110  2004/03/15 13:46:11  loevenwong
- * GUI neustart aufgrund fehlender property-datei verhindert.
- *
- * Revision 1.109  2004/03/09 16:25:16  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.108  2004/03/08 07:11:45  maj0r
- * Begonnen, JGoddies einzubauen.
- *
- * Revision 1.107  2004/03/05 15:49:38  maj0r
- * PMD-Optimierung
- *
- * Revision 1.106  2004/03/03 15:33:30  maj0r
- * PMD-Optimierung
- *
- * Revision 1.105  2004/03/01 21:14:44  maj0r
- * Unter Linux ist die properties.xml nun unter ~/appleJuice zu finden.
- *
- * Revision 1.104  2004/02/27 15:35:55  maj0r
- * Dialogtitel korrigiert.
- *
- * Revision 1.103  2004/02/27 13:19:38  maj0r
- * Pruefung auf gueltigen Core eingebaut.
- * Um das zu pruefen, duerfen die Nachrichten im Startbereich erst spaeter geladen werden.
- *
- * Revision 1.102  2004/02/27 09:54:18  maj0r
- * Standardthemepack geaendert.
- *
- * Revision 1.101  2004/02/27 07:19:13  maj0r
- * Loggerverwendung korrigiert.
- *
- * Revision 1.100  2004/02/26 15:12:47  maj0r
- * Umgang mit ZeichenErsetzer korrigiert.
- *
- * Revision 1.99  2004/02/26 13:59:06  maj0r
- * Aktivieren/Deaktivieren-Menuepunkt im LanguageSelector aufgenommen.
- *
- * Revision 1.98  2004/02/25 13:10:04  maj0r
- * Bug #244 gefixt (Danke an Homer1Simpson)
- * GUI stoert sich nicht mehr an Nicht-Themes-Zips im Themes-Verzeichnis.
- *
- * Revision 1.97  2004/02/20 16:13:33  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.96  2004/02/17 15:31:18  maj0r
- * Moeglichen NullPointer behoben.
- *
- * Revision 1.95  2004/02/13 14:50:56  maj0r
- * Bug #129 gefixt (Danke an dsp2004)
- * WebsiteException durch Ueberlastung des Servers sollte nun weitgehend unterbunden sein.
- *
- * Revision 1.94  2004/02/05 23:11:26  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.93  2004/02/04 16:10:46  maj0r
- * Titel im Fehlerdialog geaendert.
- *
- * Revision 1.92  2004/02/04 14:44:05  maj0r
- * Fehler beim Speichern der Einstellungen korrigiert.
- *
- * Revision 1.91  2004/02/04 14:26:05  maj0r
- * Bug #185 gefixt (Danke an muhviestarr)
- * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
- *
- * Revision 1.90  2004/01/29 15:44:28  maj0r
- * Formataenderung.
- *
- * Revision 1.89  2004/01/28 20:18:00  maj0r
- * Fehlerhafte Anzeige von Menuetexten bei Nicht-Windows-Systemen gefixt.
- *
- * Revision 1.88  2004/01/26 19:26:41  maj0r
- * TrayIcon hat nun einen richtigen Parent erhalten.
- *
- * Revision 1.87  2004/01/26 16:48:07  maj0r
- * Fehler beim TrayIcon-Menue behoben.
- *
- * Revision 1.86  2004/01/26 16:21:05  maj0r
- * Optionendialog besser positioniert und kann nun ueber das TrayIcon aufgerufen werden.
- *
- * Revision 1.85  2004/01/25 08:30:39  maj0r
- * NullPointer behoben.
- *
- * Revision 1.84  2004/01/23 20:22:49  maj0r
- * Formataenderung.
- *
- * Revision 1.83  2004/01/20 11:18:03  maj0r
- * Format der properties.xml geaendert.
- *
- * Revision 1.82  2004/01/20 10:34:07  maj0r
- * Focus bei der Anzeige des Dialogs nach Verstecken per TrayIcon korrigiert.
- *
- * Revision 1.81  2004/01/19 17:44:49  maj0r
- * ajl-Listen koennen nun ueber das Menue importiert werden.
- *
- * Revision 1.80  2004/01/12 16:15:04  maj0r
- * Bug #91 umgesetzt (Danke an hirsch.marcel)
- * Maxupload- und Maxdownloadgeschwindigkeit kann nun \uFFFDber das TrayIcon eingestellt werden (Windowsversion).
- *
- * Revision 1.79  2004/01/12 07:21:54  maj0r
- * Standard-XML erweitert.
- *
- * Revision 1.78  2004/01/09 13:07:19  maj0r
- * Bug #33 gefixt (Danke an oz_2k)
- * Obwohl ich denke, dass es sich um ein Feature der Themes handelt, wurde der Vollbildmodus auf Wunsch vieler Benutzer an Windowsstandard angepasst.
- *
- * Revision 1.77  2004/01/07 17:16:20  maj0r
- * Button zum Themes deaktivieren an Sprachen angepasst.
- *
- * Revision 1.76  2004/01/06 15:05:43  maj0r
- * TrayIcon-Verwendung korrigiert.
- *
- * Revision 1.75  2004/01/06 12:52:04  maj0r
- * TrayIcon f\uFFFDr Windowsplattformen eingebaut.
- *
- * Revision 1.74  2004/01/05 19:17:18  maj0r
- * Bug #56 gefixt (Danke an MeineR)
- * Das Laden der Plugins beim Start kann \uFFFDber das Optionenmenue deaktiviert werden.
- *
- * Revision 1.73  2004/01/05 07:28:58  maj0r
- * Begonnen einen Standardwebbrowser einzubauen.
- *
- * Revision 1.72  2004/01/02 17:57:51  maj0r
- * Menuepunkt zum Beenden des Core auf vielfachen Wunsch an separate Stelle verschoben.
- *
- * Revision 1.71  2004/01/02 16:47:18  maj0r
- * Standard-XML-Datei angepasst.
- *
- * Revision 1.70  2003/12/30 15:13:54  maj0r
- * Der Core kann nun uebers GUI beendet werden.
- *
- * Revision 1.69  2003/12/30 13:40:27  maj0r
- * Muell entfernt.
- *
- * Revision 1.68  2003/12/29 16:35:12  maj0r
- * Look and Feel Verwendung korrigiert.
- *
- * Revision 1.67  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.66  2003/12/29 15:20:05  maj0r
- * Neue Versionupdatebenachrichtigung fertiggestellt.
- *
- * Revision 1.65  2003/12/29 09:49:35  maj0r
- * Bug #1 gefixt (Danke an muhviestarr).
- * Look and Feel beim Verbindungsdialog korrigiert.
- *
- * Revision 1.64  2003/12/29 07:23:18  maj0r
- * Begonnen, auf neues Versionupdateinformationssystem umzubauen.
- *
- * Revision 1.63  2003/12/05 11:17:11  maj0r
- * Sobald man den richtigen Listener verwendet, funktionierts auch richtig...
- *
- * Revision 1.62  2003/11/19 17:05:20  maj0r
- * Autom. Pwdl ueberarbeitet.
- *
- * Revision 1.61  2003/11/19 13:43:39  maj0r
- * Themes sind nun ueber das Menue deaktivierbar.
- *
- * Revision 1.60  2003/11/18 16:41:50  maj0r
- * Erste Version des LinkListener eingebaut.
- * Themes koennen nun ueber die properties.xml komplett deaktiviert werden.
- *
- * Revision 1.59  2003/11/16 12:34:23  maj0r
- * Themes einngebaut (Danke an LinuxDoc)
- *
- * Revision 1.58  2003/11/04 13:14:50  maj0r
- * Memory-Monitor eingebaut.
- *
- * Revision 1.57  2003/11/03 14:26:12  maj0r
- * Titelzeile geaendert.
- *
- * Revision 1.56  2003/10/31 19:04:58  maj0r
- * Sounds eingebaut.
- *
- * Revision 1.55  2003/10/31 11:33:59  maj0r
- * StandardXML angepasst.
- *
- * Revision 1.54  2003/10/31 11:31:45  maj0r
- * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
- *
- * Revision 1.53  2003/10/27 14:46:08  maj0r
- * Detailliertere Fehlermeldung eingebaut.
- *
- * Revision 1.52  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.51  2003/10/21 11:36:32  maj0r
- * Infos werden nun ueber einen Listener geholt.
- *
- * Revision 1.50  2003/10/17 13:33:02  maj0r
- * properties.xml wird nun im Fehlerfall automatisch generiert.
- *
- * Revision 1.49  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- * Revision 1.48  2003/09/11 08:39:29  maj0r
- * Start durch Einbau von Threads beschleunigt.
- *
- * Revision 1.47  2003/09/09 17:43:24  maj0r
- * Memory-Anzeige entfernt.
- *
- * Revision 1.46  2003/09/09 12:28:14  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.45  2003/09/09 06:37:36  maj0r
- * Wizard erweitert, aber noch nicht fertiggestellt.
- *
- * Revision 1.44  2003/09/08 06:27:11  maj0r
- * Um Wizard erweitert, aber noch nicht fertiggestellt.
- *
- * Revision 1.43  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
- *
- * Revision 1.42  2003/09/05 09:02:26  maj0r
- * Threadverwendung verbessert.
- *
- * Revision 1.41  2003/09/04 22:12:45  maj0r
- * Logger verfeinert.
- * Threadbeendigung korrigiert.
- *
- * Revision 1.40  2003/09/04 10:13:28  maj0r
- * Logger eingebaut.
- *
- * Revision 1.39  2003/09/03 12:10:17  maj0r
- * Icons fuer die Sprachauswahl eingefuegt.
- *
- * Revision 1.38  2003/08/29 14:24:15  maj0r
- * About-Dialog mit entsprechendem Menuepunkt eingefuehrt.
- *
- * Revision 1.37  2003/08/28 10:38:40  maj0r
- * Versionierung HIER entfernt.
- *
- * Revision 1.36  2003/08/26 19:46:34  maj0r
- * Sharebereich weiter vervollstaendigt.
- *
- * Revision 1.35  2003/08/25 15:54:49  maj0r
- * Memory-Anzeige eingebaut.
- *
- * Revision 1.34  2003/08/24 14:59:59  maj0r
- * Version 0.14
- * Diverse Aenderungen.
- *
- * Revision 1.33  2003/08/23 11:16:13  maj0r
- * Plattformunabhaengigkeit wieder hergestellt.
- *
- * Revision 1.32  2003/08/22 12:52:19  maj0r
- * Version auf 0.13 Beta erhoeht.
- *
- * Revision 1.31  2003/08/21 15:13:29  maj0r
- * Auf Thread umgebaut.
- *
- * Revision 1.30  2003/08/20 20:08:24  maj0r
- * Version auf 0.11 erhoeht.
- *
- * Revision 1.29  2003/08/19 15:57:21  maj0r
- * Gesamtgeschwindigkeit wird nun angezeigt.
- *
- * Revision 1.28  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.27  2003/08/12 06:12:19  maj0r
- * Version erh\uFFFDht.
- *
- * Revision 1.26  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.25  2003/07/04 15:25:38  maj0r
- * Version erh\uFFFDht.
- * DownloadModel erweitert.
- *
- * Revision 1.24  2003/06/24 12:06:49  maj0r
- * log4j eingef\uFFFDgt (inkl. Bedienung \uFFFDber Einstellungsdialog).
- *
- * Revision 1.23  2003/06/22 19:54:45  maj0r
- * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugef\uFFFDgt.
- *
- * Revision 1.22  2003/06/13 15:07:30  maj0r
- * Versionsanzeige hinzugef\uFFFDgt.
- * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
- *
- * Revision 1.21  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
  *
  */
 
@@ -1392,8 +1160,14 @@ public class AppleJuiceDialog
         xmlData.append("        </farben>\r\n");
         xmlData.append("                <lookandfeels>\r\n");
         xmlData.append("                    <laf1 name=\"JGoodies Plastic\" value=\"com.jgoodies.plaf.plastic.Plastic3DLookAndFeel\"/>\r\n");
+        int index = 2;
         if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
-            xmlData.append("                    <laf2 name=\"JGoodies Windows\" value=\"com.jgoodies.plaf.windows.ExtWindowsLookAndFeel\"/>\r\n");
+            xmlData.append("                    <laf" + index + " name=\"JGoodies Windows\" value=\"com.jgoodies.plaf.windows.ExtWindowsLookAndFeel\"/>\r\n");
+        }
+        LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
+        for (int i=0; i<feels.length; i++){
+            index++;
+            xmlData.append("                    <laf" + index + " name=\"" + feels[i].getName() + "\" value=\"" + feels[i].getClassName() + "\"/>\r\n");
         }
         xmlData.append("                    <default name=\"JGoodies Plastic\"/>\r\n");
         xmlData.append("                </lookandfeels>\r\n");
