@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.84 2004/01/01 14:26:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.85 2004/01/01 18:37:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,9 @@ import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.85  2004/01/01 18:37:50  maj0r
+ * Version erhoeht.
+ *
  * Revision 1.84  2004/01/01 14:26:53  maj0r
  * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
  *
@@ -266,7 +269,7 @@ import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String GUI_VERSION = "0.52.1";
+    public static final String GUI_VERSION = "0.53.1";
 
     private HashSet downloadListener;
     private HashSet searchListener;
