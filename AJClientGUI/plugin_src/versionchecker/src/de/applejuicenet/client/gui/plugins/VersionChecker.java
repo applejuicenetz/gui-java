@@ -7,9 +7,10 @@ import java.util.HashMap;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import javax.swing.ImageIcon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.3 2004/03/02 17:36:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.4 2004/03/02 21:05:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: VersionChecker.java,v $
+ * Revision 1.4  2004/03/02 21:05:46  maj0r
+ * Schnittstelle veraendert.
+ *
  * Revision 1.3  2004/03/02 17:36:11  maj0r
  * An neue Plugin-Schnittstelle angepasst.
  *
@@ -34,15 +38,23 @@ public class VersionChecker extends PluginConnector {
     private MainPanel mainPanel;
     private Logger logger;
 
-    public VersionChecker(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder) {
-        super(pluginsPropertiesXMLHolder);
-        setLayout(new BorderLayout());
+    public VersionChecker(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder, ImageIcon icon) {
+        super(pluginsPropertiesXMLHolder, icon);
         logger = Logger.getLogger(getClass());
-        mainPanel = new MainPanel();
-        add(mainPanel, BorderLayout.CENTER);
-        initIcon();
-        ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
-        ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.UPLOAD_CHANGED);
+        try{
+            setLayout(new BorderLayout());
+            mainPanel = new MainPanel();
+            add(mainPanel, BorderLayout.CENTER);
+            ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+                DataUpdateListener.DOWNLOAD_CHANGED);
+            ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+                DataUpdateListener.UPLOAD_CHANGED);
+        }
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", e);
+            }
+        }
     }
 
     public void fireLanguageChanged() {

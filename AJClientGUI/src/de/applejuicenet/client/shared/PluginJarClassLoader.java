@@ -13,9 +13,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.plugins.PluginsPropertiesXMLHolder;
+import java.lang.reflect.Constructor;
+import javax.swing.ImageIcon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.14 2004/03/02 17:37:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.15 2004/03/02 21:05:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +26,9 @@ import de.applejuicenet.client.gui.plugins.PluginsPropertiesXMLHolder;
  * @author: Maj0r aj@tkl-soft.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.15  2004/03/02 21:05:46  maj0r
+ * Schnittstelle veraendert.
+ *
  * Revision 1.14  2004/03/02 17:37:10  maj0r
  * Pluginverwendung vereinfacht.
  *
@@ -66,6 +71,8 @@ public class PluginJarClassLoader
     extends URLClassLoader {
     private URL url;
     private Logger logger;
+    private PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder = null;
+    private ImageIcon pluginIcon = null;
 
     public PluginJarClassLoader(URL url) {
         super(new URL[] {url});
@@ -74,17 +81,20 @@ public class PluginJarClassLoader
     }
 
     public PluginConnector getPlugin(String jar) throws Exception {
+        pluginsPropertiesXMLHolder = null;
+        pluginIcon = null;
         File aJar = new File(jar);
         try {
-            String theClassName = jar.substring(jar.lastIndexOf(File.
-                separatorChar) + 1, jar.lastIndexOf(".jar"));
             loadClassBytesFromJar(aJar);
-            Class cl = loadClass("de.applejuicenet.client.gui.plugins." +
-                                 theClassName);
-            Object aPlugin = cl.newInstance();
+            String theClassName = pluginsPropertiesXMLHolder.getXMLAttributeByTagName(".root.general.classname.value");
+            Class cl = loadClass(theClassName);
+            Class[] constructorHelper = {PluginsPropertiesXMLHolder.class, ImageIcon.class };
+            Constructor con = cl.getConstructor(constructorHelper);
+            Object aPlugin = con.newInstance(new Object[]{pluginsPropertiesXMLHolder, pluginIcon});
             return (PluginConnector) aPlugin;
         }
         catch (Exception e) {
+            e.printStackTrace();
             if (logger.isEnabledFor(Level.INFO)) {
                 logger.info("Plugin " + jar +
                     " entspricht nicht dem Standard und wurde nicht geladen.");
@@ -105,7 +115,8 @@ public class PluginJarClassLoader
         for (Enumeration e = jf.entries(); e.hasMoreElements(); ) {
             ZipEntry entry = (ZipEntry) e.nextElement();
             entryName = entry.getName();
-            if (entryName.indexOf(".class") == -1 && !entryName.equals("plugin_properties.xml")) {
+            if (entryName.indexOf(".class") == -1 && !entryName.equals("plugin_properties.xml")
+                && entryName.indexOf("icon.gif") == -1) {
                 continue;
             }
             InputStream is = jf.getInputStream(entry);
@@ -119,7 +130,10 @@ public class PluginJarClassLoader
             }
             if (entryName.equals("plugin_properties.xml")){
                 String xmlString = new String(buf, 0, buf.length);
-                PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder = new PluginsPropertiesXMLHolder(xmlString);
+                pluginsPropertiesXMLHolder = new PluginsPropertiesXMLHolder(xmlString);
+            }
+            else if (entryName.indexOf("icon.gif") != -1){
+                pluginIcon = new ImageIcon(buf);
             }
             else{
                 String name = entryName.replace('/', '.');

@@ -21,7 +21,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  *
  * <p><b>Copyright: General Public License</b></p>
  *
- * <p>Diese Klasse darf nicht verändert werden!
+ * <p>Diese Klasse darf nicht veraendert werden!
  * Um ein Plugin zu erstellen, muss diese Klasse überschrieben werden.
  * Die Pluginklasse muss zwingend wie das jar-File heissen.
  * Beim Pluginstart wird automatisch der Standardkonstruktor aufgerufen, alle anderen werden ignoriert.</p>
@@ -33,12 +33,15 @@ public abstract class PluginConnector
     extends JPanel
     implements LanguageListener, DataUpdateListener, RegisterI {
 
-    protected ImageIcon pluginIcon = null;
-    private boolean initialized = false;
+    private final ImageIcon pluginIcon;
     private final PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder;
 
-    protected PluginConnector(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder){
+    protected PluginConnector(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder, ImageIcon icon){
+        if (pluginsPropertiesXMLHolder == null || icon == null){
+            throw new RuntimeException("Plugin nicht richtig implementiert");
+        }
         this.pluginsPropertiesXMLHolder = pluginsPropertiesXMLHolder;
+        pluginIcon = icon;
     }
 
     public final String getXMLAttributeByTagName(String identifier){
@@ -50,7 +53,7 @@ public abstract class PluginConnector
      * @return String: Titel, der als Reitertext ausgegeben wird
      */
     public final String getTitle(){
-        return getXMLAttributeByTagName(".root.general.title");
+        return getXMLAttributeByTagName(".root.general.title.value");
     }
 
     /**
@@ -58,7 +61,7 @@ public abstract class PluginConnector
      * @return String: Versions-Nr
      */
     public final String getVersion(){
-        return getXMLAttributeByTagName(".root.general.version");
+        return getXMLAttributeByTagName(".root.general.version.value");
     }
 
     /**
@@ -66,7 +69,7 @@ public abstract class PluginConnector
      * @return String: Name des Autors
      */
     public final String getAutor(){
-        return getXMLAttributeByTagName(".root.general.author");
+        return getXMLAttributeByTagName(".root.general.author.value");
     }
 
     /**
@@ -74,7 +77,7 @@ public abstract class PluginConnector
      * @return boolean: Liefert true zurück, wenn das Plugin eine sichtbare Oberflaeche haben soll, sonst false
      */
     public final boolean istReiter(){
-        return getXMLAttributeByTagName(".root.general.istab").toLowerCase().equals("true");
+        return getXMLAttributeByTagName(".root.general.istab.value").toLowerCase().equals("true");
     }
 
     /**
@@ -82,7 +85,7 @@ public abstract class PluginConnector
      * @return String: Liefert eine Kurzbeschreibung des Plugins zurück.
      */
     public final String getBeschreibung(){
-        return getXMLAttributeByTagName(".root.general.description");
+        return getXMLAttributeByTagName(".root.general.description.value");
     }
 
     /**
@@ -93,52 +96,13 @@ public abstract class PluginConnector
         return null;
     }
 
-    protected void initIcon() {
-        if (!initialized) {
-            initialized = true;
-            try {
-                String classname = getClass().toString();
-                String path = System.getProperty("user.dir") + File.separator +
-                    "plugins" +
-                    File.separator +
-                    classname.substring(classname.lastIndexOf('.') + 1) +
-                    ".jar";
-                File aJar = new File(path);
-                JarFile jf = new JarFile(aJar);
-                String entryName;
-
-                for (Enumeration e = jf.entries(); e.hasMoreElements(); ) {
-                    ZipEntry entry = (ZipEntry) e.nextElement();
-                    entryName = entry.getName();
-                    if (entryName.indexOf("icon.gif") != -1) {
-                        InputStream is = jf.getInputStream(entry);
-                        int l = (int) entry.getSize();
-                        byte[] buf = new byte[l];
-                        int read = 0;
-
-                        while (read < l) {
-                            int incr = is.read(buf, read, l - read);
-                            read += incr;
-                        }
-                        pluginIcon = new ImageIcon(buf);
-                        return;
-                    }
-                }
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                pluginIcon = null;
-            }
-        }
-    }
-
     /**
      * Liefert ein Icon zurueck, welches in der Lasche angezeigt werden soll. Es muss als icon.gif im package plugins gespeichert
      * werden, damit es spaeter an die richtige Stelle im jar-Archiv wandert (ca. 16x16)
      *
      * @return ImageIcon: LaschenIcon
      */
-    public ImageIcon getIcon() {
+    public final ImageIcon getIcon() {
         return pluginIcon;
     }
 
