@@ -88,7 +88,8 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
               ImageIcon icon = aPlugin.getIcon();
               addTab(aPlugin.getTitle(), icon, aPlugin);
             }
-            DataManager.getInstance().addGlobalListener(aPlugin);
+            DataManager.getInstance().addDownloadListener(aPlugin);
+            DataManager.getInstance().addServerListener(aPlugin);
             LanguageSelector.getInstance().addLanguageListener(aPlugin);
             parent.addPluginToHashSet(aPlugin);
           }

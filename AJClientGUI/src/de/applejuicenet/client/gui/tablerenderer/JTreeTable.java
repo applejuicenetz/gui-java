@@ -41,7 +41,7 @@ public class JTreeTable
     DataManager.getInstance().addDownloadListener(this);
   }
 
-  public void fireContentChanged(HashMap changedContent) {
+  public void fireContentChanged() {
     repaint();
   }
 

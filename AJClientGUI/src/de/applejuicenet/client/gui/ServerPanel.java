@@ -123,11 +123,11 @@ public class ServerPanel
   }
 
   public void registerSelected(){
-    DataManager.getInstance().updateServer();
+    DataManager.getInstance().reloadModifiedXML(true);
   }
 
-  public void fireContentChanged(HashMap changedContent){
-    ((ServerTableModel)serverTable.getModel()).setTable(changedContent);
+  public void fireContentChanged(){
+    ((ServerTableModel)serverTable.getModel()).setTable(DataManager.getInstance().getAllServer());
   }
 
   public void fireLanguageChanged() {

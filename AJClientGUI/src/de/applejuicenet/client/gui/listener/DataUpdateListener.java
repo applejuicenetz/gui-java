@@ -12,5 +12,5 @@ import java.util.HashMap;
  */
 
 public interface DataUpdateListener {
-  public void fireContentChanged(HashMap changedContent);
+  public void fireContentChanged();
 }

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import de.applejuicenet.client.shared.NetworkInfo;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -30,14 +31,12 @@ public class DataManager {   //Singleton-Implementierung
   private DownloadSourceDO[] downloads;
   private HashSet downloadListener;
   private HashSet serverListener;
-  private HashSet globalListener;
-  private HashMap serverMap;
   private static DataManager instance = null;
   private static int x=0;
   private JLabel[] statusbar;
-  private WebXMPParser modifiedXML = null;
-  private WebXMPParser informationXML = null;
-  private WebXMPParser shareXML = null;
+  private ModifiedXMLHolder modifiedXML = null;
+  private InformationXMLHolder informationXML = null;
+  private ShareXMLHolder shareXML = null;
   private Version coreVersion;
 
   public void addDownloadListener(DataUpdateListener listener){
@@ -50,22 +49,15 @@ public class DataManager {   //Singleton-Implementierung
       serverListener.add(listener);
   }
 
-  public void addGlobalListener(DataUpdateListener listener){
-    if (!(globalListener.contains(listener)))
-      globalListener.add(listener);
-  }
-
   private DataManager(){
     downloadListener = new HashSet();
-    globalListener = new HashSet();
     serverListener = new HashSet();
-    serverMap = new HashMap();
 
    //load XMLs
-   modifiedXML = new WebXMPParser("/xml/modified.xml", "");
-   updateServer();
-   informationXML = new WebXMPParser("/xml/information.xml", "");
-   shareXML = new WebXMPParser("/xml/share.xml", "");
+   modifiedXML = new ModifiedXMLHolder();
+   reloadModifiedXML(false);
+   informationXML = new InformationXMLHolder();
+   shareXML = new ShareXMLHolder();
 
    String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[]{"applejuice", "generalinformation", "version"}, true);
    coreVersion = new Version(versionsTag, "Java", Version.getOSTypByOSName((String) System.getProperties().get("os.name")));
@@ -90,8 +82,13 @@ public class DataManager {   //Singleton-Implementierung
   }
 
   public HashMap getAllServer(){
-    updateServer(false);
-    return serverMap;
+    return modifiedXML.getServer();
+  }
+
+  public void updateModifiedXML(){
+    modifiedXML.update();
+    informServerListener();
+    informDownloadListener();
   }
 
 
@@ -117,6 +114,16 @@ public class DataManager {   //Singleton-Implementierung
     return savedHost;
   }
 
+  public NetworkInfo getNetworkInfo(){
+    reloadModifiedXML(true);
+    return modifiedXML.getNetworkInfo();
+  }
+
+  public void reloadModifiedXML(boolean informListener){
+    modifiedXML.reload("");
+    updateServer(informListener);
+  }
+
   public static boolean istCoreErreichbar(){
     try {
       String testData = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET, "/xml/information.xml");
@@ -127,28 +134,7 @@ public class DataManager {   //Singleton-Implementierung
     return true;
   }
 
-  public void updateServer(){
-    updateServer(true);
-  }
-
   protected void updateServer(boolean informListener){
-    modifiedXML.reload("");
-    NodeList nodes = modifiedXML.getDocument().getElementsByTagName("server");
-    HashMap changedServer = new HashMap();
-    for (int i=0; i<nodes.getLength(); i++){
-      Element e = (Element) nodes.item(i);
-      String id_key = e.getAttribute("id");
-      int id = Integer.parseInt(id_key);
-      String name = e.getAttribute("name");
-      String host = e.getAttribute("host");
-      long lastseen = Long.parseLong(e.getAttribute("lastseen"));
-      String port = e.getAttribute("port");
-      ServerDO server = new ServerDO(id, name, host, port, lastseen);
-      changedServer.put(id_key, server);
-    }
-    serverMap.putAll(changedServer);
-    if (informListener)
-      informServerListener(changedServer);
   }
 
   public static DataManager getInstance(){
@@ -165,21 +151,14 @@ public class DataManager {   //Singleton-Implementierung
   private void informDownloadListener(){
     Iterator it = downloadListener.iterator();
     while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged(new HashMap());
+      ((DataUpdateListener)it.next()).fireContentChanged();
     }
   }
 
-  private void informServerListener(HashMap changedContent){
+  private void informServerListener(){
     Iterator it = serverListener.iterator();
     while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged(changedContent);
-    }
-  }
-
-  private void informGlobalListener(){
-    Iterator it = globalListener.iterator();
-    while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged(new HashMap());
+      ((DataUpdateListener)it.next()).fireContentChanged();
     }
   }
 
@@ -197,11 +176,6 @@ public class DataManager {   //Singleton-Implementierung
     }
   }
 
-  public void updateModifiedXML(){
-    modifiedXML.reload("");
-    System.out.print(modifiedXML.getFirstAttrbuteByTagName(new String[]{"applejuice", "time"}, true));
-  }
-
   public DownloadSourceDO[] getDownloads(){
     updateDownloads();
     return downloads;
@@ -211,7 +185,6 @@ public class DataManager {   //Singleton-Implementierung
     //dummy
     x++;
     downloads[1].setGroesse(Integer.toString(x));
-    informGlobalListener();
     informDownloadListener();
   }
 }

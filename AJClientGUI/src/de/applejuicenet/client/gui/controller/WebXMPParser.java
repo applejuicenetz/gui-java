@@ -22,7 +22,7 @@ import java.sql.Time;
  * @version 1.0
  */
 
-public class WebXMPParser extends XMLDecoder {
+public abstract class WebXMPParser extends XMLDecoder {
   private String host;
   private String xmlCommand;
   private long timestamp=0;
@@ -59,6 +59,7 @@ public class WebXMPParser extends XMLDecoder {
         timestamp = Long.parseLong(getFirstAttrbuteByTagName(new String[]{"applejuice", "time"}, true));
       else
         firstRun = !firstRun;
+      update();
     }
     catch (SAXException sxe) {
       Exception x = sxe;
@@ -76,4 +77,6 @@ public class WebXMPParser extends XMLDecoder {
       ioe.printStackTrace();
     }
   }
+
+  public abstract void update();
 }
