@@ -73,33 +73,27 @@ public class SearchPanel extends JPanel implements LanguageListener{
   }
 
   public void fireLanguageChanged() {
-    try {
-      LanguageSelector languageSelector = LanguageSelector.getInstance();
-      label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-          getFirstAttrbuteByTagName(new String[] {"mainform", "searchlbl", "caption"})) + ": ");
-      btnStartStopSearch.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-          getFirstAttrbuteByTagName(new String[] {"mainform", "searchbtn", "searchcaption"})));
+    LanguageSelector languageSelector = LanguageSelector.getInstance();
+    label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "searchlbl", "caption"})) + ": ");
+    btnStartStopSearch.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "searchbtn", "searchcaption"})));
 
-      String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-          getFirstAttrbuteByTagName(new String[] {"mainform", "opensearches", "caption"}));
-      label2.setText(temp.replaceAll("%d", Integer.toString(anzahlSuchanfragen)));
+    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"mainform", "opensearches", "caption"}));
+    label2.setText(temp.replaceAll("%d", Integer.toString(anzahlSuchanfragen)));
 
-      String[] columns = new String[6];
-      columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col0caption"}));
-      columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col1caption"}));
-      columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col4caption"}));
-      columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col5caption"}));
-      columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col4caption"}));
-      columns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col5caption"}));
+    String[] columns = new String[6];
+    columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col0caption"}));
+    columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col1caption"}));
+    columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col4caption"}));
+    columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col5caption"}));
+    columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col4caption"}));
+    columns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "searchs" ,"col5caption"}));
 
-      TableColumnModel tcm = searchResultTable.getColumnModel();
-      for (int i=0; i<tcm.getColumnCount(); i++){
-        tcm.getColumn(i).setHeaderValue(columns[i]);
-      }
-
-    }
-    catch (LanguageSelectorNotInstanciatedException ex) {
-      ex.printStackTrace();
+    TableColumnModel tcm = searchResultTable.getColumnModel();
+    for (int i=0; i<tcm.getColumnCount(); i++){
+      tcm.getColumn(i).setHeaderValue(columns[i]);
     }
   }
 }

@@ -10,6 +10,8 @@ package de.applejuicenet.client.shared.exception;
  */
 
 public class WebSiteNotFoundException extends Exception {
+  public static final int PROXY_AUTHORIZATION_REQUIRED = 407;
+
   private Exception innerException;
 
   public WebSiteNotFoundException(Exception e){
@@ -20,6 +22,15 @@ public class WebSiteNotFoundException extends Exception {
   public String getMessage(){
     printStackTrace();
     return super.getMessage() + " " + innerException.getMessage();
+  }
+
+  public int getErrorCode(){
+    //toDo
+    if (super.getMessage().indexOf("HTTP response code")!=-1)
+    {
+
+    }
+    return 0;
   }
 
   public void printStackTrace(){

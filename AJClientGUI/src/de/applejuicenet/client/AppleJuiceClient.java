@@ -7,6 +7,20 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.shared.HtmlLoader;
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import javax.swing.JOptionPane;
+import java.io.File;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileInputStream;
+import java.io.BufferedWriter;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -19,18 +33,31 @@ import de.applejuicenet.client.shared.HtmlLoader;
 
 public class AppleJuiceClient {
   public static void main(String[] args) {
-    String test;
-    try {
-      System.out.println(HtmlLoader.getHtmlContent(
-          "http://localhost:9851/xml/modified.xml"));
+    if (OptionsManager.getInstance().getRemoteSettings().isRemoteUsed()) {
+
+      try {
+        //dummy
+        System.out.println(HtmlLoader.getHtmlContent("maj0r.dyndns.org", HtmlLoader.GET, "/xml/information.xml"));
+      }
+      catch (WebSiteNotFoundException ex) {
+        ex.printStackTrace();
+        LanguageSelector languageSelector = LanguageSelector.getInstance();
+        String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
+        String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
+                                      "verbindungsfehler"}));
+        JOptionPane.showMessageDialog(new Frame(), nachricht, titel,
+                                      JOptionPane.OK_OPTION);
+        System.exit( -1);
+      }
     }
-    catch (WebSiteNotFoundException ex) {
-      int i=0;
-    }
+
     AppleJuiceDialog theApp = new AppleJuiceDialog();
     Dimension appDimension = theApp.getSize();
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    theApp.setLocation((screenSize.width-appDimension.width)/2, (screenSize.height-appDimension.height)/2);
+    theApp.setLocation( (screenSize.width - appDimension.width) / 2,
+                       (screenSize.height - appDimension.height) / 2);
     theApp.show();
   }
 }

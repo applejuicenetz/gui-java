@@ -65,13 +65,10 @@ public class AppleJuiceDialog
     setJMenuBar(createMenuBar());
     String path = System.getProperty("user.dir") + File.separator + "language" +
         File.separator;
-    OptionsManager op = OptionsManager.getInstance();
-    String datei = op.getSprache();
-    path += datei + ".xml";
+    path += OptionsManager.getInstance().getSprache() + ".xml";
     //zZ werden die Header der TableModel nicht aktualisiert, deshalb hier schon
-    LanguageSelector ls = LanguageSelector.getInstance(path);
     registerPane = new RegisterPanel(this);
-    ls = LanguageSelector.getInstance(path);
+    LanguageSelector ls = LanguageSelector.getInstance(path);
     addWindowListener(
         new WindowAdapter() {
       public void windowClosing(WindowEvent evt) {
@@ -122,14 +119,9 @@ public class AppleJuiceDialog
   }
 
   private void einstellungenSpeichern() {
-    try {
-      String sprachText = LanguageSelector.getInstance().
-          getFirstAttrbuteByTagName(new String[] {"Languageinfo", "name"});
-      OptionsManager.getInstance().setSprache(sprachText);
-    }
-    catch (LanguageSelectorNotInstanciatedException ex) {
-      ex.printStackTrace();
-    }
+    String sprachText = LanguageSelector.getInstance().
+        getFirstAttrbuteByTagName(new String[] {"Languageinfo", "name"});
+    OptionsManager.getInstance().setSprache(sprachText);
   }
 
   private void closeDialog(WindowEvent evt) {
@@ -195,22 +187,16 @@ public class AppleJuiceDialog
   }
 
   public void fireLanguageChanged() {
-    try {
-      LanguageSelector languageSelector = LanguageSelector.getInstance();
-      setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new
-          String[] {"mainform", "caption"})));
-      sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-          getFirstAttrbuteByTagName(new String[] {"einstform", "languagesheet",
-                                    "caption"})));
-      menuItem.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-          getFirstAttrbuteByTagName(new String[] {"einstform", "caption"})));
-      optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-          getFirstAttrbuteByTagName(new String[] {"javagui", "menu", "extras"})));
-
-    }
-    catch (LanguageSelectorNotInstanciatedException ex) {
-      ex.printStackTrace();
-    }
+    LanguageSelector languageSelector = LanguageSelector.getInstance();
+    setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                               getFirstAttrbuteByTagName(new
+        String[] {"mainform", "caption"})));
+    sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"einstform", "languagesheet",
+                                  "caption"})));
+    menuItem.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"einstform", "caption"})));
+    optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "menu", "extras"})));
   }
 }

@@ -37,13 +37,7 @@ public class DownloadModel
   }
 
   private void loadHeader(){
-    LanguageSelector languageSelector = null;
-    try {
-      languageSelector = LanguageSelector.getInstance();
-    }
-    catch (LanguageSelectorNotInstanciatedException ex) {
-      ex.printStackTrace();
-    }
+    LanguageSelector languageSelector = LanguageSelector.getInstance();
     cNames = new String[10];
     cNames[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col0caption"}));
     cNames[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "col1caption"}));

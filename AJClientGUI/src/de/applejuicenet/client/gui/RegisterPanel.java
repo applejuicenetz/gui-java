@@ -40,11 +40,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
   }
 
   private void init() {
-    try {
-      LanguageSelector.getInstance().addLanguageListener(this);
-    }
-    catch (LanguageSelectorNotInstanciatedException ex) {
-    }
+    LanguageSelector.getInstance().addLanguageListener(this);
     startPanel = new StartPanel();
     downloadPanel = new DownloadPanel();
     uploadPanel = new UploadPanel();
@@ -106,16 +102,11 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
   }
 
   public void fireLanguageChanged(){
-      try {
-        LanguageSelector languageSelector = LanguageSelector.getInstance();
-        setTitleAt(0, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "homesheet", "caption"})));
-        setTitleAt(1, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "seachsheet", "caption"})));
-        setTitleAt(2, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queuesheet", "caption"})));
-        setTitleAt(3, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploadsheet", "caption"})));
-        setTitleAt(4, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serversheet", "caption"})));
-      }
-      catch (LanguageSelectorNotInstanciatedException ex) {
-        ex.printStackTrace();
-      }
+    LanguageSelector languageSelector = LanguageSelector.getInstance();
+    setTitleAt(0, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "homesheet", "caption"})));
+    setTitleAt(1, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "seachsheet", "caption"})));
+    setTitleAt(2, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queuesheet", "caption"})));
+    setTitleAt(3, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "uploadsheet", "caption"})));
+    setTitleAt(4, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "serversheet", "caption"})));
   }
 }

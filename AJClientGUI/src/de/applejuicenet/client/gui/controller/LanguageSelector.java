@@ -24,11 +24,19 @@ public class LanguageSelector extends XMLDecoder{
     super(path);
   }
 
-  public static LanguageSelector getInstance() throws LanguageSelectorNotInstanciatedException{
-    if (instance==null)
-      throw new LanguageSelectorNotInstanciatedException();
+  public static LanguageSelector getInstance() {
+    if (instance==null){
+      String path = System.getProperty("user.dir") + File.separator + "language" +
+          File.separator;
+      OptionsManager op = OptionsManager.getInstance();
+      String datei = op.getSprache();
+      path += datei + ".xml";
+      //zZ werden die Header der TableModel nicht aktualisiert, deshalb hier schon
+      return new LanguageSelector(path);
+    }
     return instance;
   }
+
 
   public static LanguageSelector getInstance(String path){
     if (instance==null)

@@ -23,6 +23,8 @@ import de.applejuicenet.client.gui.controller.OptionsManager;
 public class ODProxyPanel extends JPanel {
   private JLabel label1;
   private JLabel label2;
+  private JLabel label3;
+  private JLabel label4;
   private JCheckBox verwenden;
   private JTextField ip = new JTextField();
   private JTextField port = new JTextField();
@@ -56,6 +58,8 @@ public class ODProxyPanel extends JPanel {
         getFirstAttrbuteByTagName(new String[] {"javagui", "options", "proxy", "benutzername"})));
     label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"javagui", "options", "proxy", "passwort"})));
+    label3 = new JLabel("IP");
+    label4 = new JLabel("Port");
     verwenden = new JCheckBox();
     verwenden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"javagui", "options", "proxy", "verwenden"})));
@@ -66,6 +70,7 @@ public class ODProxyPanel extends JPanel {
         proxy.useProxy(checkbox.isSelected());
       }
     });
+    port.setDocument(new NumberInputVerifier());
 
     proxy = OptionsManager.getInstance().getProxySettings();
 
@@ -74,7 +79,6 @@ public class ODProxyPanel extends JPanel {
     user.setText(proxy.getUsername());
     passwort.setText(proxy.getPassword());
 
-    port.setDocument(new NumberInputVerifier());
 
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;
@@ -108,10 +112,10 @@ public class ODProxyPanel extends JPanel {
       }
     });
 
-    panel1.add(new JLabel("IP"), constraints);
+    panel1.add(label3, constraints);
 
     constraints.gridy = 1;
-    panel1.add(new JLabel("Port"), constraints);
+    panel1.add(label4, constraints);
 
     constraints.gridy = 2;
     panel1.add(label1, constraints);
@@ -145,7 +149,8 @@ public class ODProxyPanel extends JPanel {
 
     add(panel1, BorderLayout.NORTH);
 
-    enableControls(false);
+    verwenden.setSelected(proxy.isProxyUsed());
+    enableControls(proxy.isProxyUsed());
   }
 
   public void enableControls(boolean enable){
@@ -153,5 +158,9 @@ public class ODProxyPanel extends JPanel {
     port.setEnabled(enable);
     user.setEnabled(enable);
     passwort.setEnabled(enable);
+    label1.setEnabled(enable);
+    label2.setEnabled(enable);
+    label3.setEnabled(enable);
+    label4.setEnabled(enable);
   }
 }

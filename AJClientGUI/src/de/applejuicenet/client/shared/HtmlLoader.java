@@ -18,78 +18,48 @@ import de.applejuicenet.client.shared.exception.*;
  */
 
 public abstract class HtmlLoader {
+  public static final int POST = 0;
+  public static final int GET = 1;
 
-  public static String getHtmlContent(String urlPath) throws
+  public static String getHtmlContent(String host, int method, String command) throws
       WebSiteNotFoundException {
-    ProxyConfiguration proxy = OptionsManager.getInstance().getProxySettings();
-
-    if (proxy.isProxyUsed()) {
-      Properties systemSettings = System.getProperties();
-      systemSettings.put("proxySet", "true");
-      systemSettings.put("firewallSet", "true");
-      systemSettings.put("firewallHost", proxy.getIP());
-      systemSettings.put("firewallPort", Integer.toString(proxy.getPort()));
-      systemSettings.put("http.proxyHost", proxy.getIP());
-      systemSettings.put("http.proxyPort", Integer.toString(proxy.getPort()));
-      System.setProperties(systemSettings);
-    }
-
-    URL url = null;
+    String urlContent = "";
     try {
-      url = new URL(urlPath);
-    }
-    catch (MalformedURLException ex) {
-      ex.printStackTrace();
-      throw new WebSiteNotFoundException(ex);
-    }
+      InetAddress addr = InetAddress.getByName(host);
+      Socket socket = new Socket(addr, 9851);
+      PrintWriter out = new PrintWriter(
+      new BufferedWriter(
+      new OutputStreamWriter(
+      socket.getOutputStream())));
 
-    HttpURLConnection uc = null;
-    try {
-      uc = (HttpURLConnection) url.openConnection();
-    }
-    catch (IOException ex1) {
-      ex1.printStackTrace();
-      throw new WebSiteNotFoundException(ex1);
-    }
+      String methode ="";
+      if (method==HtmlLoader.GET)
+        methode="GET ";
+      else if (method==HtmlLoader.POST)
+        methode="POST ";
+      else
+        return "";
+      out.println(methode + command + " HTTP/1.1");
+      out.println();
+      out.flush();
 
-    if (proxy.isProxyUsed()) {
-      String encoded = new String(Base64.encode( (proxy.getUsername() + ":" +
-                                                  proxy.getPassword()).
-                                                getBytes()));
-      uc.setRequestProperty("Proxy-Authorization", "Basic " + encoded);
-    }
-    try {
-      uc.connect();
-    }
-    catch (IOException ex2) {
-      ex2.printStackTrace();
-      throw new WebSiteNotFoundException(ex2);
-    }
-    InputStream in = null;
+      BufferedReader in = new BufferedReader(
+      new InputStreamReader(
+      socket.getInputStream()));
 
-    try {
-      in = uc.getInputStream();
-    }
-    catch (IOException e) {
-      throw new WebSiteNotFoundException(e);
-    }
-    String urlContent = null;
-    try {
-      byte b[] = new byte[1000];
-      int numRead = in.read(b);
-      urlContent = new String(b, 0, numRead);
-      String newContent = null;
-      while (numRead != -1) {
-        numRead = in.read(b);
-        if (numRead != -1) {
-          newContent = new String(b, 0, numRead);
-          urlContent += newContent;
-        }
+      String inputLine="" ;
+      inputLine = in.readLine();
+      while (inputLine.indexOf("xml version")==-1) {
+        inputLine = in.readLine();
+      }
+      urlContent += inputLine;
+      while ( (inputLine = in.readLine()) != null) {
+        urlContent += inputLine;
       }
     }
-    catch (IOException e) {
-      throw new WebSiteNotFoundException(e);
+    catch (Exception ex) {
+      ex.printStackTrace();
     }
-    return urlContent;
+   return urlContent;
   }
 }
