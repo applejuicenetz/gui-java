@@ -23,15 +23,18 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.18 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.19 2004/03/04 19:18:41 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.19  2004/03/04 19:18:41  maj0r
+ * Ausgabe korrigiert.
+ *
  * Revision 1.18  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -67,7 +70,7 @@ import java.util.Set;
  * Wizard erweitert, aber noch nicht fertiggestellt.
  *
  * Revision 1.7  2003/06/22 19:54:45  maj0r
- * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
+ * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugef\uFFFDgt.
  *
  * Revision 1.6  2003/06/10 12:31:03  maj0r
  * Historie eingefuegt.
@@ -144,11 +147,11 @@ public class LanguageSelector
             if (!sprachDatei.isFile()) {
                 if (logger.isEnabledFor(Level.INFO)) {
                     logger.info(
-                        "Die in der settings.xml hinterlegte Sprachdatei wurde nicht gefunden." +
+                        "Die in der properties.xml hinterlegte Sprachdatei wurde nicht gefunden." +
                         "\r\nappleJuice wird beendet.");
                 }
                 AppleJuiceDialog.closeWithErrormessage
-                    ("Die in der settings.xml hinterlegte Sprachdatei wurde nicht gefunden." +
+                    ("Die in der properties.xml hinterlegte Sprachdatei wurde nicht gefunden." +
                      "\r\nappleJuice wird beendet.", false);
             }
             instance.init(sprachDatei);
