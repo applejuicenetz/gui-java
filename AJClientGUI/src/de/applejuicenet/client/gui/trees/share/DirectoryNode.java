@@ -2,6 +2,7 @@ package de.applejuicenet.client.gui.trees.share;
 
 import de.applejuicenet.client.shared.dac.DirectoryDO;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.trees.ApplejuiceNode;
@@ -10,10 +11,11 @@ import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.7 2003/08/26 06:20:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.8 2003/08/26 09:49:01 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +24,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryNode.java,v $
+ * Revision 1.8  2003/08/26 09:49:01  maj0r
+ * ShareTree weitgehend fertiggestellt.
+ *
  * Revision 1.7  2003/08/26 06:20:10  maj0r
  * Anpassungen an muhs neuen Tree.
  *
@@ -48,12 +53,14 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node, Apple
     public static final int NOT_SHARED = 0;
     public static final int SHARED_WITH_SUB = 1;
     public static final int SHARED_WITHOUT_SUB = 2;
+    public static final int SHARED_SOMETHING = 3;
+    public static final int SHARED_SUB = 4;
+
+    private static HashSet shareDirs = new HashSet();
 
     private DirectoryDO directoryDO;
     private ArrayList children = null;
     private DirectoryNode parent;
-
-    private int shareMode = NOT_SHARED;
 
     public DirectoryNode(DirectoryNode parent, DirectoryDO directoryDO) {
         this.parent = parent;
@@ -65,6 +72,10 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node, Apple
         this.directoryDO = null;
         children = new ArrayList();
         ApplejuiceFassade.getInstance().getDirectory(null, this);
+    }
+
+    public static void setShareDirs(HashSet newShareDirs){
+        shareDirs = newShareDirs;
     }
 
     public int getChildCount() {
@@ -80,27 +91,44 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node, Apple
     }
 
     public int getShareMode(){
+        if (directoryDO==null)
+            return NOT_SHARED;
+        Iterator it = shareDirs.iterator();
+        int shareMode = NOT_SHARED;
+        while (it.hasNext()){
+            ShareEntry value = (ShareEntry)it.next();
+            if (value.getDir().toLowerCase().indexOf(directoryDO.getPath().toLowerCase())!=-1){
+                if (value.getShareMode()==ShareEntry.SUBDIRECTORY){
+                    if (directoryDO.getPath().toLowerCase().indexOf(value.getDir().toLowerCase())!=-1)
+                        return SHARED_WITH_SUB;
+                    else
+                        return SHARED_SOMETHING;
+                }
+                else{
+                    if (directoryDO.getPath().toLowerCase().indexOf(value.getDir().toLowerCase())!=-1)
+                        return SHARED_WITHOUT_SUB;
+                    else
+                        return SHARED_SOMETHING;
+                }
+            }
+        }
+        int parentShareMode = parent.getShareMode();
+        if (parentShareMode==SHARED_WITH_SUB || parentShareMode==SHARED_SUB)
+            shareMode = SHARED_SUB;
         return shareMode;
     }
 
-    public void setShareMode(int shareMode){
-        this.shareMode = shareMode;
-        if (children==null || children.size()==0)
-            return;
-        else{
-            for (int i=0; i<children.size(); i++){
-                ((DirectoryNode)children.get(i)).setShareMode(shareMode);;
-            }
-        }
-   }
-
     public Icon getShareModeIcon(){
         IconManager im = IconManager.getInstance();
-        switch (shareMode){
+        switch (getShareMode()){
             case SHARED_WITH_SUB:
+                    return im.getIcon("sharedwsub");
+            case SHARED_SUB:
                     return im.getIcon("sharedwsub");
             case SHARED_WITHOUT_SUB:
                     return im.getIcon("sharedwosub");
+            case SHARED_SOMETHING:
+                    return im.getIcon("somethingshared");
             default:
                 return im.getIcon("notshared");
         }
@@ -110,7 +138,6 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node, Apple
     public Icon getConvenientIcon() {
         if (directoryDO==null)
             return null;      //rootNode
-
         IconManager im = IconManager.getInstance();
         switch (directoryDO.getType()){
             case DirectoryDO.TYPE_DESKTOP:
@@ -154,5 +181,4 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node, Apple
         }
         return children.toArray(new DirectoryNode[children.size()]);
     }
-
 }
