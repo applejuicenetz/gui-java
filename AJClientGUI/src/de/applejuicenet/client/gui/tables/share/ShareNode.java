@@ -8,9 +8,10 @@ import de.applejuicenet.client.shared.exception.NodeAlreadyExistsException;
 
 import javax.swing.*;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.5 2003/08/25 07:23:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.6 2003/08/25 19:28:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import java.util.HashMap;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.6  2003/08/25 19:28:52  maj0r
+ * Anpassungen an muhs neuen Tree.
+ *
  * Revision 1.5  2003/08/25 07:23:25  maj0r
  * Kleine Korrekturen.
  *
@@ -39,6 +43,10 @@ import java.util.HashMap;
  */
 
 public class ShareNode implements Node {
+  public static final int NOT_SHARED = 0;
+  public static final int SHARED_WITH_SUB = 1;
+  public static final int SHARED_WITHOUT_SUB = 2;
+
   private static ImageIcon leafIcon;
   private static ImageIcon treeIcon;
   private static HashMap directoryNodes = new HashMap();
@@ -47,6 +55,7 @@ public class ShareNode implements Node {
   private HashMap children = new HashMap();
   private ShareNode parent;
   private String path;
+  private int shareMode = NOT_SHARED;
 
   public ShareNode(ShareNode parent, ShareDO shareDO) {
     initIcons();
@@ -76,6 +85,18 @@ public class ShareNode implements Node {
 
   public ShareNode getParent(){
       return parent;
+  }
+
+  public int getShareMode(){
+      return shareMode;
+  }
+
+  public void setShareMode(int shareMode){
+      this.shareMode = shareMode;
+      Iterator it = children.values().iterator();
+      while (it.hasNext()){
+          ((ShareNode)it.next()).setShareMode(shareMode);
+      }
   }
 
   private void initIcons() {

@@ -25,7 +25,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.23 2003/08/25 07:23:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.24 2003/08/25 19:28:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +34,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.24  2003/08/25 19:28:52  maj0r
+ * Anpassungen an muhs neuen Tree.
+ *
  * Revision 1.23  2003/08/25 07:23:25  maj0r
  * Kleine Korrekturen.
  *
@@ -110,6 +113,10 @@ public class SharePanel
 
   private String eintraege;
 
+  private JPopupMenu popup = new JPopupMenu();
+  private JMenuItem item1;
+  private JMenuItem item2;
+
   private int anzahlDateien = 0;
   private String dateiGroesse = "0 MB";
   private boolean treeInitialisiert = false;
@@ -131,6 +138,11 @@ public class SharePanel
     neueListe.setEnabled(false);
     prioritaetSetzen.setEnabled(false);
     prioritaetAufheben.setEnabled(false);
+
+    item1 = new JMenuItem("Verbinden");
+    item2 = new JMenuItem("Löschen");
+    popup.add(item1);
+    popup.add(item2);
 
     shareModel = new ShareModel(new ShareNode(null, "/"));
     shareTable = new JTreeTable(shareModel);
@@ -281,6 +293,32 @@ public class SharePanel
     TableColumn tc = shareTable.getColumnModel().getColumn(1);
     tc.setCellRenderer(new ShareTableCellRenderer());
 
+      folderTree.addMouseListener(new MouseAdapter() {
+          public void mousePressed(MouseEvent me) {
+              if (SwingUtilities.isRightMouseButton(me))
+              {
+                  Point p = me.getPoint();
+                  int iRow = folderTree.getRowForLocation(p.x, p.y);
+                  folderTree.setSelectionRow(iRow);
+/*                  serverTable.setRowSelectionInterval(iRow, iRow);
+                  serverTable.setColumnSelectionInterval(iCol, iCol);*/
+              }
+              maybeShowPopup(me);
+          }
+
+          public void mouseReleased(MouseEvent e) {
+              super.mouseReleased(e);
+              maybeShowPopup(e);
+          }
+
+          private void maybeShowPopup(MouseEvent e) {
+              if (e.isPopupTrigger())
+              {
+                  popup.show(folderTree, e.getX(), e.getY());
+              }
+          }
+      });
+
     LanguageSelector.getInstance().addLanguageListener(this);
   }
 
@@ -345,6 +383,12 @@ public class SharePanel
     titledBorder2.setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"mainform", "filessheet",
                                   "caption"})));
+    item1.setText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "addwsubdirsbtn", "caption"})));
+    item2.setText(ZeichenErsetzer.korrigiereUmlaute(
+        languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+        "addosubdirsbtn", "caption"})));
     addFolderWithSubfolder.setText(ZeichenErsetzer.korrigiereUmlaute(
         languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
         "addwsubdirsbtn", "caption"})));
