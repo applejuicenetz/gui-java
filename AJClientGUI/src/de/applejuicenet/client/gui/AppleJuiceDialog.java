@@ -1,25 +1,69 @@
 package de.applejuicenet.client.gui;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+import javax.swing.border.BevelBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import org.apache.log4j.*;
-import com.l2fprod.gui.plaf.skin.*;
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.plugins.*;
-import de.applejuicenet.client.gui.tools.*;
-import de.applejuicenet.client.shared.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import com.jeans.trayicon.SwingTrayPopup;
+import com.jeans.trayicon.WindowsTrayIcon;
+import com.l2fprod.gui.plaf.skin.Skin;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.OptionsManager;
+import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.gui.tools.MemoryMonitorDialog;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.Information;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import javax.swing.Icon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.74 2004/01/05 19:17:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.75 2004/01/06 12:52:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +72,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.75  2004/01/06 12:52:04  maj0r
+ * TrayIcon für Windowsplattformen eingebaut.
+ *
  * Revision 1.74  2004/01/05 19:17:18  maj0r
  * Bug #56 gefixt (Danke an MeineR)
  * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
@@ -230,6 +277,15 @@ public class AppleJuiceDialog
     private static boolean themesInitialized = false;
     private String bestaetigung = "";
 
+    private static boolean useTrayIcon = false;
+    private JMenuItem popupShowHideMenuItem;
+    private JMenuItem popupAboutMenuItem;
+    private String zeigen = "";
+    private String verstecken = "";
+    private WindowsTrayIcon trayIcon;
+    private Icon versteckenIcon = null;
+    private Icon zeigenIcon = null;
+
     private static AppleJuiceDialog theApp;
 
     public static void initThemes() {
@@ -318,12 +374,16 @@ public class AppleJuiceDialog
     }
 
     private void init() throws Exception {
-        setTitle("AppleJuice Client");
-        plugins = new HashSet();
+        String titel = "AppleJuice Client";
         IconManager im = IconManager.getInstance();
-        setIconImage(im.getIcon("applejuice").getImage());
+        Image image = im.getIcon("applejuice").getImage();
+        setTitle(titel);
+        String osName = System.getProperty("os.name");
+        plugins = new HashSet();
+        setIconImage(image);
         menuItemOptionen.setIcon(im.getIcon("optionen"));
         menuItemUeber.setIcon(im.getIcon("info"));
+        menuItemCoreBeenden.setIcon(im.getIcon("skull"));
 
         setJMenuBar(createMenuBar());
         if (PropertiesManager.getOptionsManager().isThemesSupported()) {
@@ -342,6 +402,57 @@ public class AppleJuiceDialog
                 closeDialog(evt);
             }
         });
+        if (osName.toLowerCase().indexOf("win") != -1) {
+            try {
+                if (!WindowsTrayIcon.isRunning(titel)) {
+                    useTrayIcon = true;
+                    WindowsTrayIcon.initTrayIcon(titel);
+                    trayIcon = new WindowsTrayIcon(image, 16, 16);
+                    trayIcon.setVisible(true);
+                    trayIcon.setToolTipText(titel);
+                    trayIcon.addMouseListener(new MouseAdapter() {
+                        public void mousePressed(MouseEvent evt) {
+                            if (!isVisible()) {
+                                popupShowHideMenuItem.setText(zeigen);
+                                popupShowHideMenuItem.setIcon(zeigenIcon);
+                            }
+                            else {
+                                popupShowHideMenuItem.setText(verstecken);
+                                popupShowHideMenuItem.setIcon(versteckenIcon);
+                            }
+                            if ( (evt.getModifiers() & MouseEvent.BUTTON1_MASK) !=
+                                0 &&
+                                evt.getClickCount() == 2) {
+                                if (!isVisible()) {
+                                    setVisible(true);
+                                }
+                                else {
+                                    setVisible(false);
+                                }
+                            }
+                        }
+                    });
+                    SwingTrayPopup popup = makeSwingPopup();
+                    popup.setTrayIcon(trayIcon);
+                }
+            }
+            catch (UnsatisfiedLinkError error) {
+                LanguageSelector languageSelector = LanguageSelector.
+                    getInstance();
+                String fehlerTitel = ZeichenErsetzer.korrigiereUmlaute(
+                    languageSelector.getFirstAttrbuteByTagName(new String[] {
+                    "mainform", "caption"}));
+
+                String fehlerNachricht = ZeichenErsetzer.korrigiereUmlaute(
+                    languageSelector.getFirstAttrbuteByTagName(new String[] {
+                    "javagui", "startup",
+                    "trayfehler"}));
+
+                JOptionPane.showMessageDialog(this, fehlerNachricht,
+                                              fehlerTitel,
+                                              JOptionPane.ERROR_MESSAGE);
+            }
+        }
         getContentPane().setLayout(new BorderLayout());
         registerPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -481,6 +592,9 @@ public class AppleJuiceDialog
             pm.setShareWidths(shareWidths);
             pm.save();
         }
+        if (useTrayIcon) {
+            WindowsTrayIcon.cleanUp();
+        }
         System.exit(0);
     }
 
@@ -504,6 +618,9 @@ public class AppleJuiceDialog
             einstellungenSpeichern();
         }
         System.out.println("Fehler: " + error);
+        if (useTrayIcon) {
+            WindowsTrayIcon.cleanUp();
+        }
         System.exit( -1);
     }
 
@@ -519,7 +636,7 @@ public class AppleJuiceDialog
             if (!languagePath.isDirectory()) {
                 closeWithErrormessage("Der Ordner " + path +
                     " für die Sprachauswahl xml-Dateien ist nicht vorhanden." +
-                                      "\r\nappleJuice wird beendet.", false);
+                    "\r\nappleJuice wird beendet.", false);
             }
             String[] tempListe = languagePath.list();
             HashSet sprachDateien = new HashSet();
@@ -550,25 +667,18 @@ public class AppleJuiceDialog
             });
             menuItemCoreBeenden.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), bestaetigung,
-                                                  "appleJuice Client", JOptionPane.YES_NO_OPTION,
-                                                  JOptionPane.WARNING_MESSAGE);
-                    if (result==JOptionPane.YES_OPTION){
+                    int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.
+                        getApp(), bestaetigung,
+                        "appleJuice Client", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                    if (result == JOptionPane.YES_OPTION) {
                         ApplejuiceFassade.getInstance().exitCore();
                     }
                 }
             });
             menuItemUeber.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    AboutDialog aboutDialog = new AboutDialog(_this, true);
-                    Dimension appDimension = aboutDialog.getSize();
-                    Dimension screenSize = Toolkit.getDefaultToolkit().
-                        getScreenSize();
-                    aboutDialog.setLocation( (screenSize.width -
-                                              appDimension.width) / 2,
-                                            (screenSize.height -
-                                             appDimension.height) / 2);
-                    aboutDialog.show();
+                    showAboutDialog();
                 }
             });
             optionenMenu.add(menuItemOptionen);
@@ -621,7 +731,7 @@ public class AppleJuiceDialog
                 if (!themesPath.isDirectory()) {
                     closeWithErrormessage("Der Ordner " + path +
                         " für die Themes zip-Dateien ist nicht vorhanden." +
-                                          "\r\nappleJuice wird beendet.", false);
+                        "\r\nappleJuice wird beendet.", false);
                 }
                 File[] themeFiles = themesPath.listFiles();
                 for (int i = 0; i < themeFiles.length; i++) {
@@ -695,6 +805,18 @@ public class AppleJuiceDialog
         }
     }
 
+    private void showAboutDialog() {
+        AboutDialog aboutDialog = new AboutDialog(_this, true);
+        Dimension appDimension = aboutDialog.getSize();
+        Dimension screenSize = Toolkit.getDefaultToolkit().
+            getScreenSize();
+        aboutDialog.setLocation( (screenSize.width -
+                                  appDimension.width) / 2,
+                                (screenSize.height -
+                                 appDimension.height) / 2);
+        aboutDialog.show();
+    }
+
     private void activateThemeSupport(boolean enable) {
         int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.this,
             themeSupportNachricht, themeSupportTitel, JOptionPane.YES_NO_OPTION);
@@ -741,6 +863,7 @@ public class AppleJuiceDialog
                 " (Core " + versionsNr +
                 " - GUI " + ApplejuiceFassade.GUI_VERSION + ")";
             setTitle(titel);
+            trayIcon.setToolTipText(titel);
             keinServer = languageSelector.getFirstAttrbuteByTagName(new String[] {
                 "javagui", "mainform", "keinserver"});
             themeSupportTitel = ZeichenErsetzer.korrigiereUmlaute(
@@ -792,6 +915,20 @@ public class AppleJuiceDialog
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
                                           "bestaetigung"}));
+
+            popupAboutMenuItem.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
+                                          "caption"})));
+            zeigen = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                          "zeigen"}));
+            verstecken = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                          "verstecken"}));
+
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -829,6 +966,35 @@ public class AppleJuiceDialog
         }
     }
 
+    public SwingTrayPopup makeSwingPopup() {
+        SwingTrayPopup popup = new SwingTrayPopup();
+        popupShowHideMenuItem = new JMenuItem("%Show");
+        popupShowHideMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                if (!isVisible()) {
+                    setVisible(true);
+                    toFront();
+                    requestFocus();
+                }
+                else {
+                    setVisible(false);
+                }
+            }
+        });
+        popup.add(popupShowHideMenuItem);
+	IconManager im = IconManager.getInstance();
+        versteckenIcon = im.getIcon("hide");
+	Icon aboutIcon = im.getIcon("about");
+        popupAboutMenuItem = new JMenuItem("&Info", aboutIcon);
+        popupAboutMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                showAboutDialog();
+            }
+        });
+        popup.add(popupAboutMenuItem);
+        return popup;
+    }
+
     private static void restorePropertiesXml() {
         String dateiname = System.getProperty("user.dir") + File.separator +
             "properties.xml";
@@ -836,8 +1002,10 @@ public class AppleJuiceDialog
 
         xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xmlData.append("<root>");
-        xmlData.append("    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\" ");
-        xmlData.append("themes=\"true\" defaulttheme=\"aquathemepack\" loadplugins=\"true\"");
+        xmlData.append(
+            "    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\" ");
+        xmlData.append(
+            "themes=\"true\" defaulttheme=\"aquathemepack\" loadplugins=\"true\"");
         xmlData.append(
             "             linklistenerport=\"8768\" versionsinfo=\"1\" >");
         xmlData.append(
