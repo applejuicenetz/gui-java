@@ -103,7 +103,7 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI, D
     tc.setCellRenderer(new ShareTableCellRenderer());
 
     LanguageSelector.getInstance().addLanguageListener(this);
-    DataManager.getInstance().addShareListener(this);
+//    DataManager.getInstance().addShareListener(this);
   }
 
   public void registerSelected(){
