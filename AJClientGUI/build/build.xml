@@ -12,12 +12,14 @@
    <property name="xercesImpl.jar"            location="${basedir}/tools/xercesImpl.jar"/>
    <property name="xmlParserAPIs.jar"            location="${basedir}/tools/xmlParserAPIs.jar"/>
    <property name="log4j-1.2.8.jar"            location="${basedir}/tools/log4j-1.2.8.jar"/>
+   <property name="skinlf.jar"            location="${basedir}/tools/skinlf.jar"/>
 
    <!-- classpath for compilation ... -->
    <path id="lib.path">
       <pathelement location="${xercesImpl.jar}"/>
       <pathelement location="${xmlParserAPIs.jar}"/>
       <pathelement location="${log4j-1.2.8.jar}"/>
+      <pathelement location="${skinlf.jar}"/>
    </path>
 
    <!-- usage information ... -->
@@ -76,6 +78,7 @@
 		<fileset dir="${basedir}" includes="**/changelog.htm"/>
 		<fileset dir="${basedir}" includes="**/language/*.xml **/language/*.gif"/>
 		<fileset dir="${basedir}" includes="**/plugins/*.jar **/plugins/*.txt"/>
+		<fileset dir="${basedir}" includes="**/themes/*.zip **/themes/*.txt"/>
 		<fileset dir="${basedir}" includes="**/sounds/*.wav **/sounds/*.first"/>
          </jar>
    </target>
