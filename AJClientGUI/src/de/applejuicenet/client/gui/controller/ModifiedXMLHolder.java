@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.40 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.41 2003/11/03 14:29:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.41  2003/11/03 14:29:16  maj0r
+ * Speicheroptimierung.
+ *
  * Revision 1.40  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -221,14 +224,14 @@ public class ModifiedXMLHolder
             String externeIP;
             int verbindungsStatus = Information.NICHT_VERBUNDEN;
             if (tryConnectToServer != -1) {
-                ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
+                ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(tryConnectToServer));
                 if (serverDO != null) {
                     verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
                     serverName = serverDO.getName();
                 }
             }
             else if (connectedWithServerId != -1) {
-                ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(connectedWithServerId)));
+                ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(connectedWithServerId));
                 if (serverDO != null) {
                     verbindungsStatus = Information.VERBUNDEN;
                     serverName = serverDO.getName();
@@ -296,6 +299,7 @@ public class ModifiedXMLHolder
             int size = nodes.getLength();
             MapSetStringKey toRemoveKey;
             DownloadDO downloadDO;
+            DownloadSourceDO[] sourcen;
             for (int i = 0; i < size; i++) {
                 e = (Element) nodes.item(i);
                 id = e.getAttribute("id");
@@ -307,7 +311,7 @@ public class ModifiedXMLHolder
                 else if (downloadMap.containsKey(toRemoveKey)) {
                     downloadDO = (DownloadDO) downloadMap.get(sourcenZuDownloads.get(toRemoveKey));
                     if (downloadDO!=null){
-                        DownloadSourceDO[] sourcen = downloadDO.getSources();
+                        sourcen = downloadDO.getSources();
                         if (sourcen!=null){
                             for (int y = 0; y < sourcen.length; y++) {
                                 sourcenZuDownloads.remove(new MapSetStringKey(sourcen[y].getId()));
@@ -348,12 +352,13 @@ public class ModifiedXMLHolder
                 int durchsuchteClients;
                 MapSetStringKey key;
                 Search aSearch;
+                String temp;
                 for (int i = 0; i < size; i++) {
                     e = (Element) nodes.item(i);
                     id = Integer.parseInt(e.getAttribute("id"));
                     key = new MapSetStringKey(id);
                     suchtext = e.getAttribute("searchtext");
-                    String temp = e.getAttribute("opensearchs");
+                    temp = e.getAttribute("opensearchs");
                     if (temp.length()==0){
                         temp = e.getAttribute("opensearches");
                     }
@@ -543,13 +548,31 @@ public class ModifiedXMLHolder
                 nickname = e.getAttribute("nickname");
                 temp = e.getAttribute("downloadid");
                 downloadId = Integer.parseInt(temp);
-                downloadSourceDO = new DownloadSourceDO(id, status, directstate, downloadFrom, downloadTo, actualDownloadPosition,
-                        speed, version, queuePosition, powerDownload, filename, nickname, downloadId);
                 key = new MapSetStringKey(downloadId);
                 downloadDO = (DownloadDO) downloadMap.get(key);
                 if (downloadDO != null) {
-                    downloadDO.addOrAlterSource(downloadSourceDO);
-                    sourcenZuDownloads.put(new MapSetStringKey(id), downloadDO);
+                    downloadSourceDO = downloadDO.getSourceById(id);
+                    if (downloadSourceDO!=null){
+                        downloadSourceDO.setActualDownloadPosition(actualDownloadPosition);
+                        downloadSourceDO.setDirectstate(directstate);
+                        downloadSourceDO.setDownloadFrom(downloadFrom);
+                        downloadSourceDO.setDownloadTo(downloadTo);
+                        downloadSourceDO.setFilename(filename);
+                        downloadSourceDO.setNickname(nickname);
+                        downloadSourceDO.setPowerDownload(powerDownload);
+                        downloadSourceDO.setQueuePosition(queuePosition);
+                        downloadSourceDO.setSpeed(speed);
+                        downloadSourceDO.setStatus(status);
+                        downloadSourceDO.setVersion(version);
+                        downloadSourceDO.setDownloadId(downloadId);
+                    }
+                    else{
+                        downloadSourceDO = new DownloadSourceDO(id, status, directstate, downloadFrom, downloadTo,
+                                                                actualDownloadPosition, speed, version, queuePosition,
+                                                                powerDownload, filename, nickname, downloadId);
+                        downloadDO.addSource(downloadSourceDO);
+                        sourcenZuDownloads.put(new MapSetStringKey(id), downloadDO);
+                    }
                 }
             }
         }
@@ -691,23 +714,23 @@ public class ModifiedXMLHolder
                     "true") == 0) ? true : false;
             String externeIP = e.getAttribute("ip");
             if (this.tryConnectToServer != tryConnectToServer) {
-                Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.tryConnectToServer)));
+                Object alterServer = serverMap.get(new MapSetStringKey(this.tryConnectToServer));
                 if (alterServer != null) {
                     ((ServerDO) alterServer).setTryConnect(false);
                 }
                 if (tryConnectToServer != -1) {
-                    ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
+                    ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(tryConnectToServer));
                     serverDO.setTryConnect(true);
                 }
                 this.tryConnectToServer = tryConnectToServer;
             }
             //if (this.connectedWithServerId != connectedWithServerId){
-            Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.connectedWithServerId)));
+            Object alterServer = serverMap.get(new MapSetStringKey(this.connectedWithServerId));
             if (alterServer != null) {
                 ((ServerDO) alterServer).setConnected(false);
             }
             if (connectedWithServerId != -1) {
-                ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(connectedWithServerId)));
+                ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(connectedWithServerId));
                 serverDO.setConnected(true);
             }
             this.connectedWithServerId = connectedWithServerId;

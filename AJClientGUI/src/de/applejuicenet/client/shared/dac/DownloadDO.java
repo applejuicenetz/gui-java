@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.10 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.11 2003/11/03 14:29:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import java.util.Iterator;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.11  2003/11/03 14:29:16  maj0r
+ * Speicheroptimierung.
+ *
  * Revision 1.10  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -103,24 +106,19 @@ public class DownloadDO {
         return ready * 100 / groesse;
     }
 
-    public void addOrAlterSource(DownloadSourceDO downloadSourceDO){
-        MapSetStringKey key = new MapSetStringKey(downloadSourceDO.getId());
+    public DownloadSourceDO getSourceById(int sourceId){
+        MapSetStringKey key = new MapSetStringKey(sourceId);
         if (sourcen.containsKey(key)){
-            DownloadSourceDO alteSource = (DownloadSourceDO)sourcen.get(key);
-            alteSource.setActualDownloadPosition(downloadSourceDO.getActualDownloadPosition());
-            alteSource.setDirectstate(downloadSourceDO.getDirectstate());
-            alteSource.setDownloadFrom(downloadSourceDO.getDownloadFrom());
-            alteSource.setDownloadTo(downloadSourceDO.getDownloadTo());
-            alteSource.setFilename(downloadSourceDO.getFilename());
-            alteSource.setNickname(downloadSourceDO.getNickname());
-            alteSource.setPowerDownload(downloadSourceDO.getPowerDownload());
-            alteSource.setQueuePosition(downloadSourceDO.getQueuePosition());
-            alteSource.setSpeed(downloadSourceDO.getSpeed());
-            alteSource.setStatus(downloadSourceDO.getStatus());
-            alteSource.setVersion(downloadSourceDO.getVersion());
-            alteSource.setDownloadId(downloadSourceDO.getDownloadId());
+            return (DownloadSourceDO)sourcen.get(key);
         }
         else{
+            return null;
+        }
+    }
+
+    public void addSource(DownloadSourceDO downloadSourceDO){
+        MapSetStringKey key = new MapSetStringKey(downloadSourceDO.getId());
+        if (!sourcen.containsKey(key)){
             sourcen.put(key, downloadSourceDO);
         }
     }
