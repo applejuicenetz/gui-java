@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.21 2003/08/18 14:54:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.22 2003/08/18 17:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.22  2003/08/18 17:11:26  maj0r
+ * Alte Uploads wurden nicht entfernt. Korrigiert.
+ *
  * Revision 1.21  2003/08/18 14:54:11  maj0r
  * Alte Eintraege loeschen.
  *
@@ -233,40 +236,6 @@ public class ModifiedXMLHolder
         return result;
     }
 
-    private String bytesUmrechnen(long bytes) {
-        if (bytes == 0)
-        {
-            return "0 Bytes/s";
-        }
-        long faktor = 1;
-        if (bytes < 1024)
-        {
-            faktor = 1;
-        }
-        else
-        {
-            faktor = 1024;
-        }
-        bytes = bytes / faktor;
-        String result = Double.toString(bytes);
-        int pos = result.indexOf(".");
-        if (pos != -1)
-        {
-            if (pos + 2 < result.length())
-                result = result.substring(0, pos + 3);
-            result = result.replace('.', ',');
-        }
-        if (faktor == 1)
-        {
-            result += " Bytes/s";
-        }
-        else
-        {
-            result += " kb/s";
-        }
-        return result;
-    }
-
     private void updateIDs() {
         serverIDs.clear();
         uploadIDs.clear();
@@ -303,7 +272,7 @@ public class ModifiedXMLHolder
         }
         for (int x = 0; x < toRemove.size(); x++)
         {
-            uploadIDs.remove(toRemove.get(x));
+            uploadMap.remove(toRemove.get(x));
         }
         nodes = document.getElementsByTagName("downloadid");
         NodeList userNodes;
