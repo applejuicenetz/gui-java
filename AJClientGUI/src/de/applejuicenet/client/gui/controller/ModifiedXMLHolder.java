@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.17 2003/08/10 21:08:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.18 2003/08/14 20:08:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.18  2003/08/14 20:08:42  maj0r
+ * Tree fuer Shareauswahl eingefuegt, aber noch nicht fertiggestellt.
+ *
  * Revision 1.17  2003/08/10 21:08:18  maj0r
  * Diverse Änderungen.
  *
@@ -139,7 +142,7 @@ public class ModifiedXMLHolder
     long credits = Long.parseLong(e.getAttribute("credits"));
     long up = Long.parseLong(e.getAttribute("sessionupload"));
     long down = Long.parseLong(e.getAttribute("sessiondownload"));
-    status[2] = bytesUmrechnen(down) + " in: " + bytesUmrechnen(up) + " out";
+    status[2] = "in: " + creditsUmrechnen(down) + " out: " + creditsUmrechnen(up);
     status[3] = netInfo.getExterneIP();
     status[4] = "Credits: " + creditsUmrechnen(credits);
 
@@ -166,8 +169,8 @@ public class ModifiedXMLHolder
     else {
       faktor = 1099511627776l;
     }
-    bytes = bytes / faktor;
-    String result = Double.toString(bytes);
+    double umgerechnet = (double)bytes / (double)faktor;
+    String result = Double.toString(umgerechnet);
     int pos = result.indexOf(".");
     if (pos != -1) {
       if (pos + 2 < result.length())

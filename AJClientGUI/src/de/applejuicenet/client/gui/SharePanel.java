@@ -4,6 +4,7 @@ import java.util.*;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
@@ -16,12 +17,13 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.share.ShareModel;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
+import de.applejuicenet.client.gui.trees.share.DirectoryNode;
 
 import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.17 2003/08/04 14:28:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.18 2003/08/14 20:08:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +32,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.18  2003/08/14 20:08:42  maj0r
+ * Tree fuer Shareauswahl eingefuegt, aber noch nicht fertiggestellt.
+ *
  * Revision 1.17  2003/08/04 14:28:55  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -70,6 +75,7 @@ public class SharePanel
   private JButton removeFolder = new JButton();
   private JButton startCheck = new JButton();
   private JList folderList = new JList(new DefaultListModel());
+  private JTree folderTree = new JTree();
   private TitledBorder titledBorder1;
   private TitledBorder titledBorder2;
   private JLabel dateien = new JLabel();
@@ -171,12 +177,15 @@ public class SharePanel
     panelWest.add(addFolderWithoutSubfolder, constraints);
 
     constraints.gridy = 2;
-    panelWest.add(removeFolder, constraints);
+    panelWest.add(new JScrollPane(folderTree), constraints);
 
     constraints.gridy = 3;
-    panelWest.add(startCheck, constraints);
+    panelWest.add(removeFolder, constraints);
 
     constraints.gridy = 4;
+    panelWest.add(startCheck, constraints);
+
+    constraints.gridy = 5;
     constraints.weighty = 1;
     panelWest.add(folderList, constraints);
 
@@ -205,7 +214,8 @@ public class SharePanel
   }
 
   public void registerSelected() {
-    //nix zu tun
+    folderTree.setRootVisible(false);
+    folderTree.setModel(new DefaultTreeModel(new DirectoryNode(null, null)));
   }
 
   public void fireLanguageChanged() {

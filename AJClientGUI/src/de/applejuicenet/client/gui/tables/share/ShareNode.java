@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.1 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.2 2003/08/14 20:08:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.2  2003/08/14 20:08:42  maj0r
+ * Tree fuer Shareauswahl eingefuegt, aber noch nicht fertiggestellt.
+ *
  * Revision 1.1  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -51,7 +54,7 @@ public class ShareNode implements Node {
     this.path = path;
     MapSetStringKey key = new MapSetStringKey(path);
     if (directoryNodes.containsKey(key)){
-        throw new NodeAlreadyExistsException("ShareNode mit diesem Pfad bereits vorhanden");
+        throw new NodeAlreadyExistsException("DirectoryNode mit diesem Pfad bereits vorhanden");
     }
     else{
         directoryNodes.put(key, this);
@@ -146,7 +149,7 @@ public class ShareNode implements Node {
   }
 
 	protected void nodeChanged() {
-	    /*ShareNode parent = getParent();
+	    /*DirectoryNode parent = getParent();
 
 	    if (parent != null) {
 		FileNode[]   path = parent.getPath();
