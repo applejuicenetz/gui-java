@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.17 2003/08/09 10:56:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.18 2003/08/12 16:22:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.18  2003/08/12 16:22:51  maj0r
+ * Kleine Farbaenderung.
+ *
  * Revision 1.17  2003/08/09 10:56:25  maj0r
  * DownloadTabelle weitergeführt.
  *
@@ -40,6 +43,7 @@ import de.applejuicenet.client.shared.*;
 public class PowerDownloadPanel
     extends JPanel
     implements LanguageListener {
+  private final Color BLUE_BACKGROUND = new Color(118, 112, 148);
   GridBagLayout gridBagLayout1 = new GridBagLayout();
   private JRadioButton btnInaktiv = new JRadioButton();
   private JRadioButton btnAktiv = new JRadioButton();
@@ -94,7 +98,7 @@ public class PowerDownloadPanel
     tempPanel.setLayout(new BorderLayout());
     powerdownload.setForeground(Color.white);
     powerdownload.setOpaque(true);
-    powerdownload.setBackground(Color.blue);
+    powerdownload.setBackground(BLUE_BACKGROUND);
     ratio.setBackground(Color.white);
     ratio.setMinimumSize(new Dimension(50, 21));
     ratio.setPreferredSize(new Dimension(50, 21));
@@ -118,7 +122,7 @@ public class PowerDownloadPanel
       }
     };
     btnHint.setOpaque(true);
-    btnHint.setBackground(Color.blue);
+    btnHint.setBackground(BLUE_BACKGROUND);
     tempPanel.add(btnHint, BorderLayout.EAST);
     backPanel.add(tempPanel, constraints);
     constraints.gridy = 1;
@@ -186,7 +190,7 @@ public class PowerDownloadPanel
     tempPanel2.setLayout(new BorderLayout());
     label9.setForeground(Color.white);
     label9.setOpaque(true);
-    label9.setBackground(Color.blue);
+    label9.setBackground(BLUE_BACKGROUND);
     tempPanel2.add(label9, BorderLayout.CENTER);
     btnHint2 = new JLabel(icon) {
       public JToolTip createToolTip() {
@@ -196,7 +200,7 @@ public class PowerDownloadPanel
       }
     };
     btnHint2.setOpaque(true);
-    btnHint2.setBackground(Color.blue);
+    btnHint2.setBackground(BLUE_BACKGROUND);
 
     tempPanel2.add(btnHint2, BorderLayout.EAST);
     backPanel.add(tempPanel2, constraints);
