@@ -35,7 +35,7 @@ import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.gui.controller.xmlholder.PartListXMLHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.118 2004/02/22 08:37:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.119 2004/02/24 14:12:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -383,18 +383,9 @@ public class ApplejuiceFassade {
                     logger.debug("MainWorkerThread gestartet. " + workerThread);
                 }
                 try {
-                    SessionXMLHolder session = new SessionXMLHolder();
-                    session.reload("", false);
-                    String sessionId = session.getFirstAttrbuteByTagName(new
-                        String[] {
-                        "applejuice", "session", "id"}
-                        , false);
-                    if (logger.isEnabledFor(Level.DEBUG)) {
-                        logger.debug("SessionID: " + sessionId);
-                    }
                     int versuch = 0;
                     while (!isInterrupted()) {
-                        if (updateModifiedXML(sessionId)) {
+                        if (updateModifiedXML()) {
                             versuch = 0;
                         }
                         else {
@@ -595,9 +586,9 @@ public class ApplejuiceFassade {
         return modifiedXML.getServer();
     }
 
-    public synchronized boolean updateModifiedXML(String sessionId) {
+    public synchronized boolean updateModifiedXML() {
         try {
-            if (modifiedXML.update(sessionId)) {
+            if (modifiedXML.update()) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         informDataUpdateListener(DataUpdateListener.

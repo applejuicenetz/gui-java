@@ -9,9 +9,20 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.Attributes;
+import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import org.xml.sax.XMLReader;
+import org.apache.xerces.parsers.SAXParser;
+import org.xml.sax.helpers.XMLReaderFactory;
+import de.applejuicenet.client.shared.HtmlLoader;
+import org.xml.sax.InputSource;
+import java.io.StringReader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SecurerXMLHolder.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SecurerXMLHolder.java,v 1.5 2004/02/24 14:12:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +31,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SecurerXMLHolder.java,v $
+ * Revision 1.5  2004/02/24 14:12:53  maj0r
+ * DOM->SAX-Umstellung
+ *
  * Revision 1.4  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -37,22 +51,72 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  */
 
 public class SecurerXMLHolder
-    extends WebXMLParser {
+    extends DefaultHandler {
     private Logger logger;
+    private String host;
+    private String password;
+    private String xmlCommand;
+    private XMLReader xr = null;
+    private Information information = null;
+    private static SecurerXMLHolder instance = null;
 
-    public SecurerXMLHolder() {
-        super("/xml/modified.xml", "");
+    private SecurerXMLHolder() {
         logger = Logger.getLogger(getClass());
+        try {
+            ConnectionSettings rc = PropertiesManager.getOptionsManager().
+                getRemoteSettings();
+            host = rc.getHost();
+            password = rc.getOldPassword();
+            if (host == null || host.length() == 0) {
+                host = "localhost";
+            }
+            xmlCommand = "/xml/modified.xml?filter=informations&password=" + password;
+            Class parser = SAXParser.class;
+            xr = XMLReaderFactory.createXMLReader(parser.getName());
+            xr.setContentHandler(this);
+        }
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", ex);
+            }
+        }
     }
 
-    public void update() {
-        throw new RuntimeException();
+    public static synchronized SecurerXMLHolder getInstance(){
+        if (instance == null){
+            instance = new SecurerXMLHolder();
+        }
+        return instance;
+    }
+
+    public void startElement(String namespaceURI,
+                             String localName,
+                             String qName,
+                             Attributes attr) throws SAXException {
+        if (localName.equals("information")){
+            checkInformationAttributes(attr);
+        }
+    }
+
+    private String getXMLString() throws
+        Exception {
+        String xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
+                                               xmlCommand);
+        if (xmlData.length() == 0) {
+            throw new IllegalArgumentException();
+        }
+        return xmlData;
     }
 
     public boolean secure(String sessionKontext, Information information) {
         try {
-            reload(sessionKontext + "&filter=informations", true);
-            updateInformation(information);
+            if (information == null){
+                return false;
+            }
+            this.information = information;
+            String xmlString = getXMLString();
+            xr.parse( new InputSource(
+               new StringReader( xmlString )) );
             return true;
         }
         catch (WebSiteNotFoundException wsnfE) {
@@ -67,36 +131,28 @@ public class SecurerXMLHolder
         }
     }
 
-    private void updateInformation(Information information) {
-        if (information != null) {
-            NodeList nodes = document.getElementsByTagName("information");
-            long sessionUpload;
-            long sessionDownload;
-            long credits;
-            long uploadSpeed;
-            long downloadSpeed;
-            long openConnections;
-            if (nodes.getLength() != 0) {
-                Element e = (Element) nodes.item(0);
-                credits = Long.parseLong(e.getAttribute("credits"));
-                uploadSpeed = Long.parseLong(e.getAttribute("uploadspeed"));
-                downloadSpeed = Long.parseLong(e.getAttribute(
-                    "downloadspeed"));
-                openConnections = Long.parseLong(e.getAttribute(
-                    "openconnections"));
-                sessionUpload = Long.parseLong(e.getAttribute(
-                    "sessionupload"));
-                sessionDownload = Long.parseLong(e.getAttribute(
-                    "sessiondownload"));
-                information.setCredits(credits);
-                information.setUploadSpeed(uploadSpeed);
-                information.setDownloadSpeed(downloadSpeed);
-                information.setOpenConnections(openConnections);
-                information.setSessionUpload(sessionUpload);
-                information.setSessionDownload(sessionDownload);
+    private void checkInformationAttributes(Attributes attr){
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("credits")){
+                information.setCredits(Long.parseLong(attr.getValue(i)));
             }
-            ApplejuiceFassade.getInstance().informDataUpdateListener(
-                DataUpdateListener.INFORMATION_CHANGED);
+            else if (attr.getLocalName(i).equals("sessionupload")){
+                information.setSessionUpload(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("sessiondownload")){
+                information.setSessionDownload(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("uploadspeed")){
+                information.setUploadSpeed(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("downloadspeed")){
+                information.setDownloadSpeed(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("openconnections")){
+                information.setOpenConnections(Long.parseLong(attr.getValue(i)));
+            }
         }
+        ApplejuiceFassade.getInstance().informDataUpdateListener(
+            DataUpdateListener.INFORMATION_CHANGED);
     }
 }

@@ -34,7 +34,7 @@ import org.apache.xerces.parsers.SAXParser;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.26 2004/02/24 08:49:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.27 2004/02/24 14:12:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +43,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.27  2004/02/24 14:12:53  maj0r
+ * DOM->SAX-Umstellung
+ *
  * Revision 1.26  2004/02/24 08:49:32  maj0r
  * Bug #240 gefixt (Danke an computer.ist.org)
  * Bug behoben, der im VersionChecker zu einer NoSuchElementException fuehrte.
@@ -86,7 +89,7 @@ public class ModifiedXMLHolder
     private String filter = "";
     private String sessionKontext = null;
 
-    private SecurerXMLHolder securerHolder = new SecurerXMLHolder();
+    private SecurerXMLHolder securerHolder = SecurerXMLHolder.getInstance();
 
     private int connectedWithServerId = -1;
     private int tryConnectToServer = -1;
@@ -157,10 +160,7 @@ public class ModifiedXMLHolder
         return netInfo;
     }
 
-    public synchronized boolean update(String sessionId) {
-        if (sessionKontext == null) {
-            sessionKontext = "&session=" + sessionId;
-        }
+    public synchronized boolean update() {
         if (tryToReload()) {
             return true;
         }
@@ -196,20 +196,8 @@ public class ModifiedXMLHolder
                     break;
                 }
             }
-            reload(sessionKontext + filter);
+            reload();
             return true;
-        }
-    }
-
-    private boolean secureSession() {
-        try {
-            return securerHolder.secure(sessionKontext, information);
-        }
-        catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
-            }
-            return false;
         }
     }
 
@@ -233,7 +221,6 @@ public class ModifiedXMLHolder
         }
         return speeds;
     }
-
 
     private void checkInformationAttributes(Attributes attr){
         if (information == null){
@@ -738,9 +725,6 @@ public class ModifiedXMLHolder
                 timestamp = Long.parseLong(contents.toString());
             }
         }
-        else{
-            checkCount++;
-        }
     }
 
     public void characters(char[] ch, int start, int length) throws
@@ -756,7 +740,7 @@ public class ModifiedXMLHolder
             command += zipMode;
         }
         command += "password=" + password + "&timestamp=" +
-            timestamp + parameters;
+            timestamp + parameters + sessionKontext;
         xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
                                                command);
         if (xmlData.length() == 0) {
@@ -846,12 +830,21 @@ public class ModifiedXMLHolder
         }
     }
 
-    public void reload(String parameters) {
+    public void reload() {
         try {
             reloadInProgress = true;
+            if (sessionKontext == null){
+                SessionXMLHolder sessionHolder = SessionXMLHolder.getInstance();
+                String sessionId = sessionHolder.getNewSessionId();
+                sessionKontext = "&session=" + sessionId;
+                if (logger.isEnabledFor(Level.DEBUG)) {
+                    logger.debug(
+                        "Neue SessionId: " + sessionId);
+                }
+            }
             Securer securer = new Securer();
             securer.start();
-            String xmlString = getXMLString(parameters);
+            String xmlString = getXMLString(filter);
             if (xmlString.indexOf("wrong password") != -1){
                 if (!securer.isInterrupted()) {
                     securer.interrupt();
@@ -866,36 +859,24 @@ public class ModifiedXMLHolder
                 securer.interrupt();
             }
             if (!securer.isOK()) {
-                SessionXMLHolder session = new SessionXMLHolder();
-                session.reload("", false);
-                String sessionId = session.getFirstAttrbuteByTagName(new
-                    String[] {
-                    "applejuice", "session", "id"}
-                    , false);
+                SessionXMLHolder sessionHolder = SessionXMLHolder.getInstance();
+                String sessionId = sessionHolder.getNewSessionId();
                 sessionKontext = "&session=" + sessionId;
                 if (logger.isEnabledFor(Level.DEBUG)) {
                     logger.debug(
                         "Neue SessionId: " + sessionId);
                 }
             }
+            if (checkCount<2){
+                checkCount++;
+            }
             securer = null;
             reloadInProgress = false;
         }
         catch (WebSiteNotFoundException webSiteNotFound) {
-            SessionXMLHolder session = new SessionXMLHolder();
-            try {
-                session.reload("", false);
-            }
-            catch (Exception ex) {
-                if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error("Unbehandelte Exception", ex);
-                }
-            }
+            SessionXMLHolder sessionHolder = SessionXMLHolder.getInstance();
+            String sessionId = sessionHolder.getNewSessionId();
             reloadInProgress = false;
-            String sessionId = session.getFirstAttrbuteByTagName(new
-                String[] {
-                "applejuice", "session", "id"}
-                , false);
             sessionKontext = "&session=" + sessionId;
             if (logger.isEnabledFor(Level.DEBUG)) {
                 logger.debug(
@@ -910,6 +891,18 @@ public class ModifiedXMLHolder
         }
     }
 
+    private boolean secureSession() {
+        try {
+            return securerHolder.secure(sessionKontext, information);
+        }
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", ex);
+            }
+            return false;
+        }
+    }
+
     private class Securer
         extends Thread {
         private boolean ok = true;
@@ -917,7 +910,7 @@ public class ModifiedXMLHolder
         public void run() {
             while (!interrupted()) {
                 try {
-                    sleep(5000);
+                    sleep(10000);
                     if (!secureSession()) {
                         ok = false;
                         interrupt();
