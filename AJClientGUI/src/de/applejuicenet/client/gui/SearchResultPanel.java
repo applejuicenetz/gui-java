@@ -19,9 +19,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import de.applejuicenet.client.shared.Search.SearchEntry;
+import javax.swing.table.JTableHeader;
+import de.applejuicenet.client.gui.shared.SortButtonRenderer;
+import javax.swing.table.TableColumn;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.10 2004/01/08 07:47:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.11 2004/01/12 14:20:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +33,9 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.11  2004/01/12 14:20:31  maj0r
+ * Sortierung eingebaut.
+ *
  * Revision 1.10  2004/01/08 07:47:11  maj0r
  * 98%-CPU-Last Bug durch Suche gefixt.
  *
@@ -87,6 +93,8 @@ public class SearchResultPanel extends JPanel{
     private boolean activeSearch = true;
     private SearchPanel parentSearchPanel;
     private int searchHitsCount;
+
+    private TableColumn[] tableColumns = new TableColumn[3];
 
     public SearchResultPanel(Search aSearch, SearchPanel parent) {
         search = aSearch;
@@ -222,6 +230,14 @@ public class SearchResultPanel extends JPanel{
                 }
             }
         });
+        TableColumnModel model = searchResultTable.getColumnModel();
+        SortButtonRenderer renderer = new SortButtonRenderer();
+        for (int i=0; i<tableColumns.length; i++){
+            tableColumns[i] = model.getColumn(i);
+            tableColumns[i].setHeaderRenderer(renderer);
+        }
+        JTableHeader header = searchResultTable.getTableHeader();
+        header.addMouseListener(new SortMouseAdapter(header, renderer));
     }
 
     public static void setTexte(String[] texte, String[] tableColumns){
@@ -272,6 +288,64 @@ public class SearchResultPanel extends JPanel{
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    class SortMouseAdapter
+        extends MouseAdapter {
+        private JTableHeader header;
+        private SortButtonRenderer renderer;
+
+        public SortMouseAdapter(JTableHeader header,
+                                SortButtonRenderer renderer) {
+            this.header = header;
+            this.renderer = renderer;
+        }
+
+        public void mousePressed(MouseEvent e) {
+            if (e.getButton() != MouseEvent.BUTTON1) {
+                return;
+            }
+            int col = header.columnAtPoint(e.getPoint());
+            TableColumn pressedColumn = searchResultTable.getColumnModel().
+                getColumn(col);
+            renderer.setPressedColumn(col);
+            renderer.setSelectedColumn(col);
+            header.repaint();
+
+            if (header.getTable().isEditing()) {
+                header.getTable().getCellEditor().stopCellEditing();
+            }
+
+            boolean isAscent;
+            if (SortButtonRenderer.UP == renderer.getState(col)) {
+                isAscent = true;
+            }
+            else {
+                isAscent = false;
+            }
+
+            SearchNode rootNode = ( (SearchNode) tableModel.
+                                         getRoot());
+
+            if (pressedColumn == tableColumns[0]) {
+                rootNode.setSortCriteria(SearchNode.SORT_FILENAME,
+                                         isAscent);
+            }
+            else if (pressedColumn == tableColumns[1]) {
+                rootNode.setSortCriteria(SearchNode.SORT_GROESSE,
+                                         isAscent);
+            }
+            else if (pressedColumn == tableColumns[2]) {
+                rootNode.setSortCriteria(SearchNode.SORT_ANZAHL,
+                                         isAscent);
+            }
+            searchResultTable.updateUI();
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            renderer.setPressedColumn( -1);
+            header.repaint();
         }
     }
 }
