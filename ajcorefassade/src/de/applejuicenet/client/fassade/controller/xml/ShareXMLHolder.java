@@ -84,8 +84,13 @@ public class ShareXMLHolder extends DefaultHandler {
 		if (id == -1) {
 			return;
 		}
-		ShareDO shareDO = new ShareDO(id);
-		shareMap.put(Integer.toString(id), shareDO);
+		ShareDO shareDO = null;
+		String key = Integer.toString(id);
+		shareDO = (ShareDO) shareMap.get(key);
+		if ( shareDO == null){
+			shareDO = new ShareDO(id);
+			shareMap.put(key, shareDO);
+		}
 		for (int i = 0; i < attr.getLength(); i++) {
 			if (attr.getLocalName(i).equals("filename")) {
 				shareDO.setFilename(attr.getValue(i));
