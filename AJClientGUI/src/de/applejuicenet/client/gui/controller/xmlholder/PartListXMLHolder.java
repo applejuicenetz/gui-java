@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.1 2004/02/18 17:25:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.2 2004/02/18 18:43:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListXMLHolder.java,v $
+ * Revision 1.2  2004/02/18 18:43:04  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.1  2004/02/18 17:25:04  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -60,26 +63,23 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  *
  */
 
+import java.io.CharArrayWriter;
+import java.io.StringReader;
+
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import de.applejuicenet.client.gui.controller.PartListHolder;
-import de.applejuicenet.client.gui.controller.WebXMLParser;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
-import org.xml.sax.helpers.DefaultHandler;
-import de.applejuicenet.client.shared.ConnectionSettings;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.XMLReaderFactory;
-import org.xml.sax.XMLReader;
-import org.xml.sax.InputSource;
-import java.io.StringReader;
-import de.applejuicenet.client.shared.HtmlLoader;
-import org.xml.sax.Attributes;
-import java.io.CharArrayWriter;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 public class PartListXMLHolder
     extends DefaultHandler {

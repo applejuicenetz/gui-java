@@ -1,16 +1,23 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
+import java.io.StringReader;
 import java.util.HashMap;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import de.applejuicenet.client.gui.controller.WebXMLParser;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.5 2004/02/16 07:42:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.6 2004/02/18 18:43:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +26,9 @@ import de.applejuicenet.client.shared.dac.ShareDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.6  2004/02/18 18:43:04  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.5  2004/02/16 07:42:43  maj0r
  * alten Timestampfehler beseitig
  * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
@@ -75,61 +85,106 @@ import de.applejuicenet.client.shared.dac.ShareDO;
  * Basisklasse umbenannt.
  *
  * Revision 1.4  2003/06/10 12:31:03  maj0r
- * Historie eingef�gt.
+ * Historie eingefuegt.
  *
  *
  */
 
 public class ShareXMLHolder
-    extends WebXMLParser {
+    extends DefaultHandler {
     private HashMap shareMap;
     private Logger logger;
+    private String host;
+    private String password;
+    private String xmlCommand;
+    private XMLReader xr = null;
 
     public ShareXMLHolder() {
-        super("/xml/share.xml", "");
         logger = Logger.getLogger(getClass());
+        xmlCommand = "/xml/share.xml?";
+        ConnectionSettings rc = PropertiesManager.getOptionsManager().
+            getRemoteSettings();
+        host = rc.getHost();
+        password = rc.getOldPassword();
+        if (host == null || host.length() == 0) {
+            host = "localhost";
+        }
+        if (host.compareToIgnoreCase("localhost") != 0 &&
+            host.compareTo("127.0.0.1") != 0) {
+            xmlCommand += "mode=zip&";
+        }
+        xmlCommand += "password=" + password;
+        try {
+            System.setProperty("org.xml.sax.parser",
+                               "org.apache.xerces.parsers.SAXParser");
+            xr = XMLReaderFactory.createXMLReader();
+            xr.setContentHandler( this );
+        }
+        catch (SAXException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private String getXMLString() throws
+        Exception {
+        String xmlData = null;
+        xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
+                                               xmlCommand);
+        if (xmlData.length() == 0) {
+            throw new IllegalArgumentException();
+        }
+        return xmlData;
+    }
+
+    private void checkShareAttributes(Attributes attr){
+        int id = -1;
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("id")) {
+                id = Integer.parseInt(attr.getValue(i));
+                break;
+            }
+        }
+        if (id == -1) {
+            return;
+        }
+        ShareDO shareDO = new ShareDO(id);
+        shareMap.put(Integer.toString(id), shareDO);
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("filename")){
+                shareDO.setFilename(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("shortfilename")){
+                shareDO.setShortfilename(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("size")){
+                shareDO.setSize(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("checksum")){
+                shareDO.setChecksum(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("priority")){
+                shareDO.setPrioritaet(Integer.parseInt(attr.getValue(i)));
+            }
+        }
+    }
+
+    public void startElement(String namespaceURI,
+                             String localName,
+                             String qName,
+                             Attributes attr) throws SAXException {
+        if (localName.equals("share")){
+            checkShareAttributes(attr);
+        }
     }
 
     public void update() {
         try {
-            reload("", false);
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
-        }
-        updateShare();
-    }
-
-    private void updateShare() {
-        try {
+            String xmlString = getXMLString();
             if (shareMap == null) {
                 shareMap = new HashMap();
             }
-            reload("", false);
-            NodeList nodes = document.getElementsByTagName("share");
-            int nodesSize = nodes.getLength();
-            Element e = null;
-            int id_key;
-            String filename = null;
-            String shortfilename = null;
-            long size;
-            String checksum = null;
-            ShareDO share = null;
-            int prioritaet;
-            for (int i = 0; i < nodesSize; i++) {
-                e = (Element) nodes.item(i);
-                id_key = Integer.parseInt(e.getAttribute("id"));
-                filename = e.getAttribute("filename");
-                shortfilename = e.getAttribute("shortfilename");
-                size = Long.parseLong(e.getAttribute("size"));
-                checksum = e.getAttribute("checksum");
-                prioritaet = Integer.parseInt(e.getAttribute("priority"));
-                share = new ShareDO(id_key, filename, shortfilename, size,
-                                    checksum, prioritaet);
-                shareMap.put(Integer.toString(id_key), share);
-            }
+            xr.parse( new InputSource(
+               new StringReader( xmlString )) );
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -139,7 +194,7 @@ public class ShareXMLHolder
     }
 
     public HashMap getShare() {
-        updateShare();
+        update();
         return shareMap;
     }
 }

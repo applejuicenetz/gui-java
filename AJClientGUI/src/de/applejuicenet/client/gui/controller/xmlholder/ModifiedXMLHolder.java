@@ -1,14 +1,23 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
+import java.io.CharArrayWriter;
+import java.io.StringReader;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.WebXMLParser;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.Search;
@@ -21,20 +30,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
-import org.xml.sax.*;
-import de.applejuicenet.client.shared.HtmlLoader;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
-import de.applejuicenet.client.shared.ConnectionSettings;
-import java.io.StringReader;
-import java.io.CharArrayWriter;
-import java.util.HashSet;
-import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.18 2004/02/18 17:24:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.19 2004/02/18 18:43:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +41,9 @@ import java.util.Iterator;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.19  2004/02/18 18:43:04  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.18  2004/02/18 17:24:21  maj0r
  * Von DOM auf SAX umgebaut.
  *

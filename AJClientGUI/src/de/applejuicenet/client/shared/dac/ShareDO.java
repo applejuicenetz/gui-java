@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ShareDO.java,v 1.8 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ShareDO.java,v 1.9 2004/02/18 18:43:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareDO.java,v $
+ * Revision 1.9  2004/02/18 18:43:04  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.8  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -38,6 +41,10 @@ public class ShareDO {
     private long size;
     private String checksum;
     private int prioritaet;
+
+    public ShareDO(int id) {
+        this.id = id;
+    }
 
     public ShareDO(int id, String filename, String shortfilename, long size,
                    String checksum, int prioritaet) {
