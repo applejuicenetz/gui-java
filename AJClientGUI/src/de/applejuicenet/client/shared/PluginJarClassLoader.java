@@ -1,8 +1,11 @@
 package de.applejuicenet.client.shared;
 
-import java.net.URLClassLoader;
-import java.net.URL;
-import de.applejuicenet.client.gui.plugins.PluginConnector;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.jar.*;
+
+import de.applejuicenet.client.gui.plugins.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -13,14 +16,15 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
  * @version 1.0
  */
 
-public class PluginJarClassLoader extends URLClassLoader {
+public class PluginJarClassLoader
+    extends URLClassLoader {
   private URL url;
   public PluginJarClassLoader(URL url) {
-      super(new URL[] { url });
-      this.url = url;
+    super(new URL[] {url});
+    this.url = url;
   }
 
-  public PluginConnector getPlugin(){
+  public PluginConnector getPlugin() {
     Class aClass = null;
     try {
       aClass = loadClass("de.applejuicenet.client.gui.plugins.AppleJuicePlugin");
@@ -35,8 +39,9 @@ public class PluginJarClassLoader extends URLClassLoader {
     catch (Exception e) {
       return null;
     }
-    if (!(aPlugin instanceof PluginConnector))
-        return null;
-    return (PluginConnector)aPlugin;
+    if (! (aPlugin instanceof PluginConnector)) {
+      return null;
+    }
+    return (PluginConnector) aPlugin;
   }
 }

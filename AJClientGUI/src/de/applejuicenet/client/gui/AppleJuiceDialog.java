@@ -53,6 +53,10 @@ public class AppleJuiceDialog
     plugins.add(plugin);
   }
 
+  public PluginConnector[] getPlugins(){
+    return (PluginConnector[]) plugins.toArray(new PluginConnector[plugins.size()]);
+  }
+
   private void jbInit() throws Exception {
     setTitle("AppleJuice Client");
     plugins = new HashSet();
@@ -151,6 +155,9 @@ public class AppleJuiceDialog
     menuItem.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e){
         OptionsDialog od = new OptionsDialog(_this);
+        Dimension appDimension = od.getSize();
+        Dimension screenSize = _this.getSize();
+        od.setLocation((screenSize.width-appDimension.width)/4, (screenSize.height-appDimension.height)/4);
         od.show();
       }
     });
@@ -198,6 +205,9 @@ public class AppleJuiceDialog
                                     "caption"})));
       menuItem.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
           getFirstAttrbuteByTagName(new String[] {"einstform", "caption"})));
+      optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+          getFirstAttrbuteByTagName(new String[] {"javagui", "menu", "extras"})));
+
     }
     catch (LanguageSelectorNotInstanciatedException ex) {
       ex.printStackTrace();

@@ -31,8 +31,14 @@ public abstract class PluginConnector extends JPanel implements LanguageListener
   //Versions-Nr
   public abstract String getVersion();
 
+  //Man will sich ja schließlich auch verewigen;-)
+  public abstract String getAutor();
+
   //true, wenn das Plugin eine sichtbare Oberfläche haben soll
   public abstract boolean istReiter();
+
+  //Liefert eine Kurzbeschreibung des Plugins zurück.
+  public abstract String getBeschreibung();
 
   /*Das Icon, welches in der Lasche angezeigt werden soll, es muss als icon.gif im package plugins gespeichert
     werden, damit es später an die richtige Stelle im jar-Archiv wandert (ca. 16x16)*/

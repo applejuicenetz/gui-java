@@ -41,20 +41,25 @@ public abstract class XMLDecoder {
   }
 
   public String getFirstAttrbuteByTagName(String[] attributePath) {
-    Element ele = document.getDocumentElement();
-    NodeList nl = ele.getElementsByTagName(attributePath[0]);
-    if (attributePath.length > 2) {
-      for (int i = 1; i < attributePath.length - 1; i++) {
-        nl = ele.getElementsByTagName(attributePath[i]);
+    NodeList nodes = document.getChildNodes();
+    Node rootNode = nodes.item(0);   //Element "root"
+    nodes = rootNode.getChildNodes();
+    for (int i=0; i<attributePath.length-1; i++){
+      for (int x=0; x<nodes.getLength(); x++){
+        String test = nodes.item(x).getNodeName();
+        if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])){
+          if (i == attributePath.length-2){
+            Element e = (Element) nodes.item(x);
+            return e.getAttribute(attributePath[attributePath.length-1]);
+          }
+          else{
+            nodes = nodes.item(x).getChildNodes();
+            break;
+          }
+        }
       }
     }
-    if (nl.getLength() != 0) {
-      Element language = (Element) nl.item(0);
-      String attribute = language.getAttribute(attributePath[attributePath.
-                                               length - 1]);
-      return attribute;
-    }
-    return null;
+    return "";  //Nicht gefunden
   }
 
   public void setAttributeByTagName(String[] attributePath, String newValue) {

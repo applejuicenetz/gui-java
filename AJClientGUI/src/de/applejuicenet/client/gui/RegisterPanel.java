@@ -35,6 +35,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
   private AppleJuiceDialog parent;
 
   public RegisterPanel(AppleJuiceDialog parent){
+    this.parent = parent;
     init();
   }
 
@@ -93,7 +94,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
             }
             DataManager.getInstance().addGlobalListener(aPlugin);
             LanguageSelector.getInstance().addLanguageListener(aPlugin);
-            this.parent.addPluginToHashSet(aPlugin);
+            parent.addPluginToHashSet(aPlugin);
           }
         }
         catch (Exception e){

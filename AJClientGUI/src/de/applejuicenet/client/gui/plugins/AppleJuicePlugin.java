@@ -26,7 +26,15 @@ public class AppleJuicePlugin extends PluginConnector {
   }
 
   public String getTitle(){
-    return "TestPlugin";
+    return "DemoPlugin2";
+  }
+
+  public String getAutor(){
+    return "Maj0r";
+  }
+
+  public String getBeschreibung(){
+    return "Dies ist ein Demo-Plugin. Es soll demonstrieren, wie die Implementierung eines sehr einfachen Plugins auszusehen hat";
   }
 
   public String getVersion(){
