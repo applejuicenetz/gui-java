@@ -11,7 +11,7 @@ import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.18 2004/01/12 07:27:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.19 2004/01/12 14:37:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.19  2004/01/12 14:37:26  maj0r
+ * Bug #82 gefixt (Danke an hirsch.marcel)
+ * Sortierung von Downloads innerhalb von Unterverzeichnissen der Downloadtabelle korrigiert.
+ *
  * Revision 1.18  2004/01/12 07:27:44  maj0r
  * Sortierung an neue ausblendbare Header angepasst.
  *
@@ -194,6 +198,7 @@ public class DownloadRootNode
     public void setSortCriteria(int sortCriteria, boolean isAscent) {
         sort = sortCriteria;
         this.isAscent = isAscent;
+        DownloadDirectoryNode.setSortCriteria(sortCriteria, isAscent);
         if (sortedChildNodes != null) {
             sort(sortedChildNodes);
         }
