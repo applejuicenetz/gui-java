@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE project []>
+<project name="ajcorefassade" default="create-jar" basedir="..">
+
+   <!-- component directories ... -->
+   <property name="srcdir"      location="${basedir}/src"/>
+   <property name="compiledir"  location="${basedir}/classes"/>
+
+   <!-- remove class files, DavaDoc files and test results ... -->
+   <target name="clean" description="deletes class files">
+      <delete includeEmptyDirs="true">
+         <fileset dir="${compiledir}" casesensitive="false">
+            <include name="**/*.class"/>
+            <exclude name="cvs"/>
+            <exclude name="readme.txt"/>
+            </fileset>
+      </delete>
+   </target>
+
+   <target name="compile" description="compiles ajcorefassade">
+      <javac srcdir="${srcdir}" 
+      		destdir="${compiledir}" 
+      		debug="true">      	
+      </javac>
+   </target>
+
+   <target name="rebuild" depends="clean, compile" description="cleans and compiles ajcorefassade">
+   </target>
+
+   <target name="create-jar" depends="rebuild" description="builds ajcorefassade">
+	<jar destfile="${basedir}/ajcorefassade.jar"
+		basedir="${compiledir}"
+		includes="de/**"
+		index="true">
+	    <manifest>
+	       <attribute name="Built-By" value="${user.name}"/>
+	    </manifest>
+	</jar>
+   </target>
+
+   <target name="complete" depends="create-jar" description="builds ajcorefassade">
+   </target>
+</project>
