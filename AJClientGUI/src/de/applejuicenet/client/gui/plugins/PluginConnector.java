@@ -8,6 +8,8 @@ import java.net.URL;
 import java.awt.Toolkit;
 import java.awt.Image;
 import de.applejuicenet.client.shared.exception.NoIconAvailableException;
+import de.applejuicenet.client.gui.RegisterI;
+import java.util.HashMap;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -18,7 +20,7 @@ import de.applejuicenet.client.shared.exception.NoIconAvailableException;
  * @version 1.0
  */
 
-public abstract class PluginConnector extends JPanel implements LanguageListener, DataUpdateListener{
+public abstract class PluginConnector extends JPanel implements LanguageListener, DataUpdateListener, RegisterI{
   /*Diese Datei sollte nicht verändert werden!
     Um ein Plugin zu erstellen, muss diese Klasse überschrieben werden.
     Die Plugin Klasse muss zwingend AppleJuicePlugin.java heissen.
@@ -56,11 +58,14 @@ public abstract class PluginConnector extends JPanel implements LanguageListener
     return icon;
   }
 
+  //Wird aufgerufen, wenn der Reiter ausgewählt wird.
+  public abstract void registerSelected();
+
   /*Wird automatisch aufgerufen, wenn die Sprache geändert wurde.
     Ggf. kann an dieser Stelle eine eigene xml-Datei zur Anpassung der eigenen Panels ausgewertet werden*/
   public abstract void fireLanguageChanged();
 
   /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
     Über den DataManger können diese abgerufen werden.*/
-  public abstract void fireContentChanged();
+  public abstract void fireContentChanged(HashMap changedContent);
 }

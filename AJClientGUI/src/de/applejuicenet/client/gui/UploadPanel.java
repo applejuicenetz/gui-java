@@ -20,7 +20,7 @@ import javax.swing.table.TableColumnModel;
  * @version 1.0
  */
 
-public class UploadPanel extends JPanel implements LanguageListener{
+public class UploadPanel extends JPanel implements LanguageListener, RegisterI{
   private JTable uploadDataTable;
   private int anzahlClients = 0;
   private JLabel label1 = new JLabel("0 Clients in Deiner Uploadliste");
@@ -68,4 +68,8 @@ public class UploadPanel extends JPanel implements LanguageListener{
       tcm.getColumn(i).setHeaderValue(columns[i]);
     }
   }
+
+  public void registerSelected(){
+  }
+
 }

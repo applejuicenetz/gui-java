@@ -12,6 +12,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.*;
 import de.applejuicenet.client.shared.XMLDecoder;
+import java.util.HashMap;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Element;
+import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -25,14 +29,25 @@ import de.applejuicenet.client.shared.XMLDecoder;
 public class DataManager {   //Singleton-Implementierung
   private DownloadSourceDO[] downloads;
   private HashSet downloadListener;
+  private HashSet serverListener;
   private HashSet globalListener;
+  private HashMap serverMap;
   private static DataManager instance = null;
   private static int x=0;
   private JLabel[] statusbar;
+  private WebXMPParser modifiedXML = null;
+  private WebXMPParser informationXML = null;
+  private WebXMPParser shareXML = null;
+  private Version coreVersion;
 
   public void addDownloadListener(DataUpdateListener listener){
     if (!(downloadListener.contains(listener)))
       downloadListener.add(listener);
+  }
+
+  public void addServerListener(DataUpdateListener listener){
+    if (!(serverListener.contains(listener)))
+      serverListener.add(listener);
   }
 
   public void addGlobalListener(DataUpdateListener listener){
@@ -43,6 +58,8 @@ public class DataManager {   //Singleton-Implementierung
   private DataManager(){
     downloadListener = new HashSet();
     globalListener = new HashSet();
+    serverListener = new HashSet();
+    serverMap = new HashMap();
    //Dummy-Implementierung
    Version version = new Version("0.27", "Java", "Win");
    String versionText;
@@ -53,7 +70,46 @@ public class DataManager {   //Singleton-Implementierung
    downloads[0] = new DownloadSourceDO(true, "dateiliste.mov", DownloadSourceDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
    downloads[1] = new DownloadSourceDO(true, "Film.avi", DownloadSourceDO.WARTESCHLANGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
    //Dummy-Ende
-   updateDownloads();
+
+   //load XMLs
+   modifiedXML = new WebXMPParser("/xml/modified.xml", "");
+   updateServer();
+   informationXML = new WebXMPParser("/xml/information.xml", "");
+   shareXML = new WebXMPParser("/xml/share.xml", "");
+
+   String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[]{"applejuice", "generalinformation", "version"}, true);
+   coreVersion = new Version(versionsTag, "Java", (String) System.getProperties().get("os.name"));
+//   updateDownloads();
+  }
+
+  public HashMap getAllServer(){
+    updateServer(false);
+    return serverMap;
+  }
+
+
+  public void updateServer(){
+    updateServer(true);
+  }
+
+  protected void updateServer(boolean informListener){
+    modifiedXML.reload("");
+    NodeList nodes = modifiedXML.getDocument().getElementsByTagName("server");
+    HashMap changedServer = new HashMap();
+    for (int i=0; i<nodes.getLength(); i++){
+      Element e = (Element) nodes.item(i);
+      String id_key = e.getAttribute("id");
+      int id = Integer.parseInt(id_key);
+      String name = e.getAttribute("name");
+      String host = e.getAttribute("host");
+      long lastseen = Long.parseLong(e.getAttribute("lastseen"));
+      String port = e.getAttribute("port");
+      ServerDO server = new ServerDO(id, name, host, port, lastseen);
+      changedServer.put(id_key, server);
+    }
+    serverMap.putAll(changedServer);
+    if (informListener)
+      informServerListener(changedServer);
   }
 
   public static DataManager getInstance(){
@@ -63,17 +119,28 @@ public class DataManager {   //Singleton-Implementierung
     return instance;
   }
 
+  public Version getCoreVersion(){
+    return coreVersion;
+  }
+
   private void informDownloadListener(){
     Iterator it = downloadListener.iterator();
     while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged();
+      ((DataUpdateListener)it.next()).fireContentChanged(new HashMap());
+    }
+  }
+
+  private void informServerListener(HashMap changedContent){
+    Iterator it = serverListener.iterator();
+    while (it.hasNext()){
+      ((DataUpdateListener)it.next()).fireContentChanged(changedContent);
     }
   }
 
   private void informGlobalListener(){
     Iterator it = globalListener.iterator();
     while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged();
+      ((DataUpdateListener)it.next()).fireContentChanged(new HashMap());
     }
   }
 
@@ -89,6 +156,11 @@ public class DataManager {   //Singleton-Implementierung
       statusbar[3].setText("Credits: 0,00 MB");
       statusbar[4].setText("Version 0.01PreA");
     }
+  }
+
+  public void updateModifiedXML(){
+    modifiedXML.reload("");
+    System.out.print(modifiedXML.getFirstAttrbuteByTagName(new String[]{"applejuice", "time"}, true));
   }
 
   public DownloadSourceDO[] getDownloads(){

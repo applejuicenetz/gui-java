@@ -1,6 +1,7 @@
 package de.applejuicenet.client.gui.plugins;
 
 import javax.swing.ImageIcon;
+import java.util.HashMap;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -21,8 +22,12 @@ public class AppleJuicePlugin extends PluginConnector {
     System.out.println("Sprache wurde geändert");
   }
 
-  public void fireContentChanged(){
+  public void fireContentChanged(HashMap changedContent){
     System.out.println("Neue Daten vom Server");
+  }
+
+  public void registerSelected(){
+    System.out.println("Reiter wurde angeklickt.");
   }
 
   public String getTitle(){

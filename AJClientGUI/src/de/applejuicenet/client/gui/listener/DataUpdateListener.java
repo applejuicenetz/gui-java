@@ -1,5 +1,7 @@
 package de.applejuicenet.client.gui.listener;
 
+import java.util.HashMap;
+
 /**
  * <p>Title: AppleJuice Client-GUI</p>
  * <p>Description: </p>
@@ -10,5 +12,5 @@ package de.applejuicenet.client.gui.listener;
  */
 
 public interface DataUpdateListener {
-  public void fireContentChanged();
+  public void fireContentChanged(HashMap changedContent);
 }

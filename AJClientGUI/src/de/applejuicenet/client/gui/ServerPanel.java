@@ -9,6 +9,7 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 import javax.swing.table.TableColumnModel;
+import java.util.HashMap;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -21,7 +22,7 @@ import javax.swing.table.TableColumnModel;
 
 public class ServerPanel
     extends JPanel
-    implements LanguageListener {
+    implements LanguageListener, DataUpdateListener, RegisterI {
   private JTable serverTable;
   private JLabel sucheServer = new JLabel(
       "<html><font><u>mehr Server gibt es hier</u></font></html>");
@@ -66,10 +67,19 @@ public class ServerPanel
     panel1.add(new JLabel(), constraints);
     add(panel1, BorderLayout.NORTH);
     serverTable = new JTable();
-    serverTable.setModel(new ServerTableModel());
+    serverTable.setModel(new ServerTableModel(DataManager.getInstance().getAllServer()));
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(serverTable);
     add(aScrollPane, BorderLayout.CENTER);
+    DataManager.getInstance().addServerListener(this);
+  }
+
+  public void registerSelected(){
+    DataManager.getInstance().updateServer();
+  }
+
+  public void fireContentChanged(HashMap changedContent){
+    ((ServerTableModel)serverTable.getModel()).setTable(changedContent);
   }
 
   public void fireLanguageChanged() {

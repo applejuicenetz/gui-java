@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<applejuice>
+	<time>1053522389796</time>
+	<networkinfo users="0" files="0" filesize="0,00" firewalled="false" ip="0.0.0.0"/>
+	<server id="2" name="appleJuice mainserver" host="applejuice.dyndns.info" lastseen="0" port="9855"/>
+	<server id="3" name="localserver" host="127.0.0.1" lastseen="0" port="9855"/>
+</applejuice>

@@ -30,7 +30,7 @@ import javax.swing.table.TableColumnModel;
  * @version 1.0
  */
 
-public class DownloadPanel extends JPanel implements LanguageListener{
+public class DownloadPanel extends JPanel implements LanguageListener, RegisterI{
   private JTextField downloadLink = new JTextField();
   private JButton btnStartDownload = new JButton("Download");
   private PowerDownloadPanel powerDownloadPanel = new PowerDownloadPanel();
@@ -122,6 +122,10 @@ public class DownloadPanel extends JPanel implements LanguageListener{
 
     add(topPanel, BorderLayout.CENTER);
     add(bottomPanel, BorderLayout.SOUTH);
+  }
+
+  public void registerSelected(){
+
   }
 
   public void fireLanguageChanged(){

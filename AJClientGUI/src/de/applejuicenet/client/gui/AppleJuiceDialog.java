@@ -15,6 +15,7 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
+import javax.swing.event.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -66,7 +67,6 @@ public class AppleJuiceDialog
     String path = System.getProperty("user.dir") + File.separator + "language" +
         File.separator;
     path += OptionsManager.getInstance().getSprache() + ".xml";
-    //zZ werden die Header der TableModel nicht aktualisiert, deshalb hier schon
     registerPane = new RegisterPanel(this);
     LanguageSelector ls = LanguageSelector.getInstance(path);
     addWindowListener(
@@ -75,7 +75,13 @@ public class AppleJuiceDialog
         closeDialog(evt);
       }
     });
-    this.getContentPane().setLayout(new BorderLayout());
+    getContentPane().setLayout(new BorderLayout());
+    registerPane.addChangeListener(new ChangeListener(){
+      public void stateChanged(ChangeEvent e){
+        RegisterI register = (RegisterI)registerPane.getSelectedComponent();
+        register.registerSelected();
+      }
+    });
     getContentPane().add(registerPane, BorderLayout.CENTER);
 
     JPanel panel = new JPanel(new GridBagLayout());
@@ -188,9 +194,10 @@ public class AppleJuiceDialog
 
   public void fireLanguageChanged() {
     LanguageSelector languageSelector = LanguageSelector.getInstance();
+    String versionsNr = DataManager.getInstance().getCoreVersion().getVersion();
     setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                getFirstAttrbuteByTagName(new
-        String[] {"mainform", "caption"})));
+        String[] {"mainform", "caption"})) + " (Core " + versionsNr + ")");
     sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "languagesheet",
                                   "caption"})));

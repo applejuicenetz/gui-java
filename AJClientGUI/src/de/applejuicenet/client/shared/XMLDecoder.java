@@ -10,6 +10,7 @@ import org.xml.sax.*;
 public abstract class XMLDecoder {
   protected Document document;
   private String filePath;
+  protected boolean webXML = false;
 
   protected XMLDecoder(){}
 
@@ -45,6 +46,44 @@ public abstract class XMLDecoder {
     catch (IOException ioe) {
       ioe.printStackTrace();
     }
+  }
+
+  public Document getDocument(){
+    return document;
+  }
+
+  public String getFirstAttrbuteByTagName(String[] attributePath, boolean lastIsElement) {
+    if (!webXML)
+      return getFirstAttrbuteByTagName(attributePath);
+    else{
+      NodeList nodes = document.getChildNodes();
+      for (int i=0; i<attributePath.length; i++){
+        for (int x = 0; x < nodes.getLength(); x++) {
+          String test = nodes.item(x).getNodeName();
+          if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
+            if (i == attributePath.length - 1) {
+              String result = "";
+              if (lastIsElement){
+                Element e = (Element) nodes.item(x);
+                nodes = e.getChildNodes();
+                result =  nodes.item(0).getNodeValue();
+              }
+              else{
+                Element e = (Element) nodes.item(x);
+                result = e.getAttribute(attributePath[attributePath.length-1]);
+              }
+              return result;
+            }
+            else {
+              nodes = nodes.item(x).getChildNodes();
+              break;
+            }
+          }
+        }
+      }
+      return "";
+    }
+
   }
 
   public String getFirstAttrbuteByTagName(String[] attributePath) {

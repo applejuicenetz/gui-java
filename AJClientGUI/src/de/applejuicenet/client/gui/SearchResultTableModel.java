@@ -1,6 +1,8 @@
 package de.applejuicenet.client.gui;
 
 import javax.swing.table.*;
+import java.util.HashMap;
+import de.applejuicenet.client.shared.dac.ServerDO;
 
 
 /**

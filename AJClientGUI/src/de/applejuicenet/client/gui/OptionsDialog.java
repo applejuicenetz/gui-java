@@ -47,6 +47,7 @@ public class OptionsDialog
                                                getFirstAttrbuteByTagName(new
         String[] {"einstform", "caption"})));
     standardPanel = new ODStandardPanel(parent); //Standard-Reiter
+    speichern.setBorderPainted(true);
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "standardsheet",
                                   "caption"})), standardPanel);

@@ -2,8 +2,10 @@
 <!--JBuilder XML Project-->
 <project>
   <property category="idl" name="ProcessIDL" value="false"/>
-  <property category="runtime" name="DefaultConfiguration" value="-1"/>
-  <property category="runtime" name="ExcludeDefaultForZero" value="1"/>
+  <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.0" name="ConfigurationName" value="Debug"/>
+  <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.0" name="application.class" value="de.applejuicenet.client.AppleJuiceClient"/>
   <property category="serverservices" name="disabled.services" value="connector;jdatastore"/>
   <property category="serverservices" name="single.server.name" value="Tomcat 4.0"/>
   <property category="sys" name="AuthorLabel" value="@author"/>

@@ -34,7 +34,6 @@ import de.applejuicenet.client.gui.controller.WebXMPParser;
 
 public class AppleJuiceClient {
   public static void main(String[] args) {
-    WebXMPParser xmlP = new WebXMPParser("localhost", "/xml/information.xml", "");
     if (OptionsManager.getInstance().getRemoteSettings().isRemoteUsed()) {
 
       try {

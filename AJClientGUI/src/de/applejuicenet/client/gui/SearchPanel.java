@@ -21,7 +21,7 @@ import javax.swing.table.TableColumnModel;
  * @version 1.0
  */
 
-public class SearchPanel extends JPanel implements LanguageListener{
+public class SearchPanel extends JPanel implements LanguageListener, RegisterI{
   JTable searchResultTable = new JTable();
   JButton btnStartStopSearch = new JButton("Suche starten");
   JTextField suchbegriff = new JTextField();
@@ -71,6 +71,10 @@ public class SearchPanel extends JPanel implements LanguageListener{
     aScrollPane.getViewport().add(searchResultTable);
     add(aScrollPane, BorderLayout.CENTER);
   }
+
+  public void registerSelected(){
+  }
+
 
   public void fireLanguageChanged() {
     LanguageSelector languageSelector = LanguageSelector.getInstance();
