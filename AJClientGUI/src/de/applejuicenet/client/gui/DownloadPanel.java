@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.51 2003/10/10 15:12:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.52 2003/10/12 15:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.52  2003/10/12 15:57:55  maj0r
+ * Kleinere Bugs behoben.
+ * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
+ *
  * Revision 1.51  2003/10/10 15:12:26  maj0r
  * Sortieren im Downloadbereich eingefuegt.
  *
@@ -163,8 +167,7 @@ public class DownloadPanel
             init();
             LanguageSelector.getInstance().addLanguageListener(this);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
@@ -207,15 +210,15 @@ public class DownloadPanel
                         ArrayList indizesAbbrechen = new ArrayList();
                         for (int i = 0; i < selectedItems.length; i++) {
                             if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                                DownloadDO downloadDO = ((DownloadMainNode)selectedItems[i]).getDownloadDO();
+                                DownloadDO downloadDO = ((DownloadMainNode) selectedItems[i]).getDownloadDO();
                                 indizesAbbrechen.add(new Integer(downloadDO.getId()));
                             }
                         }
                         int size = indizesAbbrechen.size();
-                        if (size>0){
+                        if (size > 0) {
                             int[] abbrechen = new int[size];
-                            for (int i=0; i<size; i++){
-                                abbrechen[i] = ((Integer)indizesAbbrechen.get(i)).intValue();
+                            for (int i = 0; i < size; i++) {
+                                abbrechen[i] = ((Integer) indizesAbbrechen.get(i)).intValue();
                             }
                             ApplejuiceFassade.getInstance().cancelDownload(abbrechen);
                         }
@@ -232,7 +235,7 @@ public class DownloadPanel
                     ArrayList indizesFortsetzen = new ArrayList();
                     for (int i = 0; i < selectedItems.length; i++) {
                         if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                            DownloadDO downloadDO = ((DownloadMainNode)selectedItems[i]).getDownloadDO();
+                            DownloadDO downloadDO = ((DownloadMainNode) selectedItems[i]).getDownloadDO();
                             if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
                                 indizesFortsetzen.add(new Integer(downloadDO.getId()));
                             }
@@ -242,18 +245,18 @@ public class DownloadPanel
                         }
                     }
                     int size = indizesPausieren.size();
-                    if (size>0){
+                    if (size > 0) {
                         int[] pausieren = new int[size];
-                        for (int i=0; i<size; i++){
-                            pausieren[i] = ((Integer)indizesPausieren.get(i)).intValue();
+                        for (int i = 0; i < size; i++) {
+                            pausieren[i] = ((Integer) indizesPausieren.get(i)).intValue();
                         }
                         ApplejuiceFassade.getInstance().pauseDownload(pausieren);
                     }
                     size = indizesFortsetzen.size();
-                    if (size>0){
+                    if (size > 0) {
                         int[] fortsetzen = new int[size];
-                        for (int i=0; i<size; i++){
-                            fortsetzen[i] = ((Integer)indizesFortsetzen.get(i)).intValue();
+                        for (int i = 0; i < size; i++) {
+                            fortsetzen[i] = ((Integer) indizesFortsetzen.get(i)).intValue();
                         }
                         ApplejuiceFassade.getInstance().resumeDownload(fortsetzen);
                     }
@@ -274,7 +277,7 @@ public class DownloadPanel
                     DownloadRootNode root = (DownloadRootNode) downloadModel.getRoot();
                     for (int i = 0; i < selectedItems.length; i++) {
                         if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                            root.alterVerstecke((DownloadMainNode)selectedItems[i]);
+                            root.alterVerstecke((DownloadMainNode) selectedItems[i]);
                         }
                     }
                     downloadTable.updateUI();
@@ -310,8 +313,8 @@ public class DownloadPanel
         constraints.weightx = 1;
 
         downloadLink.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent ke){
-                if (ke.getKeyCode() == KeyEvent.VK_ENTER){
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
                     btnStartDownload.doClick();
                 }
             }
@@ -342,14 +345,14 @@ public class DownloadPanel
                     }
                 }
                 if (node.getClass() == DownloadMainNode.class
-                    && ((DownloadMainNode)node).getType()==DownloadMainNode.ROOT_NODE) {
+                        && ((DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
                     powerDownloadPanel.btnPdl.setEnabled(true);
-                    downloadDOOverviewPanel.setDownloadDO(((DownloadMainNode)node).getDownloadDO());
+                    downloadDOOverviewPanel.setDownloadDO(((DownloadMainNode) node).getDownloadDO());
                 }
                 else if (node.getClass() == DownloadSourceDO.class) {
                     powerDownloadPanel.btnPdl.setEnabled(true);
-                    if (((DownloadSourceDO)node).getQueuePosition()<=20){
-                        downloadDOOverviewPanel.setDownloadSourceDO((DownloadSourceDO)node);
+                    if (((DownloadSourceDO) node).getQueuePosition() <= 20) {
+                        downloadDOOverviewPanel.setDownloadSourceDO((DownloadSourceDO) node);
                     }
                 }
                 else {
@@ -387,8 +390,7 @@ public class DownloadPanel
         SortButtonRenderer renderer2 = new SortButtonRenderer();
         TableColumnModel model = downloadTable.getColumnModel();
         int n = model.getColumnCount();
-        for (int i = 0; i < n; i++)
-        {
+        for (int i = 0; i < n; i++) {
             model.getColumn(i).setHeaderRenderer(renderer2);
         }
         JTableHeader header = downloadTable.getTableHeader();
@@ -397,7 +399,7 @@ public class DownloadPanel
         ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
     }
 
-    private void startDownload(){
+    private void startDownload() {
         String link = downloadLink.getText();
         if (link.length() != 0) {
             ApplejuiceFassade.getInstance().processLink(link);
@@ -406,7 +408,7 @@ public class DownloadPanel
     }
 
     public Object[] getSelectedDownloadItems() {
-        try{
+        try {
             int count = downloadTable.getSelectedRowCount();
             Object[] result = null;
             if (count == 1) {
@@ -422,8 +424,7 @@ public class DownloadPanel
             }
             return result;
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
             return null;
@@ -431,28 +432,27 @@ public class DownloadPanel
     }
 
     public void registerSelected() {
-        if (!initizialiced){
-            try{
+        if (!initizialiced) {
+            try {
                 initizialiced = true;
                 int width = aScrollPane.getWidth() - 18;
                 TableColumnModel headerModel = downloadTable.getTableHeader().getColumnModel();
                 int columnCount = headerModel.getColumnCount();
                 PositionManager pm = PropertiesManager.getPositionManager();
-                if (pm.isLegal()){
+                if (pm.isLegal()) {
                     int[] widths = pm.getDownloadWidths();
-                    for (int i=0; i<columnCount; i++){
+                    for (int i = 0; i < columnCount; i++) {
                         headerModel.getColumn(i).setPreferredWidth(widths[i]);
                     }
                 }
-                else{
-                    for (int i=0; i<columnCount; i++){
-                        headerModel.getColumn(i).setPreferredWidth(width/columnCount);
+                else {
+                    for (int i = 0; i < columnCount; i++) {
+                        headerModel.getColumn(i).setPreferredWidth(width / columnCount);
                     }
                 }
                 downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 if (logger.isEnabledFor(Level.ERROR))
                     logger.error("Unbehandelte Exception", e);
             }
@@ -460,7 +460,7 @@ public class DownloadPanel
     }
 
     public void fireLanguageChanged() {
-        try{
+        try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             String text = languageSelector.getFirstAttrbuteByTagName(new String[]{
                 "mainform", "Label14", "caption"});
@@ -529,14 +529,13 @@ public class DownloadPanel
                     getFirstAttrbuteByTagName(new String[]{"mainform",
                                                            "Clearfinishedentries1", "caption"})));
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
     }
 
-    public int[] getColumnWidths(){
+    public int[] getColumnWidths() {
         TableColumnModel tcm = downloadTable.getColumnModel();
         int[] widths = new int[tcm.getColumnCount()];
         for (int i = 0; i < tcm.getColumnCount(); i++) {
@@ -546,91 +545,102 @@ public class DownloadPanel
     }
 
     public void fireContentChanged(int type, Object content) {
-        try{
+        try {
             if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
                 HashMap downloads = (HashMap) content;
-                ((DownloadRootNode)downloadModel.getRoot()).setDownloadMap(downloads);
+                ((DownloadRootNode) downloadModel.getRoot()).setDownloadMap(downloads);
                 DownloadDirectoryNode.setDownloads(downloads);
                 downloadTable.updateUI();
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
     }
 
-    class SortMouseAdapter extends MouseAdapter{
-            private JTableHeader header;
-            private SortButtonRenderer renderer;
+    class SortMouseAdapter extends MouseAdapter {
+        private JTableHeader header;
+        private SortButtonRenderer renderer;
 
-            public SortMouseAdapter(JTableHeader header, SortButtonRenderer renderer) {
-              this.header = header;
-              this.renderer = renderer;
-            }
-
-            public void mousePressed(MouseEvent e) {
-              int col = header.columnAtPoint(e.getPoint());
-              renderer.setPressedColumn(col);
-              renderer.setSelectedColumn(col);
-              header.repaint();
-
-              if (header.getTable().isEditing()) {
-                header.getTable().getCellEditor().stopCellEditing();
-              }
-
-              boolean isAscent;
-              if (SortButtonRenderer.UP == renderer.getState(col)) {
-                isAscent = true;
-              }
-              else {
-                isAscent = false;
-              }
-              DownloadRootNode rootNode = ((DownloadRootNode)downloadModel.getRoot());
-              switch(col){
-                  case 0:{
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_DOWNLOADNAME, isAscent);
-                      break;
-                  }
-                  case 2:{
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_GROESSE, isAscent);
-                      break;
-                  }
-                  case 3:{
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_BEREITS_GELADEN, isAscent);
-                      break;
-                  }
-                  case 4:{
-                         rootNode.setSortCriteria(DownloadRootNode.SORT_GESCHWINDIGKEIT, isAscent);
-                       break;
-                   }
-                   case 5:{
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_RESTZEIT, isAscent);
-                      break;
-                  }
-                  case 6:{
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_PROZENT, isAscent);
-                      break;
-                  }
-                  case 7:{
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_REST_ZU_LADEN, isAscent);
-                      break;
-                  }
-                  case 8:{
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_PWDL, isAscent);
-                      break;
-                  }
-                  default:
-                      break;
-              }
-              downloadTable.updateUI();
-            }
-
-            public void mouseReleased(MouseEvent e) {
-              renderer.setPressedColumn( -1);
-              header.repaint();
-            }
-
+        public SortMouseAdapter(JTableHeader header, SortButtonRenderer renderer) {
+            this.header = header;
+            this.renderer = renderer;
+            header.setReorderingAllowed(false);
         }
+
+        public void mousePressed(MouseEvent e) {
+            int col = header.columnAtPoint(e.getPoint());
+            if (col==1 || col==9){
+                return;
+            }
+            renderer.setPressedColumn(col);
+            renderer.setSelectedColumn(col);
+            header.repaint();
+
+            if (header.getTable().isEditing()) {
+                header.getTable().getCellEditor().stopCellEditing();
+            }
+
+            boolean isAscent;
+            if (SortButtonRenderer.UP == renderer.getState(col)) {
+                isAscent = true;
+            }
+            else {
+                isAscent = false;
+            }
+            DownloadRootNode rootNode = ((DownloadRootNode) downloadModel.getRoot());
+            switch (col) {
+                case 0:
+                    {
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_DOWNLOADNAME, isAscent);
+                        break;
+                    }
+                case 2:
+                    {
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_GROESSE, isAscent);
+                        break;
+                    }
+                case 3:
+                    {
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_BEREITS_GELADEN, isAscent);
+                        break;
+                    }
+                case 4:
+                    {
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_GESCHWINDIGKEIT, isAscent);
+                        break;
+                    }
+                case 5:
+                    {
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_RESTZEIT, isAscent);
+                        break;
+                    }
+                case 6:
+                    {
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_PROZENT, isAscent);
+                        break;
+                    }
+                case 7:
+                    {
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_REST_ZU_LADEN, isAscent);
+                        break;
+                    }
+                case 8:
+                    {
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_PWDL, isAscent);
+                        break;
+                    }
+                default:
+                    break;
+            }
+            downloadTable.updateUI();
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            renderer.setPressedColumn(-1);
+            header.repaint();
+        }
+
+    }
 }

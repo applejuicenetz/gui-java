@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.17 2003/10/04 15:30:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.18 2003/10/12 15:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.18  2003/10/12 15:57:55  maj0r
+ * Kleinere Bugs behoben.
+ * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
+ *
  * Revision 1.17  2003/10/04 15:30:26  maj0r
  * Userpartliste hinzugefuegt.
  *
@@ -86,6 +90,7 @@ import java.awt.*;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import org.xml.sax.SAXParseException;
 
 public class DownloadDOOverviewPanel extends JPanel implements LanguageListener, DataUpdateListener{
     private DownloadPartListPanel actualDlOverviewTable = new DownloadPartListPanel();
@@ -167,12 +172,19 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
                                         tempDO.getTemporaryFileNumber() + ".data)");
                                 while(!isInterrupted()){
                                     PartListDO partList = ApplejuiceFassade.getInstance().getPartList(tempDO);
-                                    actualDlOverviewTable.setPartList(partList);
-                                    try{
-                                        sleep(15000);
-                                    }
-                                    catch (InterruptedException iE){
+                                    if (partList==null){
                                         interrupt();
+                                        actualDLDateiName.setText("");
+                                        actualDlOverviewTable.setPartList(null);
+                                    }
+                                    else{
+                                        actualDlOverviewTable.setPartList(partList);
+                                        try{
+                                            sleep(15000);
+                                        }
+                                        catch (InterruptedException iE){
+                                            interrupt();
+                                        }
                                     }
                                 }
                             }
@@ -182,6 +194,9 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
         }
         catch (Exception e)
         {
+            partListWorkerThread.interrupt();
+            actualDLDateiName.setText("");
+            actualDlOverviewTable.setPartList(null);
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DownloadPartListXMLHolder.java,v 1.5 2003/10/04 15:29:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DownloadPartListXMLHolder.java,v 1.6 2003/10/12 15:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui.controller;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPartListXMLHolder.java,v $
+ * Revision 1.6  2003/10/12 15:57:55  maj0r
+ * Kleinere Bugs behoben.
+ * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
+ *
  * Revision 1.5  2003/10/04 15:29:12  maj0r
  * Userpartliste hinzugefuegt.
  *
@@ -74,9 +78,6 @@ public class DownloadPartListXMLHolder
             return partListDO;
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
             return null;
         }
     }

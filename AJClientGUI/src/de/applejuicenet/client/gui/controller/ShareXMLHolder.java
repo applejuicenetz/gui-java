@@ -11,7 +11,7 @@ import de.applejuicenet.client.shared.LoggerUtils;
 import de.applejuicenet.client.shared.MapSetStringKey;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.13 2003/09/04 22:12:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.14 2003/10/12 15:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import de.applejuicenet.client.shared.MapSetStringKey;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.14  2003/10/12 15:57:55  maj0r
+ * Kleinere Bugs behoben.
+ * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
+ *
  * Revision 1.13  2003/09/04 22:12:45  maj0r
  * Logger verfeinert.
  * Threadbeendigung korrigiert.
@@ -66,7 +70,13 @@ public class ShareXMLHolder
     }
 
     public void update() {
-        reload("");
+        try{
+            reload("");
+        }
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
         updateShare();
     }
 

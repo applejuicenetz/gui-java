@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.14 2003/10/01 07:25:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.15 2003/10/12 15:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.15  2003/10/12 15:57:55  maj0r
+ * Kleinere Bugs behoben.
+ * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
+ *
  * Revision 1.14  2003/10/01 07:25:44  maj0r
  * Suche weiter gefuehrt.
  *
@@ -107,7 +111,7 @@ public abstract class WebXMLParser
         webXML = true;
     }
 
-    public void reload(String parameters) {
+    public void reload(String parameters) throws Exception{
         String xmlData = null;
         try
         {
@@ -164,6 +168,9 @@ public abstract class WebXMLParser
                 {
                     x = ((SAXException)e).getException();
                 }
+            }
+            if (getClass()==DownloadPartListXMLHolder.class){
+                throw new PartlistException();
             }
             if (logger.isEnabledFor(Level.ERROR)){
                 String zeit = Long.toString(System.currentTimeMillis());

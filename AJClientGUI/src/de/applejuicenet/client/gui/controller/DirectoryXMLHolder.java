@@ -7,10 +7,9 @@ import org.w3c.dom.Element;
 import org.apache.log4j.Logger;
 
 import java.net.URLEncoder;
-import java.io.UnsupportedEncodingException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.6 2003/08/28 06:57:41 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.7 2003/10/12 15:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +18,10 @@ import java.io.UnsupportedEncodingException;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.7  2003/10/12 15:57:55  maj0r
+ * Kleinere Bugs behoben.
+ * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
+ *
  * Revision 1.6  2003/08/28 06:57:41  maj0r
  * Plattformunabhaengigkeit wieder hergestellt.
  *
@@ -62,8 +65,8 @@ public class DirectoryXMLHolder extends WebXMLParser {
             else
                 reload("directory=" + URLEncoder.encode(directory, "UTF-8"));
         }
-        catch (UnsupportedEncodingException e) {
-            e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+        catch (Exception e) {
+            e.printStackTrace();
         }
         Element e = null;
         NodeList nodes = document.getElementsByTagName("applejuice");

@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/SortButtonRenderer.java,v 1.1 2003/06/24 14:32:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/SortButtonRenderer.java,v 1.2 2003/10/12 15:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,10 @@ import javax.swing.table.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SortButtonRenderer.java,v $
+ * Revision 1.2  2003/10/12 15:57:55  maj0r
+ * Kleinere Bugs behoben.
+ * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
+ *
  * Revision 1.1  2003/06/24 14:32:27  maj0r
  * Klassen zum Sortieren von Tabellen eingefügt.
  * Servertabelle kann nun spaltenweise sortiert werden.
@@ -32,9 +36,12 @@ public class SortButtonRenderer
   public static final int DOWN = 1;
   public static final int UP = 2;
 
-  int pushedColumn;
-  Hashtable state;
-  JButton downButton, upButton;
+  private Font textFont;
+
+  private int pushedColumn;
+  private Hashtable state;
+  private JButton downButton, upButton;
+  private boolean isPressed;
 
   public SortButtonRenderer() {
     pushedColumn = -1;
@@ -56,6 +63,7 @@ public class SortButtonRenderer
     upButton.setIcon(new BevelArrowIcon(BevelArrowIcon.UP, false, false));
     upButton.setPressedIcon(new BevelArrowIcon(BevelArrowIcon.UP, false, true));
 
+    textFont = new JTable().getFont();
   }
 
   public Component getTableCellRendererComponent(JTable table, Object value,
@@ -73,7 +81,8 @@ public class SortButtonRenderer
       }
     }
     button.setText( (value == null) ? "" : value.toString());
-    boolean isPressed = (column == pushedColumn);
+    button.setFont(textFont);
+    isPressed = (column == pushedColumn);
     button.getModel().setPressed(isPressed);
     button.getModel().setArmed(isPressed);
     return button;
