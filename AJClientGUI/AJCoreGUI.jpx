@@ -3,6 +3,7 @@
 <project>
   <property category="generalFormatting" name="blockIndent" value="4"/>
   <property category="javaFormatting" name="alwaysClasses" value="1"/>
+  <property category="javadoc" name="custom.tags.1" value="todo;a;To Do:"/>
   <property category="optimize.0" name="OptimizableType" value="intuitive.ide.borland.jb8.ProfilerBootstrap"/>
   <property category="optimize.0" name="oicc.FilterFile" value="C:\CrefoTeam\AJClientGUI\AJCoreGUI.oif"/>
   <property category="optimize.0" name="oipr.FilterFile" value="C:\CrefoTeam\AJClientGUI\AJCoreGUI.oif"/>
@@ -45,26 +46,5 @@
   <property category="sys" name="Version" value="1.0"/>
   <property category="sys" name="VersionLabel" value="@version"/>
   <property category="sys" name="WorkingDirectory" value="."/>
-  <node name="AJCoreGUI" type="Archive">
-    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ExecutableArchiver"/>
-    <property category="archiving" name="buildWithProject" value="0"/>
-    <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
-    <property category="archiving" name="executableEnabled.1" value="1"/>
-    <property category="archiving" name="executableEnabled.2" value="0"/>
-    <property category="archiving" name="executableEnabled.3" value="0"/>
-    <property category="archiving" name="executableEnabled.4" value="0"/>
-    <property category="archiving" name="executableEnabled.5" value="0"/>
-    <property category="archiving" name="executableFiles.1" value="AJCoreGUI.exe"/>
-    <property category="archiving" name="executableFiles.2" value="AJCoreGUIW.exe"/>
-    <property category="archiving" name="executableFiles.3" value=""/>
-    <property category="archiving" name="executableFiles.4" value=""/>
-    <property category="archiving" name="executableFiles.5" value=""/>
-    <property category="archiving" name="libraryStates.1" value="3:AJLibs"/>
-    <property category="archiving" name="manifestConfigFile" value="0"/>
-    <property category="archiving" name="overrideManifestPath" value="build/MANIFEST.MF"/>
-    <property category="archiving" name="targetCompressed" value="1"/>
-    <property category="archiving" name="targetPath" value="AJCoreGUI.jar"/>
-    <property category="archiving" name="usingRules" value="1"/>
-  </node>
   <file path="build/build.xml"/>
 </project>
