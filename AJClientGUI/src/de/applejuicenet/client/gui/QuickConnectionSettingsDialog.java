@@ -34,7 +34,7 @@ import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.18 2004/04/06 14:44:31 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.19 2004/07/05 09:18:22 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -51,6 +51,7 @@ public class QuickConnectionSettingsDialog
     private ConnectionSettings remote;
     private ConnectionSettings[] connectionSet;
     private JButton ok = new JButton("OK");
+    private JButton abbrechen = new JButton("Abbrechen");
     private JCheckBox cmbNieWiederZeigen = new JCheckBox();
     private JComboBox connectionListe = new JComboBox();
     private Logger logger;
@@ -108,6 +109,22 @@ public class QuickConnectionSettingsDialog
                 if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
                     pressOK();
                 }
+                else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                	pressAbbrechen();
+                }
+                else {
+                    super.keyPressed(ke);
+                }
+            }
+        });
+        connectionListe.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    pressOK();
+                }
+                else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                	pressAbbrechen();
+                }
                 else {
                     super.keyPressed(ke);
                 }
@@ -140,7 +157,6 @@ public class QuickConnectionSettingsDialog
         JPanel panel3 = new JPanel(new BorderLayout());
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel1.add(ok);
-        JButton abbrechen = new JButton("Abbrechen");
         panel1.add(abbrechen);
 
         JPanel panel4 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -180,6 +196,10 @@ public class QuickConnectionSettingsDialog
 
     public void pressOK() {
         ok.doClick();
+    }
+
+    public void pressAbbrechen() {
+        abbrechen.doClick();
     }
 
     public int getResult() {

@@ -24,7 +24,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.15 2004/04/06 14:44:31 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.16 2004/07/05 09:18:22 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -119,6 +119,36 @@ public class ODConnectionPanel
             }
         });
         if (quickConnectionSettingsDialog != null) {
+        	host.addKeyListener(new KeyAdapter(){
+                public void keyPressed(KeyEvent ke) {
+                    if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                        dirty = true;
+                        remote.setNewPassword(new String(passwortNeu.
+                            getPassword()));
+                        quickConnectionSettingsDialog.pressOK();
+                    }
+                    else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    	quickConnectionSettingsDialog.pressAbbrechen();
+                    }
+                    else {
+                        super.keyPressed(ke);
+                    }
+                }});
+        	port.addKeyListener(new KeyAdapter(){
+                public void keyPressed(KeyEvent ke) {
+                    if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                        dirty = true;
+                        remote.setNewPassword(new String(passwortNeu.
+                            getPassword()));
+                        quickConnectionSettingsDialog.pressOK();
+                    }
+                    else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    	quickConnectionSettingsDialog.pressAbbrechen();
+                    }
+                    else {
+                        super.keyPressed(ke);
+                    }        		
+        	}});
             passwortNeu.addKeyListener(new KeyAdapter() {
                 public void keyPressed(KeyEvent ke) {
                     if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -126,6 +156,9 @@ public class ODConnectionPanel
                         remote.setNewPassword(new String(passwortNeu.
                             getPassword()));
                         quickConnectionSettingsDialog.pressOK();
+                    }
+                    else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    	quickConnectionSettingsDialog.pressAbbrechen();
                     }
                     else {
                         super.keyPressed(ke);
