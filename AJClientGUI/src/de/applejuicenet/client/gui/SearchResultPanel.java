@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import de.applejuicenet.client.shared.Search.SearchEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.8 2003/12/30 13:08:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.9 2004/01/07 14:51:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,10 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.9  2004/01/07 14:51:39  maj0r
+ * Bug #23 gefixt (Danke an computer.ist.org)
+ * Suche laesst sich nun korrekt abrechen.
+ *
  * Revision 1.8  2003/12/30 13:08:32  maj0r
  * Suchanzeige korrigiert
  * Es kann passieren, dass nicht alle gefundenen Suchergebnisse beim Core ankommen, die Ausgabe wurde entsprechend korrigiert.
@@ -109,8 +113,8 @@ public class SearchResultPanel extends JPanel{
         sucheAbbrechen.setText(sucheStoppen);
         sucheAbbrechen.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){
-                ApplejuiceFassade.getInstance().cancelSearch(search.getId());
                 sucheAbbrechen.setEnabled(false);
+                ApplejuiceFassade.getInstance().cancelSearch(search.getId());
             }
         });
         schliessen.setEnabled(false);
