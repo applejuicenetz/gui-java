@@ -10,9 +10,10 @@ import javax.swing.table.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
+import java.awt.event.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.9 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.10 2003/06/22 19:01:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.10  2003/06/22 19:01:55  maj0r
+ * Laden des Shares nun erst nach Betätigen des Buttons "Erneut laden".
+ *
  * Revision 1.9  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -77,6 +81,12 @@ public class SharePanel
 
     neueListe.setIcon(IconManager.getInstance().getIcon("treeRoot"));
     neuLaden.setIcon(IconManager.getInstance().getIcon("erneuern"));
+    neuLaden.addActionListener(new ActionListener(){
+      public void actionPerformed(ActionEvent ae){
+        ShareTableModel tableModel = (ShareTableModel)shareTable.getModel();
+        tableModel.setTable(DataManager.getInstance().getShare());
+      }
+    });
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;
     constraints.fill = GridBagConstraints.BOTH;
@@ -116,7 +126,7 @@ public class SharePanel
     add(panelWest, BorderLayout.WEST);
     add(panelCenter, BorderLayout.CENTER);
 
-    shareTable.setModel(new ShareTableModel(DataManager.getInstance().getShare()));
+    shareTable.setModel(new ShareTableModel(null));
     TableColumn tc = shareTable.getColumnModel().getColumn(1);
     tc.setCellRenderer(new ShareTableCellRenderer());
 
@@ -125,7 +135,7 @@ public class SharePanel
   }
 
   public void registerSelected() {
-    HashMap shares = DataManager.getInstance().getShare();
+//    HashMap shares = DataManager.getInstance().getShare();
   }
 
   public void fireLanguageChanged() {

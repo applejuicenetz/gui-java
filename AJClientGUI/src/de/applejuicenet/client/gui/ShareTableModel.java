@@ -8,7 +8,7 @@ import javax.swing.table.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ShareTableModel.java,v 1.3 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ShareTableModel.java,v 1.4 2003/06/22 19:01:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareTableModel.java,v $
+ * Revision 1.4  2003/06/22 19:01:55  maj0r
+ * Laden des Shares nun erst nach Betätigen des Buttons "Erneut laden".
+ *
  * Revision 1.3  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -32,7 +35,7 @@ public class ShareTableModel
 
   public ShareTableModel(HashMap content) {
     super();
-    resetTable(content);
+    setTable(content);
   }
 
   public Object getRow(int row) {
@@ -96,29 +99,15 @@ public class ShareTableModel
   }
 
   public void setTable(HashMap changedContent) {
-    Iterator it = changedContent.values().iterator();
-    while (it.hasNext()) {
-      ShareDO share = (ShareDO) it.next();
-      int index = shares.indexOf(share);
-      if (index == -1) { // Der Share ist neu
-        shares.add(share);
-      }
-      else { // Der Share hat sich verändert
-        ShareDO oldShare = (ShareDO) shares.get(index);
-        oldShare.setChecksum(share.getCheckSum());
-        oldShare.setFilename(share.getFilename());
-        oldShare.setSize(share.getSize());
-      }
+    if (changedContent==null){
+      shares.clear();
     }
-    this.fireTableDataChanged();
-  }
-
-  public void resetTable(HashMap changedContent) {
-    Iterator it = changedContent.values().iterator();
-    shares.clear();
-    while (it.hasNext()) {
-      ShareDO server = (ShareDO) it.next();
-      shares.add(server);
+    else{
+      shares.clear();
+      Iterator it = changedContent.values().iterator();
+      while (it.hasNext()) {
+        shares.add((ShareDO) it.next());
+      }
     }
     this.fireTableDataChanged();
   }
