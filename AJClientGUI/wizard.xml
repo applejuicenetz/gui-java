@@ -3,8 +3,10 @@
 	<wizard bezeichnung="Wizard">
 		<modem bezeichnung="Modem" maxupload="3" maxdownload="4" maxnewconnections10="25"/>
 		<isdn bezeichnung="ISDN" maxupload="8" maxdownload="7" maxnewconnections10="50"/>
-		<dsl128 bezeichnung="DSL 128" maxupload="15" maxdownload="90" maxnewconnections10="50"/>
-		<dsl256 bezeichnung="DSL 256" maxupload="30" maxdownload="180" maxnewconnections10="50"/>
+		<dsl768 bezeichnung="DSL 768" maxupload="14" maxdownload="90" maxnewconnections10="50"/>
+		<dsl1000 bezeichnung="DSL 1000" maxupload="14" maxdownload="120" maxnewconnections10="50"/>
+		<dsl2000 bezeichnung="DSL 2000" maxupload="21" maxdownload="245" maxnewconnections10="50"/>
+		<dsl3000 bezeichnung="DSL 3000" maxupload="43" maxdownload="375" maxnewconnections10="50"/>
 		<t1 bezeichnung="T1" maxupload="67" maxdownload="67" maxnewconnections10="50"/>
 		<t3 bezeichnung="T3" maxupload="181" maxdownload="181" maxnewconnections10="50"/>
 		<lan bezeichnung="LAN" maxupload="5600" maxdownload="5600" maxnewconnections10="50"/>
