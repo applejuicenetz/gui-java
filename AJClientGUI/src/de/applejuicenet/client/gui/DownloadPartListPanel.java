@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.8 2003/12/16 09:28:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.9 2003/12/19 13:35:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.9  2003/12/19 13:35:40  maj0r
+ * Bug in der Partliste behoben.
+ *
  * Revision 1.8  2003/12/16 09:28:04  maj0r
  * NullPointer behoben.
  *
@@ -58,7 +61,7 @@ public class DownloadPartListPanel extends JPanel {
     public void paintComponent(Graphics g) {
         if (partListDO != null && image!=null)
         {
-            if (height != getHeight() || width != getWidth()){
+            if (height != (int)getVisibleRect().getHeight() || width != (int)getVisibleRect().getWidth()){
                 setPartList(partListDO);
             }
             g.drawImage(image, 0, 0, null);
@@ -70,27 +73,17 @@ public class DownloadPartListPanel extends JPanel {
     public void setPartList(PartListDO partListDO) {
         try
         {
-            if (this.partListDO == partListDO)
+            if (this.partListDO == partListDO){
                 return;
-            this.partListDO = partListDO;
-            if (partListDO == null){
-                image = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
-                Graphics graphics = image.getGraphics();
-                height = getHeight();
-                width = getWidth();
-                graphics.setColor(getBackground());
-                graphics.fillRect(0, 0, width, height);
             }
-            else
-            {
-                image = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
-                Graphics graphics = image.getGraphics();
-                height = getHeight();
-                width = getWidth();
-                graphics.setColor(getBackground());
-                graphics.fillRect(0, 0, width, height);
-                int anzahlRows = getHeight() / 16;
-                int anzahlZeile = getWidth() / 2;
+            this.partListDO = partListDO;
+            height = (int)getVisibleRect().getHeight();
+            width = (int)getVisibleRect().getWidth();
+            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics graphics = image.getGraphics();
+            if (partListDO != null){
+                int anzahlRows = (height / 16)-1;
+                int anzahlZeile = width / 2;
                 int anzahl = anzahlRows * anzahlZeile;
                 int groesseProPart;
                 int anzahlParts;
@@ -167,8 +160,12 @@ public class DownloadPartListPanel extends JPanel {
                     {
                         graphics.setColor(getColorByType(parts[partPos].getType()));
                     }
-                    graphics.fillRect(x, y * 16 +1 , x + 1, (y + 1) * 16);
+                    graphics.fillRect(x, (y * 16) + 1 , x + 1, (y + 1) * 16);
                     x += 2;
+                }
+                if(x<width){
+                    graphics.setColor(Color.WHITE);
+                    graphics.fillRect(x, (y * 16) + 1 , width-1, (y + 1) * 16);
                 }
             }
             updateUI();
