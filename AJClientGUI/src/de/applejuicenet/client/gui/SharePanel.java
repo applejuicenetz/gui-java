@@ -32,7 +32,7 @@ import java.net.URLEncoder;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.49 2003/12/19 09:54:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.50 2003/12/22 13:56:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.50  2003/12/22 13:56:14  maj0r
+ * Kleine Bug behoben, der sich beim Einbau eines Thread eingeschlichen hat.
+ *
  * Revision 1.49  2003/12/19 09:54:14  maj0r
  * Bug der Tableheader der Share- und der Uploadtabelle behoben (Danke an muhviestarr).
  *
@@ -632,13 +635,13 @@ public class SharePanel
             }
             if (!treeInitialisiert)
             {
+                treeInitialisiert = true;
                 new Thread(){
                     public void run(){
                         ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
                         DirectoryNode.setShareDirs(ajSettings.getShareDirs());
                         SwingUtilities.invokeLater(new Runnable(){
                             public void run(){
-                                treeInitialisiert = true;
                                 initShareSelectionTree();
                             }
                         });
