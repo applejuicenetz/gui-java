@@ -3,7 +3,6 @@ package de.applejuicenet.client.gui;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import java.awt.BorderLayout;
@@ -59,7 +58,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.74 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.75 2004/10/14 15:43:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -83,7 +82,6 @@ public class SharePanel
     private TitledBorder titledBorder2;
     private JLabel dateien = new JLabel();
     private MouseAdapter treeMouseAdapter;
-
     private JButton neueListe = new JButton();
     private JButton neuLaden = new JButton();
     private JButton refresh = new JButton();
@@ -91,31 +89,53 @@ public class SharePanel
     private JButton prioritaetAufheben = new JButton();
     private JComboBox cmbPrio = new JComboBox();
     private AJSettings ajSettings;
-
     private ShareTable shareTable;
     private ShareModel shareModel;
-
-    private String eintraege;
-
     private JPopupMenu popup = new JPopupMenu();
-
-    private JMenuItem item1;
-    private JMenuItem item2;
-    private JMenuItem item3;
-
+    private JMenuItem sharedwsub;
+    private JMenuItem sharedwosub;
+    private JMenuItem notshared;
     private JPopupMenu popup2 = new JPopupMenu();
     private JMenuItem itemCopyToClipboard = new JMenuItem();
     private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
     private JMenuItem itemCopyToClipboardAsUBBCode = new JMenuItem();
     private JMenuItem itemOpenWithProgram = new JMenuItem();
-
-    private int anzahlDateien = 0;
-    private String dateiGroesse = "0 MB";
     private boolean treeInitialisiert = false;
     private boolean initialized = false;
-
     private Logger logger;
+    
+    public JButton getBtnPrioritaetAufheben(){
+    	return prioritaetAufheben;
+    }
+    
+    public JButton getBtnPrioritaetSetzen(){
+    	return prioritaetSetzen;
+    }
 
+    public JButton getBtnNeuLaden(){
+    	return neuLaden;
+    }
+
+    public JButton getBtnRefresh(){
+    	return refresh;
+    }
+    
+    public ShareTable getShareTable(){
+    	return shareTable;
+    }
+
+    public ShareModel getShareModel(){
+    	return shareModel;
+    }
+    
+    public JLabel getLblDateien(){
+    	return dateien;
+    }
+    
+    public JComboBox getCmbPrioritaet(){
+    	return cmbPrio;
+    }
+    
     public static synchronized SharePanel getInstance() {
         if (instance == null) {
             instance = new SharePanel();
@@ -279,91 +299,16 @@ public class SharePanel
         for (int i = 1; i < 251; i++) {
             cmbPrio.addItem(new Integer(i));
         }
-        prioritaetAufheben.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                prioritaetAufheben.setEnabled(false);
-                prioritaetSetzen.setEnabled(false);
-                neuLaden.setEnabled(false);
-                final SwingWorker worker = new SwingWorker() {
-                    public Object construct() {
-                        try {
-                            Object[] values = shareTable.getSelectedItems();
-                            if (values == null) {
-                                return null;
-                            }
-                            ShareNode shareNode = null;
-                            for (int i = 0; i < values.length; i++) {
-                                shareNode = (ShareNode) values[i];
-                                shareNode.setPriority(1);
-                            }
-                        }
-                        catch (Exception e) {
-                            if (logger.isEnabledFor(Level.ERROR)) {
-                                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                            }
-                        }
-                        return null;
-                    }
 
-                    public void finished() {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                shareTable.updateUI();
-                                prioritaetAufheben.setEnabled(true);
-                                prioritaetSetzen.setEnabled(true);
-                                neuLaden.setEnabled(true);
-                            }
-                        });
-                    }
-                };
-                worker.start();
-            }
-        });
-        prioritaetSetzen.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                prioritaetAufheben.setEnabled(false);
-                prioritaetSetzen.setEnabled(false);
-                neuLaden.setEnabled(false);
-                new Thread() {
-                    public void run() {
-                        try {
-                            int prio = ( (Integer) cmbPrio.getSelectedItem()).
-                                intValue();
-                            Object[] values = shareTable.getSelectedItems();
-                            if (values != null){
-                                synchronized (values) {
-                                    if (values == null) {
-                                        return;
-                                    }
-                                    ShareNode shareNode = null;
-                                    for (int i = 0; i < values.length; i++) {
-                                        shareNode = (ShareNode) values[i];
-                                        shareNode.setPriority(prio);
-                                    }
-                                }
-                                shareNeuLaden(false);
-                            }
-                        }
-                        catch (Exception e) {
-                            if (logger.isEnabledFor(Level.ERROR)) {
-                                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                            }
-                        }
-                    }
-                }
-                .start();
-            }
-        });
-
-        item1 = new JMenuItem();
-        item1.setIcon(im.getIcon("sharedwsub"));
-        item2 = new JMenuItem();
-        item2.setIcon(im.getIcon("sharedwosub"));
-        item3 = new JMenuItem();
-        item3.setIcon(im.getIcon("notshared"));
-        popup.add(item1);
-        popup.add(item2);
-        popup.add(item3);
+        sharedwsub = new JMenuItem();
+        sharedwsub.setIcon(im.getIcon("sharedwsub"));
+        sharedwosub = new JMenuItem();
+        sharedwosub.setIcon(im.getIcon("sharedwosub"));
+        notshared = new JMenuItem();
+        notshared.setIcon(im.getIcon("notshared"));
+        popup.add(sharedwsub);
+        popup.add(sharedwosub);
+        popup.add(notshared);
 
         shareModel = new ShareModel(new ShareNode(null, null));
         shareTable = new ShareTable(shareModel);
@@ -376,35 +321,7 @@ public class SharePanel
             model.getColumn(i).setHeaderRenderer(renderer);
         }
 
-        shareTable.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent me) {
-                if (SwingUtilities.isRightMouseButton(me)) {
-                    Point p = me.getPoint();
-                    int iRow = shareTable.rowAtPoint(p);
-                    int iCol = shareTable.columnAtPoint(p);
-                    if (iRow == -1 || iCol == -1) {
-                        return;
-                    }
-                    shareTable.setRowSelectionInterval(iRow, iRow);
-                    shareTable.setColumnSelectionInterval(iCol, iCol);
-                }
-                maybeShowPopup(me);
-            }
-
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-                maybeShowPopup(e);
-            }
-
-            private void maybeShowPopup(MouseEvent e) {
-                if (e.isPopupTrigger() && shareTable.getSelectedRowCount() == 1) {
-                    Object[] obj = shareTable.getSelectedItems();
-                    if ( ( (ShareNode) obj[0]).isLeaf()) {
-                        popup2.show(shareTable, e.getX(), e.getY());
-                    }
-                }
-            }
-        });
+        shareTable.addMouseListener(new ShareTableMouseAdapter());
 
         titledBorder1 = new TitledBorder("Test");
         titledBorder2 = new TitledBorder("Tester");
@@ -414,36 +331,6 @@ public class SharePanel
 
         neueListe.setIcon(IconManager.getInstance().getIcon("treeRoot"));
         neuLaden.setIcon(IconManager.getInstance().getIcon("erneuern"));
-        refresh.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                refresh.setEnabled(false);
-                final SwingWorker worker = new SwingWorker() {
-                    public Object construct() {
-                        try {
-                            Set shares = ajSettings.getShareDirs();
-                            ApplejuiceFassade.getInstance().setShare(shares);
-                        }
-                        catch (Exception e) {
-                            if (logger.isEnabledFor(Level.ERROR)) {
-                                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                            }
-                        }
-                        return null;
-                    }
-
-                    public void finished() {
-                        refresh.setEnabled(true);
-                    }
-                };
-                worker.start();
-            }
-        });
-
-        neuLaden.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                shareNeuLaden(true);
-            }
-        });
 
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel1.add(neuLaden);
@@ -476,117 +363,9 @@ public class SharePanel
 
         LanguageSelector.getInstance().addLanguageListener(this);
 
-        item1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                Set shares = ajSettings.getShareDirs();
-                DirectoryNode node = (DirectoryNode) folderTree.
-                    getLastSelectedPathComponent();
-                if (node != null) {
-                    String path = node.getDO().getPath();
-                    ShareEntry entry = new ShareEntry(path,
-                        ShareEntry.SUBDIRECTORY);
-                    shares.add(entry);
-                    ApplejuiceFassade.getInstance().setShare(shares);
-                    DirectoryNode.setShareDirs(shares);
-                    folderTree.updateUI();
-                }
-            }
-        });
-
-        item2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                Set shares = ajSettings.getShareDirs();
-                DirectoryNode node = (DirectoryNode) folderTree.
-                    getLastSelectedPathComponent();
-                if (node != null) {
-                    String path = node.getDO().getPath();
-                    ShareEntry entry = new ShareEntry(path,
-                        ShareEntry.SINGLEDIRECTORY);
-                    shares.add(entry);
-                    ApplejuiceFassade.getInstance().setShare(shares);
-                    DirectoryNode.setShareDirs(shares);
-                    folderTree.updateUI();
-                }
-            }
-        });
-
-        item3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                Set shares = ajSettings.getShareDirs();
-                DirectoryNode node = (DirectoryNode) folderTree.
-                    getLastSelectedPathComponent();
-                if (node != null) {
-                    String path = node.getDO().getPath();
-                    Iterator it = shares.iterator();
-                    ShareEntry toRemove = null;
-                    while (it.hasNext()) {
-                        toRemove = (ShareEntry) it.next();
-                        if (toRemove.getDir().compareToIgnoreCase(path) == 0) {
-                            break;
-                        }
-                        toRemove = null;
-                    }
-                    if (toRemove != null) {
-                        shares.remove(toRemove);
-                        ApplejuiceFassade.getInstance().setShare(shares);
-                        DirectoryNode.setShareDirs(shares);
-                        folderTree.updateUI();
-                    }
-                }
-            }
-        });
-    }
-
-    private void shareNeuLaden(final boolean komplettNeu) {
-        prioritaetAufheben.setEnabled(false);
-        prioritaetSetzen.setEnabled(false);
-        neuLaden.setEnabled(false);
-        final SwingWorker worker = new SwingWorker() {
-            public Object construct() {
-                try {
-                    ShareNode rootNode = shareModel.getRootNode();
-                    if (komplettNeu) {
-                        rootNode.removeAllChildren();
-                    }
-                    Map shares = ApplejuiceFassade.getInstance().getShare(true);
-                    Iterator iterator = shares.values().iterator();
-                    int anzahlDateien = 0;
-                    double size = 0;
-                    ShareDO shareDO;
-                    while (iterator.hasNext()) {
-                        shareDO = (ShareDO) iterator.next();
-                        rootNode.addChild(shareDO);
-                        size += shareDO.getSize();
-                        anzahlDateien++;
-                    }
-                    size = size / 1048576;
-                    dateiGroesse = Double.toString(size);
-                    if (dateiGroesse.indexOf(".") + 3 < dateiGroesse.length()) {
-                        dateiGroesse = dateiGroesse.substring(0,
-                            dateiGroesse.indexOf(".") + 3) + " MB";
-                    }
-                    String temp = eintraege;
-                    temp = temp.replaceFirst("%i",
-                                             Integer.toString(anzahlDateien));
-                    temp = temp.replaceFirst("%s", dateiGroesse);
-                    dateien.setText(temp);
-                }
-                catch (Exception e) {
-                    if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                    }
-                }
-                return null;
-            }
-
-            public void finished() {
-                shareTable.updateUI();
-                prioritaetAufheben.setEnabled(true);
-                prioritaetSetzen.setEnabled(true);
-                neuLaden.setEnabled(true);
-            }
-        };
-        worker.start();
+        sharedwsub.addActionListener(new SharedWithSubActionListener());
+        sharedwosub.addActionListener(new SharedWithoutSubActionListener());
+        notshared.addActionListener(new NotSharedActionListener());
     }
 
     private void initShareSelectionTree() {
@@ -662,11 +441,11 @@ public class SharePanel
             titledBorder2.setTitle(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.filessheet.caption")));
-            item1.setText(ZeichenErsetzer.korrigiereUmlaute(
+            sharedwsub.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(".root.mainform.addwsubdirsbtn.caption")));
-            item2.setText(ZeichenErsetzer.korrigiereUmlaute(
+            sharedwosub.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(".root.mainform.addosubdirsbtn.caption")));
-            item3.setText(ZeichenErsetzer.korrigiereUmlaute(
+            notshared.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(".root.mainform.deldirbtn.caption")));
             itemCopyToClipboard.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(".root.mainform.getlink1.caption")));
@@ -710,18 +489,6 @@ public class SharePanel
             TableColumnModel tcm = shareTable.getColumnModel();
             for (int i = 0; i < 3; i++) {
                 tcm.getColumn(i).setHeaderValue(tableColumns[i]);
-            }
-
-            eintraege = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.javagui.shareform.anzahlShare"));
-            if (anzahlDateien > 0) {
-                String temp = eintraege;
-                temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
-                temp = temp.replaceFirst("%s", dateiGroesse);
-                dateien.setText(temp);
-            }
-            else {
-                dateien.setText("");
             }
         }
         catch (Exception e) {
@@ -774,14 +541,14 @@ public class SharePanel
                     if (nodeShareMode == DirectoryNode.NOT_SHARED
                         || nodeShareMode == DirectoryNode.SHARED_SOMETHING
                         || nodeShareMode == DirectoryNode.SHARED_SUB) {
-                        popup.add(item1);
-                        popup.add(item2);
+                        popup.add(sharedwsub);
+                        popup.add(sharedwosub);
                         popup.show(folderTree, e.getX(), e.getY());
                     }
                     else if (nodeShareMode == DirectoryNode.SHARED_WITH_SUB
                              ||
                              nodeShareMode == DirectoryNode.SHARED_WITHOUT_SUB) {
-                        popup.add(item3);
+                        popup.add(notshared);
                         popup.show(folderTree, e.getX(), e.getY());
                     }
                 }
@@ -804,5 +571,95 @@ public class SharePanel
     }
 
     public void lostSelection() {
+    }
+    
+    private class ShareTableMouseAdapter extends MouseAdapter {
+        public void mousePressed(MouseEvent me) {
+            if (SwingUtilities.isRightMouseButton(me)) {
+                Point p = me.getPoint();
+                int iRow = shareTable.rowAtPoint(p);
+                int iCol = shareTable.columnAtPoint(p);
+                if (iRow == -1 || iCol == -1) {
+                    return;
+                }
+                shareTable.setRowSelectionInterval(iRow, iRow);
+                shareTable.setColumnSelectionInterval(iCol, iCol);
+            }
+            maybeShowPopup(me);
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            super.mouseReleased(e);
+            maybeShowPopup(e);
+        }
+
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger() && shareTable.getSelectedRowCount() == 1) {
+                Object[] obj = shareTable.getSelectedItems();
+                if ( ( (ShareNode) obj[0]).isLeaf()) {
+                    popup2.show(shareTable, e.getX(), e.getY());
+                }
+            }
+        }
+    }
+    
+    private class SharedWithSubActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent ae) {
+            Set shares = ajSettings.getShareDirs();
+            DirectoryNode node = (DirectoryNode) folderTree.
+                getLastSelectedPathComponent();
+            if (node != null) {
+                String path = node.getDO().getPath();
+                ShareEntry entry = new ShareEntry(path,
+                    ShareEntry.SUBDIRECTORY);
+                shares.add(entry);
+                ApplejuiceFassade.getInstance().setShare(shares);
+                DirectoryNode.setShareDirs(shares);
+                folderTree.updateUI();
+            }
+        }
+    }
+    
+    private class SharedWithoutSubActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent ae) {
+            Set shares = ajSettings.getShareDirs();
+            DirectoryNode node = (DirectoryNode) folderTree.
+                getLastSelectedPathComponent();
+            if (node != null) {
+                String path = node.getDO().getPath();
+                ShareEntry entry = new ShareEntry(path,
+                    ShareEntry.SINGLEDIRECTORY);
+                shares.add(entry);
+                ApplejuiceFassade.getInstance().setShare(shares);
+                DirectoryNode.setShareDirs(shares);
+                folderTree.updateUI();
+            }
+        }
+    }
+    
+    private class NotSharedActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent ae) {
+            Set shares = ajSettings.getShareDirs();
+            DirectoryNode node = (DirectoryNode) folderTree.
+                getLastSelectedPathComponent();
+            if (node != null) {
+                String path = node.getDO().getPath();
+                Iterator it = shares.iterator();
+                ShareEntry toRemove = null;
+                while (it.hasNext()) {
+                    toRemove = (ShareEntry) it.next();
+                    if (toRemove.getDir().compareToIgnoreCase(path) == 0) {
+                        break;
+                    }
+                    toRemove = null;
+                }
+                if (toRemove != null) {
+                    shares.remove(toRemove);
+                    ApplejuiceFassade.getInstance().setShare(shares);
+                    DirectoryNode.setShareDirs(shares);
+                    folderTree.updateUI();
+                }
+            }
+        }
     }
 }

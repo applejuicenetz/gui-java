@@ -18,12 +18,13 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.44 2004/10/14 14:55:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.45 2004/10/14 15:43:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,7 +45,7 @@ public class RegisterPanel
     private SearchPanel searchPanel;
     private UploadPanel uploadPanel;
     private ServerPanel serverPanel;
-    private SharePanel sharePanel;
+    private ShareController shareController;
     private AppleJuiceDialog parent;
     private Logger logger;
 
@@ -85,7 +86,7 @@ public class RegisterPanel
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(40, "Lade Sharepanel...");
         }
-        sharePanel = SharePanel.getInstance();
+        shareController = new ShareController();
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(50, "Lade Downloadpanel...");
         }
@@ -109,7 +110,7 @@ public class RegisterPanel
         addTab("Start", icon, startPanel);
 
         ImageIcon icon6 = im.getIcon("meinshare");
-        addTab("Share", icon6, sharePanel);
+        addTab("Share", icon6, shareController.getComponent());
 
         ImageIcon icon2 = im.getIcon("suchen");
         addTab("Suchen", icon2, searchPanel);
