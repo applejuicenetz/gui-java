@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.14 2003/06/30 19:46:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.15 2003/08/05 05:11:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.15  2003/08/05 05:11:59  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.14  2003/06/30 19:46:11  maj0r
  * Sourcestil verbessert.
  *
@@ -54,7 +57,10 @@ public class PowerDownloadPanel
   private JLabel label10 = new JLabel("ab ");
   private JLabel label11 = new JLabel("bis ");
 
-  public PowerDownloadPanel() {
+  private DownloadPanel parentPanel;
+
+  public PowerDownloadPanel(DownloadPanel parentPanel) {
+    this.parentPanel = parentPanel;
     try {
       jbInit();
     }

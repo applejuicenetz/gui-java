@@ -2,6 +2,8 @@ package de.applejuicenet.client.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashMap;
+import java.util.Iterator;
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -17,7 +19,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.29 2003/07/06 20:00:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.30 2003/08/05 05:11:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +28,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.30  2003/08/05 05:11:59  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.29  2003/07/06 20:00:19  maj0r
  * DownloadTable bearbeitet.
  *
@@ -62,7 +67,7 @@ public class DownloadPanel
     implements LanguageListener, RegisterI, DataUpdateListener {
   private JTextField downloadLink = new JTextField();
   private JButton btnStartDownload = new JButton("Download");
-  private PowerDownloadPanel powerDownloadPanel = new PowerDownloadPanel();
+  private PowerDownloadPanel powerDownloadPanel;
   private JTreeTable downloadTable;
   private JTable actualDlOverviewTable = new JTable();
   private JLabel linkLabel = new JLabel("ajfsp-Link hinzufügen");
@@ -80,6 +85,7 @@ public class DownloadPanel
   JMenuItem item6;
 
   public DownloadPanel() {
+    powerDownloadPanel = new PowerDownloadPanel(this);
     try {
       jbInit();
       LanguageSelector.getInstance().addLanguageListener(this);
@@ -136,6 +142,14 @@ public class DownloadPanel
         downloadTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
     }
 
+    btnStartDownload.addActionListener(new ActionListener(){
+        public void actionPerformed(ActionEvent ae){
+            String link = downloadLink.getText();
+            if (link.length()!=0){
+                DataManager.getInstance().processLink(link);
+            }
+        }
+    });
     downloadTable.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
         Point p = e.getPoint();
@@ -210,10 +224,16 @@ public class DownloadPanel
     DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
   }
 
+  public Object[] getSelectedDownloadItems(){
+/*      int[] indizes = downloadTable.getSelectedRows();
+      ((DownloadModel)downloadTable.getModel()).get*/
+      return null;
+  }
+
   public void registerSelected() {
     //    nix zu tun
       //test
-      Version version = new Version("0.01.34", Version.LINUX);
+/*      Version version = new Version("0.01.34", Version.LINUX);
       Version version2 = new Version("0.01.36", Version.WIN32);
       DownloadDO download = new DownloadDO("12", "24", "kjhh", "13138657", DownloadDO.SUCHEN_LADEN, "test1.rar", "filme", 33);
       DownloadSourceDO source = new DownloadSourceDO("13", DownloadSourceDO.UEBERTRAGUNG, DownloadSourceDO.INDIREKTE_VERBINDUNG,
@@ -230,7 +250,7 @@ public class DownloadPanel
       DownloadNode node3 = new DownloadNode(download3);
       DownloadNode node = new DownloadNode(download);
       DownloadNode node2 = new DownloadNode(download2);
-      downloadTable.updateUI();
+      downloadTable.updateUI();  */
   }
 
   public void fireLanguageChanged() {
@@ -316,6 +336,19 @@ public class DownloadPanel
   }
 
     public void fireContentChanged(int type, Object content) {
-        downloadTable.updateUI();
+        if (type==DataUpdateListener.DOWNLOAD_CHANGED){
+            HashMap downloads = (HashMap) content;
+            if (downloads!=null && downloads.size()!=0){
+                Iterator it = downloads.values().iterator();
+                DownloadDO downloadDO = null;
+                DownloadNode node = null;
+                while (it.hasNext()){
+                    downloadDO = (DownloadDO)it.next();
+                    node = new DownloadNode(downloadDO);
+
+                }
+                downloadTable.updateUI();
+            }
+        }
     }
 }

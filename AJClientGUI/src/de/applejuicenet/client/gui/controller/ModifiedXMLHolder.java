@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.12 2003/08/03 19:54:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.13 2003/08/05 05:11:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.13  2003/08/05 05:11:59  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.12  2003/08/03 19:54:05  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -348,7 +351,7 @@ public class ModifiedXMLHolder
           downloadFrom = null;
           downloadTo = null;
           actualDownloadPosition = null;
-          speed = null;
+          speed = new Integer(0);
         }
         versionNr = e.getAttribute("version");
         temp = e.getAttribute("operatingsystem");
@@ -362,7 +365,8 @@ public class ModifiedXMLHolder
         nickname = e.getAttribute("nickname");
         downloadSourceDO = new DownloadSourceDO(id, status, directstate, downloadFrom, downloadTo, actualDownloadPosition,
                 speed, version, queuePosition, powerDownload, filename, nickname);
-        downloadDO = (DownloadDO) sourcenZuDownloads.get(new MapSetStringKey(id));
+        MapSetStringKey key = (MapSetStringKey) sourcenZuDownloads.get(new MapSetStringKey(id));
+        downloadDO = (DownloadDO) downloadMap.get(key);
         if (downloadDO!=null){
             downloadDO.addOrAlterSource(downloadSourceDO);
         }

@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.31 2003/08/04 14:28:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.32 2003/08/05 05:11:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.32  2003/08/05 05:11:59  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.31  2003/08/04 14:28:55  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -264,6 +267,24 @@ public class DataManager { //Singleton-Implementierung
         }
         return true;
       }
+    }
+
+    public boolean processLink(String link) {
+      if (link == null || link.length() == 0){
+          System.out.print("Warnung: Ungueltiger Link uebergeben!");
+          return false;
+      }
+        String result;
+        logger.info("Downloade '" + link + "...");
+        try {
+          String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+                                             "/function/processlink?password=" + password + "&link=" + link );
+        }
+        catch (WebSiteNotFoundException ex) {
+          return false;
+        }
+        return true;
     }
 
     public boolean setPowerDownload(int id, int powerDownload) {
