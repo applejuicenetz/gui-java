@@ -36,7 +36,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.38 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.39 2004/05/29 13:58:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -224,7 +224,7 @@ public class ModifiedXMLHolder
         netInfo.setAjUserGesamt(Long.parseLong((String)userAttributes.get("users")));
         netInfo.setAjAnzahlDateien(Long.parseLong((String)userAttributes.get("files")));
         netInfo.setAjGesamtShare((String)userAttributes.get("filesize"));
-        netInfo.setFirewalled(((String)userAttributes.get("filesize")).equals("true"));
+        netInfo.setFirewalled(((String)userAttributes.get("firewalled")).equals("true"));
         netInfo.setExterneIP((String)userAttributes.get("ip"));
         netInfo.setTryConnectToServer(Integer.parseInt((String)userAttributes.get("tryconnecttoserver")));
         netInfo.setConnectedWithServerId(Integer.parseInt((String)userAttributes.get("connectedwithserverid")));

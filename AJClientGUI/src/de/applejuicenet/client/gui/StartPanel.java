@@ -31,7 +31,7 @@ import java.awt.Dimension;
 import javax.swing.text.Document;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.53 2004/05/24 07:29:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.54 2004/05/29 13:58:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -77,6 +77,7 @@ public class StartPanel
     private Information information;
 
     private LanguageSelector languageSelector;
+    private boolean firewalled = false;
 
     public static synchronized StartPanel getInstance() {
         if (instance == null) {
@@ -309,7 +310,7 @@ public class StartPanel
                 languageSelector.
                 getFirstAttrbuteByTagName(
                 ".root.mainform.firewallwarning.caption"));
-            if (netInfo != null && netInfo.isFirewalled()) {
+            if (firewalled) {
                 warnungen.setVisible(true);
                 warnungIcon.setVisible(true);
                 label7.setText(firewallWarning);
@@ -426,15 +427,17 @@ public class StartPanel
                                  netInfo.getAJGesamtShareWithPoints(0));
                 }
                 label6.setText(temp.toString());
-                if (netInfo.isFirewalled()) {
-                    warnungen.setVisible(true);
-                    warnungIcon.setVisible(true);
-                    label7.setText(firewallWarning);
-                }
-                else {
-                    warnungen.setVisible(false);
-                    warnungIcon.setVisible(false);
-                    label7.setText("");
+                if (netInfo.isFirewalled() != firewalled){
+                    firewalled = !firewalled;
+                    warnungen.setVisible(firewalled);
+                    warnungIcon.setVisible(firewalled);
+                    if (firewalled){
+                        label7.setText(firewallWarning);
+                    }
+                    else{
+                        label7.setText("");
+                    }
+                    repaint();
                 }
                 String tmp = netInfo.getWelcomeMessage();
                 if (tmp.compareTo(serverMessage.getText()) != 0) {
