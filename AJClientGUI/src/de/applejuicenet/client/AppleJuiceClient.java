@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.13 2003/06/22 19:54:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.14 2003/06/22 20:03:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.14  2003/06/22 20:03:54  maj0r
+ * Konsolenausgaben hinzugefügt.
+ *
  * Revision 1.13  2003/06/22 19:54:45  maj0r
  * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
  *
@@ -31,6 +34,7 @@ import de.applejuicenet.client.shared.*;
 
 public class AppleJuiceClient {
   public static void main(String[] args) {
+    System.out.println("appleJuice-Core-GUI wird gestartet...");
     if (!DataManager.istCoreErreichbar()) {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
       String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
@@ -50,5 +54,6 @@ public class AppleJuiceClient {
     theApp.setLocation( (screenSize.width - appDimension.width) / 2,
                        (screenSize.height - appDimension.height) / 2);
     theApp.show();
+    System.out.println("appleJuice-Core-GUI läuft...");
   }
 }
