@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.12 2003/11/30 17:00:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.13 2003/12/16 14:52:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import java.util.Iterator;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.13  2003/12/16 14:52:16  maj0r
+ * An Schnittstellenerweiterung angepasst.
+ *
  * Revision 1.12  2003/11/30 17:00:06  maj0r
  * Prozentangabe bei Downloads nun auf zwei Nachkommastellen genau (Danke an muhviestarr)
  *
@@ -61,6 +64,7 @@ public class DownloadDO {
     public static final int SUCHEN_LADEN = 0;
     public static final int NICHT_GENUG_PLATZ_FEHLER = 1;
     public static final int FERTIGSTELLEN = 12;
+    public static final int FEHLER_BEIM_FERTIGSTELLEN = 13;
     public static final int FERTIG = 14;
     public static final int ABBRECHEN = 15;
     public static final int AGBEGROCHEN = 17;

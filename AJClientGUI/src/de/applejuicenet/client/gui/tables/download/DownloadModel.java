@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.20 2003/11/03 20:57:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.21 2003/12/16 14:52:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.21  2003/12/16 14:52:16  maj0r
+ * An Schnittstellenerweiterung angepasst.
+ *
  * Revision 1.20  2003/11/03 20:57:03  maj0r
  * Sortieren nach Status eingebaut.
  *
@@ -94,6 +97,7 @@ public class DownloadModel
   private static String laden = "";
   private static String keinPlatz = "";
   private static String fertigstellen = "";
+  private static String fehlerBeimFertigstellen = "";
   private static String fertig = "";
   private static String abbrechen = "";
   private static String abgebrochen = "";
@@ -113,6 +117,7 @@ public class DownloadModel
   private static String position = "";
   private static String versucheIndirekt = "";
   private static String warteschlangeVoll = "";
+  private static String eigenesLimitErreicht = "";
 
   static protected Class[] cTypes = {
       TreeTableModel.class, String.class, String.class, String.class, String.class,
@@ -315,6 +320,8 @@ public class DownloadModel
                     return versucheIndirekt;
             case DownloadSourceDO.WARTESCHLANGE_VOLL:
                     return warteschlangeVoll;
+            case DownloadSourceDO.EIGENES_LIMIT_ERREICHT:
+                    return eigenesLimitErreicht;
             default:
                 return "";
         }
@@ -330,6 +337,8 @@ public class DownloadModel
                 return abgebrochen;
             case DownloadDO.FERTIG:
                 return fertig;
+            case DownloadDO.FEHLER_BEIM_FERTIGSTELLEN:
+                return fehlerBeimFertigstellen;
             case DownloadDO.NICHT_GENUG_PLATZ_FEHLER:
                 return keinPlatz;
             case DownloadDO.SUCHEN_LADEN:
@@ -452,6 +461,7 @@ public class DownloadModel
         pausiert = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat13"}));
         position = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat51"}));
         versucheIndirekt = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat10"}));
+        eigenesLimitErreicht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadform", "eigeneslimiterreicht"}));
 
         suchen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestatlook"}));
         laden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestattransfer"}));
@@ -461,5 +471,6 @@ public class DownloadModel
         abbrechen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat15"}));
         abgebrochen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat17"}));
         warteschlangeVoll = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadform", "warteschlangevoll"}));
+        fehlerBeimFertigstellen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadform", "fehlerbeimfertigstellen"}));
     }
 }
