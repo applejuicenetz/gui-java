@@ -52,9 +52,11 @@ import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import javax.swing.JSplitPane;
+import de.applejuicenet.client.shared.Information;
+import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.57 2004/02/09 20:11:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.58 2004/02/10 14:58:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -63,6 +65,9 @@ import javax.swing.JSplitPane;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.58  2004/02/10 14:58:23  maj0r
+ * Link mit Quellen kann nun auch im Sharebereich erzeugt werden.
+ *
  * Revision 1.57  2004/02/09 20:11:57  maj0r
  * SplitPane eingebaut.
  *
@@ -253,6 +258,7 @@ public class SharePanel
 
     private JPopupMenu popup2 = new JPopupMenu();
     private JMenuItem itemCopyToClipboard = new JMenuItem();
+    private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
     private JMenuItem itemCopyToClipboardAsUBBCode = new JMenuItem();
 
     private int anzahlDateien = 0;
@@ -285,8 +291,10 @@ public class SharePanel
         IconManager im = IconManager.getInstance();
         itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
         itemCopyToClipboardAsUBBCode.setIcon(im.getIcon("clipboard"));
+        itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
 
         popup2.add(itemCopyToClipboard);
+        popup2.add(itemCopyToClipboardWithSources);
         popup2.add(itemCopyToClipboardAsUBBCode);
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));
         folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
@@ -302,6 +310,45 @@ public class SharePanel
                     toCopy.append(shareDO.getShortfilename() + "|" +
                                   shareDO.getCheckSum() + "|" + shareDO.getSize() +
                                   "/");
+                    StringSelection contents = new StringSelection(toCopy.
+                        toString());
+                    cb.setContents(contents, null);
+                }
+            }
+        });
+        itemCopyToClipboardWithSources.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                Object[] obj = shareTable.getSelectedItems();
+                if ( ( (ShareNode) obj[0]).isLeaf()) {
+                    ShareDO shareDO = ( (ShareNode) obj[0]).getDO();
+                    Clipboard cb = Toolkit.getDefaultToolkit().
+                        getSystemClipboard();
+                    StringBuffer toCopy = new StringBuffer();
+                    toCopy.append("ajfsp://file|");
+                    toCopy.append(shareDO.getShortfilename());
+                    toCopy.append("|");
+                    toCopy.append(shareDO.getCheckSum());
+                    toCopy.append("|");
+                    toCopy.append(shareDO.getSize());
+                    long port = ApplejuiceFassade.getInstance().
+                        getAJSettings().getPort();
+                    Information information = ApplejuiceFassade.getInstance().
+                        getInformation();
+                    toCopy.append("|");
+                    toCopy.append(information.getExterneIP());
+                    toCopy.append(":");
+                    toCopy.append(port);
+                    if (information.getVerbindungsStatus() ==
+                        Information.VERBUNDEN) {
+                        ServerDO serverDO = information.getServerDO();
+                        if (serverDO != null) {
+                            toCopy.append(":");
+                            toCopy.append(serverDO.getHost());
+                            toCopy.append(":");
+                            toCopy.append(serverDO.getPort());
+                        }
+                    }
+                    toCopy.append("/");
                     StringSelection contents = new StringSelection(toCopy.
                         toString());
                     cb.setContents(contents, null);
@@ -757,6 +804,11 @@ public class SharePanel
                 languageSelector.getFirstAttrbuteByTagName(new String[] {
                 "javagui",
                 "shareform", "linkalsubbcode"})));
+            itemCopyToClipboardWithSources.setText(ZeichenErsetzer.
+                korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "javagui",
+                "downloadform", "getlinkwithsources"})));
             refresh.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"mainform",
                                           "startsharecheck",
