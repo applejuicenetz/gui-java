@@ -53,9 +53,12 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
 import java.util.Set;
 import java.util.Iterator;
+import java.awt.KeyboardFocusManager;
+import java.awt.AWTKeyStroke;
+import java.util.HashSet;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.12 2004/05/12 19:52:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.13 2004/05/13 10:55:41 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -1291,7 +1294,7 @@ public class XdccIrc
         String userName;
 
         userName = JOptionPane.showInputDialog(theApp,
-                                               nicknameString);
+                                               nicknameString, nickname);
 
         if (userName != null) {
             addUser(tabbedPane, userName);
@@ -1301,7 +1304,7 @@ public class XdccIrc
     private void joinChan() {
         String channelName;
 
-        channelName = JOptionPane.showInputDialog(theApp, channelNameString);
+        channelName = JOptionPane.showInputDialog(theApp, channelNameString, nickname);
         joinChannel(channelName);
     }
 
@@ -1569,7 +1572,7 @@ public class XdccIrc
         private SortedListModel usernameList = new SortedListModel();
         private JList userList = new JList(usernameList);
         private JTextArea textArea = new JTextArea();
-        private JTextField textField = new JTextField();
+        private JTextField textField;
         private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
         private ArrayList befehle = new ArrayList();
         private int befehlPos = -1;
@@ -1592,29 +1595,14 @@ public class XdccIrc
             textArea.setWrapStyleWord(true);
             textArea.setEditable(false);
             textArea.setBackground(Color.WHITE);
+            textField = new JTextField();
+            Set set = new HashSet(1);
+            set.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_JAPANESE_HIRAGANA, 0));
+            textField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, set);
             textField.addActionListener(this);
             textField.addKeyListener(new KeyAdapter(){
                 public void keyReleased(KeyEvent ke){
                     super.keyReleased(ke);
-                    if (befehlPos != -1){
-                        if (ke.getKeyCode() == KeyEvent.VK_UP) {
-                            textField.setText((String)befehle.get(befehlPos));
-                            if (befehlPos>0){
-                                befehlPos--;
-                            }
-                        }
-                        else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
-                            if (befehlPos<befehle.size()-1){
-                                befehlPos++;
-                            }
-                            textField.setText( (String) befehle.get(
-                                befehlPos));
-                        }
-                    }
-                }
-
-                public void keyPressed(KeyEvent ke){
-//                    super.keyPressed(ke);
                     if (ke.getKeyCode() == KeyEvent.VK_TAB) {
                         String text = textField.getText();
                         if (text.length()>0){
@@ -1638,25 +1626,47 @@ public class XdccIrc
                                 String value;
                                 while (it.hasNext()) {
                                     value = (String) it.next();
+                                    if (value.indexOf('!') == 0 || value.indexOf('@') == 0 || value.indexOf('%') == 0 || value.indexOf('+') == 0){
+                                        value = value.substring(1);
+                                    }
                                     if (value.toLowerCase().indexOf(searchString)==0){
                                         treffer += value + " ";
                                         count ++;
                                     }
                                 }
                             }
-                            treffer = treffer.substring(0, treffer.length()-1);
-                            if (count == 1){
-                                if (index != -1){
-                                    String newText = text.subSequence(0, index+1) + treffer;
-                                    textField.setText(newText);
+                            if (treffer.length()>0){
+                                treffer = treffer.substring(0,
+                                    treffer.length() - 1);
+                                if (count == 1) {
+                                    if (index != -1) {
+                                        String newText = text.subSequence(0,
+                                            index + 1) + treffer;
+                                        textField.setText(newText);
+                                    }
+                                    else {
+                                        textField.setText(treffer);
+                                    }
                                 }
-                                else{
-                                    textField.setText(treffer);
+                                else if (count > 1) {
+                                    updateTextArea("\t" + treffer, false);
                                 }
                             }
-                            else if (count > 1){
-                                updateTextArea(treffer);
+                        }
+                    }
+                    else if (befehlPos != -1){
+                        if (ke.getKeyCode() == KeyEvent.VK_UP) {
+                            textField.setText((String)befehle.get(befehlPos));
+                            if (befehlPos>0){
+                                befehlPos--;
                             }
+                        }
+                        else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
+                            if (befehlPos<befehle.size()-1){
+                                befehlPos++;
+                            }
+                            textField.setText( (String) befehle.get(
+                                befehlPos));
                         }
                     }
                 }
