@@ -12,55 +12,13 @@ import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.10 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.11 2004/05/07 10:40:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ServerTableModel.java,v $
- * Revision 1.10  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.9  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.8  2004/01/30 16:32:47  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.7  2004/01/24 08:10:24  maj0r
- * Anzahl der Verbindungsversuche eingebaut.
- *
- * Revision 1.6  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.5  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.4  2003/08/19 16:02:16  maj0r
- * Optimierungen.
- *
- * Revision 1.3  2003/08/17 20:55:34  maj0r
- * Neusortierung der Tabelle nach Änderung entfernt.
- *
- * Revision 1.2  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.1  2003/07/01 18:41:39  maj0r
- * Struktur verändert.
- *
- * Revision 1.6  2003/07/01 14:54:27  maj0r
- * Weggefallene Server werden erkannt und entfernt.
- *
- * Revision 1.5  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingefügt.
- * Servertabelle kann nun spaltenweise sortiert werden.
- *
- * Revision 1.4  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -174,5 +132,21 @@ public class ServerTableModel
             }
         }
         this.fireTableDataChanged();
+    }
+
+    public Object getValueForSortAt(int row, int column) {
+        if (column!=4){
+            return getValueAt(row, column);
+        }
+        else{
+            if ( (servers == null) || (row >= servers.size())) {
+               return "";
+           }
+           ServerDO server = (ServerDO) servers.get(row);
+           if (server == null) {
+               return "";
+           }
+           return new Long(server.getTimeLastSeen());
+        }
     }
 }

@@ -4,32 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/TableSorter.java,v 1.5 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/TableSorter.java,v 1.6 2004/05/07 10:40:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: TableSorter.java,v $
- * Revision 1.5  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.4  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.3  2004/01/24 08:10:24  maj0r
- * Anzahl der Verbindungsversuche eingebaut.
- *
- * Revision 1.2  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.1  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingefügt.
- * Servertabelle kann nun spaltenweise sortiert werden.
- *
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -67,8 +48,8 @@ public class TableSorter {
     }
 
     public int compare(int column, int row1, int row2) {
-        Object o1 = model.getValueAt(row1, column);
-        Object o2 = model.getValueAt(row2, column);
+        Object o1 = model.getValueForSortAt(row1, column);
+        Object o2 = model.getValueForSortAt(row2, column);
         if (o1 == null && o2 == null) {
             return 0;
         }
