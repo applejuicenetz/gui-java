@@ -140,7 +140,7 @@ class SearchDO extends Search {
 	public SearchEntry getSearchEntryById(int id) {
 		for (SearchEntryDO curSearchEntry : entries) {
 			if (curSearchEntry.getId() == id) {
-				return curSearchEntry;
+				return (SearchEntry)curSearchEntry;
 			}
 		}
 		return null;
