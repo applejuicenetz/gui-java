@@ -58,6 +58,11 @@
    <target name="gui-rebuild" depends="gui-clean, gui-compile" description="cleans and compiles the appleJuice-gui">
    </target>
 
+   <target name="cruisecontrol">
+      <cvs dest="${basedir}" command="update -d -P"/>
+      <antcall target="gui-rebuild"/>
+   </target>
+
    <target name="create-jar" depends="gui-compile" description="builds appleJuice-jar">
 	<pack classes="de.applejuicenet.client.AppleJuiceClient,org.apache.xerces.parsers.XML11Configuration,
 			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl,org.apache.xerces.parsers.IntegratedParserConfiguration"
