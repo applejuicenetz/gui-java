@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.tables.NormalHeaderRenderer;
 import de.applejuicenet.client.gui.tables.share.ShareModel;
@@ -55,192 +56,15 @@ import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
-import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.64 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.65 2004/04/14 09:53:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: SharePanel.java,v $
- * Revision 1.64  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.63  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.62  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.61  2004/03/01 15:10:09  maj0r
- * TableHeader werden in allen Tabellen gleich dargestellt.
- *
- * Revision 1.60  2004/02/28 15:09:40  maj0r
- * Platzierung "Neu laden" und "Dateilliste" getauscht.
- *
- * Revision 1.59  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.58  2004/02/10 14:58:23  maj0r
- * Link mit Quellen kann nun auch im Sharebereich erzeugt werden.
- *
- * Revision 1.57  2004/02/09 20:11:57  maj0r
- * SplitPane eingebaut.
- *
- * Revision 1.56  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.55  2004/02/04 14:26:05  maj0r
- * Bug #185 gefixt (Danke an muhviestarr)
- * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
- *
- * Revision 1.54  2004/01/25 08:31:11  maj0r
- * Icons eingebaut.
- *
- * Revision 1.53  2004/01/05 15:30:22  maj0r
- * Bug #43 gefixt (Danke an flabeg)
- * Shareverzeichnis wird bei Prioritaetenaenderung nicht mehr komplett neu geladen, sondern nur aktualsiert.
- *
- * Revision 1.52  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.51  2003/12/29 10:54:57  maj0r
- * Bug #4 gefixt (Danke an muhviestarr).
- * Shareanzeige bei Prioritaetenaenderung gefixt.
- *
- * Revision 1.50  2003/12/22 13:56:14  maj0r
- * Kleine Bug behoben, der sich beim Einbau eines Thread eingeschlichen hat.
- *
- * Revision 1.49  2003/12/19 09:54:14  maj0r
- * Bug der Tableheader der Share- und der Uploadtabelle behoben (Danke an muhviestarr).
- *
- * Revision 1.48  2003/12/18 14:24:24  maj0r
- * Leerzeichen bekommen bei UBB-Code nun eine Sonderbehandlung.
- *
- * Revision 1.47  2003/12/18 13:26:51  maj0r
- * Es kann nun der Link einer gesharten Datei über das Popupmenue der Sharetabelle als UBB-Code in die Ablage kopiert werden.
- *
- * Revision 1.46  2003/12/17 11:39:45  maj0r
- * Initialen Aufruf des Sharetabs durch einen Initialisierungsthread beschleunigt.
- * Muell entfernt.
- *
- * Revision 1.45  2003/12/17 11:06:30  maj0r
- * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
- *
- * Revision 1.44  2003/12/16 17:05:54  maj0r
- * Sharetabelle auf vielfachen Wunsch komplett überarbeitet.
- *
- * Revision 1.43  2003/12/05 11:18:02  maj0r
- * Workaround fürs Setzen der Hintergrundfarben der Scrollbereiche ausgebaut.
- *
- * Revision 1.42  2003/11/30 17:01:33  maj0r
- * Hintergrundfarbe aller Scrollbereiche an ihre Tabellen angepasst.
- *
- * Revision 1.41  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.40  2003/10/14 15:40:43  maj0r
- * Stacktraces ausgebaut.
- *
- * Revision 1.39  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.38  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
- *
- * Revision 1.37  2003/09/06 14:49:59  maj0r
- * Verwendung des Separators korrigiert.
- *
- * Revision 1.36  2003/09/05 09:47:35  maj0r
- * Einige Logger eingebaut.
- *
- * Revision 1.35  2003/09/04 10:13:28  maj0r
- * Logger eingebaut.
- *
- * Revision 1.34  2003/09/01 15:50:51  maj0r
- * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
- *
- * Revision 1.33  2003/08/29 11:32:49  maj0r
- * Link in Ablage kopieren eingefuegt.
- *
- * Revision 1.32  2003/08/28 06:55:06  maj0r
- * NullPointer behoben.
- *
- * Revision 1.31  2003/08/28 06:11:02  maj0r
- * DragNDrop vervollstaendigt.
- *
- * Revision 1.30  2003/08/27 16:44:42  maj0r
- * Unterstuetzung fuer DragNDrop teilweise eingebaut.
- *
- * Revision 1.29  2003/08/27 11:19:30  maj0r
- * Prioritaet setzen und aufheben vollstaendig implementiert.
- * Button fuer 'Share erneuern' eingefuehrt.
- *
- * Revision 1.28  2003/08/26 19:46:34  maj0r
- * Sharebereich weiter vervollstaendigt.
- *
- * Revision 1.27  2003/08/26 14:04:23  maj0r
- * ShareTree-Event-Behandlung fertiggestellt.
- *
- * Revision 1.26  2003/08/26 09:49:01  maj0r
- * ShareTree weitgehend fertiggestellt.
- *
- * Revision 1.25  2003/08/26 06:20:10  maj0r
- * Anpassungen an muhs neuen Tree.
- *
- * Revision 1.24  2003/08/25 19:28:52  maj0r
- * Anpassungen an muhs neuen Tree.
- *
- * Revision 1.23  2003/08/25 07:23:25  maj0r
- * Kleine Korrekturen.
- *
- * Revision 1.22  2003/08/24 14:59:59  maj0r
- * Version 0.14
- * Diverse Aenderungen.
- *
- * Revision 1.21  2003/08/22 11:34:43  maj0r
- * WarteNode eingefuegt.
- *
- * Revision 1.20  2003/08/20 07:49:50  maj0r
- * Programmstart beschleunigt.
- *
- * Revision 1.19  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.18  2003/08/14 20:08:42  maj0r
- * Tree fuer Shareauswahl eingefuegt, aber noch nicht fertiggestellt.
- *
- * Revision 1.17  2003/08/04 14:28:55  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.16  2003/08/03 19:54:05  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.15  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.14  2003/07/04 11:32:18  maj0r
- * Anzeige der Anzahl der Dateien und Gesamtgroessee des Shares hinzugefuegt.
- *
- * Revision 1.13  2003/07/02 13:54:34  maj0r
- * JTreeTable komplett ueberarbeitet.
- *
- * Revision 1.12  2003/07/01 18:41:39  maj0r
- * Struktur veraendert.
- *
- * Revision 1.11  2003/07/01 18:33:53  maj0r
- * Sprachauswahl eingearbeitet.
- *
- * Revision 1.10  2003/06/22 19:01:55  maj0r
- * Laden des Shares nun erst nach Betaetigen des Buttons "Erneut laden".
- *
- * Revision 1.9  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
+ * @author: Maj0r [maj0r@applejuicenet.de]
  *
  */
 
@@ -474,17 +298,19 @@ public class SharePanel
                             int prio = ( (Integer) cmbPrio.getSelectedItem()).
                                 intValue();
                             Object[] values = shareTable.getSelectedItems();
-                            synchronized (values) {
-                                if (values == null) {
-                                    return;
+                            if (values != null){
+                                synchronized (values) {
+                                    if (values == null) {
+                                        return;
+                                    }
+                                    ShareNode shareNode = null;
+                                    for (int i = 0; i < values.length; i++) {
+                                        shareNode = (ShareNode) values[i];
+                                        shareNode.setPriority(prio);
+                                    }
                                 }
-                                ShareNode shareNode = null;
-                                for (int i = 0; i < values.length; i++) {
-                                    shareNode = (ShareNode) values[i];
-                                    shareNode.setPriority(prio);
-                                }
+                                shareNeuLaden(false);
                             }
-                            shareNeuLaden(false);
                         }
                         catch (Exception e) {
                             if (logger.isEnabledFor(Level.ERROR)) {
