@@ -74,6 +74,7 @@ public class DownloadController extends GuiController {
 	private String downloadAbbrechen;
 	private DownloadPartListWatcher downloadPartListWatcher;
 	private boolean firstUpdate = true;
+	private boolean isFirstDownloadPropertyChanged = true;
 	
 	private DownloadController() {
 		super();
@@ -245,6 +246,12 @@ public class DownloadController extends GuiController {
 	}
 	
 	private synchronized void downloadPropertyChanged(DataPropertyChangeEvent evt){
+		if (isFirstDownloadPropertyChanged){
+			isFirstDownloadPropertyChanged = false;
+			Map downloads = ApplejuiceFassade.getInstance().getDownloadsSnapshot();
+			((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
+			DownloadDirectoryNode.setDownloads(downloads);
+		}
 		boolean tmpSort = false;
 		if (evt.isEventContainer()){
 			DataPropertyChangeEvent[] events = evt.getNestedEvents();
@@ -831,9 +838,6 @@ public class DownloadController extends GuiController {
 						- downloadPanel.getSplitPane().getDividerSize() - downloadPanel.getPowerDownloadPanel()
 						.getPreferredSize().height));
 				downloadPanel.getSplitPane().setDividerLocation(loc);
-				Map downloads = ApplejuiceFassade.getInstance().getDownloadsSnapshot();
-				((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
-				DownloadDirectoryNode.setDownloads(downloads);
 			}
 			downloadPanel.getDownloadTable().updateUI();
 		} catch (Exception e) {
