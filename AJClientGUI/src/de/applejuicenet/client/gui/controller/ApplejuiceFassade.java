@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.11 2003/08/24 14:59:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.12 2003/08/25 13:17:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.12  2003/08/25 13:17:46  maj0r
+ * Muell entfernt.
+ *
  * Revision 1.11  2003/08/24 14:59:59  maj0r
  * Version 0.14
  * Diverse Aenderungen.
@@ -207,12 +210,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 "applejuice", "generalinformation", "version"}
                                                                           , true);
             coreVersion = new Version(versionsTag, Version.getOSTypByOSName((String) System.getProperties().get("os.name")));
-
-            ActionListener modifiedAction = new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    updateModifiedXML();
-                }
-            };
         }
         catch (Exception e)
         {
