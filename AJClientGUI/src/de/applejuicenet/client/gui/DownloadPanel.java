@@ -20,7 +20,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.73 2003/12/30 20:52:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.74 2004/01/01 18:38:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.74  2004/01/01 18:38:14  maj0r
+ * Partlisten von einigen wenigen DownloadSourcen wurden bei Bedarf nicht geholt.
+ *
  * Revision 1.73  2003/12/30 20:52:19  maj0r
  * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
  *
@@ -993,51 +996,49 @@ public class DownloadPanel
                 }
                 return;
             }
-            if (worker != null && nodeObject != node) {
+            if (worker != null) {
                 worker.interrupt();
                 worker = null;
             }
-            if (nodeObject != node) {
-                nodeObject = node;
-                worker = new Thread() {
-                    public void run() {
-                        try {
-                            sleep(2000);
-                            SwingUtilities.invokeLater(new Runnable() {
-                                public void run() {
-                                    if (nodeObject.getClass() ==
-                                        DownloadMainNode.class
-                                        &&
-                                        ( (DownloadMainNode) nodeObject).
-                                        getType() ==
-                                        DownloadMainNode.ROOT_NODE) {
-                                        powerDownloadPanel.btnPdl.
-                                            setEnabled(false);
-                                        downloadDOOverviewPanel.setDownloadDO( ( (
-                                            DownloadMainNode) nodeObject).
-                                            getDownloadDO());
-                                    }
-                                    else if (nodeObject.getClass() ==
-                                             DownloadSourceDO.class) {
-                                        powerDownloadPanel.btnPdl.
-                                            setEnabled(false);
-                                        if ( ( (DownloadSourceDO) nodeObject).
-                                            getQueuePosition() <= 20) {
-                                            downloadDOOverviewPanel.
-                                                setDownloadSourceDO( (
-                                                DownloadSourceDO) nodeObject);
-                                        }
-                                    }
+            nodeObject = node;
+            worker = new Thread() {
+                public void run() {
+                    try {
+                        sleep(2000);
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                if (nodeObject.getClass() ==
+                                    DownloadMainNode.class
+                                    &&
+                                    ( (DownloadMainNode) nodeObject).
+                                    getType() ==
+                                    DownloadMainNode.ROOT_NODE) {
+                                    powerDownloadPanel.btnPdl.
+                                        setEnabled(false);
+                                    downloadDOOverviewPanel.setDownloadDO( ( (
+                                        DownloadMainNode) nodeObject).
+                                        getDownloadDO());
                                 }
-                            });
-                        }
-                        catch (InterruptedException ex) {
-                            interrupt();
-                        }
+                                else if (nodeObject.getClass() ==
+                                         DownloadSourceDO.class) {
+                                    powerDownloadPanel.btnPdl.
+                                        setEnabled(false);
+                                    if ( ( (DownloadSourceDO) nodeObject).getStatus() == DownloadSourceDO.IN_WARTESCHLANGE &&
+                                        ( (DownloadSourceDO) nodeObject).getQueuePosition() > 20) {
+                                       return;
+                                   }
+                                    downloadDOOverviewPanel.setDownloadSourceDO( (
+                                        DownloadSourceDO) nodeObject);
+                                }
+                            }
+                        });
                     }
-                };
-                worker.start();
-            }
+                    catch (InterruptedException ex) {
+                        interrupt();
+                    }
+                }
+            };
+            worker.start();
         }
     }
 }
