@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.2 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.3 2004/11/30 18:03:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -55,6 +55,8 @@ public class DownloadModel
     public static String warteschlangeVoll = "";
     public static String eigenesLimitErreicht = "";
     public static String indirekteVerbindungAbgelehnt = "";
+    
+    private boolean sort = false;
 
     static protected Class[] cTypes = {
         TreeTableModel.class, String.class, String.class, String.class, String.class,
@@ -76,12 +78,16 @@ public class DownloadModel
         }
         return null;
     }
+    
+    public void sortNextRefresh(boolean sortNextRefresh){
+    	sort = sortNextRefresh;
+    }
 
     public int getChildCount(Object node) {
         if (node.getClass() != DownloadDO.class &&
             node.getClass() != DownloadSourceDO.class
             && node.getClass() != WaitNode.class) {
-            return ( (DownloadNode) node).getChildCount();
+            return ( (DownloadNode) node).getChildCount(sort);
         }
         else if (node.getClass() == DownloadDO.class) {
             return ( (DownloadDO) node).getSources().length;

@@ -181,7 +181,7 @@ public class DownloadPartListPanel extends JPanel implements
 					}
 				}
 				image = new BufferedImage(width, height,
-						BufferedImage.TYPE_INT_ARGB);
+						BufferedImage.TYPE_4BYTE_ABGR);
 				Graphics g = image.getGraphics();
 				int x = 0;
 				for (int i = 0; i < zeilen; i++) {

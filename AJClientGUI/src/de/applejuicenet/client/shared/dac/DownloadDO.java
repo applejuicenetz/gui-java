@@ -1,6 +1,5 @@
 package de.applejuicenet.client.shared.dac;
 
-import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,7 +14,7 @@ import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.30 2004/11/29 20:57:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.31 2004/11/30 18:03:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,7 +24,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
  *
  */
 
-public class DownloadDO extends PropertyChangeAdapter
+public class DownloadDO 
     implements DownloadColumnValue {
 
     private static Logger logger;
@@ -172,11 +171,6 @@ public class DownloadDO extends PropertyChangeAdapter
             SoundPlayer.getInstance().playSound(SoundPlayer.KOMPLETT);
         }
         if (status != newStatus){
-            this.notifyPropertyChangeListener(
-                    new PropertyChangeEvent(this, "status", Integer.toString(status), Integer.toString(newStatus)));
-            status = newStatus;
-        }
-        else{
             status = newStatus;
         }
     }
@@ -186,12 +180,7 @@ public class DownloadDO extends PropertyChangeAdapter
     }
 
     public void setFilename(String newFilename) {
-        if (filename != null && !filename.equals(newFilename)){
-            notifyPropertyChangeListener(
-                    new PropertyChangeEvent(this, "filename", filename, newFilename));
-            filename = newFilename;
-        }
-        else{
+        if (filename == null || !filename.equals(newFilename)){
             filename = newFilename;
         }
     }
@@ -201,12 +190,7 @@ public class DownloadDO extends PropertyChangeAdapter
     }
 
     public void setTargetDirectory(String newTargetDirectory) {
-        if (targetDirectory != null && !targetDirectory.equals(newTargetDirectory)){
-            notifyPropertyChangeListener(
-                    new PropertyChangeEvent(this, "targetdirectory", targetDirectory, newTargetDirectory));
-            targetDirectory = newTargetDirectory;
-        }
-        else{
+        if (targetDirectory == null || !targetDirectory.equals(newTargetDirectory)){
             targetDirectory = newTargetDirectory;
         }
     }
@@ -217,12 +201,6 @@ public class DownloadDO extends PropertyChangeAdapter
 
     public void setPowerDownload(int newPowerDownload) {
         if ( powerDownload != newPowerDownload ){
-            notifyPropertyChangeListener(
-                    new PropertyChangeEvent(this, "powerdownload", Integer.toString(powerDownload), 
-                            Integer.toString(newPowerDownload)));
-            powerDownload = newPowerDownload;
-        }
-        else{
             powerDownload = newPowerDownload;
         }
     }
@@ -245,12 +223,6 @@ public class DownloadDO extends PropertyChangeAdapter
 
     public void setReady(long newReady) {
         if ( ready != newReady ){
-            notifyPropertyChangeListener(
-                    new PropertyChangeEvent(this, "ready", Long.toString(ready), 
-                            Long.toString(newReady)));
-            ready = newReady;
-        }
-        else{
             ready = newReady;
         }
     }

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -19,8 +20,9 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.DoHolder;
+import de.applejuicenet.client.gui.controller.DataPropertyChangeInformer;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.gui.controller.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Information;
@@ -37,7 +39,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.47 2004/11/29 20:57:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.48 2004/11/30 18:03:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -53,7 +55,7 @@ public class ModifiedXMLHolder
     private XMLReader xr = null;
 
     private Map serverMap = new HashMap();
-    private DoHolder downloadMap = new DoHolder();
+    private static Map downloadMap = new HashMap();
     private Map uploadMap = new HashMap();
     private Map searchMap = new HashMap();
     private NetworkInfo netInfo;
@@ -80,6 +82,14 @@ public class ModifiedXMLHolder
     private static ModifiedXMLHolder instance = null;
 
     private Map attributes = new HashMap();
+    
+	private Vector downloadEvents = new Vector();
+
+    private static DataPropertyChangeInformer downloadPropertyChangeInformer;
+    
+    static{
+    	downloadPropertyChangeInformer = new DataPropertyChangeInformer();
+    }
 
     private ModifiedXMLHolder() {
         logger = Logger.getLogger(getClass());
@@ -105,6 +115,10 @@ public class ModifiedXMLHolder
 
     }
 
+    public static DataPropertyChangeInformer getDownloadPropertyChangeInformer(){
+    	return downloadPropertyChangeInformer;
+    }
+    
     private void init() {
         try {
             ConnectionSettings rc = OptionsManagerImpl.getInstance().
@@ -138,7 +152,7 @@ public class ModifiedXMLHolder
         return uploadMap;
     }
 
-    public Map getDownloads() {
+    public static Map getDownloads() {
         return downloadMap;
     }
 
@@ -392,16 +406,61 @@ public class ModifiedXMLHolder
         attributes.clear();
     }
 
-    private void checkDownloadMap(DownloadDO downloadDO, Map userAttributes){
+    private void checkDownloadMap(DownloadDO downloadDO, Map userAttributes, boolean newDownload){
         downloadDO.setShareId(Integer.parseInt((String)userAttributes.get("shareid")));
         downloadDO.setGroesse(Long.parseLong((String)userAttributes.get("size")));
-        downloadDO.setStatus(Integer.parseInt((String)userAttributes.get("status")));
-        downloadDO.setPowerDownload(Integer.parseInt((String)userAttributes.get("powerdownload")));
-        downloadDO.setTemporaryFileNumber(Integer.parseInt((String)userAttributes.get("temporaryfilenumber")));
-        downloadDO.setReady(Long.parseLong((String)userAttributes.get("ready")));
         downloadDO.setHash((String)userAttributes.get("hash"));
-        downloadDO.setFilename((String)userAttributes.get("filename"));
-        downloadDO.setTargetDirectory((String)userAttributes.get("targetdirectory"));
+        downloadDO.setTemporaryFileNumber(Integer.parseInt((String)userAttributes.get("temporaryfilenumber")));
+        if (newDownload){
+            downloadDO.setStatus(Integer.parseInt((String)userAttributes.get("status")));
+            downloadDO.setFilename((String)userAttributes.get("filename"));
+            downloadDO.setTargetDirectory((String)userAttributes.get("targetdirectory"));
+            downloadDO.setPowerDownload(Integer.parseInt((String)userAttributes.get("powerdownload")));
+            downloadDO.setReady(Long.parseLong((String)userAttributes.get("ready")));
+        }
+        else{
+        	int tmpInt = Integer.parseInt((String)userAttributes.get("status"));
+        	String old;
+        	if (tmpInt != downloadDO.getStatus()){
+        		old = Integer.toString(downloadDO.getStatus());
+        		downloadDO.setStatus(tmpInt);
+        		downloadEvents.add(new DownloadDataPropertyChangeEvent(
+        				downloadDO, DownloadDataPropertyChangeEvent.STATUS_CHANGED, 
+						old, Integer.toString(tmpInt)));
+        	}
+        	String tmpString = (String)userAttributes.get("filename");
+        	old = downloadDO.getFilename();
+        	if (old == null || !old.equals(tmpString)){
+        		downloadDO.setFilename(tmpString);
+        		downloadEvents.add(new DownloadDataPropertyChangeEvent(
+        				downloadDO, DownloadDataPropertyChangeEvent.FILENAME_CHANGED, 
+						old, tmpString));
+        	}
+        	tmpString = (String)userAttributes.get("targetdirectory");
+        	old = downloadDO.getTargetDirectory();
+        	if (old == null || !old.equals(tmpString)){
+        		downloadDO.setTargetDirectory(tmpString);
+        		downloadEvents.add(new DownloadDataPropertyChangeEvent(
+        				downloadDO, DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED, 
+						old, tmpString));
+        	}
+        	tmpInt = Integer.parseInt((String)userAttributes.get("powerdownload"));
+        	if (tmpInt != downloadDO.getPowerDownload()){
+        		old = Integer.toString(downloadDO.getPowerDownload());
+        		downloadDO.setPowerDownload(tmpInt);
+        		downloadEvents.add(new DownloadDataPropertyChangeEvent(
+        				downloadDO, DownloadDataPropertyChangeEvent.PWDL_CHANGED, 
+						old, Integer.toString(tmpInt)));
+        	}        	
+        	long tmpLong = Long.parseLong((String)userAttributes.get("ready"));
+        	if (tmpLong != downloadDO.getReady()){
+        		old = Long.toString(downloadDO.getReady());
+        		downloadDO.setReady(tmpLong);
+        		downloadEvents.add(new DownloadDataPropertyChangeEvent(
+        				downloadDO, DownloadDataPropertyChangeEvent.READY_CHANGED, 
+						old, Long.toString(tmpLong)));
+        	}        	
+        }
     }
 
     private void checkDownloadAttributes(Attributes attr){
@@ -412,15 +471,24 @@ public class ModifiedXMLHolder
         int id = Integer.parseInt((String)attributes.get("id"));
         String key = Integer.toString(id);
         DownloadDO downloadDO;
+        boolean newDownload;
         if (downloadMap.containsKey(key)) {
             downloadDO = (DownloadDO) downloadMap.get(key);
+            newDownload = false;
         }
         else{
             downloadDO = new DownloadDO(id);
             downloadMap.put(key, downloadDO);
+            newDownload = true;
         }
-        checkDownloadMap(downloadDO, attributes);
+        checkDownloadMap(downloadDO, attributes, newDownload);
         attributes.clear();
+        if (newDownload){
+        	downloadEvents.add(
+	        		new DownloadDataPropertyChangeEvent(
+	        				downloadMap, DownloadDataPropertyChangeEvent.DOWNLOAD_ADDED, 
+							null, downloadDO));
+        }
     }
 
     private void removeDownload(String id){
@@ -436,6 +504,12 @@ public class ModifiedXMLHolder
             }
         }
         downloadMap.remove(id);
+        if (downloadDO != null) {
+        	downloadEvents.add(
+	        		new DownloadDataPropertyChangeEvent(
+	        				downloadMap, DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED, 
+							downloadDO, null));
+        }
     }
 
     private void checkRemovedAttributes(Attributes attr){
@@ -753,6 +827,7 @@ public class ModifiedXMLHolder
             checkForValidSession();
             Securer securer = new Securer();
             securer.start();
+            downloadEvents.clear();
             String xmlString = getXMLString(filter);
             checkForValidResult(xmlString, securer);
             xr.parse(new InputSource(
@@ -768,6 +843,10 @@ public class ModifiedXMLHolder
                 checkCount++;
             }
             securer = null;
+    		if (downloadEvents.size() > 0){
+    	        downloadPropertyChangeInformer.propertyChanged(
+    	        		new DownloadDataPropertyChangeEvent(downloadEvents));
+    		}
             reloadInProgress = false;
         }
         catch (WebSiteNotFoundException webSiteNotFound) {

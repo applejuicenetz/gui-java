@@ -10,13 +10,14 @@ import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/treetable/JTreeTable.java,v 1.3 2004/11/29 20:57:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/treetable/JTreeTable.java,v 1.4 2004/11/30 18:03:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -58,14 +59,14 @@ public class JTreeTable
         }
     }
 
-/*    public void updateUI() {
+    public void updateUI() {
         super.updateUI();
         if (tree != null) {
             tree.updateUI();
         }
-        LookAndFeel.installColorsAndFont(this, "Tree.background",
-                                         "Tree.foreground", "Tree.font");
-    }*/
+        /*LookAndFeel.installColorsAndFont(this, "Tree.background",
+                                         "Tree.foreground", "Tree.font");*/
+    }
 
     public int getEditingRow() {
         return (getColumnClass(editingColumn) == TreeTableModel.class) ? -1 :
@@ -82,7 +83,7 @@ public class JTreeTable
     public JTree getTree() {
         return tree;
     }
-
+    
     public class TreeTableCellEditor
         extends AbstractCellEditor
         implements

@@ -15,7 +15,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.2 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.3 2004/11/30 18:03:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -88,7 +88,16 @@ public class DownloadDirectoryNode
         return false;
     }
 
-    public Object[] getChildren() {
+    public Object[] getChildren(){
+        if (downloads == null) {
+            return null;
+        }
+        else{
+        	return sortedChildNodes;
+        }
+    }
+    
+    public Object[] getChildrenWithSort() {
         if (downloads == null) {
             return null;
         }
@@ -125,8 +134,14 @@ public class DownloadDirectoryNode
         isAscent = ascent;
     }
 
-    public int getChildCount() {
-        Object[] obj = getChildren();
+    public int getChildCount(boolean sort) {
+    	Object[] obj;
+    	if ((sort || sortedChildNodes == null) && downloads != null){
+    		obj = getChildrenWithSort();
+    	}
+    	else{
+    		obj = getChildren();
+    	}
         if (obj == null) {
             return 0;
         }

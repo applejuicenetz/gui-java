@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.167 2004/11/29 20:57:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.168 2004/11/30 18:03:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -55,7 +55,7 @@ public class ApplejuiceFassade {
     public static final String ERROR_MESSAGE = "Unbehandelte Exception";
 
     private Map informer = new HashMap();
-
+    
     public static String separator;
     private ModifiedXMLHolder modifiedXML = null;
     private InformationXMLHolder informationXML = null;
@@ -86,10 +86,9 @@ public class ApplejuiceFassade {
     private ApplejuiceFassade() {
         logger = Logger.getLogger(getClass());
         try {
-
             DataUpdateInformer downloadInformer = new DataUpdateInformer(DataUpdateListener.DOWNLOAD_CHANGED){
                 protected Object getContentObject() {
-                    return modifiedXML.getDownloads();
+                    return ModifiedXMLHolder.getDownloads();
                 }
             };
             informer.put(Integer.toString(downloadInformer.getDataUpdateListenerType()), downloadInformer);
@@ -141,6 +140,10 @@ public class ApplejuiceFassade {
                 logger.error(ERROR_MESSAGE, e);
             }
         }
+    }
+    
+    public DataPropertyChangeInformer getDownloadPropertyChangeInformer(){
+    	return ModifiedXMLHolder.getDownloadPropertyChangeInformer();
     }
 
     public long getLastCoreTimestamp(){
@@ -1036,7 +1039,7 @@ public class ApplejuiceFassade {
     }
 
     public Map getDownloadsSnapshot() {
-        return modifiedXML.getDownloads();
+        return ModifiedXMLHolder.getDownloads();
     }
 
     public void informDataUpdateListener(int type) {

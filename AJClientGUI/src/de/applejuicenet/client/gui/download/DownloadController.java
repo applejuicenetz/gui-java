@@ -6,10 +6,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -27,11 +25,12 @@ import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.DoHolder;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.controller.event.DataPropertyChangeEvent;
+import de.applejuicenet.client.gui.controller.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.gui.download.table.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
 import de.applejuicenet.client.gui.download.table.DownloadRootNode;
@@ -160,8 +159,14 @@ public class DownloadController extends GuiController {
 				new DownloadTablePopupListener(this, downloadPanel.getDownloadTable()
 						, MAYBE_SHOW_POPUP));
 		LanguageSelector.getInstance().addLanguageListener(this);
-		ApplejuiceFassade.getInstance().addDataUpdateListener(this,
-				DataUpdateListener.DOWNLOAD_CHANGED);		
+/*		ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+				DataUpdateListener.DOWNLOAD_CHANGED);*/
+		Map downloads = ApplejuiceFassade.getInstance().getDownloadsSnapshot();
+		((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
+		DownloadDirectoryNode.setDownloads(downloads);
+		ApplejuiceFassade.getInstance().getDownloadPropertyChangeInformer().
+			addDataPropertyChangeListener(
+				new DownloadPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
 	}
 	
 	public Value[] getCustomizedValues(){
@@ -227,7 +232,7 @@ public class DownloadController extends GuiController {
 				break;
 			}
 			case DOWNLOAD_PROPERTY_CHANGE_EVENT:{
-				downloadPropertyChanged((PropertyChangeEvent)source);
+				downloadPropertyChanged((DataPropertyChangeEvent)source);
 				break;
 			}
 			case MAYBE_SHOW_POPUP:{
@@ -244,13 +249,56 @@ public class DownloadController extends GuiController {
 		return downloadPanel;
 	}
 	
-	private void downloadPropertyChanged(PropertyChangeEvent evt){
-	    if (evt.getPropertyName().equals(DoHolder.VALUE_ADDED)){
-	        
-	    }
-	    else if (evt.getPropertyName().equals(DoHolder.VALUE_REMOVED)){
-	        
-	    }
+	private synchronized void downloadPropertyChanged(DataPropertyChangeEvent evt){
+		boolean tmpSort = false;
+		if (evt.isEventContainer()){
+			DataPropertyChangeEvent[] events = evt.getNestedEvents();
+			for (int i = 0; i<events.length; i++){
+				if (handleDownloadDataPropertyChangeEvent(
+						(DownloadDataPropertyChangeEvent)events[i])){
+					tmpSort = true;
+				}
+			}
+		}
+		else{
+			if (handleDownloadDataPropertyChangeEvent((DownloadDataPropertyChangeEvent)evt)){
+				tmpSort = true;
+			}
+		}
+		final boolean sort = tmpSort;
+    	System.out.println("event");
+		try{
+	        SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
+	            	System.out.println("update");
+	            	if (sort){
+		            	downloadPanel.getDownloadModel().sortNextRefresh(sort);
+		            	downloadPanel.getDownloadTable().updateUI();
+		            	downloadPanel.getDownloadModel().sortNextRefresh(false);
+	            	}
+	            	else{
+		            	downloadPanel.getDownloadTable().updateUI();
+	            	}
+	            }
+	        });
+		}
+        catch(Exception e){
+        	e.printStackTrace();
+        }
+	}
+	
+	private boolean handleDownloadDataPropertyChangeEvent(DownloadDataPropertyChangeEvent event){
+		if (event.getName() == null){
+			return false;
+		}
+		else if (event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_ADDED)
+				|| event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED)
+				|| event.getName().equals(DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED)
+				|| event.getName().equals(DownloadDataPropertyChangeEvent.FILENAME_CHANGED)){
+        	System.out.println("name: " + event.getName());
+			return true;
+		}
+		return false;
 	}
 	
 	private void clearReadyDownloads(){
@@ -916,9 +964,7 @@ public class DownloadController extends GuiController {
 	protected void contentChanged(int type, final Object content) {
 		if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
 		    ApplejuiceFassade.getInstance().removeDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
-		    DoHolder downloads = (DoHolder) content;
-		    downloads.addPropertyChangeListener(
-		            new DownloadDOPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
+		    Map downloads = (Map) content;
 			((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
 			DownloadDirectoryNode.setDownloads(downloads);
 			if (panelSelected) {

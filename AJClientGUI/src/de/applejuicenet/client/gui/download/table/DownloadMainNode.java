@@ -18,7 +18,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.2 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.3 2004/11/30 18:03:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -121,7 +121,7 @@ public class DownloadMainNode
         }
     }
 
-    public int getChildCount() {
+    public int getChildCount(boolean sort) {
         Object[] obj = getChildren();
         if (obj == null) {
             return 0;
@@ -132,7 +132,7 @@ public class DownloadMainNode
     }
 
     public boolean isLeaf() {
-        return (getChildCount() == 0) ? true : false;
+        return (getChildCount(false) == 0) ? true : false;
     }
 
     public Object[] getChildren() {
@@ -144,7 +144,7 @@ public class DownloadMainNode
                 else {
                     boolean childFound = false;
                     for (int i = 0; i < children.length; i++) {
-                        if (children[i].getChildCount() > 0) {
+                        if (children[i].getChildCount(false) > 0) {
                             childFound = true;
                             break;
                         }
@@ -211,7 +211,7 @@ public class DownloadMainNode
             return downloadDO.getFilename();
         }
         else {
-            return text + " (" + getChildCount() + ")";
+            return text + " (" + getChildCount(false) + ")";
         }
     }
 

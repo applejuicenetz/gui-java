@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZLibUtils.java,v 1.4 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZLibUtils.java,v 1.5 2004/11/30 18:03:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -53,12 +53,11 @@ public abstract class ZLibUtils {
         }
     }
 
-    public static String uncompress(byte[] b) {
+    public static StringBuffer uncompress(byte[] b) {
+        StringBuffer retval = new StringBuffer();
         try {
             Inflater infl = new Inflater();
             infl.setInput(b);
-
-            StringBuffer retval = new StringBuffer();
             boolean done = false;
             int bufnum;
             byte[] buf;
@@ -66,7 +65,11 @@ public abstract class ZLibUtils {
                 buf = new byte[256];
                 try {
                     bufnum = infl.inflate(buf);
-                    retval.append(new String(buf, 0, bufnum));
+                    char[] tmp = new char[bufnum];                    
+                    for(int i=0; i<bufnum; i++){
+                    	tmp[i] = (char)buf[i];
+                    }
+                    retval.append(tmp);
                     if (bufnum < buf.length) {
                         done = true;
                     }
@@ -75,13 +78,13 @@ public abstract class ZLibUtils {
                     done = true;
                 }
             }
-            return (retval.toString());
+            return retval;
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
-            return "";
+            return retval;
         }
     }
 }
