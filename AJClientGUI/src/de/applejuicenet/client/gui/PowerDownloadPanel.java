@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.25 2003/10/16 12:06:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.26 2003/10/27 12:40:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.26  2003/10/27 12:40:48  maj0r
+ * Bug #1046 fixed (Danke an lova):
+ * Buttons entsprechend dem Standard vertauscht.
+ *
  * Revision 1.25  2003/10/16 12:06:51  maj0r
  * Diverse Schoenheitskorrekturen.
  *
@@ -237,11 +241,11 @@ public class PowerDownloadPanel
             }
         });
         constraints2.gridx = 1;
-        tempPanel3.add(btnPdlUp, constraints2);
+        tempPanel3.add(btnPdlDown, constraints2);
         constraints2.gridx = 2;
         tempPanel3.add(ratio, constraints2);
         constraints2.gridx = 3;
-        tempPanel3.add(btnPdlDown, constraints2);
+        tempPanel3.add(btnPdlUp, constraints2);
         constraints2.gridx = 4;
         constraints2.insets.left = 5;
         tempPanel3.add(label8, constraints2);
