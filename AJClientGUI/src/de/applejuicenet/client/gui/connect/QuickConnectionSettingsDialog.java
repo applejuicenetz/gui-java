@@ -26,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
@@ -39,7 +38,7 @@ import de.applejuicenet.client.gui.options.ODConnectionPanel;
 import de.applejuicenet.client.shared.ConnectionSettings;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/QuickConnectionSettingsDialog.java,v 1.5 2005/02/28 16:37:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/QuickConnectionSettingsDialog.java,v 1.6 2005/03/07 14:25:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

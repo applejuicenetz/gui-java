@@ -36,7 +36,6 @@ import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.exception.WrongPasswordException;
 import de.applejuicenet.client.fassade.listener.CoreConnectionSettingsListener;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.fassade.listener.CoreConnectionSettingsListener.ITEM;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
