@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.39 2004/02/12 18:32:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.40 2004/02/20 11:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -61,6 +61,10 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.40  2004/02/20 11:03:38  maj0r
+ * Featurerequest #228 realisiert (Danke an Major-Tom)
+ * Im Pwdl-Eingabefeld funktionieren nun auch die Hoch/Runter-Pfeiltasten.
+ *
  * Revision 1.39  2004/02/12 18:32:40  maj0r
  * Bug #195 gefixt (Danke an supermuhkuh)
  * Bug bei Pwdl-Einstellung korrigiert.
@@ -228,9 +232,22 @@ public class PowerDownloadPanel
         ratio.setHorizontalAlignment(SwingConstants.RIGHT);
         KeyAdapter ratioKlicker = new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
-                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-                    ratioFocusAdapter.focusLost(null);
-                    btnPdl.doClick();
+                switch (ke.getKeyCode()){
+                    case KeyEvent.VK_ENTER:{
+                        ratioFocusAdapter.focusLost(null);
+                        btnPdl.doClick();
+                        break;
+                    }
+                    case KeyEvent.VK_UP:{
+                        btnAktiv.setSelected(true);
+                        alterRatio(true);
+                        break;
+                    }
+                    case KeyEvent.VK_DOWN:{
+                        btnAktiv.setSelected(true);
+                        alterRatio(false);
+                        break;
+                    }
                 }
             }
         };
