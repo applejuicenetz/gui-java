@@ -21,7 +21,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.13 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.14 2003/07/04 11:32:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.14  2003/07/04 11:32:18  maj0r
+ * Anzeige der Anzahl der Dateien und Gesamtgöße des Shares hinzugefügt.
+ *
  * Revision 1.13  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -60,6 +63,7 @@ public class SharePanel
   private JList folderList = new JList(new DefaultListModel());
   private TitledBorder titledBorder1;
   private TitledBorder titledBorder2;
+  private JLabel dateien = new JLabel();
 
   private JButton neueListe = new JButton();
   private JButton neuLaden = new JButton();
@@ -70,6 +74,11 @@ public class SharePanel
 
   private JTreeTable shareTable;
   private ShareModel shareModel;
+
+  private String eintraege;
+
+  private int anzahlDateien = 0;
+  private String dateiGroesse = "0 MB";
 
   public SharePanel() {
     try {
@@ -106,6 +115,8 @@ public class SharePanel
           ShareNode rootNode = shareModel.getRootNode();
           rootNode.removeAllChildren();
           Iterator iterator = shares.values().iterator();
+          anzahlDateien = 0;
+          double size = 0;
           while (iterator.hasNext()){
               ShareDO shareDO = (ShareDO)iterator.next();
               String filename = shareDO.getFilename();
@@ -113,6 +124,8 @@ public class SharePanel
               ShareNode parentNode = ShareNode.getNodeByPath(path);
               if (parentNode!=null){
                   parentNode.addChild(shareDO);
+                  size += Long.parseLong(shareDO.getSize());
+                  anzahlDateien++;
               }
               else{
                   try {
@@ -124,6 +137,15 @@ public class SharePanel
                   }
               }
           }
+        size = size / 1048576;
+        dateiGroesse = Double.toString(size);
+        if (dateiGroesse.indexOf(".") + 3 < dateiGroesse.length()){
+            dateiGroesse = dateiGroesse.substring(0, dateiGroesse.indexOf(".") + 3) + " MB";
+        }
+          String temp = eintraege;
+          temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
+          temp = temp.replaceFirst("%s", dateiGroesse);
+          dateien.setText( temp);
           shareTable.updateUI();
       }
     });
@@ -161,6 +183,8 @@ public class SharePanel
 
     panelCenter.add(panel1, BorderLayout.NORTH);
     panelCenter.add(new JScrollPane(shareTable), BorderLayout.CENTER);
+    panelCenter.add(dateien, BorderLayout.SOUTH);
+
 
     add(panelWest, BorderLayout.WEST);
     add(panelCenter, BorderLayout.CENTER);
@@ -247,6 +271,18 @@ public class SharePanel
     TableColumnModel tcm = shareTable.getColumnModel();
     for (int i = 0; i < 3; i++) {
       tcm.getColumn(i).setHeaderValue(tableColumns[i]);
+    }
+
+    eintraege = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "shareform", "anzahlShare"}));
+    if (anzahlDateien>0){
+        String temp = eintraege;
+        temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
+        temp = temp.replaceFirst("%s", dateiGroesse);
+        dateien.setText(temp);
+    }
+    else{
+        dateien.setText("");
     }
   }
 }
