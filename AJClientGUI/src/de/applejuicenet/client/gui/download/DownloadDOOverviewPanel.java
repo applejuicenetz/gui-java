@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.8 2004/12/06 16:34:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.9 2004/12/08 10:11:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -123,11 +123,23 @@ public class DownloadDOOverviewPanel
 
     public void setDownloadDO(DownloadDO downloadDO) {
         try {
-            if (partListWorkerThread == null){
-	            partListWorkerThread = new PartListWorkerThread();
-	            partListWorkerThread.start();
-	        }
+        	if (partListWorkerThread != null){
+        		if (partListWorkerThread.isInterrupted()){
+        			partListWorkerThread = null;
+        		}
+        		else{
+	        		if (partListWorkerThread.getObjectDO() == downloadDO){
+	        			return;
+	        		}
+	        		else{
+	        			partListWorkerThread.cancel();
+	        			partListWorkerThread = null;
+	        		}
+        		}
+        	}
+            partListWorkerThread = new PartListWorkerThread();
             partListWorkerThread.setDownloadDO(downloadDO);
+            partListWorkerThread.start();
         }
         catch (Exception e) {
             if (partListWorkerThread != null){
@@ -142,11 +154,18 @@ public class DownloadDOOverviewPanel
 
     public void setDownloadSourceDO(DownloadSourceDO downloadSourceDO) {
         try {
-            if (partListWorkerThread == null){
-	            partListWorkerThread = new PartListWorkerThread();
-	            partListWorkerThread.start();
-	        }
+        	if (partListWorkerThread != null){
+        		if (partListWorkerThread.isInterrupted()){
+        			partListWorkerThread = null;
+        		}
+        		else{
+        			partListWorkerThread.cancel();
+        			partListWorkerThread = null;
+        		}
+        	}
+            partListWorkerThread = new PartListWorkerThread();
             partListWorkerThread.setDownloadSourceDO(downloadSourceDO);
+            partListWorkerThread.start();
         }
         catch (Exception e) {
             if (partListWorkerThread != null){
@@ -187,22 +206,12 @@ public class DownloadDOOverviewPanel
     
     private class PartListWorkerThread extends Thread {
     	private Object objectDO = null;
-    	private boolean paused = true;
+    	private boolean firstRun = true;
     	
         public void run() {
-        	while(true && !interrupted()){
-        		if (paused){
-        			try{
-	        			sleep(1000);
-	        			continue;
-	                }
-	                catch (InterruptedException iE) {
-	                    interrupt();
-	                }
-        		}
+        	while(!interrupted()){
             	if (objectDO == null){
-            		setPaused(true);
-            		continue;
+            		break;
             	}
             	boolean shortPause = false;
             	if (objectDO.getClass() == DownloadDO.class){
@@ -210,22 +219,25 @@ public class DownloadDOOverviewPanel
             	}
             	else{
             		shortPause = workDownloadSourceDO((DownloadSourceDO)objectDO);
-            		setPaused(true);
             	}
             	if (shortPause){
         			try{
-	        			sleep(10000);
+	        			sleep(5000);
+	        			firstRun = false;
 	        			continue;
 	                }
 	                catch (InterruptedException iE) {
 	                    interrupt();
 	                }
             	}
+            	else{
+            		break;
+            	}
         	}
         }
         
-        private void setPaused(boolean enable){
-        	paused = enable;
+        public Object getObjectDO(){
+        	return objectDO;
         }
         
         private boolean workDownloadDO(DownloadDO downloadDO){
@@ -233,31 +245,19 @@ public class DownloadDOOverviewPanel
         			&& downloadDO.getStatus() != DownloadDO.FERTIG){
             	String dateiNameText = " " + downloadDO.getFilename() +
             	" (" + downloadDO.getTemporaryFileNumber() + ".data) ";
+            	if (firstRun){
+            		actualDLDateiName.setText(dateiNameText);
+            	}
 	            PartListDO partList = null;
                 try{
                     partList = ApplejuiceFassade.getInstance().
                         getPartList(downloadDO);
-                    if (paused){
-                    	// wurde moeglicherweise waehrend des Ziehens der Partliste gestoppt
-                    	actualDLDateiName.setText("");
-                    	actualDlOverviewTable.setPartList(null, null);
-                    	return false;
-                    }
                 }
                 catch(WebSiteNotFoundException wsnfE){
                     // Core ist wahrscheinlich zurzeit ueberlastet
                     partList = null;
                 }
-                if (isInterrupted()){
-                	actualDLDateiName.setText("");
-                	actualDlOverviewTable.setPartList(null, null);
-                    return false;
-                }
-                if (partList == null) {
-                    actualDLDateiName.setText("");
-                    actualDlOverviewTable.setPartList(null, null);
-                }
-                else {
+                if (partList != null && !isInterrupted()){
                     String tmp = verfuegbar.replaceFirst("%s", 
                     		decimalFormat.format(partList.getProzentVerfuegbar()));
                     actualDLDateiName.setText(dateiNameText + " - " + tmp);
@@ -266,7 +266,6 @@ public class DownloadDOOverviewPanel
     			return true;
         	}
         	else{
-        		setPaused(true);
     			return false;
         	}
         }
@@ -279,20 +278,11 @@ public class DownloadDOOverviewPanel
 			try {
 				partList = ApplejuiceFassade.getInstance().getPartList(
 						downloadSoureDO);
-                if (paused){
-                	// wurde moeglicherweise waehrend des Ziehens der Partliste gestoppt
-                	actualDLDateiName.setText("");
-                	actualDlOverviewTable.setPartList(null, null);
-                	return false;
-                }
 			} catch (WebSiteNotFoundException ex) {
 				// Core ist wahrscheinlich zurzeit ueberlastet
 				partList = null;
 			}
-			if (partList == null) {
-            	actualDLDateiName.setText("");
-            	actualDlOverviewTable.setPartList(null, null);
-			} else {
+            if (partList != null && !isInterrupted()){
 				actualDLDateiName.setText(tmp + " - " + verfuegbar.replaceFirst("%s", decimalFormat
 						.format(partList.getProzentVerfuegbar())));
 				actualDlOverviewTable.setPartList(partList, new Integer(downloadSoureDO.getId()));
@@ -301,48 +291,34 @@ public class DownloadDOOverviewPanel
 		}
         
         public void setDownloadDO(DownloadDO downloadDO){
-        	setPaused(true);
         	if (downloadDO == null){
+        		objectDO = null;
         		clear();
         	}
-        	if (objectDO != downloadDO){
+        	else if (objectDO != downloadDO){
 	        	objectDO = downloadDO;
-            	if (objectDO == null){
-            		clear();
-            	}
-            	else{
-            		setPaused(false);
-            	}
+        		clear();
         	}
         }
 
         public void setDownloadSourceDO(DownloadSourceDO downloadSoureDO){
-        	setPaused(true);
-        	if (objectDO != downloadSoureDO){
+        	if (downloadSoureDO == null){
+        		objectDO = null;
+        		clear();
+        	}
+        	else if (objectDO != downloadSoureDO){
 	        	objectDO = downloadSoureDO;
-            	if (objectDO == null){
-            		clear();
-            	}
-            	else{
-            		setPaused(false);            		
-            	}
+        		clear();
         	}
         }
         
         private void clear(){
-        	setPaused(true);
             actualDLDateiName.setText("");
             actualDlOverviewTable.setPartList(null, null);
         }
         
-        public void pause(){
-        	setPaused(true);
-        }
-        
         public void cancel(){
-        	setPaused(true);
         	interrupt();
-        	clear();
         }
     }
 }
