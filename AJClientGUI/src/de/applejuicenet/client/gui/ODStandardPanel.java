@@ -12,7 +12,7 @@ import javax.swing.JFileChooser;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.19 2004/01/05 07:28:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.20 2004/01/05 11:54:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import java.io.File;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.20  2004/01/05 11:54:21  maj0r
+ * Standardbrowser kann nun definiert werden.
+ *
  * Revision 1.19  2004/01/05 07:28:59  maj0r
  * Begonnen einen Standardwebbrowser einzubauen.
  *
@@ -135,6 +138,10 @@ public class ODStandardPanel
             UpdateInfoItem selectedItem = (UpdateInfoItem)updateInfoModus.getSelectedItem();
             return selectedItem.getModus();
         }
+    }
+
+    public String getBrowserPfad(){
+        return browser.getText();
     }
 
     private void init() throws Exception {
@@ -356,11 +363,19 @@ public class ODStandardPanel
                 JLabel source = (JLabel) e.getSource();
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogType(JFileChooser.FILES_ONLY);
+                fileChooser.setDialogTitle(label7.getText());
+                if (browser.getText().length() != 0){
+                    File tmpFile = new File(browser.getText());
+                    if (tmpFile.isFile()){
+                        fileChooser.setCurrentDirectory(tmpFile);
+                    }
+                }
                 int returnVal = fileChooser.showOpenDialog(source);
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
                     File browserFile = fileChooser.getSelectedFile();
                     if (browserFile.isFile()){
-
+                        browser.setText(browserFile.getPath());
+                        dirty = true;
                     }
                 }
             }
