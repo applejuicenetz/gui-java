@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.79 2004/08/16 15:22:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.80 2004/10/13 15:29:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -297,6 +297,7 @@ public class AppleJuiceClient {
             }
 
             ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.getInstance();
+            boolean firstTry = true;
             while (showDialog || !applejuiceFassade.istCoreErreichbar()) {
                 splash.setVisible(false);
                 if (!showDialog) {
@@ -312,22 +313,29 @@ public class AppleJuiceClient {
                 }
                 showDialog = false;
                 remoteDialog = new QuickConnectionSettingsDialog(connectFrame);
-                remoteDialog.setVisible(true);
-                if (remoteDialog.getResult() ==
-                    QuickConnectionSettingsDialog.ABGEBROCHEN) {
-                    nachricht = ZeichenErsetzer.korrigiereUmlaute(
-                        languageSelector.
-                        getFirstAttrbuteByTagName(".root.javagui.startup.verbindungsfehler"));
-                    nachricht = nachricht.replaceFirst("%s",
-                        OptionsManagerImpl.getInstance().
-                        getRemoteSettings().
-                        getHost());
-                    JOptionPane.showMessageDialog(connectFrame, nachricht,
-                                                  titel,
-                                                  JOptionPane.OK_OPTION);
-                    logger.fatal(nachricht);
-                    System.out.println("Fehler: " + nachricht);
-                    System.exit( -1);
+                if (firstTry && OptionsManagerImpl.getInstance().isErsterStart()){
+                   	firstTry = false;
+                   	remoteDialog.setNieWiederAnzeigen();
+                   	remoteDialog.pressOK();
+                }
+                else{
+	                remoteDialog.setVisible(true);
+	                if (remoteDialog.getResult() ==
+	                    QuickConnectionSettingsDialog.ABGEBROCHEN) {
+	                    nachricht = ZeichenErsetzer.korrigiereUmlaute(
+	                        languageSelector.
+	                        getFirstAttrbuteByTagName(".root.javagui.startup.verbindungsfehler"));
+	                    nachricht = nachricht.replaceFirst("%s",
+	                        OptionsManagerImpl.getInstance().
+	                        getRemoteSettings().
+	                        getHost());
+	                    JOptionPane.showMessageDialog(connectFrame, nachricht,
+	                                                  titel,
+	                                                  JOptionPane.OK_OPTION);
+	                    logger.fatal(nachricht);
+	                    System.out.println("Fehler: " + nachricht);
+	                    System.exit( -1 );
+	                }
                 }
                 splash.setVisible(true);
             }
