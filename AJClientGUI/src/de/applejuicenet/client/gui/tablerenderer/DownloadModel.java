@@ -24,11 +24,11 @@ public class DownloadModel
 
   public DownloadModel() {
     super(new DownloadNode());
-    DataManager.getInstance().addDownloadListener(this);
-    DownloadDO[] downloads = DataManager.getInstance().getDownloads();
+    DownloadSourceDO[] downloads = DataManager.getInstance().getDownloads();
     for (int i = 0; i < downloads.length; i++) {
       ( (DownloadNode) getRoot()).addChild(downloads[i]);
     }
+    DataManager.getInstance().addDownloadListener(this);
   }
 
   public void fireContentChanged(){
@@ -36,7 +36,7 @@ public class DownloadModel
       this.nodeChanged((TreeNode)getRoot());
   }
 
-  protected DownloadDO getDO(Object node) {
+  protected DownloadSourceDO getDO(Object node) {
     DownloadNode fileNode = ( (DownloadNode) node);
     return fileNode.getDO();
   }
@@ -68,7 +68,7 @@ public class DownloadModel
   }
 
   public Object getValueAt(Object node, int column) {
-    DownloadDO download = getDO(node);
+    DownloadSourceDO download = getDO(node);
     if (download == null) {
       return "";
     }
@@ -111,10 +111,10 @@ class DownloadNode
   private static ImageIcon warteschlangeIcon;
   private static ImageIcon indirektIcon;
 
-  DownloadDO download;
+  DownloadSourceDO download;
   HashSet children;
 
-  public DownloadNode(DownloadDO download) {
+  public DownloadNode(DownloadSourceDO download) {
     initIcons();
     this.download = download;
     children = new HashSet();
@@ -147,16 +147,16 @@ class DownloadNode
     if (download == null) {
       return rootIcon;
     }
-    if (download.getIntStatus() == DownloadDO.UEBERTRAGE) {
+    if (download.getIntStatus() == DownloadSourceDO.UEBERTRAGE) {
       return uebertrageIcon;
     }
-    else if (download.getIntStatus() == DownloadDO.VERSUCHEINDIREKT) {
+    else if (download.getIntStatus() == DownloadSourceDO.VERSUCHEINDIREKT) {
       return indirektIcon;
     }
-    else if (download.getIntStatus() == DownloadDO.WARTESCHLANGE) {
+    else if (download.getIntStatus() == DownloadSourceDO.WARTESCHLANGE) {
       return warteschlangeIcon;
     }
-    else if (download.getIntStatus() == DownloadDO.ROOT) {
+    else if (download.getIntStatus() == DownloadSourceDO.ROOT) {
       return rootIcon;
     }
     else {
@@ -164,11 +164,11 @@ class DownloadNode
     }
   }
 
-  public void addChild(DownloadDO download) {
+  public void addChild(DownloadSourceDO download) {
     children.add(new DownloadNode(download));
   }
 
-  public DownloadDO getDO() {
+  public DownloadSourceDO getDO() {
     return download;
   }
 

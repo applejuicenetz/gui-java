@@ -29,7 +29,7 @@ public class DownloadSourceDO {
   private String powerdownload;
   private Version version;
   private String nick;
-  private HashSet sources = new HashSet(); //contains DownloadDO leafs
+  private HashSet sources = new HashSet(); //contains DownloadSourceDO leafs
 
   public DownloadSourceDO(boolean isRoot, String dateiname, int status,
                     String groesse,
@@ -130,16 +130,16 @@ public class DownloadSourceDO {
     return version;
   }
 
-  public void addDownloadSource(DownloadDO source) {
+  public void addDownloadSource(DownloadSourceDO source) {
     if (! (sources.contains(source))) {
       sources.add(source);
     }
   }
 
-  public DownloadDO[] getSources() {
+  public DownloadSourceDO[] getSources() {
     if (sources==null)
       return null;
-    return (DownloadDO[]) sources.toArray(new DownloadDO[sources.
+    return (DownloadSourceDO[]) sources.toArray(new DownloadSourceDO[sources.
                                                 size()]);
   }
 

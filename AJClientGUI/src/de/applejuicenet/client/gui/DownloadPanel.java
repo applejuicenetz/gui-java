@@ -10,7 +10,7 @@ import javax.swing.JSplitPane;
 import java.awt.*;
 import javax.swing.table.TableColumn;
 import de.applejuicenet.client.gui.tablerenderer.JTreeTable;
-import de.applejuicenet.client.shared.DownloadDO;
+import de.applejuicenet.client.shared.DownloadSourceDO;
 import java.util.HashSet;
 import de.applejuicenet.client.shared.Version;
 import de.applejuicenet.client.gui.tablerenderer.DownloadModel;
@@ -66,13 +66,6 @@ public class DownloadPanel extends JPanel {
     constraints.weighty = 1;
     constraints.weightx = 1;
 
-    Version version = new Version("0.27", "Java", "Win");
-    DownloadDO source = new DownloadDO(false, "datei2.jpg", DownloadDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "Maj0r", null);
-    HashSet sourcen = new HashSet();
-    sourcen.add(source);
-    DownloadDO[] downloads = new DownloadDO[2];
-    downloads[0] = new DownloadDO(true, "datei1.jpg", DownloadDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
-    downloads[1] = new DownloadDO(true, "Film.avi", DownloadDO.WARTESCHLANGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
     downloadTable = new JTreeTable(new DownloadModel());
 
     JScrollPane aScrollPane = new JScrollPane();
