@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/MainNode.java,v 1.10 2004/06/12 12:24:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/MainNode.java,v 1.11 2004/06/12 14:02:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,10 +39,9 @@ public class MainNode
 
     public MainNode() {
         type = ROOT_NODE;
-        children = new MainNode[3];
+        children = new MainNode[2];
         children[0] = new MainNode(LOADING_UPLOADS);
         children[1] = new MainNode(WAITING_UPLOADS);
-        children[2] = new MainNode(REST_UPLOADS);
     }
 
     public MainNode(int type) {
@@ -52,9 +51,6 @@ public class MainNode
             LanguageSelector.getInstance().addLanguageListener(this);
         }
         else if (type == WAITING_UPLOADS) {
-            LanguageSelector.getInstance().addLanguageListener(this);
-        }
-        else if (type == REST_UPLOADS) {
             LanguageSelector.getInstance().addLanguageListener(this);
         }
     }
@@ -69,9 +65,6 @@ public class MainNode
         }
         else if (type == WAITING_UPLOADS) {
             return IconManager.getInstance().getIcon("cool");
-        }
-        else if (type == REST_UPLOADS) {
-            return IconManager.getInstance().getIcon("eek");
         }
         else {
             return null;
@@ -96,7 +89,7 @@ public class MainNode
         }
     }
 
-    public UploadDO[] getChildrenByStatus(int statusToCheck, boolean active){
+    public UploadDO[] getChildrenByStatus(int statusToCheck){
         if (uploads == null) {
             return null;
         }
@@ -107,19 +100,7 @@ public class MainNode
             for (int i = 0; i < uploadsForThread.length; i++) {
                 if (uploadsForThread[i].getStatus() ==
                     statusToCheck) {
-                    if (statusToCheck == UploadDO.AKTIVE_UEBERTRAGUNG){
-                        children.add(uploadsForThread[i]);
-                    }
-                    else if (active){
-                        if (uploadsForThread[i].getDirectState() == UploadDO.STATE_DIREKT_VERBUNDEN){
-                            children.add(uploadsForThread[i]);
-                        }
-                    }
-                    else{
-                        if (uploadsForThread[i].getDirectState() != UploadDO.STATE_DIREKT_VERBUNDEN){
-                            children.add(uploadsForThread[i]);
-                        }
-                    }
+                    children.add(uploadsForThread[i]);
                 }
             }
             return (UploadDO[]) children.toArray(new UploadDO[children.
@@ -133,13 +114,10 @@ public class MainNode
         }
         else{
             if (getType() == MainNode.LOADING_UPLOADS) {
-                return getChildrenByStatus(UploadDO.AKTIVE_UEBERTRAGUNG, true);
+                return getChildrenByStatus(UploadDO.AKTIVE_UEBERTRAGUNG);
             }
             else if (getType() == MainNode.WAITING_UPLOADS) {
-                return getChildrenByStatus(UploadDO.WARTESCHLANGE, true);
-            }
-            else if (getType() == MainNode.REST_UPLOADS) {
-                return getChildrenByStatus(UploadDO.WARTESCHLANGE, false);
+                return getChildrenByStatus(UploadDO.WARTESCHLANGE);
             }
             else{
                 return null;
@@ -156,10 +134,6 @@ public class MainNode
         else if (type == WAITING_UPLOADS) {
             text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.uploadform.wartendeuploads"));
-        }
-        else if (type == REST_UPLOADS) {
-            text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.javagui.uploadform.dreckigerrest"));
         }
     }
 }
