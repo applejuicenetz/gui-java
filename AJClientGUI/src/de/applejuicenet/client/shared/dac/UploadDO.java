@@ -12,8 +12,8 @@ import de.applejuicenet.client.shared.*;
  */
 
 public class UploadDO {
-  public static int WARTESCHLANGE = 1;
-  public static int AKTIVE_UEBERTRAGUNG = 2;
+  public static int AKTIVE_UEBERTRAGUNG = 1;
+  public static int WARTESCHLANGE = 2;
 
   private int uploadID;
   private int shareFileID;
