@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.19 2004/02/17 14:42:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.20 2004/02/19 13:34:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.20  2004/02/19 13:34:35  maj0r
+ * Bild wird freigegeben, wenn die Partliste entfernt wird.
+ *
  * Revision 1.19  2004/02/17 14:42:57  maj0r
  * Bug #220 gefixt (Danke an dsp2004)
  * OutOfMemoryError behoben.
@@ -188,6 +191,9 @@ public class DownloadPartListPanel
                     g.drawImage(tempImage.getSubimage(x, 0, width, zeilenHoehe), 0, i*zeilenHoehe, null);
                     x += width;
                 }
+            }
+            else{
+                image = null;
             }
             updateUI();
         }
