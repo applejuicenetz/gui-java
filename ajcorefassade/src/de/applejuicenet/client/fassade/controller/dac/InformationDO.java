@@ -1,64 +1,78 @@
 package de.applejuicenet.client.fassade.controller.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/Attic/InformationDO.java,v 1.1 2004/12/03 07:57:12 maj0r Exp $
- *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: General Public License</p>
- *
+ * $Header:
+ * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/InformationDO.java,v
+ * 1.1 2004/12/03 07:57:12 maj0r Exp $
+ * 
+ * <p>
+ * Titel: AppleJuice Client-GUI
+ * </p>
+ * <p>
+ * Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
+ * appleJuice-Core
+ * </p>
+ * <p>
+ * Copyright: General Public License
+ * </p>
+ * 
  * @author: Maj0r <aj@tkl-soft.de>
- *
+ * 
  */
 
 public class InformationDO {
 
-    private int id;
-    private long sessionUpload;
-    private long sessionDownload;
-    private long credits;
-    private long uploadSpeed;
-    private long downloadSpeed;
-    private long openConnections;
+	private int id;
 
-    public InformationDO(int id, long sessionUpload, long sessionDownload,
-                         long credits,
-                         long uploadSpeed, long downloadSpeed,
-                         long openConnections) {
-        this.id = id;
-        this.sessionUpload = sessionUpload;
-        this.sessionDownload = sessionDownload;
-        this.credits = credits;
-        this.uploadSpeed = uploadSpeed;
-        this.downloadSpeed = downloadSpeed;
-        this.openConnections = openConnections;
-    }
+	private long sessionUpload;
 
-    public int getId() {
-        return id;
-    }
+	private long sessionDownload;
 
-    public long getSessionUpload() {
-        return sessionUpload;
-    }
+	private long credits;
 
-    public long getSessionDownload() {
-        return sessionDownload;
-    }
+	private long uploadSpeed;
 
-    public long getCredits() {
-        return credits;
-    }
+	private long downloadSpeed;
 
-    public long getUploadSpeed() {
-        return uploadSpeed;
-    }
+	private long openConnections;
 
-    public long getDownloadSpeed() {
-        return downloadSpeed;
-    }
+	public InformationDO(int id, long sessionUpload, long sessionDownload,
+			long credits, long uploadSpeed, long downloadSpeed,
+			long openConnections) {
+		this.id = id;
+		this.sessionUpload = sessionUpload;
+		this.sessionDownload = sessionDownload;
+		this.credits = credits;
+		this.uploadSpeed = uploadSpeed;
+		this.downloadSpeed = downloadSpeed;
+		this.openConnections = openConnections;
+	}
 
-    public long getOpenConnections() {
-        return openConnections;
-    }
+	public int getId() {
+		return id;
+	}
+
+	public long getSessionUpload() {
+		return sessionUpload;
+	}
+
+	public long getSessionDownload() {
+		return sessionDownload;
+	}
+
+	public long getCredits() {
+		return credits;
+	}
+
+	public long getUploadSpeed() {
+		return uploadSpeed;
+	}
+
+	public long getDownloadSpeed() {
+		return downloadSpeed;
+	}
+
+	public long getOpenConnections() {
+		return openConnections;
+	}
 }

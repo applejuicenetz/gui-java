@@ -1,226 +1,232 @@
 package de.applejuicenet.client.fassade.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/shared/NetworkInfo.java,v 1.1 2004/12/03 07:57:12 maj0r Exp $
- *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: General Public License</p>
- *
+ * $Header:
+ * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/shared/NetworkInfo.java,v
+ * 1.1 2004/12/03 07:57:12 maj0r Exp $
+ * 
+ * <p>
+ * Titel: AppleJuice Client-GUI
+ * </p>
+ * <p>
+ * Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
+ * appleJuice-Core
+ * </p>
+ * <p>
+ * Copyright: General Public License
+ * </p>
+ * 
  * @author: Maj0r [aj@tkl-soft.de]
- *
+ * 
  */
 
 public class NetworkInfo {
-    private long ajUserGesamt;
-    private long ajAnzahlDateien;
-    private String ajGesamtShare;
-    private boolean firewalled;
-    private String externeIP;
-    private int tryConnectToServer;
-    private int connectedWithServerId;
-    private String welcomeMessage;
-    private long connectionTime;
+	private long ajUserGesamt;
 
-    public NetworkInfo(){
+	private long ajAnzahlDateien;
 
-    }
+	private String ajGesamtShare;
 
-    public NetworkInfo(long ajUserGesamt, long ajAnzahlDateien,
-                       String ajGesamtShare, boolean firewalled,
-                       String externeIP,
-                       int tryConnectToServer, int connectedWithServerId,
-                       String welcomeMessage, long connectionTime) {
-        this.ajUserGesamt = ajUserGesamt;
-        this.ajAnzahlDateien = ajAnzahlDateien;
-        this.ajGesamtShare = ajGesamtShare;
-        this.firewalled = firewalled;
-        this.externeIP = externeIP;
-        this.tryConnectToServer = tryConnectToServer;
-        this.connectedWithServerId = connectedWithServerId;
-        this.connectionTime = connectionTime;
-        setWelcomeMessage(welcomeMessage);
-    }
+	private boolean firewalled;
 
-    public void setAjUserGesamt(long ajUserGesamt){
-        this.ajUserGesamt = ajUserGesamt;
-    }
+	private String externeIP;
 
-    public void setAjAnzahlDateien(long ajAnzahlDateien){
-        this.ajAnzahlDateien = ajAnzahlDateien;
-    }
+	private int tryConnectToServer;
 
-    public void setAjGesamtShare(String ajGesamtShare){
-        this.ajGesamtShare = ajGesamtShare;
-    }
+	private int connectedWithServerId;
 
-    public void setFirewalled(boolean firewalled){
-        this.firewalled = firewalled;
-    }
+	private String welcomeMessage;
 
-    public void setExterneIP(String externeIP){
-        this.externeIP = externeIP;
-    }
+	private long connectionTime;
 
-    public void setTryConnectToServer(int tryConnectToServer){
-        this.tryConnectToServer = tryConnectToServer;
-    }
+	public NetworkInfo() {
 
-    public void setConnectedWithServerId(int connectedWithServerId){
-        this.connectedWithServerId = connectedWithServerId;
-    }
+	}
 
-    public void setWelcomeMessage(String welcomeMessage) {
-        if (welcomeMessage.toLowerCase().indexOf("<html>") == -1){
-            welcomeMessage = "<html>" + welcomeMessage + "</html>";
-        }
-        this.welcomeMessage = welcomeMessage;
-    }
+	public NetworkInfo(long ajUserGesamt, long ajAnzahlDateien,
+			String ajGesamtShare, boolean firewalled, String externeIP,
+			int tryConnectToServer, int connectedWithServerId,
+			String welcomeMessage, long connectionTime) {
+		this.ajUserGesamt = ajUserGesamt;
+		this.ajAnzahlDateien = ajAnzahlDateien;
+		this.ajGesamtShare = ajGesamtShare;
+		this.firewalled = firewalled;
+		this.externeIP = externeIP;
+		this.tryConnectToServer = tryConnectToServer;
+		this.connectedWithServerId = connectedWithServerId;
+		this.connectionTime = connectionTime;
+		setWelcomeMessage(welcomeMessage);
+	}
 
-    public void setConnectionTime(long connectionTime) {
-        this.connectionTime = connectionTime;
-    }
+	public void setAjUserGesamt(long ajUserGesamt) {
+		this.ajUserGesamt = ajUserGesamt;
+	}
 
-    public NetworkInfo(String ajUserGesamt, String ajAnzahlDateien,
-                       String ajGesamtShare, boolean firewalled,
-                       String externeIP,
-                       int tryConnectToServer, int connectedWithServerId) {
-        if (ajUserGesamt == null || ajUserGesamt.length() == 0) {
-            this.ajUserGesamt = 0;
-        }
-        else {
-            this.ajUserGesamt = Long.parseLong(ajUserGesamt);
-        }
-        if (ajAnzahlDateien == null || ajAnzahlDateien.length() == 0) {
-            this.ajAnzahlDateien = 0;
-        }
-        else {
-            this.ajAnzahlDateien = Long.parseLong(ajAnzahlDateien);
-        }
-        this.ajGesamtShare = ajGesamtShare;
-        this.firewalled = firewalled;
-        this.externeIP = externeIP;
-        this.tryConnectToServer = tryConnectToServer;
-        this.connectedWithServerId = connectedWithServerId;
-    }
+	public void setAjAnzahlDateien(long ajAnzahlDateien) {
+		this.ajAnzahlDateien = ajAnzahlDateien;
+	}
 
-    public String getAJGesamtShare(long faktor) {
-        ajGesamtShare = ajGesamtShare.replace(',', '.');
-        double share = Double.parseDouble(ajGesamtShare);
-        if (share == 0) {
-            return "0,00 MB";
-        }
-        if (faktor == 0) { //selbst entscheiden
-            if (share / 1024 < 1024) {
-                faktor = 1024;
-            }
-            else if (share / 1048576 < 1024) {
-                faktor = 1048576;
-            }
-            else {
-                faktor = 1;
-            }
-        }
-        share = share / faktor;
-        String result = Double.toString(share);
-        if (result.indexOf(".") + 3 < result.length()) {
-            result = result.substring(0, result.indexOf(".") + 3);
-        }
-        result = result.replace('.', ',');
-        if (faktor == 1) {
-            result += " MB";
-        }
-        else if (faktor == 1024) {
-            result += " GB";
-        }
-        else if (faktor == 1048576) {
-            result += " TB";
-        }
-        else {
-            result += " ??";
-        }
-        return result;
-    }
+	public void setAjGesamtShare(String ajGesamtShare) {
+		this.ajGesamtShare = ajGesamtShare;
+	}
 
-    public String getAJGesamtShareWithPoints(long faktor) {
-        String result = getAJGesamtShare(faktor);
-        return insertPoints(result);
-    }
+	public void setFirewalled(boolean firewalled) {
+		this.firewalled = firewalled;
+	}
 
-    public boolean isFirewalled() {
-        return firewalled;
-    }
+	public void setExterneIP(String externeIP) {
+		this.externeIP = externeIP;
+	}
 
-    public String getExterneIP() {
-        return externeIP;
-    }
+	public void setTryConnectToServer(int tryConnectToServer) {
+		this.tryConnectToServer = tryConnectToServer;
+	}
 
-    public long getAJUserGesamt() {
-        return ajUserGesamt;
-    }
+	public void setConnectedWithServerId(int connectedWithServerId) {
+		this.connectedWithServerId = connectedWithServerId;
+	}
 
-    public String getAJUserGesamtAsString() {
-        return Long.toString(ajUserGesamt);
-    }
+	public void setWelcomeMessage(String welcomeMessage) {
+		if (welcomeMessage.toLowerCase().indexOf("<html>") == -1) {
+			welcomeMessage = "<html>" + welcomeMessage + "</html>";
+		}
+		this.welcomeMessage = welcomeMessage;
+	}
 
-    public String getAJUserGesamtAsStringWithPoints() {
-        String result = getAJUserGesamtAsString();
-        return insertPoints(result);
-    }
+	public void setConnectionTime(long connectionTime) {
+		this.connectionTime = connectionTime;
+	}
 
-    public long getAJAnzahlDateien() {
-        return ajAnzahlDateien;
-    }
+	public NetworkInfo(String ajUserGesamt, String ajAnzahlDateien,
+			String ajGesamtShare, boolean firewalled, String externeIP,
+			int tryConnectToServer, int connectedWithServerId) {
+		if (ajUserGesamt == null || ajUserGesamt.length() == 0) {
+			this.ajUserGesamt = 0;
+		} else {
+			this.ajUserGesamt = Long.parseLong(ajUserGesamt);
+		}
+		if (ajAnzahlDateien == null || ajAnzahlDateien.length() == 0) {
+			this.ajAnzahlDateien = 0;
+		} else {
+			this.ajAnzahlDateien = Long.parseLong(ajAnzahlDateien);
+		}
+		this.ajGesamtShare = ajGesamtShare;
+		this.firewalled = firewalled;
+		this.externeIP = externeIP;
+		this.tryConnectToServer = tryConnectToServer;
+		this.connectedWithServerId = connectedWithServerId;
+	}
 
-    public String getAJAnzahlDateienAsString() {
-        return Long.toString(ajAnzahlDateien);
-    }
+	public String getAJGesamtShare(long faktor) {
+		ajGesamtShare = ajGesamtShare.replace(',', '.');
+		double share = Double.parseDouble(ajGesamtShare);
+		if (share == 0) {
+			return "0,00 MB";
+		}
+		if (faktor == 0) { // selbst entscheiden
+			if (share / 1024 < 1024) {
+				faktor = 1024;
+			} else if (share / 1048576 < 1024) {
+				faktor = 1048576;
+			} else {
+				faktor = 1;
+			}
+		}
+		share = share / faktor;
+		String result = Double.toString(share);
+		if (result.indexOf(".") + 3 < result.length()) {
+			result = result.substring(0, result.indexOf(".") + 3);
+		}
+		result = result.replace('.', ',');
+		if (faktor == 1) {
+			result += " MB";
+		} else if (faktor == 1024) {
+			result += " GB";
+		} else if (faktor == 1048576) {
+			result += " TB";
+		} else {
+			result += " ??";
+		}
+		return result;
+	}
 
-    public String getAJAnzahlDateienAsStringWithPoints() {
-        return insertPoints(Long.toString(ajAnzahlDateien));
-    }
+	public String getAJGesamtShareWithPoints(long faktor) {
+		String result = getAJGesamtShare(faktor);
+		return insertPoints(result);
+	}
 
-    private String insertPoints(String tochange) {
-        StringBuffer result = new StringBuffer(tochange);
-        int laenge;
-        if (result.indexOf(",") == -1) {
-            if (result.indexOf(" ") == -1) {
-                laenge = result.length();
-            }
-            else {
-                laenge = result.indexOf(" ");
-            }
-        }
-        else {
-            laenge = result.indexOf(",");
-        }
-        int zaehler = 0;
-        for (int i = laenge - 1; i > 0; i--) {
-            zaehler++;
-            if (zaehler == 3) {
-                zaehler = 0;
-                result.insert(i, '.');
-            }
-        }
-        return result.toString();
-    }
+	public boolean isFirewalled() {
+		return firewalled;
+	}
 
-    public int getTryConnectToServer() {
-        return tryConnectToServer;
-    }
+	public String getExterneIP() {
+		return externeIP;
+	}
 
-    public int getConnectedWithServerId() {
-        return connectedWithServerId;
-    }
+	public long getAJUserGesamt() {
+		return ajUserGesamt;
+	}
 
-    public String getWelcomeMessage() {
-        if (welcomeMessage == null){
-            return "";
-        }
-        return welcomeMessage;
-    }
+	public String getAJUserGesamtAsString() {
+		return Long.toString(ajUserGesamt);
+	}
 
-    public long getConnectionTime() {
-        return connectionTime;
-    }
+	public String getAJUserGesamtAsStringWithPoints() {
+		String result = getAJUserGesamtAsString();
+		return insertPoints(result);
+	}
+
+	public long getAJAnzahlDateien() {
+		return ajAnzahlDateien;
+	}
+
+	public String getAJAnzahlDateienAsString() {
+		return Long.toString(ajAnzahlDateien);
+	}
+
+	public String getAJAnzahlDateienAsStringWithPoints() {
+		return insertPoints(Long.toString(ajAnzahlDateien));
+	}
+
+	private String insertPoints(String tochange) {
+		StringBuffer result = new StringBuffer(tochange);
+		int laenge;
+		if (result.indexOf(",") == -1) {
+			if (result.indexOf(" ") == -1) {
+				laenge = result.length();
+			} else {
+				laenge = result.indexOf(" ");
+			}
+		} else {
+			laenge = result.indexOf(",");
+		}
+		int zaehler = 0;
+		for (int i = laenge - 1; i > 0; i--) {
+			zaehler++;
+			if (zaehler == 3) {
+				zaehler = 0;
+				result.insert(i, '.');
+			}
+		}
+		return result.toString();
+	}
+
+	public int getTryConnectToServer() {
+		return tryConnectToServer;
+	}
+
+	public int getConnectedWithServerId() {
+		return connectedWithServerId;
+	}
+
+	public String getWelcomeMessage() {
+		if (welcomeMessage == null) {
+			return "";
+		}
+		return welcomeMessage;
+	}
+
+	public long getConnectionTime() {
+		return connectionTime;
+	}
 }

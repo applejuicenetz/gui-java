@@ -1,7 +1,7 @@
 package de.applejuicenet.client.fassade.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/shared/Attic/Information.java,v 1.1 2004/12/03 07:57:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/shared/Attic/Information.java,v 1.2 2004/12/03 15:51:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -11,220 +11,202 @@ package de.applejuicenet.client.fassade.shared;
  *
  */
 
-import java.util.Map;
-
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.dac.ServerDO;
 
 public class Information {
 
-    public static final int VERBUNDEN = 0;
-    public static final int NICHT_VERBUNDEN = 1;
-    public static final int VERSUCHE_ZU_VERBINDEN = 2;
+	public static final int VERBUNDEN = 0;
 
-    private long sessionUpload;
-    private long sessionDownload;
-    private long credits;
-    private long uploadSpeed;
-    private long downloadSpeed;
-    private long openConnections;
-    private long maxUploadPositions;
-    private String serverName;
-    private int verbindungsStatus = NICHT_VERBUNDEN;
-    private String externeIP;
-    private int serverId;
+	public static final int NICHT_VERBUNDEN = 1;
 
-    public void setVerbindungsStatus(int verbindungsStatus){
-        this.verbindungsStatus = verbindungsStatus;
-        if (verbindungsStatus == NICHT_VERBUNDEN) {
-            this.serverName = "";
-        }
-    }
+	public static final int VERSUCHE_ZU_VERBINDEN = 2;
 
-    public Information(){
-    }
+	private long sessionUpload;
 
-    public void setExterneIP(String externeIP){
-        this.externeIP = externeIP;
-    }
+	private long sessionDownload;
 
-    public void setSessionUpload(long sessionUpload) {
-        this.sessionUpload = sessionUpload;
-    }
+	private long credits;
 
-    public void setSessionDownload(long sessionDownload) {
-        this.sessionDownload = sessionDownload;
-    }
+	private long uploadSpeed;
 
-    public void setCredits(long credits) {
-        this.credits = credits;
-    }
+	private long downloadSpeed;
 
-    public void setServer(ServerDO serverDO) {
-        if (serverDO == null) {
-            serverId = -1;
-        }
-        else {
-            serverId = serverDO.getID();
-            serverName = serverDO.getName();
-        }
-    }
+	private long openConnections;
 
-    public ServerDO getServerDO() {
-        if (serverId == -1) {
-            return null;
-        }
-        else {
-            Map server = ApplejuiceFassade.getInstance().getAllServer();
-            ServerDO serverDO = (ServerDO) server.get(Integer.toString(serverId));
-            if (serverDO != null) {
-                return serverDO;
-            }
-            else {
-                serverId = -1;
-                return null;
-            }
-        }
-    }
+	private long maxUploadPositions;
 
-    public void setUploadSpeed(long uploadSpeed) {
-        this.uploadSpeed = uploadSpeed;
-    }
+	private String serverName;
 
-    public void setDownloadSpeed(long downloadSpeed) {
-        this.downloadSpeed = downloadSpeed;
-    }
+	private int verbindungsStatus = NICHT_VERBUNDEN;
 
-    public void setOpenConnections(long openConnections) {
-        this.openConnections = openConnections;
-    }
+	private String externeIP;
 
-    public void setMaxUploadPositions(long maxUploadPositions) {
-        this.maxUploadPositions = maxUploadPositions;
-    }
+	private ServerDO serverDO;
 
-    public long getSessionUpload() {
-        return sessionUpload;
-    }
+	public void setVerbindungsStatus(int verbindungsStatus) {
+		this.verbindungsStatus = verbindungsStatus;
+		if (verbindungsStatus == NICHT_VERBUNDEN) {
+			this.serverName = "";
+		}
+	}
 
-    public long getSessionDownload() {
-        return sessionDownload;
-    }
+	public Information() {
+	}
 
-    public long getCredits() {
-        return credits;
-    }
+	public void setExterneIP(String externeIP) {
+		this.externeIP = externeIP;
+	}
 
-    public long getUploadSpeed() {
-        return uploadSpeed;
-    }
+	public void setSessionUpload(long sessionUpload) {
+		this.sessionUpload = sessionUpload;
+	}
 
-    public long getDownloadSpeed() {
-        return downloadSpeed;
-    }
+	public void setSessionDownload(long sessionDownload) {
+		this.sessionDownload = sessionDownload;
+	}
 
-    public long getOpenConnections() {
-        return openConnections;
-    }
+	public void setCredits(long credits) {
+		this.credits = credits;
+	}
 
-    public String getServerName() {
-        return serverName;
-    }
+	public void setServer(ServerDO serverDO) {
+		this.serverDO = serverDO;
+	}
 
-    public int getVerbindungsStatus() {
-        return verbindungsStatus;
-    }
+	public ServerDO getServerDO() {
+		return serverDO;
+	}
 
-    public String getExterneIP() {
-        return externeIP;
-    }
+	public void setUploadSpeed(long uploadSpeed) {
+		this.uploadSpeed = uploadSpeed;
+	}
 
-    public long getMaxUploadPositions() {
-        return maxUploadPositions;
-    }
+	public void setDownloadSpeed(long downloadSpeed) {
+		this.downloadSpeed = downloadSpeed;
+	}
 
-    public String getCreditsAsString() {
-        return " Credits: " + bytesUmrechnen(credits);
-    }
+	public void setOpenConnections(long openConnections) {
+		this.openConnections = openConnections;
+	}
 
-    public String getUpDownSessionAsString() {
-        return " in: " + bytesUmrechnen(sessionDownload) + " out: " +
-            bytesUmrechnen(sessionUpload);
-    }
+	public void setMaxUploadPositions(long maxUploadPositions) {
+		this.maxUploadPositions = maxUploadPositions;
+	}
 
-    public String getUpDownAsString() {
-        return " in: " + getBytesSpeed(downloadSpeed) + " out: " +
-            getBytesSpeed(uploadSpeed);
-    }
+	public long getSessionUpload() {
+		return sessionUpload;
+	}
 
-    public String getUpAsString() {
-        return getBytesSpeed(uploadSpeed);
-    }
+	public long getSessionDownload() {
+		return sessionDownload;
+	}
 
-    public String getDownAsString() {
-        return getBytesSpeed(downloadSpeed);
-    }
+	public long getCredits() {
+		return credits;
+	}
 
-    private String getBytesSpeed(long bytes) {
-        if (bytes == 0) {
-            return "0 KB/s";
-        }
-        String result = bytesUmrechnen(bytes) + "/s";
-        return result;
-    }
+	public long getUploadSpeed() {
+		return uploadSpeed;
+	}
 
-    public static String bytesUmrechnen(long bytes) {
-        boolean minus = false;
-        if (bytes < 0) {
-            minus = true;
-            bytes *= -1;
-        }
-        if (bytes == 0) {
-            return "0 MB";
-        }
-        long faktor = 1;
-        if (bytes < 1024l) {
-            faktor = 1;
-        }
-        else if (bytes / 1024l < 1024l) {
-            faktor = 1024l;
-        }
-        else if (bytes / 1048576l < 1024l) {
-            faktor = 1048576l;
-        }
-        else if (bytes / 1073741824l < 1024l) {
-            faktor = 1073741824l;
-        }
-        else {
-            faktor = 1099511627776l;
-        }
-        if (minus) {
-            bytes *= -1;
-        }
-        double umgerechnet = (double) bytes / (double) faktor;
-        String result = Double.toString(umgerechnet);
-        int pos = result.indexOf(".");
-        if (pos != -1) {
-            if (pos + 2 < result.length()) {
-                result = result.substring(0, pos + 3);
-            }
-            result = result.replace('.', ',');
-        }
-        if (faktor == 1) {
-            result += " Bytes";
-        }
-        else if (faktor == 1024l) {
-            result += " kb";
-        }
-        else if (faktor == 1048576l) {
-            result += " MB";
-        }
-        else if (faktor == 1073741824l) {
-            result += " GB";
-        }
-        else {
-            result += " TB";
-        }
-        return result;
-    }
+	public long getDownloadSpeed() {
+		return downloadSpeed;
+	}
+
+	public long getOpenConnections() {
+		return openConnections;
+	}
+
+	public String getServerName() {
+		return serverName;
+	}
+
+	public int getVerbindungsStatus() {
+		return verbindungsStatus;
+	}
+
+	public String getExterneIP() {
+		return externeIP;
+	}
+
+	public long getMaxUploadPositions() {
+		return maxUploadPositions;
+	}
+
+	public String getCreditsAsString() {
+		return " Credits: " + bytesUmrechnen(credits);
+	}
+
+	public String getUpDownSessionAsString() {
+		return " in: " + bytesUmrechnen(sessionDownload) + " out: "
+				+ bytesUmrechnen(sessionUpload);
+	}
+
+	public String getUpDownAsString() {
+		return " in: " + getBytesSpeed(downloadSpeed) + " out: "
+				+ getBytesSpeed(uploadSpeed);
+	}
+
+	public String getUpAsString() {
+		return getBytesSpeed(uploadSpeed);
+	}
+
+	public String getDownAsString() {
+		return getBytesSpeed(downloadSpeed);
+	}
+
+	private String getBytesSpeed(long bytes) {
+		if (bytes == 0) {
+			return "0 KB/s";
+		}
+		String result = bytesUmrechnen(bytes) + "/s";
+		return result;
+	}
+
+	public static String bytesUmrechnen(long bytes) {
+		boolean minus = false;
+		if (bytes < 0) {
+			minus = true;
+			bytes *= -1;
+		}
+		if (bytes == 0) {
+			return "0 MB";
+		}
+		long faktor = 1;
+		if (bytes < 1024l) {
+			faktor = 1;
+		} else if (bytes / 1024l < 1024l) {
+			faktor = 1024l;
+		} else if (bytes / 1048576l < 1024l) {
+			faktor = 1048576l;
+		} else if (bytes / 1073741824l < 1024l) {
+			faktor = 1073741824l;
+		} else {
+			faktor = 1099511627776l;
+		}
+		if (minus) {
+			bytes *= -1;
+		}
+		double umgerechnet = (double) bytes / (double) faktor;
+		String result = Double.toString(umgerechnet);
+		int pos = result.indexOf(".");
+		if (pos != -1) {
+			if (pos + 2 < result.length()) {
+				result = result.substring(0, pos + 3);
+			}
+			result = result.replace('.', ',');
+		}
+		if (faktor == 1) {
+			result += " Bytes";
+		} else if (faktor == 1024l) {
+			result += " kb";
+		} else if (faktor == 1048576l) {
+			result += " MB";
+		} else if (faktor == 1073741824l) {
+			result += " GB";
+		} else {
+			result += " TB";
+		}
+		return result;
+	}
 }

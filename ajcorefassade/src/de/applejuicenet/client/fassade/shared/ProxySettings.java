@@ -1,41 +1,52 @@
 package de.applejuicenet.client.fassade.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/shared/ProxySettings.java,v 1.1 2004/12/03 07:57:12 maj0r Exp $
- *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: General Public License</p>
- *
+ * $Header:
+ * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/shared/ProxySettings.java,v
+ * 1.1 2004/12/03 07:57:12 maj0r Exp $
+ * 
+ * <p>
+ * Titel: AppleJuice Client-GUI
+ * </p>
+ * <p>
+ * Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
+ * appleJuice-Core
+ * </p>
+ * <p>
+ * Copyright: General Public License
+ * </p>
+ * 
  * @author: Maj0r <aj@tkl-soft.de>
- *
+ * 
  */
 
 public class ProxySettings {
-    private String host;
-    private int port;
-    private String userpass;
+	private String host;
 
-    public ProxySettings(String host, int port, String user, String pass) {
-        this.host = host;
-        this.port = port;
-        setUserpass(user, pass);
-    }
+	private int port;
 
-    public String getHost() {
-        return host;
-    }
+	private String userpass;
 
-    public int getPort() {
-        return port;
-    }
+	public ProxySettings(String host, int port, String user, String pass) {
+		this.host = host;
+		this.port = port;
+		setUserpass(user, pass);
+	}
 
-    public String getUserpass() {
-        return userpass;
-    }
+	public String getHost() {
+		return host;
+	}
 
-    private void setUserpass(String user, String passwort) {
-        this.userpass = new sun.misc.BASE64Encoder().encode( (user + ":" +
-            passwort).getBytes());
-    }
+	public int getPort() {
+		return port;
+	}
+
+	public String getUserpass() {
+		return userpass;
+	}
+
+	private void setUserpass(String user, String passwort) {
+		this.userpass = new sun.misc.BASE64Encoder()
+				.encode((user + ":" + passwort).getBytes());
+	}
 }

@@ -7,34 +7,35 @@ import java.util.Set;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 
 public abstract class DataUpdateInformer {
-    private final int listenerType;
-    private Set listener = new HashSet();
+	private final int listenerType;
 
-    protected DataUpdateInformer(int dataUpdateListenerType){
-        listenerType = dataUpdateListenerType;
-    }
+	private Set listener = new HashSet();
 
-    public int getDataUpdateListenerType(){
-        return listenerType;
-    }
+	protected DataUpdateInformer(int dataUpdateListenerType) {
+		listenerType = dataUpdateListenerType;
+	}
 
-    public void addDataUpdateListener(DataUpdateListener dataUpdateListener){
-        listener.add(dataUpdateListener);
-    }
+	public int getDataUpdateListenerType() {
+		return listenerType;
+	}
 
-    public void removeDataUpdateListener(DataUpdateListener dataUpdateListener){
-        listener.remove(dataUpdateListener);
-    }
+	public void addDataUpdateListener(DataUpdateListener dataUpdateListener) {
+		listener.add(dataUpdateListener);
+	}
 
-    public void informDataUpdateListener(){
-        Object content = getContentObject();
-        Iterator it = listener.iterator();
-        while (it.hasNext()) {
-            ( (DataUpdateListener) it.next()).fireContentChanged(
-                listenerType, content);
-        }
+	public void removeDataUpdateListener(DataUpdateListener dataUpdateListener) {
+		listener.remove(dataUpdateListener);
+	}
 
-    }
+	public void informDataUpdateListener() {
+		Object content = getContentObject();
+		Iterator it = listener.iterator();
+		while (it.hasNext()) {
+			((DataUpdateListener) it.next()).fireContentChanged(listenerType,
+					content);
+		}
 
-    protected abstract Object getContentObject();
+	}
+
+	protected abstract Object getContentObject();
 }
