@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.9 2003/12/19 13:35:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.10 2003/12/19 14:26:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.10  2003/12/19 14:26:34  maj0r
+ * Neuzeichnen korrigiert.
+ *
  * Revision 1.9  2003/12/19 13:35:40  maj0r
  * Bug in der Partliste behoben.
  *
@@ -73,9 +76,6 @@ public class DownloadPartListPanel extends JPanel {
     public void setPartList(PartListDO partListDO) {
         try
         {
-            if (this.partListDO == partListDO){
-                return;
-            }
             this.partListDO = partListDO;
             height = (int)getVisibleRect().getHeight();
             width = (int)getVisibleRect().getWidth();
@@ -166,6 +166,11 @@ public class DownloadPartListPanel extends JPanel {
                 if(x<width){
                     graphics.setColor(Color.WHITE);
                     graphics.fillRect(x, (y * 16) + 1 , width-1, (y + 1) * 16);
+                    y++;
+                }
+                if(y*16<height){
+                    graphics.setColor(Color.WHITE);
+                    graphics.fillRect(0, (y * 16) + 1 , width-1, height - 1);
                 }
             }
             updateUI();
