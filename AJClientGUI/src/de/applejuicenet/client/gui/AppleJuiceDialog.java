@@ -81,7 +81,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.113 2004/04/02 12:16:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.114 2004/04/06 14:44:31 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -1152,6 +1152,12 @@ public class AppleJuiceDialog
             "linklistenerport=\"8768\" versionsinfo=\"1\" >\r\n");
         xmlData.append(
             "        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>\r\n");
+        xmlData.append(
+            "        <remote0 host=\"localhost\" port=\"9851\"/>\r\n");
+        xmlData.append(
+            "        <remote1 host=\"\" port=\"0\"/>\r\n");
+        xmlData.append(
+            "        <remote2 host=\"\" port=\"0\"/>\r\n");
         xmlData.append("        <logging level=\"INFO\"/>\r\n");
         xmlData.append("        <download uebersicht=\"true\"/>\r\n");
         xmlData.append("        <farben aktiv=\"true\">\r\n");

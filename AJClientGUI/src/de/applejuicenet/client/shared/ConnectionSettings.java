@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/ConnectionSettings.java,v 1.6 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/ConnectionSettings.java,v 1.7 2004/04/06 14:44:31 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.security.NoSuchAlgorithmException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ConnectionSettings.java,v $
+ * Revision 1.7  2004/04/06 14:44:31  loevenwong
+ * Combobox zur Auswahl der letzten 3 Verbindungen eingebaut.
+ *
  * Revision 1.6  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -129,5 +132,9 @@ public class ConnectionSettings {
 
     public void setXmlPort(int xmlPort) {
         this.xmlPort = xmlPort;
+    }
+
+    public String toString() {
+        return this.getHost() + ":" + this.getXmlPort();
     }
 }

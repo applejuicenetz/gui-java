@@ -28,9 +28,13 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import javax.swing.JComboBox;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.17 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.18 2004/04/06 14:44:31 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,8 +49,10 @@ public class QuickConnectionSettingsDialog
     private ODConnectionPanel remotePanel;
     public static final int ABGEBROCHEN = 1;
     private ConnectionSettings remote;
+    private ConnectionSettings[] connectionSet;
     private JButton ok = new JButton("OK");
     private JCheckBox cmbNieWiederZeigen = new JCheckBox();
+    private JComboBox connectionListe = new JComboBox();
     private Logger logger;
     private boolean dirty = false;
 
@@ -67,6 +73,13 @@ public class QuickConnectionSettingsDialog
 
     private void init() {
         remote = OptionsManagerImpl.getInstance().getRemoteSettings();
+        connectionSet = OptionsManagerImpl.getInstance().getConnectionsSet();
+        for (int i = 0; i < connectionSet.length; i++) {
+            this.connectionListe.addItem(connectionSet[i]);
+            if (remote.getHost() != null && remote.getHost().equals(connectionSet[i].getHost())) {
+                this.connectionListe.setSelectedItem(connectionSet[i]);
+            }
+        }
         remotePanel = new ODConnectionPanel(remote, this, true);
         setTitle("appleJuice Client");
 
@@ -83,6 +96,13 @@ public class QuickConnectionSettingsDialog
                 dirty = true;
             }
         });
+
+        connectionListe.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent itemEvent) {
+                selChanged(itemEvent);
+            }
+        });
+
         cmbNieWiederZeigen.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -108,6 +128,11 @@ public class QuickConnectionSettingsDialog
         constraints.weightx = 1;
         constraints.insets.right = 5;
         panel2.add(new JLabel("           "), constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridwidth = 2;
+        panel2.add(connectionListe, constraints);
 
         getContentPane().add(panel2, BorderLayout.NORTH);
         getContentPane().add(remotePanel, BorderLayout.CENTER);
@@ -161,8 +186,16 @@ public class QuickConnectionSettingsDialog
         return result;
     }
 
-    private void speichereEinstellungen(){
+    private void selChanged(ItemEvent itemEvent) {
+        ConnectionSettings con = (ConnectionSettings) itemEvent.getItem();
+        this.remotePanel.setHost(con.getHost());
+        this.remotePanel.setXMLPort(Integer.toString(con.getXmlPort()));
+        this.remotePanel.updateUI();
+    }
+
+    private void speichereEinstellungen() {
         try {
+            OptionsManagerImpl.getInstance().setConnectionsSet(getNeueConfigs(remote));
             OptionsManagerImpl.getInstance().onlySaveRemote(remote);
             if (dirty) {
                 OptionsManagerImpl.getInstance().
@@ -175,5 +208,18 @@ public class QuickConnectionSettingsDialog
                 logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
         }
+    }
+
+    private ConnectionSettings[] getNeueConfigs(ConnectionSettings remote) {
+        for (int i = 0; i < this.connectionSet.length; i++) {
+            if (remote.getHost().equals(connectionSet[i].getHost()) && (remote.getXmlPort() == connectionSet[i].getXmlPort()))
+                return connectionSet;
+        }
+        ArrayList targets2Save = new ArrayList();
+        targets2Save.add(remote);
+        for (int i = 0; i < this.connectionSet.length; i++) {
+            targets2Save.add(connectionSet[i]);
+        }
+        return (ConnectionSettings[])targets2Save.toArray(new ConnectionSettings[]{});
     }
 }
