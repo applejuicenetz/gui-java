@@ -8,11 +8,19 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.Document;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import javax.swing.text.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/InitPanel.java,v 1.1 2004/05/13 13:55:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/InitPanel.java,v 1.2 2004/05/14 19:48:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,12 +34,15 @@ public class InitPanel
     extends JPanel
     implements ActionListener {
     final String name = "Init Window";
-    final JTextArea textArea = new JTextArea();
+    final JTextPane textArea = new JTextPane();
     final JTextField textField = new JTextField();
     private JTextField titleArea;
     private XdccIrc parentPanel;
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
+    private Logger logger;
 
     public InitPanel(XdccIrc parentPanel) {
+        logger = Logger.getLogger(getClass());
         this.parentPanel = parentPanel;
         makePanel();
     }
@@ -41,8 +52,6 @@ public class InitPanel
 
         // let's add actionListener
         textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
         textArea.setEditable(false);
         textArea.setBackground(Color.WHITE);
         textField.addActionListener(this);
@@ -75,7 +84,7 @@ public class InitPanel
             if (message.startsWith("/")) {
                 // commands that start with "/"
                 if (message.toLowerCase().indexOf("nickserv identify ")==-1){
-                    textArea.append(message + "\n");
+                    updateTextArea(message);
                 }
                 message = message.substring(1);
                 textField.setText("");
@@ -84,7 +93,7 @@ public class InitPanel
             }
             else {
                 // update textArea
-                textArea.append(message + "\n");
+                updateTextArea(message);
                 textField.setText("");
 
                 parentPanel.parseSendToCommand(message);
@@ -102,12 +111,25 @@ public class InitPanel
 
     public void updateTextArea(String message) {
         int oldCaretPosition = textArea.getCaretPosition();
-        textArea.append(message + "\n");
-
-        int newCaretPosition = textArea.getCaretPosition();
-        if (newCaretPosition == oldCaretPosition) {
-            textArea.setCaretPosition(oldCaretPosition +
-                                      (message + "\n").length());
+        SimpleAttributeSet attributes = new SimpleAttributeSet();
+        StyleConstants.setBackground(attributes, Color.WHITE);
+        StyleConstants.setForeground(attributes, Color.BLACK);
+        Document doc = textArea.getDocument();
+        String zeit = dateFormatter.format(new Date(System.
+            currentTimeMillis()));
+        try {
+            doc.insertString(doc.getLength(),
+                             "[" + zeit + "]\t" + message + "\n",
+                             attributes);
+        }
+        catch (BadLocationException ex) {
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Fehler im IrcPlugin", ex);
+            }
+        }
+        int newCaretPosition = textArea.getDocument().getLength();
+        if (newCaretPosition != oldCaretPosition) {
+            textArea.setCaretPosition(newCaretPosition);
         }
     }
 }

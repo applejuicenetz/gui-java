@@ -8,15 +8,21 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTabbedPane;
 import java.awt.Color;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import javax.swing.JTextPane;
+import javax.swing.text.Document;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.BadLocationException;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.3 2004/05/13 15:28:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.4 2004/05/14 19:48:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,7 +36,7 @@ public class UserPanel
     extends JPanel
     implements ActionListener {
     private String name;
-    private final JTextArea textArea = new JTextArea();
+    private final JTextPane textArea = new JTextPane();
     private final JTextField textField = new JTextField();
     private JTextField titleArea = new JTextField();
     private JButton closeButton = new JButton("X");
@@ -39,8 +45,10 @@ public class UserPanel
     private boolean marked = false;
     private JTabbedPane tabbedPane;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
+    private Logger logger;
 
     public UserPanel(XdccIrc parentPanel, String name, JTabbedPane tabbedPane) {
+        logger = Logger.getLogger(getClass());
         this.name = name;
         this.parentPanel = parentPanel;
         this.tabbedPane = tabbedPane;
@@ -70,8 +78,6 @@ public class UserPanel
 
         // let's add actionListener
         textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
         textField.addActionListener(this);
         textArea.setEditable(false);
         titleArea.setEditable(false);
@@ -131,12 +137,19 @@ public class UserPanel
         int oldCaretPosition = textArea.getCaretPosition();
         String zeit = dateFormatter.format(new Date(System.
             currentTimeMillis()));
-        textArea.append("[" + zeit + "]\t" + message + "\n");
-
-        int newCaretPosition = textArea.getCaretPosition();
-        if (newCaretPosition == oldCaretPosition) {
-            textArea.setCaretPosition(oldCaretPosition +
-                                      (message + "\n").length());
+        SimpleAttributeSet attributes = new SimpleAttributeSet();
+        StyleConstants.setBackground(attributes, Color.WHITE);
+        StyleConstants.setForeground(attributes, Color.BLACK);
+        Document doc = textArea.getDocument();
+        try {
+            doc.insertString(doc.getLength(),
+                             "[" + zeit + "]\t" + message + "\n",
+                             attributes);
+        }
+        catch (BadLocationException ex) {
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Fehler im IrcPlugin", ex);
+            }
         }
         if (!selected && !marked){
             marked = true;
@@ -147,5 +160,13 @@ public class UserPanel
                 }
             }
         }
+        int newCaretPosition = textArea.getDocument().getLength();
+        if (newCaretPosition != oldCaretPosition) {
+            textArea.setCaretPosition(newCaretPosition);
+        }
+    }
+
+    public void userQuits(String nick){
+        updateTextArea("<--- QUIT: " + nick);
     }
 }

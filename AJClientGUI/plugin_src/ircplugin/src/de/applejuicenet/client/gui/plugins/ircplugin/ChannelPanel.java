@@ -35,9 +35,14 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.AdjustmentEvent;
+import javax.swing.JLabel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.3 2004/05/13 15:28:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.4 2004/05/14 19:48:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -58,6 +63,7 @@ public class ChannelPanel
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
     private ArrayList befehle = new ArrayList();
     private int befehlPos = -1;
+    private JLabel counter = new JLabel("0 User");
 
     private JTextPane titleArea = new JTextPane();
 
@@ -66,8 +72,10 @@ public class ChannelPanel
     private boolean selected = false;
     private boolean marked = false;
     private JTabbedPane tabbedPane;
+    private Logger logger;
 
     public ChannelPanel(XdccIrc parentPanel, String name, JTabbedPane tabbedPane) {
+        logger = Logger.getLogger(getClass());
         this.name = name;
         this.parentPanel = parentPanel;
         this.tabbedPane = tabbedPane;
@@ -204,15 +212,24 @@ public class ChannelPanel
 
         JScrollPane sp1 = new JScrollPane(textArea);
         JScrollPane sp2 = new JScrollPane(userList);
+        JPanel panel1 = new JPanel(new BorderLayout());
+        panel1.add(counter, BorderLayout.NORTH);
+        panel1.add(sp2, BorderLayout.CENTER);
 
         sp1.setVerticalScrollBarPolicy(JScrollPane.
                                        VERTICAL_SCROLLBAR_ALWAYS);
+        sp1.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+
+            }
+        });
+
         sp2.setVerticalScrollBarPolicy(JScrollPane.
                                        VERTICAL_SCROLLBAR_ALWAYS);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                               sp1,
-                                              sp2);
+                                              panel1);
         splitPane.setDividerLocation(AppleJuiceDialog.getApp().getSize().width - 200);
         add(splitPane, BorderLayout.CENTER);
         add(textField, BorderLayout.SOUTH);
@@ -392,6 +409,7 @@ public class ChannelPanel
     }
 
     public void updateTextArea(String message, boolean withTimeStamp) {
+        Document doc = textArea.getDocument();
         int oldCaretPosition = textArea.getCaretPosition();
         SimpleAttributeSet attributes = new SimpleAttributeSet();
         StyleConstants.setBackground(attributes, Color.WHITE);
@@ -417,6 +435,9 @@ public class ChannelPanel
         else if (message.indexOf("<--- PART:")!=-1){
             StyleConstants.setForeground(attributes, Color.RED);
         }
+        else if (message.indexOf("<--- QUIT:")!=-1){
+            StyleConstants.setForeground(attributes, Color.RED);
+        }
         else if (!withTimeStamp || index==-1){
             StyleConstants.setForeground(attributes, Color.GRAY);
         }
@@ -424,7 +445,6 @@ public class ChannelPanel
             StyleConstants.setForeground(attributes, Color.BLACK);
             doMark = true;
         }
-        Document doc = textArea.getDocument();
         try{
             if (withTimeStamp) {
                 String zeit = dateFormatter.format(new Date(System.
@@ -439,12 +459,9 @@ public class ChannelPanel
             }
         }
         catch(BadLocationException blE){
-            blE.printStackTrace();
-        }
-        int newCaretPosition = textArea.getCaretPosition();
-        if (newCaretPosition == oldCaretPosition) {
-            textArea.setCaretPosition(oldCaretPosition +
-                                      (message + "\n").length());
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Fehler im IrcPlugin", blE);
+            }
         }
         if (!selected && doMark){
             if (eigenerName){
@@ -465,6 +482,10 @@ public class ChannelPanel
             }
             marked = true;
         }
+        int newCaretPosition = doc.getLength();
+        if (newCaretPosition != oldCaretPosition){
+            textArea.setCaretPosition(newCaretPosition);
+        }
     }
 
 
@@ -478,7 +499,72 @@ public class ChannelPanel
         }
 
         else if (command.equals("remove")) {
+            if (username.indexOf('!') == 0 || username.indexOf('@') == 0
+                || username.indexOf('%') == 0 || username.indexOf('+') == 0){
+                username = username.substring(1);
+            }
             usernameList.remove(username);
+        }
+        counter.setText(usernameList.getSize() + " User");
+    }
+
+    public void userQuits(String nick, boolean hide){
+        Set values = usernameList.getValues();
+        String nickToRemove = null;
+        synchronized (values) {
+            Iterator it = values.iterator();
+            String value;
+            String compareValue;
+            while (it.hasNext()) {
+                value = (String) it.next();
+                if (value.indexOf('!') == 0 || value.indexOf('@') == 0 || value.indexOf('%') == 0 || value.indexOf('+') == 0){
+                    compareValue = value.substring(1);
+                }
+                else{
+                    compareValue = value;
+                }
+                if (compareValue.compareToIgnoreCase(nick)==0){
+                    nickToRemove = value;
+                    break;
+                }
+            }
+        }
+        if (nickToRemove != null){
+            usernameList.remove(nickToRemove);
+        }
+        if (nickToRemove != null && !hide){
+            updateTextArea("<--- QUIT: " + nickToRemove);
+        }
+    }
+
+    public void renameUser(String oldNick, String newNick){
+        Set values = usernameList.getValues();
+        String nickToRemove = null;
+        String mod = "";
+        synchronized (values) {
+            Iterator it = values.iterator();
+            String value;
+            String compareValue;
+            while (it.hasNext()) {
+                value = (String) it.next();
+                if (value.indexOf('!') == 0 || value.indexOf('@') == 0 || value.indexOf('%') == 0 || value.indexOf('+') == 0){
+                    compareValue = value.substring(1);
+                    mod = value.substring(0, 1);
+                }
+                else{
+                    compareValue = value;
+                }
+                if (compareValue.compareToIgnoreCase(oldNick)==0){
+                    nickToRemove = value;
+                    break;
+                }
+            }
+        }
+        if (nickToRemove != null){
+            updateUserArea(nickToRemove, "remove");
+            updateUserArea(mod + newNick, "add");
+            updateTextArea(oldNick + " changes nickname to " +
+                                newNick);
         }
     }
 }

@@ -34,7 +34,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.15 2004/05/13 15:28:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.16 2004/05/14 19:48:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -81,8 +81,10 @@ public class XdccIrc
     private PrintWriter toServer;
 
     private AppleJuiceDialog theApp = AppleJuiceDialog.getApp();
-    private DisconnectActionListener disconnectActionListener = new DisconnectActionListener();
-    private ConnectActionListener connectActionListener = new ConnectActionListener();
+    private DisconnectActionListener disconnectActionListener = new
+        DisconnectActionListener();
+    private ConnectActionListener connectActionListener = new
+        ConnectActionListener();
 
     public XdccIrc(IrcPlugin parent) {
         this.parent = parent;
@@ -90,16 +92,16 @@ public class XdccIrc
         try {
             setLayout(new BorderLayout());
             String propHost = parent.getProperties().getProperty("host");
-            if (propHost != null && propHost.length()>0){
+            if (propHost != null && propHost.length() > 0) {
                 host = propHost;
             }
             String propPort = parent.getProperties().getProperty("port");
-            if (propPort != null && propPort.length()>0){
-                try{
+            if (propPort != null && propPort.length() > 0) {
+                try {
                     int tmpPort = Integer.parseInt(propPort);
                     port = tmpPort;
                 }
-                catch(NumberFormatException nfE){
+                catch (NumberFormatException nfE) {
                     //ungueltiger Port
                 }
             }
@@ -132,23 +134,23 @@ public class XdccIrc
             tabbedPane.addChangeListener(new ChangeListener() {
                 public void stateChanged(ChangeEvent e) {
                     Object selected = tabbedPane.getSelectedComponent();
-                    for (int i=0; i<tabbedPane.getTabCount(); i++){
+                    for (int i = 0; i < tabbedPane.getTabCount(); i++) {
                         Object tab = tabbedPane.getComponentAt(i);
-                        if (tab == selected){
+                        if (tab == selected) {
                             tabbedPane.setForegroundAt(i, Color.BLACK);
-                            if (tab.getClass()==UserPanel.class){
-                                ((UserPanel)tab).selected();
+                            if (tab.getClass() == UserPanel.class) {
+                                ( (UserPanel) tab).selected();
                             }
-                            else if (tab.getClass()==ChannelPanel.class){
-                                ((ChannelPanel)tab).selected();
+                            else if (tab.getClass() == ChannelPanel.class) {
+                                ( (ChannelPanel) tab).selected();
                             }
                         }
-                        else{
-                            if (tab.getClass()==UserPanel.class){
-                                ((UserPanel)tab).unselected();
+                        else {
+                            if (tab.getClass() == UserPanel.class) {
+                                ( (UserPanel) tab).unselected();
                             }
-                            else if (tab.getClass()==ChannelPanel.class){
-                                ((ChannelPanel)tab).unselected();
+                            else if (tab.getClass() == ChannelPanel.class) {
+                                ( (ChannelPanel) tab).unselected();
                             }
                         }
                     }
@@ -172,7 +174,7 @@ public class XdccIrc
         }
     }
 
-    public JTabbedPane getTabbedPane(){
+    public JTabbedPane getTabbedPane() {
         return tabbedPane;
     }
 
@@ -184,14 +186,14 @@ public class XdccIrc
         createConnection.removeActionListener(disconnectActionListener);
         ActionListener[] listener = createConnection.getActionListeners();
         boolean found = false;
-        for (int i=0; i<listener.length; i++){
-            if (listener[i]==connectActionListener){
+        for (int i = 0; i < listener.length; i++) {
+            if (listener[i] == connectActionListener) {
                 found = true;
                 createConnection.setText(verbinden);
                 break;
             }
         }
-        if (!found){
+        if (!found) {
             createConnection.setText(trennen);
         }
         newUserAction.setText(parent.getLanguageString(
@@ -218,7 +220,8 @@ public class XdccIrc
             register();
         }
         catch (IOException e) {
-            tabUpdate("Init Window", "Connection refused to: " + host + ":" + port);
+            tabUpdate("Init Window",
+                      "Connection refused to: " + host + ":" + port);
         }
     }
 
@@ -236,7 +239,7 @@ public class XdccIrc
                 super.keyReleased(ke);
                 if (nickJTextField1.getText().length() != 0) {
                     connectButton.setEnabled(true);
-                    if (ke.getKeyChar()==KeyEvent.VK_ENTER){
+                    if (ke.getKeyChar() == KeyEvent.VK_ENTER) {
                         connectButton.doClick();
                     }
                 }
@@ -248,16 +251,17 @@ public class XdccIrc
         userInfo.add(label1);
         userInfo.add(nickJTextField1);
         String nick = parent.getProperties().getProperty("nick");
-        if (nick != null){
+        if (nick != null) {
             nickname = nick;
         }
 
-        if (nickname != null && nickname.length()>0) {
+        if (nickname != null && nickname.length() > 0) {
             nickJTextField1.setText(nickname);
         }
         else {
             Random random = new Random();
-            nickJTextField1.setText("ajPluginUser" + Integer.toString(random.nextInt(99999)));
+            nickJTextField1.setText("ajPluginUser" +
+                                    Integer.toString(random.nextInt(99999)));
         }
         connectButton.setEnabled(true);
 
@@ -294,7 +298,7 @@ public class XdccIrc
         });
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (dialog != null){
+                if (dialog != null) {
                     dialog.dispose();
                     dialog = null;
                 }
@@ -312,13 +316,15 @@ public class XdccIrc
         dialog.show();
     }
 
-    private class ConnectActionListener implements ActionListener{
+    private class ConnectActionListener
+        implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             makeConnectionInfo();
         }
     }
 
-    private class DisconnectActionListener implements ActionListener{
+    private class DisconnectActionListener
+        implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             createConnection.setEnabled(false);
             createConnection.setText(verbinden);
@@ -330,7 +336,7 @@ public class XdccIrc
         }
     }
 
-    private void connect() throws IOException{
+    private void connect() throws IOException {
         chatSocket = new Socket(host, port);
         fromServer = new BufferedReader(new InputStreamReader(
             chatSocket.getInputStream()));
@@ -351,28 +357,31 @@ public class XdccIrc
         parseSendToCommand("NICK " + nickname);
         parseSendToCommand("USER " + nickname + " 0 * :" + realname);
 
-        new Thread(){
-            public void run(){
+        new Thread() {
+            public void run() {
                 int count = 0;
-                while (!isInterrupted() && count <60){
+                while (!isInterrupted() && count < 60) {
                     try {
                         sleep(500);
                     }
                     catch (InterruptedException ex) {
                         interrupt();
                     }
-                    if (pong){
+                    if (pong) {
                         if (toServer != null) {
                             joinChannel(STANDARD_CHANNEL);
-                            String onJoin = parent.getProperties().getProperty("onjoin");
-                            if (onJoin != null && onJoin.length()>0){
-                                if (onJoin.charAt(0) == '/'){
+                            String onJoin = parent.getProperties().getProperty(
+                                "onjoin");
+                            if (onJoin != null && onJoin.length() > 0) {
+                                if (onJoin.charAt(0) == '/') {
                                     onJoin = onJoin.substring(1);
                                 }
                                 parseSendToCommand(onJoin);
                             }
-                            String onJoinChannels = parent.getProperties().getProperty("channels");
-                            if (onJoinChannels != null && onJoinChannels.length()>0){
+                            String onJoinChannels = parent.getProperties().
+                                getProperty("channels");
+                            if (onJoinChannels != null &&
+                                onJoinChannels.length() > 0) {
                                 onJoinChannels(onJoinChannels);
                             }
                         }
@@ -382,12 +391,14 @@ public class XdccIrc
                     count++;
                 }
             }
-        }.start();
+        }
+
+        .start();
     }
 
-    private void onJoinChannels(String onJoinChannels){
+    private void onJoinChannels(String onJoinChannels) {
         String[] channels = onJoinChannels.split(",");
-        for (int i=0; i<channels.length; i++){
+        for (int i = 0; i < channels.length; i++) {
             parseSendToCommand("JOIN " + channels[i]);
         }
     }
@@ -411,13 +422,7 @@ public class XdccIrc
             if (aComponent instanceof ChannelPanel) {
                 // Do channel processing
                 // At first remove the old nickname from the userNameBox
-                ( (ChannelPanel) aComponent).updateUserArea(oldNickname,
-                    "remove");
-                ( (ChannelPanel) aComponent).updateUserArea(newNickname, "add");
-
-                // Now let's post a sensible comment on the channel Panel
-                ( (ChannelPanel) aComponent).updateTextArea(oldNickname +
-                    " changes nickname to " +
+                ( (ChannelPanel) aComponent).renameUser(oldNickname,
                     newNickname);
             }
             else if (aComponent instanceof UserPanel) {
@@ -450,7 +455,7 @@ public class XdccIrc
     }
 
     public void start() {
-        if (ircWorker != null){
+        if (ircWorker != null) {
             ircWorker.interrupt();
             ircWorker = null;
         }
@@ -478,8 +483,10 @@ public class XdccIrc
                                       "Server closed the connection or network is fucked.");
                             closeAll();
                             createConnection.setText(verbinden);
-                            createConnection.removeActionListener(disconnectActionListener);
-                            createConnection.addActionListener(connectActionListener);
+                            createConnection.removeActionListener(
+                                disconnectActionListener);
+                            createConnection.addActionListener(
+                                connectActionListener);
                             createConnection.setEnabled(true);
                             break;
                         }
@@ -530,13 +537,6 @@ public class XdccIrc
                     tabbedPane.setSelectedIndex(indexOfChannel);
                     channel.updateTextArea("*** Now talking in: " +
                                            parser.getTrailing());
-                    if (tabbedPane.getSelectedIndex() !=
-                        findTab(tabbedPane, "#" + channelName)) {
-                        tabbedPane.setBackgroundAt(findTab(tabbedPane,
-                            "#" + channelName),
-                            Color.red);
-                    }
-                    tabbedPane.revalidate();
                 }
                 else { // channelName tab exists!
                     ChannelPanel channel = (ChannelPanel) tabbedPane.
@@ -546,11 +546,6 @@ public class XdccIrc
                                            " (" +
                                            parser.getUser() + "@" +
                                            parser.getHost() + ")");
-                    if (tabbedPane.getSelectedIndex() != indexOfChannel) {
-                        tabbedPane.setBackgroundAt(indexOfChannel, Color.red);
-                    }
-                    tabbedPane.revalidate();
-
                     channel.updateUserArea(parser.getNick(), "add");
                 }
             }
@@ -590,11 +585,6 @@ public class XdccIrc
                             ( (ChannelPanel) aComponent).updateTextArea(
                                 formatNickname("<" + nick + "> ") + trailing);
                         }
-                        if (tabbedPane.getSelectedIndex() != indexOfChannel) {
-                            tabbedPane.setBackgroundAt(indexOfChannel,
-                                Color.red);
-                        }
-                        tabbedPane.revalidate();
                     }
                 }
                 else { // A connection/tab doesn't exists, so create one!
@@ -602,13 +592,6 @@ public class XdccIrc
                     channel.updateTextArea(
                         formatNickname("<" + parser.getNick() + "> ") + "> " +
                         parser.getTrailing());
-                    if (tabbedPane.getSelectedIndex() !=
-                        findTab(tabbedPane, "#" + channelName)) {
-                        tabbedPane.setBackgroundAt(findTab(tabbedPane,
-                            "#" + channelName),
-                            Color.red);
-                    }
-                    tabbedPane.revalidate();
                 }
 
             } //if (destination.startsWith("#"))
@@ -658,7 +641,8 @@ public class XdccIrc
                                 String versionReply = "NOTICE " +
                                     parser.getNick() + " " +
                                     firstOne + ctcpCommand +
-                                    " Using ajPlugin IRC:v" + parent.getVersion() + ":Java" +
+                                    " Using ajPlugin IRC:v" + parent.getVersion() +
+                                    ":Java" +
                                     firstOne;
                                 parseSendToCommand(versionReply);
 
@@ -675,10 +659,6 @@ public class XdccIrc
                                 formatNickname("<" + parser.getNick() + "> ") +
                                 trailing);
                         }
-                        if (tabbedPane.getSelectedIndex() != indexOfUser) {
-                            tabbedPane.setBackgroundAt(indexOfUser, Color.red);
-                        }
-                        tabbedPane.revalidate();
                     } //if (aComponent instanceof UserPanel)
                 } // if (indexOfUser != -1)
             } // else (Msg from a user..)
@@ -721,11 +701,27 @@ public class XdccIrc
 
         }
         else if (command.equals("QUIT")) {
-            //??????????????????????????
             //Find what channel user is on and direct Quit msg to correct channel(s)
-            tabUpdate("Init Window",
-                      parser.getNick() + " has quit (" + parser.getTrailing() +
-                      ")");
+            boolean hide = parser.getTrailing().toLowerCase().indexOf("z:lined") !=
+                -1;
+            int index = findTab(tabbedPane, parser.getNick());
+            if (index != -1) {
+                Object tab = tabbedPane.getComponentAt(index);
+                if (tab.getClass() == UserPanel.class) {
+                    ( (UserPanel) tab).userQuits(parser.getNick());
+                }
+            }
+            for (int i = 1; i < tabbedPane.getTabCount(); i++) {
+                Object tab = tabbedPane.getComponentAt(i);
+                if (tab.getClass() == ChannelPanel.class) {
+                    ( (ChannelPanel) tab).userQuits(parser.getNick(), hide);
+                }
+            }
+            if (hide) {
+                tabUpdate("Init Window",
+                          parser.getNick() + " has quit (" + parser.getTrailing() +
+                          ")");
+            }
         }
         else if (command.equals("NICK")) {
             // handle NICK --- When a user changes its nickname
@@ -1111,6 +1107,7 @@ public class XdccIrc
                 String modeReceived;
                 String temp;
                 String channelsMode;
+                //:UP^!UP@phpaj.de.vu MODE #applejuice +vvv ajPluginUser27667 ajPluginUser6848 ajPluginUser89142
                 temp = lineFromServer.substring(1, lineFromServer.indexOf(" "));
                 nickCommand = temp;
                 if (temp.indexOf("!") != -1) {
@@ -1132,7 +1129,6 @@ public class XdccIrc
                     channelsMode = temp.substring(1, temp.indexOf(" ", 1));
                     modeReceived = temp.substring(temp.indexOf(" ", 1) + 1,
                                                   temp.length());
-
                     int indexOfChannel = findTab(tabbedPane, channelsMode);
                     if (indexOfChannel != -1) {
                         Component aComponent = tabbedPane.getComponentAt(
@@ -1141,50 +1137,64 @@ public class XdccIrc
                             ChannelPanel channel = (ChannelPanel) aComponent;
                             channel.updateTextArea(nickCommand + " sets MODE: " +
                                 modeReceived);
-                            String tmp = modeReceived.substring(0, 1);
-                            if (tmp.compareToIgnoreCase("-") == 0
-                                || tmp.compareToIgnoreCase("+") == 0) {
-                                String name = modeReceived.substring(3);
-                                SortedListModel model = channel.getUserNameList();
-                                if (model.contains("!" + name)) {
-                                    channel.updateUserArea("!" + name, "remove");
-                                }
-                                else if (model.contains("@" +
-                                    name)) {
-                                    channel.updateUserArea("@" + name, "remove");
-                                }
-                                else if (model.contains("%" +
-                                    name)) {
-                                    channel.updateUserArea("%" + name, "remove");
-                                }
-                                else if (model.contains("+" +
-                                    name)) {
-                                    channel.updateUserArea("+" + name, "remove");
-                                }
-                                else if (model.contains(name)) {
-                                    channel.updateUserArea(name, "remove");
-                                }
-                                if (tmp.compareToIgnoreCase("+") == 0) {
-                                    tmp = modeReceived.substring(1, 2);
-                                    if (tmp.compareToIgnoreCase("v") == 0) {
-                                        channel.updateUserArea("+" + name,
-                                            "add");
-                                    }
-                                    else if (tmp.compareToIgnoreCase("a") == 0) {
+                            //MeineR sets MODE: +vvv bluna Biggestking ajPluginUser23249
+                            char plusMinus = modeReceived.charAt(0);
+                            String tmp = modeReceived.substring(1,
+                                modeReceived.indexOf(" "));
+                            String names = modeReceived.substring(modeReceived.indexOf(" ") + 1);
+                            String splits[] = names.split(" ");
+                            if (plusMinus == '-' || plusMinus == '+') {
+                                for (int i = 0; i < splits.length; i++) {
+                                    String name = splits[i];
+                                    SortedListModel model = channel.
+                                        getUserNameList();
+                                    if (model.contains("!" + name)) {
                                         channel.updateUserArea("!" + name,
-                                            "add");
+                                            "remove");
                                     }
-                                    else if (tmp.compareToIgnoreCase("o") == 0) {
+                                    else if (model.contains("@" +
+                                        name)) {
                                         channel.updateUserArea("@" + name,
-                                            "add");
+                                            "remove");
                                     }
-                                    else if (tmp.compareToIgnoreCase("h") == 0) {
+                                    else if (model.contains("%" +
+                                        name)) {
                                         channel.updateUserArea("%" + name,
-                                            "add");
+                                            "remove");
                                     }
-                                }
-                                else if (tmp.compareToIgnoreCase("-") == 0) {
-                                    channel.updateUserArea(name, "add");
+                                    else if (model.contains("+" +
+                                        name)) {
+                                        channel.updateUserArea("+" + name,
+                                            "remove");
+                                    }
+                                    else if (model.contains(name)) {
+                                        channel.updateUserArea(name, "remove");
+                                    }
+                                    if (plusMinus == '+') {
+                                        tmp = modeReceived.substring(1, 2);
+                                        if (tmp.compareToIgnoreCase("v") == 0) {
+                                            channel.updateUserArea("+" + name,
+                                                "add");
+                                        }
+                                        else if (tmp.compareToIgnoreCase("a") ==
+                                                 0) {
+                                            channel.updateUserArea("!" + name,
+                                                "add");
+                                        }
+                                        else if (tmp.compareToIgnoreCase("o") ==
+                                                 0) {
+                                            channel.updateUserArea("@" + name,
+                                                "add");
+                                        }
+                                        else if (tmp.compareToIgnoreCase("h") ==
+                                                 0) {
+                                            channel.updateUserArea("%" + name,
+                                                "add");
+                                        }
+                                    }
+                                    else if (plusMinus == '-') {
+                                        channel.updateUserArea(name, "add");
+                                    }
                                 }
                             }
                         }
@@ -1221,26 +1231,14 @@ public class XdccIrc
 
         if (indexOfTab != -1) {
             Component aComponent = tabbedPane.getComponentAt(indexOfTab);
-            if (aComponent instanceof ChannelPanel) {
+            if (aComponent.getClass() == ChannelPanel.class) {
                 ( (ChannelPanel) aComponent).updateTextArea(message);
-                if (tabbedPane.getSelectedIndex() != indexOfTab) {
-                    tabbedPane.setBackgroundAt(indexOfTab, Color.red);
-                }
-                tabbedPane.revalidate();
             }
-            else if (aComponent instanceof UserPanel) {
+            else if (aComponent.getClass() == UserPanel.class) {
                 ( (UserPanel) aComponent).updateTextArea(message);
-                if (tabbedPane.getSelectedIndex() != indexOfTab) {
-                    tabbedPane.setBackgroundAt(indexOfTab, Color.red);
-                }
-                tabbedPane.revalidate();
             }
-            else if (aComponent instanceof InitPanel) {
+            else if (aComponent.getClass() == InitPanel.class) {
                 ( (InitPanel) aComponent).updateTextArea(message);
-                if (tabbedPane.getSelectedIndex() != indexOfTab) {
-                    tabbedPane.setBackgroundAt(indexOfTab, Color.red);
-                }
-                tabbedPane.revalidate();
             }
         }
 
@@ -1253,10 +1251,12 @@ public class XdccIrc
         if (toServer != null) {
             toServer.print(lineToServer + "\r\n");
             toServer.flush();
-            if (lineToServer.toLowerCase().indexOf("join #" + STANDARD_CHANNEL) != -1){
+            if (lineToServer.toLowerCase().indexOf("join #" + STANDARD_CHANNEL) !=
+                -1) {
                 String norules = parent.getProperties().getProperty("norules");
-                if (norules == null || norules.compareToIgnoreCase("true")!=0){
-                    RulesDialog rulesDialog = new RulesDialog(AppleJuiceDialog.getApp(), true);
+                if (norules == null || norules.compareToIgnoreCase("true") != 0) {
+                    RulesDialog rulesDialog = new RulesDialog(AppleJuiceDialog.
+                        getApp(), true);
                     rulesDialog.show();
                 }
             }
@@ -1268,27 +1268,7 @@ public class XdccIrc
 
         // Adding the init window
         tabbedPane.add(new InitPanel(this), "Init Window");
-
-        tabbedPane.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                setSelectedTab();
-            }
-        });
-
         return tabbedPane;
-    }
-
-    private void setSelectedTab() {
-        // to return a selected tab to it's original color
-        if (tabbedPane.getModel().isSelected()) {
-            int index = tabbedPane.getSelectedIndex();
-
-            // setting a background color to null makes
-            // a tab's background to it's default background color
-            tabbedPane.setBackgroundAt(index, null);
-
-            tabbedPane.revalidate();
-        }
     }
 
     private void newUser() {
@@ -1332,9 +1312,13 @@ public class XdccIrc
     private void changeNick() {
         String newNickname;
 
-        newNickname = JOptionPane.showInputDialog(theApp, nicknameString, nickname);
+        newNickname = JOptionPane.showInputDialog(theApp, nicknameString,
+                                                  nickname);
 
         if (newNickname != null) {
+            if (newNickname.length() > 30) {
+                newNickname = newNickname.substring(0, 30);
+            }
             if (toServer != null) {
                 Component aComponent = tabbedPane.getComponentAt(0);
                 ( (InitPanel) aComponent).setTitleArea(newNickname +
@@ -1395,7 +1379,7 @@ public class XdccIrc
 
     public JTabbedPane closeAllChannels() {
         int count = tabbedPane.getTabCount();
-        for (int i=count-1; i>0; i--){
+        for (int i = count - 1; i > 0; i--) {
             tabbedPane.removeTabAt(i);
         }
         tabbedPane.revalidate();
