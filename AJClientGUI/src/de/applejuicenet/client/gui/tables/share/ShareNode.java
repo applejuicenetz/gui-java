@@ -1,6 +1,7 @@
 package de.applejuicenet.client.gui.tables.share;
 
 import de.applejuicenet.client.gui.tables.Node;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MapSetStringKey;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.7 2003/08/26 06:20:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.8 2003/08/27 11:19:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,10 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.8  2003/08/27 11:19:30  maj0r
+ * Prioritaet setzen und aufheben vollstaendig implementiert.
+ * Button für 'Share erneuern' eingefuehrt.
+ *
  * Revision 1.7  2003/08/26 06:20:10  maj0r
  * Anpassungen an muhs neuen Tree.
  *
@@ -163,16 +168,16 @@ public class ShareNode implements Node {
     return children.values().toArray(new ShareNode[children.size()]);
   }
 
-	protected void nodeChanged() {
-	    /*ShareNode parent = getParent();
-
-	    if (parent != null) {
-		FileNode[]   path = parent.getPath();
-		int[]        index = { getIndexOfChild(parent, this) };
-		Object[]     children = { this };
-
-		fireTreeNodesChanged(FileSystemModel2.this, path,  index,
-				     children);
-	    }*/
-	}
+    public void setPriority(int prio){
+        if (isLeaf()){
+            shareDO.setPrioritaet(prio);
+            ApplejuiceFassade.getInstance().setPrioritaet(Integer.parseInt(shareDO.getId()), prio);
+        }
+        else{
+            Iterator it = children.values().iterator();
+            while (it.hasNext()){
+                ((ShareNode)it.next()).setPriority(prio);
+            }
+        }
+    }
 }

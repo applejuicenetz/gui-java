@@ -27,7 +27,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.28 2003/08/26 19:46:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.29 2003/08/27 11:19:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +36,10 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.29  2003/08/27 11:19:30  maj0r
+ * Prioritaet setzen und aufheben vollstaendig implementiert.
+ * Button für 'Share erneuern' eingefuehrt.
+ *
  * Revision 1.28  2003/08/26 19:46:34  maj0r
  * Sharebereich weiter vervollstaendigt.
  *
@@ -112,6 +116,7 @@ public class SharePanel
 
     private JButton neueListe = new JButton();
     private JButton neuLaden = new JButton();
+    private JButton refresh = new JButton();
     private JButton prioritaetSetzen = new JButton();
     private JButton prioritaetAufheben = new JButton();
     private JComboBox cmbPrio = new JComboBox();
@@ -152,31 +157,65 @@ public class SharePanel
         }
         prioritaetAufheben.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){
-                Object[] values = getSelectedShareTableItems();
-                if (values==null)
-                    return;
-                ShareNode shareNode = null;
-                for (int i=0; i<values.length; i++){
-                    shareNode = (ShareNode)values[i];
-                    if (shareNode.isLeaf()){
-                        ApplejuiceFassade.getInstance().setPrioritaet(Integer.parseInt(shareNode.getDO().getId()), 1);
+                prioritaetAufheben.setEnabled(false);
+                prioritaetSetzen.setEnabled(false);
+                neuLaden.setEnabled(false);
+                final SwingWorker worker = new SwingWorker() {
+                    public Object construct() {
+                        Object[] values = getSelectedShareTableItems();
+                        if (values==null)
+                            return null;
+                        ShareNode shareNode = null;
+                        for (int i=0; i<values.length; i++){
+                            shareNode = (ShareNode)values[i];
+                            shareNode.setPriority(1);
+                        }
+                        return null;
                     }
-                }
+                    public void finished() {
+                        SwingUtilities.invokeLater(new Runnable(){
+                             public void run(){
+                                 shareTable.updateUI();
+                                 prioritaetAufheben.setEnabled(true);
+                                 prioritaetSetzen.setEnabled(true);
+                                 neuLaden.setEnabled(true);
+                             }
+                         });
+                    }
+                };
+                worker.start();
             }
         });
         prioritaetSetzen.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){
-                int prio = ((Integer)cmbPrio.getSelectedItem()).intValue();
-                Object[] values = getSelectedShareTableItems();
-                if (values==null)
-                    return;
-                ShareNode shareNode = null;
-                for (int i=0; i<values.length; i++){
-                    shareNode = (ShareNode)values[i];
-                    if (shareNode.isLeaf()){
-                        ApplejuiceFassade.getInstance().setPrioritaet(Integer.parseInt(shareNode.getDO().getId()), prio);
+                prioritaetAufheben.setEnabled(false);
+                prioritaetSetzen.setEnabled(false);
+                neuLaden.setEnabled(false);
+                final SwingWorker worker = new SwingWorker() {
+                    public Object construct() {
+                        int prio = ((Integer)cmbPrio.getSelectedItem()).intValue();
+                        Object[] values = getSelectedShareTableItems();
+                        if (values==null)
+                            return null;
+                        ShareNode shareNode = null;
+                        for (int i=0; i<values.length; i++){
+                            shareNode = (ShareNode)values[i];
+                            shareNode.setPriority(prio);
+                        }
+                        return null;
                     }
-                }
+                    public void finished() {
+                        SwingUtilities.invokeLater(new Runnable(){
+                             public void run(){
+                                 shareTable.updateUI();
+                                 prioritaetAufheben.setEnabled(true);
+                                 prioritaetSetzen.setEnabled(true);
+                                 neuLaden.setEnabled(true);
+                             }
+                         });
+                    }
+                };
+                worker.start();
             }
         });
 
@@ -189,6 +228,7 @@ public class SharePanel
 
         shareModel = new ShareModel(new ShareNode(null, "/"));
         shareTable = new JTreeTable(shareModel);
+        shareTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         titledBorder1 = new TitledBorder("Test");
         titledBorder2 = new TitledBorder("Tester");
         setLayout(new BorderLayout());
@@ -299,6 +339,21 @@ public class SharePanel
             }
         });
 
+        refresh.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                final SwingWorker worker2 = new SwingWorker() {
+                    public Object construct() {
+                        refresh.setEnabled(false);
+                        HashSet shares = ajSettings.getShareDirs();
+                        ApplejuiceFassade.getInstance().setShare(shares);
+                        refresh.setEnabled(true);
+                        return null;
+                    }
+                };
+                worker2.start();
+            }
+        });
+
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel1.add(neueListe);
         panel1.add(neuLaden);
@@ -312,7 +367,10 @@ public class SharePanel
 
         JScrollPane aScrollPane = new JScrollPane(folderTree);
         aScrollPane.setBorder(titledBorder1);
-        add(aScrollPane, BorderLayout.WEST);
+        JPanel panelWest = new JPanel(new BorderLayout());
+        panelWest.add(aScrollPane, BorderLayout.CENTER);
+        panelWest.add(refresh, BorderLayout.SOUTH);
+        add(panelWest, BorderLayout.WEST);
         add(panelCenter, BorderLayout.CENTER);
 
         treeMouseAdapter = new TreeMouseAdapter();
@@ -386,7 +444,7 @@ public class SharePanel
             result = new Object[count];
             int[] indizes = shareTable.getSelectedRows();
             for (int i = 0; i < indizes.length; i++) {
-                result[i] = ((TreeTableModelAdapter) shareTable.getModel()).nodeForRow(i);
+                result[i] = ((TreeTableModelAdapter) shareTable.getModel()).nodeForRow(indizes[i]);
             }
         }
         return result;
@@ -435,6 +493,12 @@ public class SharePanel
         item3.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
                                                                         "deldirbtn", "caption"})));
+        refresh.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "startsharecheck",
+                                                                                                   "caption"})));
+        refresh.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "startsharecheck",
+                                                                                                   "hint"})));
         neueListe.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                             getFirstAttrbuteByTagName(new String[]{"mainform", "newfilelist",
                                                                                                    "caption"})));
