@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/BevelArrowIcon.java,v 1.1 2003/06/24 14:32:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/BevelArrowIcon.java,v 1.2 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import javax.swing.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: BevelArrowIcon.java,v $
+ * Revision 1.2  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.1  2003/06/24 14:32:27  maj0r
  * Klassen zum Sortieren von Tabellen eingefügt.
  * Servertabelle kann nun spaltenweise sortiert werden.
@@ -72,13 +75,11 @@ public class BevelArrowIcon
   }
 
   public void paintIcon(Component c, Graphics g, int x, int y) {
-    switch (direction) {
-      case DOWN:
-        drawDownArrow(g, x, y);
-        break;
-      case UP:
-        drawUpArrow(g, x, y);
-        break;
+    if (direction==DOWN) {
+      drawDownArrow(g, x, y);
+    }
+    else{
+      drawUpArrow(g, x, y);
     }
   }
 

@@ -1,15 +1,18 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.5 2003/10/04 15:30:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.6 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListDO.java,v $
+ * Revision 1.6  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.5  2003/10/04 15:30:26  maj0r
  * Userpartliste hinzugefuegt.
  *
@@ -30,7 +33,6 @@ package de.applejuicenet.client.shared.dac;
  */
 
 import java.awt.*;
-import java.util.HashSet;
 import java.util.ArrayList;
 
 public class PartListDO {

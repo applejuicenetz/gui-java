@@ -1,15 +1,18 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.18 2003/10/12 15:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.19 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.19  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.18  2003/10/12 15:57:55  maj0r
  * Kleinere Bugs behoben.
  * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
@@ -90,7 +93,6 @@ import java.awt.*;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
-import org.xml.sax.SAXParseException;
 
 public class DownloadDOOverviewPanel extends JPanel implements LanguageListener, DataUpdateListener{
     private DownloadPartListPanel actualDlOverviewTable = new DownloadPartListPanel();

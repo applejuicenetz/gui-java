@@ -4,16 +4,12 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumnModel;
 
 import de.applejuicenet.client.gui.tables.search.SearchResultTableModel;
 import de.applejuicenet.client.gui.tables.search.SearchNode;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
-import de.applejuicenet.client.gui.tables.download.DownloadModel;
-import de.applejuicenet.client.gui.controller.PositionManager;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.shared.Search;
 
@@ -24,15 +20,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.4 2003/10/01 16:52:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.5 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.5  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.4  2003/10/01 16:52:53  maj0r
  * Suche weiter gefuehrt.
  * Version 0.32

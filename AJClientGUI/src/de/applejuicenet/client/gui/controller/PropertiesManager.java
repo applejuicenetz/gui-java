@@ -16,7 +16,7 @@ import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.8 2003/10/17 13:33:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.9 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.xml.serialize.XMLSerializer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.9  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.8  2003/10/17 13:33:02  maj0r
  * properties.xml wird nun im Fehlerfall automatisch generiert.
  *
@@ -176,7 +179,7 @@ public class PropertiesManager
 
     public void saveProxySettings(ProxySettings proxySettings){
         this.proxySettings = proxySettings;
-        setAttributeByTagName(new String[]{"options", "proxy", "use"}, new Boolean(proxySettings.isUse()).toString());
+        setAttributeByTagName(new String[]{"options", "proxy", "use"}, Boolean.toString(proxySettings.isUse()));
         setAttributeByTagName(new String[]{"options", "proxy", "host"}, proxySettings.getHost());
         setAttributeByTagName(new String[]{"options", "proxy", "port"}, Integer.toString(proxySettings.getPort()));
         setAttributeByTagName(new String[]{"options", "proxy", "userpass"}, proxySettings.getUserpass());
@@ -245,7 +248,7 @@ public class PropertiesManager
     }
 
     public void setErsterStart(boolean ersterStart) {
-        setAttributeByTagName(new String[]{"options", "firststart"}, new Boolean(ersterStart).toString());
+        setAttributeByTagName(new String[]{"options", "firststart"}, Boolean.toString(ersterStart));
     }
 
     public void setSprache(String sprache) {
@@ -476,11 +479,13 @@ public class PropertiesManager
             }
             boolean use = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "use"})).booleanValue();
             String host = getFirstAttrbuteByTagName(new String[]{"options", "proxy", "host"});
-            int port = -1;
+            int port;
             try{
                 port = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "port"}));
             }
-            catch (Exception e){}
+            catch (Exception e){
+                port = -1;
+            }
             String userpass = getFirstAttrbuteByTagName(new String[]{"options", "proxy", "userpass"});
             proxySettings = new ProxySettings(use, host, port, userpass);
         }

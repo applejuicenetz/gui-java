@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.3 2003/09/01 15:50:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.4 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.gui.tables.share.ShareNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DateiListeTableModel.java,v $
+ * Revision 1.4  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.3  2003/09/01 15:50:51  maj0r
  * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
  *
@@ -35,11 +38,7 @@ public class DateiListeTableModel
     final static String[] COL_NAMES = {
         "Name", "Größe" };
 
-    HashMap dateien = new HashMap();
-
-    public DateiListeTableModel() {
-        super();
-    }
+    private HashMap dateien = new HashMap();
 
     public Object getRow(int row) {
         if (row < dateien.size())

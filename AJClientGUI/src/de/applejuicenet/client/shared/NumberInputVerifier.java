@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared;
 import javax.swing.text.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/NumberInputVerifier.java,v 1.5 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/NumberInputVerifier.java,v 1.6 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import javax.swing.text.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: NumberInputVerifier.java,v $
+ * Revision 1.6  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.5  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -43,7 +46,7 @@ public class NumberInputVerifier
     String old = getText(0, getLength());
 
     try {
-      int i = Integer.parseInt(str);
+      Integer.parseInt(str);
       if (limits) {
         int gesamt = Integer.parseInt(old.substring(0, offset) + str +
                                       old.substring(offset));

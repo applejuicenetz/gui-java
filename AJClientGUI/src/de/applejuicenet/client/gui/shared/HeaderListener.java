@@ -4,7 +4,7 @@ import java.awt.event.*;
 import javax.swing.table.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/HeaderListener.java,v 1.2 2003/10/10 15:12:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/HeaderListener.java,v 1.3 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import javax.swing.table.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: HeaderListener.java,v $
+ * Revision 1.3  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.2  2003/10/10 15:12:26  maj0r
  * Sortieren im Downloadbereich eingefuegt.
  *
@@ -58,7 +61,6 @@ public class HeaderListener
   }
 
   public void mouseReleased(MouseEvent e) {
-    int col = header.columnAtPoint(e.getPoint());
     renderer.setPressedColumn( -1);
     header.repaint();
   }

@@ -12,7 +12,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.2 2003/10/01 16:52:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.3 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: NewServerDialog.java,v $
+ * Revision 1.3  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.2  2003/10/01 16:52:53  maj0r
  * Suche weiter gefuehrt.
  * Version 0.32
@@ -36,7 +39,7 @@ public class NewServerDialog extends JDialog {
     private JTextField dyn = new JTextField();
     private JTextField port = new JTextField();
     private boolean legal = false;
-    private String link = new String();
+    private String link = "";
     private Logger logger;
 
     public NewServerDialog(Frame parent, boolean modal) {

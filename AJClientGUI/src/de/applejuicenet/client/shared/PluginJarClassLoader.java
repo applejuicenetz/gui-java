@@ -3,7 +3,6 @@ package de.applejuicenet.client.shared;
 import java.net.*;
 import java.io.File;
 import java.io.InputStream;
-import java.io.IOException;
 import java.util.jar.JarFile;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -11,15 +10,18 @@ import java.util.zip.ZipEntry;
 import de.applejuicenet.client.gui.plugins.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.8 2003/08/23 11:16:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.9 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r aj@tkl-soft.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.9  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.8  2003/08/23 11:16:35  maj0r
  * Plattformunabhaengigkeit wieder hergestellt.
  *

@@ -1,13 +1,10 @@
 package de.applejuicenet.client.gui.tables;
 
-import de.applejuicenet.client.gui.tables.Node;
-import de.applejuicenet.client.gui.tables.AbstractCellEditor;
 import de.applejuicenet.client.gui.tables.download.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.tables.download.IconGetter;
 import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
-import de.applejuicenet.client.gui.trees.share.DirectoryNode;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.Settings;
@@ -25,15 +22,18 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.17 2003/10/02 11:14:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.18 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.18  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.17  2003/10/02 11:14:39  maj0r
  * Kleinen Anzeigefehler korrigiert und unnoetige Casts entfernt.
  *

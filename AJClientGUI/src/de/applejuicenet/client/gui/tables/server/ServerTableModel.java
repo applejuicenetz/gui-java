@@ -6,20 +6,22 @@ import javax.swing.table.*;
 
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.shared.MapSetStringKey;
-import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.gui.shared.SortableTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.4 2003/08/19 16:02:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.5 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerTableModel.java,v $
+ * Revision 1.5  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.4  2003/08/19 16:02:16  maj0r
  * Optimierungen.
  *
@@ -50,13 +52,8 @@ public class ServerTableModel
   final static String[] COL_NAMES = {
       "Name", "DynIP", "Port", "Letztes mal online"};
 
-  TableSorter sorter;
-
-  ArrayList servers = new ArrayList();
-
-  public ServerTableModel() {
-    super();
-  }
+  private TableSorter sorter;
+  private ArrayList servers = new ArrayList();
 
   public ArrayList getContent() {
     return servers;
@@ -89,7 +86,7 @@ public class ServerTableModel
       return "";
     }
 
-    String s = new String("");
+    String s;
     switch (column) {
       case 0:
         s = server.getName();
@@ -104,7 +101,7 @@ public class ServerTableModel
         s = server.getTimeLastSeenAsString();
         break;
       default:
-        s = new String("Fehler");
+        s = "Fehler";
     }
     if (s == null) {
       s = "";

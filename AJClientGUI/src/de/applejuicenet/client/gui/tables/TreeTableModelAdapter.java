@@ -14,8 +14,6 @@ package de.applejuicenet.client.gui.tables;
  * you entered into with Sun.
  */
 
-import de.applejuicenet.client.gui.tables.TreeTableModel;
-
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
@@ -26,15 +24,18 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/TreeTableModelAdapter.java,v 1.3 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/TreeTableModelAdapter.java,v 1.4 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: TreeTableModelAdapter.java,v $
+ * Revision 1.4  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.3  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -53,10 +54,10 @@ public class TreeTableModelAdapter extends AbstractTableModel
 
 	tree.addTreeExpansionListener(new TreeExpansionListener() {
 	    public void treeExpanded(TreeExpansionEvent event) {
-	      fireTableDataChanged(); 
+	      fireTableDataChanged();
 	    }
             public void treeCollapsed(TreeExpansionEvent event) {
-	      fireTableDataChanged(); 
+	      fireTableDataChanged();
 	    }
 	});
 
@@ -97,7 +98,7 @@ public class TreeTableModelAdapter extends AbstractTableModel
 
     public Object nodeForRow(int row) {
 	TreePath treePath = tree.getPathForRow(row);
-	return treePath.getLastPathComponent();         
+	return treePath.getLastPathComponent();
     }
 
     public Object getValueAt(int row, int column) {
@@ -105,7 +106,7 @@ public class TreeTableModelAdapter extends AbstractTableModel
     }
 
     public boolean isCellEditable(int row, int column) {
-         return treeTableModel.isCellEditable(nodeForRow(row), column); 
+         return treeTableModel.isCellEditable(nodeForRow(row), column);
     }
 
     public void setValueAt(Object value, int row, int column) {

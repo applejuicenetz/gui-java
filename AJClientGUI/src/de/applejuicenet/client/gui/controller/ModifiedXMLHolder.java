@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.39 2003/10/21 11:36:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.40 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.40  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.39  2003/10/21 11:36:32  maj0r
  * Infos werden nun ueber einen Listener geholt.
  *
@@ -282,60 +285,6 @@ public class ModifiedXMLHolder
                 logger.error("Unbehandelte Exception", ex);
         }
         return speeds;
-    }
-
-    private String bytesUmrechnen(long bytes) {
-        boolean minus = false;
-        if (bytes < 0) {
-            minus = true;
-            bytes *= -1;
-        }
-        if (bytes == 0) {
-            return "0 MB";
-        }
-        long faktor = 1;
-        if (bytes < 1024l) {
-            faktor = 1;
-        }
-        else if (bytes / 1024l < 1024l) {
-            faktor = 1024l;
-        }
-        else if (bytes / 1048576l < 1024l) {
-            faktor = 1048576l;
-        }
-        else if (bytes / 1073741824l < 1024l) {
-            faktor = 1073741824l;
-        }
-        else {
-            faktor = 1099511627776l;
-        }
-        if (minus) {
-            bytes *= -1;
-        }
-        double umgerechnet = (double) bytes / (double) faktor;
-        String result = Double.toString(umgerechnet);
-        int pos = result.indexOf(".");
-        if (pos != -1) {
-            if (pos + 2 < result.length())
-                result = result.substring(0, pos + 3);
-            result = result.replace('.', ',');
-        }
-        if (faktor == 1) {
-            result += " Bytes";
-        }
-        else if (faktor == 1024l) {
-            result += " kb";
-        }
-        else if (faktor == 1048576l) {
-            result += " MB";
-        }
-        else if (faktor == 1073741824l) {
-            result += " GB";
-        }
-        else {
-            result += " TB";
-        }
-        return result;
     }
 
     private void updateIDs() {

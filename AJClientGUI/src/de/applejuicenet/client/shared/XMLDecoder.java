@@ -8,7 +8,7 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.16 2003/10/14 15:39:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.17 2003/10/21 14:08:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import org.xml.sax.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: XMLDecoder.java,v $
+ * Revision 1.17  2003/10/21 14:08:45  maj0r
+ * Mittels PMD Code verschoenert, optimiert.
+ *
  * Revision 1.16  2003/10/14 15:39:28  maj0r
  * Stacktraces ausgebaut.
  *
@@ -97,7 +100,6 @@ public abstract class XMLDecoder {
             for (int i = 0; i < attributePathSize; i++) {
                 int nodesSize = nodes.getLength();
                 for (int x = 0; x < nodesSize; x++) {
-                    String test = nodes.item(x).getNodeName();
                     if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
                         if (i == attributePathSize - 1 && lastIsElement) {
                             e = (Element) nodes.item(x);
