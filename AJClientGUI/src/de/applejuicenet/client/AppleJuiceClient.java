@@ -13,9 +13,10 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 import com.l2fprod.util.OS;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+import java.net.Socket;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.35 2003/11/18 16:41:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.36 2003/11/18 17:01:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +25,9 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.36  2003/11/18 17:01:12  maj0r
+ * Erste Version des LinkListener eingebaut.
+ *
  * Revision 1.35  2003/11/18 16:41:50  maj0r
  * Erste Version des LinkListener eingebaut.
  * Themes koennen nun ueber die properties.xml komplett deaktiviert werden.
@@ -111,6 +115,26 @@ public class AppleJuiceClient {
     private static Logger logger;
 
     public static void main(String[] args) {
+        boolean processLink = false;
+        if (args != null && args.length == 1) {
+            try {
+                int PORT = PropertiesManager.getOptionsManager().getLinkListenerPort();
+                String passwort = PropertiesManager.getOptionsManager().
+                    getRemoteSettings().getOldPassword();
+                Socket socket = new Socket("localhost", PORT);
+                PrintStream out = new PrintStream(socket.getOutputStream());
+                out.println(passwort + "|" + args[0]);
+                socket.close();
+                System.exit(0);
+            }
+            catch (IOException ioE) {
+                //Keine bisherige GUI-Instanz vorhanden, also GUI oeffnen
+                processLink = true;
+            }
+            catch(Exception e){
+                System.exit(1);
+            }
+        }
         Logger rootLogger = Logger.getRootLogger();
         logger = Logger.getLogger(AppleJuiceClient.class.getName());
 
@@ -230,6 +254,9 @@ public class AppleJuiceClient {
             System.out.println(nachricht);
             splash.dispose();
             LinkListener linkListener = new LinkListener();
+            if (processLink){
+                ApplejuiceFassade.getInstance().processLink(args[0]);
+            }
             if (PropertiesManager.getOptionsManager().isErsterStart())
             {
                 WizardDialog wizardDialog = new WizardDialog(theApp, true);
