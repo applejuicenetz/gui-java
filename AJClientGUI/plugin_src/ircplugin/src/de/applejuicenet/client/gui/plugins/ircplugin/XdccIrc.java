@@ -14,15 +14,19 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.1 2003/09/12 06:32:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.2 2003/10/27 14:08:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: XdccIrc.java,v $
+ * Revision 1.2  2003/10/27 14:08:39  maj0r
+ * Bug #1030 fixed (Danke an plutoman2):
+ * Nullpointer behoben.
+ *
  * Revision 1.1  2003/09/12 06:32:17  maj0r
  * Nur verschoben.
  *
@@ -41,10 +45,10 @@ import de.applejuicenet.client.shared.SwingWorker;
 
 public class XdccIrc
         extends JPanel {
-    JButton connectButton;
-    JButton cancelButton;
-    JButton editButton;
-    JButton removeButton;
+    private JButton connectButton;
+    private JButton cancelButton;
+    private JButton editButton;
+    private JButton removeButton;
 
     boolean interrupted;
 
@@ -813,13 +817,13 @@ public class XdccIrc
             // successful registration
             tabUpdate("Init Window", parser.getTrailing());
         }
-        else if (command.equals("005"))
+/*        else if (command.equals("005"))
         {
             // RPL_BOUNCE (Server settings)
-            //tabUpdate("Init Window", "005 " + lineFromServer);
-            //tabUpdate("Init Window", "005 " + parser.getTrailing());
-            //System.out.println(parser.getTrailing());
-        }
+            tabUpdate("Init Window", "005 " + lineFromServer);
+            tabUpdate("Init Window", "005 " + parser.getTrailing());
+            System.out.println(parser.getTrailing());
+        }*/
         else if (command.equals("250") ||
                 command.equals("251") ||
                 command.equals("253") ||
@@ -866,16 +870,16 @@ public class XdccIrc
             tabUpdate("Init Window", parser.getTrailing() + " (" + channel + ")");
         }
 
-        else if (command.equals("371") ||
+/*        else if (command.equals("371") ||
                 command.equals("372") ||
                 command.equals("374") ||
                 command.equals("375") ||
                 command.equals("376")
         )
         {
-            //tabUpdate("Init Window", "371-376 " + parser.getTrailing());
-            //tabUpdate("Init Window", "Skipping MOTD!");
-        }
+            tabUpdate("Init Window", "371-376 " + parser.getTrailing());
+            tabUpdate("Init Window", "Skipping MOTD!");
+        }*/
         else if (command.equals("311") // RPL_WHOISUSER
         )
         {
@@ -1208,7 +1212,6 @@ public class XdccIrc
                                                                        " sets MODE: " + modeReceived);
                         }
                     }
-//				tabUpdate("Init Window", nickCommand + " sets MODE: " + modeReceiver + " for channel: " + channelsMode);
                 }
             }
             else if (lineFromServer.indexOf(" 366 ") != -1)
@@ -1280,13 +1283,14 @@ public class XdccIrc
         return indexOfTab;
     }
 
-//??????????????????????????????????????
-    //private void parseSendToCommand(String lineToServer)
     public void parseSendToCommand(String lineToServer) {
         // At first let's see whether the connection is still alive or
         // not.
-        toServer.print(lineToServer + "\r\n");
-        toServer.flush();
+        if (toServer != null)
+        {
+            toServer.print(lineToServer + "\r\n");
+            toServer.flush();
+        }
     }
 
     private JMenuItem addMenuItem(JMenu menu, Action action) {
@@ -1405,12 +1409,9 @@ public class XdccIrc
         whoisNickname = JOptionPane.showInputDialog(
                 " Check Info of(Input nickname): ");
 
-        if (whoisNickname != null)
+        if (whoisNickname != null && toServer!=null)
         {
-            if (toServer != null)
-            {
-                parseSendToCommand("WHOIS " + whoisNickname);
-            }
+            parseSendToCommand("WHOIS " + whoisNickname);
         }
     }
 
@@ -1626,7 +1627,6 @@ public class XdccIrc
         }
     }
 
-//"""""""""""""""""""""
     public class ChannelPanel
             extends JPanel
             implements ActionListener, ListSelectionListener {
@@ -1671,8 +1671,6 @@ public class XdccIrc
                                                   sp1,
                                                   sp2);
             splitPane.setOneTouchExpandable(true);
-            //System.out.println(getSize().width);
-            //splitPane.setDividerLocation(getSize().width - 100);
             splitPane.setDividerLocation(600);
             add(splitPane, BorderLayout.CENTER);
             add(textField, BorderLayout.SOUTH);

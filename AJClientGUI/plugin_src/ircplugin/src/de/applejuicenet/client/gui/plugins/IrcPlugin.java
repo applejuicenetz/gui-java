@@ -44,12 +44,12 @@ public class IrcPlugin extends PluginConnector {
     }
 
     public String getBeschreibung() {
-        return "Dies ist das absolut erste Plugin für die appleJuice-Java-GUI.\r\n\r\n"
+        return "Dies ist das absolut erste Plugin für das appleJuice-Java-GUI.\r\n\r\n"
                 + "Der IRC-Client unterstützt das Besuchen mehrerer Räume, Queries, usw.";
     }
 
     public String getVersion() {
-        return "1.22";
+        return "1.23";
     }
 
     public boolean istReiter() {
