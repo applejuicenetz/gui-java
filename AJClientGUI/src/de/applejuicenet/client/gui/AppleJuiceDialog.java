@@ -73,7 +73,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.95 2004/02/13 14:50:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.96 2004/02/17 15:31:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.96  2004/02/17 15:31:18  maj0r
+ * Moeglichen NullPointer behoben.
+ *
  * Revision 1.95  2004/02/13 14:50:56  maj0r
  * Bug #129 gefixt (Danke an dsp2004)
  * WebsiteException durch Ueberlastung des Servers sollte nun weitgehend unterbunden sein.
@@ -1213,85 +1216,92 @@ public class AppleJuiceDialog
             public void run() {
                 final AJSettings ajSettings = ApplejuiceFassade.getInstance().
                     getAJSettings();
-                final JSlider uploadSlider = new JSlider(JSlider.VERTICAL, 0,
-                    50, (int) ajSettings.getMaxUploadInKB());
-                final JSlider downloadSlider = new JSlider(JSlider.VERTICAL, 0,
-                    300, (int) ajSettings.getMaxDownloadInKB());
-                uploadSlider.setPaintLabels(true);
-                uploadSlider.setPaintTicks(true);
-                uploadSlider.setPaintTrack(true);
-                uploadSlider.setSnapToTicks(true);
-                downloadSlider.setPaintLabels(true);
-                downloadSlider.setPaintTicks(true);
-                downloadSlider.setPaintTrack(true);
-                downloadSlider.setSnapToTicks(true);
-                final JMenu uploadMenu = new JMenu("Upload");
-                final JMenu downloadMenu = new JMenu("Download");
-                JPanel uploadPanel = new JPanel(new BorderLayout());
-                JPanel downloadPanel = new JPanel(new BorderLayout());
-                final JLabel label1 = new JLabel("50 kb/s");
-                final JLabel label2 = new JLabel("50 kb/s");
-                label1.setText(Long.toString(ajSettings.getMaxUploadInKB()) +
-                               " kb/s");
-                label2.setText(Long.toString(ajSettings.getMaxDownloadInKB()) +
-                               " kb/s");
-                uploadPanel.add(label1, BorderLayout.NORTH);
-                uploadPanel.add(uploadSlider, BorderLayout.SOUTH);
-                uploadMenu.add(uploadPanel);
-                downloadPanel.add(label2, BorderLayout.NORTH);
-                downloadPanel.add(downloadSlider, BorderLayout.SOUTH);
-                downloadMenu.add(downloadPanel);
-                uploadSlider.addChangeListener(new ChangeListener() {
-                    public void stateChanged(ChangeEvent e) {
-                        JSlider slider = (JSlider) e.getSource();
-                        label1.setText(Integer.toString(slider.getValue()) +
-                                       " kb/s");
-                    }
-                });
-                downloadSlider.addChangeListener(new ChangeListener() {
-                    public void stateChanged(ChangeEvent e) {
-                        JSlider slider = (JSlider) e.getSource();
-                        label2.setText(Integer.toString(slider.getValue()) +
-                                       " kb/s");
-                    }
-                });
-                uploadSlider.addMouseListener(new MouseAdapter() {
-                    public void mouseReleased(MouseEvent e) {
-                        if (uploadSlider.getValue() < uploadSlider.getMaximum()
-                            && uploadSlider.getValue() > 0) {
-                            long down = downloadSlider.getValue() * 1024;
-                            long up = uploadSlider.getValue() * 1024;
-                            ApplejuiceFassade.getInstance().setMaxUpAndDown(up,
-                                down);
+                if ( ajSettings != null){
+                    final JSlider uploadSlider = new JSlider(JSlider.VERTICAL,
+                        0,
+                        50, (int) ajSettings.getMaxUploadInKB());
+                    final JSlider downloadSlider = new JSlider(JSlider.VERTICAL,
+                        0,
+                        300, (int) ajSettings.getMaxDownloadInKB());
+                    uploadSlider.setPaintLabels(true);
+                    uploadSlider.setPaintTicks(true);
+                    uploadSlider.setPaintTrack(true);
+                    uploadSlider.setSnapToTicks(true);
+                    downloadSlider.setPaintLabels(true);
+                    downloadSlider.setPaintTicks(true);
+                    downloadSlider.setPaintTrack(true);
+                    downloadSlider.setSnapToTicks(true);
+                    final JMenu uploadMenu = new JMenu("Upload");
+                    final JMenu downloadMenu = new JMenu("Download");
+                    JPanel uploadPanel = new JPanel(new BorderLayout());
+                    JPanel downloadPanel = new JPanel(new BorderLayout());
+                    final JLabel label1 = new JLabel("50 kb/s");
+                    final JLabel label2 = new JLabel("50 kb/s");
+                    label1.setText(Long.toString(ajSettings.getMaxUploadInKB()) +
+                                   " kb/s");
+                    label2.setText(Long.toString(ajSettings.getMaxDownloadInKB()) +
+                                   " kb/s");
+                    uploadPanel.add(label1, BorderLayout.NORTH);
+                    uploadPanel.add(uploadSlider, BorderLayout.SOUTH);
+                    uploadMenu.add(uploadPanel);
+                    downloadPanel.add(label2, BorderLayout.NORTH);
+                    downloadPanel.add(downloadSlider, BorderLayout.SOUTH);
+                    downloadMenu.add(downloadPanel);
+                    uploadSlider.addChangeListener(new ChangeListener() {
+                        public void stateChanged(ChangeEvent e) {
+                            JSlider slider = (JSlider) e.getSource();
+                            label1.setText(Integer.toString(slider.getValue()) +
+                                           " kb/s");
                         }
-                        else {
-                            uploadSlider.setValue( (int) ajSettings.
-                                                  getMaxUploadInKB());
+                    });
+                    downloadSlider.addChangeListener(new ChangeListener() {
+                        public void stateChanged(ChangeEvent e) {
+                            JSlider slider = (JSlider) e.getSource();
+                            label2.setText(Integer.toString(slider.getValue()) +
+                                           " kb/s");
                         }
-                    }
-                });
-                downloadSlider.addMouseListener(new MouseAdapter() {
-                    public void mouseReleased(MouseEvent e) {
-                        if (downloadSlider.getValue() <
-                            downloadSlider.getMaximum()
-                            && downloadSlider.getValue() > 0) {
-                            long down = downloadSlider.getValue() * 1024;
-                            long up = uploadSlider.getValue() * 1024;
-                            ApplejuiceFassade.getInstance().setMaxUpAndDown(up,
-                                down);
+                    });
+                    uploadSlider.addMouseListener(new MouseAdapter() {
+                        public void mouseReleased(MouseEvent e) {
+                            if (uploadSlider.getValue() <
+                                uploadSlider.getMaximum()
+                                && uploadSlider.getValue() > 0) {
+                                long down = downloadSlider.getValue() * 1024;
+                                long up = uploadSlider.getValue() * 1024;
+                                ApplejuiceFassade.getInstance().setMaxUpAndDown(
+                                    up,
+                                    down);
+                            }
+                            else {
+                                uploadSlider.setValue( (int) ajSettings.
+                                    getMaxUploadInKB());
+                            }
                         }
-                        else {
-                            downloadSlider.setValue( (int) ajSettings.
-                                getMaxDownloadInKB());
+                    });
+                    downloadSlider.addMouseListener(new MouseAdapter() {
+                        public void mouseReleased(MouseEvent e) {
+                            if (downloadSlider.getValue() <
+                                downloadSlider.getMaximum()
+                                && downloadSlider.getValue() > 0) {
+                                long down = downloadSlider.getValue() * 1024;
+                                long up = uploadSlider.getValue() * 1024;
+                                ApplejuiceFassade.getInstance().setMaxUpAndDown(
+                                    up,
+                                    down);
+                            }
+                            else {
+                                downloadSlider.setValue( (int) ajSettings.
+                                    getMaxDownloadInKB());
+                            }
                         }
-                    }
-                });
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        popup.add(uploadMenu);
-                        popup.add(downloadMenu);
-                    }
-                });
+                    });
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            popup.add(uploadMenu);
+                            popup.add(downloadMenu);
+                        }
+                    });
+                }
             }
         }
 
