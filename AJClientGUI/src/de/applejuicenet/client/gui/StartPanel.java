@@ -26,9 +26,12 @@ import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import java.awt.LayoutManager;
+import java.awt.Dimension;
+import javax.swing.text.Document;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.51 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.52 2004/05/24 06:05:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,6 +67,7 @@ public class StartPanel
     private String label6Text;
     private String firewallWarning;
     private boolean firstChange = true;
+    private ImageIcon icon1;
 
     private String keinServer = "";
 
@@ -117,37 +121,26 @@ public class StartPanel
         JPanel panel4 = new JPanel(new BorderLayout());
         panel4.setBackground(Color.WHITE);
 
-        JPanel panel1 = new JPanel(new GridBagLayout());
-        panel1.setBackground(Color.WHITE);
+        IconManager im = IconManager.getInstance();
+        icon1 = im.getIcon("applejuicebanner");
+        JPanel panel1 = new NorthPanel(new BorderLayout());
         panel1.setBackground(Color.WHITE);
 
-        IconManager im = IconManager.getInstance();
-        ImageIcon icon1 = im.getIcon("applejuicebanner");
         JLabel label1 = new JLabel(icon1);
         JScrollPane sp = new JScrollPane(serverMessage);
         sp.setBorder(null);
         sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        panel1.add(label1, BorderLayout.WEST);
+        panel1.add(sp, BorderLayout.EAST);
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 0;
         constraints.gridy = 0;
-        panel1.add(label1, constraints);
-        constraints.gridx = 1;
-        constraints.weightx = 1;
-        panel1.add(sp, constraints);
-        constraints.weightx = 0;
-
-        constraints.gridx = 0;
-        constraints.gridy = 0;
         constraints.insets.left = 5;
 
-        constraints.gridwidth = 2;
-        panel3.add(panel1, constraints);
-        constraints.gridwidth = 1;
-
-        constraints.gridy++;
         ImageIcon icon2 = im.getIcon("start");
         JLabel label2 = new JLabel(icon2);
         panel3.add(label2, constraints);
@@ -168,7 +161,8 @@ public class StartPanel
         faq = new JTextPane();
         faq.setContentType("text/html");
         faq.setEditable(false);
-        faq.setText("<html><a href=\"http://www.applejuicenet.de/13.0.html\">FAQ</a></html>");
+        faq.setText(
+            "<html><a href=\"http://www.applejuicenet.de/13.0.html\">FAQ</a></html>");
         faq.addHyperlinkListener(new HyperlinkListener() {
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() ==
@@ -251,7 +245,7 @@ public class StartPanel
 
         constraints.insets.top = 0;
 
-//        add(panel1, BorderLayout.NORTH);
+        add(panel1, BorderLayout.NORTH);
         panel4.add(panel3, BorderLayout.NORTH);
         JScrollPane scrollPane = new JScrollPane(panel4);
         scrollPane.setBorder(null);
@@ -275,11 +269,13 @@ public class StartPanel
                 LanguageSelector ls = LanguageSelector.
                     getInstance();
                 String nachricht = ZeichenErsetzer.korrigiereUmlaute(ls.
-                    getFirstAttrbuteByTagName(".root.javagui.startup.updatefehlernachricht"));
+                    getFirstAttrbuteByTagName(
+                    ".root.javagui.startup.updatefehlernachricht"));
                 String titel = ZeichenErsetzer.korrigiereUmlaute(ls.
                     getFirstAttrbuteByTagName(".root.mainform.caption"));
                 JOptionPane.showMessageDialog(this, nachricht,
-                                              titel, JOptionPane.INFORMATION_MESSAGE);
+                                              titel,
+                                              JOptionPane.INFORMATION_MESSAGE);
             }
         }
         catch (Exception e) {
@@ -294,7 +290,8 @@ public class StartPanel
 
     public void fireLanguageChanged() {
         try {
-            keinServer = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.keinserver");
+            keinServer = languageSelector.getFirstAttrbuteByTagName(
+                ".root.javagui.mainform.keinserver");
             netzwerk.setText("<html><font><h2>" +
                              ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.html7")) +
@@ -310,7 +307,8 @@ public class StartPanel
                                "</h2></font></html>");
             firewallWarning = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.firewallwarning.caption"));
+                getFirstAttrbuteByTagName(
+                ".root.mainform.firewallwarning.caption"));
             if (netInfo != null && netInfo.isFirewalled()) {
                 warnungen.setVisible(true);
                 warnungIcon.setVisible(true);
@@ -406,7 +404,7 @@ public class StartPanel
     public void fireContentChanged(int type, Object content) {
         try {
             if (type == DataUpdateListener.NETINFO_CHANGED) {
-                if (firstChange){
+                if (firstChange) {
                     firstChange = false;
                     new NachrichtenWorker().start();
                 }
@@ -439,8 +437,9 @@ public class StartPanel
                     label7.setText("");
                 }
                 String tmp = netInfo.getWelcomeMessage();
-                if (tmp.compareTo(serverMessage.getText()) != 0){
+                if (tmp.compareTo(serverMessage.getText()) != 0) {
                     serverMessage.setText(netInfo.getWelcomeMessage());
+                    serverMessage.setCaretPosition(0);
                 }
             }
             else if (type == DataUpdateListener.INFORMATION_CHANGED) {
@@ -453,12 +452,12 @@ public class StartPanel
                         if (information.getServerName() == null
                             || information.getServerName().length() == 0) {
                             ServerDO serverDO = information.getServerDO();
-                            if (serverDO != null){
+                            if (serverDO != null) {
                                 String tmp = serverDO.getHost() + ":" +
                                     serverDO.getPort();
                                 temp.replace(pos, pos + 2, tmp);
                             }
-                            else{
+                            else {
                                 temp.replace(pos, pos + 2, "?");
                             }
                         }
@@ -499,7 +498,8 @@ public class StartPanel
     public void lostSelection() {
     }
 
-    private class NachrichtenWorker extends Thread{
+    private class NachrichtenWorker
+        extends Thread {
         public void run() {
             if (logger.isEnabledFor(Level.DEBUG)) {
                 logger.debug("NachrichtenWorkerThread gestartet. " + this);
@@ -531,8 +531,8 @@ public class StartPanel
                 }
                 StringBuffer buffer = new StringBuffer(htmlText);
                 int index;
-                while ((index = buffer.indexOf(". ")) != -1){
-                     buffer.replace(index, index + 1, ".<br>");
+                while ( (index = buffer.indexOf(". ")) != -1) {
+                    buffer.replace(index, index + 1, ".<br>");
                 }
                 htmlText = buffer.toString();
                 nachrichten.setContentType("text/html");
@@ -564,4 +564,14 @@ public class StartPanel
         }
     }
 
+    private class NorthPanel
+        extends JPanel {
+        public NorthPanel(LayoutManager layoutManager) {
+            super(layoutManager);
+        }
+
+        public Dimension getPreferredSize() {
+            return new Dimension(super.getPreferredSize().width, icon1.getIconHeight());
+        }
+    }
 }
