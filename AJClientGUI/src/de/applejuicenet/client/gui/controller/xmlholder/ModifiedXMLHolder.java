@@ -34,7 +34,7 @@ import org.apache.xerces.parsers.SAXParser;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.22 2004/02/19 09:53:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.23 2004/02/19 16:50:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +43,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.23  2004/02/19 16:50:06  maj0r
+ * Bug #226 gefixt (Danke an dsp2004)
+ *
  * Revision 1.22  2004/02/19 09:53:13  maj0r
  * Serverauswertung korrigiert.
  *
@@ -757,13 +760,15 @@ public class ModifiedXMLHolder
             if (netInfo.getTryConnectToServer() != -1) {
                 serverDO = (ServerDO) serverMap.get(Integer.
                     toString(netInfo.getTryConnectToServer()));
-                serverDO.setTryConnect(true);
-                verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
+                if (serverDO != null){
+                    serverDO.setTryConnect(true);
+                    verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
+                    tryConnectToServer = netInfo.getTryConnectToServer();
+                    information.setServer(serverDO);
+                    information.setVerbindungsStatus(verbindungsStatus);
+                    information.setExterneIP(netInfo.getExterneIP());
+                }
             }
-            tryConnectToServer = netInfo.getTryConnectToServer();
-            information.setServer(serverDO);
-            information.setVerbindungsStatus(verbindungsStatus);
-            information.setExterneIP(netInfo.getExterneIP());
         }
         if (connectedWithServerId != netInfo.getConnectedWithServerId() ){
             if (connectedWithServerId != -1){
@@ -777,13 +782,15 @@ public class ModifiedXMLHolder
             if (netInfo.getConnectedWithServerId() != -1) {
                 serverDO = (ServerDO) serverMap.get(Integer.toString(
                     netInfo.getConnectedWithServerId()));
-                serverDO.setConnected(true);
-                verbindungsStatus = Information.VERBUNDEN;
+                if (serverDO != null){
+                    serverDO.setConnected(true);
+                    connectedWithServerId = netInfo.getConnectedWithServerId();
+                    information.setServer(serverDO);
+                    information.setVerbindungsStatus(verbindungsStatus);
+                    information.setExterneIP(netInfo.getExterneIP());
+                    verbindungsStatus = Information.VERBUNDEN;
+                }
             }
-            connectedWithServerId = netInfo.getConnectedWithServerId();
-            information.setServer(serverDO);
-            information.setVerbindungsStatus(verbindungsStatus);
-            information.setExterneIP(netInfo.getExterneIP());
         }
 
         Search aSearch;
