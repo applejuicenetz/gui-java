@@ -1,4 +1,4 @@
-package de.applejuicenet.client.gui.tablerenderer;
+package de.applejuicenet.client.gui.tables;
 
 import java.awt.*;
 import javax.swing.*;
@@ -8,9 +8,10 @@ import javax.swing.tree.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
+import de.applejuicenet.client.gui.tables.AbstractCellEditor;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tablerenderer/Attic/JTreeTable.java,v 1.12 2003/07/01 18:34:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.1 2003/07/01 18:41:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.1  2003/07/01 18:41:39  maj0r
+ * Struktur verändert.
+ *
  * Revision 1.12  2003/07/01 18:34:28  maj0r
  * Struktur verändert.
  *

@@ -13,9 +13,11 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.shared.SortButtonRenderer;
 import de.applejuicenet.client.gui.shared.HeaderListener;
+import de.applejuicenet.client.gui.tables.server.ServerTableCellRenderer;
+import de.applejuicenet.client.gui.tables.server.ServerTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.18 2003/07/01 14:53:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.19 2003/07/01 18:41:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +26,9 @@ import de.applejuicenet.client.gui.shared.HeaderListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.19  2003/07/01 18:41:39  maj0r
+ * Struktur verändert.
+ *
  * Revision 1.18  2003/07/01 14:53:48  maj0r
  * Unnützes Update der Serverliste entfernt.
  *

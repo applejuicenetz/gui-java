@@ -2,14 +2,14 @@ package de.applejuicenet.client.gui.tables.download;
 
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.gui.tablerenderer.Node;
+import de.applejuicenet.client.gui.tables.Node;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
 import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.1 2003/07/01 18:34:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.2 2003/07/01 18:41:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import java.util.HashMap;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadNode.java,v $
+ * Revision 1.2  2003/07/01 18:41:39  maj0r
+ * Struktur verändert.
+ *
  * Revision 1.1  2003/07/01 18:34:28  maj0r
  * Struktur verändert.
  *

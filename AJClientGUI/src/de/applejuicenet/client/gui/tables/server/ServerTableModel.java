@@ -1,4 +1,4 @@
-package de.applejuicenet.client.gui;
+package de.applejuicenet.client.gui.tables.server;
 
 import java.util.*;
 
@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.gui.shared.SortableTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerTableModel.java,v 1.6 2003/07/01 14:54:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.1 2003/07/01 18:41:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.shared.SortableTableModel;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerTableModel.java,v $
+ * Revision 1.1  2003/07/01 18:41:39  maj0r
+ * Struktur verändert.
+ *
  * Revision 1.6  2003/07/01 14:54:27  maj0r
  * Weggefallene Server werden erkannt und entfernt.
  *
