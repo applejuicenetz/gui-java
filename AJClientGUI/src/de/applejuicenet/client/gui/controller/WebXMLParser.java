@@ -1,18 +1,28 @@
 package de.applejuicenet.client.gui.controller;
 
-import java.io.*;
-import javax.xml.parsers.*;
-
-import org.xml.sax.*;
-import org.apache.log4j.Logger;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.log4j.Level;
-import de.applejuicenet.client.gui.*;
+import org.apache.log4j.Logger;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.controller.xmlholder.
+    DownloadPartListXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.UserPartListXMLHolder;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.exception.*;
+import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.shared.HtmlLoader;
+import de.applejuicenet.client.shared.XMLDecoder;
+import de.applejuicenet.client.shared.exception.PartlistException;
+import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.19 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.20 2003/12/31 16:17:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +31,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.20  2003/12/31 16:17:52  maj0r
+ * Refactoring.
+ *
  * Revision 1.19  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -89,7 +102,8 @@ import de.applejuicenet.client.shared.exception.*;
  */
 
 public abstract class WebXMLParser
-        extends XMLDecoder implements DataUpdateListener {
+    extends XMLDecoder
+    implements DataUpdateListener {
     private String host;
     private String xmlCommand;
     private long timestamp = 0;
@@ -113,84 +127,75 @@ public abstract class WebXMLParser
 
     private void init(String xmlCommand) {
         logger = Logger.getLogger(getClass());
-        ConnectionSettings rc = PropertiesManager.getOptionsManager().getRemoteSettings();
+        ConnectionSettings rc = PropertiesManager.getOptionsManager().
+            getRemoteSettings();
         host = rc.getHost();
         password = rc.getOldPassword();
-        if (host == null || host.length() == 0)
+        if (host == null || host.length() == 0) {
             host = "localhost";
+        }
         this.xmlCommand = xmlCommand;
         webXML = true;
     }
 
-    public void reload(String parameters) throws Exception{
+    public void reload(String parameters) throws Exception {
         String xmlData = null;
-        try
-        {
-            if (useTimestamp)
-            {
+        try {
+            if (useTimestamp) {
                 xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                                                       xmlCommand + "?password=" + password + "&timestamp=" +
-                                                       timestamp + parameters);
+                    xmlCommand + "?password=" + password + "&timestamp=" +
+                    timestamp + parameters);
             }
-            else
-            {
-                if (parameters.length() != 0)
-                {
+            else {
+                if (parameters.length() != 0) {
                     xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                                                           xmlCommand + "?password=" + password + "&" + parameters);
+                        xmlCommand + "?password=" + password + "&" + parameters);
                 }
-                else
-                {
+                else {
                     xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                                                           xmlCommand + "?password=" + password);
+                        xmlCommand + "?password=" + password);
                 }
             }
         }
-        catch (WebSiteNotFoundException ex)
-        {
+        catch (WebSiteNotFoundException ex) {
             AppleJuiceDialog.closeWithErrormessage(
-                    "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
+                "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
         }
         DocumentBuilderFactory factory =
-                DocumentBuilderFactory.newInstance();
-        try
-        {
+            DocumentBuilderFactory.newInstance();
+        try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             document = builder.parse(new InputSource(new StringReader(xmlData)));
-            if (!firstRun)
-            {
-                if (useTimestamp)
-                {
-                    timestamp = Long.parseLong(getFirstAttrbuteByTagName(new String[]{
+            if (!firstRun) {
+                if (useTimestamp) {
+                    timestamp = Long.parseLong(getFirstAttrbuteByTagName(new
+                        String[] {
                         "applejuice", "time"}
-                                                                         , true));
+                        , true));
                 }
             }
-            else
-            {
+            else {
                 firstRun = !firstRun;
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Exception x = e;
-            if (e.getClass()==SAXException.class){
-                if (((SAXException)e).getException() != null)
-                {
-                    x = ((SAXException)e).getException();
+            if (e.getClass() == SAXException.class) {
+                if ( ( (SAXException) e).getException() != null) {
+                    x = ( (SAXException) e).getException();
                 }
             }
-            if (getClass()==DownloadPartListXMLHolder.class
-                || getClass()==UserPartListXMLHolder.class){
+            if (getClass() == DownloadPartListXMLHolder.class
+                || getClass() == UserPartListXMLHolder.class) {
                 throw new PartlistException();
             }
-            else if (logger.isEnabledFor(Level.ERROR)){
+            else if (logger.isEnabledFor(Level.ERROR)) {
                 String zeit = Long.toString(System.currentTimeMillis());
                 String path = System.getProperty("user.dir") + File.separator +
                     "logs";
                 File aFile = new File(path);
                 if (!aFile.exists()) {
-                  aFile.mkdir();
+                    aFile.mkdir();
                 }
                 FileWriter fileWriter = null;
                 String dateiname = path + File.separator + zeit + ".exc";
@@ -202,7 +207,8 @@ public abstract class WebXMLParser
                 catch (IOException ioE) {
                     logger.error(ioE);
                 }
-                logger.error("Unbehandelte SAX-Exception -> Inhalt in " + dateiname, x);
+                logger.error("Unbehandelte SAX-Exception -> Inhalt in " +
+                             dateiname, x);
             }
         }
     }
@@ -214,11 +220,12 @@ public abstract class WebXMLParser
     }
 
     public void fireContentChanged(int type, Object content) {
-        if (type==DataUpdateListener.CONNECTION_SETTINGS_CHANGED){
-            host = ((ConnectionSettings)content).getHost();
-            password = ((ConnectionSettings)content).getOldPassword();
-            if (host == null || host.length() == 0)
+        if (type == DataUpdateListener.CONNECTION_SETTINGS_CHANGED) {
+            host = ( (ConnectionSettings) content).getHost();
+            password = ( (ConnectionSettings) content).getOldPassword();
+            if (host == null || host.length() == 0) {
                 host = "localhost";
+            }
         }
     }
 }

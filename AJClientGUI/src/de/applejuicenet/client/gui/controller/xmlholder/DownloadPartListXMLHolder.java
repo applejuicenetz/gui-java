@@ -1,7 +1,7 @@
-package de.applejuicenet.client.gui.controller;
+package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DownloadPartListXMLHolder.java,v 1.9 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DownloadPartListXMLHolder.java,v 1.1 2003/12/31 16:13:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListXMLHolder.java,v $
+ * Revision 1.1  2003/12/31 16:13:31  maj0r
+ * Refactoring.
+ *
  * Revision 1.9  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -47,6 +50,8 @@ package de.applejuicenet.client.gui.controller;
 import org.w3c.dom.*;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.shared.dac.*;
+import de.applejuicenet.client.gui.controller.WebXMLParser;
+import de.applejuicenet.client.gui.controller.PartListHolder;
 
 public class DownloadPartListXMLHolder
         extends WebXMLParser implements PartListHolder{

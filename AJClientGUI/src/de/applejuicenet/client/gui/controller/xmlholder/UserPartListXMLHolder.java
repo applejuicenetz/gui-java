@@ -1,11 +1,13 @@
-package de.applejuicenet.client.gui.controller;
+package de.applejuicenet.client.gui.controller.xmlholder;
 
 import org.w3c.dom.*;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.shared.dac.*;
+import de.applejuicenet.client.gui.controller.WebXMLParser;
+import de.applejuicenet.client.gui.controller.PartListHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/UserPartListXMLHolder.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/UserPartListXMLHolder.java,v 1.1 2003/12/31 16:13:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UserPartListXMLHolder.java,v $
+ * Revision 1.1  2003/12/31 16:13:31  maj0r
+ * Refactoring.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *

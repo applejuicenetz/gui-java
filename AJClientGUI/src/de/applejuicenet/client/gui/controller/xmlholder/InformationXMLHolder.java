@@ -1,7 +1,9 @@
-package de.applejuicenet.client.gui.controller;
+package de.applejuicenet.client.gui.controller.xmlholder;
+
+import de.applejuicenet.client.gui.controller.WebXMLParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/InformationXMLHolder.java,v 1.5 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/InformationXMLHolder.java,v 1.1 2003/12/31 16:13:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +12,9 @@ package de.applejuicenet.client.gui.controller;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: InformationXMLHolder.java,v $
+ * Revision 1.1  2003/12/31 16:13:31  maj0r
+ * Refactoring.
+ *
  * Revision 1.5  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *

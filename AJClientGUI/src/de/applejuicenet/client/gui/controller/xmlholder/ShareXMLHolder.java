@@ -1,4 +1,4 @@
-package de.applejuicenet.client.gui.controller;
+package de.applejuicenet.client.gui.controller.xmlholder;
 
 import java.util.*;
 
@@ -7,9 +7,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.shared.MapSetStringKey;
+import de.applejuicenet.client.gui.controller.WebXMLParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.16 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.1 2003/12/31 16:13:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,9 @@ import de.applejuicenet.client.shared.MapSetStringKey;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.1  2003/12/31 16:13:31  maj0r
+ * Refactoring.
+ *
  * Revision 1.16  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *

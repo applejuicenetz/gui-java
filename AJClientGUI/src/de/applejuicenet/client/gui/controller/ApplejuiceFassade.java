@@ -1,21 +1,37 @@
 package de.applejuicenet.client.gui.controller;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
-import javax.swing.*;
-
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.trees.ApplejuiceNode;
-import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.exception.*;
-import de.applejuicenet.client.shared.dac.*;
-import org.apache.log4j.Logger;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import javax.swing.SwingUtilities;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.xmlholder.DirectoryXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.
+    DownloadPartListXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.InformationXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.ModifiedXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.SessionXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.SettingsXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.ShareXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.UserPartListXMLHolder;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.trees.ApplejuiceNode;
+import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.HtmlLoader;
+import de.applejuicenet.client.shared.Information;
+import de.applejuicenet.client.shared.NetworkInfo;
+import de.applejuicenet.client.shared.ShareEntry;
+import de.applejuicenet.client.shared.Version;
+import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.shared.dac.PartListDO;
+import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.82 2003/12/31 15:46:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.83 2003/12/31 16:13:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +40,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.83  2003/12/31 16:13:16  maj0r
+ * Refactoring.
+ *
  * Revision 1.82  2003/12/31 15:46:03  maj0r
  * Version erhoeht.
  *
@@ -123,7 +142,7 @@ import org.apache.log4j.Level;
  * Wizard fertiggestellt.
  *
  * Revision 1.31  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.29  2003/09/06 14:48:50  maj0r
  * Core-Dateisystem-Separator statisch verwendbar.
@@ -270,55 +289,45 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     private Logger logger;
 
     public void addDataUpdateListener(DataUpdateListener listener, int type) {
-        try{
-            if (type == DataUpdateListener.DOWNLOAD_CHANGED)
-            {
+        try {
+            if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
                 downloadListener.add(listener);
             }
-            else if (type == DataUpdateListener.NETINFO_CHANGED)
-            {
+            else if (type == DataUpdateListener.NETINFO_CHANGED) {
                 networkInfoListener.add(listener);
             }
-            else if (type == DataUpdateListener.SERVER_CHANGED)
-            {
+            else if (type == DataUpdateListener.SERVER_CHANGED) {
                 serverListener.add(listener);
             }
-            else if (type == DataUpdateListener.SHARE_CHANGED)
-            {
+            else if (type == DataUpdateListener.SHARE_CHANGED) {
                 shareListener.add(listener);
             }
-            else if (type == DataUpdateListener.UPLOAD_CHANGED)
-            {
+            else if (type == DataUpdateListener.UPLOAD_CHANGED) {
                 uploadListener.add(listener);
             }
-            else if (type == DataUpdateListener.SPEED_CHANGED)
-            {
+            else if (type == DataUpdateListener.SPEED_CHANGED) {
                 speedListener.add(listener);
             }
-            else if (type == DataUpdateListener.SEARCH_CHANGED)
-            {
+            else if (type == DataUpdateListener.SEARCH_CHANGED) {
                 searchListener.add(listener);
             }
-            else if (type == DataUpdateListener.INFORMATION_CHANGED)
-            {
+            else if (type == DataUpdateListener.INFORMATION_CHANGED) {
                 informationListener.add(listener);
             }
-            else
-            {
+            else {
                 return;
             }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     private ApplejuiceFassade() {
         logger = Logger.getLogger(getClass());
-        try
-        {
+        try {
             downloadListener = new HashSet();
             searchListener = new HashSet();
             serverListener = new HashSet();
@@ -335,77 +344,89 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             informationXML.reload("");
             shareXML = new ShareXMLHolder();
 
-            String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[]{
-                "applejuice", "generalinformation", "version"} , true);
-            separator = informationXML.getFirstAttrbuteByTagName(new String[]{
-                "applejuice", "generalinformation", "filesystem", "seperator"} , false);
-            coreVersion = new Version(versionsTag, Version.getOSTypByOSName((String) System.getProperties().get("os.name")));
+            String versionsTag = informationXML.getFirstAttrbuteByTagName(new
+                String[] {
+                "applejuice", "generalinformation", "version"}
+                , true);
+            separator = informationXML.getFirstAttrbuteByTagName(new String[] {
+                "applejuice", "generalinformation", "filesystem", "seperator"}
+                , false);
+            coreVersion = new Version(versionsTag,
+                                      Version.getOSTypByOSName( (String) System.
+                getProperties().get("os.name")));
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void startXMLCheck() {
         workerThread = new Thread() {
-                    public void run() {
-                        if (logger.isEnabledFor(Level.DEBUG))
-                            logger.debug("MainWorkerThread gestartet. " + workerThread);
-                        try{
-                            SessionXMLHolder session = new SessionXMLHolder();
+            public void run() {
+                if (logger.isEnabledFor(Level.DEBUG)) {
+                    logger.debug("MainWorkerThread gestartet. " + workerThread);
+                }
+                try {
+                    SessionXMLHolder session = new SessionXMLHolder();
+                    session.reload("");
+                    String sessionId = session.getFirstAttrbuteByTagName(new
+                        String[] {
+                        "applejuice", "session", "id"}
+                        , false);
+                    long time = System.currentTimeMillis();
+                    if (logger.isEnabledFor(Level.DEBUG)) {
+                        logger.debug("SessionID = " + sessionId);
+                    }
+                    while (!isInterrupted()) {
+                        if (System.currentTimeMillis() > time + 20000) {
                             session.reload("");
-                            String sessionId = session.getFirstAttrbuteByTagName(new String[]{
-                                "applejuice", "session", "id" }, false);
-                            long time = System.currentTimeMillis();
-                            if (logger.isEnabledFor(Level.DEBUG))
+                            sessionId = session.getFirstAttrbuteByTagName(new
+                                String[] {
+                                "applejuice", "session", "id"}
+                                , false);
+                            if (logger.isEnabledFor(Level.DEBUG)) {
                                 logger.debug("SessionID = " + sessionId);
-                            while (!isInterrupted()){
-                                if (System.currentTimeMillis() > time + 20000){
-                                    session.reload("");
-                                    sessionId = session.getFirstAttrbuteByTagName(new String[]{
-                                        "applejuice", "session", "id" }, false);
-                                    if (logger.isEnabledFor(Level.DEBUG))
-                                        logger.debug("SessionID = " + sessionId);
-                                }
-                                time = System.currentTimeMillis();
-                                updateModifiedXML(sessionId);
-                                try{
-                                    sleep(2000);
-                                }
-                                catch (InterruptedException e)
-                                {
-                                    interrupt();
-                                }
                             }
                         }
-                        catch (Exception e)
-                        {
-                            if (logger.isEnabledFor(Level.ERROR))
-                                logger.error("Unbehandelte Exception", e);
+                        time = System.currentTimeMillis();
+                        updateModifiedXML(sessionId);
+                        try {
+                            sleep(2000);
                         }
-                        if (logger.isEnabledFor(Level.DEBUG))
-                            logger.debug("MainWorkerThread beendet. " + workerThread);
+                        catch (InterruptedException e) {
+                            interrupt();
+                        }
                     }
-                };
+                }
+                catch (Exception e) {
+                    if (logger.isEnabledFor(Level.ERROR)) {
+                        logger.error("Unbehandelte Exception", e);
+                    }
+                }
+                if (logger.isEnabledFor(Level.DEBUG)) {
+                    logger.debug("MainWorkerThread beendet. " + workerThread);
+                }
+            }
+        };
         workerThread.start();
     }
 
     public void stopXMLCheck() {
-        try{
-            if (workerThread!=null){
+        try {
+            if (workerThread != null) {
                 workerThread.interrupt();
             }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    public Information getInformation(){
+    public Information getInformation() {
         return modifiedXML.getInformation();
     }
 
@@ -420,57 +441,62 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public AJSettings getAJSettings() {
-        try{
-            if (settingsXML == null)
-            {
+        try {
+            if (settingsXML == null) {
                 settingsXML = new SettingsXMLHolder();
             }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
         return settingsXML.getAJSettings();
     }
 
     public void saveAJSettings(AJSettings ajSettings) {
-        try{
+        try {
             String parameters = "";
-            try
-            {
+            try {
                 parameters = "Nickname=" +
-                        URLEncoder.encode(ajSettings.getNick(), "UTF-8");
+                    URLEncoder.encode(ajSettings.getNick(), "UTF-8");
                 parameters += "&XMLPort=" + Long.toString(ajSettings.getXMLPort());
                 parameters += "&Port=" + Long.toString(ajSettings.getPort());
-                parameters += "&MaxUpload=" + Long.toString(ajSettings.getMaxUpload());
-                parameters += "&MaxDownload=" + Long.toString(ajSettings.getMaxDownload());
+                parameters += "&MaxUpload=" +
+                    Long.toString(ajSettings.getMaxUpload());
+                parameters += "&MaxDownload=" +
+                    Long.toString(ajSettings.getMaxDownload());
                 parameters += "&Speedperslot=" +
-                        Integer.toString(ajSettings.getSpeedPerSlot());
+                    Integer.toString(ajSettings.getSpeedPerSlot());
                 parameters += "&Incomingdirectory=" +
-                        URLEncoder.encode(ajSettings.getIncomingDir(), "UTF-8");
+                    URLEncoder.encode(ajSettings.getIncomingDir(), "UTF-8");
                 parameters += "&Temporarydirectory=" +
-                        URLEncoder.encode(ajSettings.getTempDir(), "UTF-8");
+                    URLEncoder.encode(ajSettings.getTempDir(), "UTF-8");
                 parameters += "&maxconnections=" +
-                        URLEncoder.encode(Long.toString(ajSettings.getMaxConnections()), "UTF-8");
+                    URLEncoder.encode(Long.toString(ajSettings.
+                    getMaxConnections()), "UTF-8");
                 parameters += "&autoconnect=" +
-                        URLEncoder.encode(Boolean.toString(ajSettings.isAutoConnect()), "UTF-8");
+                    URLEncoder.encode(Boolean.toString(ajSettings.isAutoConnect()),
+                                      "UTF-8");
                 parameters += "&maxnewconnectionsperturn=" +
-                        URLEncoder.encode(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()), "UTF-8");
+                    URLEncoder.encode(Long.toString(ajSettings.
+                    getMaxNewConnectionsPerTurn()), "UTF-8");
             }
-            catch (UnsupportedEncodingException ex1)
-            {
-                if (logger.isEnabledFor(Level.ERROR))
+            catch (UnsupportedEncodingException ex1) {
+                if (logger.isEnabledFor(Level.ERROR)) {
                     logger.error("Unbehandelte Exception", ex1);
+                }
             }
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setsettings?password=" + password + "&" + parameters, false);
+                                         "/function/setsettings?password=" +
+                                         password + "&" + parameters, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -479,315 +505,336 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public synchronized void updateModifiedXML(String sessionId) {
-        try
-        {
+        try {
             modifiedXML.update(sessionId);
-            SwingUtilities.invokeLater(new Runnable(){
-                public void run(){
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
                     informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
-                    informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
+                    informDataUpdateListener(DataUpdateListener.
+                                             DOWNLOAD_CHANGED);
                     informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
                     informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
                     informDataUpdateListener(DataUpdateListener.SPEED_CHANGED);
                     informDataUpdateListener(DataUpdateListener.SEARCH_CHANGED);
-                    informDataUpdateListener(DataUpdateListener.INFORMATION_CHANGED);
+                    informDataUpdateListener(DataUpdateListener.
+                                             INFORMATION_CHANGED);
                 }
             });
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void resumeDownload(int[] id) {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             String parameters = "&id=" + id[0];
-            if (id.length>1){
-                for (int i=1; i<id.length; i++){
+            if (id.length > 1) {
+                for (int i = 1; i < id.length; i++) {
                     parameters += "&id" + i + "=" + id[i];
                 }
             }
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/resumedownload?password=" + password + parameters, false);
+                                         "/function/resumedownload?password=" +
+                                         password + parameters, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void startSearch(String searchString) {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/search?password=" + password + "&search=" + searchString, false);
+                                         "/function/search?password=" +
+                                         password + "&search=" + searchString, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void cancelSearch(int searchId) {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/cancelsearch?password=" + password + "&id=" + searchId, false);
+                                         "/function/cancelsearch?password=" +
+                                         password + "&id=" + searchId, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void renameDownload(int downloadId, String neuerName) {
-        try
-        {
+        try {
             String encodedName = neuerName;
             try {
                 StringBuffer tempLink = new StringBuffer(encodedName);
-                for (int i=0; i<tempLink.length(); i++){
-                    if (tempLink.charAt(i)==' '){
+                for (int i = 0; i < tempLink.length(); i++) {
+                    if (tempLink.charAt(i) == ' ') {
                         tempLink.setCharAt(i, '.');
                     }
                 }
-                encodedName = URLEncoder.encode(tempLink.toString(), "ISO-8859-1");
+                encodedName = URLEncoder.encode(tempLink.toString(),
+                                                "ISO-8859-1");
             }
             catch (UnsupportedEncodingException ex) {
                 //gibbet, also nix zu behandeln...
             }
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/renamedownload?password=" + password + "&id=" + downloadId
-                                                  + "&name=" + encodedName, false);
+                                         "/function/renamedownload?password=" +
+                                         password + "&id=" + downloadId
+                                         + "&name=" + encodedName, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void setTargetDir(int downloadId, String verzeichnisName) {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/settargetdir?password=" + password + "&id=" + downloadId
-                                                  + "&dir=" + verzeichnisName, false);
+                                         "/function/settargetdir?password=" +
+                                         password + "&id=" + downloadId
+                                         + "&dir=" + verzeichnisName, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void exitCore() {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/exitcore?password=" + password, false);
+                                         "/function/exitcore?password=" +
+                                         password, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public static void setPassword(String passwordAsMD5) {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setpassword?password=" + password + "&newpassword="
-                                                  + passwordAsMD5, false);
+                                         "/function/setpassword?password=" +
+                                         password + "&newpassword="
+                                         + passwordAsMD5, false);
         }
-        catch (WebSiteNotFoundException ex)
-        {
+        catch (WebSiteNotFoundException ex) {
         }
     }
 
     public void cancelDownload(int[] id) {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             String parameters = "&id=" + id[0];
-            if (id.length>1){
-                for (int i=1; i<id.length; i++){
+            if (id.length > 1) {
+                for (int i = 1; i < id.length; i++) {
                     parameters += "&id" + i + "=" + id[i];
                 }
             }
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/canceldownload?password=" + password + parameters, false);
+                                         "/function/canceldownload?password=" +
+                                         password + parameters, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void cleanDownloadList() {
         logger.info("Clear list...");
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/cleandownloadlist?password=" + password, false);
+                "/function/cleandownloadlist?password=" + password, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void pauseDownload(int[] id) {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             String parameters = "&id=" + id[0];
-            if (id.length>1){
-                for (int i=1; i<id.length; i++){
+            if (id.length > 1) {
+                for (int i = 1; i < id.length; i++) {
                     parameters += "&id" + i + "=" + id[i];
                 }
             }
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/pausedownload?password=" + password + parameters, false);
+                                         "/function/pausedownload?password=" +
+                                         password + parameters, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void connectToServer(int id) {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/serverlogin?password=" + password + "&id=" + id, false);
+                                         "/function/serverlogin?password=" +
+                                         password + "&id=" + id, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
+    public Object getObjectById(int id) {
+        return null;
+    }
+
     public void entferneServer(int id) {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/removeserver?password=" + password + "&id=" + id, false);
+                                         "/function/removeserver?password=" +
+                                         password + "&id=" + id, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void setPrioritaet(int id, int prioritaet) {
-        try{
-            if (prioritaet < 1 || prioritaet > 250)
-            {
+        try {
+            if (prioritaet < 1 || prioritaet > 250) {
                 System.out.print("Warnung: Prioritaet muss 1<= x <=250 sein!");
                 return;
             }
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setpriority?password=" + password + "&id=" + id +
-                                                  "&priority=" + prioritaet, false);
+                                         "/function/setpriority?password=" +
+                                         password + "&id=" + id +
+                                         "&priority=" + prioritaet, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void processLink(String link) {
-        try{
-            if (link == null || link.length() == 0)
-            {
+        try {
+            if (link == null || link.length() == 0) {
                 System.out.print("Warnung: Ungueltiger Link uebergeben!");
                 return;
             }
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/processlink?password=" + password + "&link=" + link, false);
+                                         "/function/processlink?password=" +
+                                         password + "&link=" + link, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void setPowerDownload(int[] id, int powerDownload) {
-        try{
-            if (powerDownload < 0 || powerDownload > 490)
-            {
-                System.out.print("Warnung: PowerDownload muss 0<= x <=490 sein!");
+        try {
+            if (powerDownload < 0 || powerDownload > 490) {
+                System.out.print(
+                    "Warnung: PowerDownload muss 0<= x <=490 sein!");
                 return;
             }
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-            String parameters = "&powerdownload=" + powerDownload + "&id=" + id[0];
-            if (id.length>1){
-                for (int i=1; i<id.length; i++){
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
+            String parameters = "&powerdownload=" + powerDownload + "&id=" +
+                id[0];
+            if (id.length > 1) {
+                for (int i = 1; i < id.length; i++) {
                     parameters += "&id" + i + "=" + id[i];
                 }
             }
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/setpowerdownload?password=" + password + parameters, false);
+                                         "/function/setpowerdownload?password=" +
+                                         password + parameters, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     private static String getHost() {
-        String savedHost = PropertiesManager.getOptionsManager().getRemoteSettings().getHost();
-        if (savedHost.length() == 0)
-        {
+        String savedHost = PropertiesManager.getOptionsManager().
+            getRemoteSettings().getHost();
+        if (savedHost.length() == 0) {
             savedHost = "localhost";
         }
         return savedHost;
     }
 
     public static boolean istCoreErreichbar() {
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+        try {
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                           "/xml/information.xml?password=" + password);
+                                         "/xml/information.xml?password=" +
+                                         password);
         }
-        catch (WebSiteNotFoundException ex)
-        {
+        catch (WebSiteNotFoundException ex) {
             return false;
         }
         return true;
     }
 
     public static synchronized ApplejuiceFassade getInstance() {
-        if (instance==null){
+        if (instance == null) {
             instance = new ApplejuiceFassade();
         }
         return instance;
@@ -797,152 +844,149 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return coreVersion;
     }
 
-    public HashMap getDownloadsSnapshot(){
+    public HashMap getDownloadsSnapshot() {
         return modifiedXML.getDownloads();
     }
 
     private void informDataUpdateListener(int type) {
-        try{
-            switch (type)
-            {
-                case DataUpdateListener.DOWNLOAD_CHANGED:
-                    {
-                        HashMap content = modifiedXML.getDownloads();
-                        Iterator it = downloadListener.iterator();
-                        while (it.hasNext())
-                        {
-                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-                                                                                DOWNLOAD_CHANGED, content);
-                        }
-                        break;
+        try {
+            switch (type) {
+                case DataUpdateListener.DOWNLOAD_CHANGED: {
+                    HashMap content = modifiedXML.getDownloads();
+                    Iterator it = downloadListener.iterator();
+                    while (it.hasNext()) {
+                        ( (DataUpdateListener) it.next()).fireContentChanged(
+                            DataUpdateListener.
+                            DOWNLOAD_CHANGED, content);
                     }
-                case DataUpdateListener.UPLOAD_CHANGED:
-                    {
-                        HashMap content = modifiedXML.getUploads();
-                        Iterator it = uploadListener.iterator();
-                        while (it.hasNext())
-                        {
-                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-                                                                                UPLOAD_CHANGED, content);
-                        }
-                        break;
+                    break;
+                }
+                case DataUpdateListener.UPLOAD_CHANGED: {
+                    HashMap content = modifiedXML.getUploads();
+                    Iterator it = uploadListener.iterator();
+                    while (it.hasNext()) {
+                        ( (DataUpdateListener) it.next()).fireContentChanged(
+                            DataUpdateListener.
+                            UPLOAD_CHANGED, content);
                     }
-                case DataUpdateListener.SERVER_CHANGED:
-                    {
-                        HashMap content = modifiedXML.getServer();
-                        Iterator it = serverListener.iterator();
-                        while (it.hasNext())
-                        {
-                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-                                                                                SERVER_CHANGED, content);
-                        }
-                        break;
+                    break;
+                }
+                case DataUpdateListener.SERVER_CHANGED: {
+                    HashMap content = modifiedXML.getServer();
+                    Iterator it = serverListener.iterator();
+                    while (it.hasNext()) {
+                        ( (DataUpdateListener) it.next()).fireContentChanged(
+                            DataUpdateListener.
+                            SERVER_CHANGED, content);
                     }
-                case DataUpdateListener.SHARE_CHANGED:
-                    {
-                        HashMap content = shareXML.getShare();
-                        Iterator it = shareListener.iterator();
-                        while (it.hasNext())
-                        {
-                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-                                                                                SHARE_CHANGED, content);
-                        }
-                        break;
+                    break;
+                }
+                case DataUpdateListener.SHARE_CHANGED: {
+                    HashMap content = shareXML.getShare();
+                    Iterator it = shareListener.iterator();
+                    while (it.hasNext()) {
+                        ( (DataUpdateListener) it.next()).fireContentChanged(
+                            DataUpdateListener.
+                            SHARE_CHANGED, content);
                     }
-                case DataUpdateListener.NETINFO_CHANGED:
-                    {
-                        NetworkInfo content = modifiedXML.getNetworkInfo();
-                        Iterator it = networkInfoListener.iterator();
-                        while (it.hasNext())
-                        {
-                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-                                                                                NETINFO_CHANGED, content);
-                        }
-                        break;
+                    break;
+                }
+                case DataUpdateListener.NETINFO_CHANGED: {
+                    NetworkInfo content = modifiedXML.getNetworkInfo();
+                    Iterator it = networkInfoListener.iterator();
+                    while (it.hasNext()) {
+                        ( (DataUpdateListener) it.next()).fireContentChanged(
+                            DataUpdateListener.
+                            NETINFO_CHANGED, content);
                     }
-                case DataUpdateListener.SPEED_CHANGED:
-                    {
-                        HashMap content = modifiedXML.getSpeeds();
-                        Iterator it = speedListener.iterator();
-                        while (it.hasNext())
-                        {
-                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.SPEED_CHANGED, content);
-                        }
-                        break;
+                    break;
+                }
+                case DataUpdateListener.SPEED_CHANGED: {
+                    HashMap content = modifiedXML.getSpeeds();
+                    Iterator it = speedListener.iterator();
+                    while (it.hasNext()) {
+                        ( (DataUpdateListener) it.next()).fireContentChanged(
+                            DataUpdateListener.SPEED_CHANGED, content);
                     }
-                case DataUpdateListener.SEARCH_CHANGED:
-                    {
-                        HashMap content = modifiedXML.getSearchs();
-                        Iterator it = searchListener.iterator();
-                        while (it.hasNext())
-                        {
-                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.SEARCH_CHANGED, content);
-                        }
-                        break;
+                    break;
+                }
+                case DataUpdateListener.SEARCH_CHANGED: {
+                    HashMap content = modifiedXML.getSearchs();
+                    Iterator it = searchListener.iterator();
+                    while (it.hasNext()) {
+                        ( (DataUpdateListener) it.next()).fireContentChanged(
+                            DataUpdateListener.SEARCH_CHANGED, content);
                     }
-                case DataUpdateListener.INFORMATION_CHANGED:
-                    {
-                        Information content = modifiedXML.getInformation();
-                        Iterator it = informationListener.iterator();
-                        while (it.hasNext())
-                        {
-                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.INFORMATION_CHANGED, content);
-                        }
-                        break;
+                    break;
+                }
+                case DataUpdateListener.INFORMATION_CHANGED: {
+                    Information content = modifiedXML.getInformation();
+                    Iterator it = informationListener.iterator();
+                    while (it.hasNext()) {
+                        ( (DataUpdateListener) it.next()).fireContentChanged(
+                            DataUpdateListener.INFORMATION_CHANGED, content);
                     }
+                    break;
+                }
                 default:
                     break;
             }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public HashMap getShare(boolean reinit) {
-        try{
-            if (share == null || reinit)
+        try {
+            if (share == null || reinit) {
                 share = shareXML.getShare();
+            }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
         return share;
     }
 
-    public void setShare(HashSet newShare){
-        try{
+    public void setShare(HashSet newShare) {
+        try {
             int shareSize = newShare.size();
-            if (newShare==null)
+            if (newShare == null) {
                 return;
+            }
             String parameters = "countshares=" + shareSize;
             ShareEntry shareEntry = null;
             Iterator it = newShare.iterator();
             int i = 1;
-            while (it.hasNext()){
-                shareEntry = (ShareEntry)it.next();
+            while (it.hasNext()) {
+                shareEntry = (ShareEntry) it.next();
                 try {
-                    parameters += "&sharedirectory" + i + "=" + URLEncoder.encode(shareEntry.getDir(), "UTF-8");
+                    parameters += "&sharedirectory" + i + "=" +
+                        URLEncoder.encode(shareEntry.getDir(), "UTF-8");
                 }
                 catch (UnsupportedEncodingException e) {
                     logger.error("Unbehandelte Exception", e);
                 }
                 parameters += "&sharesub" + i + "=" +
-                        (shareEntry.getShareMode()==ShareEntry.SUBDIRECTORY ? "true" : "false");
+                    (shareEntry.getShareMode() == ShareEntry.SUBDIRECTORY ?
+                     "true" : "false");
                 i++;
             }
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setsettings?password=" + password + "&" + parameters, false);
+                                         "/function/setsettings?password=" +
+                                         password + "&" + parameters, false);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
