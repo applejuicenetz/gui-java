@@ -8,6 +8,8 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import java.awt.*;
+import javax.swing.table.TableColumn;
+import de.applejuicenet.client.gui.tablerenderer.DownloadDateiNameCellRenderer;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -61,6 +63,14 @@ public class DownloadPanel extends JPanel {
     constraints.weightx = 1;
     downloadTable = new JTable();
     downloadTable.setModel(new DownloadDataTableModel());
+    int vColIndex = 0;
+    TableColumn col = downloadTable.getColumnModel().getColumn(vColIndex);
+    col.setCellRenderer(new DownloadDateiNameCellRenderer(downloadTable));
+
+    Object[] test = new Object[1];
+    test[0] = new String("dies ist ein test");
+    ((DownloadDataTableModel)downloadTable.getModel()).setTable(test);
+
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(downloadTable);
     topPanel.add(aScrollPane, constraints);
