@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.37 2003/09/06 14:49:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.38 2003/09/07 09:29:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,6 +40,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.38  2003/09/07 09:29:55  maj0r
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ *
  * Revision 1.37  2003/09/06 14:49:59  maj0r
  * Verwendung des Separators korrigiert.
  *
@@ -138,6 +141,8 @@ public class SharePanel
 
     private AppleJuiceDialog parent;
 
+    public static SharePanel _this;
+
     private JPanel panelCenter;
     private DirectoryTree folderTree = new DirectoryTree();
     private TitledBorder titledBorder1;
@@ -170,10 +175,12 @@ public class SharePanel
     private int anzahlDateien = 0;
     private String dateiGroesse = "0 MB";
     private boolean treeInitialisiert = false;
+    private boolean initizialiced = false;
 
     private Logger logger;
 
     public SharePanel(AppleJuiceDialog parent) {
+        _this = this;
         logger = Logger.getLogger(getClass());
         try
         {
@@ -600,6 +607,24 @@ public class SharePanel
 
     public void registerSelected() {
         try{
+            if (!initizialiced) {
+                initizialiced = true;
+                shareTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                TableColumnModel headerModel = shareTable.getTableHeader().getColumnModel();
+                int columnCount = headerModel.getColumnCount();
+                PositionManager pm = PositionManager.getInstance();
+                if (pm.isLegal()) {
+                    int[] widths = pm.getShareWidths();
+                    for (int i = 0; i < columnCount; i++) {
+                        headerModel.getColumn(i).setPreferredWidth(widths[i]);
+                    }
+                }
+                else {
+                    for (int i = 0; i < columnCount; i++) {
+                        headerModel.getColumn(i).setPreferredWidth(shareTable.getWidth() / columnCount);
+                    }
+                }
+            }
             if (!treeInitialisiert)
             {
                 ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
@@ -766,5 +791,14 @@ public class SharePanel
                     logger.error("Unbehandelte Exception", ex);
             }
         }
+    }
+
+    public int[] getColumnWidths(){
+        TableColumnModel tcm = shareTable.getColumnModel();
+        int[] widths = new int[tcm.getColumnCount()];
+        for (int i = 0; i < tcm.getColumnCount(); i++) {
+            widths[i] = tcm.getColumn(i).getWidth();
+        }
+        return widths;
     }
 }

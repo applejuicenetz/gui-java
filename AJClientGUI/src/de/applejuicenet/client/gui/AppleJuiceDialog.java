@@ -13,11 +13,12 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.42 2003/09/05 09:02:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.43 2003/09/07 09:29:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.43  2003/09/07 09:29:55  maj0r
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ *
  * Revision 1.42  2003/09/05 09:02:26  maj0r
  * Threadverwendung verbessert.
  *
@@ -271,12 +275,39 @@ public class AppleJuiceDialog
         };
         dm.startXMLCheck();
         memoryWorker.start();
-    }
 
-    public Dimension getPreferredSize() {
-        Dimension systemDimension = getToolkit().getScreenSize();
-        return new Dimension((int) systemDimension.getWidth() / 4 * 3,
-                             (int) systemDimension.getHeight() / 4 * 3);
+        try{
+            //http://download.berlios.de/applejuicejava/version.txt
+            String strAktuellsteVersion = HtmlLoader.getHtmlContent("download.berlios.de", 80, HtmlLoader.GET,
+                                                        "/applejuicejava/version.txt");
+            if (strAktuellsteVersion.length()>0){
+                int pos = ApplejuiceFassade.GUI_VERSION.indexOf(' ');
+                double aktuelleVersion;
+                if (pos!=-1){
+                    aktuelleVersion = Double.parseDouble(ApplejuiceFassade.GUI_VERSION.substring(0, pos));
+                }
+                else{
+                    aktuelleVersion = Double.parseDouble(ApplejuiceFassade.GUI_VERSION);
+                }
+                double aktuellsteVersion = Double.parseDouble(strAktuellsteVersion);
+                if (aktuellsteVersion>aktuelleVersion){
+                    String titel = ls.getFirstAttrbuteByTagName(new String[]{"javagui", "startup", "newversiontitel"});
+                    String nachricht = ls.getFirstAttrbuteByTagName(new String[]{"javagui", "startup", "newversionnachricht"});
+                    nachricht = nachricht.replaceFirst("%s", strAktuellsteVersion);
+                    JOptionPane.showMessageDialog(this, nachricht, titel,
+                            JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        }
+        catch (WebSiteNotFoundException e){
+            if (logger.isEnabledFor(Level.INFO))
+                logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Proxy?");
+        }
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.INFO))
+                logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
+        }
+
     }
 
     private static void einstellungenSpeichern() {
@@ -292,6 +323,13 @@ public class AppleJuiceDialog
     }
 
     private void closeDialog(WindowEvent evt) {
+        int[] downloadWidths = DownloadPanel._this.getColumnWidths();
+        int[] uploadWidths = UploadPanel._this.getColumnWidths();
+        int[] serverWidths = ServerPanel._this.getColumnWidths();
+        int[] searchWidths = SearchPanel._this.getColumnWidths();
+        int[] shareWidths = SharePanel._this.getColumnWidths();
+        Dimension dim = getSize();
+        Point p = getLocationOnScreen();
         setVisible(false);
         if (memoryWorker!=null){
             memoryWorker.interrupt();
@@ -302,6 +340,15 @@ public class AppleJuiceDialog
             logger.info(nachricht);
         System.out.println(nachricht);
         einstellungenSpeichern();
+        PositionManager pm = PositionManager.getInstance();
+        pm.setMainXY(p);
+        pm.setMainDimension(dim);
+        pm.setDownloadWidths(downloadWidths);
+        pm.setUploadWidths(uploadWidths);
+        pm.setServerWidths(serverWidths);
+        pm.setSearchWidths(searchWidths);
+        pm.setShareWidths(shareWidths);
+        pm.save();
         System.exit(0);
     }
 

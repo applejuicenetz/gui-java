@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.26 2003/09/04 10:13:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.27 2003/09/07 09:29:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.27  2003/09/07 09:29:55  maj0r
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ *
  * Revision 1.26  2003/09/04 10:13:28  maj0r
  * Logger eingebaut.
  *
@@ -71,15 +74,20 @@ import org.apache.log4j.Level;
 public class ServerPanel
         extends JPanel
         implements LanguageListener, DataUpdateListener, RegisterI {
+
+    public static ServerPanel _this;
+
     private JTable serverTable;
     private JLabel sucheServer = new JLabel(
             "<html><font><u>mehr Server gibt es hier</u></font></html>");
     private JPopupMenu popup = new JPopupMenu();
-    JMenuItem item1;
-    JMenuItem item2;
+    private JMenuItem item1;
+    private JMenuItem item2;
     private Logger logger;
+    private boolean initizialiced = false;
 
     public ServerPanel() {
+        _this = this;
         logger = Logger.getLogger(getClass());
         try
         {
@@ -202,7 +210,24 @@ public class ServerPanel
     }
 
     public void registerSelected() {
-//    ApplejuiceFassade.getInstance().updateModifiedXML();
+        if (!initizialiced){
+            initizialiced = true;
+            TableColumnModel headerModel = serverTable.getTableHeader().getColumnModel();
+            int columnCount = headerModel.getColumnCount();
+            PositionManager pm = PositionManager.getInstance();
+            if (pm.isLegal()){
+                int[] widths = pm.getServerWidths();
+                for (int i=0; i<columnCount; i++){
+                    headerModel.getColumn(i).setPreferredWidth(widths[i]);
+                }
+            }
+            else{
+                for (int i=0; i<columnCount; i++){
+                    headerModel.getColumn(i).setPreferredWidth(serverTable.getWidth()/columnCount);
+                }
+            }
+            serverTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        }
     }
 
     public void fireContentChanged(int type, Object content) {
@@ -263,5 +288,14 @@ public class ServerPanel
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
+    }
+
+    public int[] getColumnWidths(){
+        TableColumnModel tcm = serverTable.getColumnModel();
+        int[] widths = new int[tcm.getColumnCount()];
+        for (int i = 0; i < tcm.getColumnCount(); i++) {
+            widths[i] = tcm.getColumn(i).getWidth();
+        }
+        return widths;
     }
 }

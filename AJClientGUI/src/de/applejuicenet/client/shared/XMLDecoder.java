@@ -8,7 +8,7 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.14 2003/09/06 14:51:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.15 2003/09/07 09:29:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import org.xml.sax.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: XMLDecoder.java,v $
+ * Revision 1.15  2003/09/07 09:29:55  maj0r
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ *
  * Revision 1.14  2003/09/06 14:51:39  maj0r
  * XMLDecoder bei Attributen korrigiert.
  *
@@ -145,6 +148,10 @@ public abstract class XMLDecoder {
             }
         }
         return ""; //Nicht gefunden
+    }
+
+    protected void setAttributeByTagName(String[] attributePath, int newValue) {
+        setAttributeByTagName(attributePath, Integer.toString(newValue));
     }
 
     protected void setAttributeByTagName(String[] attributePath, String newValue) {

@@ -7,5 +7,17 @@
         <farben aktiv="true">
             <hintergrund downloadFertig="-13382656" quelle="-205"/>
         </farben>
+        <location>
+            <main height="" width="" x="" y=""/>
+            <download column0="208" column1="121" column2="64"
+                column3="71" column4="97" column5="79" column6="97"
+                column7="74" column8="35" column9="96"/>
+            <upload column0="375" column1="134" column2="67"
+                column3="97" column4="134" column5="33" column6="106"/>
+            <server column0="563" column1="180" column2="56" column3="149"/>
+            <search column0="130" column1="130" column2="130"
+                column3="129" column4="130" column5="129"/>
+            <share column0="599" column1="69" column2="61"/>
+        </location>
     </options>
 </root>

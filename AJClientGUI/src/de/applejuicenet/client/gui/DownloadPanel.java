@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.43 2003/09/04 10:14:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.44 2003/09/07 09:29:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.44  2003/09/07 09:29:55  maj0r
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ *
  * Revision 1.43  2003/09/04 10:14:08  maj0r
  * Logger eingebaut.
  *
@@ -103,6 +106,9 @@ import org.apache.log4j.Level;
 public class DownloadPanel
         extends JPanel
         implements LanguageListener, RegisterI, DataUpdateListener {
+
+    public static DownloadPanel _this;
+
     private DownloadDOOverviewPanel downloadDOOverviewPanel = new DownloadDOOverviewPanel();
     private JTextField downloadLink = new JTextField();
     private JButton btnStartDownload = new JButton("Download");
@@ -113,15 +119,15 @@ public class DownloadPanel
     private JPopupMenu popup = new JPopupMenu();
     private boolean initizialiced = false;
     private JScrollPane aScrollPane;
-    JMenuItem item1;
-    JMenuItem item2;
-    JMenuItem item3;
-    JMenuItem item4;
-    JMenuItem item5;
-    JMenuItem item6;
+    private JMenuItem item1;
+    private JMenuItem item2;
+    private JMenuItem item4;
+    private JMenuItem item5;
+    private JMenuItem item6;
     private Logger logger;
 
     public DownloadPanel() {
+        _this = this;
         logger = Logger.getLogger(getClass());
         powerDownloadPanel = new PowerDownloadPanel(this);
         try {
@@ -316,8 +322,17 @@ public class DownloadPanel
                 int width = aScrollPane.getWidth() - 18;
                 TableColumnModel headerModel = downloadTable.getTableHeader().getColumnModel();
                 int columnCount = headerModel.getColumnCount();
-                for (int i=0; i<columnCount; i++){
-                    headerModel.getColumn(i).setPreferredWidth(width/columnCount);
+                PositionManager pm = PositionManager.getInstance();
+                if (pm.isLegal()){
+                    int[] widths = pm.getDownloadWidths();
+                    for (int i=0; i<columnCount; i++){
+                        headerModel.getColumn(i).setPreferredWidth(widths[i]);
+                    }
+                }
+                else{
+                    for (int i=0; i<columnCount; i++){
+                        headerModel.getColumn(i).setPreferredWidth(width/columnCount);
+                    }
                 }
                 downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             }
@@ -406,13 +421,22 @@ public class DownloadPanel
         }
     }
 
+    public int[] getColumnWidths(){
+        TableColumnModel tcm = downloadTable.getColumnModel();
+        int[] widths = new int[tcm.getColumnCount()];
+        for (int i = 0; i < tcm.getColumnCount(); i++) {
+            widths[i] = tcm.getColumn(i).getWidth();
+        }
+        return widths;
+    }
+
     public void fireContentChanged(int type, Object content) {
         try{
             if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
-                    HashMap downloads = (HashMap) content;
-                    ((DownloadRootNode)downloadModel.getRoot()).setDownloadMap(downloads);
-                    DownloadDirectoryNode.setDownloads(downloads);
-                    downloadTable.updateUI();
+                HashMap downloads = (HashMap) content;
+                ((DownloadRootNode)downloadModel.getRoot()).setDownloadMap(downloads);
+                DownloadDirectoryNode.setDownloads(downloads);
+                downloadTable.updateUI();
             }
         }
         catch (Exception e)

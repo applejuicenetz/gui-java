@@ -6,7 +6,7 @@ import java.net.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.13 2003/09/06 16:25:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.14 2003/09/07 09:29:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.14  2003/09/07 09:29:55  maj0r
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ *
  * Revision 1.13  2003/09/06 16:25:39  maj0r
  * Newsanfrage an neue Domain angepasst.
  * HtmlLoader korrigiert.
@@ -77,7 +80,7 @@ public abstract class HtmlLoader {
           throw new WebSiteNotFoundException(WebSiteNotFoundException.
                                              UNKNOWN_HOST);
         }
-        while(inputLine.indexOf("Content-Type: text/html")!=0){
+        while(inputLine.indexOf("Content-Type: text")!=0){
             inputLine = in.readLine();
         }
         while((inputLine = in.readLine()) != null){

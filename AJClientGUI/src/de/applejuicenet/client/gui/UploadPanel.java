@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.21 2003/09/02 16:08:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.22 2003/09/07 09:29:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.22  2003/09/07 09:29:55  maj0r
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ *
  * Revision 1.21  2003/09/02 16:08:14  maj0r
  * Downloadbaum komplett umgebaut.
  *
@@ -68,22 +71,27 @@ import de.applejuicenet.client.shared.*;
 public class UploadPanel
         extends JPanel
         implements LanguageListener, RegisterI, DataUpdateListener {
+
+    public static UploadPanel _this;
+
     private JTreeTable uploadDataTable;
     private int anzahlClients = 0;
     private JLabel label1 = new JLabel("0 Clients in Deiner Uploadliste");
     private String clientText;
     private UploadDataTableModel uploadDataTableModel;
+    private boolean initizialiced = false;
 
     public UploadPanel() {
+        _this = this;
         try {
-            jbInit();
+            init();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void jbInit() throws Exception {
+    private void init() throws Exception {
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
         uploadDataTableModel = new UploadDataTableModel();
@@ -161,7 +169,33 @@ public class UploadPanel
         }
     }
 
+    public int[] getColumnWidths(){
+        TableColumnModel tcm = uploadDataTable.getColumnModel();
+        int[] widths = new int[tcm.getColumnCount()];
+        for (int i = 0; i < tcm.getColumnCount(); i++) {
+            widths[i] = tcm.getColumn(i).getWidth();
+        }
+        return widths;
+    }
+
     public void registerSelected() {
-//    ApplejuiceFassade.getInstance().updateModifiedXML();
+        if (!initizialiced){
+            initizialiced = true;
+            TableColumnModel headerModel = uploadDataTable.getTableHeader().getColumnModel();
+            int columnCount = headerModel.getColumnCount();
+            PositionManager pm = PositionManager.getInstance();
+            if (pm.isLegal()){
+                int[] widths = pm.getUploadWidths();
+                for (int i=0; i<columnCount; i++){
+                    headerModel.getColumn(i).setPreferredWidth(widths[i]);
+                }
+            }
+            else{
+                for (int i=0; i<columnCount; i++){
+                    headerModel.getColumn(i).setPreferredWidth(uploadDataTable.getWidth()/columnCount);
+                }
+            }
+            uploadDataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        }
     }
 }

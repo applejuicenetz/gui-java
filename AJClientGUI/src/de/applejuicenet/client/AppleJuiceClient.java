@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.24 2003/09/06 14:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.25 2003/09/07 09:29:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.25  2003/09/07 09:29:55  maj0r
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ *
  * Revision 1.24  2003/09/06 14:57:55  maj0r
  * Splashscreenausblendung verlagert.
  *
@@ -140,11 +143,18 @@ public class AppleJuiceClient {
       }
       Splash splash = new Splash(IconManager.getInstance().getIcon("splashscreen").getImage());
       splash.show();
+      PositionManager lm = PositionManager.getInstance();
       AppleJuiceDialog theApp = new AppleJuiceDialog();
-      Dimension appDimension = theApp.getSize();
-      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-      theApp.setLocation( (screenSize.width - appDimension.width) / 2,
-                         (screenSize.height - appDimension.height) / 2);
+      if (lm.isLegal()){
+          theApp.setLocation(lm.getMainXY());
+          theApp.setSize(lm.getMainDimension());
+      }
+      else{
+          Dimension appDimension = theApp.getSize();
+          Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+          theApp.setLocation( (screenSize.width - appDimension.width) / 2,
+                             (screenSize.height - appDimension.height) / 2);
+      }
       theApp.show();
       nachricht = "appleJuice-Core-GUI läuft...";
       if (logger.isEnabledFor(Level.INFO))
