@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.25 2003/07/01 06:17:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.26 2003/07/01 15:00:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.26  2003/07/01 15:00:00  maj0r
+ * Keyverwendung bei HashSets und HashMaps korrigiert.
+ *
  * Revision 1.25  2003/07/01 06:17:16  maj0r
  * Code optimiert.
  *
@@ -184,7 +187,7 @@ public class DataManager { //Singleton-Implementierung
     return modifiedXML.getServer();
   }
 
-  public void updateModifiedXML() {
+  public synchronized void updateModifiedXML() {
     modifiedXML.update();
     informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
     informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
@@ -196,7 +199,7 @@ public class DataManager { //Singleton-Implementierung
   public boolean connectToServer(int id) {
     HashMap server = getAllServer();
     String id_key = Integer.toString(id);
-    ServerDO serverDO = (ServerDO) server.get(id_key);
+    ServerDO serverDO = (ServerDO) server.get(new MapSetStringKey(id_key));
     if (serverDO==null){
       System.out.print("Warnung: Server mit ID: "+ id_key +" nicht gefunden!");
       return false;
