@@ -1,17 +1,17 @@
 package de.applejuicenet.client.gui.plugins;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-import java.io.CharArrayWriter;
-import org.xml.sax.InputSource;
 import java.io.StringReader;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-import org.xml.sax.XMLReader;
 import java.util.HashMap;
-import org.xml.sax.helpers.XMLReaderFactory;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.xerces.parsers.SAXParser;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 public class PluginsPropertiesXMLHolder extends DefaultHandler{
     private Logger logger;
@@ -27,7 +27,6 @@ public class PluginsPropertiesXMLHolder extends DefaultHandler{
             xr.setContentHandler(this);
             xr.parse(new InputSource(
                 new StringReader(xmlString)));
-            int i=0;
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -49,7 +48,7 @@ public class PluginsPropertiesXMLHolder extends DefaultHandler{
 
     public void characters(char[] ch, int start, int length) throws
         SAXException {
-        xmlContents.put(key.toString(), ch);
+        xmlContents.put(key.toString(), new String(ch, start, length));
     }
 
     public void endElement(String namespaceURI,
