@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project []>
-<project name="aj_java_gui" default="help" basedir="..">
+<project name="aj_java_gui" basedir="..">
 
    <taskdef name="pack" classname="org.sadun.util.ant.Pack" classpath="${basedir}/tools/pack.jar"/>
 
@@ -21,20 +21,6 @@
       <pathelement location="${log4j-1.2.8.jar}"/>
       <pathelement location="${skinlf.jar}"/>
    </path>
-
-   <!-- usage information ... -->
-   <target name="help">
-      <echo>The following targets exist:</echo>
-      <echo>  gui-compile              compiles the appleJuice-gui</echo>
-      <echo>  gui-clean                deletes class files</echo>
-      <echo>  gui-rebuild              bcleans and compiles the appleJuice-gui</echo>
-      <echo>  create-jar               builds appleJuice-jar</echo>
-      <echo>  complete                 builds complete appleJuice</echo>
-      <echo>  build-archive            builds releasable archive-zip</echo>
-      <echo>  build-plugin-jar         builds plugin - build.xml needs to be modified</echo>
-      <echo>  build-pwdlPolicy-jar     builds PowerdownloadPolicy - build.xml needs to be modified</echo>
-      <fail message="You have to specifiy a target" />
-   </target>
 
    <!-- remove class files, DavaDoc files and test results ... -->
    <target name="gui-clean" description="deletes class files">
@@ -130,6 +116,11 @@
 		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/powerdownload/**/*.*"
 			excludes="**/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.class" />
          </jar>
+   </target>
+
+   <target name="cruisecontrol" description="target for cruisecontrol">
+      <cvs dest="${basedir}" command="update -d -P"/>
+      <antcall target="gui-rebuild"/>
    </target>
 
    <target name="complete" depends="create-jar" description="builds complete appleJuice">
