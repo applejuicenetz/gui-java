@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <!--JBuilder Library Definition File-->
+  <fullname>AJLibs</fullname>
+  <class>
+    <path>[tools/log4j-1.2.8.jar]</path>
+    <path>[tools/pack.jar]</path>
+    <path>[tools/xercesImpl.jar]</path>
+    <path>[tools/xmlParserAPIs.jar]</path>
+    <path>[needed_jars/skinlf.jar]</path>
+  </class>
+  <lastmodsaved>1069151967420</lastmodsaved>
+</library>
