@@ -27,7 +27,7 @@ import de.applejuicenet.client.fassade.entity.Download;
  * 
  */
 
-class DownloadDO implements Download, DownloadInternal {
+class DownloadDO implements Download {
 
 	private final int id;
 
