@@ -95,6 +95,14 @@ public class DownloadPartListPanel extends JPanel implements
 	
 	public synchronized void setPartList(PartListDO newPartListDO, Integer newId) {
 		try {
+			if (newPartListDO == null || newId == null){
+				partListDO = null;
+				lineImage = null;
+				image = null;
+				savedMouseEvent = null;
+				updateUI();
+				return;
+			}
 			boolean idChanged = false;
 			if (id == null){
 				idChanged = true;
@@ -105,7 +113,9 @@ public class DownloadPartListPanel extends JPanel implements
 			}
 			if (idChanged){
 				id = newId;
-				partListDO.removeAllParts();
+				if (partListDO != null){
+					partListDO.removeAllParts();
+				}
 			}
 			else if (partListDO != null && newPartListDO != null){
 				Part[] parts = partListDO.getParts();
@@ -169,7 +179,9 @@ public class DownloadPartListPanel extends JPanel implements
 				savedMouseEvent = null;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			partListDO = null;
+			lineImage = null;
 			image = null;
 			savedMouseEvent = null;
 			if (logger.isEnabledFor(Level.DEBUG)) {

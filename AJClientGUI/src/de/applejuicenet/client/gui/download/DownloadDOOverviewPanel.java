@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.6 2004/12/06 14:27:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.7 2004/12/06 14:49:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -239,6 +239,8 @@ public class DownloadDOOverviewPanel
                         getPartList(downloadDO);
                     if (paused){
                     	// wurde moeglicherweise waehrend des Ziehens der Partliste gestoppt
+                    	actualDLDateiName.setText("");
+                    	actualDlOverviewTable.setPartList(null, null);
                     	return false;
                     }
                 }
@@ -247,6 +249,8 @@ public class DownloadDOOverviewPanel
                     partList = null;
                 }
                 if (isInterrupted()){
+                	actualDLDateiName.setText("");
+                	actualDlOverviewTable.setPartList(null, null);
                     return false;
                 }
                 if (partList == null) {
@@ -277,6 +281,8 @@ public class DownloadDOOverviewPanel
 						downloadSoureDO);
                 if (paused){
                 	// wurde moeglicherweise waehrend des Ziehens der Partliste gestoppt
+                	actualDLDateiName.setText("");
+                	actualDlOverviewTable.setPartList(null, null);
                 	return false;
                 }
 			} catch (WebSiteNotFoundException ex) {
@@ -284,7 +290,8 @@ public class DownloadDOOverviewPanel
 				partList = null;
 			}
 			if (partList == null) {
-				actualDLDateiName.setText("");
+            	actualDLDateiName.setText("");
+            	actualDlOverviewTable.setPartList(null, null);
 			} else {
 				actualDLDateiName.setText(tmp + " - " + verfuegbar.replaceFirst("%s", decimalFormat
 						.format(partList.getProzentVerfuegbar())));
