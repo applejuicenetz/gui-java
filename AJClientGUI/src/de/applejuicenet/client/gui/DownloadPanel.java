@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.61 2003/12/05 11:18:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.62 2003/12/16 09:06:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.62  2003/12/16 09:06:40  maj0r
+ * Partliste wird nun erst nach 2 Sekunden Wartezeit geholt, um ein erneutes Klicken behandeln zu können.
+ *
  * Revision 1.61  2003/12/05 11:18:02  maj0r
  * Workaround fürs Setzen der Hintergrundfarben der Scrollbereiche ausgebaut.
  *
@@ -187,6 +190,8 @@ public class DownloadPanel
 /*    private JMenuItem item7;
     private JMenuItem item8;*/
     private Logger logger;
+
+    private DownloadPartListWatcher downloadPartListWatcher = new DownloadPartListWatcher();
 
     public DownloadPanel() {
         _this = this;
@@ -350,24 +355,10 @@ public class DownloadPanel
                 }
                 if (node.getClass() == DownloadMainNode.class
                         && ((DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
-                    if (!powerDownloadPanel.isAutomaticPwdlActive()){
-                        powerDownloadPanel.btnPdl.setEnabled(true);
-                    }
-                    else{
-                        powerDownloadPanel.btnPdl.setEnabled(false);
-                    }
-                    downloadDOOverviewPanel.setDownloadDO(((DownloadMainNode) node).getDownloadDO());
+                        downloadPartListWatcher.setDownloadNode(node);
                 }
                 else if (node.getClass() == DownloadSourceDO.class) {
-                    if (!powerDownloadPanel.isAutomaticPwdlActive()){
-                        powerDownloadPanel.btnPdl.setEnabled(true);
-                    }
-                    else{
-                        powerDownloadPanel.btnPdl.setEnabled(false);
-                    }
-                    if (((DownloadSourceDO) node).getQueuePosition() <= 20) {
-                        downloadDOOverviewPanel.setDownloadSourceDO((DownloadSourceDO) node);
-                    }
+                    downloadPartListWatcher.setDownloadNode(node);
                 }
                 else {
                     powerDownloadPanel.btnPdl.setEnabled(false);
@@ -663,6 +654,71 @@ public class DownloadPanel
         public void mouseReleased(MouseEvent e) {
             renderer.setPressedColumn(-1);
             header.repaint();
+        }
+    }
+
+    private class DownloadPartListWatcher{
+        private Thread worker = null;
+        private Object nodeObject = null;
+
+        public void setDownloadNode(Object node){
+            if (worker!=null && nodeObject!=node){
+                worker.interrupt();
+                worker = null;
+            }
+            if (nodeObject!=node){
+                nodeObject = node;
+                worker = new Thread() {
+                    public void run() {
+                        try {
+                            sleep(2000);
+                            SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    if (nodeObject.getClass() == DownloadMainNode.class
+                                        &&
+                                        ( (DownloadMainNode) nodeObject).getType() ==
+                                        DownloadMainNode.ROOT_NODE) {
+                                        if (!powerDownloadPanel.
+                                            isAutomaticPwdlActive()) {
+                                            powerDownloadPanel.btnPdl.
+                                                setEnabled(true);
+                                        }
+                                        else {
+                                            powerDownloadPanel.btnPdl.
+                                                setEnabled(false);
+                                        }
+                                        downloadDOOverviewPanel.setDownloadDO( ( (
+                                            DownloadMainNode) nodeObject).
+                                            getDownloadDO());
+                                    }
+                                    else if (nodeObject.getClass() ==
+                                             DownloadSourceDO.class) {
+                                        if (!powerDownloadPanel.
+                                            isAutomaticPwdlActive()) {
+                                            powerDownloadPanel.btnPdl.
+                                                setEnabled(true);
+                                        }
+                                        else {
+                                            powerDownloadPanel.btnPdl.
+                                                setEnabled(false);
+                                        }
+                                        if ( ( (DownloadSourceDO) nodeObject).
+                                            getQueuePosition() <= 20) {
+                                            downloadDOOverviewPanel.
+                                                setDownloadSourceDO( (
+                                                DownloadSourceDO) nodeObject);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        catch (InterruptedException ex) {
+                            interrupt();
+                        }
+                    }
+                };
+                worker.start();
+            }
         }
     }
 }

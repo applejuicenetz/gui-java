@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.19 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.20 2003/12/16 09:06:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.20  2003/12/16 09:06:40  maj0r
+ * Partliste wird nun erst nach 2 Sekunden Wartezeit geholt, um ein erneutes Klicken behandeln zu können.
+ *
  * Revision 1.19  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -169,27 +172,30 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
                 final DownloadDO tempDO = downloadDO;
                 partListWorkerThread.interrupt();
                 partListWorkerThread = new Thread() {
-                            public void run() {
-                                actualDLDateiName.setText(tempDO.getFilename() + " (" +
-                                        tempDO.getTemporaryFileNumber() + ".data)");
-                                while(!isInterrupted()){
-                                    PartListDO partList = ApplejuiceFassade.getInstance().getPartList(tempDO);
-                                    if (partList==null){
-                                        interrupt();
-                                        actualDLDateiName.setText("");
-                                        actualDlOverviewTable.setPartList(null);
-                                    }
-                                    else{
-                                        actualDlOverviewTable.setPartList(partList);
-                                        try{
-                                            sleep(15000);
-                                        }
-                                        catch (InterruptedException iE){
-                                            interrupt();
-                                        }
-                                    }
+                    public void run() {
+                        actualDLDateiName.setText(tempDO.getFilename() + " (" +
+                                                  tempDO.getTemporaryFileNumber() +
+                                                  ".data)");
+                        actualDlOverviewTable.setPartList(null);
+                        while (!isInterrupted()) {
+                            PartListDO partList = ApplejuiceFassade.getInstance().
+                                getPartList(tempDO);
+                            if (partList == null) {
+                                interrupt();
+                                actualDLDateiName.setText("");
+                                actualDlOverviewTable.setPartList(null);
+                            }
+                            else {
+                                actualDlOverviewTable.setPartList(partList);
+                                try {
+                                    sleep(15000);
+                                }
+                                catch (InterruptedException iE) {
+                                    interrupt();
                                 }
                             }
+                        }
+                    }
                 };
                 partListWorkerThread.start();
             }
@@ -216,6 +222,8 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
                 final DownloadSourceDO tempDO = downloadSourceDO;
                 final SwingWorker worker2 = new SwingWorker() {
                             public Object construct() {
+                                actualDLDateiName.setText(tempDO.getFilename() + " (" + tempDO.getNickname() + ")");
+                                actualDlOverviewTable.setPartList(null);
                                 return ApplejuiceFassade.getInstance().getPartList(tempDO);
                             }
                             public void finished(){
