@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import javax.swing.JTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.10 2004/02/24 18:21:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.11 2004/02/28 14:15:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import javax.swing.JTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDirectoryNode.java,v $
+ * Revision 1.11  2004/02/28 14:15:02  maj0r
+ * Featurerequest #254 gefixt (Danke an te_real_ZeroBANG)
+ * Downloadtabelle wird jetzt beim Start standarmaessig nach Dateiname sortiert.
+ *
  * Revision 1.10  2004/02/24 18:21:51  maj0r
  * Schrift korrigiert.
  *
@@ -71,7 +75,7 @@ public class DownloadDirectoryNode
     public static int SORT_GESCHWINDIGKEIT = 7;
     public static int SORT_STATUS = 7;
 
-    private static int sort = SORT_NO_SORT;
+    private static int sort = SORT_DOWNLOADNAME;
     private static boolean isAscent = true;
 
     private int speziellSort = sort;
