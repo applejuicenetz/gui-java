@@ -6,50 +6,31 @@
       <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/tables/upload/UploadTableCellRenderer.java" line="115" column="92" vertical-scroll-proportion="1.0235757" horizontal-scroll-proportion="0.6962162" />
       <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/tables/download/DownloadTableCellRenderer.java" line="197" column="124" vertical-scroll-proportion="0.4762634" horizontal-scroll-proportion="0.9383784" />
       <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/OptionsDialog.java" line="93" column="0" vertical-scroll-proportion="0.50094515" horizontal-scroll-proportion="0.0" />
-      <source-position-entry url="jar://D:/j2sdk1.4.2/src.zip!/javax/swing/AbstractButton.java" line="1771" column="0" vertical-scroll-proportion="0.35095137" horizontal-scroll-proportion="0.0" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/tables/download/DownloadNode.java" line="134" column="113" vertical-scroll-proportion="0.70321363" horizontal-scroll-proportion="0.85513514" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/OptionsManager.java" line="116" column="0" vertical-scroll-proportion="0.5652174" horizontal-scroll-proportion="0.0" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/shared/RemoteConfiguration.java" line="54" column="0" vertical-scroll-proportion="0.3327032" horizontal-scroll-proportion="0.0" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/WebXMLParser.java" line="78" column="46" vertical-scroll-proportion="0.57088846" horizontal-scroll-proportion="0.3481081" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/ModifiedXMLHolder.java" line="287" column="81" vertical-scroll-proportion="0.32136106" horizontal-scroll-proportion="0.612973" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/ServerPanel.java" line="194" column="15" vertical-scroll-proportion="0.3327032" horizontal-scroll-proportion="0.113513514" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/DataManager.java" line="364" column="0" vertical-scroll-proportion="0.3327032" horizontal-scroll-proportion="0.0" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/shared/Version.java" line="46" column="0" vertical-scroll-proportion="0.3327032" horizontal-scroll-proportion="0.0" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/StartPanel.java" line="247" column="103" vertical-scroll-proportion="0.6862004" horizontal-scroll-proportion="0.7794595">
-        <folding>
-          <element signature="imports" expanded="true" />
-        </folding>
-      </source-position-entry>
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/shared/HtmlLoader.java" line="66" column="93" vertical-scroll-proportion="0.17202269" horizontal-scroll-proportion="0.7037838" />
+      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/tables/download/DownloadNode.java" line="25" column="113" vertical-scroll-proportion="0.43059778" horizontal-scroll-proportion="0.73308617" />
+      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/WebXMLParser.java" line="78" column="46" vertical-scroll-proportion="0.5825735" horizontal-scroll-proportion="0.30037314" />
+      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/ModifiedXMLHolder.java" line="287" column="81" vertical-scroll-proportion="0.32826748" horizontal-scroll-proportion="0.5289179" />
+      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/shared/HtmlLoader.java" line="66" column="93" vertical-scroll-proportion="0.17325228" horizontal-scroll-proportion="0.60727614" />
+      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/StartPanel.java" line="247" column="103" vertical-scroll-proportion="0.6879433" horizontal-scroll-proportion="0.49253732" />
+      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/ServerPanel.java" line="194" column="15" vertical-scroll-proportion="0.3343465" horizontal-scroll-proportion="0.07182836" />
+      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/shared/Version.java" line="46" column="0" vertical-scroll-proportion="0.3343465" horizontal-scroll-proportion="0.0" />
+      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/OptionsManager.java" line="63" column="0" vertical-scroll-proportion="0.8966565" horizontal-scroll-proportion="0.0" />
     </history>
-    <open-files>
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/tables/download/DownloadNode.java" line="134" column="113" vertical-scroll-proportion="0.70321363" horizontal-scroll-proportion="0.85513514" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/ModifiedXMLHolder.java" line="287" column="81" vertical-scroll-proportion="0.32136106" horizontal-scroll-proportion="0.612973" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/DataManager.java" line="364" column="0" vertical-scroll-proportion="0.3327032" horizontal-scroll-proportion="0.0" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/WebXMLParser.java" line="78" column="46" vertical-scroll-proportion="0.57088846" horizontal-scroll-proportion="0.3481081" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/shared/HtmlLoader.java" line="66" column="93" vertical-scroll-proportion="0.17202269" horizontal-scroll-proportion="0.7037838" selected="true" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/StartPanel.java" line="247" column="103" vertical-scroll-proportion="0.6862004" horizontal-scroll-proportion="0.7794595">
-        <folding>
-          <element signature="imports" expanded="true" />
-        </folding>
-      </source-position-entry>
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/ServerPanel.java" line="194" column="15" vertical-scroll-proportion="0.3327032" horizontal-scroll-proportion="0.113513514" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/shared/Version.java" line="46" column="0" vertical-scroll-proportion="0.3327032" horizontal-scroll-proportion="0.0" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/shared/RemoteConfiguration.java" line="54" column="0" vertical-scroll-proportion="0.3327032" horizontal-scroll-proportion="0.0" />
-      <source-position-entry url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller/OptionsManager.java" line="116" column="0" vertical-scroll-proportion="0.5652174" horizontal-scroll-proportion="0.0" />
-    </open-files>
+    <open-files />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="-4" width="1408" height="991" extended-state="0" />
-    <editor active="true" />
+    <frame x="-4" y="-4" width="1608" height="1180" extended-state="0" />
+    <editor active="false" />
     <layout>
+      <window_info id="J2ME console" active="false" anchor="bottom" auto_hide="true" internal_type="sliding" type="sliding" visible="false" weight="0.33" order="-1" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="1" />
+      <window_info id="J2ME Support" active="false" anchor="right" auto_hide="true" internal_type="sliding" type="sliding" visible="false" weight="0.33" order="-1" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.3290993" order="2" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.15473442" order="7" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="sliding" type="sliding" visible="false" weight="0.4" order="0" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.24981685" order="0" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.29792148" order="3" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.24935897" order="0" />
+      <window_info id="simpleUML" active="false" anchor="left" auto_hide="true" internal_type="sliding" type="sliding" visible="false" weight="0.33" order="-1" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.29787233" order="3" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="1" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.3290993" order="1" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="sliding" type="sliding" visible="false" weight="0.24942264" order="8" />
@@ -61,36 +42,7 @@
     </layout>
   </component>
   <component name="Debugger">
-    <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/QuickRemoteEinstellungDialog.java" line="126">
-        <option name="ENABLED" value="true" />
-        <option name="SUSPEND_VM" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CONDITION" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="LOG_MESSAGE" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INVERSE_CLASS_FILLTERS" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/tables/download/DownloadNode.java" line="131">
-        <option name="ENABLED" value="true" />
-        <option name="SUSPEND_VM" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CONDITION" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="LOG_MESSAGE" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INVERSE_CLASS_FILLTERS" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-      </breakpoint>
-    </line_breakpoints>
+    <line_breakpoints />
     <exception_breakpoints>
       <breakpoint_any>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -283,23 +235,17 @@
   <component name="ProjectViewSettings">
     <navigator currentView="ProjectPane" flattenPackages="false" showMembers="false" showStructure="false" autoscrollToSource="false" splitterProportion="0.5" />
     <view id="ProjectPane">
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src" />
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/tables/download" />
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/controller" />
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/tables" />
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet/client" />
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet/client/shared" />
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet" />
       <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui" />
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet/client/gui/tables/upload" />
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet/client/shared/dac" />
+      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet/client" />
+      <expanded_node type="directory" url="file://$PROJECT_DIR$/src" />
       <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de" />
+      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet" />
     </view>
     <view id="SourcepathPane">
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src" />
       <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet" />
-      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de" />
+      <expanded_node type="directory" url="file://$PROJECT_DIR$/src" />
       <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de/applejuicenet/client" />
+      <expanded_node type="directory" url="file://$PROJECT_DIR$/src/de" />
     </view>
     <view id="ClasspathPane" />
   </component>
@@ -515,6 +461,48 @@
   <component name="VcsManagerConfiguration">
     <option name="ACTIVE_VCS_NAME" value="" />
   </component>
+  <component name="J2ME Support">
+    <toolkit_options>
+      <option name="emlPropsFile" value="c:\wtk104\wtklib\emulator.properties" />
+      <option name="defaultDevice" value="DefaultGrayPhone" />
+      <option name="rtPropsFile" value="c:\wtk104\wtklib\runtime.properties" />
+      <option name="toolkitHome" value="c:\wtk104" />
+      <option name="toolkitPropsFile" value="c:\wtk104\wtklib\Windows\ktools.properties" />
+      <option name="selectedDevice" value="DefaultGrayPhone" />
+    </toolkit_options>
+    <prj_options>
+      <option name="deployFtpUserID" />
+      <option name="deployLocalPath" />
+      <option name="buildBeforeDeploy" value="true" />
+      <option name="midletSuite" class="com.pinsoft.j2me.emulator.WTK104.MidletSuite">
+        <midletSuite midletSuiteName="" midletJarUrl="" midletJarSize="" midletDataSize="" midletVendor="" midletVersion="">
+          <midlets />
+        </midletSuite>
+      </option>
+      <option name="deployFtpPass" />
+      <option name="jadURL" value="http://localhost" />
+      <option name="deployLANPath" />
+      <option name="deployMethod" value="Local" />
+      <option name="deployFtpServer" />
+      <option name="askCleanBuild" value="true" />
+      <option name="prjName" value="AJClientGUI" />
+      <option name="prjHome" value="C:\CrefoTeam\AJClientGUI" />
+      <option name="selConfigTab" />
+      <option name="deployFtpMode" value="AUTO" />
+      <option name="selProjectTab" />
+      <option name="j2meProject" value="false" />
+      <option name="cleanBeforeBuild" value="true" />
+      <option name="initialized" value="false" />
+      <option name="deployFtpPath" />
+      <option name="deployShowOptions" value="true" />
+    </prj_options>
+    <rt_options>
+      <option name="debugPort" value="5005" />
+      <option name="assignNameToInstances" value="true" />
+    </rt_options>
+    <general_options />
+  </component>
+  <component name="simpleUML.DiagramSettingsWorkspace" />
   <component name="StarteamConfiguration">
     <option name="SERVER" value="" />
     <option name="PORT" value="49201" />
