@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.80 2003/12/30 14:03:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.81 2003/12/30 20:14:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.81  2003/12/30 20:14:59  maj0r
+ * Funktionsname korrigiert.
+ *
  * Revision 1.80  2003/12/30 14:03:26  maj0r
  * Neue Schnittstellenfunktionen eingebaut.
  *
@@ -576,7 +579,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/renamedownload?password=" + password + "&id=" + downloadId
+                                                  "/function/settargetdir?password=" + password + "&id=" + downloadId
                                                   + "&dir=" + verzeichnisName, false);
         }
         catch (Exception e)
