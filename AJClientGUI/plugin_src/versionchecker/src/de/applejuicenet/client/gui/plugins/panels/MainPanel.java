@@ -24,7 +24,7 @@ import javax.swing.ListSelectionModel;
 import java.awt.Color;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.2 2004/01/30 16:32:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.3 2004/03/14 15:10:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +33,9 @@ import java.awt.Color;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MainPanel.java,v $
+ * Revision 1.3  2004/03/14 15:10:11  maj0r
+ * ConcurrentModificationException behoben.
+ *
  * Revision 1.2  2004/01/30 16:32:56  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -87,8 +90,8 @@ public class MainPanel
         DownloadSourceDO[] sources;
         boolean updateView = false;
         try {
-            Iterator it = downloads.values().iterator();
-            synchronized (it) {
+            synchronized (downloads) {
+                Iterator it = downloads.values().iterator();
                 while (it.hasNext()) {
                     downloadDO = (DownloadDO) it.next();
                     if (downloadDO == null) {
@@ -140,8 +143,8 @@ public class MainPanel
         VersionHolder versionHolder;
         boolean updateView = false;
         try {
-            Iterator it = uploads.values().iterator();
-            synchronized (it) {
+            synchronized (uploads) {
+                Iterator it = uploads.values().iterator();
                 while (it.hasNext()) {
                     uploadDO = (UploadDO) it.next();
                     if (uploadDO == null || uploadDO.getVersion() == null) {
