@@ -494,6 +494,7 @@ public class ChannelPanel extends JPanel implements ActionListener {
 		} else {
 			compareValue = message;
 		}
+		boolean isAction = false;
 		if (compareValue.indexOf(parentPanel.getNickname()) != -1) {
 			StyleConstants.setBackground(attributes, Color.ORANGE);
 			eigenerName = true;
@@ -504,8 +505,10 @@ public class ChannelPanel extends JPanel implements ActionListener {
 			StyleConstants.setForeground(attributes, Color.RED);
 		} else if (message.indexOf("<--- QUIT:") != -1) {
 			StyleConstants.setForeground(attributes, Color.RED);
-		} else if (message.indexOf(">") == 0) {
+		} else if (message.indexOf('>') == 0) {
 			StyleConstants.setForeground(attributes, Color.MAGENTA);
+		} else if (message.startsWith("* ")) {
+			isAction = true;
 		} else if (!withTimeStamp || index == -1) {
 			StyleConstants.setForeground(attributes, Color.GRAY);
 		} else {
@@ -518,6 +521,13 @@ public class ChannelPanel extends JPanel implements ActionListener {
 						.currentTimeMillis()));
 				doc.insertString(doc.getLength(), "[" + zeit + "]\t", attributes);
 			} 
+			if (isAction) {
+				Color color = StyleConstants.getForeground(attributes);
+				StyleConstants.setForeground(attributes, Color.MAGENTA);
+				doc.insertString(doc.getLength(), "\t*", attributes);
+				StyleConstants.setForeground(attributes, color);
+				message = message.substring(1).trim();
+			}
 			parseLinks(attributes, doc, message);
 		} catch (BadLocationException blE) {
 			if (logger.isEnabledFor(Level.ERROR)) {

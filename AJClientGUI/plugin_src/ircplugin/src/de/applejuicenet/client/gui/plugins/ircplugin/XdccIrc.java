@@ -7,6 +7,7 @@ import java.io.InterruptedIOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Random;
 import java.util.StringTokenizer;
 
@@ -36,7 +37,7 @@ import de.applejuicenet.client.gui.plugins.IrcPlugin;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.29 2004/12/07 16:03:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.30 2004/12/08 13:51:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -452,22 +453,25 @@ public class XdccIrc
     }
 
     public String formatNickname(String nickname) {
+    	return formatNickname(nickname, true);
+    }
+
+    public String formatNickname(String nickname, boolean allignLeft) {
         int formatlen = 12;
         String blank = "";
         int len = nickname.length();
 
         if (len >= formatlen) {
-            return nickname;
+        	nickname = nickname.substring(0, formatlen);
         }
-        else {
-            for (int i = 0; i < (formatlen - len); i++) {
-                blank = blank + " ";
-            }
+        if (allignLeft){
+        	return nickname + "\t";
         }
-
-        return nickname + blank;
+        else{
+        	return "\t" + nickname;
+        }
     }
-
+    
     public String getRealname() {
         return realname;
     }
@@ -504,6 +508,9 @@ public class XdccIrc
                             	// nothing to do
                             	line = null;
                             }
+                        }
+                        catch (SocketException se){
+                            line = null;
                         }
                         if (line != null) {
                             parseFromServer(line);
@@ -604,10 +611,11 @@ public class XdccIrc
                             //remove \001 from Beginning and End of CTCP msg
                             trailing = trailing.substring(1,
                                 trailing.length() - 1);
+                            String message = trailing.replaceFirst("ACTION", nick);
                             ( (ChannelPanel) aComponent).updateTextArea(
-                                formatNickname("[" + nick + "] ") + trailing);
+                            		"* " + message);
                         }
-                        if (nick.equals(nickname)) {
+                        else if (nick.equals(nickname)) {
                             //((ChannelPanel)aComponent).textArea.setDisabledTextColor(new Color(255,0,0));
                             ( (ChannelPanel) aComponent).updateTextArea(
                                 formatNickname("<" + nick + "> ") + trailing);
