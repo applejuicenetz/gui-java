@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.table.JTableHeader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/HeaderListener.java,v 1.5 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/HeaderListener.java,v 1.6 2004/02/21 20:52:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,10 @@ import javax.swing.table.JTableHeader;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: HeaderListener.java,v $
+ * Revision 1.6  2004/02/21 20:52:43  maj0r
+ * Bug #234 gefixt (Danke an hirsch.marcel)
+ * Tabellen werden beim Aendern von Spaltengroessen nicht mehr sortiert.
+ *
  * Revision 1.5  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -45,7 +49,7 @@ public class HeaderListener
         this.renderer = renderer;
     }
 
-    public void mousePressed(MouseEvent e) {
+    public void mouseClicked(MouseEvent e) {
         int col = header.columnAtPoint(e.getPoint());
         int sortCol = header.getTable().convertColumnIndexToModel(col);
         renderer.setPressedColumn(col);
@@ -66,9 +70,6 @@ public class HeaderListener
         ( (SortableTableModel) header.getTable().getModel()).sortByColumn(
             sortCol,
             isAscent);
-    }
-
-    public void mouseReleased(MouseEvent e) {
         renderer.setPressedColumn( -1);
         header.repaint();
     }
