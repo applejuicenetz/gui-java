@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.41 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.42 2004/02/25 13:16:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -61,6 +61,10 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.42  2004/02/25 13:16:48  maj0r
+ * Featurerequest #244 gefixt (Danke an Homer1Simpson)
+ * Standardmaessig ist nun beim automatischen Powerdownload der Inaktiv-Button selektiert.
+ *
  * Revision 1.41  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -372,7 +376,7 @@ public class PowerDownloadPanel
         buttonGroup2.add(btnAutoAktiv);
         btnAutoInaktiv.setText("inaktiv");
         btnAutoAktiv.setText("aktiv");
-        btnAutoAktiv.setSelected(true);
+        btnAutoInaktiv.setSelected(true);
         pwdlPolicies.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 AutomaticPowerdownloadPolicy policy = (
