@@ -8,7 +8,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/IconGetter.java,v 1.5 2004/02/09 14:21:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/IconGetter.java,v 1.6 2004/02/21 17:09:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: IconGetter.java,v $
+ * Revision 1.6  2004/02/21 17:09:57  maj0r
+ * Neues Icon fuer unbekannte Verbindung eingebaut.
+ *
  * Revision 1.5  2004/02/09 14:21:32  maj0r
  * Icons für Upload-DirectStates eingebaut.
  *
@@ -41,7 +44,7 @@ public abstract class IconGetter {
     private static ImageIcon direktVerbundenIcon = IconManager.getInstance().
         getIcon("treeUebertrage");
     private static ImageIcon verbindungUnbekanntIcon = IconManager.getInstance().
-        getIcon("unbekanntsymbol");
+        getIcon("verbindungUnbekannt");
     private static ImageIcon indirektVerbundenIcon = IconManager.getInstance().
         getIcon("treeWarteschlange");
     private static ImageIcon versucheIndirektIcon = IconManager.getInstance().
