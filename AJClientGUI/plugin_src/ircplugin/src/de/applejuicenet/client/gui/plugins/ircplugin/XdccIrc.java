@@ -36,7 +36,7 @@ import de.applejuicenet.client.gui.plugins.IrcPlugin;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.26 2004/12/06 08:03:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.27 2004/12/06 11:29:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -177,6 +177,10 @@ public class XdccIrc
             }
         }
     }
+    
+    public IrcPlugin getPlugin(){
+    	return parent;
+    }
 
     public JTabbedPane getTabbedPane() {
         return tabbedPane;
@@ -215,6 +219,12 @@ public class XdccIrc
         nicknameString = parent.getLanguageString(".root.language.nick.newnick");
         channelNameString = parent.getLanguageString(
             ".root.language.channel.newchannel");
+        for (int i=0; i<tabbedPane.getComponentCount(); i++){
+        	Object obj = tabbedPane.getComponent(i);
+        	if (obj.getClass() == ChannelPanel.class){
+        		((ChannelPanel)obj).fireLanguageChanged();
+        	}
+        }
     }
 
     public void connectStartRegister() {

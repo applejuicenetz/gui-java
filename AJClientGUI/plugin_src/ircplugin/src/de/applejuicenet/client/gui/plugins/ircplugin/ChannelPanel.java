@@ -43,7 +43,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.14 2004/12/05 20:04:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.15 2004/12/06 11:29:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -55,7 +55,7 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 public class ChannelPanel
     extends JPanel
-    implements ActionListener {
+    implements ActionListener{
 	private String name;
     private SortedListModel usernameList = new SortedListModel();
     private JList userList = new JList(usernameList);
@@ -64,7 +64,7 @@ public class ChannelPanel
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
     private ArrayList befehle = new ArrayList();
     private int befehlPos = -1;
-    private JLabel counter = new JLabel("0 User");
+    private JLabel counter = new JLabel("0 Ops, 0 Gesamt");
 
     private JTextPane titleArea = new JTextPane();
 
@@ -76,6 +76,8 @@ public class ChannelPanel
     private Logger logger;
 	private long lastStatsPrinted = 0;
 	private long lastVersionPrinted = 0;
+	
+	private String counterText = "Gesamt";
 
     public ChannelPanel(XdccIrc parentPanel, String name, JTabbedPane tabbedPane) {
         logger = Logger.getLogger(getClass());
@@ -585,7 +587,7 @@ public class ChannelPanel
                 usernameList.remove(user);
             }
         }
-        counter.setText(usernameList.getSize() + " User");
+        updateCounter();
     }
 
     public void userQuits(String nick, boolean hide){
@@ -625,5 +627,15 @@ public class ChannelPanel
             updateTextArea(oldNick + " changes nickname to " +
                                 newNick);
         }
+    }
+    
+    private void updateCounter(){
+        counter.setText(usernameList.getOpCount() + " Ops, " + usernameList.getSize() + " " + counterText);
+    }
+    
+    public void fireLanguageChanged() {
+    	counterText = parentPanel.getPlugin().getLanguageString(
+        ".root.language.channel.gesamt");
+        updateCounter();
     }
 }

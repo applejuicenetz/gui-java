@@ -6,7 +6,7 @@ import java.util.Comparator;
 import javax.swing.AbstractListModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.12 2004/12/05 20:04:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.13 2004/12/06 11:29:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -74,6 +74,18 @@ public class SortedListModel extends AbstractListModel {
     public void fireIntervalRemoved(Object source, int index0, int index1){
         super.fireIntervalRemoved(source, index0, index1);
         reorder();
+    }
+    
+    public int getOpCount(){
+    	int ops = 0;
+    	for (int i=0; i<model.size(); i++){
+    		if (((User)model.get(i)).isAdmin()
+    				|| ((User)model.get(i)).isOp()
+					|| ((User)model.get(i)).isHalfop()){
+    			ops++;
+    		}
+    	}
+    	return ops;
     }
     
     public void reorder(){
