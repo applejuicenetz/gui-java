@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE project []>
+<project name="aj_java_gui" default="help" basedir=".."> 
+
+   <!-- component directories ... -->
+   <property name="gui.srcdir"      location="${basedir}/src"/>
+   <property name="gui.compiledir"  location="${basedir}/classes"/>
+
+   <!-- other path settings, some items to be customized locally ...  -->
+   <property name="xercesImpl.jar"            location="${basedir}/../tools/xercesImpl.jar"/>
+   <property name="xmlParserAPIs.jar"            location="${basedir}/../tools/xmlParserAPIs.jar"/>
+
+   <!-- classpath for compilation ... -->
+   <path id="lib.path">
+      <pathelement location="${xercesImpl.jar}"/>
+      <pathelement location="${xmlParserAPIs.jar}"/>
+   </path>
+
+   <!-- usage information ... -->
+   <target name="help">
+      <echo>The following targets exist:</echo>
+      <echo>  gui-compile          ompiles the appleJuice-gui</echo>
+      <echo>  gui-clean              deletes class files</echo>
+      <echo>  gui-rebuild           cleans and compiles the appleJuice-gui</echo>
+      <echo>  create-jar            builds appleJuice-jar</echo>
+      <echo>  complete             builds complete appleJuice</echo>
+      <fail message="You have to specifiy a target" />
+   </target>
+
+   <!-- remove class files, DavaDoc files and test results ... -->
+   <target name="gui-clean" description="deletes class files">
+      <delete includeEmptyDirs="true">
+         <fileset dir="${gui.compiledir}" casesensitive="false">
+            <include name="**/*.class"/>
+            <exclude name="cvs"/>
+            <exclude name="readme.txt"/>
+            </fileset>
+      </delete>
+   </target>
+
+   <target name="gui-compile" description="compiles the appleJuice-gui">
+      <javac srcdir="${gui.srcdir}" destdir="${gui.compiledir}" debug="true">
+         <classpath>
+          <path refid="lib.path"/>
+         </classpath>
+      </javac>
+   </target>
+
+   <target name="gui-rebuild" depends="gui-clean, gui-compile" description="cleans and compiles the appleJuice-gui">
+   </target>
+
+   <target name="create-jar" depends="gui-rebuild" description="builds appleJuice-jar">
+	<jar destfile="${basedir}/ajcoregui.jar">
+		<fileset dir="${gui.compiledir}" excludes="**/*.txt **/*.dep2"/>
+		<manifest>              
+			<attribute name="Main-Class" value="de.applejuicenet.client.AppleJuiceClient"/>              
+			<attribute name="Class-Path" value="${basedir}/../tools/xercesImpl.jar ${basedir}/../tools/xmlParserAPIs.jar" /> 
+		</manifest>
+	</jar>
+   </target>
+
+   <target name="complete" depends="create-jar" description="builds complete appleJuice">
+   </target>  
+</project>
