@@ -9,15 +9,16 @@
         </farben>
         <location>
             <main height="" width="" x="" y=""/>
-            <download column0="111" column1="111" column2="111"
-                column3="110" column4="111" column5="110" column6="111"
-                column7="110" column8="111" column9="110"/>
-            <upload column0="179" column1="155" column2="154"
-                column3="155" column4="154" column5="155" column6="154"/>
-            <server column0="277" column1="276" column2="277" column3="276"/>
-            <search column0="154" column1="153" column2="154"
-                column3="153" column4="154" column5="153"/>
-            <share column0="295" column1="296" column2="295"/>
+            <download column0="80" column1="80" column2="80"
+                column3="80" column4="81" column5="80" column6="81"
+                column7="80" column8="81" column9="80"/>
+            <upload column0="136" column1="111" column2="111"
+                column3="111" column4="111" column5="112" column6="111"/>
+            <server column0="201" column1="201" column2="201" column3="200"/>
+            <search column0="103" column1="103" column2="103"
+                column3="103" column4="103" column5="103"/>
+            <share column0="194" column1="195" column2="194"/>
         </location>
+        <proxy host="" port="" use="false" userpass="="/>
     </options>
 </root>
