@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.21 2004/01/12 07:26:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.22 2004/01/12 07:49:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.22  2004/01/12 07:49:25  maj0r
+ * Kleine Bugs behoben.
+ *
  * Revision 1.21  2004/01/12 07:26:10  maj0r
  * Tabellenspalte nun ueber Headerkontextmenue ein/ausblendbar.
  *
@@ -683,7 +686,11 @@ public class PropertiesManager
 
                 downloadVisibilities = new boolean[10];
                 downloadVisibilities[0] = true;
-                downloadVisibilities[1] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column1"})).booleanValue();
+                String xmlTest = getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column1"});
+                if (xmlTest.length() == 0){
+                    throw new Exception("Properties.xml hat altes Format. Wird neu erstellt.");
+                }
+                downloadVisibilities[1] = new Boolean(xmlTest).booleanValue();
                 downloadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column2"})).booleanValue();
                 downloadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column3"})).booleanValue();
                 downloadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column4"})).booleanValue();
@@ -693,7 +700,7 @@ public class PropertiesManager
                 downloadVisibilities[8] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column8"})).booleanValue();
                 downloadVisibilities[9] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "download", "column9"})).booleanValue();
 
-                uploadVisibilities = new boolean[10];
+                uploadVisibilities = new boolean[7];
                 uploadVisibilities[0] = true;
                 uploadVisibilities[1] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column1"})).booleanValue();
                 uploadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column2"})).booleanValue();
@@ -701,6 +708,16 @@ public class PropertiesManager
                 uploadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column4"})).booleanValue();
                 uploadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column5"})).booleanValue();
                 uploadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "visibility", "upload", "column6"})).booleanValue();
+            }
+            else{
+                downloadVisibilities = new boolean[10];
+                for (int i=0; i<downloadVisibilities.length; i++){
+                    downloadVisibilities[i] = true;
+                }
+                uploadVisibilities = new boolean[7];
+                for (int i=0; i<uploadVisibilities.length; i++){
+                    uploadVisibilities[i] = true;
+                }
             }
             boolean use = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "use"})).booleanValue();
             String host = getFirstAttrbuteByTagName(new String[]{"options", "proxy", "host"});
