@@ -43,7 +43,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.15 2004/12/06 11:29:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.16 2004/12/06 12:49:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -189,15 +189,11 @@ public class ChannelPanel
         userList.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent me){
                 if (me.getClickCount()==2){
-                    String name = (String)userList.getSelectedValue();
-                    if (name.charAt(0)=='!' || name.charAt(0)=='%' || name.charAt(0)=='@' || name.charAt(0)=='+'){
-                        name = name.substring(1);
-                    }
-                    if (name.compareToIgnoreCase(parentPanel.getNickname()) != 0){
+                    User user = (User)userList.getSelectedValue();
+                    if (!user.getName().equalsIgnoreCase(parentPanel.getNickname())){
                         JTabbedPane tabbedPane = parentPanel.getTabbedPane();
                         for (int i = 1; i < tabbedPane.getTabCount(); i++) {
-                            if (tabbedPane.getTitleAt(i).
-                                compareToIgnoreCase(name) == 0) {
+                            if (tabbedPane.getTitleAt(i).equalsIgnoreCase(name)) {
                                 return;
                             }
                         }
