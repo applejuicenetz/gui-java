@@ -36,7 +36,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import de.applejuicenet.client.gui.ConnectFrame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.51 2003/12/30 15:31:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.52 2003/12/30 21:09:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,6 +45,9 @@ import de.applejuicenet.client.gui.ConnectFrame;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.52  2003/12/30 21:09:54  maj0r
+ * Versionskontrolle geaendert.
+ *
  * Revision 1.51  2003/12/30 15:31:18  maj0r
  * Das GUI wird jetzt beim Start beendet, wenn bereits eine Instanz vorhanden ist.
  *
@@ -193,15 +196,14 @@ public class AppleJuiceClient {
 
     public static void main(String[] args) {
         String javaVersion = System.getProperty("java.version");
-        int pos = javaVersion.indexOf("_");
-        if (pos != -1){
-            javaVersion = javaVersion.substring(0, pos);
-        }
         StringBuffer version = new StringBuffer(javaVersion);
         for (int i=version.length()-1; i>=0; i--){
             if (version.charAt(i)=='.'){
                 version.deleteCharAt(i);
             }
+        }
+        if (javaVersion.length()>2){
+            javaVersion = javaVersion.substring(0, 2);
         }
         boolean gueltig = false;
         try{
@@ -216,7 +218,6 @@ public class AppleJuiceClient {
         if (!gueltig){
             JOptionPane.showMessageDialog(new Frame(), "Es wird mindestens JRE 1.4 benötigt!", "appleJuice Client",
                                           JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
         }
 
         boolean processLink = false;
