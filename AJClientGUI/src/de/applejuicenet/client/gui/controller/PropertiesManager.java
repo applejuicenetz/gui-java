@@ -27,7 +27,7 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.34 2004/03/01 21:14:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.35 2004/03/03 12:36:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +36,9 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.35  2004/03/03 12:36:07  maj0r
+ * Modifizierbare und potenziell modifizierbare Dateien bei Nicht-Windows-System verschoben.
+ *
  * Revision 1.34  2004/03/01 21:14:45  maj0r
  * Unter Linux ist die properties.xml nun unter ~/appleJuice zu finden.
  *
@@ -247,8 +250,9 @@ public class PropertiesManager
     }
 
     public static String getPropertiesPath(){
-        if (System.getProperty("os.name").equals("Linux")){
-            String dir = System.getProperty("user.home") + File.separator + "appleJuice";
+        if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1){
+            String dir = System.getProperty("user.home") + File.separator +
+                "appleJuice" + File.separator + "gui";
             File directory = new File(dir);
             if (!directory.isDirectory()){
                 directory.mkdir();

@@ -39,7 +39,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.63 2004/02/26 11:50:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.64 2004/03/03 12:36:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.64  2004/03/03 12:36:07  maj0r
+ * Modifizierbare und potenziell modifizierbare Dateien bei Nicht-Windows-System verschoben.
+ *
  * Revision 1.63  2004/02/26 11:50:31  maj0r
  * Soundausgabe bei korrektem Login korrigiert.
  *
@@ -369,8 +372,16 @@ public class AppleJuiceClient {
         Level logLevel = PropertiesManager.getOptionsManager().getLogLevel();
         try {
             rootLogger.addAppender(new ConsoleAppender());
-            String path = System.getProperty("user.dir") + File.separator +
-                "logs";
+            String path;
+            if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1) {
+                path = System.getProperty("user.home") + File.separator +
+                    "appleJuice" + File.separator +
+                    "gui" + File.separator + "logs";
+            }
+            else {
+                path = System.getProperty("user.dir") + File.separator +
+                    "logs";
+            }
             File aFile = new File(path);
             if (!aFile.exists()) {
                 aFile.mkdir();
