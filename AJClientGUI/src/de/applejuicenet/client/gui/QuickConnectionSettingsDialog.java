@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.5 2003/10/14 15:41:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.6 2003/10/14 19:21:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.6  2003/10/14 19:21:23  maj0r
+ * Korrekturen zur Xml-Port-Verwendung.
+ *
  * Revision 1.5  2003/10/14 15:41:46  maj0r
  * An pflegbaren Xml-Port angepasst.
  *
@@ -71,7 +74,7 @@ public class QuickConnectionSettingsDialog extends JDialog {
 
     private void init(){
         remote = PropertiesManager.getOptionsManager().getRemoteSettings();
-        remotePanel = new ODConnectionPanel(remote);
+        remotePanel = new ODConnectionPanel(remote, true);
         setTitle("appleJuice Client");
 
         getContentPane().setLayout(new BorderLayout());
