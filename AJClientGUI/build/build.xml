@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project []>
-<project name="aj_java_gui" basedir="..">
+<project name="aj_java_gui" default="help" basedir="..">
 
    <taskdef name="pack" classname="org.sadun.util.ant.Pack" classpath="${basedir}/tools/pack.jar"/>
 
@@ -33,6 +33,8 @@
       </delete>
    </target>
 
+   <target name="help"/>
+
    <target name="gui-compile" description="compiles the appleJuice-gui">
       <javac srcdir="${gui.srcdir}" destdir="${gui.compiledir}" debug="true">
          <classpath>
@@ -63,26 +65,10 @@
    <target name="build-archive" depends="create-jar" description="builds archive-zip">
 	<jar destfile="${basedir}/AJCoreGUI_vX_XX.zip">
 		<fileset dir="${basedir}" includes="AJCoreGUI.jar"/>
-		<fileset dir="${basedir}" includes="wizard.xml"/>
-		<fileset dir="${basedir}" includes="changelog.htm"/>
-		<fileset dir="${basedir}" includes="TrayIcon12.dll"/>
-		<fileset dir="${basedir}" includes="language/*.xml language/*.gif"/>
-		<fileset dir="${basedir}" includes="plugins/*.jar plugins/*.txt"/>
-		<fileset dir="${basedir}" includes="pwdlpolicies/*.jar pwdlpolicies/*.txt"/>
-		<fileset dir="${basedir}" includes="themes/*.zip themes/*.first"/>
-		<fileset dir="${basedir}" includes="sounds/*.wav sounds/*.first"/>
-		<fileset dir="${basedir}" includes="needed_jars/*.jar"/>
-         </jar>
-   </target>
-
-   <target name="build-winnative-archive" description="builds winnative-archive">
-	<jar destfile="${basedir}/AJCoreGUI_Win_vX_XX.zip">
 		<fileset dir="${basedir}" includes="AJCoreGUI.exe"/>
 		<fileset dir="${basedir}" includes="wizard.xml"/>
 		<fileset dir="${basedir}" includes="changelog.htm"/>
 		<fileset dir="${basedir}" includes="TrayIcon12.dll"/>
-		<fileset dir="${basedir}" includes="WICHTIG_LESEN.txt"/>
-		<fileset dir="${basedir}" includes="*.reg"/>
 		<fileset dir="${basedir}" includes="language/*.xml language/*.gif"/>
 		<fileset dir="${basedir}" includes="plugins/*.jar plugins/*.txt"/>
 		<fileset dir="${basedir}" includes="pwdlpolicies/*.jar pwdlpolicies/*.txt"/>
