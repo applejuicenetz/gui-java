@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.13 2003/09/03 10:26:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.14 2003/09/04 06:26:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.14  2003/09/04 06:26:49  maj0r
+ * Partlist korrigiert. Wird momentan beim Resize nicht neugezeichnet.
+ *
  * Revision 1.13  2003/09/03 10:26:07  maj0r
  * NullPointer behoben und Logging eingefuehrt.
  *
@@ -76,17 +79,15 @@ import org.apache.log4j.Level;
 
 public class DownloadDOOverviewPanel extends JPanel implements LanguageListener, DataUpdateListener{
     private DownloadDO downloadDO = null;
-    private JPanel actualDlOverviewTable = new JPanel();
+    private DownloadPartListPanel actualDlOverviewTable = new DownloadPartListPanel();
     private JLabel actualDLDateiName = new JLabel();
     private JLabel label4 = new JLabel("Vorhanden");
     private JLabel label3 = new JLabel("Nicht vorhanden");
     private JLabel label2 = new JLabel("In Ordnung");
     private JLabel label1 = new JLabel("Überprüft");
     private Settings settings;
-    private Logger logger;
 
     public DownloadDOOverviewPanel() {
-        logger = Logger.getLogger(getClass());
         init();
         settings = Settings.getSettings();
         LanguageSelector.getInstance().addLanguageListener(this);
@@ -123,104 +124,16 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
 
         add(tempPanel1, BorderLayout.NORTH);
         actualDLDateiName.setPreferredSize(new Dimension(actualDLDateiName.getPreferredSize().width, 17));
-        add(actualDlOverviewTable, BorderLayout.CENTER);
-    }
-
-    private void setPartListDO(PartListDO partListDO){
-        final PartListDO tempPartList = partListDO;
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run(){
-                try{
-                    actualDLDateiName.setText(downloadDO.getFilename() + " (" + downloadDO.getTemporaryFileNumber() + ".data)");
-                    remove(actualDlOverviewTable);
-                    actualDlOverviewTable = new JPanel(new GridBagLayout());
-                    GridBagConstraints constraints = new GridBagConstraints();
-                    constraints.anchor = GridBagConstraints.NORTHWEST;
-                    constraints.fill = GridBagConstraints.BOTH;
-                    constraints.gridx = 0;
-                    constraints.gridy = 0;
-                    constraints.weightx = 1;
-                    JLabel label1 = null;
-                    PartListDO.Part[] parts = tempPartList.getParts();
-                    int anzahl = 5632;
-                    int anzahlZeile = 512;
-                    int anzahlZeilen = 11;
-                    if (tempPartList.getGroesse()<513){
-                        anzahl = (int) tempPartList.getGroesse();
-                        anzahlZeile = anzahl;
-                        anzahlZeilen = 1;
-                    }
-                    else if (tempPartList.getGroesse()<5633){
-                        anzahl = (int)tempPartList.getGroesse() / anzahlZeilen * anzahlZeilen;
-                        anzahlZeile = anzahl/anzahlZeilen;
-                    }
-                    constraints.gridwidth = anzahlZeile;
-                    actualDlOverviewTable.add(actualDLDateiName, constraints);
-                    constraints.weighty = 1;
-                    constraints.gridwidth = 1;
-                    int groesseProPart = (int) tempPartList.getGroesse() / anzahl;
-                    long position = 0;
-                    int partPos = 0;
-                    long mbStart;
-                    long mbEnde;
-                    int kleiner;
-                    int groesstes;
-                    boolean ueberprueft;
-                    for (int i=0; i<anzahlZeilen; i++){
-                        constraints.gridy = i+1;
-                        for (int x=0; x<anzahlZeile; x++){
-                            constraints.gridx = x;
-                            position += groesseProPart;
-                            while (parts[partPos].getFromPosition()<position && partPos<parts.length-1){
-                                partPos++;
-                            }
-                            label1 = new JLabel();
-                            label1.setOpaque(true);
-                            if (parts[partPos].getType()==-1){
-                                mbStart = position / 1048576 * 1048576;
-                                mbEnde = mbStart + 1048576;
-                                kleiner = partPos;
-                                groesstes = partPos;
-                                while (parts[kleiner].getFromPosition()>mbStart && kleiner>0){
-                                    kleiner--;
-                                }
-                                while (parts[groesstes].getFromPosition()<mbEnde && groesstes<parts.length-1){
-                                    groesstes++;
-                                }
-                                groesstes--;
-                                ueberprueft = true;
-                                for (int l = kleiner; l<=groesstes; l++){
-                                    if (parts[l].getType()!=-1){
-                                        ueberprueft = false;
-                                        break;
-                                    }
-                                }
-                                if (ueberprueft){
-                                    label1.setBackground(PartListDO.COLOR_TYPE_UEBERPRUEFT);
-                                }
-                                else{
-                                    label1.setBackground(PartListDO.COLOR_TYPE_OK);
-                                }
-                            }
-                            else{
-                                label1.setBackground(getColorByType(parts[partPos].getType()));
-                            }
-                            actualDlOverviewTable.add(label1, constraints);
-                        }
-                    }
-                    add(actualDlOverviewTable, BorderLayout.CENTER);
-                }
-                 catch(Exception e){
-                     if (logger.isEnabledFor(Level.ERROR))
-                         logger.error("Unbehandelte Exception", e);
-                 }
-             }
-        });
+        JPanel panel1 = new JPanel(new BorderLayout());
+        panel1.add(actualDLDateiName, BorderLayout.NORTH);
+        panel1.add(actualDlOverviewTable, BorderLayout.CENTER);
+        add(panel1, BorderLayout.CENTER);
     }
 
     public void setDownloadDO(DownloadDO downloadDO) {
-        if (!settings.isDownloadUebersicht()){
-            remove(actualDlOverviewTable);
+        if (!settings.isDownloadUebersicht() || downloadDO==null){
+            actualDLDateiName.setText("");
+            actualDlOverviewTable.setPartList(null);
         }
         else if (this.downloadDO != downloadDO && downloadDO.getStatus()!=DownloadDO.FERTIGSTELLEN &&
                 downloadDO.getStatus()!=DownloadDO.FERTIG)
@@ -229,46 +142,14 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
             final DownloadDO tempDO = downloadDO;
             final SwingWorker worker2 = new SwingWorker() {
                         public Object construct() {
-                            PartListDO partListDO = ApplejuiceFassade.getInstance().getDownloadPartList(tempDO);
-                            return partListDO;
+                            return ApplejuiceFassade.getInstance().getDownloadPartList(tempDO);
                         }
                         public void finished(){
-                            setPartListDO((PartListDO)getValue());
+                            actualDLDateiName.setText(tempDO.getFilename() + " (" + tempDO.getTemporaryFileNumber() + ".data)");
+                            actualDlOverviewTable.setPartList((PartListDO) getValue());
                         }
                     };
             worker2.start();
-        }
-    }
-
-    private Color getColorByType(int type) {
-        switch (type)
-        {
-            case -1:
-                return PartListDO.COLOR_TYPE_OK;
-            case 0:
-                return PartListDO.COLOR_TYPE_0;
-            case 1:
-                return PartListDO.COLOR_TYPE_1;
-            case 2:
-                return PartListDO.COLOR_TYPE_2;
-            case 3:
-                return PartListDO.COLOR_TYPE_3;
-            case 4:
-                return PartListDO.COLOR_TYPE_4;
-            case 5:
-                return PartListDO.COLOR_TYPE_5;
-            case 6:
-                return PartListDO.COLOR_TYPE_6;
-            case 7:
-                return PartListDO.COLOR_TYPE_7;
-            case 8:
-                return PartListDO.COLOR_TYPE_8;
-            case 9:
-                return PartListDO.COLOR_TYPE_9;
-            case 10:
-                return PartListDO.COLOR_TYPE_10;
-            default:
-                return PartListDO.COLOR_TYPE_0;
         }
     }
 
