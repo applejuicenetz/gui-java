@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.14 2003/10/02 11:15:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.15 2003/10/15 09:06:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.15  2003/10/15 09:06:10  maj0r
+ * Prozentanzeige nur bei aktiven Uebertragungen anzeigen.
+ *
  * Revision 1.14  2003/10/02 11:15:13  maj0r
  * Kleinen Anzeigefehler korrigiert.
  *
@@ -157,7 +160,7 @@ public class DownloadTableCellRenderer
                                            int row,
                                            int column) {
         Color foreground = table.getForeground();
-        if (column == 6)
+        if (column == 6 && downloadSourceDO.getStatus()==DownloadSourceDO.UEBERTRAGUNG)
         {
             String prozent = downloadSourceDO.getDownloadPercentAsString();
             JProgressBar progress = new JProgressBar(JProgressBar.HORIZONTAL, 0,
