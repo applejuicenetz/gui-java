@@ -37,7 +37,7 @@ import de.applejuicenet.client.gui.options.ODConnectionPanel;
 import de.applejuicenet.client.shared.ConnectionSettings;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/QuickConnectionSettingsDialog.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/QuickConnectionSettingsDialog.java,v 1.4 2005/02/26 23:05:45 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -242,10 +242,12 @@ public class QuickConnectionSettingsDialog
 
     private ConnectionSettings[] getNeueConfigs(ConnectionSettings remote) {
         for (int i = 0; i < this.connectionSet.length; i++) {
-            if (remote.getHost().equals(connectionSet[i].getHost()) && (remote.getXmlPort() == connectionSet[i].getXmlPort()))
+            if (remote.getHost().equals(connectionSet[i].getHost()) && (remote.getXmlPort() == connectionSet[i].getXmlPort())) {
+                connectionSet[i] = remote;
                 return connectionSet;
+            }
         }
-        ArrayList targets2Save = new ArrayList();
+        ArrayList<ConnectionSettings> targets2Save = new ArrayList<ConnectionSettings>();
         targets2Save.add(remote);
         for (int i = 0; i < this.connectionSet.length; i++) {
             targets2Save.add(connectionSet[i]);
