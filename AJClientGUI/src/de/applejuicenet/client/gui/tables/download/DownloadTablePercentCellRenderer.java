@@ -1,9 +1,7 @@
 package de.applejuicenet.client.gui.tables.download;
 
-import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
@@ -63,7 +61,6 @@ public class DownloadTablePercentCellRenderer
         DownloadDO downloadDO = downloadMainNode.getDownloadDO();
         if (isSelected) {
             c.setBackground(table.getSelectionBackground());
-            c.setForeground(table.getSelectionForeground());
         }
         else {
             if (downloadMainNode.getType() == DownloadMainNode.ROOT_NODE &&
@@ -75,7 +72,6 @@ public class DownloadTablePercentCellRenderer
             else {
                 c.setBackground(table.getBackground());
             }
-            c.setForeground(table.getForeground());
         }
         return c;
     }
@@ -90,7 +86,6 @@ public class DownloadTablePercentCellRenderer
         Component c = downloadSourceDO.getProgressbarComponent(table, value);
         if (isSelected) {
             c.setBackground(table.getSelectionBackground());
-            c.setForeground(table.getSelectionForeground());
         }
         else {
             if (settings.isFarbenAktiv()) {
@@ -99,7 +94,6 @@ public class DownloadTablePercentCellRenderer
             else {
                 c.setBackground(table.getBackground());
             }
-            c.setForeground(table.getForeground());
         }
         return c;
     }
@@ -114,11 +108,9 @@ public class DownloadTablePercentCellRenderer
         Component c = downloadDirectoryNode.getProgressbarComponent(table, value);
         if (isSelected) {
             c.setBackground(table.getSelectionBackground());
-            c.setForeground(table.getSelectionForeground());
         }
         else {
             c.setBackground(table.getBackground());
-            c.setForeground(table.getForeground());
         }
         return c;
     }

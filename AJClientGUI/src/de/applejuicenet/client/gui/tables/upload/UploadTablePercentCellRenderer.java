@@ -1,9 +1,6 @@
 package de.applejuicenet.client.gui.tables.upload;
 
-import java.awt.Color;
 import java.awt.Component;
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -28,11 +25,9 @@ public class UploadTablePercentCellRenderer
             Component c = ((UploadDO) obj).getProgressbarComponent(table, value);
             if (isSelected) {
                 c.setBackground(table.getSelectionBackground());
-                c.setForeground(table.getSelectionForeground());
             }
             else {
                 c.setBackground(table.getBackground());
-                c.setForeground(table.getForeground());
             }
             return c;
         }
