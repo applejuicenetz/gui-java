@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.52 2003/10/12 15:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.53 2003/10/21 11:36:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.53  2003/10/21 11:36:32  maj0r
+ * Infos werden nun ueber einen Listener geholt.
+ *
  * Revision 1.52  2003/10/12 15:57:55  maj0r
  * Kleinere Bugs behoben.
  * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
@@ -270,7 +273,7 @@ public class DownloadPanel
             }
         });
 
-        item7.addActionListener(new ActionListener() {
+/*        item7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 Object[] selectedItems = getSelectedDownloadItems();
                 if (selectedItems != null && selectedItems.length != 0) {
@@ -291,7 +294,7 @@ public class DownloadPanel
                 root.enableVerstecke(!item8.isSelected());
                 downloadTable.updateUI();
             }
-        });
+        });     */
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
@@ -373,7 +376,7 @@ public class DownloadPanel
             private void maybeShowPopup(MouseEvent e) {
                 if (e.isPopupTrigger()) {
                     DownloadRootNode root = (DownloadRootNode) downloadModel.getRoot();
-                    item8.setSelected(!root.isVerstecktEnabled());
+                    //item8.setSelected(!root.isVerstecktEnabled());
                     popup.show(downloadTable, e.getX(), e.getY());
                 }
             }
@@ -395,6 +398,7 @@ public class DownloadPanel
         }
         JTableHeader header = downloadTable.getTableHeader();
         header.addMouseListener(new SortMouseAdapter(header, renderer2));
+        downloadTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
     }

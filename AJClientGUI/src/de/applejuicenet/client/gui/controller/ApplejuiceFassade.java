@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.53 2003/10/18 19:24:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.54 2003/10/21 11:36:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.54  2003/10/21 11:36:32  maj0r
+ * Infos werden nun ueber einen Listener geholt.
+ *
  * Revision 1.53  2003/10/18 19:24:21  maj0r
  * Neue Version 0.37
  *
@@ -268,8 +271,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     private HashSet uploadListener;
     private HashSet serverListener;
     private HashSet networkInfoListener;
-    private HashSet statusbarListener;
     private HashSet speedListener;
+    private HashSet informationListener;
     public static String separator;
     private ModifiedXMLHolder modifiedXML = null;
     private InformationXMLHolder informationXML = null;
@@ -308,10 +311,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             {
                 uploadListener.add(listener);
             }
-            else if (type == DataUpdateListener.STATUSBAR_CHANGED)
-            {
-                statusbarListener.add(listener);
-            }
             else if (type == DataUpdateListener.SPEED_CHANGED)
             {
                 speedListener.add(listener);
@@ -319,6 +318,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             else if (type == DataUpdateListener.SEARCH_CHANGED)
             {
                 searchListener.add(listener);
+            }
+            else if (type == DataUpdateListener.INFORMATION_CHANGED)
+            {
+                informationListener.add(listener);
             }
             else
             {
@@ -342,8 +345,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             uploadListener = new HashSet();
             shareListener = new HashSet();
             networkInfoListener = new HashSet();
-            statusbarListener = new HashSet();
             speedListener = new HashSet();
+            informationListener = new HashSet();
 
             //load XMLs
             modifiedXML = new ModifiedXMLHolder();
@@ -420,6 +423,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
+    }
+
+    public Information getInformation(){
+        return modifiedXML.getInformation();
     }
 
     public PartListDO getPartList(DownloadDO downloadDO) {
@@ -501,9 +508,9 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
                     informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
                     informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
-                    informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
                     informDataUpdateListener(DataUpdateListener.SPEED_CHANGED);
                     informDataUpdateListener(DataUpdateListener.SEARCH_CHANGED);
+                    informDataUpdateListener(DataUpdateListener.INFORMATION_CHANGED);
                 }
             });
         }
@@ -814,16 +821,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                         }
                         break;
                     }
-                case DataUpdateListener.STATUSBAR_CHANGED:
-                    {
-                        String[] content = modifiedXML.getStatusBar();
-                        Iterator it = statusbarListener.iterator();
-                        while (it.hasNext())
-                        {
-                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.STATUSBAR_CHANGED, content);
-                        }
-                        break;
-                    }
                 case DataUpdateListener.SPEED_CHANGED:
                     {
                         HashMap content = modifiedXML.getSpeeds();
@@ -841,6 +838,16 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                         while (it.hasNext())
                         {
                             ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.SEARCH_CHANGED, content);
+                        }
+                        break;
+                    }
+                case DataUpdateListener.INFORMATION_CHANGED:
+                    {
+                        Information content = modifiedXML.getInformation();
+                        Iterator it = informationListener.iterator();
+                        while (it.hasNext())
+                        {
+                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.INFORMATION_CHANGED, content);
                         }
                         break;
                     }

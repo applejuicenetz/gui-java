@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.31 2003/10/09 15:42:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.32 2003/10/21 11:36:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.32  2003/10/21 11:36:32  maj0r
+ * Infos werden nun ueber einen Listener geholt.
+ *
  * Revision 1.31  2003/10/09 15:42:52  maj0r
  * Bug behoben, dass nicht immer der aktuell verbundene Server angezeigt wurde.
  *
@@ -121,15 +124,20 @@ public class StartPanel
     private JLabel netzwerk;
     private JLabel label6;
     private JLabel label9;
+    private JLabel label10;
     private JLabel version;
 
     private String label9Text;
+    private String label10Text;
     private String label6Text;
     private String firewallWarning;
 
+    private String keinServer = "";
+
     private Logger logger;
 
-    NetworkInfo netInfo;
+    private NetworkInfo netInfo;
+    private Information information;
 
     private LanguageSelector languageSelector;
 
@@ -240,8 +248,12 @@ public class StartPanel
         label9 = new JLabel("Du bist mit xxxx vielleicht verbunden.");
         panel3.add(label9, constraints);
 
+        label10 = new JLabel("10 Verbindungen.");
         constraints.gridy = 8;
         constraints.insets.top = 5;
+        panel3.add(label10, constraints);
+
+        constraints.gridy = 9;
         label6 = new JLabel();
         panel3.add(label6, constraints);
 
@@ -288,7 +300,7 @@ public class StartPanel
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
                                                               DataUpdateListener.NETINFO_CHANGED);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
-                                                              DataUpdateListener.STATUSBAR_CHANGED);
+                                                              DataUpdateListener.INFORMATION_CHANGED);
     }
 
     public void registerSelected() {
@@ -296,6 +308,8 @@ public class StartPanel
 
     public void fireLanguageChanged() {
         try{
+            keinServer = languageSelector.getFirstAttrbuteByTagName(new String[]{
+                "javagui", "mainform", "keinserver"});
             netzwerk.setText("<html><font><h2>" +
                              ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                getFirstAttrbuteByTagName(new String[]{"mainform", "html7"})) +
@@ -322,12 +336,24 @@ public class StartPanel
             label9Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "html10"}));
             String temp = label9Text;
-            temp = temp.replaceFirst("%s", "<Kein Server>");
+            temp = temp.replaceFirst("%s", keinServer);
             temp = temp.replaceFirst("%d",
                                      Integer.toString(ApplejuiceFassade.getInstance().
                                                       getAllServer().
                                                       size()));
             label9.setText(temp);
+            label10Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "status", "status0"}));
+            temp = label10Text;
+            if (information != null)
+            {
+                temp = temp.replaceFirst("%d", Long.toString(information.getOpenConnections()));
+            }
+            else{
+                temp = temp.replaceFirst("%d", "0");
+            }
+            label10.setText(temp);
+
             label6Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new
                                                                    String[]{"mainform", "status", "status2"}));
@@ -379,16 +405,24 @@ public class StartPanel
                     label7.setText("");
                 }
             }
-            else if (type == DataUpdateListener.STATUSBAR_CHANGED)
+            else if (type == DataUpdateListener.INFORMATION_CHANGED)
             {
-                String[] status = (String[]) content;
+                information = (Information) content;
                 String temp = label9Text;
-                temp = temp.replaceFirst("%s", status[1]);
+                if (information.getVerbindungsStatus()==Information.VERBUNDEN){
+                    temp = temp.replaceFirst("%s", information.getServerName());
+                }
+                else{
+                    temp = temp.replaceFirst("%s", keinServer);
+                }
                 temp = temp.replaceFirst("%d",
                                          Integer.toString(ApplejuiceFassade.getInstance().
                                                           getAllServer().
                                                           size()));
                 label9.setText(temp);
+                temp = label10Text;
+                temp = temp.replaceFirst("%d", Long.toString(information.getOpenConnections()));
+                label10.setText(temp);
             }
         }
         catch (Exception e)

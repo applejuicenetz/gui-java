@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.50 2003/10/17 13:33:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.51 2003/10/21 11:36:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.51  2003/10/21 11:36:32  maj0r
+ * Infos werden nun ueber einen Listener geholt.
+ *
  * Revision 1.50  2003/10/17 13:33:02  maj0r
  * properties.xml wird nun im Fehlerfall automatisch generiert.
  *
@@ -137,6 +140,7 @@ public class AppleJuiceDialog
     private JFrame _this;
     private JButton pause = new JButton();
     private boolean paused = false;
+    private String keinServer = "";
     private static Logger logger;
     public static boolean rewriteProperties = false;
 
@@ -241,7 +245,7 @@ public class AppleJuiceDialog
         fireLanguageChanged();
         ApplejuiceFassade dm = ApplejuiceFassade.getInstance();
         dm.addDataUpdateListener(this,
-                                 DataUpdateListener.STATUSBAR_CHANGED);
+                                 DataUpdateListener.INFORMATION_CHANGED);
         dm.startXMLCheck();
     }
 
@@ -406,6 +410,8 @@ public class AppleJuiceDialog
             setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                        getFirstAttrbuteByTagName(new
                                                                String[]{"mainform", "caption"})) + " (Core " + versionsNr + ")");
+            keinServer = languageSelector.getFirstAttrbuteByTagName(new String[]{
+                "javagui", "mainform", "keinserver"});
             sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                  getFirstAttrbuteByTagName(new String[]{"einstform", "languagesheet",
                                                                                                         "caption"})));
@@ -440,15 +446,20 @@ public class AppleJuiceDialog
 
     public void fireContentChanged(int type, Object content) {
         try{
-            if (type == DataUpdateListener.STATUSBAR_CHANGED)
+            if (type == DataUpdateListener.INFORMATION_CHANGED)
             {
-                String[] status = (String[]) content;
-                statusbar[0].setText(status[0]);
-                statusbar[1].setText(status[1]);
-                statusbar[2].setText(status[2]);
-                statusbar[3].setText(status[3]);
-                statusbar[4].setText(status[4]);
-                statusbar[5].setText(status[5]);
+                Information information = (Information) content;
+                statusbar[0].setText(information.getVerbindungsStatusAsString());
+                if (information.getVerbindungsStatus()==Information.NICHT_VERBUNDEN){
+                    statusbar[1].setText(keinServer);
+                }
+                else{
+                    statusbar[1].setText(information.getServerName());
+                }
+                statusbar[2].setText(information.getUpDownAsString());
+                statusbar[3].setText(information.getUpDownSessionAsString());
+                statusbar[4].setText(information.getExterneIP());
+                statusbar[5].setText(information.getCreditsAsString());
             }
         }
         catch (Exception e){

@@ -7,18 +7,20 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
-import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.38 2003/10/12 15:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.39 2003/10/21 11:36:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.39  2003/10/21 11:36:32  maj0r
+ * Infos werden nun ueber einen Listener geholt.
+ *
  * Revision 1.38  2003/10/12 15:57:55  maj0r
  * Kleinere Bugs behoben.
  * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
@@ -131,7 +133,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  */
 
 public class ModifiedXMLHolder
-        extends WebXMLParser implements LanguageListener {
+        extends WebXMLParser{
     private HashMap sourcenZuDownloads = new HashMap();
 
     private HashMap serverMap = new HashMap();
@@ -139,22 +141,16 @@ public class ModifiedXMLHolder
     private HashMap uploadMap = new HashMap();
     private HashMap searchMap = new HashMap();
     private NetworkInfo netInfo;
-    private String[] status = new String[6];
+    private Information information;
 
     private int connectedWithServerId = -1;
     private int tryConnectToServer = -1;
-
-    private String verbunden;
-    private String nichtVerbunden;
-    private String verbinden;
-    private String keinServer;
 
     private boolean reloadInProgress = false;
     private Logger logger;
 
     public ModifiedXMLHolder() {
         super("/xml/modified.xml", "");
-        LanguageSelector.getInstance().addLanguageListener(this);
         logger = Logger.getLogger(getClass());
     }
 
@@ -186,6 +182,7 @@ public class ModifiedXMLHolder
         updateNetworkInfo();
         updateUploads();
         updateSuche();
+        getInformation();
     }
 
     public void reload(String parameters) {
@@ -208,47 +205,61 @@ public class ModifiedXMLHolder
         throw new RuntimeException();
     }
 
-    public String[] getStatusBar() {
+    public Information getInformation() {
         NodeList nodes = document.getElementsByTagName("information");
         try {
+            long sessionUpload;
+            long sessionDownload;
+            long credits;
+            long uploadSpeed;
+            long downloadSpeed;
+            long openConnections;
+            String serverName = null;
+            String externeIP;
+            int verbindungsStatus = Information.NICHT_VERBUNDEN;
             if (tryConnectToServer != -1) {
                 ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
                 if (serverDO != null) {
-                    status[0] = verbinden;
-                    status[1] = serverDO.getName();
+                    verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
+                    serverName = serverDO.getName();
                 }
             }
             else if (connectedWithServerId != -1) {
                 ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(connectedWithServerId)));
                 if (serverDO != null) {
-                    status[0] = verbunden;
-                    status[1] = serverDO.getName();
+                    verbindungsStatus = Information.VERBUNDEN;
+                    serverName = serverDO.getName();
                 }
             }
             else {
-                status[0] = nichtVerbunden;
-                status[1] = keinServer;
+                verbindungsStatus = Information.NICHT_VERBUNDEN;
             }
-            status[4] = netInfo.getExterneIP();
-            if (nodes.getLength() == 0) {
-                return status; //Keine Ver�nderung seit dem letzten Abrufen
+            externeIP = netInfo.getExterneIP();
+            if (nodes.getLength() != 0) {
+                Element e = (Element) nodes.item(0);
+                credits = Long.parseLong(e.getAttribute("credits"));
+                uploadSpeed = Long.parseLong(e.getAttribute("uploadspeed"));
+                downloadSpeed = Long.parseLong(e.getAttribute("downloadspeed"));
+                openConnections = Long.parseLong(e.getAttribute("openconnections"));
+                sessionUpload = Long.parseLong(e.getAttribute("sessionupload"));
+                sessionDownload = Long.parseLong(e.getAttribute("sessiondownload"));
+                information = new Information(sessionUpload, sessionDownload, credits, uploadSpeed, downloadSpeed,
+                                              openConnections, verbindungsStatus, serverName, externeIP);
             }
-            Element e = (Element) nodes.item(0); //Es gibt nur ein information-Element
-            long credits = Long.parseLong(e.getAttribute("credits"));
-            long up = Long.parseLong(e.getAttribute("uploadspeed"));
-            long down = Long.parseLong(e.getAttribute("downloadspeed"));
-            status[2] = " in: " + getBytesSpeed(down) + " out: " + getBytesSpeed(up);
-            long uptotal = Long.parseLong(e.getAttribute("sessionupload"));
-            long downtotal = Long.parseLong(e.getAttribute("sessiondownload"));
-            status[3] = " in: " + bytesUmrechnen(downtotal) + " out: " + bytesUmrechnen(uptotal);
-            status[4] = netInfo.getExterneIP();
-            status[5] = " Credits: " + bytesUmrechnen(credits);
+            else{
+                information = new Information(information.getSessionUpload(), information.getSessionDownload(),
+                                              information.getCredits(),
+                                              information.getUploadSpeed(), information.getDownloadSpeed(),
+                                              information.getOpenConnections(),
+                                              verbindungsStatus, serverName, externeIP);
+            }
+            return information;
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", ex);
+            return null;
         }
-        return status;
     }
 
     public HashMap getSpeeds(){
@@ -271,14 +282,6 @@ public class ModifiedXMLHolder
                 logger.error("Unbehandelte Exception", ex);
         }
         return speeds;
-    }
-
-    private String getBytesSpeed(long bytes) {
-        if (bytes == 0) {
-            return "0 KB/s";
-        }
-        String result = bytesUmrechnen(bytes) + "/s";
-        return result;
     }
 
     private String bytesUmrechnen(long bytes) {
@@ -762,24 +765,6 @@ public class ModifiedXMLHolder
             //}
             netInfo = new NetworkInfo(users, dateien, dateigroesse, firewalled,
                     externeIP, tryConnectToServer, connectedWithServerId);
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Unbehandelte Exception", e);
-        }
-    }
-
-    public void fireLanguageChanged() {
-        try {
-            LanguageSelector languageSelector = LanguageSelector.getInstance();
-            verbunden = languageSelector.getFirstAttrbuteByTagName(new String[]{
-                "javagui", "mainform", "verbunden"});
-            verbinden = languageSelector.getFirstAttrbuteByTagName(new String[]{
-                "javagui", "mainform", "verbinden"});
-            keinServer = languageSelector.getFirstAttrbuteByTagName(new String[]{
-                "javagui", "mainform", "keinserver"});
-            nichtVerbunden = languageSelector.getFirstAttrbuteByTagName(new String[]{
-                "javagui", "mainform", "nichtverbunden"});
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))

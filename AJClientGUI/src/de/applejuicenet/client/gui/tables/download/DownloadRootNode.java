@@ -11,15 +11,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.9 2003/10/16 09:57:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.10 2003/10/21 11:36:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.10  2003/10/21 11:36:32  maj0r
+ * Infos werden nun ueber einen Listener geholt.
+ *
  * Revision 1.9  2003/10/16 09:57:21  maj0r
  * Sortierung korrigiert, Nichtbeachtung von Gross/Kleinschreibung.
  *
@@ -69,15 +72,15 @@ public class DownloadRootNode implements Node, DownloadNode {
 
     private HashMap childrenPath = new HashMap();
     private ArrayList children = new ArrayList();
-    private HashMap versteckteNodes = new HashMap();
-    private boolean versteckt = false;
+/*    private HashMap versteckteNodes = new HashMap();
+    private boolean versteckt = false;*/
 
     private int sort = SORT_NO_SORT;
     private boolean isAscent = true;
 
     private DownloadMainNode[] sortedChildNodes;
 
-    public void alterVerstecke(DownloadMainNode downloadMainNode) {
+/*    public void alterVerstecke(DownloadMainNode downloadMainNode) {
         if (downloadMainNode.getType() == DownloadMainNode.ROOT_NODE) {
             MapSetStringKey key = new MapSetStringKey(downloadMainNode.getDownloadDO().getId());
             if (!versteckteNodes.containsKey(key)) {
@@ -109,7 +112,7 @@ public class DownloadRootNode implements Node, DownloadNode {
 
     public boolean isVerstecktEnabled() {
         return versteckt;
-    }
+    }*/
 
     public Object[] getChildren() {
         if (downloads == null)
@@ -126,7 +129,7 @@ public class DownloadRootNode implements Node, DownloadNode {
                 obj = children.get(i);
                 if (obj.getClass() == DownloadMainNode.class) {
                     key = new MapSetStringKey(((DownloadMainNode) obj).getDownloadDO().getId());
-                    if (!downloads.containsKey(key) || (versteckt && versteckteNodes.containsKey(key))) {
+                    if (!downloads.containsKey(key) /*|| (versteckt && versteckteNodes.containsKey(key))*/) {
                         children.remove(i);
                         sort = true;
                     }
@@ -139,9 +142,9 @@ public class DownloadRootNode implements Node, DownloadNode {
             while (it.hasNext()) {
                 downloadDO = (DownloadDO) it.next();
                 mapKey = new MapSetStringKey(downloadDO.getId());
-                if (versteckt && versteckteNodes.containsKey(mapKey)) {
+/*                if (versteckt && versteckteNodes.containsKey(mapKey)) {
                     continue;
-                }
+                }*/
                 pfad = downloadDO.getTargetDirectory();
                 pathEntry = (PathEntry) childrenPath.get(mapKey);
                 if (pathEntry != null) {
