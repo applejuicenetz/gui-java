@@ -23,7 +23,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import com.l2fprod.gui.plaf.skin.Skin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.60 2003/11/18 16:41:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.61 2003/11/19 13:43:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.61  2003/11/19 13:43:39  maj0r
+ * Themes sind nun ueber das Menue deaktivierbar.
+ *
  * Revision 1.60  2003/11/18 16:41:50  maj0r
  * Erste Version des LinkListener eingebaut.
  * Themes koennen nun ueber die properties.xml komplett deaktiviert werden.
@@ -181,6 +184,8 @@ public class AppleJuiceDialog
     private boolean firstChange = true;
     private MemoryMonitorDialog memoryMonitorDialog;
     private HashMap themes = new HashMap();
+    private String themeSupportTitel;
+    private String themeSupportNachricht;
 
     private static AppleJuiceDialog theApp;
 
@@ -476,6 +481,7 @@ public class AppleJuiceDialog
                 });
                 lafGroup.add(rb);
             }
+            themesMenu = new JMenu("Themes");
             if (PropertiesManager.getOptionsManager().isThemesSupported()){
                 HashSet themesDateien = new HashSet();
                 File themesPath = new File(System.getProperty("user.dir") + File.separator + "themes");
@@ -491,7 +497,6 @@ public class AppleJuiceDialog
                         themesDateien.add(themeFiles[i].toURL());
                     }
                 }
-                themesMenu = new JMenu("Themes");
                 it = themesDateien.iterator();
                 ButtonGroup lafGroup2 = new ButtonGroup();
                 Skin standardSkin = null;
@@ -530,15 +535,44 @@ public class AppleJuiceDialog
                 if (standardSkin == null) {
                     standardSkin = aSkin;
                 }
-                menuBar.add(themesMenu);
+                themesMenu.add(new JSeparator());
+                JMenuItem menuItem = new JMenuItem();
+                menuItem.setText("deaktivieren");
+                menuItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ce) {
+                        activateThemeSupport(false);
+                    }
+                });
+                themesMenu.add(menuItem);
                 SkinLookAndFeel.setSkin(standardSkin);
             }
+            else{
+                JMenuItem menuItem = new JMenuItem();
+                menuItem.setText("aktivieren");
+                menuItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ce) {
+                        activateThemeSupport(true);
+                    }
+                });
+                themesMenu.add(menuItem);
+            }
+            menuBar.add(themesMenu);
             return menuBar;
         }
         catch (Exception e){
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
             return null;
+        }
+    }
+
+    private void activateThemeSupport(boolean enable){
+        int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.this,
+            themeSupportNachricht, themeSupportTitel, JOptionPane.YES_NO_OPTION);
+        if (result==JOptionPane.YES_OPTION){
+            PropertiesManager.getOptionsManager().
+                enableThemeSupport(enable);
+            closeDialog(null);
         }
     }
 
@@ -568,6 +602,10 @@ public class AppleJuiceDialog
                                                                " - GUI " + ApplejuiceFassade.GUI_VERSION + ")");
             keinServer = languageSelector.getFirstAttrbuteByTagName(new String[]{
                 "javagui", "mainform", "keinserver"});
+            themeSupportTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[]{"mainform", "caption"}));
+            themeSupportNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[]{"javagui", "mainform", "themesupportnachricht"}));
             sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                  getFirstAttrbuteByTagName(new String[]{"einstform", "languagesheet",
                                                                                                         "caption"})));
