@@ -169,6 +169,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	private String alreadyLoaded;
 	private String invalidLink;
 	private String linkFailure;
+	private String dialogTitel;
+
 	
 	public static void initThemes() {
 		try {
@@ -963,7 +965,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							            textArea.setBackground(new JLabel().getBackground());
 							            textArea.setText(returnValues.toString());
 										JOptionPane.showMessageDialog(AppleJuiceDialog
-												.getApp(), new JScrollPane(textArea), "appleJuice Client",
+												.getApp(), new JScrollPane(textArea), dialogTitel,
 												JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
 							        }
 							    });							
@@ -1066,6 +1068,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 					.getFirstAttrbuteByTagName(".root.javagui.downloadform.falscherlink"));
 			linkFailure = ZeichenErsetzer.korrigiereUmlaute(languageSelector
 					.getFirstAttrbuteByTagName(".root.javagui.downloadform.sonstigerlinkfehlerkurz"));
+            dialogTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+    				.getFirstAttrbuteByTagName(".root.mainform.caption"));
 			if (firewalled) {
 				statusbar[0].setToolTipText(firewallWarning);
 			} 
