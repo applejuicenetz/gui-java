@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.21 2003/08/20 10:52:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.22 2003/08/27 16:44:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.22  2003/08/27 16:44:42  maj0r
+ * Unterstuetzung fuer DragNDrop teilweise eingebaut.
+ *
  * Revision 1.21  2003/08/20 10:52:51  maj0r
  * JarClassloader korrigiert.
  *
@@ -73,7 +76,7 @@ public class RegisterPanel
     logger = Logger.getLogger(getClass());
     LanguageSelector.getInstance().addLanguageListener(this);
     startPanel = new StartPanel(parent);
-    sharePanel = new SharePanel();
+    sharePanel = new SharePanel(parent);
     downloadPanel = new DownloadPanel();
     uploadPanel = new UploadPanel();
     searchPanel = new SearchPanel();
