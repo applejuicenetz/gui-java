@@ -10,9 +10,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTabbedPane;
+import java.awt.Color;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.2 2004/05/13 14:41:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.3 2004/05/13 15:28:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,15 +35,25 @@ public class UserPanel
     private JTextField titleArea = new JTextField();
     private JButton closeButton = new JButton("X");
     private XdccIrc parentPanel;
+    private boolean selected = false;
+    private boolean marked = false;
+    private JTabbedPane tabbedPane;
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
 
-    public UserPanel(XdccIrc parentPanel, String name) {
+    public UserPanel(XdccIrc parentPanel, String name, JTabbedPane tabbedPane) {
         this.name = name;
         this.parentPanel = parentPanel;
+        this.tabbedPane = tabbedPane;
         makePanel();
     }
 
     public void selected(){
+        selected = true;
+    }
 
+    public void unselected(){
+        selected = false;
+        marked = false;
     }
 
     public void setName(String name) {
@@ -115,12 +129,23 @@ public class UserPanel
 
     public void updateTextArea(String message) {
         int oldCaretPosition = textArea.getCaretPosition();
-        textArea.append(message + "\n");
+        String zeit = dateFormatter.format(new Date(System.
+            currentTimeMillis()));
+        textArea.append("[" + zeit + "]\t" + message + "\n");
 
         int newCaretPosition = textArea.getCaretPosition();
         if (newCaretPosition == oldCaretPosition) {
             textArea.setCaretPosition(oldCaretPosition +
                                       (message + "\n").length());
+        }
+        if (!selected && !marked){
+            marked = true;
+            for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+                Object tab = tabbedPane.getComponentAt(i);
+                if (tab == this) {
+                    tabbedPane.setForegroundAt(i, Color.GREEN);
+                }
+            }
         }
     }
 }

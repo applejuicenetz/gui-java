@@ -135,6 +135,6 @@ public class RulesDialog extends JDialog{
         "einem Ban gef&uuml;hrt haben, und das bereitet dir schlaflose N&auml;chte, dann " +
         "solltest du deinen Umgangston &uuml;berdenken. Wende dich in diesem Fall ans <a " +
         "HREF=\"http://community.applejuicenet.de/\">Forum</a>. <b>Und nun " +
-        "viel Spass im <a HREF=\"irc://irc.applejuicenet.de/applejuice\">IRC</a></b>:)</p>"+
+        "viel Spass im IRC</b>:)</p>"+
         "<p>Diesen Dialog kannst Du &uuml;ber Optionen->Plugins->IrcPlugin deaktivieren.</p></html>";
 }

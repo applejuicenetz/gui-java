@@ -34,7 +34,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.14 2004/05/13 13:55:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.15 2004/05/13 15:28:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -129,6 +129,31 @@ public class XdccIrc
             cancelButton = new JButton("Cancel");
 
             tabbedPane = createTabbedPane();
+            tabbedPane.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    Object selected = tabbedPane.getSelectedComponent();
+                    for (int i=0; i<tabbedPane.getTabCount(); i++){
+                        Object tab = tabbedPane.getComponentAt(i);
+                        if (tab == selected){
+                            tabbedPane.setForegroundAt(i, Color.BLACK);
+                            if (tab.getClass()==UserPanel.class){
+                                ((UserPanel)tab).selected();
+                            }
+                            else if (tab.getClass()==ChannelPanel.class){
+                                ((ChannelPanel)tab).selected();
+                            }
+                        }
+                        else{
+                            if (tab.getClass()==UserPanel.class){
+                                ((UserPanel)tab).unselected();
+                            }
+                            else if (tab.getClass()==ChannelPanel.class){
+                                ((ChannelPanel)tab).unselected();
+                            }
+                        }
+                    }
+                }
+            });
 
             JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
             // Let's create a ToolBar
@@ -436,11 +461,11 @@ public class XdccIrc
                         if (fromServer == null) {
                             try {
                                 sleep(5000);
+                                continue;
                             }
                             catch (InterruptedException e) {
                                 interrupt();
                             }
-                            continue;
                         }
                         String line = fromServer.readLine();
                         if (line != null) {
@@ -1280,7 +1305,7 @@ public class XdccIrc
     private void joinChan() {
         String channelName;
 
-        channelName = JOptionPane.showInputDialog(theApp, channelNameString, nickname);
+        channelName = JOptionPane.showInputDialog(theApp, channelNameString);
         joinChannel(channelName);
     }
 
@@ -1307,7 +1332,7 @@ public class XdccIrc
     private void changeNick() {
         String newNickname;
 
-        newNickname = JOptionPane.showInputDialog(theApp, nicknameString);
+        newNickname = JOptionPane.showInputDialog(theApp, nicknameString, nickname);
 
         if (newNickname != null) {
             if (toServer != null) {
@@ -1318,9 +1343,6 @@ public class XdccIrc
                 parseSendToCommand("NICK " + newNickname);
                 nickname = newNickname;
             }
-        }
-        else {
-            tabUpdate("Init Window", "No nickname specified.");
         }
     }
 
@@ -1335,7 +1357,7 @@ public class XdccIrc
     }
 
     public UserPanel addUser(final JTabbedPane tabbedPane, String name) {
-        UserPanel userPanel = new UserPanel(this, name);
+        UserPanel userPanel = new UserPanel(this, name, tabbedPane);
         tabbedPane.add(userPanel, name);
         tabbedPane.revalidate();
 
@@ -1346,11 +1368,11 @@ public class XdccIrc
         ChannelPanel channel;
 
         if (name.startsWith("#")) {
-            channel = new ChannelPanel(this, name);
+            channel = new ChannelPanel(this, name, tabbedPane);
             tabbedPane.add(channel, name);
         }
         else {
-            channel = new ChannelPanel(this, "#" + name);
+            channel = new ChannelPanel(this, "#" + name, tabbedPane);
             tabbedPane.add(channel, "#" + name);
         }
         tabbedPane.revalidate();

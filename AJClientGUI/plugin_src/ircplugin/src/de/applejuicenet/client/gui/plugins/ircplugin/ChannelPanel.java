@@ -37,7 +37,7 @@ import javax.swing.text.StyledDocument;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.2 2004/05/13 14:41:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.3 2004/05/13 15:28:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -63,10 +63,14 @@ public class ChannelPanel
 
     private JButton closeButton = new JButton("X");
     private XdccIrc parentPanel;
+    private boolean selected = false;
+    private boolean marked = false;
+    private JTabbedPane tabbedPane;
 
-    public ChannelPanel(XdccIrc parentPanel, String name) {
+    public ChannelPanel(XdccIrc parentPanel, String name, JTabbedPane tabbedPane) {
         this.name = name;
         this.parentPanel = parentPanel;
+        this.tabbedPane = tabbedPane;
         makePanel();
     }
 
@@ -75,7 +79,12 @@ public class ChannelPanel
     }
 
     public void selected(){
+        selected = true;
+        marked = false;
+    }
 
+    public void unselected(){
+        selected = false;
     }
 
     private void makePanel() {
@@ -389,6 +398,8 @@ public class ChannelPanel
         StyleConstants.setForeground(attributes, Color.BLACK);
         int index = message.indexOf('>');
         String compareValue;
+        boolean eigenerName = false;
+        boolean doMark = false;
         if (index!=-1 && message.length()-1>index){
             compareValue = message.substring(index+1);
         }
@@ -397,6 +408,8 @@ public class ChannelPanel
         }
         if (compareValue.indexOf(parentPanel.getNickname())!=-1){
             StyleConstants.setBackground(attributes, Color.ORANGE);
+            eigenerName = true;
+            doMark = true;
         }
         else if (message.indexOf("---> JOIN:")!=-1){
             StyleConstants.setForeground(attributes, Color.GREEN);
@@ -409,6 +422,7 @@ public class ChannelPanel
         }
         else{
             StyleConstants.setForeground(attributes, Color.BLACK);
+            doMark = true;
         }
         Document doc = textArea.getDocument();
         try{
@@ -431,6 +445,25 @@ public class ChannelPanel
         if (newCaretPosition == oldCaretPosition) {
             textArea.setCaretPosition(oldCaretPosition +
                                       (message + "\n").length());
+        }
+        if (!selected && doMark){
+            if (eigenerName){
+                for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+                    Object tab = tabbedPane.getComponentAt(i);
+                    if (tab == this) {
+                        tabbedPane.setForegroundAt(i, Color.GREEN);
+                    }
+                }
+            }
+            if (!eigenerName && !marked){
+                for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+                    Object tab = tabbedPane.getComponentAt(i);
+                    if (tab == this) {
+                        tabbedPane.setForegroundAt(i, Color.RED);
+                    }
+                }
+            }
+            marked = true;
         }
     }
 
