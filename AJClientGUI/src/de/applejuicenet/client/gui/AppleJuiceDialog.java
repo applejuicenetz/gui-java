@@ -5,6 +5,7 @@ import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -13,11 +14,12 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.icons.DummyClass;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.38 2003/08/29 14:24:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.39 2003/09/03 12:10:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.39  2003/09/03 12:10:17  maj0r
+ * Icons fuer die Sprachauswahl eingefuegt.
+ *
  * Revision 1.38  2003/08/29 14:24:15  maj0r
  * About-Dialog mit entsprechendem Menuepunkt eingefuehrt.
  *
@@ -348,6 +353,11 @@ public class AppleJuiceDialog
             {
                 rb.setSelected(true);
             }
+            Image img = Toolkit.getDefaultToolkit().getImage(path + sprachText.toLowerCase() + ".gif");
+            ImageIcon result = new ImageIcon();
+            result.setImage(img);
+            rb.setIcon(result);
+
             sprachMenu.add(rb);
             rb.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent ae) {
