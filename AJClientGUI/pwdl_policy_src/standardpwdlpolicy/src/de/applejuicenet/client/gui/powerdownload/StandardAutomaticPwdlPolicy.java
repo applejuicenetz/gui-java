@@ -30,7 +30,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * Copyright: General Public License
  * </p>
  * 
- * @author: loevenwong [timo@loevenwong.de]
+ * @author: Maj0r [aj@tkl-soft.de]
  * 
  */
 
