@@ -22,7 +22,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.10 2004/01/30 16:32:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.11 2004/01/30 21:34:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.11  2004/01/30 21:34:48  maj0r
+ * GUI sollte nun auch bei Ueberlastung des Core besser verbinden (Danke an the_Killerbee).
+ *
  * Revision 1.10  2004/01/30 16:32:31  maj0r
  * Verbindung sollte nun auch bei belasteten Verbindungen aufgebaut werden.
  * MapSetStringKey ausgebaut.
@@ -244,7 +247,7 @@ public class ModifiedXMLHolder
         if (sessionKontext == null){
             sessionKontext = "&session=" + sessionId;
         }
-        if (tryToReload(sessionKontext)){
+        if (tryToReload()){
             switch (count){
                 case 0:{
                     updateIDs();
@@ -281,7 +284,7 @@ public class ModifiedXMLHolder
         }
     }
 
-    private boolean tryToReload(String parameters){
+    private boolean tryToReload(){
         if (reloadInProgress) {
             return false;
         }
@@ -307,7 +310,7 @@ public class ModifiedXMLHolder
                     break;
                 }
             }
-            reload(parameters + filter);
+            reload(sessionKontext + filter);
             return true;
         }
     }
@@ -341,12 +344,34 @@ public class ModifiedXMLHolder
                     "applejuice", "session", "id"}
                     , false);
                 sessionKontext = "&session=" + sessionId;
+                if (logger.isEnabledFor(Level.DEBUG)) {
+                    logger.debug(
+                        "Neue SessionId: " + sessionId);
+                }
             }
             securer = null;
             reloadInProgress = false;
         }
         catch (WebSiteNotFoundException webSiteNotFound) {
+            SessionXMLHolder session = new SessionXMLHolder();
+            try {
+                session.reload("", false);
+            }
+            catch (Exception ex) {
+                if (logger.isEnabledFor(Level.ERROR)) {
+                    logger.error("Unbehandelte Exception", ex);
+                }
+            }
             reloadInProgress = false;
+            String sessionId = session.getFirstAttrbuteByTagName(new
+                String[] {
+                "applejuice", "session", "id"}
+                , false);
+            sessionKontext = "&session=" + sessionId;
+            if (logger.isEnabledFor(Level.DEBUG)) {
+                logger.debug(
+                    "Neue SessionId: " + sessionId);
+            }
             throw new RuntimeException();
         }
         catch (Exception ex) {
@@ -1003,10 +1028,6 @@ public class ModifiedXMLHolder
                     sleep(5000);
                     if (!secureSession()){
                         ok = false;
-                        if (logger.isEnabledFor(Level.INFO)) {
-                            logger.info(
-                                "Verbindung zum Core ueberlastet, Start kann jedoch fortgesetzt werden.");
-                        }
                         interrupt();
                     }
 //                            System.out.println("session secured");
