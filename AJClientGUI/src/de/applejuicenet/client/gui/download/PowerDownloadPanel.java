@@ -40,8 +40,8 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.Information;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.fassade.shared.Information;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -53,7 +53,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.PolicyJarClassLoader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.4 2005/01/18 20:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.5 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

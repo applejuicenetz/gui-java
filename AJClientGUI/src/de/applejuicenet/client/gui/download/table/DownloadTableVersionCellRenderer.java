@@ -7,8 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -16,7 +16,7 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.util.DownloadSourceCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTableVersionCellRenderer.java,v 1.4 2005/01/18 20:49:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTableVersionCellRenderer.java,v 1.5 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -56,8 +56,8 @@ public class DownloadTableVersionCellRenderer
         int column) {
         Object node = ( (TreeTableModelAdapter) table.getModel()).nodeForRow(
             row);
-        if (node.getClass() == DownloadSourceDO.class) {
-            return getComponentForSource( (DownloadSourceDO) node, table, value,
+        if (node instanceof DownloadSource) {
+            return getComponentForSource( (DownloadSource) node, table, value,
                                          isSelected, hasFocus, row, column);
         }
         else if (node.getClass() == DownloadMainNode.class) {
@@ -102,14 +102,14 @@ public class DownloadTableVersionCellRenderer
         return c;
     }
 
-    public Component getComponentForSource(DownloadSourceDO downloadSourceDO,
+    public Component getComponentForSource(DownloadSource downloadSource,
                                            JTable table,
                                            Object value,
                                            boolean isSelected,
                                            boolean hasFocus,
                                            int row,
                                            int column) {
-    	Component c = DownloadSourceCalculator.getVersionComponent(downloadSourceDO, table);
+    	Component c = DownloadSourceCalculator.getVersionComponent(downloadSource, table);
         if (isSelected) {
             c.setBackground(selectionBackground);
             c.setForeground(selectionForeground);

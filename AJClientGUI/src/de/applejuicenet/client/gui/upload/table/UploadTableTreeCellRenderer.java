@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import de.applejuicenet.client.fassade.controller.dac.UploadDO;
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.components.util.IconGetter;
 
@@ -54,7 +54,7 @@ public class UploadTableTreeCellRenderer
             return returnPanel;
         }
         else {
-            UploadDO uploadDO = (UploadDO) obj;
+            Upload upload = (Upload) obj;
             JLabel text = new JLabel();
             text.setOpaque(true);
             if (isSelected) {
@@ -65,7 +65,7 @@ public class UploadTableTreeCellRenderer
             }
             text.setText("   " + (String) value);
             text.setFont(table.getFont());
-            Icon icon = IconGetter.getConvenientIcon(uploadDO);
+            Icon icon = IconGetter.getConvenientIcon(upload);
             if (icon != null) {
                 text.setIcon(icon);
             }

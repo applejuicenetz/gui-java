@@ -13,7 +13,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
-import de.applejuicenet.client.fassade.shared.Information;
 
 /**
  * $Header:
@@ -42,7 +41,7 @@ public class SecurerXMLHolder extends DefaultHandler {
 
 	private XMLReader xr = null;
 
-	private Information information = null;
+	private InformationDO information = null;
 
 	public SecurerXMLHolder(CoreConnectionSettingsHolder coreHolder) {
 		this.coreHolder = coreHolder;
@@ -74,7 +73,7 @@ public class SecurerXMLHolder extends DefaultHandler {
 	}
 
 	public synchronized boolean secure(String sessionKontext,
-			Information information) {
+			InformationDO information) {
 		try {
 			if (information == null) {
 				return false;

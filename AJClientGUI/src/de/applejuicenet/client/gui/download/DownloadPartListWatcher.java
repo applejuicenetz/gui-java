@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.download;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
 
 public class DownloadPartListWatcher {
@@ -26,9 +26,9 @@ public class DownloadPartListWatcher {
 				.getDownloadDOOverviewPanel()
 					.setDownloadDO(((DownloadMainNode) nodeObject)
 							.getDownload());
-		} else if (nodeObject.getClass() == DownloadSourceDO.class) {
-			if (((DownloadSourceDO) nodeObject).getStatus() == DownloadSourceDO.IN_WARTESCHLANGE
-					&& ((DownloadSourceDO) nodeObject)
+		} else if (nodeObject instanceof DownloadSource) {
+			if (((DownloadSource) nodeObject).getStatus() == DownloadSource.IN_WARTESCHLANGE
+					&& ((DownloadSource) nodeObject)
 							.getQueuePosition() > 20) {
 				((DownloadPanel)downloadController.getComponent())
 				.getDownloadDOOverviewPanel()
@@ -37,7 +37,7 @@ public class DownloadPartListWatcher {
 			else{
 				((DownloadPanel)downloadController.getComponent())
 					.getDownloadDOOverviewPanel()
-						.setDownloadSourceDO((DownloadSourceDO) nodeObject);
+						.setDownloadSourceDO((DownloadSource) nodeObject);
 			}
 		}
 	}

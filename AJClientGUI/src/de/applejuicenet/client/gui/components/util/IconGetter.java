@@ -2,13 +2,13 @@ package de.applejuicenet.client.gui.components.util;
 
 import javax.swing.ImageIcon;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
-import de.applejuicenet.client.fassade.controller.dac.UploadDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/util/IconGetter.java,v 1.3 2005/01/18 20:49:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/util/IconGetter.java,v 1.4 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,33 +34,33 @@ public abstract class IconGetter {
         if (node instanceof Download) {
             return downloadIcon;
         }
-        else if (node.getClass() == DownloadSourceDO.class) {
-            switch ( ( (DownloadSourceDO) node).getDirectstate()) {
-                case DownloadSourceDO.UNBEKANNT:
+        else if (node instanceof DownloadSource) {
+            switch ( ( (DownloadSource) node).getDirectstate()) {
+                case DownloadSource.UNBEKANNT:
                     return verbindungUnbekanntIcon;
-                case DownloadSourceDO.DIREKTE_VERBINDUNG:
+                case DownloadSource.DIREKTE_VERBINDUNG:
                     return direktVerbundenIcon;
-                case DownloadSourceDO.INDIREKTE_VERBINDUNG:
+                case DownloadSource.INDIREKTE_VERBINDUNG:
                     return indirektVerbundenIcon;
-                case DownloadSourceDO.INDIREKTE_VERBINDUNG_UNBESTAETIGT:
+                case DownloadSource.INDIREKTE_VERBINDUNG_UNBESTAETIGT:
                     return versucheIndirektIcon;
                 default:
                     return verbindungUnbekanntIcon;
             }
         }
-        else if (node.getClass() == UploadDO.class) {
-            if ((((UploadDO)node).getStatus()==UploadDO.AKTIVE_UEBERTRAGUNG
-                || ((UploadDO)node).getStatus()== UploadDO.WARTESCHLANGE)
-               && ((UploadDO)node).getDirectState()==UploadDO.STATE_DIREKT_VERBUNDEN){
+        else if (node instanceof Upload) {
+            if ((((Upload)node).getStatus()==Upload.AKTIVE_UEBERTRAGUNG
+                || ((Upload)node).getStatus()== Upload.WARTESCHLANGE)
+               && ((Upload)node).getDirectState()==Upload.STATE_DIREKT_VERBUNDEN){
                 return direktVerbundenIcon;
             }
             else{
-                switch ( ( (UploadDO) node).getDirectState()) {
-                    case UploadDO.STATE_UNBEKANNT:
+                switch ( ( (Upload) node).getDirectState()) {
+                    case Upload.STATE_UNBEKANNT:
                         return verbindungUnbekanntIcon;
-                    case UploadDO.STATE_DIREKT_VERBUNDEN:
+                    case Upload.STATE_DIREKT_VERBUNDEN:
                         return direktVerbundenIcon;
-                    case UploadDO.STATE_INDIREKT_VERBUNDEN:
+                    case Upload.STATE_INDIREKT_VERBUNDEN:
                         return indirektVerbundenIcon;
                     default:
                         return verbindungUnbekanntIcon;

@@ -5,9 +5,9 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import de.applejuicenet.client.fassade.controller.dac.UploadDO;
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
-import de.applejuicenet.client.shared.util.UploadDOCalculator;
+import de.applejuicenet.client.shared.util.UploadCalculator;
 
 public class UploadTableVersionCellRenderer
     extends DefaultTableCellRenderer {
@@ -25,7 +25,7 @@ public class UploadTableVersionCellRenderer
                 isSelected, hasFocus, row, column);
         }
         else {
-            Component c = UploadDOCalculator.getVersionComponent((UploadDO)obj, table); 
+            Component c = UploadCalculator.getVersionComponent((Upload)obj, table); 
             if (isSelected) {
                 c.setBackground(table.getSelectionBackground());
                 c.setForeground(table.getSelectionForeground());

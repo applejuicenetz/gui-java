@@ -20,15 +20,14 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.controller.DataPropertyChangeInformer;
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
-import de.applejuicenet.client.fassade.controller.dac.ServerDO;
-import de.applejuicenet.client.fassade.controller.dac.ShareDO;
-import de.applejuicenet.client.fassade.controller.dac.UploadDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.fassade.entity.Information;
+import de.applejuicenet.client.fassade.entity.Server;
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
-import de.applejuicenet.client.fassade.shared.Information;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
 import de.applejuicenet.client.fassade.shared.Search;
 import de.applejuicenet.client.fassade.shared.Version;
@@ -61,12 +60,12 @@ public class ModifiedXMLHolder extends DefaultHandler {
 
 	private Map<String, Download> sourcenZuDownloads = new HashMap<String, Download>();
 	private XMLReader xr = null;
-	private Map<String, ServerDO> serverMap = new HashMap<String, ServerDO>();
+	private Map<String, Server> serverMap = new HashMap<String, Server>();
 	private Map<String, Download> downloadMap = new HashMap<String, Download>();
-	private Map<String, UploadDO> uploadMap = new HashMap<String, UploadDO>();
+	private Map<String, Upload> uploadMap = new HashMap<String, Upload>();
 	private Map<String, Search> searchMap = new HashMap<String, Search>();
 	private NetworkInfo netInfo;
-	private Information information;
+	private InformationDO information;
 	private int count = 0;
 	private String filter = "";
 	private String sessionKontext = null;
@@ -116,11 +115,11 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		init();
 	}
 
-	public Map<String, ServerDO> getServer() {
+	public Map<String, Server> getServer() {
 		return serverMap;
 	}
 
-	public Map<String, UploadDO> getUploads() {
+	public Map<String, Upload> getUploads() {
 		return uploadMap;
 	}
 
@@ -195,7 +194,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 
 	private void checkInformationAttributes(Attributes attr) {
 		if (information == null) {
-			information = new Information();
+			information = new InformationDO();
 		}
 		for (int i = 0; i < attr.getLength(); i++) {
 			if (attr.getLocalName(i).equals("credits")) {
@@ -269,7 +268,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		String key = Integer.toString(id);
 		ServerDO serverDO;
 		if (serverMap.containsKey(key)) {
-			serverDO = serverMap.get(key);
+			serverDO = (ServerDO)serverMap.get(key);
 		} else {
 			serverDO = new ServerDO(id);
 			serverMap.put(key, serverDO);
@@ -321,7 +320,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		String key = Integer.toString(id);
 		UploadDO uploadDO;
 		if (uploadMap.containsKey(key)) {
-			uploadDO = uploadMap.get(key);
+			uploadDO = (UploadDO)uploadMap.get(key);
 		} else {
 			uploadDO = new UploadDO(id);
 			uploadMap.put(key, uploadDO);
@@ -503,11 +502,11 @@ public class ModifiedXMLHolder extends DefaultHandler {
 	}
 
 	private void removeDownload(String id) {
-		Download downloadDO = downloadMap.get(sourcenZuDownloads
+		Download download = downloadMap.get(sourcenZuDownloads
 				.get(id));
-		if (downloadDO != null) {
-			for (DownloadSourceDO curDownloadSourceDO : downloadDO.getSources()) {
-				sourcenZuDownloads.remove(Integer.toString(curDownloadSourceDO
+		if (download != null) {
+			for (DownloadSource curDownloadSource : download.getSources()) {
+				sourcenZuDownloads.remove(Integer.toString(curDownloadSource
 						.getId()));
 			}
 		}

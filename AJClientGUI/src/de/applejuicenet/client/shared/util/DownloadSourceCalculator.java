@@ -7,48 +7,48 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.shared.Version;
 import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.shared.IconManager;
 
 public abstract class DownloadSourceCalculator {
 
-	public static String getStatusAsString(DownloadSourceDO downloadSourceDO) {
-        switch (downloadSourceDO.getStatus()) {
-            case DownloadSourceDO.UNGEFRAGT:
+	public static String getStatusAsString(DownloadSource downloadSource) {
+        switch (downloadSource.getStatus()) {
+            case DownloadSource.UNGEFRAGT:
                 return DownloadModel.ungefragt;
-            case DownloadSourceDO.VERSUCHE_ZU_VERBINDEN:
+            case DownloadSource.VERSUCHE_ZU_VERBINDEN:
                 return DownloadModel.versucheZuVerbinden;
-            case DownloadSourceDO.GEGENSTELLE_HAT_ZU_ALTE_VERSION:
+            case DownloadSource.GEGENSTELLE_HAT_ZU_ALTE_VERSION:
                 return DownloadModel.ggstZuAlteVersion;
-            case DownloadSourceDO.GEGENSTELLE_KANN_DATEI_NICHT_OEFFNEN:
+            case DownloadSource.GEGENSTELLE_KANN_DATEI_NICHT_OEFFNEN:
                 return DownloadModel.kannDateiNichtOeffnen;
-            case DownloadSourceDO.IN_WARTESCHLANGE: {
+            case DownloadSource.IN_WARTESCHLANGE: {
                 String temp = DownloadModel.position;
                 temp = temp.replaceFirst("%d",
-                		Integer.toString(downloadSourceDO.getQueuePosition()));
+                		Integer.toString(downloadSource.getQueuePosition()));
                 return temp;
             }
-            case DownloadSourceDO.KEINE_BRAUCHBAREN_PARTS:
+            case DownloadSource.KEINE_BRAUCHBAREN_PARTS:
                 return DownloadModel.keineBrauchbarenParts;
-            case DownloadSourceDO.UEBERTRAGUNG:
+            case DownloadSource.UEBERTRAGUNG:
                 return DownloadModel.uebertragung;
-            case DownloadSourceDO.NICHT_GENUEGEND_PLATZ_AUF_DER_PLATTE:
+            case DownloadSource.NICHT_GENUEGEND_PLATZ_AUF_DER_PLATTE:
                 return DownloadModel.nichtGenugPlatz;
-            case DownloadSourceDO.FERTIGGESTELLT:
+            case DownloadSource.FERTIGGESTELLT:
                 return DownloadModel.fertiggestellt;
-            case DownloadSourceDO.KEINE_VERBINDUNG_MOEGLICH:
+            case DownloadSource.KEINE_VERBINDUNG_MOEGLICH:
                 return DownloadModel.keineVerbindungMoeglich;
-            case DownloadSourceDO.PAUSIERT:
+            case DownloadSource.PAUSIERT:
                 return DownloadModel.pausiert;
-            case DownloadSourceDO.VERSUCHE_INDIREKT:
+            case DownloadSource.VERSUCHE_INDIREKT:
                 return DownloadModel.versucheIndirekt;
-            case DownloadSourceDO.WARTESCHLANGE_VOLL:
+            case DownloadSource.WARTESCHLANGE_VOLL:
                 return DownloadModel.warteschlangeVoll;
-            case DownloadSourceDO.EIGENES_LIMIT_ERREICHT:
+            case DownloadSource.EIGENES_LIMIT_ERREICHT:
                 return DownloadModel.eigenesLimitErreicht;
-            case DownloadSourceDO.INDIREKTE_VERBINDUNG_ABGELEHNT:
+            case DownloadSource.INDIREKTE_VERBINDUNG_ABGELEHNT:
                 return DownloadModel.indirekteVerbindungAbgelehnt;
 
             default:
@@ -66,9 +66,9 @@ public abstract class DownloadSourceCalculator {
 		versionLabel.setOpaque(true);
 	}
 	
-	public static Component getProgressbarComponent(DownloadSourceDO downloadSourceDO) {
-        if (downloadSourceDO.getStatus() == DownloadSourceDO.UEBERTRAGUNG) {
-            String prozent = downloadSourceDO.getDownloadPercentAsString();
+	public static Component getProgressbarComponent(DownloadSource downloadSource) {
+        if (downloadSource.getStatus() == DownloadSource.UEBERTRAGUNG) {
+            String prozent = downloadSource.getDownloadPercentAsString();
             int pos = prozent.indexOf('.');
             String balken = prozent;
             if (pos != -1) {
@@ -83,21 +83,21 @@ public abstract class DownloadSourceCalculator {
         }
     }
 	
-	public static Component getVersionComponent(DownloadSourceDO downloadSourceDO, JTable table) {
-        if (downloadSourceDO.getVersion() == null) {
+	public static Component getVersionComponent(DownloadSource downloadSource, JTable table) {
+        if (downloadSource.getVersion() == null) {
             versionLabel.setIcon(null);
             versionLabel.setText("");
         }
         else {
             versionLabel.setFont(table.getFont());
-            versionLabel.setIcon(getVersionIcon(downloadSourceDO));
-            versionLabel.setText(downloadSourceDO.getVersion().getVersion());
+            versionLabel.setIcon(getVersionIcon(downloadSource));
+            versionLabel.setText(downloadSource.getVersion().getVersion());
         }
         return versionLabel;
     }
 	
-	public static ImageIcon getVersionIcon(DownloadSourceDO downloadSourceDO) {
-        switch (downloadSourceDO.getVersion().getBetriebsSystem()) {
+	public static ImageIcon getVersionIcon(DownloadSource downloadSource) {
+        switch (downloadSource.getVersion().getBetriebsSystem()) {
 	        case Version.WIN32: {
 	            return IconManager.getInstance().getIcon("winsymbol");
 	        }

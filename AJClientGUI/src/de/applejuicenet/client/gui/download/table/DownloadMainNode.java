@@ -8,8 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.shared.FileTypeHelper;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.treetable.Node;
@@ -18,7 +18,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.6 2005/01/18 20:49:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.7 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -159,41 +159,41 @@ public class DownloadMainNode
             }
             case LOADING_DOWNLOADS: {
                 ArrayList kinder = new ArrayList();
-                DownloadSourceDO[] downloadSourceDO = download.getSources();
-                for (int i = 0; i < downloadSourceDO.length; i++) {
-                    if (downloadSourceDO[i].getStatus() ==
-                        DownloadSourceDO.UEBERTRAGUNG) {
-                        kinder.add(downloadSourceDO[i]);
+                DownloadSource[] downloadSource = download.getSources();
+                for (int i = 0; i < downloadSource.length; i++) {
+                    if (downloadSource[i].getStatus() ==
+                        DownloadSource.UEBERTRAGUNG) {
+                        kinder.add(downloadSource[i]);
                     }
                 }
-                return (DownloadSourceDO[]) kinder.toArray(new DownloadSourceDO[
+                return (DownloadSource[]) kinder.toArray(new DownloadSource[
                     kinder.size()]);
             }
             case WAITING_DOWNLOADS: {
                 ArrayList kinder = new ArrayList();
-                DownloadSourceDO[] downloadSourceDO = download.getSources();
-                for (int i = 0; i < downloadSourceDO.length; i++) {
-                    if (downloadSourceDO[i].getStatus() == DownloadSourceDO.IN_WARTESCHLANGE
-                        || downloadSourceDO[i].getStatus() == DownloadSourceDO.WARTESCHLANGE_VOLL) {
-                        kinder.add(downloadSourceDO[i]);
+                DownloadSource[] downloadSource = download.getSources();
+                for (int i = 0; i < downloadSource.length; i++) {
+                    if (downloadSource[i].getStatus() == DownloadSource.IN_WARTESCHLANGE
+                        || downloadSource[i].getStatus() == DownloadSource.WARTESCHLANGE_VOLL) {
+                        kinder.add(downloadSource[i]);
                     }
                 }
-                return (DownloadSourceDO[]) kinder.toArray(new DownloadSourceDO[
+                return (DownloadSource[]) kinder.toArray(new DownloadSource[
                     kinder.size()]);
             }
             case REST_DOWNLOADS: {
                 ArrayList kinder = new ArrayList();
-                DownloadSourceDO[] downloadSourceDO = download.getSources();
-                for (int i = 0; i < downloadSourceDO.length; i++) {
-                    if (downloadSourceDO[i].getStatus() !=
-                        DownloadSourceDO.UEBERTRAGUNG
+                DownloadSource[] downloadSource = download.getSources();
+                for (int i = 0; i < downloadSource.length; i++) {
+                    if (downloadSource[i].getStatus() !=
+                        DownloadSource.UEBERTRAGUNG
                         &&
-                        downloadSourceDO[i].getStatus() != DownloadSourceDO.IN_WARTESCHLANGE
-                        && downloadSourceDO[i].getStatus() != DownloadSourceDO.WARTESCHLANGE_VOLL) {
-                        kinder.add(downloadSourceDO[i]);
+                        downloadSource[i].getStatus() != DownloadSource.IN_WARTESCHLANGE
+                        && downloadSource[i].getStatus() != DownloadSource.WARTESCHLANGE_VOLL) {
+                        kinder.add(downloadSource[i]);
                     }
                 }
-                return (DownloadSourceDO[]) kinder.toArray(new DownloadSourceDO[
+                return (DownloadSource[]) kinder.toArray(new DownloadSource[
                     kinder.size()]);
             }
             default: {

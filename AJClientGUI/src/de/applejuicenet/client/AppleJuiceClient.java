@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.89 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.90 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -63,10 +63,11 @@ import de.applejuicenet.client.shared.Splash;
  */
 
 public class AppleJuiceClient {
-    private static Logger logger;
+    public static Splash splash = null;
+
+    private static Logger logger = Logger.getLogger(AppleJuiceClient.class);
     private static String fileAppenderPath;
     private static HTMLLayout layout;
-    public static Splash splash = null;
     private static ApplejuiceFassade ajFassade = null;
     
     public static ApplejuiceFassade getAjFassade() {
@@ -76,7 +77,7 @@ public class AppleJuiceClient {
 				ajFassade = new ApplejuiceFassade(rm.getHost(), new Integer(rm.getXmlPort()), 
 						rm.getOldPassword(), false);
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
+				logger.error(e);
 			} 
     	}
     	return ajFassade;
@@ -248,7 +249,6 @@ public class AppleJuiceClient {
             System.exit(1);
         }
         Logger rootLogger = Logger.getRootLogger();
-        logger = Logger.getLogger(AppleJuiceClient.class.getName());
 
         String datum = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date(
             System.currentTimeMillis()));

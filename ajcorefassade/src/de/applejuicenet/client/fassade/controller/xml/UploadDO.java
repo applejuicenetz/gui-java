@@ -1,5 +1,6 @@
-package de.applejuicenet.client.fassade.controller.dac;
+package de.applejuicenet.client.fassade.controller.xml;
 
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.fassade.shared.Version;
 
 /**
@@ -22,49 +23,24 @@ import de.applejuicenet.client.fassade.shared.Version;
  * 
  */
 
-public class UploadDO {
-	public static final int AKTIVE_UEBERTRAGUNG = 1;
-
-	public static final int WARTESCHLANGE = 2;
-
-	public static final int STATE_UNBEKANNT = 0;
-
-	public static final int STATE_DIREKT_VERBUNDEN = 1;
-
-	public static final int STATE_INDIREKT_VERBUNDEN = 2;
+class UploadDO extends Upload{
 
 	private final int uploadID;
-
 	private String dateiName;
-
 	private int shareFileID;
-
 	private Version version = null;
-
 	private int status;
-
 	private String nick;
-
 	private long uploadFrom;
-
 	private long uploadTo;
-
 	private long actualUploadPosition;
-
 	private int speed;
-
 	private int prioritaet;
-
 	private int directstate;
-
 	private long lastConnection;
-
 	private boolean progressChanged = false;
-
 	private boolean wholeLoadedProgressChanged = false;
-
 	private boolean versionChanged = false;
-
 	private int loaded;
 
 	public UploadDO(int uploadID) {
@@ -96,16 +72,8 @@ public class UploadDO {
 		return uploadID;
 	}
 
-	public String getUploadIDAsString() {
-		return Integer.toString(uploadID);
-	}
-
 	public int getShareFileID() {
 		return shareFileID;
-	}
-
-	public String getShareFileIDAsString() {
-		return Integer.toString(shareFileID);
 	}
 
 	public void setShareFileID(int shareFileID) {
@@ -131,10 +99,6 @@ public class UploadDO {
 
 	public void setDirectState(int directstate) {
 		this.directstate = directstate;
-	}
-
-	public String getStatusAsString() {
-		return Integer.toString(status);
 	}
 
 	public void setStatus(int status) {
@@ -225,28 +189,5 @@ public class UploadDO {
 				loaded = tmp;
 			}
 		}
-	}
-
-	public String getDownloadPercentAsString() {
-		if (actualUploadPosition == -1 || uploadFrom == -1) {
-			return "0";
-		}
-		double temp = actualUploadPosition - uploadFrom;
-		if (temp == 0.0) {
-			return "0";
-		}
-		temp = temp * 100 / getSize();
-		String result = Double.toString(temp);
-		if (result.indexOf(".") + 3 < result.length()) {
-			result = result.substring(0, result.indexOf(".") + 3);
-		}
-		return result;
-	}
-
-	public long getSize() {
-		if (uploadTo == -1 || uploadFrom == -1) {
-			return 0;
-		}
-		return uploadTo - uploadFrom;
 	}
 }

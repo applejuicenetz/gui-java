@@ -13,10 +13,10 @@ import javax.swing.JTable;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.util.DownloadDOCalculator;
+import de.applejuicenet.client.shared.util.DownloadCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.6 2005/01/18 20:49:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.7 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -250,9 +250,9 @@ public class DownloadDirectoryNode
                           getSpeedInBytes());
         }
         else if (sort == SORT_STATUS) {
-            o1 = ( DownloadDOCalculator.getStatusAsString(((DownloadMainNode)
+            o1 = ( DownloadCalculator.getStatusAsString(((DownloadMainNode)
                   childNodes[row1]).getDownload()));
-            o2 = ( DownloadDOCalculator.getStatusAsString(((DownloadMainNode)
+            o2 = ( DownloadCalculator.getStatusAsString(((DownloadMainNode)
                     childNodes[row2]).getDownload()));
         }
 

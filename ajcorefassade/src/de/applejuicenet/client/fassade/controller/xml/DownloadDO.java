@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.entity.Download;
 
 /**

@@ -13,7 +13,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
-import de.applejuicenet.client.fassade.controller.dac.ShareDO;
+import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 
 /**
@@ -40,7 +40,7 @@ public class ShareXMLHolder extends DefaultHandler {
 
 	private final CoreConnectionSettingsHolder coreHolder;
 
-	private Map<String, ShareDO> shareMap;
+	private Map<String, Share> shareMap;
 
 	private String xmlCommand;
 
@@ -121,7 +121,7 @@ public class ShareXMLHolder extends DefaultHandler {
 		try {
 			String xmlString = getXMLString();
 			if (shareMap == null) {
-				shareMap = new HashMap<String, ShareDO>();
+				shareMap = new HashMap<String, Share>();
 			}
 			xr.parse(new InputSource(new StringReader(xmlString)));
 		} catch (Exception e) {
@@ -129,7 +129,7 @@ public class ShareXMLHolder extends DefaultHandler {
 		}
 	}
 
-	public Map<String, ShareDO> getShare() {
+	public Map<String, Share> getShare() {
 		update();
 		return shareMap;
 	}

@@ -38,7 +38,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.ShareDO;
+import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.dragndrop.DndTargetAdapter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -47,7 +47,7 @@ import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/DateiListeDialog.java,v 1.5 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/DateiListeDialog.java,v 1.6 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -201,8 +201,8 @@ public class DateiListeDialog
             if (i == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 StringBuffer text = new StringBuffer();
-                ShareDO[] shareDO = ( (DateiListeTableModel) table.getModel()).
-                    getShareDOs();
+                Share[] share = ( (DateiListeTableModel) table.getModel()).
+                    getShares();
                 if (source != speicherTxt) {
                     if (!file.getPath().toLowerCase().endsWith(".htm")
                         && !file.getPath().toLowerCase().endsWith(".html")) {
@@ -211,8 +211,8 @@ public class DateiListeDialog
                     text.append("<html><head><title>appleJuice Linklist</title></head><body bgcolor=#000080 text=#ffffff "
                                 + "link=#ffffff vlink=#ffffff><table align=center border=0><tr><td><b>appleJuice Dateien</b></td></tr><br>" +
                                 "\r\n");
-                    ShareDO[] sortedShareDOs = sortShareDOs(shareDO);
-                    for (int x = 0; x < shareDO.length; x++) {
+                    Share[] sortedShareDOs = sortShares(share);
+                    for (int x = 0; x < share.length; x++) {
                         text.append("<tr><td><a href=\"ajfsp://file|");
                         text.append(sortedShareDOs[x].getShortfilename() + "|" +
                                     sortedShareDOs[x].getCheckSum() + "|" +
@@ -232,11 +232,11 @@ public class DateiListeDialog
                                 "\r\n\r\n");
                     text.append("Diese Datei darf nicht modifiziert werden!" +
                                 "\r\n" + "-----\r\n100\r\n");
-                    ShareDO[] sortedShareDOs = sortShareDOs(shareDO);
-                    for (int x = 0; x < sortedShareDOs.length; x++) {
-                        text.append(sortedShareDOs[x].getShortfilename() + "\r\n");
-                        text.append(sortedShareDOs[x].getCheckSum() + "\r\n");
-                        text.append(sortedShareDOs[x].getSize() + "\r\n");
+                    Share[] sortedShares = sortShares(share);
+                    for (int x = 0; x < sortedShares.length; x++) {
+                        text.append(sortedShares[x].getShortfilename() + "\r\n");
+                        text.append(sortedShares[x].getCheckSum() + "\r\n");
+                        text.append(sortedShares[x].getSize() + "\r\n");
                     }
                 }
                 try {
@@ -252,10 +252,10 @@ public class DateiListeDialog
             }
         }
 
-        private ShareDO[] sortShareDOs(ShareDO[] shareDO){
-            ShareDO[] sortedDOs = shareDO;
+        private Share[] sortShares(Share[] share){
+            Share[] sortedDOs = share;
             int n = sortedDOs.length;
-            ShareDO tmp;
+            Share tmp;
             for (int i = 0; i < n - 1; i++) {
                 int k = i;
                 for (int j = i + 1; j < n; j++) {

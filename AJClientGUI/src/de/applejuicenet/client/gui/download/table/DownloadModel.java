@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download.table;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.6 2005/01/18 20:49:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.7 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -69,7 +69,7 @@ public class DownloadModel
 
     protected Object[] getChildren(Object node) {
         if (!(node instanceof Download) &&
-            node.getClass() != DownloadSourceDO.class
+            !(node instanceof DownloadSource)
             && node.getClass() != WaitNode.class) {
             return ( (DownloadNode) node).getChildren();
         }
@@ -85,7 +85,7 @@ public class DownloadModel
 
     public int getChildCount(Object node) {
         if (!(node instanceof Download) &&
-            node.getClass() != DownloadSourceDO.class
+            !(node instanceof DownloadSource)
             && node.getClass() != WaitNode.class) {
             return ( (DownloadNode) node).getChildCount(sort);
         }
@@ -121,7 +121,7 @@ public class DownloadModel
             ( (DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
             columnValue = ( (DownloadMainNode) node).getDownload();
         }
-        else if (node instanceof DownloadSourceDO) {
+        else if (node instanceof DownloadSource) {
             columnValue = node;
         }
         if (columnValue != null) {

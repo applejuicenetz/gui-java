@@ -5,7 +5,7 @@ import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.JTree;
 
-import de.applejuicenet.client.fassade.controller.dac.UploadDO;
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.gui.components.treetable.DefaultIconNodeRenderer;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.components.util.IconGetter;
@@ -21,8 +21,8 @@ public class UploadIconNodeRenderer extends DefaultIconNodeRenderer{
 			boolean hasFocus) {
 
 		Component c = null;
-		if (value.getClass() == UploadDO.class) {
-			c = super.getTreeCellRendererComponent(tree, ((UploadDO) value)
+		if (value instanceof Upload) {
+			c = super.getTreeCellRendererComponent(tree, ((Upload) value)
 					.getDateiName(), sel, expanded, leaf, row, hasFocus);
 		} else if (value.getClass() == UploadMainNode.class) {
 			c = super.getTreeCellRendererComponent(tree, ((UploadMainNode) value)

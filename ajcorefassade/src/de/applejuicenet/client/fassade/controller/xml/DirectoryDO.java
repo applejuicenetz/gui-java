@@ -1,7 +1,9 @@
-package de.applejuicenet.client.fassade.controller.dac;
+package de.applejuicenet.client.fassade.controller.xml;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.applejuicenet.client.fassade.entity.Directory;
 
 /**
  * $Header:
@@ -23,34 +25,19 @@ import java.util.List;
  * 
  */
 
-public class DirectoryDO {
-	public static final int TYPE_RECHNER = 1;
-	public static final int TYPE_LAUFWERK = 2;
-	public static final int TYPE_DISKETTE = 3;
-	public static final int TYPE_ORDNER = 4;
-	public static final int TYPE_DESKTOP = 5;
-
-	private static String separator;
+public class DirectoryDO extends Directory {
 
 	private String name;
 	private int type;
 	private boolean fileSystem;
 	private String path;
-	private List<DirectoryDO> children = null;
+	private List<Directory> children = null;
 
 	public DirectoryDO(String name, int type, boolean fileSystem, String path) {
 		this.name = name;
 		this.type = type;
 		this.fileSystem = fileSystem;
 		this.path = path;
-	}
-
-	public static String getSeparator() {
-		return separator;
-	}
-
-	public static void setSeparator(String separator) {
-		DirectoryDO.separator = separator;
 	}
 
 	public String getName() {
@@ -85,21 +72,21 @@ public class DirectoryDO {
 		this.path = path;
 	}
 
-	public void addChild(DirectoryDO directoryDO) {
-		if (directoryDO == null) {
+	public void addChild(Directory directory) {
+		if (directory == null) {
 			return;
 		}
 		if (children == null) {
-			children = new ArrayList<DirectoryDO>();
+			children = new ArrayList<Directory>();
 		}
-		children.add(directoryDO);
+		children.add(directory);
 	}
 
-	public DirectoryDO[] getChildren() {
+	public Directory[] getChildren() {
 		if (children == null) {
 			return null;
 		}
-		return (DirectoryDO[]) children
-				.toArray(new DirectoryDO[children.size()]);
+		return (Directory[]) children
+				.toArray(new Directory[children.size()]);
 	}
 }

@@ -5,8 +5,8 @@ import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.JTree;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.components.treetable.DefaultIconNodeRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
@@ -33,10 +33,10 @@ public class DownloadIconNodeRenderer extends DefaultIconNodeRenderer
 			boolean hasFocus) {
 
 		Component c = null;
-		if (value.getClass() == DownloadSourceDO.class) {
+		if (value instanceof DownloadSource) {
 			c = super.getTreeCellRendererComponent(tree,
-					((DownloadSourceDO) value).getNickname() + " ("
-							+ ((DownloadSourceDO) value).getFilename() + ")",
+					((DownloadSource) value).getNickname() + " ("
+							+ ((DownloadSource) value).getFilename() + ")",
 					sel, expanded, leaf, row, hasFocus);
 		} else if (value.getClass() == DownloadMainNode.class) {
 			c = super.getTreeCellRendererComponent(tree, value.toString(), sel,
@@ -55,7 +55,7 @@ public class DownloadIconNodeRenderer extends DefaultIconNodeRenderer
 			c.setForeground(treeTable.getSelectionForeground());
 		} else {
 			if (settings.isFarbenAktiv()) {
-				if (value.getClass() == DownloadSourceDO.class) {
+				if (value instanceof DownloadSource) {
 					c.setBackground(settings.getQuelleHintergrundColor());
 				} else if (value.getClass() == DownloadMainNode.class
 						&& ((DownloadMainNode) value).getType() == DownloadMainNode.ROOT_NODE

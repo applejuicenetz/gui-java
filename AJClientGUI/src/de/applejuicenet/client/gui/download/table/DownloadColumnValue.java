@@ -1,12 +1,12 @@
 package de.applejuicenet.client.gui.download.table;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.shared.util.DownloadDOCalculator;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.shared.util.DownloadCalculator;
 import de.applejuicenet.client.shared.util.DownloadSourceCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadColumnValue.java,v 1.3 2005/01/18 20:49:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadColumnValue.java,v 1.4 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,18 +24,18 @@ public abstract class DownloadColumnValue {
     	else if (obj instanceof Download){
     		return ((Download)obj).getFilename();
     	}
-    	else if (obj.getClass() == DownloadSourceDO.class){
-    		return ((DownloadSourceDO)obj).getFilename();
+    	else if (obj instanceof DownloadSource){
+    		return ((DownloadSource)obj).getFilename();
     	}
     	return "";
     }
 
     public static String getColumn1(Object obj){
     	if (obj instanceof Download){
-    		return DownloadDOCalculator.getStatusAsString((Download)obj);
+    		return DownloadCalculator.getStatusAsString((Download)obj);
     	}
-    	else if (obj.getClass() == DownloadSourceDO.class){
-    		return DownloadSourceCalculator.getStatusAsString((DownloadSourceDO)obj);
+    	else if (obj instanceof DownloadSource){
+    		return DownloadSourceCalculator.getStatusAsString((DownloadSource)obj);
     	}
     	return "";
     }
@@ -44,8 +44,8 @@ public abstract class DownloadColumnValue {
     	if (obj instanceof Download){
     		return DownloadModel.parseGroesse(((Download)obj).getGroesse());
     	}
-    	else if (obj.getClass() == DownloadSourceDO.class){
-    		int size = ((DownloadSourceDO)obj).getSize();
+    	else if (obj instanceof DownloadSource){
+    		int size = ((DownloadSource)obj).getSize();
             String sizeAsString = DownloadModel.parseGroesse(size);
             if (sizeAsString == null){
                 return "";
@@ -61,8 +61,8 @@ public abstract class DownloadColumnValue {
     	if (obj instanceof Download){
     		return DownloadModel.parseGroesse(((Download)obj).getBereitsGeladen());
     	}
-    	else if (obj.getClass() == DownloadSourceDO.class){
-    		int bereitsGeladen = ((DownloadSourceDO)obj).getBereitsGeladen();
+    	else if (obj instanceof DownloadSource){
+    		int bereitsGeladen = ((DownloadSource)obj).getBereitsGeladen();
             String bereitsGeladenAsString = DownloadModel.parseGroesse(bereitsGeladen);
             if (bereitsGeladenAsString == null){
                 return "";
@@ -79,9 +79,9 @@ public abstract class DownloadColumnValue {
     			&& ((Download)obj).getStatus() == Download.SUCHEN_LADEN){
     		return DownloadModel.parseGroesse(((Download)obj).getSpeedInBytes());
     	}
-    	else if (obj.getClass() == DownloadSourceDO.class
-    			&& ((DownloadSourceDO)obj).getStatus() == DownloadSourceDO.UEBERTRAGUNG){
-    		return DownloadModel.getSpeedAsString( (long) ((DownloadSourceDO)obj).getSpeed());
+    	else if (obj instanceof DownloadSource
+    			&& ((DownloadSource)obj).getStatus() == DownloadSource.UEBERTRAGUNG){
+    		return DownloadModel.getSpeedAsString( (long) ((DownloadSource)obj).getSpeed());
     	}
     	return "";
     }
@@ -91,8 +91,8 @@ public abstract class DownloadColumnValue {
     			&& ((Download)obj).getStatus() == Download.SUCHEN_LADEN){
     		return ((Download)obj).getRestZeitAsString();
     	}
-    	else if (obj.getClass() == DownloadSourceDO.class){
-    		return ((DownloadSourceDO)obj).getRestZeitAsString();
+    	else if (obj instanceof DownloadSource){
+    		return ((DownloadSource)obj).getRestZeitAsString();
     	}
     	return "";
     }
@@ -108,8 +108,8 @@ public abstract class DownloadColumnValue {
     		return DownloadModel.parseGroesse(
     				((Download)obj).getGroesse()-((Download)obj).getBereitsGeladen());
     	}
-    	else if (obj.getClass() == DownloadSourceDO.class){
-    		int nochZuLaden = ((DownloadSourceDO)obj).getNochZuLaden();
+    	else if (obj instanceof DownloadSource){
+    		int nochZuLaden = ((DownloadSource)obj).getNochZuLaden();
             String nochZuLadenAsString = DownloadModel.parseGroesse(nochZuLaden);
             if (nochZuLadenAsString == null){
                 return "";
@@ -127,16 +127,16 @@ public abstract class DownloadColumnValue {
 				|| ((Download)obj).getStatus() == Download.PAUSIERT)){
     		return DownloadModel.powerdownload(((Download)obj).getPowerDownload());
     	}
-    	else if (obj.getClass() == DownloadSourceDO.class){
-    		return DownloadModel.powerdownload(((DownloadSourceDO)obj).getPowerDownload());
+    	else if (obj instanceof DownloadSource){
+    		return DownloadModel.powerdownload(((DownloadSource)obj).getPowerDownload());
     	}
     	return "";
     }
 
     public static String getColumn9(Object obj){
-    	if (obj.getClass() == DownloadSourceDO.class
-    			&& ((DownloadSourceDO)obj).getVersion() != null){
-    		return ((DownloadSourceDO)obj).getVersion().getVersion();
+    	if (obj instanceof DownloadSource
+    			&& ((DownloadSource)obj).getVersion() != null){
+    		return ((DownloadSource)obj).getVersion().getVersion();
     	}
     	return "";
     }

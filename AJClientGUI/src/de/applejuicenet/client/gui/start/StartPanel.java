@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,7 +14,7 @@ import javax.swing.JTextPane;
 import org.apache.log4j.Level;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.Information;
+import de.applejuicenet.client.fassade.entity.Information;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.11 2005/01/18 20:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.12 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,9 +26,9 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
-import de.applejuicenet.client.fassade.controller.dac.PartListDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.fassade.entity.PartList;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -154,7 +154,7 @@ public class DownloadDOOverviewPanel
         }
     }
 
-    public void setDownloadSourceDO(DownloadSourceDO downloadSourceDO) {
+    public void setDownloadSourceDO(DownloadSource downloadSource) {
         try {
         	if (partListWorkerThread != null){
         		if (partListWorkerThread.isInterrupted()){
@@ -166,7 +166,7 @@ public class DownloadDOOverviewPanel
         		}
         	}
             partListWorkerThread = new PartListWorkerThread();
-            partListWorkerThread.setDownloadSourceDO(downloadSourceDO);
+            partListWorkerThread.setDownloadSourceDO(downloadSource);
             partListWorkerThread.start();
         }
         catch (Exception e) {
@@ -220,7 +220,7 @@ public class DownloadDOOverviewPanel
             		shortPause = workDownloadDO((Download)objectDO);
             	}
             	else{
-            		shortPause = workDownloadSourceDO((DownloadSourceDO)objectDO);
+            		shortPause = workDownloadSourceDO((DownloadSource)objectDO);
             	}
             	if (shortPause){
         			try{
@@ -250,7 +250,7 @@ public class DownloadDOOverviewPanel
             	if (firstRun){
             		actualDLDateiName.setText(dateiNameText);
             	}
-	            PartListDO partList = null;
+	            PartList partList = null;
                 try{
                     partList = AppleJuiceClient.getAjFassade().
                         getPartList(download);
@@ -272,14 +272,14 @@ public class DownloadDOOverviewPanel
         	}
         }
 
-        private boolean workDownloadSourceDO(DownloadSourceDO downloadSoureDO) {
-			PartListDO partList;
-			String tmp = downloadSoureDO.getFilename() + " (" +
-				downloadSoureDO.getNickname() + ")";
+        private boolean workDownloadSourceDO(DownloadSource downloadSoure) {
+			PartList partList;
+			String tmp = downloadSoure.getFilename() + " (" +
+				downloadSoure.getNickname() + ")";
 			actualDLDateiName.setText(tmp);
 			try {
 				partList = AppleJuiceClient.getAjFassade().getPartList(
-						downloadSoureDO);
+						downloadSoure);
 			} catch (WebSiteNotFoundException ex) {
 				// Core ist wahrscheinlich zurzeit ueberlastet
 				partList = null;
@@ -287,7 +287,7 @@ public class DownloadDOOverviewPanel
             if (partList != null && !isInterrupted()){
 				actualDLDateiName.setText(tmp + " - " + verfuegbar.replaceFirst("%s", decimalFormat
 						.format(partList.getProzentVerfuegbar())));
-				actualDlOverviewTable.setPartList(partList, new Integer(downloadSoureDO.getId()));
+				actualDlOverviewTable.setPartList(partList, new Integer(downloadSoure.getId()));
 			}
 			return false;
 		}
@@ -303,13 +303,13 @@ public class DownloadDOOverviewPanel
         	}
         }
 
-        public void setDownloadSourceDO(DownloadSourceDO downloadSoureDO){
-        	if (downloadSoureDO == null){
+        public void setDownloadSourceDO(DownloadSource downloadSoure){
+        	if (downloadSoure == null){
         		objectDO = null;
         		clear();
         	}
-        	else if (objectDO != downloadSoureDO){
-	        	objectDO = downloadSoureDO;
+        	else if (objectDO != downloadSoure){
+	        	objectDO = downloadSoure;
         		clear();
         	}
         }

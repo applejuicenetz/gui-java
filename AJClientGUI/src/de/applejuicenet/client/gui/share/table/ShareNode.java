@@ -9,14 +9,14 @@ import javax.swing.ImageIcon;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.ShareDO;
+import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.FileTypeHelper;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareNode.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareNode.java,v 1.4 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,18 +36,18 @@ public class ShareNode
         treeIcon = im.getIcon("tree");
     }
 
-    private ShareDO shareDO;
+    private Share share;
     private Map children = new HashMap();
     private ShareNode parent;
     private String path;
     private Object[] sortedChildren = null;
 
-    public ShareNode(ShareNode parent, ShareDO shareDO) {
+    public ShareNode(ShareNode parent, Share share) {
         this.parent = parent;
         path = "";
         if (parent != null) {
             String bisherigerPath = getCompletePath();
-            String restPath = shareDO.getFilename();
+            String restPath = share.getFilename();
             while (restPath.indexOf(ApplejuiceFassade.separator) == 0) {
                 restPath = restPath.substring(1);
             }
@@ -66,7 +66,7 @@ public class ShareNode
                 path = restPath.substring(0, pos);
             }
             else {
-                this.shareDO = shareDO;
+                this.share = share;
             }
         }
     }
@@ -76,7 +76,7 @@ public class ShareNode
     }
 
     public boolean isLeaf() {
-        return (shareDO != null);
+        return (share != null);
     }
 
     public String getPath() {
@@ -101,7 +101,7 @@ public class ShareNode
     public Icon getConvenientIcon() {
         if (isLeaf()) {
         	if (leafIcon == null){
-        		String fileType = FileTypeHelper.calculatePossibleFileType(shareDO.getShortfilename());
+        		String fileType = FileTypeHelper.calculatePossibleFileType(share.getShortfilename());
         		leafIcon = IconManager.getInstance().getIcon(fileType);
         	}
             return leafIcon;
@@ -109,9 +109,9 @@ public class ShareNode
         return treeIcon;
     }
 
-    public ShareNode addChild(ShareDO shareDOtoAdd) {
+    public ShareNode addChild(Share shareToAdd) {
         String bisherigerPath = getCompletePath();
-        String restPath = shareDOtoAdd.getFilename();
+        String restPath = shareToAdd.getFilename();
         while (restPath.indexOf(ApplejuiceFassade.separator) == 0) {
             restPath = restPath.substring(1);
         }
@@ -127,23 +127,24 @@ public class ShareNode
             String aKey = tmpPath;
             if (children.containsKey(aKey)) {
                 childNode = (ShareNode) children.get(aKey);
-                childNode.addChild(shareDOtoAdd);
+                childNode.addChild(shareToAdd);
             }
             else {
-                childNode = new ShareNode(this, shareDOtoAdd);
+                childNode = new ShareNode(this, shareToAdd);
                 children.put(aKey, childNode);
-                childNode.addChild(shareDOtoAdd);
+                childNode.addChild(shareToAdd);
             }
         }
         else {
-            String key = Integer.toString(shareDOtoAdd.getId());
+            String key = Integer.toString(shareToAdd.getId());
             if (children.containsKey(key)) {
                 childNode = (ShareNode) children.get(key);
-                ShareDO shareDO = childNode.getDO();
-                shareDO.setPrioritaet(shareDOtoAdd.getPrioritaet());
+                Share tmpShare = childNode.getShare();
+                // todo
+//                tmpShare.setPrioritaet(shareToAdd.getPrioritaet());
             }
             else {
-                childNode = new ShareNode(this, shareDOtoAdd);
+                childNode = new ShareNode(this, shareToAdd);
                 children.put(key, childNode);
                 sortedChildren = null;
             }
@@ -151,8 +152,8 @@ public class ShareNode
         return childNode;
     }
 
-    public ShareDO getDO() {
-        return shareDO;
+    public Share getShare() {
+        return share;
     }
 
     public void setParent(ShareNode parentNode) {
@@ -161,7 +162,7 @@ public class ShareNode
 
     public String toString() {
         if (isLeaf() && parent != null) {
-            return getDO().getShortfilename();
+            return getShare().getShortfilename();
         }
         else if (parent != null) {
             return path;
@@ -207,10 +208,10 @@ public class ShareNode
     }
 
     private int compare(ShareNode shareNode1, ShareNode shareNode2) {
-        if (shareNode1.getDO() == null && shareNode2.getDO() != null) {
+        if (shareNode1.getShare() == null && shareNode2.getShare() != null) {
             return -1;
         }
-        else if (shareNode1.getDO() != null && shareNode2.getDO() == null) {
+        else if (shareNode1.getShare() != null && shareNode2.getShare() == null) {
             return 1;
         }
         else {
@@ -222,7 +223,7 @@ public class ShareNode
     public void setPriority(int prio) {
         if (isLeaf()) {
         	try {
-				AppleJuiceClient.getAjFassade().setPrioritaet(shareDO, new Integer(prio));
+				AppleJuiceClient.getAjFassade().setPrioritaet(share, new Integer(prio));
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

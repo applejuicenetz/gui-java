@@ -20,8 +20,8 @@ import org.apache.log4j.Level;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.ShareDO;
-import de.applejuicenet.client.fassade.controller.dac.UploadDO;
+import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.GuiController;
@@ -140,7 +140,7 @@ public class UploadController extends GuiController {
 					selectedRow);
 			Object selectedItem = ((TreeTableModelAdapter) uploadPanel.getTable()
 					.getModel()).nodeForRow(selectedRow);
-			if (selectedItem.getClass() == UploadDO.class) {
+			if (selectedItem instanceof Upload) {
 				uploadPanel.getPopup().show(uploadPanel.getTable(), e.getX(), e.getY());
 			}
 		}
@@ -160,19 +160,19 @@ public class UploadController extends GuiController {
 	private void copyLinkToClipboard() {
 		Object selectedItem = ((TreeTableModelAdapter) uploadPanel.getTable()
 				.getModel()).nodeForRow(uploadPanel.getTable().getSelectedRow());
-		if (selectedItem.getClass() == UploadDO.class) {
-			String shareFileId = ((UploadDO) selectedItem)
+		if (selectedItem instanceof Upload) {
+			String shareFileId = ((Upload) selectedItem)
 					.getShareFileIDAsString();
 			Map share = AppleJuiceClient.getAjFassade().getShare(false);
 			if (share.containsKey(shareFileId)) {
-				ShareDO shareDO = (ShareDO) share.get(shareFileId);
-				if (shareDO != null) {
+				Share shareObj = (Share) share.get(shareFileId);
+				if (share != null) {
 					Clipboard cb = Toolkit.getDefaultToolkit()
 							.getSystemClipboard();
 					StringBuffer toCopy = new StringBuffer();
 					toCopy.append("ajfsp://file|");
-					toCopy.append(shareDO.getShortfilename() + "|"
-							+ shareDO.getCheckSum() + "|" + shareDO.getSize()
+					toCopy.append(shareObj.getShortfilename() + "|"
+							+ shareObj.getCheckSum() + "|" + shareObj.getSize()
 							+ "/");
 					StringSelection contents = new StringSelection(toCopy
 							.toString());

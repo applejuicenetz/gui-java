@@ -5,8 +5,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JToolTip;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
@@ -39,8 +39,8 @@ public class DownloadTreeTable extends JTreeTable {
             if (value == null){
             	return null;
             }
-            else if (value.getClass() == DownloadSourceDO.class) {
-                return getToolTipForDownloadSourceDO( (DownloadSourceDO) value);
+            else if (value instanceof DownloadSource) {
+                return getToolTipForDownloadSource( (DownloadSource) value);
             }
             else if (value.getClass() == DownloadMainNode.class
                 &&
@@ -85,28 +85,28 @@ public class DownloadTreeTable extends JTreeTable {
         return toolTip.toString();
     }
 
-    private String getToolTipForDownloadSourceDO(DownloadSourceDO downloadSourceDO){
+    private String getToolTipForDownloadSource(DownloadSource downloadSource){
         String[] columns = DownloadMainNode.getColumnTitles();
         StringBuffer toolTip = new StringBuffer();
-        toolTip.append(DownloadColumnValue.getColumn0(downloadSourceDO));
+        toolTip.append(DownloadColumnValue.getColumn0(downloadSource));
         toolTip.append("| |" + columns[1] + ": ");
-        toolTip.append(DownloadColumnValue.getColumn1(downloadSourceDO));
+        toolTip.append(DownloadColumnValue.getColumn1(downloadSource));
         toolTip.append("|" + columns[2] + ": ");
-        toolTip.append(DownloadColumnValue.getColumn2(downloadSourceDO));
+        toolTip.append(DownloadColumnValue.getColumn2(downloadSource));
         toolTip.append("|" + columns[3] + ": ");
-        toolTip.append(DownloadColumnValue.getColumn3(downloadSourceDO));
+        toolTip.append(DownloadColumnValue.getColumn3(downloadSource));
         toolTip.append("|" + columns[4] + ": ");
-        toolTip.append(DownloadColumnValue.getColumn4(downloadSourceDO));
+        toolTip.append(DownloadColumnValue.getColumn4(downloadSource));
         toolTip.append("|" + columns[5] + ": ");
-        toolTip.append(DownloadColumnValue.getColumn5(downloadSourceDO));
+        toolTip.append(DownloadColumnValue.getColumn5(downloadSource));
         toolTip.append("|" + columns[6] + ": ");
-        toolTip.append(downloadSourceDO.getDownloadPercentAsString());
+        toolTip.append(downloadSource.getDownloadPercentAsString());
         toolTip.append("|" + columns[7] + ": ");
-        toolTip.append(DownloadColumnValue.getColumn7(downloadSourceDO));
+        toolTip.append(DownloadColumnValue.getColumn7(downloadSource));
         toolTip.append("|" + columns[8] + ": ");
-        toolTip.append(DownloadColumnValue.getColumn8(downloadSourceDO));
+        toolTip.append(DownloadColumnValue.getColumn8(downloadSource));
         toolTip.append("|" + columns[9] + ": ");
-        toolTip.append(DownloadColumnValue.getColumn9(downloadSourceDO));
+        toolTip.append(DownloadColumnValue.getColumn9(downloadSource));
         return toolTip.toString();
     }
     

@@ -35,10 +35,10 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.ServerDO;
+import de.applejuicenet.client.fassade.entity.Information;
+import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.fassade.shared.Information;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
@@ -149,7 +149,7 @@ public class ServerPanel extends JPanel implements LanguageListener,
 		verbinden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				int selected = serverTable.getSelectedRow();
-				ServerDO server = (ServerDO) ((ServerTableModel) serverTable
+				Server server = (Server) ((ServerTableModel) serverTable
 						.getModel()).getRow(selected);
 				ApplejuiceFassade af = AppleJuiceClient.getAjFassade();
 				if (af.getInformation().getVerbindungsStatus() == Information.VERBUNDEN) {
@@ -191,9 +191,9 @@ public class ServerPanel extends JPanel implements LanguageListener,
 			public void actionPerformed(ActionEvent ae) {
 				int selected[] = serverTable.getSelectedRows();
 				if (selected.length > 0) {
-					ServerDO server = null;
+					Server server = null;
 					for (int i = 0; i < selected.length; i++) {
-						server = (ServerDO) ((ServerTableModel) serverTable
+						server = (Server) ((ServerTableModel) serverTable
 								.getModel()).getRow(selected[i]);
 						if (server != null) {
 							try {
@@ -214,11 +214,11 @@ public class ServerPanel extends JPanel implements LanguageListener,
 							.getSystemClipboard();
 					StringBuffer toCopy = new StringBuffer();
 					toCopy.append("ajfsp://server|");
-					ServerDO serverDO = (ServerDO) ((ServerTableModel) serverTable
+					Server server = (Server) ((ServerTableModel) serverTable
 							.getModel()).getRow(selectedItems[0]);
-					toCopy.append(serverDO.getHost());
+					toCopy.append(server.getHost());
 					toCopy.append("|");
-					toCopy.append(serverDO.getPort());
+					toCopy.append(server.getPort());
 					toCopy.append("/");
 					StringSelection contents = new StringSelection(toCopy
 							.toString());

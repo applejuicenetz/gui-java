@@ -6,11 +6,11 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import de.applejuicenet.client.fassade.controller.dac.ServerDO;
+import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableCellRenderer.java,v 1.2 2005/01/18 17:35:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableCellRenderer.java,v 1.3 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,7 +28,7 @@ public class ServerTableCellRenderer
         boolean hasFocus,
         int row,
         int column) {
-        ServerDO server = (ServerDO) ( (ServerTableModel) table.getModel()).
+        Server server = (Server) ( (ServerTableModel) table.getModel()).
             getRow(
             row);
         long aktuelleZeit = System.currentTimeMillis();

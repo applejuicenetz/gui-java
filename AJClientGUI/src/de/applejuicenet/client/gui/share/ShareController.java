@@ -18,10 +18,10 @@ import org.apache.log4j.Level;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.ServerDO;
-import de.applejuicenet.client.fassade.controller.dac.ShareDO;
+import de.applejuicenet.client.fassade.entity.Information;
+import de.applejuicenet.client.fassade.entity.Server;
+import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.shared.AJSettings;
-import de.applejuicenet.client.fassade.shared.Information;
 import de.applejuicenet.client.fassade.shared.ShareEntry;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
@@ -38,7 +38,7 @@ import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.12 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.13 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -194,8 +194,8 @@ public class ShareController extends GuiController {
 	private void mitProgrammOeffnen(){
         Object[] obj = sharePanel.getShareTable().getSelectedItems();
         if ( ( (ShareNode) obj[0]).isLeaf()) {
-            ShareDO shareDO = ( (ShareNode) obj[0]).getDO();
-            String filename = shareDO.getFilename();
+            Share share = ( (ShareNode) obj[0]).getShare();
+            String filename = share.getFilename();
             String programToExecute = OptionsManagerImpl.getInstance().getOpenProgram();
             if (programToExecute.length() != 0){
     			try {
@@ -217,16 +217,16 @@ public class ShareController extends GuiController {
 	private void copyToClipboardWithSources(){
         Object[] obj = sharePanel.getShareTable().getSelectedItems();
         if ( ( (ShareNode) obj[0]).isLeaf()) {
-            ShareDO shareDO = ( (ShareNode) obj[0]).getDO();
+            Share share = ( (ShareNode) obj[0]).getShare();
             Clipboard cb = Toolkit.getDefaultToolkit().
                 getSystemClipboard();
             StringBuffer toCopy = new StringBuffer();
             toCopy.append("ajfsp://file|");
-            toCopy.append(shareDO.getShortfilename());
+            toCopy.append(share.getShortfilename());
             toCopy.append("|");
-            toCopy.append(shareDO.getCheckSum());
+            toCopy.append(share.getCheckSum());
             toCopy.append("|");
-            toCopy.append(shareDO.getSize());
+            toCopy.append(share.getSize());
             long port = AppleJuiceClient.getAjFassade().
                 getAJSettings().getPort();
             Information information = AppleJuiceClient.getAjFassade().
@@ -237,12 +237,12 @@ public class ShareController extends GuiController {
             toCopy.append(port);
             if (information.getVerbindungsStatus() ==
                 Information.VERBUNDEN) {
-                ServerDO serverDO = information.getServerDO();
-                if (serverDO != null) {
+                Server server = information.getServer();
+                if (server != null) {
                     toCopy.append(":");
-                    toCopy.append(serverDO.getHost());
+                    toCopy.append(server.getHost());
                     toCopy.append(":");
-                    toCopy.append(serverDO.getPort());
+                    toCopy.append(server.getPort());
                 }
             }
             toCopy.append("/");
@@ -255,11 +255,11 @@ public class ShareController extends GuiController {
 	private void copyToClipboardAsUBBCode(){
         Object[] obj = sharePanel.getShareTable().getSelectedItems();
         if ( ( (ShareNode) obj[0]).isLeaf()) {
-            ShareDO shareDO = ( (ShareNode) obj[0]).getDO();
+            Share share = ( (ShareNode) obj[0]).getShare();
             Clipboard cb = Toolkit.getDefaultToolkit().
                 getSystemClipboard();
             StringBuffer toCopy = new StringBuffer();
-            StringBuffer tempFilename = new StringBuffer(shareDO.
+            StringBuffer tempFilename = new StringBuffer(share.
                 getShortfilename());
             for (int i = 0; i < tempFilename.length(); i++) {
                 if (tempFilename.charAt(i) == ' ') {
@@ -276,9 +276,9 @@ public class ShareController extends GuiController {
                 //gibbet, also nix zu behandeln...
             }
             toCopy.append("[URL=ajfsp://file|");
-            toCopy.append(encodedFilename + "|" + shareDO.getCheckSum() +
-                          "|" + shareDO.getSize());
-            toCopy.append("/]" + shareDO.getShortfilename() + "[/URL]");
+            toCopy.append(encodedFilename + "|" + share.getCheckSum() +
+                          "|" + share.getSize());
+            toCopy.append("/]" + share.getShortfilename() + "[/URL]");
             StringSelection contents = new StringSelection(toCopy.
                 toString());
             cb.setContents(contents, null);
@@ -288,7 +288,7 @@ public class ShareController extends GuiController {
 	private void copyToClipboard(){
         Object[] obj = sharePanel.getShareTable().getSelectedItems();
         if ( ( (ShareNode) obj[0]).isLeaf()) {
-            ShareDO shareDO = ( (ShareNode) obj[0]).getDO();
+            Share shareDO = ( (ShareNode) obj[0]).getShare();
             Clipboard cb = Toolkit.getDefaultToolkit().
                 getSystemClipboard();
             StringBuffer toCopy = new StringBuffer();
@@ -458,11 +458,11 @@ public class ShareController extends GuiController {
                     Iterator iterator = shares.values().iterator();
                     int anzahlDateien = 0;
                     double size = 0;
-                    ShareDO shareDO;
+                    Share share;
                     while (iterator.hasNext()) {
-                        shareDO = (ShareDO) iterator.next();
-                        rootNode.addChild(shareDO);
-                        size += shareDO.getSize();
+                        share = (Share) iterator.next();
+                        rootNode.addChild(share);
+                        size += share.getSize();
                         anzahlDateien++;
                     }
                     size = size / 1048576;

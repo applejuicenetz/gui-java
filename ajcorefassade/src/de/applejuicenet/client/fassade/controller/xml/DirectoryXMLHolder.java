@@ -6,7 +6,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
-import de.applejuicenet.client.fassade.controller.dac.DirectoryDO;
 
 /**
  * $Header:

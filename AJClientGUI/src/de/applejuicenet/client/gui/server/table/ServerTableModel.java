@@ -7,12 +7,12 @@ import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
-import de.applejuicenet.client.fassade.controller.dac.ServerDO;
+import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.4 2005/01/18 17:35:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.5 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -56,7 +56,7 @@ public class ServerTableModel
             return "";
         }
 
-        ServerDO server = (ServerDO) servers.get(row);
+        Server server = (Server) servers.get(row);
         if (server == null) {
             return "";
         }
@@ -106,7 +106,7 @@ public class ServerTableModel
         String suchKey = null;
         ArrayList toRemove = new ArrayList();
         for (int i = 0; i < servers.size(); i++) {
-            suchKey = Integer.toString( ( (ServerDO) servers.get(i)).getID());
+            suchKey = Integer.toString( ( (Server) servers.get(i)).getID());
             if (!changedContent.containsKey(suchKey)) {
                 toRemove.add(servers.get(i));
             }
@@ -116,20 +116,10 @@ public class ServerTableModel
         }
         Iterator it = changedContent.values().iterator();
         while (it.hasNext()) {
-            ServerDO server = (ServerDO) it.next();
+            Server server = (Server) it.next();
             int index = servers.indexOf(server);
             if (index == -1) { // Der Server ist neu
                 servers.add(server);
-            }
-            else { // Der Server hat sich veraendert
-                ServerDO oldServer = (ServerDO) servers.get(index);
-                oldServer.setHost(server.getHost());
-                oldServer.setName(server.getName());
-                oldServer.setPort(server.getPort());
-                oldServer.setVersuche(server.getVersuche());
-                oldServer.setTimeLastSeen(server.getTimeLastSeen());
-                oldServer.setConnected(server.isConnected());
-                oldServer.setTryConnect(server.isTryConnect());
             }
         }
         this.fireTableDataChanged();
@@ -143,7 +133,7 @@ public class ServerTableModel
             if ( (servers == null) || (row >= servers.size())) {
                return "";
            }
-           ServerDO server = (ServerDO) servers.get(row);
+           Server server = (Server) servers.get(row);
            if (server == null) {
                return "";
            }

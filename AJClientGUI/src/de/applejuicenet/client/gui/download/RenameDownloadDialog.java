@@ -20,13 +20,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/RenameDownloadDialog.java,v 1.4 2005/01/18 20:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/RenameDownloadDialog.java,v 1.5 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -66,7 +66,7 @@ public class RenameDownloadDialog
         JLabel label1 = new JLabel();
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.downloadform.neuerdateiname")));
-        DownloadSourceDO[] sources = download.getSources();
+        DownloadSource[] sources = download.getSources();
         HashSet set = new HashSet();
         set.add(download.getFilename());
         for (int i = 0; i < sources.length; i++) {

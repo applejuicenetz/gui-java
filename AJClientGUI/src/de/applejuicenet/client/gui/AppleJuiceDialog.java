@@ -68,11 +68,11 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.ServerDO;
+import de.applejuicenet.client.fassade.entity.Information;
+import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.fassade.shared.AJSettings;
-import de.applejuicenet.client.fassade.shared.Information;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
 import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
@@ -1174,10 +1174,10 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 						} else {
 							String tmp = information.getServerName();
 							if (tmp == null || tmp.length() == 0) {
-								ServerDO serverDO = information.getServerDO();
-								if (serverDO != null) {
-									tmp = serverDO.getHost() + ":"
-											+ serverDO.getPort();
+								Server server = information.getServer();
+								if (server != null) {
+									tmp = server.getHost() + ":"
+											+ server.getPort();
 								}
 							}
 							statusbar[1].setText(tmp);

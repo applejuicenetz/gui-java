@@ -6,10 +6,10 @@ import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
-import de.applejuicenet.client.fassade.controller.dac.ShareDO;
+import de.applejuicenet.client.fassade.entity.Share;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DateiListeTableModel.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DateiListeTableModel.java,v 1.4 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -42,8 +42,8 @@ public class DateiListeTableModel
         for (int i = 0; i < n - 1; i++) {
             int k = i;
             for (int j = i + 1; j < n; j++) {
-                if (((((ShareDO)children[j]).getShortfilename().compareToIgnoreCase(
-                    ((ShareDO)children[k]).getShortfilename()))) < 0) {
+                if (((((Share)children[j]).getShortfilename().compareToIgnoreCase(
+                    ((Share)children[k]).getShortfilename()))) < 0) {
                     k = j;
                 }
             }
@@ -60,16 +60,16 @@ public class DateiListeTableModel
             return "";
         }
 
-        ShareDO shareDO = (ShareDO) sortedChildren[row];
-        if (shareDO == null) {
+        Share share = (Share) sortedChildren[row];
+        if (share == null) {
             return "";
         }
 
         switch (column) {
             case 0:
-                return shareDO.getShortfilename();
+                return share.getShortfilename();
             case 1:
-                return Long.toString(shareDO.getSize());
+                return Long.toString(share.getSize());
             default:
                 return "Fehler";
         }
@@ -93,8 +93,8 @@ public class DateiListeTableModel
 
     public void addNodes(ShareNode shareNode) {
         if (shareNode.isLeaf()) {
-            dateien.put(Integer.toString(shareNode.getDO().getId()),
-                        shareNode.getDO());
+            dateien.put(Integer.toString(shareNode.getShare().getId()),
+                        shareNode.getShare());
         }
         else {
             Iterator it = shareNode.getChildrenMap().values().iterator();
@@ -109,14 +109,14 @@ public class DateiListeTableModel
     public void removeRow(int row) {
         Object toRemove = getRow(row);
         if (toRemove != null) {
-            dateien.remove(Integer.toString( ( (ShareDO) toRemove).getId()));
+            dateien.remove(Integer.toString( ( (Share) toRemove).getId()));
             sortChildren();
             fireTableDataChanged();
         }
     }
 
-    public ShareDO[] getShareDOs() {
-        return (ShareDO[]) dateien.values().toArray(new ShareDO[dateien.values().
+    public Share[] getShares() {
+        return (Share[]) dateien.values().toArray(new Share[dateien.values().
             size()]);
     }
 }

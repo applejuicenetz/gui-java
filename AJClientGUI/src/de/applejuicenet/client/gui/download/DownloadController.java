@@ -22,14 +22,14 @@ import org.apache.log4j.Level;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
-import de.applejuicenet.client.fassade.controller.dac.ServerDO;
-import de.applejuicenet.client.fassade.controller.dac.ShareDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.fassade.entity.Information;
+import de.applejuicenet.client.fassade.entity.Server;
+import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.event.DataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
-import de.applejuicenet.client.fassade.shared.Information;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
@@ -373,7 +373,7 @@ public class DownloadController extends GuiController {
 					downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
 				}
 			}
-		} else if (node.getClass() == DownloadSourceDO.class) {
+		} else if (node instanceof DownloadSource) {
 			if (Settings.getSettings().isDownloadUebersicht()) {
 				downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
 				tryGetPartList(false);
@@ -383,7 +383,7 @@ public class DownloadController extends GuiController {
 			if (!downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
 				downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(true);
 				downloadPanel.getPowerDownloadPanel()
-						.setPwdlValue(((DownloadSourceDO) node)
+						.setPwdlValue(((DownloadSource) node)
 								.getPowerDownload());
 			}
 		} else {
@@ -445,10 +445,10 @@ public class DownloadController extends GuiController {
 			if (selectedItems.length == 1) {
 				if ((selectedItems[0].getClass() == DownloadMainNode.class && ((DownloadMainNode) selectedItems[0])
 						.getType() == DownloadMainNode.ROOT_NODE)
-						|| (selectedItems[0].getClass() == DownloadSourceDO.class)) {
+						|| (selectedItems[0] instanceof DownloadSource)) {
 					downloadPanel.getMnuPartlisteAnzeigen().setVisible(true);
 				}
-				if (selectedItems[0].getClass() != DownloadSourceDO.class) {
+				if (selectedItems[0] instanceof DownloadSource) {
 					downloadPanel.getMnuUmbenennen().setVisible(true);
 					downloadPanel.getMnuZielordner().setVisible(true);
 				}
@@ -502,7 +502,7 @@ public class DownloadController extends GuiController {
 			if (selectedItems[0].getClass() == DownloadMainNode.class
 					&& ((DownloadMainNode) selectedItems[0]).getType() == DownloadMainNode.ROOT_NODE) {
 				downloadPartListWatcher.setDownloadNode(selectedItems[0]);
-			} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
+			} else if (selectedItems[0] instanceof DownloadSource) {
 				downloadPartListWatcher.setDownloadNode(selectedItems[0]);
 			}
 		}
@@ -717,11 +717,11 @@ public class DownloadController extends GuiController {
 					&& ((DownloadMainNode) selectedItems[0]).getType() == DownloadMainNode.ROOT_NODE) {
 				download = ((DownloadMainNode) selectedItems[0])
 						.getDownload();
-			} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
-				DownloadSourceDO downloadSourceDO = (DownloadSourceDO) selectedItems[0];
+			} else if (selectedItems[0] instanceof DownloadSource) {
+				DownloadSource downloadSource = (DownloadSource) selectedItems[0];
 				Map downloads = AppleJuiceClient.getAjFassade()
 						.getDownloadsSnapshot();
-				String key = Integer.toString(downloadSourceDO
+				String key = Integer.toString(downloadSource
 						.getDownloadId());
 				download = (Download) downloads.get(key);
 			}
@@ -730,9 +730,9 @@ public class DownloadController extends GuiController {
                 if (programToExecute.length() != 0){
 					Integer shareId = new Integer(download.getShareId());
 					try {
-						ShareDO shareDO = (ShareDO)AppleJuiceClient.getAjFassade().getObjectById(shareId);
-						if (shareDO != null){
-						    String filename = shareDO.getFilename();
+						Share share = (Share)AppleJuiceClient.getAjFassade().getObjectById(shareId);
+						if (share != null){
+						    String filename = share.getFilename();
 							try {
 								Runtime.getRuntime().exec(new String[] { programToExecute, filename });
 							} catch (Exception ex) {
@@ -763,15 +763,15 @@ public class DownloadController extends GuiController {
 						+ downloadDO.getHash() + "|"
 						+ downloadDO.getGroesse());
 				copyToClipboard = true;
-			} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
-				DownloadSourceDO downloadSourceDO = (DownloadSourceDO) selectedItems[0];
+			} else if (selectedItems[0] instanceof DownloadSource) {
+				DownloadSource downloadSource = (DownloadSource) selectedItems[0];
 				Map<String, Download> downloads = AppleJuiceClient.getAjFassade()
 						.getDownloadsSnapshot();
-				String key = Integer.toString(downloadSourceDO
+				String key = Integer.toString(downloadSource
 						.getDownloadId());
 				Download download = downloads.get(key);
 				if (download != null) {
-					toCopy.append(downloadSourceDO.getFilename() + "|"
+					toCopy.append(downloadSource.getFilename() + "|"
 							+ download.getHash() + "|"
 							+ download.getGroesse());
 					copyToClipboard = true;
@@ -786,12 +786,12 @@ public class DownloadController extends GuiController {
 				toCopy.append(":");
 				toCopy.append(port);
 				if (information.getVerbindungsStatus() == Information.VERBUNDEN) {
-					ServerDO serverDO = information.getServerDO();
-					if (serverDO != null) {
+					Server server = information.getServer();
+					if (server != null) {
 						toCopy.append(":");
-						toCopy.append(serverDO.getHost());
+						toCopy.append(server.getHost());
 						toCopy.append(":");
-						toCopy.append(serverDO.getPort());
+						toCopy.append(server.getPort());
 					}
 				}
 				toCopy.append("/");
@@ -819,14 +819,14 @@ public class DownloadController extends GuiController {
 				StringSelection contents = new StringSelection(toCopy
 						.toString());
 				cb.setContents(contents, null);
-			} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
-				DownloadSourceDO downloadSourceDO = (DownloadSourceDO) selectedItems[0];
+			} else if (selectedItems[0] instanceof DownloadSource) {
+				DownloadSource downloadSource = (DownloadSource) selectedItems[0];
 				Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-				String key = Integer.toString(downloadSourceDO
+				String key = Integer.toString(downloadSource
 						.getDownloadId());
 				Download download = downloads.get(key);
 				if (download != null) {
-					toCopy.append(downloadSourceDO.getFilename() + "|"
+					toCopy.append(downloadSource.getFilename() + "|"
 							+ download.getHash() + "|"
 							+ download.getGroesse() + "/");
 					StringSelection contents = new StringSelection(

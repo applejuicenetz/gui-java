@@ -12,9 +12,9 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
-import de.applejuicenet.client.fassade.controller.dac.PartListDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.fassade.entity.PartList;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 
@@ -41,15 +41,10 @@ import de.applejuicenet.client.fassade.shared.HtmlLoader;
 public class PartListXMLHolder extends DefaultHandler {
 
 	private final CoreConnectionSettingsHolder coreHolder;
-
 	private String xmlCommand;
-
 	private XMLReader xr = null;
-
 	private CharArrayWriter contents = new CharArrayWriter();
-
 	private PartListDO partListDO;
-
 	private String zipMode = "";
 
 	public PartListXMLHolder(CoreConnectionSettingsHolder coreHolder) {
@@ -84,7 +79,7 @@ public class PartListXMLHolder extends DefaultHandler {
 				type = Integer.parseInt(attr.getValue(i));
 			}
 		}
-		partListDO.addPart(partListDO.new Part(startPosition, type));
+		partListDO.addPart(partListDO.new PartDO(startPosition, type));
 	}
 
 	public void startElement(String namespaceURI, String localName,
@@ -115,7 +110,7 @@ public class PartListXMLHolder extends DefaultHandler {
 		return xmlData;
 	}
 
-	public PartListDO getPartList(Object object)
+	public PartList getPartList(Object object)
 			throws WebSiteNotFoundException {
 		try {
 			String xmlString;
@@ -123,14 +118,14 @@ public class PartListXMLHolder extends DefaultHandler {
 				xmlCommand = "/xml/userpartlist.xml?";
 				xmlString = getXMLString("&id="
 						+ ((DownloadSourceDO) object).getId());
-				partListDO = new PartListDO((DownloadSourceDO) object);
+				partListDO = new PartListDO((DownloadSource) object);
 			} else {
 				xmlCommand = "/xml/downloadpartlist.xml?";
 				xmlString = getXMLString("&id=" + ((DownloadDO) object).getId());
 				partListDO = new PartListDO((Download) object);
 			}
 			xr.parse(new InputSource(new StringReader(xmlString)));
-			PartListDO resultPartList = partListDO;
+			PartList resultPartList = partListDO;
 			partListDO = null;
 			return resultPartList;
 		} catch (Exception e) {

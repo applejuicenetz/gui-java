@@ -1,53 +1,51 @@
 package de.applejuicenet.client.fassade.entity;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
-
 public interface Download {
     
     // Status - IDs
-    public static final int SUCHEN_LADEN = 0;
-    public static final int NICHT_GENUG_PLATZ_FEHLER = 1;
-    public static final int FERTIGSTELLEN = 12;
-    public static final int FEHLER_BEIM_FERTIGSTELLEN = 13;
-    public static final int FERTIG = 14;
-    public static final int ABBRECHEN = 15;
-    public static final int DATA_WIRD_ERSTELLT = 16;
-    public static final int ABGEGROCHEN = 17;
-    public static final int PAUSIERT = 18;
+    static final int SUCHEN_LADEN = 0;
+    static final int NICHT_GENUG_PLATZ_FEHLER = 1;
+    static final int FERTIGSTELLEN = 12;
+    static final int FEHLER_BEIM_FERTIGSTELLEN = 13;
+    static final int FERTIG = 14;
+    static final int ABBRECHEN = 15;
+    static final int DATA_WIRD_ERSTELLT = 16;
+    static final int ABGEGROCHEN = 17;
+    static final int PAUSIERT = 18;
     
-    public String getProzentGeladenAsString();
+    String getProzentGeladenAsString();
 
-    public double getProzentGeladen();
+    double getProzentGeladen();
 
-    public DownloadSourceDO getSourceById(int sourceId);
+    DownloadSource getSourceById(int sourceId);
 
-    public DownloadSourceDO[] getSources();
+    DownloadSource[] getSources();
 
-    public int getShareId();
+    int getShareId();
 
-    public String getHash();
+    String getHash();
 
-    public long getGroesse();
+    long getGroesse();
 
-    public int getStatus();
+    int getStatus();
 
-    public String getFilename();
+    String getFilename();
 
-    public String getTargetDirectory();
+    String getTargetDirectory();
 
-    public int getPowerDownload();
+    int getPowerDownload();
 
-    public int getId();
+    int getId();
 
-    public int getTemporaryFileNumber();
+    int getTemporaryFileNumber();
 
-    public long getReady();
+    long getReady();
 
-    public long getRestZeit();
+    long getRestZeit();
 
-    public String getRestZeitAsString();
+    String getRestZeitAsString();
 
-    public long getSpeedInBytes();
+    long getSpeedInBytes();
 
-    public long getBereitsGeladen();
+    long getBereitsGeladen();
 }

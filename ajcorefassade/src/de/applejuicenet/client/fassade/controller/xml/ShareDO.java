@@ -1,4 +1,6 @@
-package de.applejuicenet.client.fassade.controller.dac;
+package de.applejuicenet.client.fassade.controller.xml;
+
+import de.applejuicenet.client.fassade.entity.Share;
 
 /**
  * $Header:
@@ -20,7 +22,7 @@ package de.applejuicenet.client.fassade.controller.dac;
  * 
  */
 
-public class ShareDO {
+class ShareDO implements Share{
 	private final int id;
 
 	private String filename;

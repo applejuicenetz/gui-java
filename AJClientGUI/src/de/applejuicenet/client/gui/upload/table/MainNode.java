@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.swing.Icon;
 
-import de.applejuicenet.client.fassade.controller.dac.UploadDO;
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/MainNode.java,v 1.3 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/MainNode.java,v 1.4 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -89,21 +89,21 @@ public class MainNode
         }
     }
 
-    public UploadDO[] getChildrenByStatus(int statusToCheck){
+    public Upload[] getChildrenByStatus(int statusToCheck){
         if (uploads == null) {
             return null;
         }
         else {
             ArrayList children = new ArrayList();
-            UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
-                toArray(new UploadDO[uploads.size()]);
+            Upload[] uploadsForThread = (Upload[]) uploads.values().
+                toArray(new Upload[uploads.size()]);
             for (int i = 0; i < uploadsForThread.length; i++) {
                 if (uploadsForThread[i].getStatus() ==
                     statusToCheck) {
                     children.add(uploadsForThread[i]);
                 }
             }
-            return (UploadDO[]) children.toArray(new UploadDO[children.
+            return (Upload[]) children.toArray(new Upload[children.
                 size()]);
         }
     }
@@ -114,10 +114,10 @@ public class MainNode
         }
         else{
             if (getType() == MainNode.LOADING_UPLOADS) {
-                return getChildrenByStatus(UploadDO.AKTIVE_UEBERTRAGUNG);
+                return getChildrenByStatus(Upload.AKTIVE_UEBERTRAGUNG);
             }
             else if (getType() == MainNode.WAITING_UPLOADS) {
-                return getChildrenByStatus(UploadDO.WARTESCHLANGE);
+                return getChildrenByStatus(Upload.WARTESCHLANGE);
             }
             else{
                 return null;

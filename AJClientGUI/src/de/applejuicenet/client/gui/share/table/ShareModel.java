@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/Attic/ShareModel.java,v 1.4 2004/12/03 17:31:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/Attic/ShareModel.java,v 1.5 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -71,7 +71,7 @@ public class ShareModel
             switch (column) {
                 case 0: {
                     if (shareNode.isLeaf() && shareNode != getRoot()) {
-                        return shareNode.getDO().getFilename();
+                        return shareNode.getShare().getFilename();
                     }
                     else {
                         return "";
@@ -79,7 +79,7 @@ public class ShareModel
                 }
                 case 1: {
                     if (shareNode.isLeaf() && shareNode != getRoot()) {
-                        return DownloadModel.parseGroesse(shareNode.getDO().
+                        return DownloadModel.parseGroesse(shareNode.getShare().
                             getSize());
                     }
                     else {
@@ -88,7 +88,7 @@ public class ShareModel
                 }
                 case 2: {
                     if (shareNode.isLeaf() && shareNode != getRoot()) {
-                        return new Integer(shareNode.getDO().getPrioritaet());
+                        return new Integer(shareNode.getShare().getPrioritaet());
                     }
                     else {
                         return null;
@@ -96,7 +96,7 @@ public class ShareModel
                 }
                 case 3: {
                     if (shareNode.isLeaf() && shareNode != getRoot()) {
-                        return formatter.format(new Date(shareNode.getDO().getLastAsked()));
+                        return formatter.format(new Date(shareNode.getShare().getLastAsked()));
                     }
                     else {
                         return null;
@@ -104,7 +104,7 @@ public class ShareModel
                 }
                 case 4: {
                     if (shareNode.isLeaf() && shareNode != getRoot()) {
-                        return new Long(shareNode.getDO().getAskCount());
+                        return new Long(shareNode.getShare().getAskCount());
                     }
                     else {
                         return null;
@@ -112,7 +112,7 @@ public class ShareModel
                 }
                 case 5: {
                     if (shareNode.isLeaf() && shareNode != getRoot()) {
-                        return new Long(shareNode.getDO().getSearchCount());
+                        return new Long(shareNode.getShare().getSearchCount());
                     }
                     else {
                         return null;

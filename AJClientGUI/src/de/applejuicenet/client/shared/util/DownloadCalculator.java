@@ -3,12 +3,12 @@ package de.applejuicenet.client.shared.util;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.gui.download.table.DownloadModel;
 
-public abstract class DownloadDOCalculator {
-	private static Logger logger = Logger.getLogger(DownloadDOCalculator.class); 
+public abstract class DownloadCalculator {
+	private static Logger logger = Logger.getLogger(DownloadCalculator.class); 
 
 	public static String getStatusAsString(Download download) {
         try {
@@ -28,19 +28,19 @@ public abstract class DownloadDOCalculator {
                 case Download.DATA_WIRD_ERSTELLT:
                     return DownloadModel.dataWirdErstellt;
                 case Download.SUCHEN_LADEN: {
-                    DownloadSourceDO[] sources = download.getSources();
+                    DownloadSource[] sources = download.getSources();
                     String result = "";
                     int uebertragung = 0;
                     int warteschlange = 0;
                     int status;
                     for (int i = 0; i < sources.length; i++) {
                         status = sources[i].getStatus();
-                        if (status == DownloadSourceDO.UEBERTRAGUNG) {
+                        if (status == DownloadSource.UEBERTRAGUNG) {
                             uebertragung++;
                             result = DownloadModel.laden;
                         }
-                        else if (status == DownloadSourceDO.IN_WARTESCHLANGE
-                                 || status == DownloadSourceDO.WARTESCHLANGE_VOLL) {
+                        else if (status == DownloadSource.IN_WARTESCHLANGE
+                                 || status == DownloadSource.WARTESCHLANGE_VOLL) {
                             warteschlange++;
                         }
                     }

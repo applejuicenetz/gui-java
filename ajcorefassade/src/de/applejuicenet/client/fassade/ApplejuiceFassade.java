@@ -12,11 +12,7 @@ import java.util.Set;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.controller.DataPropertyChangeInformer;
 import de.applejuicenet.client.fassade.controller.DataUpdateInformer;
-import de.applejuicenet.client.fassade.controller.dac.DirectoryDO;
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
-import de.applejuicenet.client.fassade.controller.dac.PartListDO;
-import de.applejuicenet.client.fassade.controller.dac.ServerDO;
-import de.applejuicenet.client.fassade.controller.dac.ShareDO;
+import de.applejuicenet.client.fassade.controller.xml.DirectoryDO;
 import de.applejuicenet.client.fassade.controller.xml.DirectoryXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.GetObjectXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.InformationXMLHolder;
@@ -26,12 +22,16 @@ import de.applejuicenet.client.fassade.controller.xml.PartListXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.SettingsXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.ShareXMLHolder;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.fassade.entity.Information;
+import de.applejuicenet.client.fassade.entity.PartList;
+import de.applejuicenet.client.fassade.entity.Server;
+import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
-import de.applejuicenet.client.fassade.shared.Information;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
 import de.applejuicenet.client.fassade.shared.Search;
 import de.applejuicenet.client.fassade.shared.ShareEntry;
@@ -76,7 +76,7 @@ public class ApplejuiceFassade {
 	private SettingsXMLHolder settingsXML = null;
 	private DirectoryXMLHolder directoryXML = null;
 	private Version coreVersion;
-	private Map<String, ShareDO> share = null;
+	private Map<String, Share> share = null;
 	private PartListXMLHolder partlistXML = null;
 	
 	private long sleepTime = 2000;
@@ -282,15 +282,15 @@ public class ApplejuiceFassade {
 		return modifiedXML.getInformation();
 	}
 
-	public PartListDO getPartList(DownloadSourceDO downloadSourceDO)
+	public PartList getPartList(DownloadSource downloadSource)
 			throws WebSiteNotFoundException {
 		if (partlistXML == null) {
 			partlistXML = new PartListXMLHolder(coreHolder);
 		}
-		return partlistXML.getPartList(downloadSourceDO);
+		return partlistXML.getPartList(downloadSource);
 	}
 
-	public PartListDO getPartList(Download download)
+	public PartList getPartList(Download download)
 			throws WebSiteNotFoundException {
 		if (partlistXML == null) {
 			partlistXML = new PartListXMLHolder(coreHolder);
@@ -380,7 +380,7 @@ public class ApplejuiceFassade {
 				false);
 	}
 
-	public Map<String, ServerDO> getAllServer() {
+	public Map<String, Server> getAllServer() {
 		if (modifiedXML != null) {
 			return modifiedXML.getServer();
 		}
@@ -611,16 +611,16 @@ public class ApplejuiceFassade {
 						+ coreHolder.getCorePassword() + parameters, false);
 	}
 
-	public void connectToServer(ServerDO serverDO)
+	public void connectToServer(Server server)
 			throws IllegalArgumentException {
-		if (serverDO == null) {
+		if (server == null) {
 			throw new IllegalArgumentException("invalid server");
 		}
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
 				.getCorePort(), HtmlLoader.POST,
 				"/function/serverlogin?password="
 						+ coreHolder.getCorePassword() + "&id="
-						+ serverDO.getID(), false);
+						+ server.getID(), false);
 	}
 
 	public Object getObjectById(Integer id) throws IllegalArgumentException {
@@ -632,24 +632,24 @@ public class ApplejuiceFassade {
 		return getObjectXMLHolder.getObjectByID(id.intValue());
 	}
 
-	public void entferneServer(ServerDO serverDO)
+	public void entferneServer(Server server)
 			throws IllegalArgumentException {
-		if (serverDO == null) {
+		if (server == null) {
 			throw new IllegalArgumentException("invalid server");
 		}
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
 				.getCorePort(), HtmlLoader.POST,
 				"/function/removeserver?password="
 						+ coreHolder.getCorePassword() + "&id="
-						+ serverDO.getID(), false);
+						+ server.getID(), false);
 	}
 
-	public void setPrioritaet(ShareDO shareDO, Integer priority) 
+	public void setPrioritaet(Share share, Integer priority) 
 		throws IllegalArgumentException {
-		if (shareDO == null) {
-			throw new IllegalArgumentException("invalid shareDO");
+		if (share == null) {
+			throw new IllegalArgumentException("invalid share");
 		}
-		setPrioritaet(shareDO.getId(), priority);
+		setPrioritaet(share.getId(), priority);
 	}
 	
 	
@@ -795,7 +795,7 @@ public class ApplejuiceFassade {
 		}
 	}
 
-	public Map<String, ShareDO> getShare(boolean reinit) {
+	public Map<String, Share> getShare(boolean reinit) {
 		if (share == null || reinit) {
 			share = shareXML.getShare();
 		}

@@ -1,7 +1,6 @@
-package de.applejuicenet.client.fassade.controller.dac;
+package de.applejuicenet.client.fassade.controller.xml;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import de.applejuicenet.client.fassade.entity.Server;
 
 /**
  * $Header:
@@ -23,25 +22,15 @@ import java.util.Date;
  * 
  */
 
-public class ServerDO {
+class ServerDO extends Server {
 	private final int id;
-
 	private String host;
-
 	private String name;
-
 	private String port;
-
 	private long timeLastSeen;
-
 	private int versuche;
-
 	private boolean connected = false;
-
 	private boolean tryConnect = false;
-
-	private static SimpleDateFormat formatter = new SimpleDateFormat(
-			"dd.MM.yyyy HH:mm:ss");
 
 	public ServerDO(int id) {
 		this.id = id;
@@ -99,25 +88,6 @@ public class ServerDO {
 
 	public int getID() {
 		return id;
-	}
-
-	public String getIDasString() {
-		return Integer.toString(id);
-	}
-
-	public String getTimeLastSeenAsString() {
-		if (timeLastSeen == 0) {
-			return "";
-		} else {
-			return formatter.format(new Date(timeLastSeen));
-		}
-	}
-
-	public boolean equals(Object obj) {
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		return (id == ((ServerDO) obj).getID());
 	}
 
 	public boolean isConnected() {

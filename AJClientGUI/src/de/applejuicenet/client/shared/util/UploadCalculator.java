@@ -7,11 +7,11 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
 
-import de.applejuicenet.client.fassade.controller.dac.UploadDO;
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.fassade.shared.Version;
 import de.applejuicenet.client.shared.IconManager;
 
-public abstract class UploadDOCalculator {
+public abstract class UploadCalculator {
 	
 	private static JProgressBar progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
 	private static JProgressBar wholeLoadedProgress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
@@ -29,9 +29,9 @@ public abstract class UploadDOCalculator {
         wholeLoadedProgressbarLabel.setOpaque(true);
 	}
 
-	 public static Component getProgressbarComponent(UploadDO uploadDO) {
-        if (uploadDO.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG) {
-            String prozent = uploadDO.getDownloadPercentAsString();
+	 public static Component getProgressbarComponent(Upload upload) {
+        if (upload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG) {
+            String prozent = upload.getDownloadPercentAsString();
             progress.setString(prozent + " %");
             int pos = prozent.indexOf('.');
             if (pos != -1) {
@@ -45,23 +45,23 @@ public abstract class UploadDOCalculator {
         }
     }
 
-    public static Component getVersionComponent(UploadDO uploadDO, JTable table) {
+    public static Component getVersionComponent(Upload upload, JTable table) {
         versionLabel.setFont(table.getFont());
-        if (uploadDO.getVersion() == null) {
+        if (upload.getVersion() == null) {
             versionLabel.setIcon(null);
             versionLabel.setText("");
         }
         else {
-            versionLabel.setIcon(getVersionIcon(uploadDO));
-            versionLabel.setText(uploadDO.getVersion().getVersion());
+            versionLabel.setIcon(getVersionIcon(upload));
+            versionLabel.setText(upload.getVersion().getVersion());
         }
         return versionLabel;
     }
 
-    public static Component getWholeLoadedProgressbarComponent(UploadDO uploadDO) {
-        if (uploadDO.getLoaded() != -1) {
-            wholeLoadedProgress.setString(uploadDO.getLoaded() + " %");
-            wholeLoadedProgress.setValue(uploadDO.getLoaded());
+    public static Component getWholeLoadedProgressbarComponent(Upload upload) {
+        if (upload.getLoaded() != -1) {
+            wholeLoadedProgress.setString(upload.getLoaded() + " %");
+            wholeLoadedProgress.setValue(upload.getLoaded());
             return wholeLoadedProgress;
         }
         else {
@@ -69,8 +69,8 @@ public abstract class UploadDOCalculator {
         }
     }
 
-	public static ImageIcon getVersionIcon(UploadDO uploadDO) {
-        switch (uploadDO.getVersion().getBetriebsSystem()) {
+	public static ImageIcon getVersionIcon(Upload upload) {
+        switch (upload.getVersion().getBetriebsSystem()) {
 	        case Version.WIN32: {
 	            return IconManager.getInstance().getIcon("winsymbol");
 	        }

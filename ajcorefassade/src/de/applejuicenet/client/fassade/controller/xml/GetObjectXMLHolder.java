@@ -1,7 +1,7 @@
 package de.applejuicenet.client.fassade.controller.xml;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xml/GetObjectXMLHolder.java,v 1.3 2005/01/18 20:49:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xml/GetObjectXMLHolder.java,v 1.4 2005/01/19 11:03:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,11 +15,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
-import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
-import de.applejuicenet.client.fassade.controller.dac.InformationDO;
-import de.applejuicenet.client.fassade.controller.dac.ServerDO;
-import de.applejuicenet.client.fassade.controller.dac.ShareDO;
-import de.applejuicenet.client.fassade.controller.dac.UploadDO;
 import de.applejuicenet.client.fassade.shared.Version;
 
 public class GetObjectXMLHolder extends WebXMLParser {
@@ -84,6 +79,7 @@ public class GetObjectXMLHolder extends WebXMLParser {
 		long uploadSpeed;
 		long downloadSpeed;
 		long openConnections;
+		long maxuploadpositions;
 		Element e = (Element) nodes.item(0);
 		int id = Integer.parseInt(e.getAttribute("id"));
 		credits = Long.parseLong(e.getAttribute("credits"));
@@ -92,9 +88,10 @@ public class GetObjectXMLHolder extends WebXMLParser {
 		openConnections = Long.parseLong(e.getAttribute("openconnections"));
 		sessionUpload = Long.parseLong(e.getAttribute("sessionupload"));
 		sessionDownload = Long.parseLong(e.getAttribute("sessiondownload"));
+		maxuploadpositions = Long.parseLong(e.getAttribute("maxuploadpositions"));
 		InformationDO information = new InformationDO(id, sessionUpload,
 				sessionDownload, credits, uploadSpeed, downloadSpeed,
-				openConnections);
+				openConnections, maxuploadpositions);
 		return information;
 	}
 

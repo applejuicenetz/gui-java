@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import de.applejuicenet.client.fassade.controller.dac.UploadDO;
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
@@ -12,7 +12,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.4 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.5 2005/01/19 11:03:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -79,16 +79,16 @@ public class UploadDataTableModel
                 return "";
             }
         }
-        else if (node.getClass() == UploadDO.class) {
-            UploadDO upload = (UploadDO) node;
+        else if (node instanceof Upload) {
+            Upload upload = (Upload) node;
             switch (column) {
                 case 0:
                     return upload.getDateiName();
                 case 1:
                     switch (upload.getStatus()) {
-                        case UploadDO.AKTIVE_UEBERTRAGUNG:
+                        case Upload.AKTIVE_UEBERTRAGUNG:
                             return uebertragung;
-                        case UploadDO.WARTESCHLANGE:
+                        case Upload.WARTESCHLANGE:
                             return warteschlange + " (" +formatter.format(new Date(upload.getLastConnection())) + ")";
                         default:
                             return "";
@@ -96,7 +96,7 @@ public class UploadDataTableModel
                 case 2:
                     return upload.getNick();
                 case 3: {
-                    if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG) {
+                    if (upload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG) {
                         return getSpeedAsString(upload.getSpeed());
                     }
                     else {
