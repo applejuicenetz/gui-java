@@ -2,6 +2,7 @@ package de.applejuicenet.client.shared;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
@@ -11,11 +12,14 @@ import java.util.zip.ZipEntry;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PolicyJarClassLoader.java,v 1.4 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PolicyJarClassLoader.java,v 1.5 2005/02/15 11:03:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,7 +51,11 @@ public class PolicyJarClassLoader
                 className = (String) classes.get(i);
                 cl = loadClass(className);
                 if (AutomaticPowerdownloadPolicy.class.isAssignableFrom(cl)) {
-                    return (AutomaticPowerdownloadPolicy) cl.newInstance();
+                	Constructor con = cl.getConstructor(new Class[]{ ApplejuiceFassade.class });
+                	AutomaticPowerdownloadPolicy policy = 
+                		(AutomaticPowerdownloadPolicy)con.newInstance(
+                				new Object[]{ AppleJuiceClient.getAjFassade() });
+                    return policy;
                 }
             }
             return null;
@@ -55,7 +63,7 @@ public class PolicyJarClassLoader
         catch (Exception e) {
             if (logger.isEnabledFor(Level.INFO)) {
                 logger.info("Plugin " + jar +
-                            " entspricht nicht dem Standard und wurde nicht geladen.");
+                            " entspricht nicht dem Standard und wurde nicht geladen.", e);
             }
             return null;
         }
