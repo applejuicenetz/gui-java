@@ -39,7 +39,7 @@ import java.awt.Insets;
 import java.awt.Point;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.56 2004/01/12 09:36:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.57 2004/01/25 10:18:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,9 @@ import java.awt.Point;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.57  2004/01/25 10:18:55  maj0r
+ * Nervenden Dialog ausgeblendet.
+ *
  * Revision 1.56  2004/01/12 09:36:09  maj0r
  * Positionierung korrigiert.
  *
@@ -355,7 +358,8 @@ public class AppleJuiceClient {
             String nachricht = "appleJuice-Core-GUI Version " +
                 ApplejuiceFassade.GUI_VERSION + " wird gestartet...";
             ConnectFrame connectFrame = new ConnectFrame();
-            connectFrame.show();
+//            connectFrame.show();
+//            connectFrame.hide();
             Splash splash = new Splash(connectFrame, IconManager.getInstance().getIcon(
                 "splashscreen").getImage());
             splash.show();
@@ -403,7 +407,7 @@ public class AppleJuiceClient {
                                                   JOptionPane.OK_OPTION);
                     logger.fatal(nachricht);
                     System.out.println("Fehler: " + nachricht);
-                    connectFrame.dispose();
+//                    connectFrame.dispose();
                     System.exit( -1);
                 }
                 splash.setVisible(true);
@@ -434,7 +438,7 @@ public class AppleJuiceClient {
                 theApp.setLocation(location);
             }
 
-            connectFrame.dispose();
+//            connectFrame.dispose();
             theApp.show();
             nachricht = "appleJuice-Core-GUI läuft...";
             if (logger.isEnabledFor(Level.INFO)) {
