@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.76 2003/12/29 07:23:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.77 2003/12/29 09:47:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,38 +24,14 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.77  2003/12/29 09:47:17  maj0r
+ * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
+ *
  * Revision 1.76  2003/12/29 07:23:18  maj0r
  * Begonnen, auf neues Versionupdateinformationssystem umzubauen.
  *
- * Revision 1.75  2003/12/28 10:31:44  maj0r
- * Version erhoeht.
- *
- * Revision 1.74  2003/12/27 21:18:13  maj0r
- * Version erhoeht.
- *
- * Revision 1.73  2003/12/19 09:54:01  maj0r
- * Version erhoeht.
- *
- * Revision 1.72  2003/12/18 17:52:22  maj0r
- * Version erhoeht.
- *
- * Revision 1.71  2003/12/17 20:36:15  maj0r
- * Version erhoeht.
- *
- * Revision 1.70  2003/12/17 11:05:34  maj0r
- * Version erhoeht.
- *
  * Revision 1.69  2003/12/16 14:51:46  maj0r
  * Suche kann nun GUI-seitig abgebrochen werden.
- *
- * Revision 1.68  2003/12/16 09:05:55  maj0r
- * Version erhoeht.
- *
- * Revision 1.67  2003/11/24 12:46:31  maj0r
- * Version erhoeht.
- *
- * Revision 1.66  2003/11/19 11:57:16  maj0r
- * Version erhoeht.
  *
  * Revision 1.65  2003/11/17 14:44:10  maj0r
  * Erste funktionierende Version des automatischen Powerdownloads eingebaut.
@@ -63,38 +39,17 @@ import org.apache.log4j.Level;
  * Revision 1.64  2003/11/17 07:32:30  maj0r
  * Automatischen Pwdl begonnen.
  *
- * Revision 1.63  2003/11/12 11:01:26  maj0r
- * Version erhoeht.
- *
- * Revision 1.62  2003/11/05 10:20:10  maj0r
- * Version erhoeht.
- *
  * Revision 1.61  2003/11/04 13:14:50  maj0r
  * Memory-Monitor eingebaut.
  *
- * Revision 1.60  2003/11/03 13:11:35  maj0r
- * Version erhoeht.
- *
  * Revision 1.59  2003/10/31 18:01:45  maj0r
  * Ungueltige Zeichen entfernt.
- *
- * Revision 1.58  2003/10/31 17:33:30  maj0r
- * Neue Version 0.40
- *
- * Revision 1.57  2003/10/27 17:23:37  maj0r
- * Neue Version 0.39
- *
- * Revision 1.56  2003/10/24 19:35:05  maj0r
- * Neue Version 0.38
  *
  * Revision 1.55  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
  * Revision 1.54  2003/10/21 11:36:32  maj0r
  * Infos werden nun ueber einen Listener geholt.
- *
- * Revision 1.53  2003/10/18 19:24:21  maj0r
- * Neue Version 0.37
  *
  * Revision 1.52  2003/10/14 19:21:23  maj0r
  * Korrekturen zur Xml-Port-Verwendung.
@@ -104,13 +59,7 @@ import org.apache.log4j.Level;
  * Powerdownloads werden nun innerhalb einer Connection gesetzt,
  *
  * Revision 1.50  2003/10/13 12:37:48  maj0r
- * Bug #1003 behoben.
- *
- * Revision 1.49  2003/10/12 16:12:19  maj0r
- * Neue Version 0.35
- *
- * Revision 1.48  2003/10/10 19:16:04  maj0r
- * Neue Version 0.34
+ * Bug behoben.
  *
  * Revision 1.47  2003/10/09 15:42:52  maj0r
  * Bug behoben, dass nicht immer der aktuell verbundene Server angezeigt wurde.
@@ -128,7 +77,6 @@ import org.apache.log4j.Level;
  *
  * Revision 1.43  2003/10/01 16:52:53  maj0r
  * Suche weiter gefuehrt.
- * Version 0.32
  *
  * Revision 1.42  2003/09/30 16:35:11  maj0r
  * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
@@ -138,7 +86,6 @@ import org.apache.log4j.Level;
  *
  * Revision 1.40  2003/09/12 13:19:26  maj0r
  * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
- * Version 0.30
  *
  * Revision 1.39  2003/09/11 09:41:16  maj0r
  * Nullpointer behoben.
@@ -153,14 +100,8 @@ import org.apache.log4j.Level;
  * Revision 1.36  2003/09/10 15:30:48  maj0r
  * Begonnen auf neue Session-Struktur umzubauen.
  *
- * Revision 1.35  2003/09/10 13:18:01  maj0r
- * Version 0.28
- *
  * Revision 1.34  2003/09/10 13:16:28  maj0r
  * Veraltete Option "Browsen erlauben" entfernt und neue Option MaxNewConnectionsPerTurn hinzugefuegt.
- *
- * Revision 1.33  2003/09/09 12:47:21  maj0r
- * Version 0.27
  *
  * Revision 1.32  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
@@ -168,14 +109,8 @@ import org.apache.log4j.Level;
  * Revision 1.31  2003/09/07 09:29:55  maj0r
  * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
- * Revision 1.30  2003/09/06 15:01:06  maj0r
- * Version 0.25
- *
  * Revision 1.29  2003/09/06 14:48:50  maj0r
  * Core-Dateisystem-Separator statisch verwendbar.
- *
- * Revision 1.28  2003/09/05 09:47:22  maj0r
- * Version 0.24
  *
  * Revision 1.27  2003/09/05 09:02:26  maj0r
  * Threadverwendung verbessert.
@@ -184,22 +119,8 @@ import org.apache.log4j.Level;
  * Logger verfeinert.
  * Threadbeendigung korrigiert.
  *
- * Revision 1.25  2003/09/04 14:00:09  maj0r
- * Version 0.23.
- *
- * Revision 1.24  2003/09/04 06:34:54  maj0r
- * Version erhoeht.
- * v 0.22
- *
- * Revision 1.23  2003/09/02 19:29:26  maj0r
- * Einige Stellen synchronisiert und Nullpointer behoben.
- * Version 0.21 beta.
- *
  * Revision 1.22  2003/09/02 16:08:56  maj0r
  * Downloadbaum komplett umgebaut.
- *
- * Revision 1.21  2003/09/01 19:57:10  maj0r
- * Version 0.19 Beta
  *
  * Revision 1.20  2003/09/01 15:50:51  maj0r
  * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
@@ -207,19 +128,8 @@ import org.apache.log4j.Level;
  * Revision 1.19  2003/08/31 11:06:22  maj0r
  * CheckInProgress geaendert.
  *
- * Revision 1.18  2003/08/30 19:46:10  maj0r
- * Version 0.18 Beta
- *
- * Revision 1.17  2003/08/29 19:34:03  maj0r
- * Einige Aenderungen.
- * Version 0.17 Beta
- *
  * Revision 1.16  2003/08/28 15:47:26  maj0r
  * Warten auf Antwort vom Core entfernt.
- *
- * Revision 1.15  2003/08/28 10:57:04  maj0r
- * Versionierung geaendert und erhoeht.
- * Version 0.16 Beta.
  *
  * Revision 1.14  2003/08/28 06:56:48  maj0r
  * Methode setShares korrigiert.
@@ -231,23 +141,16 @@ import org.apache.log4j.Level;
  * Muell entfernt.
  *
  * Revision 1.11  2003/08/24 14:59:59  maj0r
- * Version 0.14
  * Diverse Aenderungen.
  *
  * Revision 1.10  2003/08/22 14:16:00  maj0r
  * Threadverwendung korrigiert.
- *
- * Revision 1.9  2003/08/22 12:52:12  maj0r
- * Version auf 0.13 Beta erhoeht.
  *
  * Revision 1.8  2003/08/22 10:03:11  maj0r
  * Threadverwendung korrigiert.
  *
  * Revision 1.7  2003/08/21 15:13:29  maj0r
  * Auf Thread umgebaut.
- *
- * Revision 1.6  2003/08/20 20:08:25  maj0r
- * Version auf 0.11 erhoeht.
  *
  * Revision 1.5  2003/08/20 16:18:51  maj0r
  * Server koennen nun entfernt werden.
@@ -264,9 +167,6 @@ import org.apache.log4j.Level;
  * Revision 1.1  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
- * Revision 1.38  2003/08/12 06:12:19  maj0r
- * Version erhoeht.
- *
  * Revision 1.37  2003/08/11 14:10:28  maj0r
  * DownloadPartList eingefuegt.
  * Diverse Aenderungen.
@@ -278,7 +178,7 @@ import org.apache.log4j.Level;
  * Diverse Aenderungen.
  *
  * Revision 1.34  2003/08/09 10:57:54  maj0r
- * Upload- und DownloadTabelle weitergef�hrt.
+ * Upload- und DownloadTabelle weitergefuehrt.
  *
  * Revision 1.33  2003/08/05 20:47:06  maj0r
  * An neue Schnittstelle angepasst.
@@ -296,7 +196,6 @@ import org.apache.log4j.Level;
  * An neue Schnittstelle angepasst.
  *
  * Revision 1.28  2003/07/04 15:25:38  maj0r
- * Version erh�ht.
  * DownloadModel erweitert.
  *
  * Revision 1.27  2003/07/03 19:11:16  maj0r
@@ -324,7 +223,6 @@ import org.apache.log4j.Level;
  *
  * Revision 1.20  2003/06/10 12:31:03  maj0r
  * Historie eingefuegt.
- *
  *
  */
 
