@@ -75,7 +75,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.101 2004/02/27 07:19:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.102 2004/02/27 09:54:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -84,6 +84,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.102  2004/02/27 09:54:18  maj0r
+ * Standardthemepack geaendert.
+ *
  * Revision 1.101  2004/02/27 07:19:13  maj0r
  * Loggerverwendung korrigiert.
  *
@@ -1330,7 +1333,7 @@ public class AppleJuiceDialog
         xmlData.append(
             "    <options dialogzeigen=\"true\" firststart=\"true\" sound=\"true\" sprache=\"deutsch\" ");
         xmlData.append(
-            "themes=\"true\" defaulttheme=\"aquathemepack\" loadplugins=\"true\" ");
+            "themes=\"true\" defaulttheme=\"toxicthemepack\" loadplugins=\"true\" ");
         xmlData.append(
             "linklistenerport=\"8768\" versionsinfo=\"1\" >\r\n");
         xmlData.append(
