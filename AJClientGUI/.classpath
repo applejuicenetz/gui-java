@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="needed_jars/skinlf.jar"/>
 	<classpathentry kind="src" path="/ajcorefassade"/>
 	<classpathentry kind="lib" path="needed_jars/junit.jar"/>
+	<classpathentry kind="lib" path="needed_jars/tklcontrols.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

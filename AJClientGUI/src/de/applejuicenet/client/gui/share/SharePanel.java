@@ -32,9 +32,12 @@ import de.applejuicenet.client.gui.share.table.ShareTable;
 import de.applejuicenet.client.gui.share.tree.DirectoryTree;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
+import de.tklsoft.gui.controls.TKLButton;
+import de.tklsoft.gui.controls.TKLComboBox;
+import de.tklsoft.gui.layout.Synchronizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.6 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.7 2005/02/21 16:04:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -51,12 +54,12 @@ public class SharePanel extends TklPanel{
     private TitledBorder folderTreeBolder;
     private TitledBorder mailPanelBolder;
     private JLabel dateien = new JLabel();
-    private JButton neueListe = new JButton();
-    private JButton neuLaden = new JButton();
-    private JButton refresh = new JButton();
-    private JButton prioritaetSetzen = new JButton();
-    private JButton prioritaetAufheben = new JButton();
-    private JComboBox cmbPrio = new JComboBox();
+    private TKLButton neueListe = new TKLButton();
+    private TKLButton neuLaden = new TKLButton();
+    private TKLButton refresh = new TKLButton();
+    private TKLButton prioritaetSetzen = new TKLButton();
+    private TKLButton prioritaetAufheben = new TKLButton();
+    private TKLComboBox cmbPrio = new TKLComboBox();
     private AJSettings ajSettings;
     private ShareTable shareTable;
     private ShareModel shareModel;
@@ -222,6 +225,12 @@ public class SharePanel extends TklPanel{
         neuLaden.setIcon(IconManager.getInstance().getIcon("erneuern"));
 
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        Synchronizer synchronizer = new Synchronizer(Synchronizer.METHOD.HEIGHT);
+        synchronizer.add(neuLaden);
+        synchronizer.add(neueListe);
+        synchronizer.add(cmbPrio);
+        synchronizer.add(prioritaetSetzen);
+        synchronizer.add(prioritaetAufheben);
         panel1.add(neuLaden);
         panel1.add(neueListe);
         panel1.add(cmbPrio);
