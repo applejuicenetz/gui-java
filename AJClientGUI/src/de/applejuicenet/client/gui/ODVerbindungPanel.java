@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.23 2004/07/23 10:21:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.24 2004/07/27 07:23:30 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -335,15 +335,30 @@ public class ODVerbindungPanel
     }
 
     public void reloadSettings() {
-        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
-        maxUpload.setText(Long.toString(ajSettings.getMaxUploadInKB()));
-        maxDownload.setText(Long.toString(ajSettings.getMaxDownloadInKB()));
-        maxVerbindungen.setText(Long.toString(ajSettings.getMaxConnections()));
-        kbSlider.setValue(ajSettings.getSpeedPerSlot());
+        AJSettings ajSettings2 = ApplejuiceFassade.getInstance().getAJSettings();
+        /*
+        ajSettings.setAutoConnect(ajSettings2.isAutoConnect());
+        ajSettings.setIncomingDir(ajSettings2.getIncomingDir());
+        ajSettings.setMaxConnections(ajSettings2.getMaxConnections());
+        ajSettings.setMaxDownload(ajSettings2.getMaxDownload());
+        ajSettings.setMaxNewConnectionsPerTurn(ajSettings2.getMaxNewConnectionsPerTurn());
+        ajSettings.setMaxSourcesPerFile(ajSettings2.getMaxSourcesPerFile());
+        ajSettings.setMaxUpload(ajSettings2.getMaxUpload());
+        ajSettings.setNick(ajSettings2.getNick());
+        ajSettings.setPort(ajSettings2.getPort());
+        ajSettings.setShareDirs(ajSettings2.getShareDirs());
+        ajSettings.setSpeedPerSlot(ajSettings2.getSpeedPerSlot());
+        ajSettings.setTempDir(ajSettings2.getTempDir());
+        ajSettings.setXMLPort(ajSettings2.getXMLPort());
+        */
+        maxUpload.setText(Long.toString(ajSettings2.getMaxUploadInKB()));
+        maxDownload.setText(Long.toString(ajSettings2.getMaxDownloadInKB()));
+        maxVerbindungen.setText(Long.toString(ajSettings2.getMaxConnections()));
+        kbSlider.setValue(ajSettings2.getSpeedPerSlot());
         kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
-        automaticConnect.setSelected(ajSettings.isAutoConnect());
-        maxVerbindungenProTurn.setText(Long.toString(ajSettings.
+        automaticConnect.setSelected(ajSettings2.isAutoConnect());
+        maxVerbindungenProTurn.setText(Long.toString(ajSettings2.
             getMaxNewConnectionsPerTurn()));
-        maxSourcesPerFile.setText(Long.toString(ajSettings.getMaxSourcesPerFile()));
+        maxSourcesPerFile.setText(Long.toString(ajSettings2.getMaxSourcesPerFile()));
     }
 }

@@ -41,7 +41,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.33 2004/07/23 17:37:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.34 2004/07/27 07:23:30 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -487,12 +487,12 @@ public class ODStandardPanel
     }
 
     public void reloadSettings() {
-        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
-        temp.setText(ajSettings.getTempDir());
-        incoming.setText(ajSettings.getIncomingDir());
-        port.setText(Long.toString(ajSettings.getPort()));
-        xmlPort.setText(Long.toString(ajSettings.getXMLPort()));
-        nick.setText(ajSettings.getNick());
+        AJSettings ajSettings2 = ApplejuiceFassade.getInstance().getAJSettings();
+        temp.setText(ajSettings2.getTempDir());
+        incoming.setText(ajSettings2.getIncomingDir());
+        port.setText(Long.toString(ajSettings2.getPort()));
+        xmlPort.setText(Long.toString(ajSettings2.getXMLPort()));
+        nick.setText(ajSettings2.getNick());
     }
 
     class DirectoryChooserMouseAdapter
