@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.gui.shared.SortableTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.3 2003/08/17 20:55:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.4 2003/08/19 16:02:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.gui.shared.SortableTableModel;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerTableModel.java,v $
+ * Revision 1.4  2003/08/19 16:02:16  maj0r
+ * Optimierungen.
+ *
  * Revision 1.3  2003/08/17 20:55:34  maj0r
  * Neusortierung der Tabelle nach Änderung entfernt.
  *
@@ -51,9 +54,8 @@ public class ServerTableModel
 
   ArrayList servers = new ArrayList();
 
-  public ServerTableModel(HashMap content) {
+  public ServerTableModel() {
     super();
-    resetTable(content);
   }
 
   public ArrayList getContent() {
@@ -159,21 +161,6 @@ public class ServerTableModel
         oldServer.setTryConnect(server.isTryConnect());
       }
     }
-    this.fireTableDataChanged();
-  }
-
-  public void resetTable(HashMap changedContent) {
-    Iterator it = changedContent.values().iterator();
-    servers.clear();
-    while (it.hasNext()) {
-      ServerDO server = (ServerDO) it.next();
-      servers.add(server);
-    }
-    this.fireTableDataChanged();
-  }
-
-  public void clearTable() {
-    servers = null;
     this.fireTableDataChanged();
   }
 }

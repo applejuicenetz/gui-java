@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.tables.server.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.tables.server.ServerTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.22 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.23 2003/08/19 16:02:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.gui.tables.server.ServerTableModel;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.23  2003/08/19 16:02:16  maj0r
+ * Optimierungen.
+ *
  * Revision 1.22  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -126,8 +129,7 @@ public class ServerPanel
     panel1.add(new JLabel(), constraints);
     add(panel1, BorderLayout.NORTH);
     serverTable = new JTable();
-    serverTable.setModel(new ServerTableModel(ApplejuiceFassade.getInstance().
-                                              getAllServer()));
+    serverTable.setModel(new ServerTableModel());
     serverTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     SortButtonRenderer renderer = new SortButtonRenderer();
     TableColumnModel model = serverTable.getColumnModel();
