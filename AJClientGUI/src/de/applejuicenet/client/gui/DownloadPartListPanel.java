@@ -10,15 +10,18 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.6 2003/10/04 15:30:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.7 2003/10/15 09:12:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.7  2003/10/15 09:12:34  maj0r
+ * Beim Deaktivieren der Partliste wird diese nun auch zurueck gesetzt,
+ *
  * Revision 1.6  2003/10/04 15:30:26  maj0r
  * Userpartliste hinzugefuegt.
  *
@@ -62,12 +65,20 @@ public class DownloadPartListPanel extends JPanel {
     }
 
     public void setPartList(PartListDO partListDO) {
-        if (this.partListDO == partListDO)
-            return;
-        this.partListDO = partListDO;
-        if (partListDO != null)
+        try
         {
-            try
+            if (this.partListDO == partListDO)
+                return;
+            this.partListDO = partListDO;
+            if (partListDO == null){
+                image = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
+                Graphics graphics = image.getGraphics();
+                height = getHeight();
+                width = getWidth();
+                graphics.setColor(getBackground());
+                graphics.fillRect(0, 0, width, height);
+            }
+            else
             {
                 image = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
                 Graphics graphics = image.getGraphics();
@@ -156,13 +167,13 @@ public class DownloadPartListPanel extends JPanel {
                     graphics.fillRect(x, y * 16 +1 , x + 1, (y + 1) * 16);
                     x += 2;
                 }
-                updateUI();
             }
-            catch (Exception e)
-            {
-                if (logger.isEnabledFor(Level.ERROR))
-                    logger.error("Unbehandelte Exception", e);
-            }
+            updateUI();
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
