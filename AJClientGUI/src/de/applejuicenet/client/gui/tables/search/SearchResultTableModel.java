@@ -9,8 +9,11 @@ import de.applejuicenet.client.gui.trees.WaitNode;
 
 import javax.swing.table.*;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchResultTableModel.java,v 1.4 2003/10/01 14:45:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchResultTableModel.java,v 1.5 2003/10/01 16:52:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +22,10 @@ import javax.swing.table.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SearchResultTableModel.java,v $
+ * Revision 1.5  2003/10/01 16:52:53  maj0r
+ * Suche weiter gefuehrt.
+ * Version 0.32
+ *
  * Revision 1.4  2003/10/01 14:45:40  maj0r
  * Suche fortgesetzt.
  *
@@ -39,6 +46,9 @@ import javax.swing.table.*;
 
 public class SearchResultTableModel
         extends AbstractTreeTableModel {
+
+    private Logger logger;
+
     final static String[] COL_NAMES = {
         "Dateiname", "Größe", "Anzahl"};
 
@@ -47,27 +57,47 @@ public class SearchResultTableModel
 
     public SearchResultTableModel(Search aSearch) {
         super(new SearchNode(aSearch));
+        logger = Logger.getLogger(getClass());
     }
 
     protected Object[] getChildren(Object node) {
-        if (node.getClass()==SearchNode.class){
-            return ((SearchNode)node).getChildren();
+        try {
+            if (node.getClass() == SearchNode.class) {
+                return ((SearchNode) node).getChildren();
+            }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
         return null;
     }
 
     public int getChildCount(Object node) {
-        if (node.getClass()==SearchNode.class){
-            return ((SearchNode)node).getChildCount();
+        try {
+            if (node.getClass() == SearchNode.class) {
+                return ((SearchNode) node).getChildCount();
+            }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
         return 0;
     }
 
     public Object getChild(Object node, int i) {
-        Object[] obj = getChildren(node);
-        if (obj==null || i>obj.length-1)
-          return null;
-        return obj[i];
+        try {
+            Object[] obj = getChildren(node);
+            if (obj == null || i > obj.length - 1)
+                return null;
+            return obj[i];
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+            return null;
+        }
     }
 
     public int getColumnCount() {
@@ -79,106 +109,120 @@ public class SearchResultTableModel
     }
 
     public Class getColumnClass(int column) {
-      return cTypes[column];
+        return cTypes[column];
     }
 
     public Object getValueAt(Object node, int column) {
-      if (node.getClass()==WaitNode.class){
-          return "";
-      }
-      else if (node.getClass()==SearchNode.class){
-          Object o = ((SearchNode)node).getValueObject();
-          if (((SearchNode)node).getNodeType()==SearchNode.ROOT_NODE){
-              return "";
-          }
-          else{
-              Search.SearchEntry entry = (Search.SearchEntry) o;
-              switch (column) {
-                case 0:{
-                    Search.SearchEntry.FileName[] filenames = entry.getFileNames();
-                    int haeufigkeit = 0;
-                    String dateiname = "";
-                    for (int i=0; i<filenames.length; i++){
-                        if (filenames[i].getHaeufigkeit()>haeufigkeit){
-                            haeufigkeit = filenames[i].getHaeufigkeit();
-                            dateiname = filenames[i].getDateiName();
-                        }
-                    }
-                    return dateiname;
+        try {
+            if (node.getClass() == WaitNode.class) {
+                return "";
+            }
+            else if (node.getClass() == SearchNode.class) {
+                Object o = ((SearchNode) node).getValueObject();
+                if (((SearchNode) node).getNodeType() == SearchNode.ROOT_NODE) {
+                    return "";
                 }
-                case 1:
-                      return parseGroesse(entry.getGroesse());
-                case 2:{
-                    Search.SearchEntry.FileName[] filenames = entry.getFileNames();
-                    int haeufigkeit = 0;
-                    for (int i=0; i<filenames.length; i++){
-                        if (filenames[i].getHaeufigkeit()>haeufigkeit){
-                            haeufigkeit = filenames[i].getHaeufigkeit();
-                        }
+                else {
+                    Search.SearchEntry entry = (Search.SearchEntry) o;
+                    switch (column) {
+                        case 0:
+                            {
+                                Search.SearchEntry.FileName[] filenames = entry.getFileNames();
+                                int haeufigkeit = 0;
+                                String dateiname = "";
+                                for (int i = 0; i < filenames.length; i++) {
+                                    if (filenames[i].getHaeufigkeit() > haeufigkeit) {
+                                        haeufigkeit = filenames[i].getHaeufigkeit();
+                                        dateiname = filenames[i].getDateiName();
+                                    }
+                                }
+                                return dateiname;
+                            }
+                        case 1:
+                            return parseGroesse(entry.getGroesse());
+                        case 2:
+                            {
+                                Search.SearchEntry.FileName[] filenames = entry.getFileNames();
+                                int haeufigkeit = 0;
+                                for (int i = 0; i < filenames.length; i++) {
+                                    if (filenames[i].getHaeufigkeit() > haeufigkeit) {
+                                        haeufigkeit = filenames[i].getHaeufigkeit();
+                                    }
+                                }
+                                return Integer.toString(haeufigkeit);
+                            }
+                        default:
+                            return "";
                     }
-                    return Integer.toString(haeufigkeit);
                 }
-                default:
-                  return "";
-              }
-          }
-      }
-      else if(node.getClass()==Search.SearchEntry.FileName.class){
-          Search.SearchEntry.FileName filename = (Search.SearchEntry.FileName) node;
-          switch (column) {
-            case 0:
-                  return filename.getDateiName();
-            case 1:
-                  return "";
-            case 2:
-                  return Integer.toString(filename.getHaeufigkeit());
-            default:
-              return "";
-          }
-      }
-      return null;
+            }
+            else if (node.getClass() == Search.SearchEntry.FileName.class) {
+                Search.SearchEntry.FileName filename = (Search.SearchEntry.FileName) node;
+                switch (column) {
+                    case 0:
+                        return filename.getDateiName();
+                    case 1:
+                        return "";
+                    case 2:
+                        return Integer.toString(filename.getHaeufigkeit());
+                    default:
+                        return "";
+                }
+            }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+        return null;
     }
 
-    private String parseGroesse(long groesse){
-        double share = Double.parseDouble(new Long(groesse).toString());
-        int faktor;
-        if (share == 0) {
-          return "";
+    private String parseGroesse(long groesse) {
+        try {
+            double share = Double.parseDouble(new Long(groesse).toString());
+            int faktor;
+            if (share == 0) {
+                return "";
+            }
+            if (share < 1024) {
+                return groesse + " Bytes";
+            }
+            else if (share / 1024 < 1024) {
+                faktor = 1024;
+            }
+            else if (share / 1048576 < 1024) {
+                faktor = 1048576;
+            }
+            else if (share / 1073741824 < 1024) {
+                faktor = 1073741824;
+            }
+            else {
+                faktor = 1;
+            }
+            share = share / faktor;
+            String result = Double.toString(share);
+            if (result.indexOf(".") + 3 < result.length()) {
+                result = result.substring(0, result.indexOf(".") + 3);
+            }
+            result = result.replace('.', ',');
+            if (faktor == 1024) {
+                result += " KB";
+            }
+            else if (faktor == 1048576) {
+                result += " MB";
+            }
+            else if (faktor == 1073741824) {
+                result += " GB";
+            }
+            else {
+                result += " ??";
+            }
+            return result;
         }
-        if (share < 1024) {
-          return groesse + " Bytes";
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+            return "";
         }
-        else if (share / 1024 < 1024) {
-          faktor = 1024;
-        }
-        else if (share / 1048576 < 1024) {
-          faktor = 1048576;
-        }
-        else if (share / 1073741824 < 1024) {
-          faktor = 1073741824;
-        }
-        else {
-          faktor = 1;
-        }
-        share = share / faktor;
-        String result = Double.toString(share);
-        if (result.indexOf(".") + 3 < result.length())
-        {
-            result = result.substring(0, result.indexOf(".") + 3);
-        }
-        result = result.replace('.', ',');
-        if (faktor == 1024) {
-          result += " KB";
-        }
-        else if (faktor == 1048576) {
-          result += " MB";
-        }
-        else if (faktor == 1073741824) {
-          result += " GB";
-        }
-        else {
-          result += " ??";
-        }
-        return result;
     }
 }

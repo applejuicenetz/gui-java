@@ -6,13 +6,13 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.1 2003/10/01 14:46:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.2 2003/10/01 16:52:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,10 @@ import java.awt.event.ActionEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: NewServerDialog.java,v $
+ * Revision 1.2  2003/10/01 16:52:53  maj0r
+ * Suche weiter gefuehrt.
+ * Version 0.32
+ *
  * Revision 1.1  2003/10/01 14:46:11  maj0r
  * Server koennen nun manuell hinzugefuegt werden.
  *
@@ -33,10 +37,18 @@ public class NewServerDialog extends JDialog {
     private JTextField port = new JTextField();
     private boolean legal = false;
     private String link = new String();
+    private Logger logger;
 
     public NewServerDialog(Frame parent, boolean modal) {
         super(parent, modal);
-        init();
+        logger = Logger.getLogger(getClass());
+        try{
+            init();
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
 
     private void init() {
@@ -80,12 +92,18 @@ public class NewServerDialog extends JDialog {
         panel1.add(ok);
         getContentPane().add(panel1, BorderLayout.SOUTH);
         pack();
+        port.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke){
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER){
+                    ok.doClick();
+                }
+            }
+        });
         ok.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 if (dyn.getText().length() > 0 && port.getText().length() > 0)
                 {
                     legal = true;
-                    //ajfsp://server|kel2003.dyn.ee|9855/
                     link = "ajfsp://server|" + dyn.getText() + "|" + port.getText();
                     close();
                 }

@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.13 2003/10/01 14:45:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.14 2003/10/01 16:52:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.14  2003/10/01 16:52:53  maj0r
+ * Suche weiter gefuehrt.
+ * Version 0.32
+ *
  * Revision 1.13  2003/10/01 14:45:40  maj0r
  * Suche fortgesetzt.
  *
@@ -120,7 +124,8 @@ public class SearchPanel
                 String suchText = suchbegriff.getText();
                 if (suchText.length()!=0){
                     ApplejuiceFassade.getInstance().startSearch(suchText);
-                    suchbegriff.setText("");
+                    suchbegriff.setSelectionStart(0);
+                    suchbegriff.setSelectionEnd(suchText.length());
                 }
             }
         });
@@ -146,7 +151,7 @@ public class SearchPanel
                                                            "caption"}));
             label2.setText(bearbeitung.replaceAll("%d", Integer.toString(resultPanel.getComponentCount())));
 
-            String[] resultTexte = new String[4];
+            String[] resultTexte = new String[5];
             resultTexte[0]=(ZeichenErsetzer.korrigiereUmlaute(
                                 languageSelector.
                                 getFirstAttrbuteByTagName(new String[]{"javagui", "searchform",
@@ -163,12 +168,10 @@ public class SearchPanel
                                 languageSelector.
                                 getFirstAttrbuteByTagName(new String[]{"mainform", "Getlink3",
                                                                        "caption"})));
-
-            SearchResultPanel.setTexte(resultTexte);
-
-            for (int i=0; i<resultPanel.getComponentCount(); i++){
-                ((SearchResultPanel)resultPanel.getComponentAt(i)).aendereSprache();
-            }
+            resultTexte[4]=(ZeichenErsetzer.korrigiereUmlaute(
+                                languageSelector.
+                                getFirstAttrbuteByTagName(new String[]{"mainform", "cancelsearch",
+                                                                       "caption"})));
 
             String[] columns = new String[3];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
@@ -181,10 +184,11 @@ public class SearchPanel
                     getFirstAttrbuteByTagName(new String[]{"mainform", "searchs",
                                                            "col2caption"}));
 
-/*            TableColumnModel tcm = searchResultTable.getColumnModel();
-            for (int i = 0; i < tcm.getColumnCount(); i++) {
-                tcm.getColumn(i).setHeaderValue(columns[i]);
-            }*/
+            SearchResultPanel.setTexte(resultTexte, columns);
+
+            for (int i=0; i<resultPanel.getComponentCount(); i++){
+                ((SearchResultPanel)resultPanel.getComponentAt(i)).aendereSprache();
+            }
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
@@ -193,28 +197,34 @@ public class SearchPanel
     }
 
     public void fireContentChanged(int type, Object content) {
-        if (type==DataUpdateListener.SEARCH_CHANGED){
-            synchronized(content){
-                Iterator it = ((HashMap)content).keySet().iterator();
-                Object key;
-                Search aSearch;
-                SearchResultPanel searchResultPanel;
-                while (it.hasNext()){
-                    key = it.next();
-                    if (!searchIds.containsKey(key)){
-                        aSearch = (Search)((HashMap)content).get(key);
-                        searchResultPanel = new SearchResultPanel(aSearch);
-                        resultPanel.addTab(aSearch.getSuchText(), searchResultPanel);
-                        resultPanel.setSelectedComponent(searchResultPanel);
-                        searchIds.put(key, searchResultPanel);
+        try{
+            if (type==DataUpdateListener.SEARCH_CHANGED){
+                synchronized(content){
+                    Iterator it = ((HashMap)content).keySet().iterator();
+                    Object key;
+                    Search aSearch;
+                    SearchResultPanel searchResultPanel;
+                    while (it.hasNext()){
+                        key = it.next();
+                        if (!searchIds.containsKey(key)){
+                            aSearch = (Search)((HashMap)content).get(key);
+                            searchResultPanel = new SearchResultPanel(aSearch);
+                            resultPanel.addTab(aSearch.getSuchText(), searchResultPanel);
+                            resultPanel.setSelectedComponent(searchResultPanel);
+                            searchIds.put(key, searchResultPanel);
+                        }
+                        else{
+                            searchResultPanel = (SearchResultPanel) searchIds.get(key);
+                            searchResultPanel.updateSearchContent();
+                        }
                     }
-                    else{
-                        searchResultPanel = (SearchResultPanel) searchIds.get(key);
-                        searchResultPanel.updateSearchContent();
-                    }
+                    label2.setText(bearbeitung.replaceAll("%d", Integer.toString(resultPanel.getComponentCount())));
                 }
-                label2.setText(bearbeitung.replaceAll("%d", Integer.toString(resultPanel.getComponentCount())));
             }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 }
