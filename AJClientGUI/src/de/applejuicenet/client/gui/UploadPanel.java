@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadTableCellRenderer;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.16 2003/08/18 17:10:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.17 2003/08/22 13:52:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.17  2003/08/22 13:52:25  maj0r
+ * Threadverwendung korrigiert.
+ *
  * Revision 1.16  2003/08/18 17:10:22  maj0r
  * Debugausgabe entfernt.
  *
@@ -124,14 +127,19 @@ public class UploadPanel
     public void fireContentChanged(int type, Object content) {
         if (type == DataUpdateListener.UPLOAD_CHANGED ||
                 !(content instanceof HashMap)) {
-            int selected = uploadDataTable.getSelectedRow();
-            UploadDataTableModel model = (UploadDataTableModel) uploadDataTable.getModel();
-            model.setTable((HashMap)content);
-            if (selected != -1 && selected < uploadDataTable.getRowCount()) {
-              uploadDataTable.setRowSelectionInterval(selected, selected);
-            }
-            anzahlClients = model.getRowCount();
-            label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
+            final HashMap tempHashMap = (HashMap)content;
+            SwingUtilities.invokeLater(new Runnable(){
+                public void run(){
+                    int selected = uploadDataTable.getSelectedRow();
+                    UploadDataTableModel model = (UploadDataTableModel) uploadDataTable.getModel();
+                    model.setTable(tempHashMap);
+                    if (selected != -1 && selected < uploadDataTable.getRowCount()) {
+                      uploadDataTable.setRowSelectionInterval(selected, selected);
+                    }
+                    anzahlClients = model.getRowCount();
+                    label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
+                }
+            });
         }
     }
 
