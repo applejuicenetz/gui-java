@@ -131,6 +131,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 	private static Map themes = null;
 	public static boolean rewriteProperties = false;
 	private static AppleJuiceDialog theApp;
+    
+    private Information information = null;
 
 	private RegisterPanel registerPane;
 	private TKLLabel[] statusbar = new TKLLabel[6];
@@ -181,6 +183,10 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 	private String verbunden;
     private String verbinden;
     private String nichtVerbunden;
+    
+    private ImageIcon firewallIcon;
+    private ImageIcon verbundenIcon;
+    private ImageIcon nichtVerbundenIcon;    
 	
 	public static void initThemes() {
 		try {
@@ -282,7 +288,11 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 		titel = "appleJuice Client (GUI " + AppleJuiceDialog.GUI_VERSION 
 		 	+ "/" + ApplejuiceFassade.FASSADE_VERSION + ")";
 		IconManager im = IconManager.getInstance();
-		Image image = im.getIcon("applejuice").getImage();
+        firewallIcon = im.getIcon("firewall");
+        verbundenIcon = im.getIcon("serververbunden");
+        nichtVerbundenIcon = im.getIcon("serverversuche");
+
+        Image image = im.getIcon("applejuice").getImage();
 		setTitle(titel);
 		String osName = System.getProperty("os.name");
 		plugins = new HashSet();
@@ -1114,14 +1124,14 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 						NetworkInfo netInfo = (NetworkInfo) content;
 						if (netInfo.isFirewalled() != firewalled) {
 							firewalled = !firewalled;
+                            updateFirewall();
 							if (firewalled){
-								statusbar[0].setIcon(IconManager.getInstance().getIcon("firewall"));
 								statusbar[0].setToolTipText(firewallWarning);
 							}
 							else{
-								statusbar[0].setIcon(null);
 								statusbar[0].setToolTipText(null);
 							}
+                            updateFirewall();
 						}
 					} catch (Exception e) {
 						logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
@@ -1155,7 +1165,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 							}
 							repaint();
 						}
-						Information information = (Information) content;
+						information = (Information) content;
 						statusbar[0].setText(getVerbindungsStatusAsString(information));
 						if (information.getVerbindungsStatus() == Information.NICHT_VERBUNDEN) {
 							statusbar[1].setText(keinServer);
@@ -1175,6 +1185,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 								.getUpDownSessionAsString());
 						statusbar[4].setText(information.getExterneIP());
 						statusbar[5].setText(information.getCreditsAsString());
+                        updateFirewall();
 					} catch (Exception e) {
 						logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 					}
@@ -1183,7 +1194,22 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 		}
 	}
 
-	public SwingTrayPopup makeSwingPopup() {
+	protected void updateFirewall() {
+        if (information != null
+                && information.getVerbindungsStatus() != Information.VERBUNDEN){
+            statusbar[0].setIcon(nichtVerbundenIcon);
+        }
+        else{
+            if (firewalled){
+                statusbar[0].setIcon(firewallIcon);
+            }
+            else {
+                statusbar[0].setIcon(verbundenIcon);
+            }
+        }
+    }
+
+    public SwingTrayPopup makeSwingPopup() {
 		final SwingTrayPopup popup = new SwingTrayPopup(this);
 		popupShowHideMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
