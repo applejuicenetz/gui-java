@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.38 2003/12/17 11:06:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.39 2003/12/17 16:42:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.39  2003/12/17 16:42:16  maj0r
+ * Verhalten des Popupmenues der Servertabelle ueberarbeitet.
+ * Muell entfernt.
+ *
  * Revision 1.38  2003/12/17 11:06:29  maj0r
  * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
  *
@@ -250,15 +254,6 @@ public class ServerPanel
 
         JTableHeader header = serverTable.getTableHeader();
         header.addMouseListener(new HeaderListener(header, renderer));
-/*    ToolTipManager.sharedInstance().registerComponent(serverTable);
-    serverTable.addMouseMotionListener(new MouseMotionAdapter(){
-      public void mouseMoved(MouseEvent e){
-        int row = serverTable.rowAtPoint(e.getPoint());
-        int column = serverTable.columnAtPoint(e.getPoint());
-        Object a = serverTable.getModel().getValueAt(row, column);
-        serverTable.setToolTipText((String)a);
-      }
-    });*/
 
         TableColumn tc = serverTable.getColumnModel().getColumn(0);
         tc.setCellRenderer(new ServerTableCellRenderer());
@@ -269,10 +264,7 @@ public class ServerPanel
         MouseAdapter popupMouseAdapter = new MouseAdapter(){
             public void mousePressed(MouseEvent me) {
                 super.mouseReleased(me);
-                if (SwingUtilities.isRightMouseButton(me))
-                {
-                    maybeShowPopup(me);
-                }
+                maybeShowPopup(me);
             }
 
             public void mouseReleased(MouseEvent e) {
@@ -283,6 +275,26 @@ public class ServerPanel
             private void maybeShowPopup(MouseEvent e) {
                 if (e.isPopupTrigger())
                 {
+                    int selectedRow = serverTable.rowAtPoint(e.getPoint());
+                    if (selectedRow!=-1){
+                        if (serverTable.getSelectedRowCount() == 0){
+                            serverTable.setRowSelectionInterval(selectedRow,
+                                selectedRow);
+                        }
+                        else{
+                            int[] currentSelectedRows = serverTable.getSelectedRows();
+                            for (int i=0; i<currentSelectedRows.length; i++){
+                                if (currentSelectedRows[i]==selectedRow){
+                                    selectedRow = -1;
+                                    break;
+                                }
+                            }
+                            if (selectedRow!=-1){
+                                serverTable.setRowSelectionInterval(selectedRow,
+                                    selectedRow);
+                            }
+                        }
+                    }
                     if (serverTable.getSelectedRowCount()==1){
                         popup.show(aScrollPane, e.getX(), e.getY());
                     }
