@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.4 2003/08/18 14:51:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.5 2003/08/18 17:37:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDataTableModel.java,v $
+ * Revision 1.5  2003/08/18 17:37:08  maj0r
+ * UploadTabelle wesentlich vereinfacht.
+ *
  * Revision 1.4  2003/08/18 14:51:52  maj0r
  * Alte Eintraege loeschen.
  *
@@ -49,7 +52,7 @@ public class UploadDataTableModel
     private String versucheZuVerbinden;
     private String warteschlange;
 
-    ArrayList uploads = new ArrayList();
+    HashMap uploads = null;
 
     public UploadDataTableModel() {
         super();
@@ -59,7 +62,7 @@ public class UploadDataTableModel
     public Object getRow(int row) {
         if ((uploads != null) && (row < uploads.size()))
         {
-            return uploads.get(row);
+            return uploads.values().toArray()[row];
         }
         return null;
     }
@@ -70,7 +73,7 @@ public class UploadDataTableModel
             return "";
         }
 
-        UploadDO upload = (UploadDO) uploads.get(row);
+        UploadDO upload = (UploadDO) uploads.values().toArray()[row];
         if (upload == null)
         {
             return "";
@@ -152,50 +155,9 @@ public class UploadDataTableModel
     }
 
     public void setTable(HashMap changedContent) {
-        //alte Uploads entfernen
-        MapSetStringKey suchKey = null;
-        ArrayList toRemove = new ArrayList();
-        for (int i = 0; i < uploads.size(); i++)
-        {
-            suchKey = new MapSetStringKey(((UploadDO) uploads.get(i)).getUploadIDAsString());
-            if (!changedContent.containsKey(suchKey))
-            {
-                toRemove.add(uploads.get(i));
-            }
+        if (uploads==null){
+            uploads = changedContent;
         }
-        for (int x = 0; x < toRemove.size(); x++)
-        {
-            uploads.remove(toRemove.get(x));
-        }
-        Iterator it = changedContent.values().iterator();
-        while (it.hasNext())
-        {
-            UploadDO upload = (UploadDO) it.next();
-            int index = uploads.indexOf(upload);
-            if (index == -1)
-            { // Der Upload ist neu
-                uploads.add(upload);
-            }
-            else
-            { // Der Upload hat sich verändert
-                UploadDO oldUpload = (UploadDO) uploads.get(index);
-                oldUpload.setActualUploadPosition(upload.getActualUploadPosition());
-                oldUpload.setNick(upload.getNick());
-                oldUpload.setPrioritaet(upload.getPrioritaet());
-                oldUpload.setShareFileID(upload.getShareFileID());
-                oldUpload.setSpeed(upload.getSpeed());
-                oldUpload.setStatus(upload.getStatus());
-                oldUpload.setUploadFrom(upload.getUploadFrom());
-                oldUpload.setUploadID(upload.getUploadID());
-                oldUpload.setUploadTo(upload.getUploadTo());
-                oldUpload.setVersion(upload.getVersion());
-            }
-        }
-        this.fireTableDataChanged();
-    }
-
-    public void clearTable() {
-        uploads = null;
         this.fireTableDataChanged();
     }
 
