@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.2 2004/02/18 18:43:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.3 2004/02/18 18:57:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListXMLHolder.java,v $
+ * Revision 1.3  2004/02/18 18:57:23  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.2  2004/02/18 18:43:04  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -80,6 +83,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
+import org.apache.log4j.Level;
 
 public class PartListXMLHolder
     extends DefaultHandler {
@@ -96,25 +100,27 @@ public class PartListXMLHolder
 
     private PartListXMLHolder() {
         logger = Logger.getLogger(getClass());
-        ConnectionSettings rc = PropertiesManager.getOptionsManager().
-            getRemoteSettings();
-        host = rc.getHost();
-        password = rc.getOldPassword();
-        if (host == null || host.length() == 0) {
-            host = "localhost";
-        }
-        if (host.compareToIgnoreCase("localhost") != 0 &&
-            host.compareTo("127.0.0.1") != 0) {
-            zipMode = "mode=zip&";
-        }
         try {
+            ConnectionSettings rc = PropertiesManager.getOptionsManager().
+                getRemoteSettings();
+            host = rc.getHost();
+            password = rc.getOldPassword();
+            if (host == null || host.length() == 0) {
+                host = "localhost";
+            }
+            if (host.compareToIgnoreCase("localhost") != 0 &&
+                host.compareTo("127.0.0.1") != 0) {
+                zipMode = "mode=zip&";
+            }
             System.setProperty("org.xml.sax.parser",
                                "org.apache.xerces.parsers.SAXParser");
             xr = XMLReaderFactory.createXMLReader();
-            xr.setContentHandler( this );
+            xr.setContentHandler(this);
         }
-        catch (SAXException ex) {
-            ex.printStackTrace();
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
@@ -129,10 +135,6 @@ public class PartListXMLHolder
         for (int i = 0; i < attr.getLength(); i++) {
             if (attr.getLocalName(i).equals("filesize")){
                 partListDO.setGroesse(Long.parseLong(attr.getValue(i)));
-            }
-            else{
-/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));*/
             }
         }
     }
@@ -165,14 +167,6 @@ public class PartListXMLHolder
         }
         else if (localName.equals("part")){
             checkPartAttributes(attr);
-        }
-        else{
-/*            System.out.println("SAX Event: START ELEMENT[ " +
-                               localName + " ]");
-            for (int i = 0; i < attr.getLength(); i++) {
-                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));
-            }*/
         }
     }
 
@@ -213,6 +207,9 @@ public class PartListXMLHolder
             return partListDO;
         }
         catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", e);
+            }
             return null;
         }
     }

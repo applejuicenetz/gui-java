@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.19 2004/02/18 18:43:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.20 2004/02/18 18:57:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.20  2004/02/18 18:57:23  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.19  2004/02/18 18:43:04  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -71,7 +74,6 @@ public class ModifiedXMLHolder
     private int tryConnectToServer = -1;
 
     private boolean reloadInProgress = false;
-    private int gcCounter = 0;
     private Logger logger;
 
     private String host;
@@ -84,26 +86,28 @@ public class ModifiedXMLHolder
 
     private ModifiedXMLHolder() {
         logger = Logger.getLogger(getClass());
-        ConnectionSettings rc = PropertiesManager.getOptionsManager().
-            getRemoteSettings();
-        host = rc.getHost();
-        password = rc.getOldPassword();
-        if (host == null || host.length() == 0) {
-            host = "localhost";
-        }
-        if (host.compareToIgnoreCase("localhost") != 0 &&
-            host.compareTo("127.0.0.1") != 0) {
-            zipMode = "mode=zip&";
-        }
-        xmlCommand = "/xml/modified.xml";
         try {
+            ConnectionSettings rc = PropertiesManager.getOptionsManager().
+                getRemoteSettings();
+            host = rc.getHost();
+            password = rc.getOldPassword();
+            if (host == null || host.length() == 0) {
+                host = "localhost";
+            }
+            if (host.compareToIgnoreCase("localhost") != 0 &&
+                host.compareTo("127.0.0.1") != 0) {
+                zipMode = "mode=zip&";
+            }
+            xmlCommand = "/xml/modified.xml";
             System.setProperty("org.xml.sax.parser",
                                "org.apache.xerces.parsers.SAXParser");
             xr = XMLReaderFactory.createXMLReader();
-            xr.setContentHandler( this );
+            xr.setContentHandler(this);
         }
-        catch (SAXException ex) {
-            ex.printStackTrace();
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
@@ -196,21 +200,21 @@ public class ModifiedXMLHolder
     }
 
     public HashMap getSpeeds() {
-           HashMap speeds = new HashMap();
-           if (information != null){
-               speeds.put("uploadspeed",
-                          new Long(information.getUploadSpeed()));
-               speeds.put("downloadspeed",
-                          new Long(information.getDownloadSpeed()));
-               speeds.put("credits",
-                          new Long(information.getCredits()));
-               speeds.put("sessionupload",
-                          new Long(information.getSessionUpload()));
-               speeds.put("sessiondownload",
-                          new Long(information.getSessionDownload()));
-           }
-           return speeds;
-       }
+        HashMap speeds = new HashMap();
+        if (information != null) {
+            speeds.put("uploadspeed",
+                       new Long(information.getUploadSpeed()));
+            speeds.put("downloadspeed",
+                       new Long(information.getDownloadSpeed()));
+            speeds.put("credits",
+                       new Long(information.getCredits()));
+            speeds.put("sessionupload",
+                       new Long(information.getSessionUpload()));
+            speeds.put("sessiondownload",
+                       new Long(information.getSessionDownload()));
+        }
+        return speeds;
+    }
 
 
     private void checkInformationAttributes(Attributes attr){
@@ -235,10 +239,6 @@ public class ModifiedXMLHolder
             }
             else if (attr.getLocalName(i).equals("openconnections")){
                 information.setOpenConnections(Long.parseLong(attr.getValue(i)));
-            }
-            else{
-                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));
             }
         }
     }
@@ -268,10 +268,6 @@ public class ModifiedXMLHolder
             }
             else if (attr.getLocalName(i).equals("connectedwithserverid")){
                 netInfo.setConnectedWithServerId(Integer.parseInt(attr.getValue(i)));
-            }
-            else{
-/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));*/
             }
         }
     }
@@ -314,10 +310,6 @@ public class ModifiedXMLHolder
             }
             else if (attr.getLocalName(i).equals("id")) {
                 continue;
-            }
-            else {
-/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));*/
             }
         }
     }
@@ -382,10 +374,6 @@ public class ModifiedXMLHolder
             }
             else if (attr.getLocalName(i).equals("id")) {
                 continue;
-            }
-            else {
-/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));*/
             }
         }
         if (!versionNr.equals("0.0.0.0")) {
@@ -541,10 +529,6 @@ public class ModifiedXMLHolder
             else if (attr.getLocalName(i).equals("id")) {
                 continue;
             }
-            else {
-/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));*/
-            }
         }
     }
 
@@ -588,10 +572,6 @@ public class ModifiedXMLHolder
                     continue;
                 }
             }
-            else{
-/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));*/
-            }
         }
     }
 
@@ -628,10 +608,6 @@ public class ModifiedXMLHolder
             else if (attr.getLocalName(i).equals("sumsearches")) {
                 aSearch.setDurchsuchteClients(Integer.parseInt(attr.getValue(i)));
             }
-            else {
-/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));*/
-            }
         }
     }
 
@@ -655,10 +631,6 @@ public class ModifiedXMLHolder
             }
             else if (attr.getLocalName(i).equals("size")) {
                 groesse = Long.parseLong(attr.getValue(i));
-            }
-            else {
-/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));*/
             }
         }
         String key = Integer.toString(searchId);
@@ -689,10 +661,6 @@ public class ModifiedXMLHolder
             }
             else if (attr.getLocalName(i).equals("user")) {
                 haeufigkeit = Integer.parseInt(attr.getValue(i));
-            }
-            else {
-/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));*/
             }
         }
         FileName filename = tmpSearchEntry.new FileName(
@@ -734,14 +702,6 @@ public class ModifiedXMLHolder
         }
         else if (localName.equals("filename")){
             checkSearchEntryFilenameAttributes(attr);
-        }
-        else{
-/*            System.out.println("SAX Event: START ELEMENT[ " +
-                               localName + " ]");
-            for (int i = 0; i < attr.getLength(); i++) {
-                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
-                                   " VALUE: " + attr.getValue(i));
-            }*/
         }
     }
 
@@ -876,109 +836,8 @@ public class ModifiedXMLHolder
             throw new RuntimeException();
         }
         catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void updateSuche() {
-        try {
-/*            NodeList nodes = document.getElementsByTagName("search");
-            int size = nodes.getLength();
-            if (size > 0) {
-                Element e;
-                int id;
-                String suchtext;
-                int offeneSuchen;
-                int gefundeneDateien;
-                int durchsuchteClients;
-                String key;
-                Search aSearch;
-                String temp;
-                for (int i = 0; i < size; i++) {
-                    e = (Element) nodes.item(i);
-                    id = Integer.parseInt(e.getAttribute("id"));
-                    key = Integer.toString(id);
-                    suchtext = e.getAttribute("searchtext");
-                    temp = e.getAttribute("opensearchs");
-                    if (temp.length() == 0) {
-                        temp = e.getAttribute("opensearches");
-                    }
-                    offeneSuchen = Integer.parseInt(temp);
-                    temp = e.getAttribute("sumsearches");
-                    durchsuchteClients = Integer.parseInt(temp);
-                    temp = e.getAttribute("foundfiles");
-                    gefundeneDateien = Integer.parseInt(temp);
-                    if (searchMap.containsKey(key)) {
-                        aSearch = (Search) searchMap.get(key);
-                        aSearch.setDurchsuchteClients(durchsuchteClients);
-                        aSearch.setGefundenDateien(gefundeneDateien);
-                        aSearch.setOffeneSuchen(offeneSuchen);
-                        aSearch.setSuchText(suchtext);
-                    }
-                    else {
-                        aSearch = new Search(id);
-                        aSearch.setDurchsuchteClients(durchsuchteClients);
-                        aSearch.setGefundenDateien(gefundeneDateien);
-                        aSearch.setOffeneSuchen(offeneSuchen);
-                        aSearch.setSuchText(suchtext);
-                        searchMap.put(key, aSearch);
-                    }
-                }
-                Search.currentSearchCount = searchMap.size();
-            }
-            nodes = document.getElementsByTagName("searchentry");
-            size = nodes.getLength();
-            if (size > 0) {
-                Element e;
-                int id;
-                int searchid;
-                String checksum;
-                long groesse;
-                String key;
-                Search aSearch;
-                Search.SearchEntry searchEntry;
-                Element innerElement;
-                NodeList childNodes;
-                String dateiName;
-                int haeufigkeit;
-                Search.SearchEntry.FileName filename;
-                for (int i = 0; i < size; i++) {
-                    e = (Element) nodes.item(i);
-                    id = Integer.parseInt(e.getAttribute("id"));
-                    searchid = Integer.parseInt(e.getAttribute("searchid"));
-                    key = Integer.toString(searchid);
-                    checksum = e.getAttribute("checksum");
-                    groesse = Long.parseLong(e.getAttribute("size"));
-                    aSearch = (Search) searchMap.get(key);
-                    if (aSearch != null) {
-                        searchEntry = aSearch.new SearchEntry(id, checksum,
-                            groesse);
-                        childNodes = nodes.item(i).getChildNodes();
-                        int nodesSize = childNodes.getLength();
-                        for (int y = 0; y < nodesSize; y++) {
-                            if (childNodes.item(y).getNodeType() ==
-                                Node.ELEMENT_NODE) {
-                                innerElement = (Element) childNodes.item(y);
-                                if (innerElement.getNodeName().
-                                    compareToIgnoreCase("filename") == 0) {
-                                    dateiName = innerElement.getAttribute(
-                                        "name");
-                                    haeufigkeit = Integer.parseInt(innerElement.
-                                        getAttribute("user"));
-                                    filename = searchEntry.new FileName(
-                                        dateiName, haeufigkeit);
-                                    searchEntry.addFileName(filename);
-                                }
-                            }
-                        }
-                        aSearch.addSearchEntry(searchEntry);
-                    }
-                }
-            }*/
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", ex);
             }
         }
     }

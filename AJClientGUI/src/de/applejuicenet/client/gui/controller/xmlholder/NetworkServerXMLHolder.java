@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/NetworkServerXMLHolder.java,v 1.3 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/NetworkServerXMLHolder.java,v 1.4 2004/02/18 18:57:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: NetworkServerXMLHolder.java,v $
+ * Revision 1.4  2004/02/18 18:57:23  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.3  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -23,24 +26,38 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  */
 
 import java.io.StringReader;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
-import de.applejuicenet.client.shared.XMLDecoder;
+import org.apache.log4j.Level;
 
 public class NetworkServerXMLHolder
-    extends XMLDecoder {
+    extends DefaultHandler {
 
     private static NetworkServerXMLHolder instance = null;
     private Logger logger;
+    private XMLReader xr = null;
 
     private NetworkServerXMLHolder() {
         logger = Logger.getLogger(getClass());
+        try {
+            System.setProperty("org.xml.sax.parser",
+                               "org.apache.xerces.parsers.SAXParser");
+            xr = XMLReaderFactory.createXMLReader();
+            xr.setContentHandler( this );
+        }
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", ex);
+            }
+        }
     }
 
     public static NetworkServerXMLHolder getInstance() {
@@ -49,6 +66,25 @@ public class NetworkServerXMLHolder
         }
         return instance;
     }
+
+    public void startElement(String namespaceURI,
+                             String localName,
+                             String qName,
+                             Attributes attr) throws SAXException {
+        if (localName.equals("server")){
+            checkServerAttributes(attr);
+        }
+    }
+
+    private void checkServerAttributes(Attributes attr){
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("link")){
+                links.add(attr.getValue(i));
+            }
+        }
+    }
+
+    private ArrayList links = new ArrayList();
 
     public String[] getNetworkKnownServers() {
         String xmlData = null;
@@ -60,26 +96,15 @@ public class NetworkServerXMLHolder
                 || xmlData.length() == 0) {
                 return null;
             }
-            DocumentBuilderFactory factory =
-                DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse(new InputSource(new StringReader(xmlData)));
-            NodeList nodes = document.getElementsByTagName("server");
-            Element e = null;
-            String link;
-            int nodesSize = nodes.getLength();
-            if (nodesSize == 0) {
-                return null;
-            }
-            String[] servers = new String[nodesSize];
-            for (int i = 0; i < nodesSize; i++) {
-                e = (Element) nodes.item(i);
-                servers[i] = e.getAttribute("link");
-            }
-            return servers;
+            links.clear();
+            xr.parse( new InputSource(
+               new StringReader( xmlData )) );
+            return (String[])links.toArray(new String[links.size()]);
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", e);
+            }
             return null;
         }
     }
