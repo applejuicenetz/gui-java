@@ -56,7 +56,7 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.59 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.60 2004/02/28 15:09:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,6 +65,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.60  2004/02/28 15:09:40  maj0r
+ * Platzierung "Neu laden" und "Dateilliste" getauscht.
+ *
  * Revision 1.59  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -565,8 +568,8 @@ public class SharePanel
         });
 
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel1.add(neueListe);
         panel1.add(neuLaden);
+        panel1.add(neueListe);
         panel1.add(cmbPrio);
         panel1.add(prioritaetSetzen);
         panel1.add(prioritaetAufheben);
