@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.22 2004/01/12 07:49:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.23 2004/01/12 09:36:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.23  2004/01/12 09:36:20  maj0r
+ * Speichern korrigiert.
+ *
  * Revision 1.22  2004/01/12 07:49:25  maj0r
  * Kleine Bugs behoben.
  *
@@ -857,7 +860,6 @@ public class PropertiesManager
     public void setDownloadColumnVisible(int column, boolean visible) {
         if (column != 0){
             downloadVisibilities[column] = visible;
-            save();
         }
     }
 
@@ -868,7 +870,6 @@ public class PropertiesManager
     public void setUploadColumnVisible(int column, boolean visible) {
         if (column != 0){
             uploadVisibilities[column] = visible;
-            save();
         }
     }
 
