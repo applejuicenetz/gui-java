@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.46 2003/10/06 12:08:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.47 2003/10/09 15:42:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.47  2003/10/09 15:42:52  maj0r
+ * Bug behoben, dass nicht immer der aktuell verbundene Server angezeigt wurde.
+ *
  * Revision 1.46  2003/10/06 12:08:01  maj0r
  * Unnoetiges Logging entfernt.
  *
@@ -248,7 +251,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     private HashSet networkInfoListener;
     private HashSet statusbarListener;
     private HashSet speedListener;
-    private static ApplejuiceFassade instance = null;
     public static String separator;
     private ModifiedXMLHolder modifiedXML = null;
     private InformationXMLHolder informationXML = null;
@@ -258,6 +260,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     private Version coreVersion;
     private HashMap share = null;
 
+    private static ApplejuiceFassade instance = null;
+
     //Thread
     private Thread workerThread;
 
@@ -265,46 +269,41 @@ public class ApplejuiceFassade { //Singleton-Implementierung
 
     public void addDataUpdateListener(DataUpdateListener listener, int type) {
         try{
-            HashSet listenerSet = null;
             if (type == DataUpdateListener.DOWNLOAD_CHANGED)
             {
-                listenerSet = downloadListener;
+                downloadListener.add(listener);
             }
             else if (type == DataUpdateListener.NETINFO_CHANGED)
             {
-                listenerSet = networkInfoListener;
+                networkInfoListener.add(listener);
             }
             else if (type == DataUpdateListener.SERVER_CHANGED)
             {
-                listenerSet = serverListener;
+                serverListener.add(listener);
             }
             else if (type == DataUpdateListener.SHARE_CHANGED)
             {
-                listenerSet = shareListener;
+                shareListener.add(listener);
             }
             else if (type == DataUpdateListener.UPLOAD_CHANGED)
             {
-                listenerSet = uploadListener;
+                uploadListener.add(listener);
             }
             else if (type == DataUpdateListener.STATUSBAR_CHANGED)
             {
-                listenerSet = statusbarListener;
+                statusbarListener.add(listener);
             }
             else if (type == DataUpdateListener.SPEED_CHANGED)
             {
-                listenerSet = speedListener;
+                speedListener.add(listener);
             }
             else if (type == DataUpdateListener.SEARCH_CHANGED)
             {
-                listenerSet = searchListener;
+                searchListener.add(listener);
             }
             else
             {
                 return;
-            }
-            if (!(listenerSet.contains(listener)))
-            {
-                listenerSet.add(listener);
             }
         }
         catch (Exception e)
@@ -740,9 +739,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return true;
     }
 
-    public static ApplejuiceFassade getInstance() {
-        if (instance == null)
-        {
+    public static synchronized ApplejuiceFassade getInstance() {
+        if (instance==null){
             instance = new ApplejuiceFassade();
         }
         return instance;

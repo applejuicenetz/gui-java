@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.30 2003/10/05 11:54:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.31 2003/10/09 15:42:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.31  2003/10/09 15:42:52  maj0r
+ * Bug behoben, dass nicht immer der aktuell verbundene Server angezeigt wurde.
+ *
  * Revision 1.30  2003/10/05 11:54:48  maj0r
  * Kleinen Fehler behoben.
  *
@@ -379,14 +382,13 @@ public class StartPanel
             else if (type == DataUpdateListener.STATUSBAR_CHANGED)
             {
                 String[] status = (String[]) content;
-                StringBuffer temp = new StringBuffer(label9Text);
-                int pos = temp.indexOf("%s");
-                temp.replace(pos, pos + 2, status[1]);
-                pos = temp.indexOf("%d");
-                temp.replace(pos, pos + 2, Integer.toString(ApplejuiceFassade.getInstance().
-                                                            getAllServer().
-                                                            size()));
-                label9.setText(temp.toString());
+                String temp = label9Text;
+                temp = temp.replaceFirst("%s", status[1]);
+                temp = temp.replaceFirst("%d",
+                                         Integer.toString(ApplejuiceFassade.getInstance().
+                                                          getAllServer().
+                                                          size()));
+                label9.setText(temp);
             }
         }
         catch (Exception e)
