@@ -1,24 +1,16 @@
 package de.applejuicenet.client.gui;
 
 import java.awt.*;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.MalformedURLException;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
 import javax.swing.*;
 
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.27 2003/10/04 15:47:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.28 2003/10/04 15:48:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +19,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.28  2003/10/04 15:48:04  maj0r
+ * Unnoetige Imports entfernt.
+ *
  * Revision 1.27  2003/10/04 15:47:13  maj0r
  * Schoenheitskorrektur
  *
