@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODRemotePanel.java,v 1.4 2003/08/02 12:03:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.1 2003/08/22 10:55:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,7 +16,10 @@ import de.applejuicenet.client.shared.*;
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
- * $Log: ODRemotePanel.java,v $
+ * $Log: ODConnectionPanel.java,v $
+ * Revision 1.1  2003/08/22 10:55:06  maj0r
+ * Klassen umbenannt.
+ *
  * Revision 1.4  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -26,7 +29,7 @@ import de.applejuicenet.client.shared.*;
  *
  */
 
-public class ODRemotePanel
+public class ODConnectionPanel
     extends JPanel {
   private boolean dirty = false;
   private JLabel label1;
@@ -35,9 +38,9 @@ public class ODRemotePanel
   private JTextField host = new JTextField();
   private JPasswordField passwortAlt = new JPasswordField();
   private JPasswordField passwortNeu = new JPasswordField();
-  private RemoteConfiguration remote;
+  private ConnectionSettings remote;
 
-  public ODRemotePanel() {
+  public ODConnectionPanel() {
     try {
       jbInit();
     }
@@ -126,7 +129,7 @@ public class ODRemotePanel
     add(panel1, BorderLayout.NORTH);
   }
 
-  public RemoteConfiguration getRemoteConfiguration() {
+  public ConnectionSettings getRemoteConfiguration() {
     return remote;
   }
 

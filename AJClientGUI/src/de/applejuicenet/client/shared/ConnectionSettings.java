@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/RemoteConfiguration.java,v 1.6 2003/08/19 12:38:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/ConnectionSettings.java,v 1.1 2003/08/22 10:55:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,7 +12,10 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
- * $Log: RemoteConfiguration.java,v $
+ * $Log: ConnectionSettings.java,v $
+ * Revision 1.1  2003/08/22 10:55:36  maj0r
+ * Klassen umbenannt.
+ *
  * Revision 1.6  2003/08/19 12:38:47  maj0r
  * Passworteingabe und md5 korrigiert.
  *
@@ -28,19 +31,19 @@ import java.security.NoSuchAlgorithmException;
  *
  */
 
-public class RemoteConfiguration {
+public class ConnectionSettings {
     private String host;
     private String oldPassword;
     private String newPassword;
 
-    public RemoteConfiguration(String host, String password) {
+    public ConnectionSettings(String host, String password) {
         this.host = host;
         if (password.length() == 0)
             password = getMD5("");
         this.oldPassword = password;
     }
 
-    public RemoteConfiguration() {
+    public ConnectionSettings() {
     }
 
     public void setHost(String host) {

@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickRemoteEinstellungDialog.java,v 1.1 2003/07/01 14:52:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.1 2003/08/22 10:55:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,26 +21,29 @@ import java.awt.*;
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
- * $Log: QuickRemoteEinstellungDialog.java,v $
+ * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.1  2003/08/22 10:55:06  maj0r
+ * Klassen umbenannt.
+ *
  * Revision 1.1  2003/07/01 14:52:36  maj0r
  * Wenn kein Core gefunden wird, können nun die entsprechenden Einstellungen beim Start der GUI angepasst werden.
  *
  *
  */
 
-public class QuickRemoteEinstellungDialog extends JDialog {
-    private ODRemotePanel remotePanel;
+public class QuickConnectionSettingsDialog extends JDialog {
+    private ODConnectionPanel remotePanel;
     public static final int ABGEBROCHEN = 1;
 
     private int result = 0;
 
-    public QuickRemoteEinstellungDialog(Frame parent){
+    public QuickConnectionSettingsDialog(Frame parent){
         super(parent, true);
         init();
     }
 
     private void init(){
-        remotePanel = new ODRemotePanel();
+        remotePanel = new ODConnectionPanel();
         setTitle("appleJuice Client");
 
         getContentPane().setLayout(new BorderLayout());
