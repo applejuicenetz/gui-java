@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.9 2003/08/28 06:58:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryNode.java,v 1.10 2003/09/03 11:12:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryNode.java,v $
+ * Revision 1.10  2003/09/03 11:12:00  maj0r
+ * Eintraege werden nun nach Verzeichnisname sortiert.
+ *
  * Revision 1.9  2003/08/28 06:58:14  maj0r
  * Plattformunabhaengigkeit wieder hergestellt.
  *
@@ -177,10 +180,30 @@ public class DirectoryNode extends DefaultMutableTreeNode implements Node, Apple
         return childNode;
     }
 
+    private void sortChildren(){
+        if (children==null || children.size()<2){
+            return;
+        }
+        int n = children.size();
+        int k;
+        for (int i = 0; i < n - 1; i++) {
+          k = i;
+          for (int j = i + 1; j < n; j++) {
+              if (children.get(j).toString().compareToIgnoreCase(children.get(k).toString()) < 0) {
+                k = j;
+              }
+          }
+          Object tmp = children.get(i);
+          children.set(i, children.get(k));
+          children.set(k, tmp);
+        }
+    }
+
     protected Object[] getChildren() {
         if (children==null){
             children = new ArrayList();
             ApplejuiceFassade.getInstance().getDirectory(directoryDO.getPath(), this);
+            sortChildren();
         }
         return children.toArray(new DirectoryNode[children.size()]);
     }
