@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared.dac;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.7 2003/08/04 14:28:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.8 2003/08/09 10:57:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.8  2003/08/09 10:57:54  maj0r
+ * Upload- und DownloadTabelle weitergeführt.
+ *
  * Revision 1.7  2003/08/04 14:28:55  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -40,15 +43,15 @@ public class UploadDO {
   private Version version;
   private int status;
   private String nick;
-  private String uploadFrom;
-  private String uploadTo;
-  private String actualUploadPosition;
-  private String speed;
-  private String prioritaet;
+  private Long uploadFrom;
+  private Long uploadTo;
+  private Long actualUploadPosition;
+  private Integer speed;
+  private Integer prioritaet;
 
   public UploadDO(int uploadID, int shareFileID, Version version, int status,
-                  String nick, String uploadFrom, String uploadTo,
-                  String actualUploadPosition, String speed, String prioritaet) {
+                  String nick, Long uploadFrom, Long uploadTo,
+                  Long actualUploadPosition, Integer speed, Integer prioritaet) {
     this.uploadID = uploadID;
     this.shareFileID = shareFileID;
     this.version = version;
@@ -63,8 +66,8 @@ public class UploadDO {
 
   public UploadDO(String uploadID, String shareFileID, Version version,
                   String status,
-                  String nick, String uploadFrom, String uploadTo,
-                  String actualUploadPosition, String speed, String prioritaet) {
+                  String nick, Long uploadFrom, Long uploadTo,
+                  Long actualUploadPosition, Integer speed, Integer prioritaet) {
     this.uploadID = Integer.parseInt(uploadID);
     this.shareFileID = Integer.parseInt(shareFileID);
     this.version = version;
@@ -129,43 +132,43 @@ public class UploadDO {
     this.nick = nick;
   }
 
-  public String getUploadFrom() {
+  public Long getUploadFrom() {
     return uploadFrom;
   }
 
-  public void setUploadFrom(String uploadFrom) {
+  public void setUploadFrom(Long uploadFrom) {
     this.uploadFrom = uploadFrom;
   }
 
-  public String getUploadTo() {
+  public Long getUploadTo() {
     return uploadTo;
   }
 
-  public void setUploadTo(String uploadTo) {
+  public void setUploadTo(Long uploadTo) {
     this.uploadTo = uploadTo;
   }
 
-  public String getActualUploadPosition() {
+  public Long getActualUploadPosition() {
     return actualUploadPosition;
   }
 
-  public void setActualUploadPosition(String actualUploadPosition) {
+  public void setActualUploadPosition(Long actualUploadPosition) {
     this.actualUploadPosition = actualUploadPosition;
   }
 
-  public String getSpeed() {
+  public Integer getSpeed() {
     return speed;
   }
 
-  public void setPrioritaet(String prioritaet) {
+  public void setPrioritaet(Integer prioritaet) {
     this.prioritaet = prioritaet;
   }
 
-  public String getPrioritaet() {
+  public Integer getPrioritaet() {
     return prioritaet;
   }
 
-  public void setSpeed(String speed) {
+  public void setSpeed(Integer speed) {
     this.speed = speed;
   }
 
@@ -176,4 +179,27 @@ public class UploadDO {
     public void setDateiName(String dateiName) {
         this.dateiName = dateiName;
     }
+
+    public String getDownloadPercentAsString(){
+        if (actualUploadPosition==null || uploadFrom==null)
+            return "0";
+        double temp = actualUploadPosition.intValue() - uploadFrom.intValue();
+        if (temp==0.0){
+            return "0";
+        }
+        temp =  temp * 100 / getSize();
+        String result = Double.toString(temp);
+        if (result.indexOf(".") + 3 < result.length())
+        {
+            result = result.substring(0, result.indexOf(".") + 3);
+        }
+        return result;
+    }
+
+    public int getSize(){
+        if (uploadTo==null || uploadFrom==null)
+            return 0;
+        return uploadTo.intValue() - uploadFrom.intValue();
+    }
+
 }

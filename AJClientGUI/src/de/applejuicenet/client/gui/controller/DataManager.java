@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.33 2003/08/05 20:47:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.34 2003/08/09 10:57:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.34  2003/08/09 10:57:54  maj0r
+ * Upload- und DownloadTabelle weitergeführt.
+ *
  * Revision 1.33  2003/08/05 20:47:06  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -196,12 +199,11 @@ public class DataManager { //Singleton-Implementierung
           URLEncoder.encode(ajSettings.getTempDir(), "UTF-8");
     }
     catch (UnsupportedEncodingException ex1) {
-      int i = 0;
     }
     String result;
     try {
       String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-      result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+      result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
                                          "/function/setsettings?password=" + password + "&" + parameters);
     }
     catch (WebSiteNotFoundException ex) {

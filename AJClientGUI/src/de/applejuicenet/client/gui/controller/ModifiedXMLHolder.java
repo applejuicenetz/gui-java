@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.15 2003/08/08 05:35:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.16 2003/08/09 10:57:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.16  2003/08/09 10:57:54  maj0r
+ * Upload- und DownloadTabelle weitergeführt.
+ *
  * Revision 1.15  2003/08/08 05:35:52  maj0r
  * Nullpointer behoben.
  *
@@ -299,7 +302,8 @@ public class ModifiedXMLHolder
       String id = null;
       String shareid = null;
       String hash = null;
-      String fileSize = null;
+      Long fileSize = null;
+      Long sizeReady = null;
       String temp = null;
       int status;
       String filename = null;
@@ -312,21 +316,41 @@ public class ModifiedXMLHolder
       for (int i = 0; i < size; i++) {
         e = (Element) nodes.item(i);
         id = e.getAttribute("id");
-        shareid = e.getAttribute("shareid");
-        hash = e.getAttribute("hash");
-        fileSize = e.getAttribute("size");
-        temp = e.getAttribute("status");
-        status = Integer.parseInt(temp);
-        filename = e.getAttribute("filename");
-        targetDirectory = e.getAttribute("targetdirectory");
-        temp = e.getAttribute("powerdownload");
-        powerDownload = Integer.parseInt(temp);
-        temp = e.getAttribute("temporaryfilenumber");
-        temporaryFileNumber = Integer.parseInt(temp);
+        MapSetStringKey key = new MapSetStringKey(id);
+        if (downloadMap.containsKey(key)) {
+            downloadDO = (DownloadDO)downloadMap.get(key);
+            downloadDO.setShareId(e.getAttribute("shareid"));
+            downloadDO.setHash(e.getAttribute("hash"));
+            downloadDO.setGroesse(new Long(e.getAttribute("size")));
+            downloadDO.setReady(new Long(e.getAttribute("ready")));
+            temp = e.getAttribute("status");
+            downloadDO.setStatus(Integer.parseInt(temp));
+            downloadDO.setFilename(e.getAttribute("filename"));
+            downloadDO.setTargetDirectory(e.getAttribute("targetdirectory"));
+            temp = e.getAttribute("powerdownload");
+            downloadDO.setPowerDownload(Integer.parseInt(temp));
+            temp = e.getAttribute("temporaryfilenumber");
+            downloadDO.setTemporaryFileNumber(Integer.parseInt(temp));
+        }
+        else{
+            shareid = e.getAttribute("shareid");
+            hash = e.getAttribute("hash");
+            fileSize = new Long(e.getAttribute("size"));
+            sizeReady = new Long(e.getAttribute("ready"));
+            temp = e.getAttribute("status");
+            status = Integer.parseInt(temp);
+            filename = e.getAttribute("filename");
+            targetDirectory = e.getAttribute("targetdirectory");
+            temp = e.getAttribute("powerdownload");
+            powerDownload = Integer.parseInt(temp);
+            temp = e.getAttribute("temporaryfilenumber");
+            temporaryFileNumber = Integer.parseInt(temp);
 
-        downloadDO = new DownloadDO(id, shareid, hash, fileSize, status, filename, targetDirectory, powerDownload, temporaryFileNumber);
+            downloadDO = new DownloadDO(id, shareid, hash, fileSize, sizeReady, status, filename,
+                    targetDirectory, powerDownload, temporaryFileNumber);
 
-        downloadMap.put(new MapSetStringKey(id), downloadDO);
+            downloadMap.put(new MapSetStringKey(id), downloadDO);
+        }
       }
 
       int directstate;
@@ -395,13 +419,13 @@ public class ModifiedXMLHolder
     int os;
     String versionsNr = null;
     Version version = null;
-    String prioritaet = null;
+    Integer prioritaet = null;
     String nick = null;
     String status = null;
-    String uploadFrom = null;
-    String uploadTo = null;
-    String actualUploadPos = null;
-    String speed = null;
+    Long uploadFrom = null;
+    Long uploadTo = null;
+    Long actualUploadPos = null;
+    Integer speed = null;
     MapSetStringKey shareIDKey = null;
     HashMap share = DataManager.getInstance().getShare(false);
     for (int i = 0; i < size; i++) {
@@ -410,13 +434,13 @@ public class ModifiedXMLHolder
       shareIDKey = new MapSetStringKey(shareId);
       if (uploadMap.containsKey(shareIDKey)) {
         upload = (UploadDO) uploadMap.get(shareIDKey);
-        upload.setPrioritaet(e.getAttribute("priority"));
+        upload.setPrioritaet(new Integer(e.getAttribute("priority")));
         upload.setNick(e.getAttribute("nick"));
         upload.setStatus(Integer.parseInt(e.getAttribute("status")));
-        upload.setUploadFrom(e.getAttribute("uploadfrom"));
-        upload.setUploadTo(e.getAttribute("uploadto"));
-        upload.setActualUploadPosition(e.getAttribute("actualuploadposition"));
-        upload.setSpeed(e.getAttribute("speed"));
+        upload.setUploadFrom(new Long(e.getAttribute("uploadfrom")));
+        upload.setUploadTo(new Long(e.getAttribute("uploadto")));
+        upload.setActualUploadPosition(new Long(e.getAttribute("actualuploadposition")));
+        upload.setSpeed(new Integer(e.getAttribute("speed")));
       }
       else {
         id = e.getAttribute("id");
@@ -424,13 +448,13 @@ public class ModifiedXMLHolder
         versionsNr = e.getAttribute("version");
         version = new Version(versionsNr, os);
 
-        prioritaet = e.getAttribute("priority");
+        prioritaet = new Integer(e.getAttribute("priority"));
         nick = e.getAttribute("nick");
         status = e.getAttribute("status");
-        uploadFrom = e.getAttribute("uploadfrom");
-        uploadTo = e.getAttribute("uploadto");
-        actualUploadPos = e.getAttribute("actualuploadposition");
-        speed = e.getAttribute("speed");
+        uploadFrom = new Long(e.getAttribute("uploadfrom"));
+        uploadTo = new Long(e.getAttribute("uploadto"));
+        actualUploadPos = new Long(e.getAttribute("actualuploadposition"));
+        speed = new Integer(e.getAttribute("speed"));
         upload = new UploadDO(id, shareId, version, status, nick,
                                        uploadFrom, uploadTo, actualUploadPos,
                                        speed, prioritaet);
