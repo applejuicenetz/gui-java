@@ -35,7 +35,7 @@ import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.gui.controller.xmlholder.PartListXMLHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.117 2004/02/19 20:28:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.118 2004/02/22 08:37:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -275,7 +275,7 @@ import de.applejuicenet.client.gui.controller.xmlholder.PartListXMLHolder;
  */
 
 public class ApplejuiceFassade {
-    public static final String GUI_VERSION = "0.55.8";
+    public static final String GUI_VERSION = "0.55.9";
 
     private HashSet downloadListener;
     private HashSet searchListener;
