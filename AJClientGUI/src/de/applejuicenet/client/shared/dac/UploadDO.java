@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared.dac;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.12 2004/02/09 07:30:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.13 2004/02/09 14:21:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.13  2004/02/09 14:21:32  maj0r
+ * Icons für Upload-DirectStates eingebaut.
+ *
  * Revision 1.12  2004/02/09 07:30:13  maj0r
  * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
  *
@@ -49,7 +52,7 @@ public class UploadDO {
     public static final int VERSUCHE_INDIREKTE_VERBINDUNG = 6;
     public static final int KEINE_VERBINDUNG_MOEGLICH = 7;
 
-    public static final int STATE_UNBBEKANNT = 0;
+    public static final int STATE_UNBEKANNT = 0;
     public static final int STATE_DIREKT_VERBUNDEN = 1;
     public static final int STATE_VERSUCHE_INDIREKTE_VERBINDUNG = 2;
     public static final int STATE_INDIREKT_VERBUNDEN = 3;
@@ -80,6 +83,7 @@ public class UploadDO {
         this.actualUploadPosition = actualUploadPosition;
         this.speed = speed;
         this.prioritaet = prioritaet;
+        this.directstate = directstate;
     }
 
     public UploadDO(int uploadID, int shareFileID, Version version,
@@ -96,6 +100,7 @@ public class UploadDO {
         this.actualUploadPosition = actualUploadPosition;
         this.speed = speed;
         this.prioritaet = prioritaet;
+        this.directstate = directstate;
     }
 
     public int getUploadID() {

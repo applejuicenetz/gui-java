@@ -10,6 +10,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.dac.UploadDO;
+import javax.swing.Icon;
+import de.applejuicenet.client.gui.tables.download.IconGetter;
 
 public class UploadTableTreeCellRenderer
     extends DefaultTableCellRenderer {
@@ -61,6 +63,10 @@ public class UploadTableTreeCellRenderer
             }
             text.setText("   " + (String) value);
             text.setFont(table.getFont());
+            Icon icon = IconGetter.getConvenientIcon(uploadDO);
+            if (icon != null) {
+                text.setIcon(icon);
+            }
             return text;
         }
     }

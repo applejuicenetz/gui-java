@@ -32,9 +32,11 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
+import de.applejuicenet.client.gui.tables.upload.MainNode;
+import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.21 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.22 2004/02/09 14:21:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +45,9 @@ import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.22  2004/02/09 14:21:32  maj0r
+ * Icons für Upload-DirectStates eingebaut.
+ *
  * Revision 1.21  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -382,6 +387,16 @@ public class JTreeTable
             else if (value.getClass() == FileName.class) {
                 c = super.getTreeCellRendererComponent(tree,
                     ( (FileName) value).getDateiName(),
+                    sel, expanded, leaf, row, hasFocus);
+            }
+            else if (value.getClass() == MainNode.class) {
+                c = super.getTreeCellRendererComponent(tree,
+                    ( (MainNode) value).toString() + " (" + ( (MainNode) value).getChildCount() + ")",
+                    sel, expanded, leaf, row, hasFocus);
+            }
+            else if (value.getClass() == UploadDO.class) {
+                c = super.getTreeCellRendererComponent(tree,
+                    ( (UploadDO) value).getDateiName(),
                     sel, expanded, leaf, row, hasFocus);
             }
             else {

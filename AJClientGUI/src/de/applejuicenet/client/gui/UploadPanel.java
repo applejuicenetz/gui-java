@@ -38,7 +38,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.38 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.39 2004/02/09 14:21:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,6 +47,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.39  2004/02/09 14:21:32  maj0r
+ * Icons für Upload-DirectStates eingebaut.
+ *
  * Revision 1.38  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -186,15 +189,15 @@ public class UploadPanel
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 Point p = e.getPoint();
-                int selectedRow = uploadDataTable.rowAtPoint(p);
-                if (e.getClickCount() == 2) {
-                    ( (TreeTableModelAdapter) uploadDataTable.getModel()).
-                        expandOrCollapseRow(selectedRow);
+                if (uploadDataTable.columnAtPoint(p) != 0) {
+                    int selectedRow = uploadDataTable.rowAtPoint(p);
+                    if (e.getClickCount() == 2) {
+                        ( (TreeTableModelAdapter) uploadDataTable.getModel()).
+                            expandOrCollapseRow(selectedRow);
+                    }
                 }
             }
         });
-        uploadDataTable.getColumnModel().getColumn(0).setCellRenderer(new
-            UploadTableTreeCellRenderer());
         uploadDataTable.getColumnModel().getColumn(4).setCellRenderer(new
             UploadTablePercentCellRenderer());
         uploadDataTable.getColumnModel().getColumn(6).setCellRenderer(new
@@ -259,9 +262,9 @@ public class UploadPanel
                 }
             }
         });
-
         JScrollPane aScrollPane = new JScrollPane(uploadDataTable);
         aScrollPane.setBackground(uploadDataTable.getBackground());
+//        uploadDataTable.getTableHeader().setBackground(uploadDataTable.getBackground());
         aScrollPane.getViewport().setOpaque(false);
         add(aScrollPane, BorderLayout.CENTER);
 

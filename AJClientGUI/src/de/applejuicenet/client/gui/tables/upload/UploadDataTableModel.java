@@ -11,7 +11,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.10 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.11 2004/02/09 14:21:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadDataTableModel.java,v $
+ * Revision 1.11  2004/02/09 14:21:32  maj0r
+ * Icons für Upload-DirectStates eingebaut.
+ *
  * Revision 1.10  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -59,20 +62,27 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 public class UploadDataTableModel
     extends AbstractTreeTableModel
     implements LanguageListener {
+
     final static String[] COL_NAMES = {
         "Dateiname", "Status", "Wer", "Geschwindigkeit", "Prozent geladen",
         "Priorität", "Client"};
+
+    static protected Class[] cTypes = {
+        TreeTableModel.class, String.class, String.class, String.class, String.class,
+        Integer.class, String.class};
 
     private String uebertragung;
     private String keineVerbindungMoeglich;
     private String versucheIndirekteVerbindung;
     private String versucheZuVerbinden;
     private String warteschlange;
+    private MainNode mainNode;
 
-    HashMap uploads = null;
+    private HashMap uploads = null;
 
     public UploadDataTableModel() {
         super(new MainNode());
+        mainNode = (MainNode)getRoot();
         LanguageSelector.getInstance().addLanguageListener(this);
     }
 
@@ -159,14 +169,8 @@ public class UploadDataTableModel
         return uploads.size();
     }
 
-    public Class getClass(int column) {
-        if (column == 0) {
-            return TreeTableModel.class;
-        }
-        else if (column == 5) {
-            return Integer.class;
-        }
-        return String.class;
+    public Class getColumnClass(int column) {
+        return cTypes[column];
     }
 
     private String getSpeedAsString(long speed) {
@@ -226,77 +230,15 @@ public class UploadDataTableModel
     }
 
     public int getChildCount(Object parent) {
-        Object[] obj = getChildren(parent);
-        if (obj != null) {
-            return obj.length;
+        if (parent.getClass() == MainNode.class) {
+            return ((MainNode)parent).getChildCount();
         }
-        else {
-            return 0;
-        }
+        return 0;
     }
 
     private Object[] getChildren(Object parent) {
         if (parent.getClass() == MainNode.class) {
-            MainNode mainNode = (MainNode) parent;
-            if (mainNode.getType() == MainNode.ROOT_NODE) {
-                return mainNode.getChildren();
-            }
-            else if (mainNode.getType() == MainNode.LOADING_UPLOADS) {
-                if (uploads == null) {
-                    return null;
-                }
-                else {
-                    ArrayList children = new ArrayList();
-                    UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
-                        toArray(new UploadDO[uploads.size()]);
-                    for (int i = 0; i < uploadsForThread.length; i++) {
-                        if (uploadsForThread[i].getStatus() ==
-                            UploadDO.AKTIVE_UEBERTRAGUNG) {
-                            children.add(uploadsForThread[i]);
-                        }
-                    }
-                    return (UploadDO[]) children.toArray(new UploadDO[children.
-                        size()]);
-                }
-            }
-            else if (mainNode.getType() == MainNode.WAITING_UPLOADS) {
-                if (uploads == null) {
-                    return null;
-                }
-                else {
-                    ArrayList children = new ArrayList();
-                    UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
-                        toArray(new UploadDO[uploads.size()]);
-                    for (int i = 0; i < uploadsForThread.length; i++) {
-                        if (uploadsForThread[i].getStatus() ==
-                            UploadDO.WARTESCHLANGE) {
-                            children.add(uploadsForThread[i]);
-                        }
-                    }
-                    return (UploadDO[]) children.toArray(new UploadDO[children.
-                        size()]);
-                }
-            }
-            else if (mainNode.getType() == MainNode.REST_UPLOADS) {
-                if (uploads == null) {
-                    return null;
-                }
-                else {
-                    ArrayList children = new ArrayList();
-                    UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
-                        toArray(new UploadDO[uploads.size()]);
-                    for (int i = 0; i < uploadsForThread.length; i++) {
-                        if (uploadsForThread[i].getStatus() !=
-                            UploadDO.AKTIVE_UEBERTRAGUNG &&
-                            uploadsForThread[i].getStatus() !=
-                            UploadDO.WARTESCHLANGE) {
-                            children.add(uploadsForThread[i]);
-                        }
-                    }
-                    return (UploadDO[]) children.toArray(new UploadDO[children.
-                        size()]);
-                }
-            }
+            return ((MainNode)parent).getChildren();
         }
         return null;
     }
@@ -304,6 +246,7 @@ public class UploadDataTableModel
     public void setTable(HashMap content) {
         if (uploads == null) {
             uploads = content;
+            mainNode.setUploads(content);
         }
     }
 }
