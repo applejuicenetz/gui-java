@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.2 2003/09/04 09:27:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.3 2003/09/04 09:29:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.3  2003/09/04 09:29:18  maj0r
+ * Anpassung an die Namenskonvention.
+ *
  * Revision 1.2  2003/09/04 09:27:25  maj0r
  * DownloadPartListe fertiggestellt.
  *
@@ -28,7 +31,7 @@ import org.apache.log4j.Logger;
 public class DownloadPartListPanel extends JPanel {
     private PartListDO partListDO;
     private Logger logger;
-    private BufferedImage I = null;
+    private BufferedImage image = null;
     int width;
     int height;
 
@@ -43,7 +46,7 @@ public class DownloadPartListPanel extends JPanel {
             if (height != getHeight() || width != getWidth()){
                 setPartList(partListDO);
             }
-            g.drawImage(I, 0, 0, null);
+            g.drawImage(image, 0, 0, null);
         }
         else
             super.paintComponent(g);
@@ -57,8 +60,8 @@ public class DownloadPartListPanel extends JPanel {
         {
             try
             {
-                I = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
-                Graphics graphics = I.getGraphics();
+                image = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
+                Graphics graphics = image.getGraphics();
                 height = getHeight();
                 width = getWidth();
                 int anzahlRows = getHeight() / 16;
@@ -141,7 +144,7 @@ public class DownloadPartListPanel extends JPanel {
                     graphics.fillRect(x, y * 16 +1 , x + 1, (y + 1) * 16);
                     x += 2;
                 }
-                getGraphics().drawImage(I, 0, 0, null);
+                getGraphics().drawImage(image, 0, 0, null);
             }
             catch (Exception e)
             {
