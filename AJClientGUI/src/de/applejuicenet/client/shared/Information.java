@@ -1,59 +1,22 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.11 2004/03/03 15:45:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.12 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: Information.java,v $
- * Revision 1.11  2004/03/03 15:45:16  maj0r
- * PMD-Optimierung
- *
- * Revision 1.10  2004/03/01 15:35:47  maj0r
- * Bug #264 gefixt (Danke an muhviestarr)
- * Verbindungsstatus wird richtig angezeigt.
- *
- * Revision 1.9  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.8  2004/02/20 14:55:02  maj0r
- * Speicheroptimierungen.
- *
- * Revision 1.7  2004/02/18 17:24:21  maj0r
- * Von DOM auf SAX umgebaut.
- *
- * Revision 1.6  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.5  2004/02/04 13:10:04  maj0r
- * Aktuell verwendeter Server kann nun direkt ausgegeben werden.
- *
- * Revision 1.4  2004/01/29 13:47:06  maj0r
- * Setter eingefuegt.
- *
- * Revision 1.3  2004/01/01 14:24:37  maj0r
- * Id wird nun auch ausgelesen.
- *
- * Revision 1.2  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.1  2003/10/21 11:35:41  maj0r
- * Infos werden nun ueber einen Listener geholt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
-import java.util.HashMap;
+import java.util.Map;
 
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.ServerDO;
-import java.util.Map;
 
 public class Information
     implements LanguageListener {
@@ -73,6 +36,7 @@ public class Information
     private long uploadSpeed;
     private long downloadSpeed;
     private long openConnections;
+    private long maxUploadPositions;
     private String serverName;
     private int verbindungsStatus = NICHT_VERBUNDEN;
     private String externeIP;
@@ -146,6 +110,10 @@ public class Information
         this.openConnections = openConnections;
     }
 
+    public void setMaxUploadPositions(long maxUploadPositions) {
+        this.maxUploadPositions = maxUploadPositions;
+    }
+
     public long getSessionUpload() {
         return sessionUpload;
     }
@@ -180,6 +148,10 @@ public class Information
 
     public String getExterneIP() {
         return externeIP;
+    }
+
+    public long getMaxUploadPositions() {
+        return maxUploadPositions;
     }
 
     public String getCreditsAsString() {

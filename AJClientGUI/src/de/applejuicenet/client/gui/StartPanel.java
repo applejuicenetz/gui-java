@@ -2,7 +2,6 @@ package de.applejuicenet.client.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.ImageIcon;
@@ -26,17 +25,16 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import javax.swing.JTextArea;
-import java.awt.Dimension;
+import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.50 2004/05/22 20:39:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.51 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -454,7 +452,15 @@ public class StartPanel
                         Information.VERBUNDEN) {
                         if (information.getServerName() == null
                             || information.getServerName().length() == 0) {
-                            temp.replace(pos, pos + 2, "?");
+                            ServerDO serverDO = information.getServerDO();
+                            if (serverDO != null){
+                                String tmp = serverDO.getHost() + ":" +
+                                    serverDO.getPort();
+                                temp.replace(pos, pos + 2, tmp);
+                            }
+                            else{
+                                temp.replace(pos, pos + 2, "?");
+                            }
                         }
                         else {
                             temp.replace(pos, pos + 2,

@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.tables.JTreeTable;
@@ -36,124 +37,15 @@ import de.applejuicenet.client.gui.tables.upload.UploadDataTableModel;
 import de.applejuicenet.client.gui.tables.upload.UploadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.44 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.45 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: UploadPanel.java,v $
- * Revision 1.44  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.43  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.42  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.41  2004/03/01 15:10:09  maj0r
- * TableHeader werden in allen Tabellen gleich dargestellt.
- *
- * Revision 1.40  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.39  2004/02/09 14:21:32  maj0r
- * Icons für Upload-DirectStates eingebaut.
- *
- * Revision 1.38  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.37  2004/02/04 14:26:05  maj0r
- * Bug #185 gefixt (Danke an muhviestarr)
- * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
- *
- * Revision 1.36  2004/01/20 14:18:29  maj0r
- * Spaltenindizes werden jetzt gespeichert.
- *
- * Revision 1.35  2004/01/12 07:26:10  maj0r
- * Tabellenspalte nun ueber Headerkontextmenue ein/ausblendbar.
- *
- * Revision 1.34  2004/01/09 19:21:17  maj0r
- * Kleine Korrekturen.
- *
- * Revision 1.33  2004/01/09 15:08:44  maj0r
- * Erste Spalte kann nun nicht mehr verschoben werden.
- *
- * Revision 1.32  2004/01/09 14:35:15  maj0r
- * Spalten der Uploadtabelle koennen nun ordentlich verschoben werden.
- *
- * Revision 1.31  2004/01/08 07:48:22  maj0r
- * Wenn das Panel nicht selektiert ist, wird die Tabelle nun nicht mehr aktualisiert.
- *
- * Revision 1.30  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.29  2003/12/19 09:54:14  maj0r
- * Bug der Tableheader der Share- und der Uploadtabelle behoben (Danke an muhviestarr).
- *
- * Revision 1.28  2003/12/17 11:06:30  maj0r
- * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
- *
- * Revision 1.27  2003/12/05 11:18:02  maj0r
- * Workaround fürs Setzen der Hintergrundfarben der Scrollbereiche ausgebaut.
- *
- * Revision 1.26  2003/11/30 17:01:33  maj0r
- * Hintergrundfarbe aller Scrollbereiche an ihre Tabellen angepasst.
- *
- * Revision 1.25  2003/10/14 15:40:25  maj0r
- * Logger eingebaut.
- *
- * Revision 1.24  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- * Revision 1.23  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.22  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
- *
- * Revision 1.21  2003/09/02 16:08:14  maj0r
- * Downloadbaum komplett umgebaut.
- *
- * Revision 1.20  2003/08/31 11:06:44  maj0r
- * Groesse der ersten Upload-Spalte geaendert.
- *
- * Revision 1.19  2003/08/30 19:45:20  maj0r
- * Auf JTreeTable umgebaut.
- *
- * Revision 1.18  2003/08/22 14:16:00  maj0r
- * Threadverwendung korrigiert.
- *
- * Revision 1.17  2003/08/22 13:52:25  maj0r
- * Threadverwendung korrigiert.
- *
- * Revision 1.16  2003/08/18 17:10:22  maj0r
- * Debugausgabe entfernt.
- *
- * Revision 1.15  2003/08/18 14:51:04  maj0r
- * Anzeige korrigiert.
- *
- * Revision 1.14  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.13  2003/08/10 21:08:18  maj0r
- * Diverse Änderungen.
- *
- * Revision 1.12  2003/08/09 10:57:29  maj0r
- * UploadTabelle weitergeführt.
- *
- * Revision 1.11  2003/07/01 18:41:39  maj0r
- * Struktur verändert.
- *
- * Revision 1.10  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -166,6 +58,7 @@ public class UploadPanel
     private JTreeTable uploadDataTable;
     private int anzahlClients = 0;
     private JLabel label1 = new JLabel("0 Clients in Deiner Uploadliste");
+    private String warteschlangeVoll = "";
     private String clientText;
     private UploadDataTableModel uploadDataTableModel;
     private boolean initizialiced = false;
@@ -327,6 +220,8 @@ public class UploadPanel
             columns[i].setHeaderValue(columnsText[i]);
         }
         columns[0].setPreferredWidth(100);
+        warteschlangeVoll = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(".root.javagui.downloadform.warteschlangevoll"));
     }
 
     public void fireContentChanged(int type, Object content) {
@@ -337,8 +232,14 @@ public class UploadPanel
                     uploadDataTable.updateUI();
                 }
                 anzahlClients = uploadDataTableModel.getRowCount();
-                label1.setText(clientText.replaceAll("%d",
-                    Integer.toString(anzahlClients)));
+                String tmp = clientText.replaceAll("%d",
+                    Integer.toString(anzahlClients));
+                long maxUploadPos = ApplejuiceFassade.getInstance().
+                    getInformation().getMaxUploadPositions();
+                if (anzahlClients >= maxUploadPos){
+                    tmp += " (" + warteschlangeVoll + ")";
+                }
+                label1.setText(tmp);
             }
         }
         catch (Exception ex) {

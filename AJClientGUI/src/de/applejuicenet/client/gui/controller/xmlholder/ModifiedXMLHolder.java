@@ -36,7 +36,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.37 2004/05/22 20:39:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.38 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -214,6 +214,9 @@ public class ModifiedXMLHolder
             else if (attr.getLocalName(i).equals("openconnections")){
                 information.setOpenConnections(Long.parseLong(attr.getValue(i)));
             }
+            else if (attr.getLocalName(i).equals("maxuploadpositions")){
+                information.setMaxUploadPositions(Long.parseLong(attr.getValue(i)));
+            }
         }
     }
 
@@ -278,6 +281,7 @@ public class ModifiedXMLHolder
         uploadDO.setUploadTo(Integer.parseInt((String)userAttributes.get("uploadto")));
         uploadDO.setSpeed(Integer.parseInt((String)userAttributes.get("speed")));
         uploadDO.setNick((String)userAttributes.get("nick"));
+        uploadDO.setLastConnection(Long.parseLong((String)userAttributes.get("lastconnection")));
         String versionNr = (String)userAttributes.get("version");
         int os = Integer.parseInt((String)userAttributes.get("operatingsystem"));
         if (!versionNr.equals("0.0.0.0") && os != -1) {

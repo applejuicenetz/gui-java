@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.8 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.9 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: GetObjectXMLHolder.java,v $
+ * Revision 1.9  2004/05/23 17:58:29  maj0r
+ * Anpassungen an neue Schnittstelle.
+ *
  * Revision 1.8  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -140,6 +143,7 @@ public class GetObjectXMLHolder
         long uploadFrom;
         long uploadTo;
         long actualUploadPos;
+        long lastConnection;
         int speed;
         int directstate;
         e = (Element) nodes.item(0);
@@ -161,9 +165,10 @@ public class GetObjectXMLHolder
         actualUploadPos = Long.parseLong(e.getAttribute("actualuploadposition"));
         speed = Integer.parseInt(e.getAttribute("speed"));
         directstate = Integer.parseInt(e.getAttribute("directstate"));
+        lastConnection = Long.parseLong(e.getAttribute("lastconnection"));
         upload = new UploadDO(id, shareId, version, status, nick,
                               uploadFrom, uploadTo, actualUploadPos,
-                              speed, prioritaet, directstate);
+                              speed, prioritaet, directstate, lastConnection);
         return upload;
     }
 

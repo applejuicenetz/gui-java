@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.13 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.14 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadDataTableModel.java,v $
+ * Revision 1.14  2004/05/23 17:58:29  maj0r
+ * Anpassungen an neue Schnittstelle.
+ *
  * Revision 1.13  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -127,12 +130,6 @@ public class UploadDataTableModel
                     switch (upload.getStatus()) {
                         case UploadDO.AKTIVE_UEBERTRAGUNG:
                             return uebertragung;
-                        case UploadDO.KEINE_VERBINDUNG_MOEGLICH:
-                            return keineVerbindungMoeglich;
-                        case UploadDO.VERSUCHE_INDIREKTE_VERBINDUNG:
-                            return versucheIndirekteVerbindung;
-                        case UploadDO.VERSUCHE_ZU_VERBINDEN:
-                            return versucheZuVerbinden;
                         case UploadDO.WARTESCHLANGE:
                             return warteschlange;
                         default:

@@ -23,7 +23,7 @@ import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.39 2004/04/27 13:38:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.40 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -136,6 +136,18 @@ public class RegisterPanel
         else {
             path = System.getProperty("user.dir") + File.separator +
                 "plugins" + File.separator;
+        }
+        File delFile = new File(path + "ajIrcPlugin_1_3.jar");
+        if (delFile.isFile()){
+            delFile.delete();
+        }
+        delFile = new File(path + "ajIrcPlugin_1_31.jar");
+        if (delFile.isFile()) {
+            delFile.delete();
+        }
+        delFile = new File(path + "IrcPlugin_1_31.jar");
+        if (delFile.isFile()) {
+            delFile.delete();
         }
         File pluginPath = new File(path);
         if (!pluginPath.isDirectory()) {

@@ -83,9 +83,10 @@ import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.119 2004/05/08 08:25:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.120 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -1018,7 +1019,15 @@ public class AppleJuiceDialog
                     statusbar[1].setText(keinServer);
                 }
                 else {
-                    statusbar[1].setText(information.getServerName());
+                    String tmp = information.getServerName();
+                    if (tmp == null || tmp.length() == 0 ){
+                        ServerDO serverDO = information.getServerDO();
+                        if (serverDO != null){
+                            tmp = serverDO.getHost() + ":" +
+                                serverDO.getPort();
+                        }
+                    }
+                    statusbar[1].setText(tmp);
                 }
                 statusbar[2].setText(information.getUpDownAsString());
                 statusbar[3].setText(information.getUpDownSessionAsString());

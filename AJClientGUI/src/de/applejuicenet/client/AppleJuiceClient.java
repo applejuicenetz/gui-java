@@ -40,7 +40,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.68 2004/04/27 13:40:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.69 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -154,21 +154,16 @@ public class AppleJuiceClient {
             }
         }
         else {
-            int PORT = OptionsManagerImpl.getInstance().
-                getLinkListenerPort();
             try {
-                Socket socket = new Socket("localhost", PORT);
-                socket.close();
+                new LinkListener();
+            }
+            catch (IOException ex) {
                 //bereits ein GUI vorhanden, also GUI schliessen
                 JOptionPane.showMessageDialog(new Frame(),
                     "Eine Instanz des GUIs ist bereits in Verwendung.",
                                               "appleJuice Client",
                                               JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
-            }
-            catch (IOException ex) {
-                ;
-                //alles bestens
             }
         }
         Logger rootLogger = Logger.getRootLogger();
@@ -325,7 +320,6 @@ public class AppleJuiceClient {
             }
             System.out.println(nachricht);
             splash.dispose();
-            new LinkListener();
             if (processLink) {
                 ApplejuiceFassade.getInstance().processLink(link);
             }

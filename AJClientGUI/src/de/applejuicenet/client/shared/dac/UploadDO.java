@@ -3,82 +3,29 @@ package de.applejuicenet.client.shared.dac;
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+import javax.swing.JTable;
 
 import de.applejuicenet.client.gui.tables.upload.UploadColumnComponent;
 import de.applejuicenet.client.shared.Version;
-import javax.swing.JTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.18 2004/02/25 16:20:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.19 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: UploadDO.java,v $
- * Revision 1.18  2004/02/25 16:20:01  maj0r
- * ProgressBar auf opaque=false gesetzt.
- * VersionLabel und ProgressBar wird nur bei tatsaechlicher Wertaenderung aktualisiert.
- *
- * Revision 1.17  2004/02/24 18:21:51  maj0r
- * Schrift korrigiert.
- *
- * Revision 1.16  2004/02/24 15:38:11  maj0r
- * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
- *
- * Revision 1.15  2004/02/24 08:49:32  maj0r
- * Bug #240 gefixt (Danke an computer.ist.org)
- * Bug behoben, der im VersionChecker zu einer NoSuchElementException fuehrte.
- *
- * Revision 1.14  2004/02/18 17:24:21  maj0r
- * Von DOM auf SAX umgebaut.
- *
- * Revision 1.13  2004/02/09 14:21:32  maj0r
- * Icons für Upload-DirectStates eingebaut.
- *
- * Revision 1.12  2004/02/09 07:30:13  maj0r
- * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
- *
- * Revision 1.11  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.10  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.9  2003/09/01 15:50:51  maj0r
- * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
- *
- * Revision 1.8  2003/08/09 10:57:54  maj0r
- * Upload- und DownloadTabelle weitergeführt.
- *
- * Revision 1.7  2003/08/04 14:28:55  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.6  2003/08/03 19:54:05  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.5  2003/06/30 19:46:11  maj0r
- * Sourcestil verbessert.
- *
- * Revision 1.4  2003/06/10 12:31:03  maj0r
- * Historie eingefï¿½gt.
- *
+ * @author: Maj0r <Maj0r@applejuicenet.de>
  *
  */
 
 public class UploadDO implements UploadColumnComponent{
     public static final int AKTIVE_UEBERTRAGUNG = 1;
     public static final int WARTESCHLANGE = 2;
-    public static final int VERSUCHE_ZU_VERBINDEN = 5;
-    public static final int VERSUCHE_INDIREKTE_VERBINDUNG = 6;
-    public static final int KEINE_VERBINDUNG_MOEGLICH = 7;
 
     public static final int STATE_UNBEKANNT = 0;
     public static final int STATE_DIREKT_VERBUNDEN = 1;
-    public static final int STATE_VERSUCHE_INDIREKTE_VERBINDUNG = 2;
-    public static final int STATE_INDIREKT_VERBUNDEN = 3;
+    public static final int STATE_INDIREKT_VERBUNDEN = 2;
 
     private final int uploadID;
     private String dateiName;
@@ -92,6 +39,7 @@ public class UploadDO implements UploadColumnComponent{
     private int speed;
     private int prioritaet;
     private int directstate;
+    private long lastConnection;
 
     private JProgressBar progress;
     private JLabel progressbarLabel;
@@ -104,29 +52,11 @@ public class UploadDO implements UploadColumnComponent{
         init();
     }
 
-    public UploadDO(int uploadID, int shareFileID, Version version, int status,
-                    String nick, long uploadFrom, long uploadTo,
-                    long actualUploadPosition, int speed, int prioritaet, int directstate) {
-        this.uploadID = uploadID;
-        this.shareFileID = shareFileID;
-        this.version = version;
-        this.status = status;
-        this.nick = nick;
-        this.uploadFrom = uploadFrom;
-        this.uploadTo = uploadTo;
-        this.actualUploadPosition = actualUploadPosition;
-        this.speed = speed;
-        this.prioritaet = prioritaet;
-        this.directstate = directstate;
-        progressChanged = true;
-        versionChanged = true;
-        init();
-    }
-
     public UploadDO(int uploadID, int shareFileID, Version version,
                     String status,
                     String nick, long uploadFrom, long uploadTo,
-                    long actualUploadPosition, int speed, int prioritaet, int directstate) {
+                    long actualUploadPosition, int speed, int prioritaet,
+                    int directstate, long lastConnection) {
         this.uploadID = uploadID;
         this.shareFileID = shareFileID;
         this.version = version;
@@ -138,6 +68,7 @@ public class UploadDO implements UploadColumnComponent{
         this.speed = speed;
         this.prioritaet = prioritaet;
         this.directstate = directstate;
+        this.lastConnection = lastConnection;
         progressChanged = true;
         versionChanged = true;
         init();
@@ -257,8 +188,16 @@ public class UploadDO implements UploadColumnComponent{
         return dateiName;
     }
 
+    public long getLastConnection() {
+        return lastConnection;
+    }
+
     public void setDateiName(String dateiName) {
         this.dateiName = dateiName;
+    }
+
+    public void setLastConnection(long lastConnection) {
+        this.lastConnection = lastConnection;
     }
 
     public String getDownloadPercentAsString() {

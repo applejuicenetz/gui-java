@@ -8,9 +8,10 @@ import java.net.Socket;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import java.io.IOException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.6 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.7 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: LinkListener.java,v $
+ * Revision 1.7  2004/05/23 17:58:29  maj0r
+ * Anpassungen an neue Schnittstelle.
+ *
  * Revision 1.6  2004/03/09 16:25:17  maj0r
  * PropertiesManager besser gekapselt.
  *
@@ -49,13 +53,16 @@ public class LinkListener
     private ServerSocket listen;
     private Thread connect;
 
-    public LinkListener() {
+    public LinkListener() throws IOException{
         PORT = OptionsManagerImpl.getInstance().getLinkListenerPort();
         logger = Logger.getLogger(getClass());
         try {
             listen = new ServerSocket(PORT);
             connect = new Thread(this);
             connect.start();
+        }
+        catch (IOException ioE){
+            throw ioE;
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {

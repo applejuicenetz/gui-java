@@ -8,7 +8,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/IconGetter.java,v 1.6 2004/02/21 17:09:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/IconGetter.java,v 1.7 2004/05/23 17:58:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: IconGetter.java,v $
+ * Revision 1.7  2004/05/23 17:58:29  maj0r
+ * Anpassungen an neue Schnittstelle.
+ *
  * Revision 1.6  2004/02/21 17:09:57  maj0r
  * Neues Icon fuer unbekannte Verbindung eingebaut.
  *
@@ -82,8 +85,6 @@ public abstract class IconGetter {
                         return direktVerbundenIcon;
                     case UploadDO.STATE_INDIREKT_VERBUNDEN:
                         return indirektVerbundenIcon;
-                    case UploadDO.STATE_VERSUCHE_INDIREKTE_VERBINDUNG:
-                        return versucheIndirektIcon;
                     default:
                         return verbindungUnbekanntIcon;
                 }
