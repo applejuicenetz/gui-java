@@ -41,9 +41,12 @@ import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.tklsoft.gui.controls.TKLCheckBox;
+import de.tklsoft.gui.controls.TKLComboBox;
+import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODStandardPanel.java,v 1.3 2005/01/18 17:35:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODStandardPanel.java,v 1.4 2005/03/07 14:23:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -68,12 +71,12 @@ public class ODStandardPanel
     private JLabel selectStandardBrowser;
     private JLabel openTemp;
     private JLabel openIncoming;
-    private JTextField temp = new JTextField();
-    private JTextField incoming = new JTextField();
-    private JTextField port = new JTextField();
-    private JTextField xmlPort = new JTextField();
-    private JTextField nick = new JTextField();
-    private JTextField browser = new JTextField();
+    private TKLTextField temp = new TKLTextField();
+    private TKLTextField incoming = new TKLTextField();
+    private TKLTextField port = new TKLTextField();
+    private TKLTextField xmlPort = new TKLTextField();
+    private TKLTextField nick = new TKLTextField();
+    private TKLTextField browser = new TKLTextField();
     private JLabel hint1;
     private JLabel hint2;
     private JLabel hint3;
@@ -82,9 +85,9 @@ public class ODStandardPanel
     private JLabel hint6;
     private JDialog parent;
     private AJSettings ajSettings;
-    private JComboBox cmbLog;
-    private JComboBox updateInfoModus;
-    private JCheckBox loadPlugins = new JCheckBox();
+    private TKLComboBox cmbLog;
+    private TKLComboBox updateInfoModus;
+    private TKLCheckBox loadPlugins = new TKLCheckBox();
     private Logger logger;
     private ConnectionSettings remote;
     private Icon menuIcon;
@@ -202,7 +205,7 @@ public class ODStandardPanel
             languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.off")));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.einstform.standardsheet.caption"));
-        cmbLog = new JComboBox(levelItems);
+        cmbLog = new TKLComboBox(levelItems);
         cmbLog.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 dirty = true;
@@ -223,7 +226,7 @@ public class ODStandardPanel
 
         panel8.add(cmbLog);
 
-        updateInfoModus = new JComboBox();
+        updateInfoModus = new TKLComboBox();
         UpdateInfoItem item0 = new UpdateInfoItem(0,
                                                   ZeichenErsetzer.
                                                   korrigiereUmlaute(
@@ -377,6 +380,7 @@ public class ODStandardPanel
                     if (browserFile.isFile()) {
                         browser.setText(browserFile.getPath());
                         dirty = true;
+                        browser.fireCheckRules();
                     }
                 }
             }
@@ -475,6 +479,16 @@ public class ODStandardPanel
         panel6.add(panel11, constraints);
 
         add(panel6, BorderLayout.NORTH);
+        
+        temp.confirmNewValue();
+        incoming.confirmNewValue();
+        port.confirmNewValue();
+        xmlPort.confirmNewValue();
+        nick.confirmNewValue();
+        browser.confirmNewValue();
+        cmbLog.confirmNewValue();
+        updateInfoModus.confirmNewValue();
+        loadPlugins.confirmNewValue();
     }
 
     public boolean isXmlPortDirty() {
@@ -522,10 +536,12 @@ public class ODStandardPanel
                 String path = chooser.getSelectedPath();
                 if (source == openTemp) {
                     temp.setText(path);
+                    temp.fireCheckRules();
                     ajSettings.setTempDir(path);
                 }
                 else {
                     incoming.setText(path);
+                    incoming.fireCheckRules();
                     ajSettings.setIncomingDir(path);
                 }
             }

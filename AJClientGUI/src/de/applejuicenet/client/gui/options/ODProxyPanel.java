@@ -8,15 +8,12 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 import javax.swing.Icon;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
@@ -26,9 +23,11 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.tklsoft.gui.controls.TKLCheckBox;
+import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODProxyPanel.java,v 1.3 2005/01/18 17:35:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODProxyPanel.java,v 1.4 2005/03/07 14:23:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,11 +46,11 @@ public class ODProxyPanel
     private JLabel label2;
     private JLabel label3;
     private JLabel label4;
-    private JTextField host = new JTextField();
-    private JTextField port = new JTextField();
-    private JTextField user = new JTextField();
+    private TKLTextField host = new TKLTextField();
+    private TKLTextField port = new TKLTextField();
+    private TKLTextField user = new TKLTextField();
     private JPasswordField passwort = new JPasswordField();
-    private JCheckBox use = new JCheckBox();
+    private TKLCheckBox use = new TKLCheckBox();
     private ProxySettings proxySettings;
     private Logger logger;
     private Icon menuIcon;
@@ -63,9 +62,7 @@ public class ODProxyPanel
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -171,6 +168,11 @@ public class ODProxyPanel
         panel1.add(panel2, constraints);
 
         add(panel1, BorderLayout.NORTH);
+        
+        host.confirmNewValue();
+        port.confirmNewValue();
+        user.confirmNewValue();
+        use.confirmNewValue();
     }
 
     public ProxySettings getProxySettings() {

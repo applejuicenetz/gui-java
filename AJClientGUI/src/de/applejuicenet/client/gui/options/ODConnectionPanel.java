@@ -25,9 +25,10 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODConnectionPanel.java,v 1.5 2005/02/28 16:37:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODConnectionPanel.java,v 1.6 2005/03/07 14:23:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,8 +46,8 @@ public class ODConnectionPanel
     private JLabel label1;
     private JLabel label3;
     private JLabel label4;
-    private JTextField host = new JTextField();
-    private JTextField port = new JTextField();
+    private TKLTextField host = new TKLTextField();
+    private TKLTextField port = new TKLTextField();
     private JPasswordField passwortNeu = new JPasswordField();
     private ConnectionSettings remote;
     private Logger logger;
@@ -56,25 +57,9 @@ public class ODConnectionPanel
     private String menuText;
 
     public ODConnectionPanel(ConnectionSettings remote,
-                             QuickConnectionSettingsDialog
-                             quickConnectionSettingsDialog) {
-        logger = Logger.getLogger(getClass());
-        try {
-            this.quickConnectionSettingsDialog = quickConnectionSettingsDialog;
-            this.remote = remote;
-            init();
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
-        }
-    }
-
-    public ODConnectionPanel(ConnectionSettings remote,
-                             QuickConnectionSettingsDialog
-                             quickConnectionSettingsDialog,
-                             boolean showPort) {
+            QuickConnectionSettingsDialog
+            quickConnectionSettingsDialog,
+            boolean showPort) {
         logger = Logger.getLogger(getClass());
         try {
             this.showPort = showPort;
@@ -83,10 +68,14 @@ public class ODConnectionPanel
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
+    }
+
+    public ODConnectionPanel(ConnectionSettings remote,
+                             QuickConnectionSettingsDialog
+                             quickConnectionSettingsDialog) {
+        this(remote, quickConnectionSettingsDialog, false);
     }
 
     private void init() throws Exception {
@@ -202,6 +191,8 @@ public class ODConnectionPanel
             label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.einstform.pwsheet.caption")));
         }
+        host.confirmNewValue();
+        port.confirmNewValue();
     }
 
     public void setFocusOnPassword() {

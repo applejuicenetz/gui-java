@@ -10,12 +10,9 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -29,9 +26,12 @@ import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.tklsoft.gui.controls.TKLButton;
+import de.tklsoft.gui.controls.TKLCheckBox;
+import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODVerbindungPanel.java,v 1.3 2005/01/18 17:35:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODVerbindungPanel.java,v 1.4 2005/03/07 14:23:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -53,18 +53,18 @@ public class ODVerbindungPanel
     private JLabel label5;
     private JLabel label6;
     private JLabel kbSlot;
-    private JCheckBox automaticConnect;
-    private JTextField maxSourcesPerFile = new JTextField();
-    private JTextField maxVerbindungen = new JTextField();
-    private JTextField maxUpload = new JTextField();
-    private JTextField maxDownload = new JTextField();
+    private TKLCheckBox automaticConnect;
+    private TKLTextField maxSourcesPerFile = new TKLTextField();
+    private TKLTextField maxVerbindungen = new TKLTextField();
+    private TKLTextField maxUpload = new TKLTextField();
+    private TKLTextField maxDownload = new TKLTextField();
     private JSlider kbSlider;
-    private JTextField maxVerbindungenProTurn = new JTextField();
+    private TKLTextField maxVerbindungenProTurn = new TKLTextField();
     private AJSettings ajSettings;
     private Logger logger;
     private Icon menuIcon;
     private String menuText;
-    private JButton wizzard = new JButton();
+    private TKLButton wizzard = new TKLButton();
     private OptionsDialog parent;
 
     public ODVerbindungPanel(OptionsDialog parent, AJSettings ajSettings) {
@@ -222,7 +222,7 @@ public class ODVerbindungPanel
                 ajSettings.setSpeedPerSlot(slider.getValue());
             }
         });
-        automaticConnect = new JCheckBox(ZeichenErsetzer.korrigiereUmlaute(
+        automaticConnect = new TKLCheckBox(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
             getFirstAttrbuteByTagName(".root.einstform.autoconn.caption")));
         automaticConnect.addChangeListener(new ChangeListener() {
@@ -322,6 +322,13 @@ public class ODVerbindungPanel
         add(panel1, BorderLayout.NORTH);
 
         reloadSettings();
+
+        maxSourcesPerFile.confirmNewValue();
+        maxVerbindungen.confirmNewValue();
+        maxUpload.confirmNewValue();
+        maxDownload.confirmNewValue();
+        maxVerbindungenProTurn.confirmNewValue();
+        automaticConnect.confirmNewValue();
     }
 
     public Icon getIcon() {

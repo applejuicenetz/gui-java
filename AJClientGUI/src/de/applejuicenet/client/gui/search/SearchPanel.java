@@ -35,7 +35,7 @@ import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.11 2005/03/07 12:42:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.12 2005/03/07 14:23:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,9 +65,7 @@ public class SearchPanel
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
     
@@ -146,6 +144,7 @@ public class SearchPanel
                 }
             }
         });
+        suchbegriff.disableDirtyComponent(true);
     }
 
     private void showLinkMenu(int x, int y) {

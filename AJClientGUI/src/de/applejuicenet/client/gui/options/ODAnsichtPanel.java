@@ -34,7 +34,7 @@ import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.4 2005/02/22 16:01:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.5 2005/03/07 14:23:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -250,10 +250,10 @@ public class ODAnsichtPanel
 
         reloadSettings();
         
-        cmbAktiv.ignoreInvalidRules(false);
-        cmbDownloadUebersicht.ignoreInvalidRules(false);
-        enableToolTip.ignoreInvalidRules(false);
-        cmbStartscreenZeigen.ignoreInvalidRules(false);
+        cmbAktiv.confirmNewValue();
+        cmbDownloadUebersicht.confirmNewValue();
+        enableToolTip.confirmNewValue();
+        cmbStartscreenZeigen.confirmNewValue();
     }
 
     public boolean save() {

@@ -56,7 +56,7 @@ import de.tklsoft.gui.controls.TKLTextField;
 import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.13 2005/02/28 14:58:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.14 2005/03/07 14:23:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -117,9 +117,9 @@ public class PowerDownloadPanel
     }
 
     private void init() throws Exception {
-        ratio.ignoreStatus(STATUSFLAG.MODIFIED);
-        autoAb.ignoreStatus(STATUSFLAG.MODIFIED);
-        autoBis.ignoreStatus(STATUSFLAG.MODIFIED);
+        ratio.disableDirtyComponent(true);
+        autoAb.disableDirtyComponent(true);
+        autoBis.disableDirtyComponent(true);
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
         backPanel.setLayout(new GridBagLayout());

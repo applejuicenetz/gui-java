@@ -12,11 +12,12 @@ import javax.swing.JLabel;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.tklsoft.gui.controls.InvalidRule;
+import de.tklsoft.gui.controls.ModifyableComponent;
 import de.tklsoft.gui.controls.TKLTextArea;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.13 2005/02/22 09:21:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.14 2005/03/07 14:23:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -53,7 +54,7 @@ public class Schritt3Panel
         nickname.setColumns(20);
         
         InvalidRule rule = new InvalidRule(){
-            public boolean isInvalid(JComponent component) {
+            public boolean isInvalid(ModifyableComponent component) {
                 return (nickname.getText().toLowerCase().startsWith("nonick") 
                         || nickname.getText().length() == 0) ? true : false;
             }

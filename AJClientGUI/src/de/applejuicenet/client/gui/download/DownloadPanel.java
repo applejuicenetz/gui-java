@@ -20,7 +20,6 @@ import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -53,6 +52,7 @@ import de.applejuicenet.client.gui.download.table.DownloadTreeTable;
 import de.applejuicenet.client.gui.download.table.DownloadTreeTableCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
 import de.tklsoft.gui.controls.InvalidRule;
+import de.tklsoft.gui.controls.ModifyableComponent;
 import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.controls.TKLTextField;
 import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
@@ -336,7 +336,7 @@ public class DownloadPanel extends TklPanel {
 		};
 		downloadLink.addKeyListener(keyListener);
         InvalidRule downloadloadlinkRule = new InvalidRule(){
-            public boolean isInvalid(JComponent component){
+            public boolean isInvalid(ModifyableComponent component){
                 String text = ((TKLTextField) component).getText().toLowerCase();
                 if (text.length() == 0){
                     return false;   
@@ -366,13 +366,13 @@ public class DownloadPanel extends TklPanel {
                 return false;
             }
         };
-        downloadLink.ignoreStatus(STATUSFLAG.MODIFIED);
+        downloadLink.ignoreStatus(STATUSFLAG.MODIFIED, true);
         downloadLink.addInvalidRule(downloadloadlinkRule);
         downloadLink.ignoreInvalidRules(false);
         
-        targetDir.ignoreStatus(STATUSFLAG.MODIFIED);
+        targetDir.ignoreStatus(STATUSFLAG.MODIFIED, true);
         InvalidRule targetDirRule = new InvalidRule(){
-            public boolean isInvalid(JComponent component){
+            public boolean isInvalid(ModifyableComponent component){
                 Object obj = ((TKLComboBox) component).getSelectedItem();
                 if (obj == null){
                     return false;   
