@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.36 2003/09/05 09:47:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.37 2003/09/06 14:49:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,6 +40,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.37  2003/09/06 14:49:59  maj0r
+ * Verwendung des Separators korrigiert.
+ *
  * Revision 1.36  2003/09/05 09:47:35  maj0r
  * Einige Logger eingebaut.
  *
@@ -424,7 +427,7 @@ public class SharePanel
                             {
                                 shareDO = (ShareDO) iterator.next();
                                 filename = shareDO.getFilename();
-                                path = filename.substring(0, filename.lastIndexOf(File.separator));
+                                path = filename.substring(0, filename.lastIndexOf(ApplejuiceFassade.separator));
                                 parentNode = ShareNode.getNodeByPath(path);
                                 if (parentNode != null)
                                 {
