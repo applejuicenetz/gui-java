@@ -8,9 +8,10 @@ import javax.swing.*;
 
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.5 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.6 2003/06/24 12:06:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.6  2003/06/24 12:06:49  maj0r
+ * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
+ *
  * Revision 1.5  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -44,9 +48,11 @@ public class ODStandardPanel
   private JLabel hint2;
   private JLabel hint3;
   private JLabel hint4;
+  private JLabel hint5;
   private JFrame parent;
   private AJSettings ajSettings;
   private JCheckBox cmbAllowBrowse = new JCheckBox();
+  private JComboBox cmbLog;
 
   public ODStandardPanel(JFrame parent, AJSettings ajSettings) {
     this.parent = parent;
@@ -61,6 +67,10 @@ public class ODStandardPanel
 
   public boolean isDirty() {
     return dirty;
+  }
+
+  public Level getLogLevel(){
+    return ((LevelItem)cmbLog.getSelectedItem()).getLevel();
   }
 
   private void jbInit() throws Exception {
@@ -113,10 +123,41 @@ public class ODStandardPanel
     JPanel panel7 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     panel7.add(cmbAllowBrowse);
 
+    JPanel panel8 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    panel8.add(new JLabel("Logging: "));
+    LanguageSelector languageSelector = LanguageSelector.getInstance();
+    Level logLevel = OptionsManager.getInstance().getLogLevel();
+
+    LevelItem[] levelItems = new LevelItem[5];//{ "kein Logging", "alles", "Warnungen", "Fehler"};
+    levelItems[0] = new LevelItem(Level.OFF, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "options", "logging", "off"})));
+    levelItems[1] = new LevelItem(Level.INFO, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "options", "logging", "info"})));
+    levelItems[2] = new LevelItem(Level.DEBUG, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "options", "logging", "debug"})));
+    levelItems[3] = new LevelItem(Level.WARN, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "options", "logging", "warn"})));
+    levelItems[4] = new LevelItem(Level.FATAL, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "options", "logging", "fatal"})));
+
+    cmbLog = new JComboBox(levelItems);
+    cmbLog.addItemListener(new ItemListener(){
+      public void itemStateChanged(ItemEvent e) {
+        dirty = true;
+      }
+    });
+
+    int index = 0;
+    if (logLevel==Level.INFO)
+      index = 1;
+    else if (logLevel==Level.DEBUG)
+      index = 2;
+    else if (logLevel==Level.WARN)
+      index = 3;
+    else if (logLevel==Level.FATAL)
+      index = 4;
+    cmbLog.setSelectedIndex(index);
+
+    panel8.add(cmbLog);
+
     setLayout(new BorderLayout());
     port.setHorizontalAlignment(JLabel.RIGHT);
     JPanel panel6 = new JPanel(new GridBagLayout());
-    LanguageSelector languageSelector = LanguageSelector.getInstance();
     label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "Label2",
                                   "caption"})));
@@ -167,6 +208,13 @@ public class ODStandardPanel
         return tip;
       }
     };
+    hint5 = new JLabel(icon) {
+      public JToolTip createToolTip() {
+        MultiLineToolTip tip = new MultiLineToolTip();
+        tip.setComponent(this);
+        return tip;
+      }
+    };
     hint1.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"javagui", "options",
                                   "standard", "ttipp_temp"})));
@@ -178,8 +226,10 @@ public class ODStandardPanel
                                   "standard", "ttipp_nick"})));
     hint4.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "Label1",
-                                  "caption"}))
-                         );
+                                  "caption"})));
+    hint5.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                  "logging", "ttip"})));
 
     for (int i = 1; i < 11; i++) {
       cmbUploadPrio.addItem(new Integer(i));
@@ -253,8 +303,13 @@ public class ODStandardPanel
     constraints.gridx = 0;
     constraints.gridwidth = 1;
     panel6.add(panel7, constraints);
+    constraints.gridy = 6;
+    panel6.add(panel8, constraints);
+    constraints.gridy = 5;
     constraints.gridx = 1;
     panel6.add(hint4, constraints);
+    constraints.gridy = 6;
+    panel6.add(hint5, constraints);
 
     add(panel6, BorderLayout.NORTH);
   }
@@ -291,6 +346,25 @@ public class ODStandardPanel
   }
 
   void temp_focusLost(FocusEvent e) {
+
+  }
+
+  class LevelItem{
+    private Level level;
+    private String bezeichnung;
+
+    public LevelItem(Level level, String bezeichnung){
+      this.level = level;
+      this.bezeichnung = bezeichnung;
+    }
+
+    public Level getLevel(){
+      return level;
+    }
+
+    public String toString(){
+      return bezeichnung;
+    }
 
   }
 }

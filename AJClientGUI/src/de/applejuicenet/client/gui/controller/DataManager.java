@@ -12,9 +12,11 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.22 2003/06/22 20:34:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.23 2003/06/24 12:06:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +25,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.23  2003/06/24 12:06:49  maj0r
+ * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
+ *
  * Revision 1.22  2003/06/22 20:34:25  maj0r
  * Konsolenausgaben hinzugefügt.
  *
@@ -54,6 +59,8 @@ public class DataManager { //Singleton-Implementierung
   private Version coreVersion;
   private Timer modifiedTimer;
 
+  private Logger logger;
+
   public void addDataUpdateListener(DataUpdateListener listener, int type) {
     HashSet listenerSet = null;
     if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
@@ -80,31 +87,39 @@ public class DataManager { //Singleton-Implementierung
   }
 
   private DataManager() {
-    downloadListener = new HashSet();
-    serverListener = new HashSet();
-    uploadListener = new HashSet();
-    shareListener = new HashSet();
-    networkInfoListener = new HashSet();
+    logger = Logger.getLogger(getClass());
+    try
+    {
+      downloadListener = new HashSet();
+      serverListener = new HashSet();
+      uploadListener = new HashSet();
+      shareListener = new HashSet();
+      networkInfoListener = new HashSet();
 
-    //load XMLs
-    modifiedXML = new ModifiedXMLHolder();
-    informationXML = new InformationXMLHolder();
-    shareXML = new ShareXMLHolder();
+      //load XMLs
+      modifiedXML = new ModifiedXMLHolder();
+      informationXML = new InformationXMLHolder();
+      shareXML = new ShareXMLHolder();
 
-    informationXML.reload("");
-    String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[] {
-        "applejuice", "generalinformation", "version"}
-        , true);
-    coreVersion = new Version(versionsTag, "Java",
-                              Version.getOSTypByOSName( (String) System.
-        getProperties().get("os.name")));
+      informationXML.reload("");
+      String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[] {
+          "applejuice", "generalinformation", "version"}
+          , true);
+      coreVersion = new Version(versionsTag, "Java",
+                                Version.getOSTypByOSName( (String) System.
+          getProperties().get("os.name")));
 
-    ActionListener modifiedAction = new ActionListener() {
-      public void actionPerformed(ActionEvent ae) {
-        updateModifiedXML();
-      }
-    };
-    modifiedTimer = new Timer(1000, modifiedAction);
+      ActionListener modifiedAction = new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          updateModifiedXML();
+        }
+      };
+      modifiedTimer = new Timer(1000, modifiedAction);
+    }
+    catch (Exception e) {
+      if (logger.isEnabledFor(Level.FATAL))
+        logger.fatal("Unbehandelte Exception", e);
+    }
   }
 
   public void startXMLCheck() {
@@ -180,7 +195,7 @@ public class DataManager { //Singleton-Implementierung
     }
     else{
       String result;
-      System.out.print("Verbinde mit '" + serverDO.getName() + "'...");
+      logger.info("Verbinde mit '" + serverDO.getName() + "'...");
       try {
         result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
                                            "/function/serverlogin?id=" + id);

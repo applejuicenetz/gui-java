@@ -5,9 +5,11 @@ import java.io.*;
 import org.apache.xerces.impl.dv.util.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.12 2003/06/22 19:01:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.13 2003/06/24 12:06:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +18,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.13  2003/06/24 12:06:49  maj0r
+ * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
+ *
  * Revision 1.12  2003/06/22 19:01:22  maj0r
  * Hostverwendung korrigiert.
  *
@@ -28,9 +33,11 @@ import de.applejuicenet.client.shared.exception.*;
 public class OptionsManager
     extends XMLDecoder {
   private static OptionsManager instance = null;
+  private Logger logger;
 
   private OptionsManager(String path) {
     super(path);
+    logger = Logger.getLogger(getClass());
   }
 
   public static OptionsManager getInstance() {
@@ -49,6 +56,45 @@ public class OptionsManager
   public void setSprache(String sprache) {
     setAttributeByTagName(new String[] {"options", "sprache"}
                           , sprache.toLowerCase());
+  }
+
+  public Level getLogLevel(){
+    String temp = getFirstAttrbuteByTagName(new String[] {"options", "logging", "level"});
+    Level result = Level.OFF;
+    if (temp.compareToIgnoreCase("INFO")==0)
+      return Level.INFO;
+    else if (temp.compareToIgnoreCase("DEBUG")==0)
+      return Level.DEBUG;
+    else if (temp.compareToIgnoreCase("WARN")==0)
+      return Level.WARN;
+    else if (temp.compareToIgnoreCase("FATAL")==0)
+      return Level.FATAL;
+    else if (temp.compareToIgnoreCase("ALL")==0)
+      return Level.ALL;
+
+    if (logger.isEnabledFor(Level.DEBUG))
+      logger.debug(result);
+    return result;
+  }
+
+  public void setLogLevel(Level level) {
+    if (level==null)
+      level = Level.OFF;
+    String temp = "OFF";
+    if (level==Level.ALL)
+      temp="ALL";
+    else if (level==Level.INFO)
+      temp="INFO";
+    else if (level==Level.DEBUG)
+      temp="DEBUG";
+    else if (level==Level.WARN)
+      temp="WARN";
+    else if (level==Level.FATAL)
+      temp="FATAL";
+    setAttributeByTagName(new String[] {"options", "logging", "level"}, temp);
+    Logger.getRootLogger().setLevel(level);
+    if (logger.isEnabledFor(Level.DEBUG))
+      logger.debug("Loglevel geändert in " + level.toString());
   }
 
   public RemoteConfiguration getRemoteSettings() {

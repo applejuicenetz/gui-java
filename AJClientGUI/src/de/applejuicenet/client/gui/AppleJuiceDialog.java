@@ -13,9 +13,11 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.23 2003/06/22 19:54:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.24 2003/06/24 12:06:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +26,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.24  2003/06/24 12:06:49  maj0r
+ * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
+ *
  * Revision 1.23  2003/06/22 19:54:45  maj0r
  * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
  *
@@ -52,11 +57,13 @@ public class AppleJuiceDialog
   private JFrame _this;
   private JButton pause;
   private boolean paused = false;
+  private Logger logger;
 
   private static AppleJuiceDialog theApp;
 
   public AppleJuiceDialog() {
     super();
+    logger = Logger.getLogger(getClass());
     try {
       jbInit();
       pack();
@@ -159,6 +166,10 @@ public class AppleJuiceDialog
 
   private void closeDialog(WindowEvent evt) {
     setVisible(false);
+    String nachricht = "appleJuice-Core-GUI wird beendet...";
+    if (logger.isEnabledFor(Level.INFO))
+      logger.info(nachricht);
+    System.out.println(nachricht);
     einstellungenSpeichern();
     System.exit(0);
   }
@@ -166,6 +177,11 @@ public class AppleJuiceDialog
   public static void closeWithErrormessage(String error, boolean speichereEinstellungen) {
     JOptionPane.showMessageDialog(theApp, error, "Fehler!",
                                   JOptionPane.OK_OPTION);
+    String nachricht = "appleJuice-Core-GUI wird beendet...";
+    Logger aLogger = Logger.getLogger(AppleJuiceDialog.class.getName());
+    if (aLogger.isEnabledFor(Level.INFO))
+      aLogger.info(nachricht);
+    System.out.println(nachricht);
     if (speichereEinstellungen)
       einstellungenSpeichern();
     System.out.println("Fehler: " + error);

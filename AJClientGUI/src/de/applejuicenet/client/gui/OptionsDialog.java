@@ -7,9 +7,10 @@ import javax.swing.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.10 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.11 2003/06/24 12:06:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.11  2003/06/24 12:06:49  maj0r
+ * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
+ *
  * Revision 1.10  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -105,6 +109,8 @@ public class OptionsDialog
     OptionsManager om = OptionsManager.getInstance();
     if (standardPanel.isDirty() || verbindungPanel.isDirty()) {
       om.saveAJSettings(ajSettings);
+      if (standardPanel.isDirty())
+        om.setLogLevel(standardPanel.getLogLevel());
     }
     if (remotePanel.isDirty()) {
       try {

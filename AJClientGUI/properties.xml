@@ -2,5 +2,6 @@
 <root>
     <options sprache="deutsch">
         <remote host="localhost" passwort="" use="0"/>
+        <logging level="OFF"/>
     </options>
 </root>
