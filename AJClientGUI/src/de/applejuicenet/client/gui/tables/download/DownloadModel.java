@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.4 2003/07/03 19:11:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.5 2003/07/04 15:25:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.5  2003/07/04 15:25:38  maj0r
+ * Version erhöht.
+ * DownloadModel erweitert.
+ *
  * Revision 1.4  2003/07/03 19:11:16  maj0r
  * DownloadTable überarbeitet.
  *
@@ -44,6 +48,19 @@ public class DownloadModel
     extends AbstractTreeTableModel implements LanguageListener{
 
   static protected String[] cNames = {"", "", "", "", "", "", "", "", "", ""};
+
+  private String ungefragt = "";
+  private String versucheZuVerbinden = "";
+  private String ggstZuAlteVersion = "";
+  private String kannDateiNichtOeffnen = "";
+  private String warteschlange = "";
+  private String keineBrauchbarenParts = "";
+  private String uebertragung = "";
+  private String nichtGenugPlatz = "";
+  private String fertiggestellt = "";
+  private String keineVerbindungMoeglich = "";
+  private String pausiert = "";
+  private String position = "";
 
   static protected Class[] cTypes = {
       TreeTableModel.class, String.class, String.class, String.class, String.class,
@@ -114,7 +131,7 @@ public class DownloadModel
             case 0:
                 return downloadSourceDO.getFilename();
             case 1:
-                return Integer.toString(downloadSourceDO.getStatus());
+                return getStatusForSource(downloadSourceDO);
             case 2:
             case 3:
             case 4:
@@ -137,6 +154,52 @@ public class DownloadModel
     return null;
   }
 
+    private String getStatusForSource(DownloadSourceDO downloadSourceDO){
+        switch(downloadSourceDO.getStatus()){
+            case DownloadSourceDO.UNGEFRAGT:
+                    return ungefragt;
+            case DownloadSourceDO.VERSUCHE_ZU_VERBINDEN:
+                    return versucheZuVerbinden;
+            case DownloadSourceDO.GEGENSTELLE_HAT_ZU_ALTE_VERSION:
+                    return ggstZuAlteVersion;
+            case DownloadSourceDO.GEGENSTELLE_KANN_DATEI_NICHT_OEFFNEN:
+                    return kannDateiNichtOeffnen;
+            case DownloadSourceDO.IN_WARTESCHLANGE:
+                {
+                    String temp = position;
+                    temp = temp.replaceFirst("%d", Integer.toString(downloadSourceDO.getQueuePosition()));
+                    return warteschlange + " " + temp;
+                }
+            case DownloadSourceDO.KEINE_BRAUCHBAREN_PARTS:
+                    return keineBrauchbarenParts;
+            case DownloadSourceDO.UEBERTRAGUNG:
+                    return uebertragung;
+            case DownloadSourceDO.NICHT_GENUEGEND_PLATZ_AUF_DER_PLATTE:
+                    return nichtGenugPlatz;
+            case DownloadSourceDO.FERTIGGESTELLT:
+                    return fertiggestellt;
+            case DownloadSourceDO.KEINE_VERBINDUNG_MOEGLICH:
+                    return keineVerbindungMoeglich;
+            case DownloadSourceDO.PAUSIERT:
+                    return pausiert;
+            default:
+                return "";
+        }
+    }
+
     public void fireLanguageChanged() {
+        LanguageSelector languageSelector = LanguageSelector.getInstance();
+        ungefragt = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat1"}));
+        versucheZuVerbinden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat2"}));
+        ggstZuAlteVersion = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat3"}));
+        kannDateiNichtOeffnen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat4"}));
+        warteschlange = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat5"}));
+        keineBrauchbarenParts = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat6"}));
+        uebertragung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat7"}));
+        nichtGenugPlatz = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat8"}));
+        fertiggestellt = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat14"}));
+        keineVerbindungMoeglich = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", ""}));
+        pausiert = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat13"}));
+        position = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat51"}));
     }
 }

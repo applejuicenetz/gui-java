@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.27 2003/07/03 19:11:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.28 2003/07/04 15:25:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.28  2003/07/04 15:25:38  maj0r
+ * Version erhöht.
+ * DownloadModel erweitert.
+ *
  * Revision 1.27  2003/07/03 19:11:16  maj0r
  * DownloadTable überarbeitet.
  *
@@ -55,7 +59,7 @@ import org.apache.log4j.Level;
  */
 
 public class DataManager { //Singleton-Implementierung
-  public static final String DATAMANAGER_VERSION = "0.02 Alpha";
+  public static final String DATAMANAGER_VERSION = "0.04 Alpha";
 
   private HashSet downloadListener;
   private HashSet shareListener;
