@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<general>
+		<title value="ServerWatcher"/>
+		<version value="1.2"/>
+		<author value="Maj0r"/>
+		<description value="Mit dem Serverwatcher kann der Status von Servern angezeigt werden. Benötigt wird ein GUI ab 0.56.1"/>
+		<istab value="true"/>
+		<classname value="de.applejuicenet.client.gui.plugins.VersionChecker"/>
+	</general>
+</root>
