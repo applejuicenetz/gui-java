@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.tables.server.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.tables.server.ServerTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.19 2003/07/01 18:41:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.20 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.gui.tables.server.ServerTableModel;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.20  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.19  2003/07/01 18:41:39  maj0r
  * Struktur verändert.
  *
@@ -176,14 +179,14 @@ public class ServerPanel
   }
 
   public void fireContentChanged(int type, Object content) {
-    if (type != DataUpdateListener.SERVER_CHANGED ||
-        ! (content instanceof HashMap)) {
-      return;
-    }
-    int selected = serverTable.getSelectedRow();
-    ( (ServerTableModel) serverTable.getModel()).setTable( (HashMap) content);
-    if (selected != -1 && selected < serverTable.getRowCount()) {
-      serverTable.setRowSelectionInterval(selected, selected);
+    if (type == DataUpdateListener.SERVER_CHANGED &&
+         (content instanceof HashMap))
+    {
+        int selected = serverTable.getSelectedRow();
+        ( (ServerTableModel) serverTable.getModel()).setTable( (HashMap) content);
+        if (selected != -1 && selected < serverTable.getRowCount()) {
+          serverTable.setRowSelectionInterval(selected, selected);
+        }
     }
   }
 

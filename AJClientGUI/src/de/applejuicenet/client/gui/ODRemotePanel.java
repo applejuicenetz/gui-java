@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODRemotePanel.java,v 1.3 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODRemotePanel.java,v 1.4 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODRemotePanel.java,v $
+ * Revision 1.4  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.3  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -32,7 +35,6 @@ public class ODRemotePanel
   private JTextField host = new JTextField();
   private JPasswordField passwortAlt = new JPasswordField();
   private JPasswordField passwortNeu = new JPasswordField();
-  private JCheckBox verwenden = new JCheckBox();
   private RemoteConfiguration remote;
 
   public ODRemotePanel() {
@@ -63,9 +65,6 @@ public class ODRemotePanel
     label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"javagui", "options", "remote",
                                   "passwortNeu"})));
-    verwenden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"javagui", "options", "remote",
-                                  "verwenden"})));
 
     host.setText(remote.getHost());
     host.addFocusListener(new FocusAdapter() {
@@ -89,18 +88,7 @@ public class ODRemotePanel
       }
     });
 
-    panel2.add(verwenden);
-
-    verwenden.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent ae) {
-        remote.useRemote(verwenden.isSelected());
-        enableControls(verwenden.isSelected());
-        dirty = true;
-      }
-    });
-
-    verwenden.setSelected(remote.isRemoteUsed());
-    enableControls(remote.isRemoteUsed());
+    enableControls(true);
 
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;

@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.25 2003/07/04 15:25:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.26 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.26  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.25  2003/07/04 15:25:38  maj0r
  * Version erhöht.
  * DownloadModel erweitert.
@@ -48,7 +51,7 @@ import org.apache.log4j.Level;
 
 public class AppleJuiceDialog
     extends JFrame
-    implements LanguageListener {
+    implements LanguageListener, DataUpdateListener {
 
   public static final String GUI_VERSION = "0.04 Alpha";
 
@@ -121,14 +124,13 @@ public class AppleJuiceDialog
     JPanel panel = new JPanel(new GridBagLayout());
 
     for (int i = 0; i < statusbar.length; i++) {
-      statusbar[i] = new JLabel();
+      statusbar[i] = new JLabel("            ");
       statusbar[i].setHorizontalAlignment(JLabel.RIGHT);
       statusbar[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
       statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
     }
     pause = new JButton("Pause");
     pause.setFont(new java.awt.Font("SansSerif", 0, 11));
-    DataManager.getInstance().addStatusbarForListen(statusbar);
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;
     constraints.fill = GridBagConstraints.BOTH;
@@ -153,7 +155,10 @@ public class AppleJuiceDialog
     ToolTipManager.sharedInstance().setInitialDelay(1);
     ToolTipManager.sharedInstance().setDismissDelay(50000);
     fireLanguageChanged();
-    DataManager.getInstance().startXMLCheck();
+    DataManager dm = DataManager.getInstance();
+    dm.addDataUpdateListener(this,
+        DataUpdateListener.STATUSBAR_CHANGED);
+    dm.startXMLCheck();
   }
 
   public Dimension getPreferredSize() {
@@ -279,4 +284,16 @@ public class AppleJuiceDialog
                                     "pause"})));
     }
   }
+
+    public void fireContentChanged(int type, Object content) {
+        if (type == DataUpdateListener.STATUSBAR_CHANGED)
+        {
+            String[] status = (String[]) content;
+            statusbar[0].setText(status[0]);
+            statusbar[1].setText(status[1]);
+            statusbar[2].setText(status[2]);
+            statusbar[3].setText(status[3]);
+            statusbar[4].setText(status[4]);
+        }
+    }
 }

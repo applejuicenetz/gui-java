@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.exception.*;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.11 2003/06/24 12:06:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.12 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.12  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.11  2003/06/24 12:06:49  maj0r
  * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
  *
@@ -33,7 +36,6 @@ public class OptionsDialog
   private JTabbedPane jTabbedPane1 = new JTabbedPane();
   private ODPluginPanel pluginPanel;
   private ODStandardPanel standardPanel;
-  private ODPasswortPanel passwortPanel;
   private ODVerbindungPanel verbindungPanel;
   private ODRemotePanel remotePanel;
   private JFrame parent;
@@ -62,17 +64,13 @@ public class OptionsDialog
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "standardsheet",
                                   "caption"})), standardPanel);
-    passwortPanel = new ODPasswortPanel(); //Passwort-Reiter
-    jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"einstform", "pwsheet",
-                                  "caption"})), passwortPanel);
     verbindungPanel = new ODVerbindungPanel(ajSettings); //Verbindungs-Reiter
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "connectionsheet",
                                   "caption"})), verbindungPanel);
     remotePanel = new ODRemotePanel(); //Fernzugriff-Reiter
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"javagui", "options", "remote",
+        getFirstAttrbuteByTagName(new String[] {"einstform", "pwsheet",
                                   "caption"})), remotePanel);
     pluginPanel = new ODPluginPanel(parent); //Plugin-Reiter
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.

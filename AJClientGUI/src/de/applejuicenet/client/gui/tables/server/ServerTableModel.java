@@ -6,11 +6,12 @@ import javax.swing.table.*;
 
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.shared.MapSetStringKey;
+import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.gui.shared.SortableTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.1 2003/07/01 18:41:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.2 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import de.applejuicenet.client.gui.shared.SortableTableModel;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerTableModel.java,v $
+ * Revision 1.2  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.1  2003/07/01 18:41:39  maj0r
  * Struktur verändert.
  *
@@ -43,7 +47,6 @@ public class ServerTableModel
   TableSorter sorter;
 
   ArrayList servers = new ArrayList();
-
 
   public ServerTableModel(HashMap content) {
     super();
@@ -149,6 +152,8 @@ public class ServerTableModel
         oldServer.setName(server.getName());
         oldServer.setPort(server.getPort());
         oldServer.setTimeLastSeen(server.getTimeLastSeen());
+        oldServer.setConnected(server.isConnected());
+        oldServer.setTryConnect(server.isTryConnect());
       }
     }
     sortByColumn(0, true);

@@ -2,6 +2,7 @@ package de.applejuicenet.client.gui.tables;
 
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.tables.AbstractCellEditor;
+import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
@@ -20,7 +21,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.5 2003/07/07 15:57:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.6 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +30,9 @@ import java.util.EventObject;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.6  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.5  2003/07/07 15:57:59  maj0r
  * Fehler korrigiert.
  *
@@ -57,7 +61,7 @@ public class JTreeTable extends JTable {
 	ListToTreeSelectionModelWrapper selectionWrapper = new
             ListToTreeSelectionModelWrapper();
 	tree.setSelectionModel(selectionWrapper);
-	setSelectionModel(selectionWrapper.getListSelectionModel()); 
+	setSelectionModel(selectionWrapper.getListSelectionModel());
 
 	setDefaultRenderer(TreeTableModel.class, tree);
 	setDefaultEditor(TreeTableModel.class, new TreeTableCellEditor());
@@ -83,13 +87,13 @@ public class JTreeTable extends JTable {
 
     public int getEditingRow() {
         return (getColumnClass(editingColumn) == TreeTableModel.class) ? -1 :
-	        editingRow;  
+	        editingRow;
     }
 
     public void setRowHeight(int rowHeight) {
-        super.setRowHeight(rowHeight); 
+        super.setRowHeight(rowHeight);
 	if (tree != null && tree.getRowHeight() != rowHeight) {
-            tree.setRowHeight(getRowHeight()); 
+            tree.setRowHeight(getRowHeight());
 	}
     }
 
@@ -121,7 +125,7 @@ public class JTreeTable extends JTable {
 
 	public void setRowHeight(int rowHeight) {
 	    if (rowHeight > 0) {
-		super.setRowHeight(rowHeight); 
+		super.setRowHeight(rowHeight);
 		if (JTreeTable.this != null &&
 		    JTreeTable.this.getRowHeight() != rowHeight) {
 		    JTreeTable.this.setRowHeight(getRowHeight());
@@ -160,9 +164,8 @@ public class JTreeTable extends JTable {
                     setBackground(table.getBackground());
                 }
             }
-            else{
+            else
                 setBackground(table.getBackground());
-            }
         }
 
 	    visibleRow = row;
@@ -211,7 +214,7 @@ public class JTreeTable extends JTable {
 	}
 
 	ListSelectionModel getListSelectionModel() {
-	    return listSelectionModel; 
+	    return listSelectionModel;
 	}
 
 	public void resetRowSelection() {
@@ -292,9 +295,6 @@ public class JTreeTable extends JTable {
                   else{
                       ((JLabel)c).setBackground(tree.getBackground());
                   }
-              }
-              else{
-                  ((JLabel)c).setBackground(tree.getBackground());
               }
           }
       }

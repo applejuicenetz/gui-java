@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.9 2003/06/24 14:32:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.10 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.10  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.9  2003/06/24 14:32:27  maj0r
  * Klassen zum Sortieren von Tabellen eingefügt.
  * Servertabelle kann nun spaltenweise sortiert werden.
@@ -47,6 +50,11 @@ public class StartPanel
   private JLabel label6;
   private JLabel label9;
 
+  private String label9Text;
+  private String label6Text;
+  private String firewallWarning;
+
+
   private LanguageSelector languageSelector;
 
   public StartPanel(AppleJuiceDialog parent) {
@@ -69,7 +77,6 @@ public class StartPanel
 
     JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
     panel1.setBackground(Color.WHITE);
-    JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
     panel1.setBackground(Color.WHITE);
 
     IconManager im = IconManager.getInstance();
@@ -118,14 +125,7 @@ public class StartPanel
     constraints.gridy = 3;
     constraints.insets.left = 15;
     label7 = new JLabel();
-    if (netInfo.isFirewalled()) {
-      label7.setForeground(Color.RED);
-      label7.setText("Es ist möglich, dass Du hinter einer Firewall, einem Router, Proxy oder ähnlichem sitzt. Dies vermindert die Chance was zu laden.");
-    }
-    else {
-      label7.setForeground(Color.BLACK);
-      label7.setText("Alles klar.");
-    }
+    label7.setForeground(Color.RED);
 
     panel3.add(label7, constraints);
 
@@ -168,9 +168,6 @@ public class StartPanel
     constraints.gridy = 8;
     constraints.insets.top = 5;
     label6 = new JLabel();
-    label6.setText(netInfo.getAJUserGesamtAsString() + " Benutzer haben " +
-                   netInfo.getAJAnzahlDateienAsString() + " Dateien ( " +
-                   netInfo.getAJGesamtShare(0) + " )");
     panel3.add(label6, constraints);
 
     constraints.insets.top = 0;
@@ -182,14 +179,12 @@ public class StartPanel
     languageSelector.addLanguageListener(this);
     DataManager.getInstance().addDataUpdateListener(this,
         DataUpdateListener.NETINFO_CHANGED);
+    DataManager.getInstance().addDataUpdateListener(this,
+        DataUpdateListener.STATUSBAR_CHANGED);
   }
 
   public void registerSelected() {
 //    updateContent();
-  }
-
-  private void updateContent() {
-    fireLanguageChanged(); //ein bischen missbraucht, aber schwachsinnig dies doppelt zu implementieren
   }
 
   public void fireLanguageChanged() {
@@ -206,17 +201,18 @@ public class StartPanel
                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"mainform", "html1"})) +
                        "</h2></font></html>");
-    if (netInfo.isFirewalled()) {
-      label7.setForeground(Color.RED);
-      label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+    firewallWarning = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
           getFirstAttrbuteByTagName(new String[] {"mainform", "firewallwarning",
-                                    "caption"})));
+                                    "caption"}));
+    if (netInfo.isFirewalled()) {
+      label7.setText(firewallWarning);
     }
     else {
       label7.setText("");
     }
-    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+    label9Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"mainform", "html10"}));
+    String temp = label9Text;
     temp = temp.replaceFirst("%s", "<Kein Server>");
     temp = temp.replaceFirst("%d",
                              Integer.toString(DataManager.getInstance().
@@ -224,9 +220,10 @@ public class StartPanel
                                               size()));
     temp = temp.replaceAll("%s", "-");
     label9.setText(temp);
-    temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+    label6Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                              getFirstAttrbuteByTagName(new
         String[] {"mainform", "status", "status2"}));
+    temp = label6Text;
     temp = temp.replaceFirst("%d", netInfo.getAJUserGesamtAsStringWithPoints());
     temp = temp.replaceFirst("%d", netInfo.getAJAnzahlDateienAsStringWithPoints());
     temp = temp.replaceFirst("%s", netInfo.getAJGesamtShareWithPoints(0));
@@ -238,16 +235,37 @@ public class StartPanel
   }
 
   public void fireContentChanged(int type, Object content) {
-    if (type != DataUpdateListener.NETINFO_CHANGED ||
-        ! (content instanceof NetworkInfo)) {
-      return;
+    if (type == DataUpdateListener.NETINFO_CHANGED) {
+        NetworkInfo netInfo = (NetworkInfo) content;
+        StringBuffer temp = new StringBuffer(label6Text);
+        int pos = temp.indexOf("%d");
+        temp.replace(pos, pos +2, netInfo.getAJUserGesamtAsStringWithPoints());
+        pos = temp.indexOf("%d");
+        temp.replace(pos, pos +2, netInfo.getAJUserGesamtAsStringWithPoints());
+        pos = temp.indexOf("%s");
+        temp.replace(pos, pos +2, netInfo.getAJGesamtShareWithPoints(0));
+        label6.setText(temp.toString());
+        if (netInfo.isFirewalled()) {
+          label7.setText(firewallWarning);
+        }
+        else {
+          label7.setText("");
+        }
     }
-    NetworkInfo netInfo = (NetworkInfo) content;
-    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"mainform", "status", "status2"}));
-    temp = temp.replaceFirst("%d", netInfo.getAJUserGesamtAsStringWithPoints());
-    temp = temp.replaceFirst("%d", netInfo.getAJAnzahlDateienAsStringWithPoints());
-    temp = temp.replaceFirst("%s", netInfo.getAJGesamtShareWithPoints(0));
-    label6.setText(temp);
+    else if (type == DataUpdateListener.STATUSBAR_CHANGED) {
+        String[] status = (String[]) content;
+        StringBuffer temp = new StringBuffer(label9Text);
+        int pos = temp.indexOf("%s");
+        temp.replace(pos, pos +2, status[1]);
+        pos = temp.indexOf("%d");
+        temp.replace(pos, pos +2, Integer.toString(DataManager.getInstance().
+                                                  getAllServer().
+                                                  size()));
+        pos = temp.indexOf("%s");
+        temp.replace(pos, pos +2, "-");
+        pos = temp.indexOf("%s");
+        temp.replace(pos, pos +2, "-");
+        label9.setText(temp.toString());
+    }
   }
 }

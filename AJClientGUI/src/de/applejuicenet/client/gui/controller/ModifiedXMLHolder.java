@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.10 2003/07/03 19:11:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.11 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.11  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.10  2003/07/03 19:11:16  maj0r
  * DownloadTable überarbeitet.
  *
@@ -53,6 +56,9 @@ public class ModifiedXMLHolder
   private String[] status = new String[5];
   int i = 0;
 
+  private int connectedWithServerId = -1;
+  private int tryConnectToServer = -1;
+
   public ModifiedXMLHolder() {
     super("/xml/modified.xml", "");
   }
@@ -88,6 +94,25 @@ public class ModifiedXMLHolder
 
   public String[] getStatusBar() {
     NodeList nodes = document.getElementsByTagName("information");
+      try{
+    if (tryConnectToServer!=-1){
+        ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
+        status[0] = "Verbinde...";
+        status[1] = serverDO.getName();
+    }
+    else if (connectedWithServerId != -1){
+        ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
+        status[0] = "Verbunden...";
+        status[1] = serverDO.getName();
+    }
+    else{
+        status[0] = "Nicht verbunden";
+        status[1] = "<Kein Server>";
+    }
+          }
+      catch(Exception ex){
+          ex.printStackTrace();
+      }
     status[3] = netInfo.getExterneIP();
     if (nodes.getLength() == 0) {
       return status; //Keine Verï¿½nderung seit dem letzten Abrufen
@@ -96,9 +121,6 @@ public class ModifiedXMLHolder
     long credits = Long.parseLong(e.getAttribute("credits"));
     long up = Long.parseLong(e.getAttribute("sessionupload"));
     long down = Long.parseLong(e.getAttribute("sessiondownload"));
-
-    status[0] = "Nicht verbunden"; //toDo
-    status[1] = "Servername"; //toDo
     status[2] = bytesUmrechnen(down) + " in: " + bytesUmrechnen(up) + " out";
     status[3] = netInfo.getExterneIP();
     status[4] = "Credits: " + creditsUmrechnen(credits);
@@ -443,10 +465,34 @@ public class ModifiedXMLHolder
     String users = e.getAttribute("users");
     String dateien = e.getAttribute("files");
     String dateigroesse = e.getAttribute("filesize");
+    int tryConnectToServer = Integer.parseInt(e.getAttribute("tryconnecttoserver"));
+    int connectedWithServerId = Integer.parseInt(e.getAttribute("connectedwithserverid"));
     boolean firewalled = (e.getAttribute("firewalled").compareToIgnoreCase(
         "true") == 0) ? true : false;
     String externeIP = e.getAttribute("ip");
+    if (this.tryConnectToServer != tryConnectToServer){
+        Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.tryConnectToServer)));
+        if (alterServer!=null){
+            ((ServerDO)alterServer).setTryConnect(false);
+        }
+        if (tryConnectToServer!=-1){
+            ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
+            serverDO.setTryConnect(true);
+        }
+        this.tryConnectToServer = tryConnectToServer;
+    }
+    if (this.connectedWithServerId != connectedWithServerId){
+        Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.connectedWithServerId)));
+        if (alterServer!=null){
+            ((ServerDO)alterServer).setConnected(false);
+        }
+        if (connectedWithServerId!=-1){
+            ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(connectedWithServerId)));
+            serverDO.setConnected(true);
+        }
+        this.connectedWithServerId = connectedWithServerId;
+    }
     netInfo = new NetworkInfo(users, dateien, dateigroesse, firewalled,
-                              externeIP);
+                              externeIP, tryConnectToServer, connectedWithServerId);
   }
 }

@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.28 2003/07/04 15:25:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.29 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.29  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.28  2003/07/04 15:25:38  maj0r
  * Version erhöht.
  * DownloadModel erweitert.
@@ -66,9 +69,8 @@ public class DataManager { //Singleton-Implementierung
   private HashSet uploadListener;
   private HashSet serverListener;
   private HashSet networkInfoListener;
+  private HashSet statusbarListener;
   private static DataManager instance = null;
-  private static int x = 0;
-  private JLabel[] statusbar;
   private ModifiedXMLHolder modifiedXML = null;
   private InformationXMLHolder informationXML = null;
   private ShareXMLHolder shareXML = null;
@@ -95,6 +97,9 @@ public class DataManager { //Singleton-Implementierung
     else if (type == DataUpdateListener.UPLOAD_CHANGED) {
       listenerSet = uploadListener;
     }
+    else if (type == DataUpdateListener.STATUSBAR_CHANGED) {
+      listenerSet = statusbarListener;
+    }
     else {
       return;
     }
@@ -112,6 +117,7 @@ public class DataManager { //Singleton-Implementierung
       uploadListener = new HashSet();
       shareListener = new HashSet();
       networkInfoListener = new HashSet();
+      statusbarListener = new HashSet();
 
       //load XMLs
       modifiedXML = new ModifiedXMLHolder();
@@ -179,8 +185,9 @@ public class DataManager { //Singleton-Implementierung
     }
     String result;
     try {
+      String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
       result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
-                                         "/function/setsettings?" + parameters);
+                                         "/function/setsettings?password=" + password + "&" + parameters);
     }
     catch (WebSiteNotFoundException ex) {
       return false;
@@ -198,7 +205,7 @@ public class DataManager { //Singleton-Implementierung
     informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
     informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
     informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
-    updateStatusbar();
+    informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
   }
 
   public boolean connectToServer(int id) {
@@ -213,8 +220,9 @@ public class DataManager { //Singleton-Implementierung
       String result;
       logger.info("Verbinde mit '" + serverDO.getName() + "'...");
       try {
+        String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
         result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
-                                           "/function/serverlogin?id=" + id);
+                                           "/function/serverlogin?password=" + password + "&id=" + id);
       }
       catch (WebSiteNotFoundException ex) {
         return false;
@@ -224,13 +232,9 @@ public class DataManager { //Singleton-Implementierung
   }
 
   private static String getHost() {
-    OptionsManager om = OptionsManager.getInstance();
-    String savedHost = "localhost";
-    if (om.getRemoteSettings().isRemoteUsed()) {
-      savedHost = OptionsManager.getInstance().getRemoteSettings().getHost();
-      if (savedHost.length() == 0) {
-        savedHost = "localhost";
-      }
+    String savedHost = OptionsManager.getInstance().getRemoteSettings().getHost();
+    if (savedHost.length() == 0) {
+      savedHost = "localhost";
     }
     return savedHost;
   }
@@ -242,8 +246,9 @@ public class DataManager { //Singleton-Implementierung
 
   public static boolean istCoreErreichbar() {
     try {
+      String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
       String testData = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
-                                                  "/xml/information.xml");
+                                                  "/xml/information.xml?password=" + password);
     }
     catch (WebSiteNotFoundException ex) {
       return false;
@@ -326,24 +331,16 @@ public class DataManager { //Singleton-Implementierung
                 }
                 break;
             }
+        case DataUpdateListener.STATUSBAR_CHANGED:
+            {
+                String[] content = modifiedXML.getStatusBar();
+                Iterator it = statusbarListener.iterator();
+                while (it.hasNext()) {
+                  ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.STATUSBAR_CHANGED, content);
+                }
+                break;
+            }
         default: break;
-    }
-  }
-
-  public void addStatusbarForListen(JLabel[] statusbar) {
-    this.statusbar = statusbar;
-    updateStatusbar();
-  }
-
-  public void updateStatusbar() {
-    //dummy
-    String[] status = modifiedXML.getStatusBar();
-    if (statusbar != null) {
-      statusbar[0].setText(status[0]);
-      statusbar[1].setText(status[1]);
-      statusbar[2].setText(status[2]);
-      statusbar[3].setText(status[3]);
-      statusbar[4].setText(status[4]);
     }
   }
 

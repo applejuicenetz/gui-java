@@ -9,7 +9,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.15 2003/07/01 14:55:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.16 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.16  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.15  2003/07/01 14:55:06  maj0r
  * Unnütze Abfrage entfernt.
  *
@@ -105,38 +108,23 @@ public class OptionsManager
   }
 
   public RemoteConfiguration getRemoteSettings() {
-    boolean use = getFirstAttrbuteByTagName(new String[] {"options", "remote",
-                                            "use"}).equals("1");
     String host = "localhost";
     String passwort = "";
-    if (use){
-      host = getFirstAttrbuteByTagName(new String[] {"options", "remote",
-                                              "host"});
-      passwort = getFirstAttrbuteByTagName(new String[] {"options",
-                                                  "remote", "passwort"});
-      if (passwort != null && passwort.length() > 0) {
-        passwort = new String(Base64.decode(passwort));
-      }
-    }
-    return new RemoteConfiguration(host, passwort, use);
+    host = getFirstAttrbuteByTagName(new String[] {"options", "remote",
+                                          "host"});
+    passwort = getFirstAttrbuteByTagName(new String[] {"options",
+                                              "remote", "passwort"});
+    return new RemoteConfiguration(host, passwort);
   }
 
   public void saveRemote(RemoteConfiguration remote) throws
       InvalidPasswordException {
-    if (!remote.isRemoteUsed()) {
-      setAttributeByTagName(new String[] {"options", "remote", "use"}
-                            , (remote.isRemoteUsed() ? "1" : "0"));
-      return;
-    }
     if (!remote.getNewPassword().equalsIgnoreCase("")) {
-      String altPasswortBase64FromXML = new String(Base64.decode(
-          getFirstAttrbuteByTagName(new String[] {"options", "remote",
-                                    "passwort"})));
-      if (altPasswortBase64FromXML.compareTo(remote.getOldPassword()) == 0) {
-        setAttributeByTagName(new String[] {"options", "remote", "passwort"}
-                              ,
-                              new String(Base64.encode(remote.getNewPassword().
-            getBytes())));
+      String altPasswort = getFirstAttrbuteByTagName(new String[] {"options", "remote",
+                                    "passwort"});
+      if (altPasswort.compareTo(remote.getOldPassword()) == 0) {
+        setAttributeByTagName(new String[] {"options", "remote", "passwort"},
+                              remote.getNewPassword());
       }
       else {
         throw new InvalidPasswordException();
@@ -144,8 +132,6 @@ public class OptionsManager
     }
     setAttributeByTagName(new String[] {"options", "remote", "host"}
                           , remote.getHost());
-    setAttributeByTagName(new String[] {"options", "remote", "use"}
-                            , (remote.isRemoteUsed() ? "1" : "0"));
   }
 
   public boolean saveAJSettings(AJSettings ajSettings) {

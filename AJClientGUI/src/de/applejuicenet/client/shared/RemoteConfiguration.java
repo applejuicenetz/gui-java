@@ -1,7 +1,10 @@
 package de.applejuicenet.client.shared;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/RemoteConfiguration.java,v 1.4 2003/07/01 14:51:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/RemoteConfiguration.java,v 1.5 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +13,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RemoteConfiguration.java,v $
+ * Revision 1.5  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.4  2003/07/01 14:51:56  maj0r
  * Fehler bei null-Werten korrigiert.
  *
@@ -21,14 +27,12 @@ package de.applejuicenet.client.shared;
 
 public class RemoteConfiguration {
   private String host;
-  private boolean use;
   private String oldPassword;
   private String newPassword;
 
-  public RemoteConfiguration(String host, String oldPassword, boolean use) {
+  public RemoteConfiguration(String host, String oldPassword) {
     this.host = host;
     this.oldPassword = oldPassword;
-    this.use = use;
   }
 
   public RemoteConfiguration() {}
@@ -37,16 +41,12 @@ public class RemoteConfiguration {
     this.host = host;
   }
 
-  public void useRemote(boolean use) {
-    this.use = use;
-  }
-
   public void setOldPassword(String oldPassword) {
-    this.oldPassword = oldPassword;
+    this.oldPassword = getMD5(oldPassword);
   }
 
   public void setNewPassword(String newPassword) {
-    this.newPassword = newPassword;
+    this.newPassword = getMD5(newPassword);
   }
 
   public String getHost() {
@@ -67,7 +67,19 @@ public class RemoteConfiguration {
     return newPassword;
   }
 
-  public boolean isRemoteUsed() {
-    return use;
+  private String getMD5 (String text){
+    byte[] intext = text.getBytes();
+    StringBuffer sb = new StringBuffer();
+    MessageDigest md5 = null;
+    try {
+        md5 = MessageDigest.getInstance("MD5");
+    } catch (NoSuchAlgorithmException e) {
+        e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+    }
+    byte[] md5rslt = md5.digest(intext);
+    for( int i = 0 ; i < md5rslt.length ; i++ ){
+        sb.append(Integer.toHexString( (0xff & md5rslt[i])));
+    }
+    return sb.toString();
   }
 }

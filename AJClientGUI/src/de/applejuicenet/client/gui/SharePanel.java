@@ -21,7 +21,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.14 2003/07/04 11:32:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.15 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.15  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.14  2003/07/04 11:32:18  maj0r
  * Anzeige der Anzahl der Dateien und Gesamtgöße des Shares hinzugefügt.
  *
@@ -124,8 +127,6 @@ public class SharePanel
               ShareNode parentNode = ShareNode.getNodeByPath(path);
               if (parentNode!=null){
                   parentNode.addChild(shareDO);
-                  size += Long.parseLong(shareDO.getSize());
-                  anzahlDateien++;
               }
               else{
                   try {
@@ -136,6 +137,8 @@ public class SharePanel
                       e.printStackTrace();  //To change body of catch statement use Options | File Templates.
                   }
               }
+              size += Long.parseLong(shareDO.getSize());
+              anzahlDateien++;
           }
         size = size / 1048576;
         dateiGroesse = Double.toString(size);

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.7 2003/07/06 20:00:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.8 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: NetworkInfo.java,v $
+ * Revision 1.8  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.7  2003/07/06 20:00:19  maj0r
  * DownloadTable bearbeitet.
  *
@@ -25,18 +28,24 @@ public class NetworkInfo {
   private String ajGesamtShare;
   private boolean firewalled;
   private String externeIP;
+  private int tryConnectToServer;
+  private int connectedWithServerId;
 
   public NetworkInfo(long ajUserGesamt, long ajAnzahlDateien,
-                     String ajGesamtShare, boolean firewalled, String externeIP) {
+                     String ajGesamtShare, boolean firewalled, String externeIP,
+                     int tryConnectToServer, int connectedWithServerId) {
     this.ajUserGesamt = ajUserGesamt;
     this.ajAnzahlDateien = ajAnzahlDateien;
     this.ajGesamtShare = ajGesamtShare;
     this.firewalled = firewalled;
     this.externeIP = externeIP;
+    this.tryConnectToServer = tryConnectToServer;
+    this.connectedWithServerId = connectedWithServerId;
   }
 
   public NetworkInfo(String ajUserGesamt, String ajAnzahlDateien,
-                     String ajGesamtShare, boolean firewalled, String externeIP) {
+                     String ajGesamtShare, boolean firewalled, String externeIP,
+                     int tryConnectToServer, int connectedWithServerId) {
     if (ajUserGesamt == null || ajUserGesamt.length() == 0) {
       this.ajUserGesamt = 0;
     }
@@ -52,6 +61,8 @@ public class NetworkInfo {
     this.ajGesamtShare = ajGesamtShare;
     this.firewalled = firewalled;
     this.externeIP = externeIP;
+    this.tryConnectToServer = tryConnectToServer;
+    this.connectedWithServerId = connectedWithServerId;
   }
 
   public String getAJGesamtShare(long faktor) {
@@ -155,4 +166,12 @@ public class NetworkInfo {
     }
     return result.toString();
   }
+
+    public int getTryConnectToServer() {
+        return tryConnectToServer;
+    }
+
+    public int getConnectedWithServerId() {
+        return connectedWithServerId;
+    }
 }

@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.3 2003/06/30 20:35:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.4 2003/08/02 12:03:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.4  2003/08/02 12:03:38  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.3  2003/06/30 20:35:50  maj0r
  * Code optimiert.
  *
@@ -40,6 +43,7 @@ public abstract class WebXMLParser
   private long timestamp = 0;
   private boolean firstRun = true;
   private boolean useTimestamp = true;
+  private String password;
 
   public WebXMLParser(String xmlCommand, String parameters) {
     super();
@@ -54,14 +58,11 @@ public abstract class WebXMLParser
   }
 
   private void init(String xmlCommand){
-    if (OptionsManager.getInstance().getRemoteSettings().isRemoteUsed()){
-      host = OptionsManager.getInstance().getRemoteSettings().getHost();
-      if (host==null || host.length()==0)
-        host = "localhost";
-    }
-    else{
+    RemoteConfiguration rc = OptionsManager.getInstance().getRemoteSettings();
+    host = rc.getHost();
+    password = rc.getOldPassword();
+    if (host==null || host.length()==0)
       host = "localhost";
-    }
     this.xmlCommand = xmlCommand;
     webXML = true;
   }
@@ -71,12 +72,12 @@ public abstract class WebXMLParser
     try {
       if (useTimestamp) {
         xmlData = HtmlLoader.getHtmlContent(host, HtmlLoader.GET,
-                                            xmlCommand + "?timestamp=" +
+                                            xmlCommand + "?password=" + password + "&timestamp=" +
                                             timestamp + parameters);
       }
       else {
         xmlData = HtmlLoader.getHtmlContent(host, HtmlLoader.GET,
-                                            xmlCommand + "?" + parameters);
+                                            xmlCommand + "?password=" + password + "&" + parameters);
       }
     }
     catch (WebSiteNotFoundException ex) {
@@ -117,4 +118,8 @@ public abstract class WebXMLParser
   }
 
   public abstract void update();
+
+  public void setPassword(String password){
+      this.password = password;
+  }
 }
