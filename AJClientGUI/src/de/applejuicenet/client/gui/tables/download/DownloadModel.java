@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.16 2003/10/16 12:06:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.17 2003/10/18 18:44:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.17  2003/10/18 18:44:16  maj0r
+ * Neuen Userstatus "Warteschlange voll" hinzugefuegt.
+ *
  * Revision 1.16  2003/10/16 12:06:51  maj0r
  * Diverse Schoenheitskorrekturen.
  *
@@ -100,6 +103,7 @@ public class DownloadModel
   private String pausiert = "";
   private String position = "";
   private String versucheIndirekt = "";
+  private String warteschlangeVoll = "";
 
   static protected Class[] cTypes = {
       TreeTableModel.class, String.class, String.class, String.class, String.class,
@@ -300,6 +304,8 @@ public class DownloadModel
                     return pausiert;
             case DownloadSourceDO.VERSUCHE_INDIREKT:
                     return versucheIndirekt;
+            case DownloadSourceDO.WARTESCHLANGE_VOLL:
+                    return warteschlangeVoll;
             default:
                 return "";
         }
@@ -445,5 +451,6 @@ public class DownloadModel
         fertig = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat14"}));
         abbrechen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat15"}));
         abgebrochen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat17"}));
+        warteschlangeVoll = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui", "downloadform", "warteschlangevoll"}));
     }
 }

@@ -5,7 +5,7 @@ import java.util.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.12 2003/09/10 15:30:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.13 2003/10/18 18:44:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.13  2003/10/18 18:44:16  maj0r
+ * Neuen Userstatus "Warteschlange voll" hinzugefuegt.
+ *
  * Revision 1.12  2003/09/10 15:30:48  maj0r
  * Begonnen auf neue Session-Struktur umzubauen.
  *
@@ -52,6 +55,7 @@ public class DownloadSourceDO {
     public static final int KEINE_VERBINDUNG_MOEGLICH = 11;
     public static final int VERSUCHE_INDIREKT = 12;
     public static final int PAUSIERT = 13;
+    public static final int WARTESCHLANGE_VOLL = 14;
 
     //directstate - IDs
     public static final int UNBEKANNT = 0;
