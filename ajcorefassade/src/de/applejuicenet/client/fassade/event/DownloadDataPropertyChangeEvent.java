@@ -4,6 +4,7 @@ import java.util.Vector;
 
 public class DownloadDataPropertyChangeEvent extends DataPropertyChangeEvent {
 
+	public static final String DOWNLOADMAP_CHECKED = "DOWNLOADMAP_CHECKED";
 	public static final String DOWNLOAD_REMOVED = "DOWNLOAD_REMOVED";
 	public static final String DOWNLOAD_ADDED = "DOWNLOAD_ADDED";
 	public static final String STATUS_CHANGED = "STATUS_CHANGED";

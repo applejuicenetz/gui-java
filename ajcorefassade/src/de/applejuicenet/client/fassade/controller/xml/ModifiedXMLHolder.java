@@ -815,6 +815,12 @@ public class ModifiedXMLHolder extends DefaultHandler {
 				securer.interrupt();
 			}
 			downloadEvents.clear();
+			if (filter.indexOf("down;") != -1) {
+				downloadEvents.add(new DownloadDataPropertyChangeEvent(
+						downloadMap,
+						DownloadDataPropertyChangeEvent.DOWNLOADMAP_CHECKED, 
+						null, null));
+			}
 			downloadSourceEvent = false;
 			xr.parse(new InputSource(new StringReader(xmlString)));
 			parseRest();
