@@ -20,7 +20,7 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SecurerXMLHolder.java,v 1.9 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SecurerXMLHolder.java,v 1.10 2004/06/12 13:13:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -88,7 +88,7 @@ public class SecurerXMLHolder
         return xmlData;
     }
 
-    public boolean secure(String sessionKontext, Information information) {
+    public synchronized boolean secure(String sessionKontext, Information information) {
         try {
             if (information == null){
                 return false;
