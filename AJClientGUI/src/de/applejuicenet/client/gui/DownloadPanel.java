@@ -9,7 +9,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import java.awt.*;
 import javax.swing.table.TableColumn;
-import de.applejuicenet.client.gui.tablerenderer.DownloadDateiNameCellRenderer;
+import de.applejuicenet.client.gui.tablerenderer.JTreeTable;
+import de.applejuicenet.client.shared.DownloadDO;
+import java.util.HashSet;
+import de.applejuicenet.client.shared.Version;
+import de.applejuicenet.client.gui.tablerenderer.DownloadModel;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -24,7 +28,7 @@ public class DownloadPanel extends JPanel {
   private JTextField downloadLink = new JTextField();
   private JButton btnStartDownload = new JButton("Download");
   private PowerDownloadPanel powerDownloadPanel = new PowerDownloadPanel();
-  private JTable downloadTable;
+  private JTreeTable downloadTable;
   private JTable actualDlOverviewTable = new JTable();
 
   public DownloadPanel() {
@@ -61,16 +65,24 @@ public class DownloadPanel extends JPanel {
     constraints.gridy = 1;
     constraints.weighty = 1;
     constraints.weightx = 1;
+    /*
     downloadTable = new JTable();
     downloadTable.setModel(new DownloadDataTableModel());
     int vColIndex = 0;
     TableColumn col = downloadTable.getColumnModel().getColumn(vColIndex);
     col.setCellRenderer(new DownloadDateiNameCellRenderer(downloadTable));
+*/
+    Version version = new Version("0.27", "Java", "Win");
+    DownloadDO source = new DownloadDO(false, "datei2.jpg", "Warte", "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "Maj0r", null);
+    HashSet sourcen = new HashSet();
+    sourcen.add(source);
+    DownloadDO download = new DownloadDO(true, "datei1.jpg", "Warte", "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
+    downloadTable = new JTreeTable(new DownloadModel(download));
 
-    Object[] test = new Object[1];
+/*    Object[] test = new Object[1];
     test[0] = new String("dies ist ein test");
     ((DownloadDataTableModel)downloadTable.getModel()).setTable(test);
-
+*/
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(downloadTable);
     topPanel.add(aScrollPane, constraints);
