@@ -12,12 +12,13 @@ import java.util.zip.ZipEntry;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
-import de.applejuicenet.client.gui.plugins.PluginsPropertiesXMLHolder;
 import java.lang.reflect.Constructor;
 import javax.swing.ImageIcon;
+import de.applejuicenet.client.gui.plugins.XMLValueHolder;
+import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.16 2004/03/02 21:06:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.17 2004/03/03 11:56:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +27,9 @@ import javax.swing.ImageIcon;
  * @author: Maj0r aj@tkl-soft.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.17  2004/03/03 11:56:53  maj0r
+ * Sprachunterstuetzung fuer Plugins eingebaut.
+ *
  * Revision 1.16  2004/03/02 21:06:40  maj0r
  * Kleine Fehler behoben.
  *
@@ -74,8 +78,9 @@ public class PluginJarClassLoader
     extends URLClassLoader {
     private URL url;
     private Logger logger;
-    private PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder = null;
+    private XMLValueHolder pluginsPropertiesXMLHolder = null;
     private ImageIcon pluginIcon = null;
+    private HashMap languageXMLs = new HashMap();
 
     public PluginJarClassLoader(URL url) {
         super(new URL[] {url});
@@ -86,14 +91,15 @@ public class PluginJarClassLoader
     public PluginConnector getPlugin(String jar) throws Exception {
         pluginsPropertiesXMLHolder = null;
         pluginIcon = null;
+        languageXMLs.clear();
         File aJar = new File(jar);
         try {
             loadClassBytesFromJar(aJar);
             String theClassName = pluginsPropertiesXMLHolder.getXMLAttributeByTagName(".root.general.classname.value");
             Class cl = loadClass(theClassName);
-            Class[] constructorHelper = {PluginsPropertiesXMLHolder.class, ImageIcon.class };
+            Class[] constructorHelper = {XMLValueHolder.class, HashMap.class, ImageIcon.class };
             Constructor con = cl.getConstructor(constructorHelper);
-            Object aPlugin = con.newInstance(new Object[]{pluginsPropertiesXMLHolder, pluginIcon});
+            Object aPlugin = con.newInstance(new Object[]{pluginsPropertiesXMLHolder, languageXMLs, pluginIcon});
             return (PluginConnector) aPlugin;
         }
         catch (Exception e) {
@@ -118,7 +124,7 @@ public class PluginJarClassLoader
             ZipEntry entry = (ZipEntry) e.nextElement();
             entryName = entry.getName();
             if (entryName.indexOf(".class") == -1 && !entryName.equals("plugin_properties.xml")
-                && entryName.indexOf("icon.gif") == -1) {
+                && entryName.indexOf("icon.gif") == -1 && entryName.indexOf("language_xml_") == -1) {
                 continue;
             }
             InputStream is = jf.getInputStream(entry);
@@ -132,10 +138,16 @@ public class PluginJarClassLoader
             }
             if (entryName.equals("plugin_properties.xml")){
                 String xmlString = new String(buf, 0, buf.length);
-                pluginsPropertiesXMLHolder = new PluginsPropertiesXMLHolder(xmlString);
+                pluginsPropertiesXMLHolder = new XMLValueHolder(xmlString);
             }
             else if (entryName.indexOf("icon.gif") != -1){
                 pluginIcon = new ImageIcon(buf);
+            }
+            else if (entryName.indexOf("language_xml_") != -1){
+                String xmlString = new String(buf, 0, buf.length);
+                XMLValueHolder languageFile = new XMLValueHolder(xmlString);
+                String sprache = languageFile.getXMLAttributeByTagName(".root.language.value");
+                languageXMLs.put(sprache, languageFile);
             }
             else{
                 String name = entryName.replace('/', '.');

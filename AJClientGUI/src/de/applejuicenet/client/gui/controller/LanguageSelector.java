@@ -18,9 +18,10 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.16 2004/02/27 13:17:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.17 2004/03/03 11:56:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +30,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.17  2004/03/03 11:56:53  maj0r
+ * Sprachunterstuetzung fuer Plugins eingebaut.
+ *
  * Revision 1.16  2004/02/27 13:17:14  maj0r
  * Logging verbessert und Muell entfernt.
  *
@@ -77,6 +81,7 @@ public class LanguageSelector
     private CharArrayWriter contents = new CharArrayWriter();
     private static Logger logger = Logger.getLogger(LanguageSelector.class);
     private StringBuffer key = new StringBuffer();
+    private HashSet pluginsToWatch = new HashSet();
 
     private LanguageSelector(String path) {
         try {
@@ -104,6 +109,10 @@ public class LanguageSelector
             return new LanguageSelector(path);
         }
         return instance;
+    }
+
+    public void addPluginsToWatch(HashSet plugins){
+        pluginsToWatch = plugins;
     }
 
     private void init(File languageFile){
@@ -179,6 +188,11 @@ public class LanguageSelector
         Iterator it = languageListener.iterator();
         while (it.hasNext()) {
             ( (LanguageListener) it.next()).fireLanguageChanged();
+        }
+        it = pluginsToWatch.iterator();
+        String language = getFirstAttrbuteByTagName(".root.Languageinfo.name").toLowerCase();
+        while (it.hasNext()) {
+            ( (PluginConnector) it.next()).setLanguage(language);
         }
     }
 

@@ -18,9 +18,10 @@ import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
+import java.util.HashSet;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.32 2004/03/02 17:37:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.33 2004/03/03 11:56:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +30,9 @@ import java.util.zip.ZipEntry;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.33  2004/03/03 11:56:53  maj0r
+ * Sprachunterstuetzung fuer Plugins eingebaut.
+ *
  * Revision 1.32  2004/03/02 17:37:10  maj0r
  * Pluginverwendung vereinfacht.
  *
@@ -181,6 +185,7 @@ public class RegisterPanel
         }
         String[] tempListe = pluginPath.list();
         PluginJarClassLoader jarLoader = null;
+        HashSet plugins = new HashSet();
         for (int i = 0; i < tempListe.length; i++) {
             if (tempListe[i].toLowerCase().endsWith(".jar")) {
                 URL url = null;
@@ -203,6 +208,7 @@ public class RegisterPanel
                             ImageIcon icon = aPlugin.getIcon();
                             addTab(aPlugin.getTitle(), icon, aPlugin);
                         }
+                        plugins.add(aPlugin);
                         parent.addPluginToHashSet(aPlugin);
                         String nachricht = "Plugin " + aPlugin.getTitle() +
                             " geladen...";
@@ -222,6 +228,7 @@ public class RegisterPanel
                 }
             }
         }
+        LanguageSelector.getInstance().addPluginsToWatch(plugins);
     }
 
     public void fireLanguageChanged() {
