@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.43 2003/12/05 11:18:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.44 2003/12/16 17:05:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +39,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.44  2003/12/16 17:05:54  maj0r
+ * Sharetabelle auf vielfachen Wunsch komplett überarbeitet.
+ *
  * Revision 1.43  2003/12/05 11:18:02  maj0r
  * Workaround fürs Setzen der Hintergrundfarben der Scrollbereiche ausgebaut.
  *
@@ -327,7 +330,7 @@ public class SharePanel
         popup.add(item2);
         popup.add(item3);
 
-        shareModel = new ShareModel(new ShareNode(null, "/"));
+        shareModel = new ShareModel(new ShareNode(null, null));
         shareTable = new ShareTable(shareModel);
         shareTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -407,36 +410,6 @@ public class SharePanel
                         try{
                             ShareNode rootNode = shareModel.getRootNode();
                             rootNode.removeAllChildren();
-                            ArrayList sharesArray = new ArrayList();
-                            HashSet shareDirs = ajSettings.getShareDirs();
-                            Iterator it = shareDirs.iterator();
-                            ShareNode directoryNode = null;
-                            String pfad;
-                            try
-                            {
-                                pfad = ajSettings.getTempDir();
-                                pfad = pfad.substring(0, pfad.length() - 1);
-                                directoryNode = new ShareNode(rootNode, pfad);
-                            }
-                            catch (NodeAlreadyExistsException e)
-                            {
-                                //Schon da, also brauchts den auch nicht.
-                            }
-                            rootNode.addDirectory(directoryNode);
-                            while (it.hasNext())
-                            {
-                                pfad = ((ShareEntry) it.next()).getDir();
-                                sharesArray.add(pfad);
-                                try
-                                {
-                                    directoryNode = new ShareNode(rootNode, pfad);
-                                    rootNode.addDirectory(directoryNode);
-                                }
-                                catch (NodeAlreadyExistsException e)
-                                {
-                                    //Schon da, also brauchts den auch nicht.
-                                }
-                            }
                             HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
                             Iterator iterator = shares.values().iterator();
                             int anzahlDateien = 0;
@@ -450,7 +423,8 @@ public class SharePanel
                             while (iterator.hasNext())
                             {
                                 shareDO = (ShareDO) iterator.next();
-                                filename = shareDO.getFilename();
+                                rootNode.addChild(shareDO);
+/*                                filename = shareDO.getFilename();
                                 path = filename.substring(0, filename.lastIndexOf(ApplejuiceFassade.separator));
                                 parentNode = ShareNode.getNodeByPath(path);
                                 if (parentNode != null)
@@ -488,6 +462,7 @@ public class SharePanel
                                         }
                                     }
                                 }
+                                */
                                 size += shareDO.getSize();
                                 anzahlDateien++;
                             }

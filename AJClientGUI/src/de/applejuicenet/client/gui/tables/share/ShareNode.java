@@ -1,18 +1,20 @@
 package de.applejuicenet.client.gui.tables.share;
 
-import de.applejuicenet.client.gui.tables.Node;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.shared.dac.ShareDO;
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.MapSetStringKey;
-import de.applejuicenet.client.shared.exception.NodeAlreadyExistsException;
-
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.tables.Node;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.MapSetStringKey;
+import de.applejuicenet.client.shared.dac.ShareDO;
+import java.util.ArrayList;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.10 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.11 2003/12/16 17:05:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +23,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.11  2003/12/16 17:05:54  maj0r
+ * Sharetabelle auf vielfachen Wunsch komplett überarbeitet.
+ *
  * Revision 1.10  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -56,128 +61,161 @@ import java.util.Iterator;
  *
  */
 
-public class ShareNode implements Node {
-  private static ImageIcon leafIcon;
-  private static ImageIcon treeIcon;
-  private static HashMap directoryNodes = new HashMap();
+public class ShareNode
+    implements Node {
+    private static ImageIcon leafIcon;
+    private static ImageIcon treeIcon;
 
-  private ShareDO shareDO;
-  private HashMap children = new HashMap();
-  private ShareNode parent;
-  private String path;
-
-  public ShareNode(ShareNode parent, ShareDO shareDO) {
-    initIcons();
-    path = "";
-    this.parent = parent;
-    this.shareDO = shareDO;
-  }
-
-  public ShareNode(ShareNode parent, String path) throws NodeAlreadyExistsException{
-    initIcons();
-    this.parent = parent;
-    shareDO = null;
-    this.path = path;
-    MapSetStringKey key = new MapSetStringKey(path);
-    if (directoryNodes.containsKey(key)){
-        throw new NodeAlreadyExistsException("ShareNode mit diesem Pfad bereits vorhanden");
+    static {
+        IconManager im = IconManager.getInstance();
+        leafIcon = im.getIcon("treeRoot");
+        treeIcon = im.getIcon("tree");
     }
-    else{
-        directoryNodes.put(key, this);
+
+    private ShareDO shareDO;
+    private HashMap children = new HashMap();
+    private ShareNode parent;
+    private String path;
+
+    public ShareNode(ShareNode parent, ShareDO shareDO) {
+        this.parent = parent;
+        path = "";
+        if (parent != null) {
+            String bisherigerPath = getCompletePath();
+            String restPath = shareDO.getFilename().substring(bisherigerPath.
+                length());
+            int pos = restPath.indexOf(ApplejuiceFassade.separator);
+            if (pos != -1) {
+                path = restPath.substring(0, pos);
+            }
+            else {
+                this.shareDO = shareDO;
+            }
+        }
     }
-  }
 
-  public static ShareNode getNodeByPath(String path){
-      ShareNode result = (ShareNode)directoryNodes.get(new MapSetStringKey(path));
-      return result;
-  }
-
-  public ShareNode getParent(){
-      return parent;
-  }
-
-  private void initIcons() {
-    if (leafIcon == null) {
-      IconManager im = IconManager.getInstance();
-      leafIcon = im.getIcon("treeRoot");
-      treeIcon = im.getIcon("tree");
+    public ShareNode getParent() {
+        return parent;
     }
-  }
 
-  public boolean isLeaf(){
-    return (shareDO!=null);
-  }
-
-  public String getPath(){
-      return path;
-  }
-
-  public Icon getConvenientIcon() {
-    if (path.length()==0) {
-      return leafIcon;
+    public boolean isLeaf() {
+        return (shareDO != null);
     }
-    return treeIcon;
-  }
 
-  public ShareNode addChild(ShareDO shareDOtoAdd) {
-    ShareNode childNode = new ShareNode(this, shareDOtoAdd);
-    children.put(new MapSetStringKey(shareDOtoAdd.getId()), childNode);
-    return childNode;
-  }
-
-  public void addDirectory(ShareNode shareNodeToAdd) {
-    shareNodeToAdd.setParent(this);
-    children.put(new MapSetStringKey(shareNodeToAdd.getPath()), shareNodeToAdd);
-  }
-
-  public ShareDO getDO() {
-    return shareDO;
-  }
-
-  public void setParent(ShareNode parentNode){
-    parent = parentNode;
-  }
-
-  public String toString() {
-    if (isLeaf() && parent!=null){
-        return getDO().getShortfilename();
-    }
-    else if (parent!=null){
+    public String getPath() {
         return path;
     }
-    else{
-        return "";
+
+    public String getCompletePath() {
+        if (parent != null) {
+            return parent.getCompletePath() + ApplejuiceFassade.separator +
+                path;
+        }
+        else {
+            return path;
+        }
     }
-  }
 
-  public HashMap getChildrenMap() {
-    return children;
-  }
+    public Icon getConvenientIcon() {
+        if (path.length() == 0) {
+            return leafIcon;
+        }
+        return treeIcon;
+    }
 
-  public void removeChild(ShareNode toRemove){
-      children.remove(new MapSetStringKey(toRemove.getDO().getId()));
-  }
+    public ShareNode addChild(ShareDO shareDOtoAdd) {
+        String bisherigerPath = getCompletePath();
+        String restPath = shareDOtoAdd.getFilename().substring(bisherigerPath.
+            length());
+        int pos = restPath.indexOf(ApplejuiceFassade.separator);
+        while (pos == 0) {
+            restPath = restPath.substring(pos + 1);
+            pos = restPath.indexOf(ApplejuiceFassade.separator);
+        }
+        ShareNode childNode = null;
+        if (pos != -1) {
+            String tmpPath = restPath.substring(0, pos);
+            MapSetStringKey aKey = new MapSetStringKey(tmpPath);
+            if (children.containsKey(aKey)) {
+                childNode = (ShareNode) children.get(aKey);
+                childNode.addChild(shareDOtoAdd);
+            }
+            else {
+                childNode = new ShareNode(this, shareDOtoAdd);
+                children.put(aKey, childNode);
+                childNode.addChild(shareDOtoAdd);
+            }
+        }
+        else {
+            childNode = new ShareNode(this, shareDOtoAdd);
+            children.put(new MapSetStringKey(shareDOtoAdd.getId()), childNode);
+        }
+        return childNode;
+    }
 
-  public void removeAllChildren(){
-      if (parent==null){
-          directoryNodes.clear();
-          directoryNodes.put("/", this);
-      }
-      children.clear();
-  }
-  protected Object[] getChildren() {
-    return children.values().toArray(new ShareNode[children.size()]);
-  }
+    public ShareDO getDO() {
+        return shareDO;
+    }
 
-    public void setPriority(int prio){
-        if (isLeaf()){
+    public void setParent(ShareNode parentNode) {
+        parent = parentNode;
+    }
+
+    public String toString() {
+        if (isLeaf() && parent != null) {
+            return getDO().getShortfilename();
+        }
+        else if (parent != null) {
+            return path;
+        }
+        else {
+            return "";
+        }
+    }
+
+    public HashMap getChildrenMap() {
+        return children;
+    }
+
+    public void removeChild(ShareNode toRemove) {
+        children.remove(new MapSetStringKey(toRemove.getDO().getId()));
+    }
+
+    public void removeAllChildren() {
+        children.clear();
+    }
+
+    protected Object[] getChildren() {
+        ShareNode[] shareNodes = (ShareNode[]) children.values().toArray(new ShareNode[children.size()]);
+        return sort(shareNodes);
+    }
+
+    private Object[] sort(ShareNode[] childNodes) {
+        int n = childNodes.length;
+        ShareNode tmp;
+        for (int i = 0; i < n - 1; i++) {
+            int k = i;
+            for (int j = i + 1; j < n; j++) {
+                if (childNodes[j].toString().compareToIgnoreCase(childNodes[k].toString()) < 0) {
+                    k = j;
+                }
+            }
+            tmp = childNodes[i];
+            childNodes[i] = childNodes[k];
+            childNodes[k] = tmp;
+        }
+        return childNodes;
+    }
+
+    public void setPriority(int prio) {
+        if (isLeaf()) {
             shareDO.setPrioritaet(prio);
             ApplejuiceFassade.getInstance().setPrioritaet(shareDO.getId(), prio);
         }
-        else{
+        else {
             Iterator it = children.values().iterator();
-            while (it.hasNext()){
-                ((ShareNode)it.next()).setPriority(prio);
+            while (it.hasNext()) {
+                ( (ShareNode) it.next()).setPriority(prio);
             }
         }
     }
