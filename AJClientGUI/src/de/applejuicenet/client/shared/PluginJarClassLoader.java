@@ -21,7 +21,7 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.21 2005/01/24 10:40:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.22 2005/01/24 10:42:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,7 +37,7 @@ public class PluginJarClassLoader
     private Logger logger;
     private XMLValueHolder pluginsPropertiesXMLHolder = null;
     private ImageIcon pluginIcon = null;
-    private Map languageXMLs = new HashMap();
+    private Map<String, XMLValueHolder> languageXMLs = new HashMap<String, XMLValueHolder>();
 
     public PluginJarClassLoader(URL url) {
         super(new URL[] {url});

@@ -2,30 +2,21 @@ package de.applejuicenet.client.gui.controller;
 
 import java.io.CharArrayWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.xerces.parsers.SAXParser;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.26 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.27 2005/01/24 10:40:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,24 +27,20 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
  */
 
 public class LanguageSelector
-    extends DefaultHandler {
+    extends XMLValueHolder {
 
     private static LanguageSelector instance = null;
 
     private Set languageListener = new HashSet();
-    private Map words = new HashMap();
-    private XMLReader xr = null;
     private CharArrayWriter contents = new CharArrayWriter();
     private static Logger logger = Logger.getLogger(LanguageSelector.class);
     private StringBuffer key = new StringBuffer();
     private Set pluginsToWatch = null;
 
     private LanguageSelector(String path) {
+    	super();
         try {
-            Class parser = SAXParser.class;
-            xr = XMLReaderFactory.createXMLReader(parser.getName());
-            xr.setContentHandler(this);
-            init(new File(path));
+            parse(new File(path));
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -85,8 +72,7 @@ public class LanguageSelector
             if (key.length()>0){
                 key.delete(0, key.length() - 1);
             }
-            xr.parse( new InputSource(
-                new FileInputStream( languageFile )) );
+            parse(languageFile);
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -145,8 +131,8 @@ public class LanguageSelector
     }
 
     public String getFirstAttrbuteByTagName(String identifier){
-        if (words.containsKey(identifier)){
-            return (String)words.get(identifier);
+        if (xmlContents.containsKey(identifier)){
+            return xmlContents.get(identifier);
         }
         else{
             return "";
@@ -165,28 +151,5 @@ public class LanguageSelector
 	            ( (PluginConnector) it.next()).setLanguage(language);
 	        }
         }
-    }
-
-    public void startElement(String namespaceURI,
-                             String localName,
-                             String qName,
-                             Attributes attr) throws SAXException {
-        contents.reset();
-        key.append(".");
-        key.append(localName);
-        for (int i = 0; i < attr.getLength(); i++) {
-            words.put(key.toString() + "." + attr.getLocalName(i), attr.getValue(i));
-        }
-    }
-
-    public void endElement(String namespaceURI,
-                           String localName,
-                           String qName) throws SAXException {
-        key.delete(key.length() - localName.length() - 1, key.length());
-    }
-
-    public void characters(char[] ch, int start, int length) throws
-        SAXException {
-        words.put(key.toString(), ch);
     }
 }

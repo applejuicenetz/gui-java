@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project []>
-<project name="aj_java_gui" default="help" basedir="..">
-
-   <taskdef name="pack" classname="org.sadun.util.ant.Pack" classpath="${basedir}/tools/pack.jar"/>
+<project name="aj_java_gui" default="create-jar" basedir="..">
 
    <!-- component directories ... -->
    <property name="gui.srcdir"      location="${basedir}/src"/>
@@ -50,19 +48,14 @@
    </target>
 
    <target name="create-jar" depends="gui-compile" description="builds appleJuice-jar">
-	<pack classes="de.applejuicenet.client.AppleJuiceClient,org.apache.xerces.parsers.XML11Configuration,
-			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl,org.apache.xerces.parsers.IntegratedParserConfiguration"
-	      targetJar="${basedir}/AJCoreGUI.jar"
-	      excludePkg="java,javax,sun,com.l2fprod,com.sixlegs,org.apache.log4j"
-              manifestClassPath="./needed_jars/log4j-1.2.8.jar ./needed_jars/skinlf.jar ./needed_jars/looks-1.2.1.jar"
-	      manifestMainClass="de.applejuicenet.client.AppleJuiceClient">
-           <classpath>
-           	<pathelement path="${gui.compiledir}"/>
-           	<path refid="lib.path"/>
-           </classpath>
-	   <additionalclass name="org.apache.xerces.parsers.SAXParser"/>
-           <additionalfileset dir="${gui.compiledir}" excludes="**/*.txt **/*.class **/*.dep2"/>
-	</pack>
+	  <jar destfile="${basedir}/AJCoreGUI.jar">
+          <manifest>
+              <attribute name="Built-by" value="${user.name}"/>
+              <attribute name="Class-Path" value="./needed_jars/log4j-1.2.8.jar ./needed_jars/skinlf.jar ./needed_jars/looks-1.2.1.jar ./needed_jars/ajcorefassade.jar"/>
+             <attribute name="Main-Class" value="de.applejuicenet.client.AppleJuiceClient"/>
+          </manifest>
+		<fileset dir="${basedir}/classes" includes="**/de/**/*.* **/com/jeans/**/*.*"/>
+      </jar>
    </target>
 
    <target name="build-archive" depends="create-jar" description="builds archive-zip">
@@ -85,18 +78,17 @@
    <target name="build-plugin-jar" description="builds plugin - build.xml needs to be modified">
       <delete includeEmptyDirs="true">
          <fileset dir="${basedir}/plugins" casesensitive="false">
-            <include name="**/IrcPlugin.jar"/>
+            <include name="**/versionchecker.jar"/>
          </fileset>
       </delete>
-	  <jar destfile="${basedir}/plugins/IrcPlugin.jar">
-		<fileset dir="${basedir}/plugin_src/ircplugin" includes="*.xml"/>
+	  <jar destfile="${basedir}/plugins/versionchecker.jar">
+		<fileset dir="${basedir}/plugin_src/versionchecker" includes="*.xml"/>
 		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
-                excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class
-                        ,**/de/applejuicenet/client/gui/plugins/XMLValueHolder.class" />
+                excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
       </jar>
-	  <jar destfile="${basedir}/plugins/IrcPlugin.zip">
-		<fileset dir="${basedir}/plugins/" includes="IrcPlugin.jar"/>
-		<fileset dir="${basedir}/plugin_src/ircplugin/icons/" includes="*.gif"/>
+	  <jar destfile="${basedir}/plugins/versionchecker.zip">
+		<fileset dir="${basedir}/plugins/" includes="versionchecker.jar"/>
+		<fileset dir="${basedir}/plugin_src/versionchecker/icons/" includes="*.gif"/>
       </jar>
    </target>
 
