@@ -13,65 +13,13 @@ import java.util.Set;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.8 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.9 2004/10/11 18:18:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: SettingsXMLHolder.java,v $
- * Revision 1.8  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.7  2004/03/03 17:27:55  maj0r
- * PMD-Optimierung
- *
- * Revision 1.6  2004/02/16 07:42:43  maj0r
- * alten Timestampfehler beseitig
- * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
- *
- * Revision 1.5  2004/02/09 07:28:24  maj0r
- * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
- *
- * Revision 1.4  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.3  2004/02/04 13:10:37  maj0r
- * Neues Linkformat zusaetzlich in den Downloadbereich eingebaut.
- *
- * Revision 1.2  2004/01/06 17:32:50  maj0r
- * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
- *
- * Revision 1.1  2003/12/31 16:13:31  maj0r
- * Refactoring.
- *
- * Revision 1.10  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.9  2003/10/12 15:57:55  maj0r
- * Kleinere Bugs behoben.
- * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
- *
- * Revision 1.8  2003/09/10 13:16:28  maj0r
- * Veraltete Option "Browsen erlauben" entfernt und neue Option MaxNewConnectionsPerTurn hinzugefuegt.
- *
- * Revision 1.7  2003/08/10 21:08:18  maj0r
- * Diverse Änderungen.
- *
- * Revision 1.6  2003/07/01 06:17:16  maj0r
- * Code optimiert.
- *
- * Revision 1.5  2003/06/30 20:35:50  maj0r
- * Code optimiert.
- *
- * Revision 1.4  2003/06/22 19:00:27  maj0r
- * Basisklasse umbenannt.
- *
- * Revision 1.3  2003/06/10 12:31:03  maj0r
- * Historie eingefï¿½gt.
- *
  *
  */
 

@@ -1,44 +1,13 @@
 package de.applejuicenet.client.gui.listener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/listener/Attic/DataUpdateListener.java,v 1.15 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/listener/Attic/DataUpdateListener.java,v 1.16 2004/10/11 18:18:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: DataUpdateListener.java,v $
- * Revision 1.15  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.14  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.13  2003/10/21 11:36:32  maj0r
- * Infos werden nun ueber einen Listener geholt.
- *
- * Revision 1.12  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- * Revision 1.11  2003/09/13 11:30:41  maj0r
- * Neuen Listener fuer Geschwindigkeitsanzeigen eingebaut.
- *
- * Revision 1.10  2003/08/22 10:54:25  maj0r
- * Klassen umbenannt.
- * ConnectionSettings ueberarbeitet.
- *
- * Revision 1.9  2003/08/16 17:50:15  maj0r
- * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
- * DownloaduebersichtTabelle kann deaktiviert werden.
- *
- * Revision 1.8  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.7  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
  *
  */
 

@@ -19,66 +19,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.19 2004/05/13 14:32:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.20 2004/10/11 18:18:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r aj@tkl-soft.de>
- *
- * $Log: PluginJarClassLoader.java,v $
- * Revision 1.19  2004/05/13 14:32:30  maj0r
- * [Maj0r] Bugfix (Danke an mich ;) )
- * Beim Laden von Plugins konnten Fehler beim Classloading auftreten.
- *
- * Revision 1.18  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.17  2004/03/03 11:56:53  maj0r
- * Sprachunterstuetzung fuer Plugins eingebaut.
- *
- * Revision 1.16  2004/03/02 21:06:40  maj0r
- * Kleine Fehler behoben.
- *
- * Revision 1.15  2004/03/02 21:05:46  maj0r
- * Schnittstelle veraendert.
- *
- * Revision 1.14  2004/03/02 17:37:10  maj0r
- * Pluginverwendung vereinfacht.
- *
- * Revision 1.13  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.12  2004/01/14 15:25:25  maj0r
- * Loggerausgabe eingebaut.
- *
- * Revision 1.11  2004/01/14 15:19:59  maj0r
- * Laden von Plugins verbessert.
- * Muell oder nicht standardkonforme Plugins im Plugin-Ordner werden nun korrekt behandelt.
- *
- * Revision 1.10  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.9  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.8  2003/08/23 11:16:35  maj0r
- * Plattformunabhaengigkeit wieder hergestellt.
- *
- * Revision 1.7  2003/08/20 10:52:51  maj0r
- * JarClassloader korrigiert.
- *
- * Revision 1.6  2003/08/16 17:58:58  maj0r
- * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
- * DownloaduebersichtTabelle kann deaktiviert werden.
- *
- * Revision 1.5  2003/07/01 14:51:28  maj0r
- * Unnützen Krimskram entfernt.
- *
- * Revision 1.4  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
  *
  */
 

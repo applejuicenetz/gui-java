@@ -15,58 +15,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.22 2004/03/15 13:44:20 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.23 2004/10/11 18:18:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: XMLDecoder.java,v $
- * Revision 1.22  2004/03/15 13:44:20  loevenwong
- * GUI neustart aufgrund fehlender property-datei verhindert.
- *
- * Revision 1.21  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.20  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.19  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.18  2003/11/03 15:18:39  maj0r
- * Optimierungen.
- *
- * Revision 1.17  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.16  2003/10/14 15:39:28  maj0r
- * Stacktraces ausgebaut.
- *
- * Revision 1.15  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
- *
- * Revision 1.14  2003/09/06 14:51:39  maj0r
- * XMLDecoder bei Attributen korrigiert.
- *
- * Revision 1.13  2003/08/22 10:54:25  maj0r
- * Klassen umbenannt.
- * ConnectionSettings ueberarbeitet.
- *
- * Revision 1.12  2003/07/01 06:17:16  maj0r
- * Code optimiert.
- *
- * Revision 1.11  2003/06/30 20:35:50  maj0r
- * Code optimiert.
- *
- * Revision 1.10  2003/06/30 19:46:11  maj0r
- * Sourcestil verbessert.
- *
- * Revision 1.9  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
  *
  */
 

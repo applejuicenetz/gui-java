@@ -12,72 +12,13 @@ import de.applejuicenet.client.shared.dac.DirectoryDO;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.9 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.10 2004/10/11 18:18:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: DirectoryXMLHolder.java,v $
- * Revision 1.9  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.8  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.7  2004/02/18 20:44:37  maj0r
- * Bugs #223 und #224 behoben.
- *
- * Revision 1.6  2004/02/16 07:42:43  maj0r
- * alten Timestampfehler beseitig
- * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
- *
- * Revision 1.5  2004/02/09 20:12:28  maj0r
- * Sortierung verbessert bzw. eingebaut.
- *
- * Revision 1.4  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.3  2004/01/29 10:05:02  maj0r
- * Sharebaum wird jetzt wieder korrekt angezeigt.
- *
- * Revision 1.2  2004/01/06 17:32:50  maj0r
- * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
- *
- * Revision 1.1  2003/12/31 16:13:31  maj0r
- * Refactoring.
- *
- * Revision 1.9  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.8  2003/10/14 15:45:09  maj0r
- * Logger eingebaut.
- *
- * Revision 1.7  2003/10/12 15:57:55  maj0r
- * Kleinere Bugs behoben.
- * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
- *
- * Revision 1.6  2003/08/28 06:57:41  maj0r
- * Plattformunabhaengigkeit wieder hergestellt.
- *
- * Revision 1.5  2003/08/24 14:59:59  maj0r
- * Version 0.14
- * Diverse Aenderungen.
- *
- * Revision 1.4  2003/08/19 12:38:47  maj0r
- * Passworteingabe und md5 korrigiert.
- *
- * Revision 1.3  2003/08/17 16:13:11  maj0r
- * Erstellen des DirectoryNode-Baumes korrigiert.
- *
- * Revision 1.2  2003/08/16 20:53:40  maj0r
- * Kleinen Fehler korrigiert
- *
- * Revision 1.1  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
  *
  */
 

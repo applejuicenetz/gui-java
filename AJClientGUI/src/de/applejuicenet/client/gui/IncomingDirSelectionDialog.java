@@ -17,34 +17,13 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/IncomingDirSelectionDialog.java,v 1.6 2004/10/06 12:29:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/IncomingDirSelectionDialog.java,v 1.7 2004/10/11 18:18:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: IncomingDirSelectionDialog.java,v $
- * Revision 1.6  2004/10/06 12:29:14  maj0r
- * serialVersionUIDs eingebaut.
- *
- * Revision 1.5  2004/06/17 09:57:53  maj0r
- * Unnoetige Imports entfernt.
- *
- * Revision 1.4  2004/04/05 10:09:32  maj0r
- * [Maj0r] Dialog zur Eingabe eines Datei-Incoming-Verzeichnisses kann jetzt per <RET> bestaetigt werden.
- *
- * Revision 1.3  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.2  2004/02/05 23:11:26  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.1  2004/01/04 12:38:01  maj0r
- * Bug #40 umgesetzt (Danke an hirsch.marcel)
- * Incoming-Verzeichnis kann nun für mehrere Downloads gleichzeitig geaendert werden.
- *
  *
  */
 

@@ -1,49 +1,13 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.10 2004/06/11 09:24:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.11 2004/10/11 18:18:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: GetObjectXMLHolder.java,v $
- * Revision 1.10  2004/06/11 09:24:30  maj0r
- * [Maj0r] Wasserstände der einzelnen Uploader werden angezeigt.
- * [Maj0r] Beim Serverwechsel wird nun eine qualifizierte Warnung ausgegeben, wenn die aktuelle Verbindung noch keine 30 Minuten besteht.
- * [Maj0r] Bugfix
- *      Beim Neuerzeigen der properties.xml wurden die neuen Coredaten nicht für die aktuelle Sitzung übernommen. Folge war ein Verbindungsverlust.
- *
- * Revision 1.9  2004/05/23 17:58:29  maj0r
- * Anpassungen an neue Schnittstelle.
- *
- * Revision 1.8  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.7  2004/02/16 07:42:43  maj0r
- * alten Timestampfehler beseitig
- * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
- *
- * Revision 1.6  2004/02/09 08:52:24  maj0r
- * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
- *
- * Revision 1.5  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.4  2004/01/30 16:32:47  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.3  2004/01/24 09:46:40  maj0r
- * An neue Doku angepasst.
- *
- * Revision 1.2  2004/01/06 17:32:50  maj0r
- * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
- *
- * Revision 1.1  2004/01/01 14:27:47  maj0r
- * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
- *
  *
  */
 

@@ -14,95 +14,13 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.24 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.25 2004/10/11 18:18:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: DownloadRootNode.java,v $
- * Revision 1.24  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.23  2004/02/28 14:15:02  maj0r
- * Featurerequest #254 gefixt (Danke an te_real_ZeroBANG)
- * Downloadtabelle wird jetzt beim Start standarmaessig nach Dateiname sortiert.
- *
- * Revision 1.22  2004/02/12 16:42:42  maj0r
- * Bug #198 gefixt (Danke an froeschle567)
- * Sortierung nach Downloadstatus korrigiert.
- *
- * Revision 1.21  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.20  2004/01/30 16:32:47  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.19  2004/01/12 14:37:26  maj0r
- * Bug #82 gefixt (Danke an hirsch.marcel)
- * Sortierung von Downloads innerhalb von Unterverzeichnissen der Downloadtabelle korrigiert.
- *
- * Revision 1.18  2004/01/12 07:27:44  maj0r
- * Sortierung an neue ausblendbare Header angepasst.
- *
- * Revision 1.17  2004/01/07 18:37:21  maj0r
- * Sortierung korrigiert.
- *
- * Revision 1.16  2003/12/30 20:52:19  maj0r
- * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
- *
- * Revision 1.15  2003/12/30 09:01:59  maj0r
- * Bug #10 fixed (Danke an muhviestarr)
- * Wenn man keine Downloads hat, steht nun nicht mehr "bitte warten" in der Downloadtabelle.
- *
- * Revision 1.14  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.13  2003/12/29 15:38:59  maj0r
- * Wird nun immer als initialisiert markiert, wenn die Downloadmap gesetzt wird.
- *
- * Revision 1.12  2003/12/17 17:03:37  maj0r
- * In der Downloadtabelle nun ein Warteicon angezeigt, bis erstmalig Daten geholt wurden.
- *
- * Revision 1.11  2003/11/03 20:57:03  maj0r
- * Sortieren nach Status eingebaut.
- *
- * Revision 1.10  2003/10/21 11:36:32  maj0r
- * Infos werden nun ueber einen Listener geholt.
- *
- * Revision 1.9  2003/10/16 09:57:21  maj0r
- * Sortierung korrigiert, Nichtbeachtung von Gross/Kleinschreibung.
- *
- * Revision 1.8  2003/10/12 16:34:59  maj0r
- * NullPointer behoben.
- *
- * Revision 1.7  2003/10/12 15:57:55  maj0r
- * Kleinere Bugs behoben.
- * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
- *
- * Revision 1.6  2003/10/10 15:12:26  maj0r
- * Sortieren im Downloadbereich eingefuegt.
- *
- * Revision 1.5  2003/10/05 11:48:36  maj0r
- * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
- * Userpartlisten werden angezeigt.
- * Downloadpartlisten werden alle 15 Sek. aktualisiert.
- *
- * Revision 1.4  2003/10/04 15:31:07  maj0r
- * Erste Version des Versteckens.
- *
- * Revision 1.3  2003/10/02 15:01:00  maj0r
- * Erste Version den Versteckens eingebaut.
- *
- * Revision 1.2  2003/09/02 19:29:26  maj0r
- * Einige Stellen synchronisiert und Nullpointer behoben.
- * Version 0.21 beta.
- *
- * Revision 1.1  2003/09/02 16:06:26  maj0r
- * Downloadbaum komplett umgebaut.
- *
  *
  */
 

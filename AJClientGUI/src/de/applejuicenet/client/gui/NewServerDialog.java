@@ -26,43 +26,13 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.9 2004/10/06 12:29:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.10 2004/10/11 18:18:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: NewServerDialog.java,v $
- * Revision 1.9  2004/10/06 12:29:14  maj0r
- * serialVersionUIDs eingebaut.
- *
- * Revision 1.8  2004/03/05 15:49:38  maj0r
- * PMD-Optimierung
- *
- * Revision 1.7  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.6  2004/02/05 23:11:26  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.5  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.4  2003/10/31 19:04:58  maj0r
- * Sounds eingebaut.
- *
- * Revision 1.3  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.2  2003/10/01 16:52:53  maj0r
- * Suche weiter gefuehrt.
- * Version 0.32
- *
- * Revision 1.1  2003/10/01 14:46:11  maj0r
- * Server koennen nun manuell hinzugefuegt werden.
- *
  *
  */
 

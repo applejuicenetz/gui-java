@@ -10,24 +10,13 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZLibUtils.java,v 1.3 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZLibUtils.java,v 1.4 2004/10/11 18:18:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ZLibUtils.java,v $
- * Revision 1.3  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.2  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.1  2004/02/02 15:12:03  maj0r
- * Hilfsklasse zum Entzippen eines byte-Arrays.
- *
  *
  */
 
