@@ -134,10 +134,15 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
         int iCol = downloadTable.columnAtPoint(p);
         downloadTable.setRowSelectionInterval(iRow, iRow);
         downloadTable.setColumnSelectionInterval(iCol, iCol);
+        maybeShowPopup(me);
       }
 
       public void mouseReleased(MouseEvent e) {
         super.mouseReleased(e);
+        maybeShowPopup(e);
+      }
+
+      private void maybeShowPopup(MouseEvent e){
         if (e.isPopupTrigger()) {
           popup.show(downloadTable, e.getX(), e.getY());
         }

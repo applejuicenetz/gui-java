@@ -107,10 +107,15 @@ public class ServerPanel
           serverTable.setRowSelectionInterval(iRow, iRow);
           serverTable.setColumnSelectionInterval(iCol, iCol);
         }
+        maybeShowPopup(me);
       }
 
       public void mouseReleased(MouseEvent e) {
         super.mouseReleased(e);
+        maybeShowPopup(e);
+      }
+
+      private void maybeShowPopup(MouseEvent e){
         if (e.isPopupTrigger()) {
           popup.show(serverTable, e.getX(), e.getY());
         }
