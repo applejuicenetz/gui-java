@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.84 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.85 2004/11/23 19:19:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -125,28 +125,28 @@ public class AppleJuiceClient {
         if (args != null && args.length > 0) {
             try {
                 for (int i = 0; i < args.length; i++) {
-                    if (args[i].indexOf("-path=") != -1) {
-                        System.setProperty("user.dir", args[i].substring(6));
+                    if (args[i].startsWith("-path=") || args[i].startsWith("--path=")) {
+                        String executionPath = args[i].substring(args[i].indexOf('=')+1); 
+                        System.setProperty("user.dir", executionPath);
                         break;
                     }
                 }
-                boolean hilfeAusgegeben = false;
                 for (int i = 0; i < args.length; i++) {
-                    if (args[i].compareTo("-help") == 0) {
-                        if (hilfeAusgegeben) {
-                            continue;
-                        }
-                        System.out.println();
-                        System.out.println(
-                            " -help                       Diese Uebersicht.");
-                        System.out.println(" -path=<pfad>                Ausfuehrpfad setzen. Alles im GUI ist relativ zu diesem.");
-                        System.out.println(
-                            " -link=<md5Passwort|link>    ajfsp-Link ans GUI uebergeben. " +
-                            " Das GUI wird ggf gestartet.");
-                        System.out.println();
-                        hilfeAusgegeben = true;
+                    if (args[i].equals("-version") || args[i].equals("--version")) {
+                        System.out.println("appleJuice-Java-GUI " + ApplejuiceFassade.GUI_VERSION);
+                        System.exit(0);
                     }
-                    else if (args[i].indexOf("-command=") != -1) {
+                    else if (args[i].equals("-help") || args[i].equals("--help")) {
+                        System.out.println(
+                            " --help                       Diese Uebersicht");
+                        System.out.println(" --version                    Versionsinformationen anzeigen");
+                        System.out.println(" --path=<pfad>                Ausfuehrpfad setzen. Alles im GUI ist relativ zu diesem.");
+                        System.out.println(
+                            " --link=<md5Passwort|link>    ajfsp-Link ans GUI uebergeben. " +
+                            "Das GUI wird ggf gestartet.");
+                        System.exit(0);
+                    }
+                    else if (args[i].startsWith("-command=") || args[i].startsWith("--command=")) {
                         if (doubleInstance){
                             int PORT = OptionsManagerImpl.getInstance().
                                 getLinkListenerPort();
@@ -157,7 +157,11 @@ public class AppleJuiceClient {
                                 getOutputStream());
                             DataInputStream in = new DataInputStream(socket.
                                 getInputStream());
-                            out.println(passwort + "|" + args[i]);
+                            String command = args[i];
+                            if (args[i].charAt(1) == '-'){
+                                command = command.substring(1);
+                            }
+                            out.println(passwort + "|" + command);
                             BufferedReader reader = new BufferedReader(new
                                 InputStreamReader(in));
                             String line = reader.readLine();
@@ -170,7 +174,7 @@ public class AppleJuiceClient {
                             System.exit(1);
                         }
                     }
-                    else if (args[i].indexOf("-link=") != -1) {
+                    else if (args[i].startsWith("-link=") || args[i].startsWith("--link=")) {
                         if (doubleInstance){
                             int PORT = OptionsManagerImpl.getInstance().
                                 getLinkListenerPort();
@@ -179,7 +183,11 @@ public class AppleJuiceClient {
                             Socket socket = new Socket("localhost", PORT);
                             PrintStream out = new PrintStream(socket.
                                 getOutputStream());
-                            out.println(passwort + "|" + args[i]);
+                            String theLink = args[i];
+                            if (args[i].charAt(1) == '-'){
+                                theLink = theLink.substring(1);
+                            }
+                            out.println(passwort + "|" + theLink);
                             socket.close();
                             //war nur Linkprocessing, also GUI schliessen
                             System.exit(1);
