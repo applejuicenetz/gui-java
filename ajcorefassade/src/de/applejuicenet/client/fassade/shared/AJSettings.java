@@ -143,10 +143,6 @@ public class AJSettings {
 		return shareDirs;
 	}
 
-	/*public void setShareDirs(Set shareDirs) {
-		this.shareDirs = shareDirs;
-	}*/
-
 	public long getMaxConnections() {
 		return maxConnections;
 	}

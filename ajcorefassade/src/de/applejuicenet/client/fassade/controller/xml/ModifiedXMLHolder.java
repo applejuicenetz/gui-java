@@ -511,7 +511,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		}
 		downloadMap.remove(id);
 		downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadMap,
-				DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED, id, null));
+				DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED, download, null));
 	}
 
 	private void checkRemovedAttributes(Attributes attr) {

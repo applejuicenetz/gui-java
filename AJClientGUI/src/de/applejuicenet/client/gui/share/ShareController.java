@@ -5,7 +5,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +22,7 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Information;
 import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.fassade.entity.ShareEntry;
 import de.applejuicenet.client.fassade.entity.ShareEntry.SHAREMODE;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
@@ -40,7 +40,7 @@ import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.14 2005/01/19 16:22:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.15 2005/03/04 13:48:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -412,14 +412,12 @@ public class ShareController extends GuiController {
         final SwingWorker worker = new SwingWorker() {
             public Object construct() {
                 try {
-                    Set shares = AppleJuiceClient.getAjFassade().
+                    Set<ShareEntry> shares = AppleJuiceClient.getAjFassade().
                     	getAJSettings().getShareDirs();
                     AppleJuiceClient.getAjFassade().setShare(shares);
                 }
                 catch (Exception e) {
-                    if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                    }
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                 }
                 return null;
             }
@@ -442,15 +440,12 @@ public class ShareController extends GuiController {
                     if (komplettNeu) {
                         rootNode.removeAllChildren();
                     }
-                    Map shares = AppleJuiceClient.getAjFassade().getShare(true);
-                    Iterator iterator = shares.values().iterator();
+                    Map<String, Share> shares = AppleJuiceClient.getAjFassade().getShare(true);
                     int anzahlDateien = 0;
                     double size = 0;
-                    Share share;
-                    while (iterator.hasNext()) {
-                        share = (Share) iterator.next();
-                        rootNode.addChild(share);
-                        size += share.getSize();
+                    for (Share curShare : shares.values()) {
+                        rootNode.addChild(curShare);
+                        size += curShare.getSize();
                         anzahlDateien++;
                     }
                     size = size / 1048576;
@@ -466,9 +461,7 @@ public class ShareController extends GuiController {
                     sharePanel.getLblDateien().setText(temp);
                 }
                 catch (Exception e) {
-                    if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                    }
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                 }
                 return null;
             }
@@ -527,9 +520,7 @@ public class ShareController extends GuiController {
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
