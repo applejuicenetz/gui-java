@@ -8,7 +8,7 @@ import java.util.TreeSet;
 import javax.swing.AbstractListModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.6 2004/05/12 19:52:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.7 2004/05/29 14:21:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -79,7 +79,14 @@ public class SortedListModel extends AbstractListModel {
     private class StringComparator implements Comparator{
         public int compare(Object o1, Object o2) {
             if (o1.getClass()==String.class && o2.getClass()==String.class){
-                int mods = compareMods(o1.toString().charAt(0), o2.toString().charAt(0));
+                int mods = 0;
+                try{
+                    mods = compareMods(o1.toString().charAt(0),
+                                           o2.toString().charAt(0));
+                }
+                catch(StringIndexOutOfBoundsException saoobE){
+                    mods = 0;
+                }
                 if (mods != 0){
                     return mods;
                 }
