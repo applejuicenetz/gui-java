@@ -22,7 +22,7 @@ public class AppleJuicePlugin extends PluginConnector {
     System.out.println("Sprache wurde geändert");
   }
 
-  public void fireContentChanged(HashMap changedContent){
+  public void fireContentChanged(){
     System.out.println("Neue Daten vom Server");
   }
 
