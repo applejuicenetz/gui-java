@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.6 2003/06/22 16:24:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.7 2003/06/22 19:00:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.7  2003/06/22 19:00:27  maj0r
+ * Basisklasse umbenannt.
+ *
  * Revision 1.6  2003/06/22 16:24:09  maj0r
  * Umrechnung korrigiert.
  *
@@ -26,7 +29,7 @@ import de.applejuicenet.client.shared.dac.*;
  */
 
 public class ModifiedXMLHolder
-    extends WebXMPParser {
+    extends WebXMLParser {
   private HashMap serverMap;
   private HashMap downloadMap;
   private HashMap uploadMap;
