@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.56 2003/10/31 19:04:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.57 2003/11/03 14:26:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.57  2003/11/03 14:26:12  maj0r
+ * Titelzeile geaendert.
+ *
  * Revision 1.56  2003/10/31 19:04:58  maj0r
  * Sounds eingebaut.
  *
@@ -444,7 +447,9 @@ public class AppleJuiceDialog
             String versionsNr = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
             setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                        getFirstAttrbuteByTagName(new
-                                                               String[]{"mainform", "caption"})) + " (Core " + versionsNr + ")");
+                                                               String[]{"mainform", "caption"})) +
+                                                               " (Core " + versionsNr +
+                                                               " - GUI " + ApplejuiceFassade.GUI_VERSION + ")");
             keinServer = languageSelector.getFirstAttrbuteByTagName(new String[]{
                 "javagui", "mainform", "keinserver"});
             sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
