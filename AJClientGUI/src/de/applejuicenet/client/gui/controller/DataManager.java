@@ -12,11 +12,13 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import de.applejuicenet.client.shared.dac.ShareDO;
+import de.applejuicenet.client.shared.dac.DownloadDO;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.30 2003/08/03 19:54:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.31 2003/08/04 14:28:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.31  2003/08/04 14:28:55  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.30  2003/08/03 19:54:05  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -234,6 +239,59 @@ public class DataManager { //Singleton-Implementierung
       return true;
     }
   }
+
+    public boolean setPrioritaet(int id, int prioritaet) {
+      if (prioritaet<1 || prioritaet >250){
+          System.out.print("Warnung: Prioritaet muss 1<= x <=250 sein!");
+          return false;
+      }
+      String id_key = Integer.toString(id);
+      ShareDO shareDO = (ShareDO) share.get(new MapSetStringKey(id_key));
+      if (shareDO==null){
+        System.out.print("Warnung: Share mit ID: "+ id_key +" nicht gefunden!");
+        return false;
+      }
+      else{
+        String result;
+        logger.info("Setze '" + shareDO.getShortfilename() + "' auf Prioritaet " + prioritaet + "...");
+        try {
+          String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+                                             "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet);
+        }
+        catch (WebSiteNotFoundException ex) {
+          return false;
+        }
+        return true;
+      }
+    }
+
+    public boolean setPowerDownload(int id, int powerDownload) {
+      if (powerDownload<0 || powerDownload >490){
+          System.out.print("Warnung: PowerDownload muss 0<= x <=490 sein!");
+          return false;
+      }
+      HashMap download = getDownloads();
+      String id_key = Integer.toString(id);
+      DownloadDO downloadDO = (DownloadDO) download.get(new MapSetStringKey(id_key));
+      if (downloadDO==null){
+        System.out.print("Warnung: Download mit ID: "+ id_key +" nicht gefunden!");
+        return false;
+      }
+      else{
+        String result;
+        logger.info("Setze '" + downloadDO.getFilename() + "' auf PowerDownload " + powerDownload + "...");
+        try {
+          String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+                                             "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload);
+        }
+        catch (WebSiteNotFoundException ex) {
+          return false;
+        }
+        return true;
+      }
+    }
 
   private static String getHost() {
     String savedHost = OptionsManager.getInstance().getRemoteSettings().getHost();

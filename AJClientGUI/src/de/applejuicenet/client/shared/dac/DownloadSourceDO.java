@@ -5,7 +5,7 @@ import java.util.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.9 2003/07/06 20:00:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.10 2003/08/04 14:28:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.10  2003/08/04 14:28:55  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.9  2003/07/06 20:00:19  maj0r
  * DownloadTable bearbeitet.
  *
@@ -41,13 +44,14 @@ public class DownloadSourceDO {
     public static final int NICHT_GENUEGEND_PLATZ_AUF_DER_PLATTE = 8;
     public static final int FERTIGGESTELLT = 9;
     public static final int KEINE_VERBINDUNG_MOEGLICH = 11;
+    public static final int VERSUCHE_INDIREKT = 12;
     public static final int PAUSIERT = 13;
 
     //directstate - IDs
     public static final int UNBEKANNT = 0;
     public static final int DIREKTE_VERBINDUNG = 1;
-    public static final int INDIREKTE_VERBINDUNG = 2;
-
+    public static final int INDIREKTE_VERBINDUNG_UNBESTAETIGT = 2;
+    public static final int INDIREKTE_VERBINDUNG = 3;
 
     private String id;
     private int status;

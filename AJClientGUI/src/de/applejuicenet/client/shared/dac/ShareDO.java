@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ShareDO.java,v 1.4 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ShareDO.java,v 1.5 2003/08/04 14:28:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareDO.java,v $
+ * Revision 1.5  2003/08/04 14:28:55  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.4  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -25,13 +28,15 @@ public class ShareDO {
   private String shortfilename;
   private String size;
   private String checksum;
+  private int prioritaet;
 
-  public ShareDO(String id, String filename, String shortfilename, String size, String checksum) {
+  public ShareDO(String id, String filename, String shortfilename, String size, String checksum, int prioritaet) {
     this.id = id;
     this.filename = filename;
     this.shortfilename = shortfilename;
     this.size = size;
     this.checksum = checksum;
+    this.prioritaet = prioritaet;
   }
 
   public void setFilename(String filename) {
@@ -69,4 +74,12 @@ public class ShareDO {
   public void setShortfilename(String shortfilename) {
       this.shortfilename = shortfilename;
   }
+
+    public int getPrioritaet() {
+        return prioritaet;
+    }
+
+    public void setPrioritaet(int prioritaet) {
+        this.prioritaet = prioritaet;
+    }
 }

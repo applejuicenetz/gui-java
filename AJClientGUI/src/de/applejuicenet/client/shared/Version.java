@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.8 2003/07/03 19:11:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.9 2003/08/04 14:28:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Version.java,v $
+ * Revision 1.9  2003/08/04 14:28:55  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.8  2003/07/03 19:11:16  maj0r
  * DownloadTable überarbeitet.
  *
@@ -20,8 +23,14 @@ package de.applejuicenet.client.shared;
  */
 
 public class Version {
-  public static final int LINUX = 2;
+  public static final int UNBEKANNT = 0;
   public static final int WIN32 = 1;
+  public static final int LINUX = 2;
+  public static final int MACINTOSH = 3;
+  public static final int SOLRAIS = 4;
+  public static final int OS2 = 5;
+  public static final int FREEBSD = 6;
+  public static final int NETWARE = 7;
 
   private String versionNr;
   private int betriebsSystem;

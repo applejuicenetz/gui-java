@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared.dac;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.6 2003/08/03 19:54:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.7 2003/08/04 14:28:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.7  2003/08/04 14:28:55  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.6  2003/08/03 19:54:05  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -27,6 +30,9 @@ import de.applejuicenet.client.shared.*;
 public class UploadDO {
   public static final int AKTIVE_UEBERTRAGUNG = 1;
   public static final int WARTESCHLANGE = 2;
+  public static final int VERSUCHE_ZU_VERBINDEN = 5;
+  public static final int VERSUCHE_INDIREKTE_VERBINDUNG = 6;
+  public static final int KEINE_VERBINDUNG_MOEGLICH = 7;
 
   private int uploadID;
   private String dateiName;

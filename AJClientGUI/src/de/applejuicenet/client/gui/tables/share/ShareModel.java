@@ -6,7 +6,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModel;
 import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareModel.java,v 1.1 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareModel.java,v 1.2 2003/08/04 14:28:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import java.util.HashMap;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareModel.java,v $
+ * Revision 1.2  2003/08/04 14:28:55  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.1  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -27,7 +30,7 @@ public class ShareModel extends AbstractTreeTableModel {
     static protected String[]  cNames = {"Name", "Size", "Type"};
 
     static protected Class[]  cTypes = { TreeTableModel.class,
-					 String.class, String.class};
+					 String.class, Integer.class};
 
 
     public ShareModel(ShareNode rootNode) {
@@ -91,7 +94,14 @@ public class ShareModel extends AbstractTreeTableModel {
                         }
                     }
                 case 2:
-                    return "";
+                    {
+                        if (shareNode.isLeaf() && shareNode!=getRoot()){
+                            return new Integer(shareNode.getDO().getPrioritaet());
+                        }
+                        else{
+                            return null;
+                        }
+                    }
             }
         }
         catch (SecurityException se) { }

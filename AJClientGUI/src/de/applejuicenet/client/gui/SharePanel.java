@@ -21,7 +21,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.16 2003/08/03 19:54:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.17 2003/08/04 14:28:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.17  2003/08/04 14:28:55  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.16  2003/08/03 19:54:05  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -177,7 +180,7 @@ public class SharePanel
     constraints.weighty = 1;
     panelWest.add(folderList, constraints);
 
-    for (int i = 0; i <= 250; i++) {
+    for (int i = 1; i <= 250; i++) {
       cmbPrio.addItem(Integer.toString(i));
     }
     JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
