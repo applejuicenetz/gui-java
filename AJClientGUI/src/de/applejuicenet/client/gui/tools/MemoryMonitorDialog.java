@@ -9,24 +9,13 @@ import java.awt.event.WindowEvent;
 import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitorDialog.java,v 1.3 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitorDialog.java,v 1.4 2004/07/23 17:37:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: MemoryMonitorDialog.java,v $
- * Revision 1.3  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.2  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.1  2003/11/04 13:14:50  maj0r
- * Memory-Monitor eingebaut.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -58,8 +47,8 @@ public class MemoryMonitorDialog
         setSize(new Dimension(200, 200));
     }
 
-    public void show() {
-        super.show();
+    public void setVisible(boolean display) {
+        super.setVisible(display);
         memoryMonitorPanel.startMemoryMonitor();
     }
 }

@@ -748,7 +748,7 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 						.getDownloadDO();
 				RenameDownloadDialog renameDownloadDialog = new RenameDownloadDialog(
 						AppleJuiceDialog.getApp(), downloadDO);
-				renameDownloadDialog.show();
+				renameDownloadDialog.setVisible(true);
 				String neuerName = renameDownloadDialog.getNewName();
 
 				if (neuerName == null) {
@@ -922,7 +922,7 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 				.getCurrentIncomingDirs();
 		IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(
 				AppleJuiceDialog.getApp(), dirs);
-		incomingDirSelectionDialog.show();
+		incomingDirSelectionDialog.setVisible(true);
 		String neuerName = incomingDirSelectionDialog.getSelectedIncomingDir();
 
 		if (neuerName == null) {

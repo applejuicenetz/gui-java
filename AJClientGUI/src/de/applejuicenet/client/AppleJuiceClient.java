@@ -16,7 +16,7 @@ import de.applejuicenet.client.gui.shared.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.77 2004/07/09 14:31:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.78 2004/07/23 17:37:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -223,7 +223,7 @@ public class AppleJuiceClient {
                 "splashscreen").getImage(), 0, 100);
             KeyStates ks = new KeyStates();
             splash.addKeyListener(ks);
-            splash.show();
+            splash.setVisible(true);
             try {
                 if (OptionsManagerImpl.getInstance().isThemesSupported()) {
                     java.lang.reflect.Method method = JFrame.class.
@@ -280,7 +280,7 @@ public class AppleJuiceClient {
                 }
                 showDialog = false;
                 remoteDialog = new QuickConnectionSettingsDialog(connectFrame);
-                remoteDialog.show();
+                remoteDialog.setVisible(true);
                 if (remoteDialog.getResult() ==
                     QuickConnectionSettingsDialog.ABGEBROCHEN) {
                     nachricht = ZeichenErsetzer.korrigiereUmlaute(
@@ -328,7 +328,7 @@ public class AppleJuiceClient {
                 theApp.setSize(appScreenSize);
                 theApp.setLocation(location);
             }
-            theApp.show();
+            theApp.setVisible(true);
             nachricht = "appleJuice-Core-GUI läuft...";
             if (logger.isEnabledFor(Level.INFO)) {
                 logger.info(nachricht);
@@ -357,8 +357,11 @@ public class AppleJuiceClient {
                                 pos1);
                             StringTokenizer token1 = new StringTokenizer(
                                 aktuellsteVersion, ".");
-                            StringTokenizer token2 = new StringTokenizer(
-                                ApplejuiceFassade.GUI_VERSION, ".");
+    						String guiVersion = ApplejuiceFassade.GUI_VERSION;
+    						if (guiVersion.indexOf('-') != -1){
+    							guiVersion = guiVersion.substring(0, guiVersion.indexOf('-'));
+    						}
+                            StringTokenizer token2 = new StringTokenizer(guiVersion, ".");
                             if (token1.countTokens() != 3 ||
                                 token2.countTokens() != 3) {
                                 return;
@@ -409,7 +412,7 @@ public class AppleJuiceClient {
                                 UpdateInformationDialog updateInformationDialog =
                                     new UpdateInformationDialog(theApp,
                                     aktuellsteVersion, winLink, sonstigeLink);
-                                updateInformationDialog.show();
+                                updateInformationDialog.setVisible(true);
                             }
                         }
                     }
@@ -444,7 +447,7 @@ public class AppleJuiceClient {
                                    appDimension.width) / 2,
                                  (screenSize.height -
                                   appDimension.height) / 2);
-        wizardDialog.show();
+        wizardDialog.setVisible(true);
     }
     public static void showConnectionWizard(JDialog dialog, AJSettings ajSettings) throws
         HeadlessException {
@@ -456,6 +459,6 @@ public class AppleJuiceClient {
                                    appDimension.width) / 2,
                                  (screenSize.height -
                                   appDimension.height) / 2);
-        wizardDialog.show();
+        wizardDialog.setVisible(true);
     }
 }

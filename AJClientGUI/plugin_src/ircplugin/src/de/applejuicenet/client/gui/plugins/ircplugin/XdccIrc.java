@@ -35,7 +35,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.19 2004/06/09 05:59:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.20 2004/07/23 17:37:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -314,7 +314,7 @@ public class XdccIrc
 
         dialog.pack();
         dialog.setLocationRelativeTo(this);
-        dialog.show();
+        dialog.setVisible(true);
     }
 
     private class ConnectActionListener
@@ -1275,7 +1275,7 @@ public class XdccIrc
                 if (norules == null || norules.compareToIgnoreCase("true") != 0) {
                     RulesDialog rulesDialog = new RulesDialog(AppleJuiceDialog.
                         getApp(), true);
-                    rulesDialog.show();
+                    rulesDialog.setVisible(true);
                 }
             }
         }

@@ -41,7 +41,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.32 2004/07/22 14:13:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.33 2004/07/23 17:37:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -513,7 +513,7 @@ public class ODStandardPanel
             }
             ODDirectoryChooser chooser = new ODDirectoryChooser(parent, title);
             chooser.setLocation(parent.getLocation());
-            chooser.show();
+            chooser.setVisible(true);
             if (chooser.isNewPathSelected()) {
                 dirty = true;
                 String path = chooser.getSelectedPath();

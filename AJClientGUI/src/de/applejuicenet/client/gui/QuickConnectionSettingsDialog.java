@@ -34,7 +34,7 @@ import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.19 2004/07/05 09:18:22 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.20 2004/07/23 17:37:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -169,21 +169,21 @@ public class QuickConnectionSettingsDialog
             public void actionPerformed(ActionEvent ae) {
                 speichereEinstellungen();
                 result = 0;
-                hide();
+                setVisible(false);
             }
         });
 
         abbrechen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 result = ABGEBROCHEN;
-                hide();
+                setVisible(false);
             }
         });
         addWindowListener(
             new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 result = ABGEBROCHEN;
-                hide();
+                setVisible(false);
             }
         });
         pack();

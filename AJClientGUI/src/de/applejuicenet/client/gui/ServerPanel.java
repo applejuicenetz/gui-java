@@ -246,7 +246,7 @@ public class ServerPanel extends JPanel implements LanguageListener,
 				newServerDialog.setLocation(
 						(screenSize.width - appDimension.width) / 2,
 						(screenSize.height - appDimension.height) / 2);
-				newServerDialog.show();
+				newServerDialog.setVisible(true);
 				if (newServerDialog.isLegal()) {
 					final String link = newServerDialog.getLink();
 					new Thread() {

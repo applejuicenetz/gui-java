@@ -443,7 +443,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 					memoryMonitorDialog.setLocation(loc);
 				}
 				if (!memoryMonitorDialog.isVisible()) {
-					memoryMonitorDialog.show();
+					memoryMonitorDialog.setVisible(true);
 				}
 			}
 		});
@@ -843,7 +843,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		od.setLocation((screenSize.width - optDimension.width) / 2,
 				(screenSize.height - optDimension.height) / 2);
-		od.show();
+		od.setVisible(true);
 	}
 
 	private void showAboutDialog() {
@@ -852,7 +852,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		aboutDialog.setLocation((screenSize.width - appDimension.width) / 2,
 				(screenSize.height - appDimension.height) / 2);
-		aboutDialog.show();
+		aboutDialog.setVisible(true);
 	}
 
 	private void activateThemeSupport(boolean enable) {
@@ -1454,8 +1454,12 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 								pos1);
 						StringTokenizer token1 = new StringTokenizer(
 								aktuellsteVersion, ".");
+						String guiVersion = ApplejuiceFassade.GUI_VERSION;
+						if (guiVersion.indexOf('-') != -1){
+							guiVersion = guiVersion.substring(0, guiVersion.indexOf('-'));
+						}
 						StringTokenizer token2 = new StringTokenizer(
-								ApplejuiceFassade.GUI_VERSION, ".");
+								guiVersion, ".");
 						if (token1.countTokens() != 3
 								|| token2.countTokens() != 3) {
 							return;
@@ -1479,7 +1483,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(
 									AppleJuiceDialog.getApp(),
 									aktuellsteVersion, winLink, sonstigeLink);
-							updateInformationDialog.show();
+							updateInformationDialog.setVisible(true);
 						} else {
 							LanguageSelector languageSelector = LanguageSelector
 									.getInstance();

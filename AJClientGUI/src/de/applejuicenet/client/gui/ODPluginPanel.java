@@ -27,7 +27,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.17 2004/07/15 06:22:36 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.18 2004/07/23 17:37:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +36,10 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginPanel.java,v $
+ * Revision 1.18  2004/07/23 17:37:32  maj0r
+ * JDK 1.5 Deprecations behoben.
+ * CVS-Versionsanzeige eingebaut.
+ *
  * Revision 1.17  2004/07/15 06:22:36  loevenwong
  * Anzeige nach erneutem Wizardstart aktualisiert (Danke UP^).
  *
@@ -173,7 +177,7 @@ public class ODPluginPanel
                         new ODPluginOptionsDialog(parentDialog,
                                                   selectedPluginConnector);
                     pluginOptionsDialog.setResizable(true);
-                    pluginOptionsDialog.show();
+                    pluginOptionsDialog.setVisible(true);
                 }
             }
         });
