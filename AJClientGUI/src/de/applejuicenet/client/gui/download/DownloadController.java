@@ -448,6 +448,8 @@ public class DownloadController extends GuiController {
 						.getType() == DownloadMainNode.ROOT_NODE)
 						|| (selectedItems[0] instanceof DownloadSource)) {
 					downloadPanel.getMnuPartlisteAnzeigen().setVisible(true);
+					downloadPanel.getMnuUmbenennen().setVisible(true);
+					downloadPanel.getMnuZielordner().setVisible(true);
 				}
 				if (selectedItems[0] instanceof DownloadSource) {
 					downloadPanel.getMnuUmbenennen().setVisible(true);
