@@ -1,22 +1,18 @@
 package de.applejuicenet.client.gui.plugins;
 
-import java.net.*;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.jar.JarFile;
 
-import java.awt.*;
 import java.io.File;
 import java.io.InputStream;
 import javax.swing.*;
 
 import de.applejuicenet.client.gui.*;
 import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.shared.exception.*;
-import sun.tools.jar.resources.jar;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.10 2003/08/20 20:05:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.11 2003/08/21 09:30:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +21,9 @@ import sun.tools.jar.resources.jar;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PluginConnector.java,v $
+ * Revision 1.11  2003/08/21 09:30:40  maj0r
+ * Unnoetige Imports entfernt.
+ *
  * Revision 1.10  2003/08/20 20:05:47  maj0r
  * Plugin korrigiert.
  *
