@@ -8,10 +8,12 @@ import java.awt.event.MouseListener;
 import javax.swing.Icon;
 import javax.swing.JTabbedPane;
 
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.Search;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultTabbedPane.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultTabbedPane.java,v 1.3 2004/12/06 18:31:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,8 +36,8 @@ public class SearchResultTabbedPane extends JTabbedPane
         super.addTab(title, component);
     }
 
-    public void enableIconAt(int index){
-        super.setIconAt(index, new CloseIcon());
+    public void enableIconAt(int index, Search aSearch){
+        super.setIconAt(index, new CloseIcon(aSearch));
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -48,6 +50,7 @@ public class SearchResultTabbedPane extends JTabbedPane
             Rectangle rect = icon.getBounds();
             if (rect.contains(e.getX(), e.getY())){
                 removeTabAt(tabNumber);
+                ApplejuiceFassade.getInstance().cancelSearch(icon.getSearch());
             }
         }
     }
@@ -71,10 +74,16 @@ public class SearchResultTabbedPane extends JTabbedPane
         private int y_pos;
         private int width;
         private int height;
+        private Search aSearch;
 
-        public CloseIcon() {
+        public CloseIcon(Search aSearch) {
             width = icon.getIconWidth();
             height = icon.getIconHeight();
+            this.aSearch = aSearch;
+        }
+        
+        public Search getSearch(){
+        	return aSearch;
         }
 
         public void paintIcon(Component c, Graphics g, int x, int y) {
