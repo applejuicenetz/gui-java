@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.5 2004/12/06 10:29:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.6 2004/12/06 14:27:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -201,7 +201,7 @@ public class DownloadDOOverviewPanel
 	                }
         		}
             	if (objectDO == null){
-            		paused = true;
+            		setPaused(true);
             		continue;
             	}
             	boolean shortPause = false;
@@ -210,7 +210,7 @@ public class DownloadDOOverviewPanel
             	}
             	else{
             		shortPause = workDownloadSourceDO((DownloadSourceDO)objectDO);
-            		paused = true;
+            		setPaused(true);
             	}
             	if (shortPause){
         			try{
@@ -222,6 +222,10 @@ public class DownloadDOOverviewPanel
 	                }
             	}
         	}
+        }
+        
+        private void setPaused(boolean enable){
+        	paused = enable;
         }
         
         private boolean workDownloadDO(DownloadDO downloadDO){
@@ -258,7 +262,7 @@ public class DownloadDOOverviewPanel
     			return true;
         	}
         	else{
-        		paused = true;
+        		setPaused(true);
     			return false;
         	}
         }
@@ -290,7 +294,7 @@ public class DownloadDOOverviewPanel
 		}
         
         public void setDownloadDO(DownloadDO downloadDO){
-        	paused = true;
+        	setPaused(true);
         	if (downloadDO == null){
         		clear();
         	}
@@ -300,36 +304,36 @@ public class DownloadDOOverviewPanel
             		clear();
             	}
             	else{
-            		paused = false;
+            		setPaused(false);
             	}
         	}
         }
 
         public void setDownloadSourceDO(DownloadSourceDO downloadSoureDO){
-        	paused = true;
+        	setPaused(true);
         	if (objectDO != downloadSoureDO){
 	        	objectDO = downloadSoureDO;
             	if (objectDO == null){
             		clear();
             	}
             	else{
-            		paused = false;            		
+            		setPaused(false);            		
             	}
         	}
         }
         
         private void clear(){
-        	paused = true;
+        	setPaused(true);
             actualDLDateiName.setText("");
             actualDlOverviewTable.setPartList(null, null);
         }
         
         public void pause(){
-        	paused = true;
+        	setPaused(true);
         }
         
         public void cancel(){
-        	paused = true;
+        	setPaused(true);
         	interrupt();
         	clear();
         }
