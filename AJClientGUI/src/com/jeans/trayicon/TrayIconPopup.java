@@ -101,8 +101,8 @@ public class TrayIconPopup
      * Param menuId = the id of the selected item
      */
     public boolean onSelected(int menuId) {
-        for (Enumeration enum = mVector.elements(); enum.hasMoreElements(); ) {
-            TrayIconPopupItem item = (TrayIconPopupItem) enum.nextElement();
+        for (Enumeration enumeration = mVector.elements(); enumeration.hasMoreElements(); ) {
+            TrayIconPopupItem item = (TrayIconPopupItem) enumeration.nextElement();
             if (item.onSelected(menuId)) {
                 return true;
             }
@@ -121,8 +121,8 @@ public class TrayIconPopup
         int mLevel = level + 1;
         WindowsTrayIcon.subPopup(id, mLevel, mItem,
                           WindowsTrayIcon.POPUP_TYPE_INIT_LEVEL, 0);
-        for (Enumeration enum = mVector.elements(); enum.hasMoreElements(); ) {
-            TrayIconPopupItem item = (TrayIconPopupItem) enum.nextElement();
+        for (Enumeration enumeration = mVector.elements(); enumeration.hasMoreElements(); ) {
+            TrayIconPopupItem item = (TrayIconPopupItem) enumeration.nextElement();
             item.setTrayIcon(trayicon, id, mLevel);
         }
         WindowsTrayIcon.subPopup(id, mLevel, mItem,

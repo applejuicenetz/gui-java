@@ -470,9 +470,9 @@ public class WindowsTrayIcon {
             MouseEvent evt = new MouseEvent(getDummyComponent(), 0, 0,
                                             modifiers, xp, yp, clicks,
                                             button == 1);
-            for (Enumeration enum = m_MouseList.elements();
-                 enum.hasMoreElements(); ) {
-                MouseListener listener = (MouseListener) enum.nextElement();
+            for (Enumeration enumeration = m_MouseList.elements();
+            enumeration.hasMoreElements(); ) {
+                MouseListener listener = (MouseListener) enumeration.nextElement();
                 if (up) {
                     listener.mouseReleased(evt);
                 }
