@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
@@ -36,7 +37,7 @@ import de.applejuicenet.client.gui.plugins.serverwatcher.ServerConfig;
 import de.applejuicenet.client.gui.plugins.serverwatcher.ServerXML;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.10 2005/01/21 16:28:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.11 2005/01/24 18:04:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
