@@ -20,15 +20,18 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.54 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.55 2003/10/21 14:50:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.55  2003/10/21 14:50:11  maj0r
+ * Fixe Sprachverwendung entfernt.
+ *
  * Revision 1.54  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -161,8 +164,10 @@ public class DownloadPanel
     private JMenuItem item4;
     private JMenuItem item5;
     private JMenuItem item6;
-    private JMenuItem item7;
-    private JMenuItem item8;
+    private String downloadAbbrechen;
+    private String dialogTitel;
+/*    private JMenuItem item7;
+    private JMenuItem item8;*/
     private Logger logger;
 
     public DownloadPanel() {
@@ -191,16 +196,16 @@ public class DownloadPanel
         item4 = new JMenuItem("Umbenennen");
         item5 = new JMenuItem("Zielordner ändern");
         item6 = new JMenuItem("Fertige Übertragungen entfernen");
-        item7 = new JMenuItem("Download verstecken");
-        item8 = new JCheckBoxMenuItem("Versteckte Downloads anzeigen");
+/*        item7 = new JMenuItem("Download verstecken");
+        item8 = new JCheckBoxMenuItem("Versteckte Downloads anzeigen");*/
         //todo
         item4.setEnabled(false);
         item5.setEnabled(false);
         //
         popup.add(item1);
         popup.add(item2);
-        popup.add(item4);
-        popup.add(item5);
+/*        popup.add(item4);
+        popup.add(item5);*/
         popup.add(item6);
 /*        popup.add(new JPopupMenu.Separator());
         popup.add(item7);
@@ -210,7 +215,8 @@ public class DownloadPanel
             public void actionPerformed(ActionEvent ae) {
                 Object[] selectedItems = getSelectedDownloadItems();
                 if (selectedItems != null && selectedItems.length != 0) {
-                    int result = JOptionPane.showConfirmDialog(null, "Wollen Sie wirklich diese Downloads abbrechen", "Bestätigung",
+                    int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(),
+                                                               downloadAbbrechen, dialogTitel,
                             JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
                         ArrayList indizesAbbrechen = new ArrayList();
@@ -471,6 +477,10 @@ public class DownloadPanel
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             String text = languageSelector.getFirstAttrbuteByTagName(new String[]{
                 "mainform", "Label14", "caption"});
+            dialogTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "caption"}));
+            downloadAbbrechen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "msgdlgtext5"}));
             linkLabel.setText(ZeichenErsetzer.korrigiereUmlaute(text));
             btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                     getFirstAttrbuteByTagName(new String[]{"mainform", "downlajfsp",
