@@ -11,9 +11,10 @@ import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.26 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.27 2004/01/05 19:17:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +23,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.27  2004/01/05 19:17:18  maj0r
+ * Bug #56 gefixt (Danke an MeineR)
+ * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
+ *
  * Revision 1.26  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -138,7 +143,9 @@ public class RegisterPanel
         ImageIcon icon5 = im.getIcon("server");
         addTab("Server", icon5, serverPanel);
 
-        loadPlugins();
+        if (PropertiesManager.getOptionsManager().shouldLoadPluginsOnStartup()){
+            loadPlugins();
+        }
     }
 
     private void loadPlugins() {

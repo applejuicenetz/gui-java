@@ -5,7 +5,7 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.5 2004/01/05 19:17:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,10 @@ import java.awt.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Settings.java,v $
+ * Revision 1.5  2004/01/05 19:17:19  maj0r
+ * Bug #56 gefixt (Danke an MeineR)
+ * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -29,9 +33,10 @@ public class Settings {
     private Color quelleHintergrundColor = new Color(255, 255, 150);
     private boolean farbenAktiv = true;
     private boolean downloadUebersicht = true;
+    private boolean loadPlugins = true;
 
     public Settings(Boolean farbenAktiv, Color downloadFertigHintergrundColor, Color quelleHintergrundColor,
-                    Boolean downloadUebersicht){
+                    Boolean downloadUebersicht, Boolean loadPlugins){
         if (farbenAktiv!=null)
             this.farbenAktiv = farbenAktiv.booleanValue();
         if (downloadFertigHintergrundColor!=null)
@@ -40,6 +45,8 @@ public class Settings {
             this.quelleHintergrundColor = quelleHintergrundColor;
         if (downloadUebersicht!=null)
             this.downloadUebersicht = downloadUebersicht.booleanValue();
+        if (loadPlugins!=null)
+            this.loadPlugins = downloadUebersicht.booleanValue();
     }
 
     public static Settings getSettings(){
@@ -98,6 +105,17 @@ public class Settings {
         if (this.downloadUebersicht!=downloadUebersicht){
             dirty = true;
             this.downloadUebersicht = downloadUebersicht;
+        }
+    }
+
+    public boolean shouldLoadPluginsOnStartup(){
+        return loadPlugins;
+    }
+
+    public void loadPluginsOnStartup(boolean loadPluginsOnStartup){
+        if (loadPlugins != loadPluginsOnStartup){
+            dirty = true;
+            loadPlugins = loadPluginsOnStartup;
         }
     }
 }

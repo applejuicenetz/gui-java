@@ -19,7 +19,7 @@ import de.applejuicenet.client.gui.tools.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.73 2004/01/05 07:28:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.74 2004/01/05 19:17:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.74  2004/01/05 19:17:18  maj0r
+ * Bug #56 gefixt (Danke an MeineR)
+ * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
+ *
  * Revision 1.73  2004/01/05 07:28:58  maj0r
  * Begonnen einen Standardwebbrowser einzubauen.
  *
@@ -832,7 +836,8 @@ public class AppleJuiceDialog
 
         xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xmlData.append("<root>");
-        xmlData.append("    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\" themes=\"true\" defaulttheme=\"aquathemepack\"");
+        xmlData.append("    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\" ");
+        xmlData.append("themes=\"true\" defaulttheme=\"aquathemepack\" loadplugins=\"true\"");
         xmlData.append(
             "             linklistenerport=\"8768\" versionsinfo=\"1\" >");
         xmlData.append(

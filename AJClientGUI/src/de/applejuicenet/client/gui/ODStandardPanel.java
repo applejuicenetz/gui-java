@@ -1,18 +1,44 @@
 package de.applejuicenet.client.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.shared.*;
+import java.io.File;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolTip;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import javax.swing.JFileChooser;
-import java.io.File;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.OptionsManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.MultiLineToolTip;
+import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.20 2004/01/05 11:54:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.21 2004/01/05 19:17:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +47,10 @@ import java.io.File;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.21  2004/01/05 19:17:18  maj0r
+ * Bug #56 gefixt (Danke an MeineR)
+ * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
+ *
  * Revision 1.20  2004/01/05 11:54:21  maj0r
  * Standardbrowser kann nun definiert werden.
  *
@@ -75,7 +105,7 @@ import java.io.File;
  */
 
 public class ODStandardPanel
-        extends JPanel {
+    extends JPanel {
     private boolean dirty = false;
     private boolean xmlPortDirty = false;
     private JLabel label1 = new JLabel();
@@ -103,22 +133,23 @@ public class ODStandardPanel
     private AJSettings ajSettings;
     private JComboBox cmbLog;
     private JComboBox updateInfoModus;
+    private JCheckBox loadPlugins = new JCheckBox();
     private Logger logger;
     private ConnectionSettings remote;
 
-    public ODStandardPanel(JDialog parent, AJSettings ajSettings, ConnectionSettings remote) {
+    public ODStandardPanel(JDialog parent, AJSettings ajSettings,
+                           ConnectionSettings remote) {
         logger = Logger.getLogger(getClass());
-        try
-        {
+        try {
             this.remote = remote;
             this.parent = parent;
             this.ajSettings = ajSettings;
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -127,21 +158,26 @@ public class ODStandardPanel
     }
 
     public Level getLogLevel() {
-        return ((LevelItem) cmbLog.getSelectedItem()).getLevel();
+        return ( (LevelItem) cmbLog.getSelectedItem()).getLevel();
     }
 
-    public int getVersionsinfoModus(){
-        if (updateInfoModus.getSelectedIndex()==-1){
+    public int getVersionsinfoModus() {
+        if (updateInfoModus.getSelectedIndex() == -1) {
             return 1;
         }
-        else{
-            UpdateInfoItem selectedItem = (UpdateInfoItem)updateInfoModus.getSelectedItem();
+        else {
+            UpdateInfoItem selectedItem = (UpdateInfoItem) updateInfoModus.
+                getSelectedItem();
             return selectedItem.getModus();
         }
     }
 
-    public String getBrowserPfad(){
+    public String getBrowserPfad() {
         return browser.getText();
+    }
+
+    public boolean shouldLoadPluginsOnStartup() {
+        return loadPlugins.isSelected();
     }
 
     private void init() throws Exception {
@@ -162,8 +198,7 @@ public class ODStandardPanel
         nick.setText(ajSettings.getNick());
         port.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
-                if (ajSettings.getPort() != Integer.parseInt(port.getText()))
-                {
+                if (ajSettings.getPort() != Integer.parseInt(port.getText())) {
                     dirty = true;
                     ajSettings.setPort(Integer.parseInt(port.getText()));
                 }
@@ -171,8 +206,7 @@ public class ODStandardPanel
         });
         xmlPort.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
-                if (ajSettings.getXMLPort() != Long.parseLong(xmlPort.getText()))
-                {
+                if (ajSettings.getXMLPort() != Long.parseLong(xmlPort.getText())) {
                     dirty = true;
                     xmlPortDirty = true;
                     remote.setXmlPort(Integer.parseInt(xmlPort.getText()));
@@ -182,8 +216,7 @@ public class ODStandardPanel
         });
         nick.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
-                if (ajSettings.getNick().compareTo(nick.getText()) != 0)
-                {
+                if (ajSettings.getNick().compareTo(nick.getText()) != 0) {
                     dirty = true;
                     ajSettings.setNick(nick.getText());
                 }
@@ -195,13 +228,19 @@ public class ODStandardPanel
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         Level logLevel = optionsManager.getLogLevel();
 
-        LevelItem[] levelItems = new LevelItem[3];//{ "Info", "Debug", "keins"};
-        levelItems[0] = new LevelItem(Level.INFO, ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "info"})));
-        levelItems[1] = new LevelItem(Level.DEBUG, ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "debug"})));
-        levelItems[2] = new LevelItem(Level.OFF, ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "off"})));
+        LevelItem[] levelItems = new LevelItem[3]; //{ "Info", "Debug", "keins"};
+        levelItems[0] = new LevelItem(Level.INFO,
+                                      ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
+            "options", "logging", "info"})));
+        levelItems[1] = new LevelItem(Level.DEBUG,
+                                      ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
+            "options", "logging", "debug"})));
+        levelItems[2] = new LevelItem(Level.OFF,
+                                      ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
+            "options", "logging", "off"})));
 
         cmbLog = new JComboBox(levelItems);
         cmbLog.addItemListener(new ItemListener() {
@@ -211,42 +250,54 @@ public class ODStandardPanel
         });
 
         int index = 0;
-        if (logLevel == Level.INFO)
+        if (logLevel == Level.INFO) {
             index = 0;
-        else if (logLevel == Level.DEBUG)
+        }
+        else if (logLevel == Level.DEBUG) {
             index = 1;
-        else if (logLevel == Level.OFF)
+        }
+        else if (logLevel == Level.OFF) {
             index = 2;
+        }
         cmbLog.setSelectedIndex(index);
 
         panel8.add(cmbLog);
 
         updateInfoModus = new JComboBox();
-        UpdateInfoItem item0 = new UpdateInfoItem(0, ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "standard", "updateinfo0"})));
-        UpdateInfoItem item1 = new UpdateInfoItem(1, ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "standard", "updateinfo1"})));
-        UpdateInfoItem item2 = new UpdateInfoItem(2, ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "standard", "updateinfo2"})));
+        UpdateInfoItem item0 = new UpdateInfoItem(0,
+                                                  ZeichenErsetzer.
+                                                  korrigiereUmlaute(
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
+            "options", "standard", "updateinfo0"})));
+        UpdateInfoItem item1 = new UpdateInfoItem(1,
+                                                  ZeichenErsetzer.
+                                                  korrigiereUmlaute(
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
+            "options", "standard", "updateinfo1"})));
+        UpdateInfoItem item2 = new UpdateInfoItem(2,
+                                                  ZeichenErsetzer.
+                                                  korrigiereUmlaute(
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
+            "options", "standard", "updateinfo2"})));
         updateInfoModus.addItem(item0);
         updateInfoModus.addItem(item1);
         updateInfoModus.addItem(item2);
         int infoModus = optionsManager.getVersionsinfoModus();
-        switch (infoModus){
-            case 0:{
+        switch (infoModus) {
+            case 0: {
                 updateInfoModus.setSelectedItem(item0);
                 break;
             }
-            case 1:{
+            case 1: {
                 updateInfoModus.setSelectedItem(item1);
                 break;
             }
-            case 2:{
+            case 2: {
                 updateInfoModus.setSelectedItem(item2);
                 break;
             }
-            default:{
-                updateInfoModus.setSelectedIndex(-1);
+            default: {
+                updateInfoModus.setSelectedIndex( -1);
             }
         }
         updateInfoModus.addItemListener(new ItemListener() {
@@ -256,7 +307,8 @@ public class ODStandardPanel
         });
         JPanel panel9 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel label10 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "standard", "updateinfotext"})));
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
+            "options", "standard", "updateinfotext"})));
         panel9.add(label10);
         panel9.add(updateInfoModus);
 
@@ -265,23 +317,28 @@ public class ODStandardPanel
         xmlPort.setHorizontalAlignment(JLabel.RIGHT);
         JPanel panel6 = new JPanel(new GridBagLayout());
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new String[]{"einstform", "Label2",
-                                                                                                "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Label2",
+                                      "caption"})));
         label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new String[]{"einstform", "Label7",
-                                                                                                "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Label7",
+                                      "caption"})));
         label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new String[]{"einstform", "Label3",
-                                                                                                "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Label3",
+                                      "caption"})));
         label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new String[]{"einstform", "Label8",
-                                                                                                "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Label8",
+                                      "caption"})));
         label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                                                                "standard", "xmlport"})));
-      label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                                                                      "standard", "standardbrowser"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "standard", "xmlport"})));
+        label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "standard", "standardbrowser"})));
+        loadPlugins.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "standard", "ladeplugins"})));
+
+        loadPlugins.setSelected(optionsManager.shouldLoadPluginsOnStartup());
 
         IconManager im = IconManager.getInstance();
         ImageIcon icon = im.getIcon("hint");
@@ -328,32 +385,33 @@ public class ODStandardPanel
             }
         };
         hint1.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                                                                      "standard", "ttipp_temp"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "standard", "ttipp_temp"})));
         hint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                                                                      "standard", "ttipp_port"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "standard", "ttipp_port"})));
         hint3.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                                                                      "standard", "ttipp_nick"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "standard", "ttipp_nick"})));
         hint4.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"einstform", "Label1",
-                                                                                                      "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Label1",
+                                      "caption"})));
         hint5.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                                                                      "logging", "ttip"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "logging", "ttip"})));
         hint6.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                                                                      "standard", "ttipp_xmlport"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "standard", "ttipp_xmlport"})));
 
         Icon icon2 = im.getIcon("folderopen");
-        DirectoryChooserMouseAdapter dcMouseAdapter = new DirectoryChooserMouseAdapter();
+        DirectoryChooserMouseAdapter dcMouseAdapter = new
+            DirectoryChooserMouseAdapter();
         openTemp = new JLabel(icon2);
         openTemp.addMouseListener(dcMouseAdapter);
         openIncoming = new JLabel(icon2);
         openIncoming.addMouseListener(dcMouseAdapter);
         selectStandardBrowser = new JLabel(icon2);
-        selectStandardBrowser.addMouseListener(new MouseAdapter(){
+        selectStandardBrowser.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 JLabel source = (JLabel) e.getSource();
                 source.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -364,16 +422,16 @@ public class ODStandardPanel
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogType(JFileChooser.FILES_ONLY);
                 fileChooser.setDialogTitle(label7.getText());
-                if (browser.getText().length() != 0){
+                if (browser.getText().length() != 0) {
                     File tmpFile = new File(browser.getText());
-                    if (tmpFile.isFile()){
+                    if (tmpFile.isFile()) {
                         fileChooser.setCurrentDirectory(tmpFile);
                     }
                 }
                 int returnVal = fileChooser.showOpenDialog(source);
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File browserFile = fileChooser.getSelectedFile();
-                    if (browserFile.isFile()){
+                    if (browserFile.isFile()) {
                         browser.setText(browserFile.getPath());
                         dirty = true;
                     }
@@ -383,6 +441,12 @@ public class ODStandardPanel
             public void mouseExited(MouseEvent e) {
                 JLabel source = (JLabel) e.getSource();
                 source.setBorder(null);
+            }
+        });
+
+        loadPlugins.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                dirty = true;
             }
         });
 
@@ -399,6 +463,8 @@ public class ODStandardPanel
         JPanel panel4 = new JPanel(new GridBagLayout());
         JPanel panel7 = new JPanel(new GridBagLayout());
         JPanel panel10 = new JPanel(new GridBagLayout());
+        JPanel panel11 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panel11.add(loadPlugins);
 
         constraints.insets.right = 5;
         constraints.insets.left = 4;
@@ -461,6 +527,9 @@ public class ODStandardPanel
         constraints.gridy = 7;
         constraints.gridx = 0;
         panel6.add(panel9, constraints);
+        constraints.gridy = 8;
+        constraints.gridx = 0;
+        panel6.add(panel11, constraints);
 
         add(panel6, BorderLayout.NORTH);
     }
@@ -470,7 +539,7 @@ public class ODStandardPanel
     }
 
     class DirectoryChooserMouseAdapter
-            extends MouseAdapter {
+        extends MouseAdapter {
         public void mouseEntered(MouseEvent e) {
             JLabel source = (JLabel) e.getSource();
             source.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -479,28 +548,23 @@ public class ODStandardPanel
         public void mouseClicked(MouseEvent e) {
             JLabel source = (JLabel) e.getSource();
             String title = "";
-            if (source == openTemp)
-            {
+            if (source == openTemp) {
                 title = label1.getText();
             }
-            else
-            {
+            else {
                 title = label2.getText();
             }
             ODDirectoryChooser chooser = new ODDirectoryChooser(parent, title);
             chooser.setLocation(parent.getLocation());
             chooser.show();
-            if (chooser.isNewPathSelected())
-            {
+            if (chooser.isNewPathSelected()) {
                 dirty = true;
                 String path = chooser.getSelectedPath();
-                if (source == openTemp)
-                {
+                if (source == openTemp) {
                     temp.setText(path);
                     ajSettings.setTempDir(path);
                 }
-                else
-                {
+                else {
                     incoming.setText(path);
                     ajSettings.setIncomingDir(path);
                 }

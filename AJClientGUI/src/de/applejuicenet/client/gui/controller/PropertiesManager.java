@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.19 2004/01/05 17:08:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.20 2004/01/05 19:17:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,10 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.20  2004/01/05 19:17:19  maj0r
+ * Bug #56 gefixt (Danke an MeineR)
+ * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
+ *
  * Revision 1.19  2004/01/05 17:08:36  maj0r
  * Fehlerbehandlung korrigiert.
  *
@@ -339,6 +343,29 @@ public class PropertiesManager
         setAttributeByTagName(new String[]{"options", "firststart"}, Boolean.toString(ersterStart));
     }
 
+    public boolean shouldLoadPluginsOnStartup() {
+        try{
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "loadplugins"});;
+            if (temp==null || temp.length()==0)
+                return true;
+            return new Boolean(temp).booleanValue();
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return false;
+        }
+    }
+
+    public void loadPluginsOnStartup(boolean loadPluginsOnStartup) {
+        setAttributeByTagName(new String[]{"options", "loadplugins"}, Boolean.toString(loadPluginsOnStartup));
+        shouldLoadPluginsOnStartup();
+    }
+
     public boolean isThemesSupported() {
         try{
             String temp = getFirstAttrbuteByTagName(new String[]{"options", "themes"});;
@@ -509,6 +536,7 @@ public class PropertiesManager
             Color quelleHintergrundColor = null;
             Boolean farbenAktiv = null;
             Boolean downloadUebersicht = null;
+            Boolean loadPlugins = null;
             String temp;
             temp = getFirstAttrbuteByTagName(new String[]{"options", "farben",
                                                           "aktiv"});
@@ -530,7 +558,11 @@ public class PropertiesManager
             if (temp.length() != 0) {
                 downloadUebersicht = new Boolean(temp);
             }
-            return new Settings(farbenAktiv, downloadFertigHintergrundColor, quelleHintergrundColor, downloadUebersicht);
+            temp = getFirstAttrbuteByTagName(new String[]{"options", "loadplugins"});
+            if (temp.length() != 0) {
+                loadPlugins = new Boolean(temp);
+            }
+            return new Settings(farbenAktiv, downloadFertigHintergrundColor, quelleHintergrundColor, downloadUebersicht, loadPlugins);
         }
         catch (Exception e)
         {
@@ -553,6 +585,8 @@ public class PropertiesManager
                 Integer.toString(settings.getQuelleHintergrundColor().getRGB()));
         setAttributeByTagName(new String[]{"options", "download", "uebersicht"},
                 Boolean.toString(settings.isDownloadUebersicht()));
+        setAttributeByTagName(new String[]{"options", "loadplugins"},
+                Boolean.toString(settings.shouldLoadPluginsOnStartup()));
         informSettingsListener(settings);
     }
 
