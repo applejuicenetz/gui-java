@@ -75,7 +75,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.98 2004/02/25 13:10:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.99 2004/02/26 13:59:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -84,6 +84,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.99  2004/02/26 13:59:06  maj0r
+ * Aktivieren/Deaktivieren-Menuepunkt im LanguageSelector aufgenommen.
+ *
  * Revision 1.98  2004/02/25 13:10:04  maj0r
  * Bug #244 gefixt (Danke an Homer1Simpson)
  * GUI stoert sich nicht mehr an Nicht-Themes-Zips im Themes-Verzeichnis.
@@ -349,6 +352,7 @@ public class AppleJuiceDialog
     private JMenuItem menuItemCoreBeenden = new JMenuItem();
     private JMenuItem menuItemUeber = new JMenuItem();
     private JMenuItem menuItemDeaktivieren = new JMenuItem();
+    private JMenuItem menuItemAktivieren = new JMenuItem();
     private JMenuItem popupOptionenMenuItem = new JMenuItem("Optionen");
     private JMenuItem popupAboutMenuItem = new JMenuItem("&Info");
     private JMenuItem popupShowHideMenuItem = new JMenuItem("%Show");
@@ -933,14 +937,13 @@ public class AppleJuiceDialog
                 themesMenu.add(menuItemDeaktivieren);
             }
             else {
-                JMenuItem menuItem = new JMenuItem();
-                menuItem.setText("aktivieren");
-                menuItem.addActionListener(new ActionListener() {
+                menuItemAktivieren.setText("aktivieren");
+                menuItemAktivieren.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ce) {
                         activateThemeSupport(true);
                     }
                 });
-                themesMenu.add(menuItem);
+                themesMenu.add(menuItemAktivieren);
             }
             menuBar.add(themesMenu);
             coreMenu = new JMenu("Core");
@@ -1122,6 +1125,12 @@ public class AppleJuiceDialog
             bestaetigung = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.menu.bestaetigung"));
+            menuItemAktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(".root.javagui.menu.aktivieren")));
+            menuItemDeaktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(".root.javagui.menu.deaktivieren")));
 
             if (useTrayIcon) {
                 trayIcon.setToolTipText(titel);
