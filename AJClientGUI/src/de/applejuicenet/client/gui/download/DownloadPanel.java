@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -99,7 +100,7 @@ public class DownloadPanel extends TklPanel {
 	private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[columns.length];
 	private JPopupMenu menu;
 	private JMenuItem einfuegen;
-	private JTextField targetDir = new JTextField();
+	private JComboBox targetDir = new JComboBox();
 	private JLabel txtTargetDir = new JLabel();
 	
 	public JTreeTable getDownloadTable(){
@@ -114,7 +115,7 @@ public class DownloadPanel extends TklPanel {
 		return downloadLink;
 	}
 
-	public JTextField getTargetDirField(){
+	public JComboBox getTargetDirField(){
 		return targetDir;
 	}
 

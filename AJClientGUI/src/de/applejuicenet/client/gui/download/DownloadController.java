@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -163,6 +164,16 @@ public class DownloadController extends GuiController {
 		ApplejuiceFassade.getInstance().getDownloadPropertyChangeInformer().
 			addDataPropertyChangeListener(
 				new DownloadPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
+
+		JComboBox targetDirs = downloadPanel.getTargetDirField();
+		String[] dirs = ApplejuiceFassade.getInstance().getCurrentIncomingDirs();
+		for (int i = 0; i < dirs.length; i++) {
+			targetDirs.addItem(dirs[i]);
+            if (dirs[i].equals("")) {
+            	targetDirs.setSelectedItem(dirs[i]);
+            }
+        }
+		targetDirs.setEditable(true);
 	}
 	
 	public Value[] getCustomizedValues(){
@@ -290,6 +301,32 @@ public class DownloadController extends GuiController {
 				|| event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED)
 				|| event.getName().equals(DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED)
 				|| event.getName().equals(DownloadDataPropertyChangeEvent.FILENAME_CHANGED)){
+			if (event.getName().equals(DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED) 
+					|| event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_ADDED)){
+				String directory;
+				if (event.getNewValue().getClass() == DownloadDO.class){
+					directory = ((DownloadDO)event.getNewValue()).getTargetDirectory();
+				}
+				else{
+					directory = (String)event.getNewValue();
+				}
+				if (directory != null && directory.length()>0){
+					JComboBox targetDirs = downloadPanel.getTargetDirField();
+					boolean found = false;
+					for (int i=0; i<targetDirs.getItemCount(); i++){
+						if (!((String)targetDirs.getItemAt(i)).equalsIgnoreCase(directory)){
+							continue;
+						}
+						else{
+							found = true;
+							break;
+						}
+					}
+					if (!found){
+						targetDirs.addItem(directory);
+					}
+				}
+			}
 			return true;
 		}
 		return false;
@@ -585,7 +622,15 @@ public class DownloadController extends GuiController {
 
 	private void startDownload() {
 		final String link = downloadPanel.getDownloadLinkField().getText();
-		final String targetDir = downloadPanel.getTargetDirField().getText();
+		Object sel = downloadPanel.getTargetDirField().getSelectedItem();
+		String tmp;
+		if (sel != null){
+			tmp = (String)sel;
+		}
+		else{
+			tmp = "";
+		}
+		final String targetDir = "";
 		if (link.length() != 0) {
 			new Thread() {
 				public void run() {
