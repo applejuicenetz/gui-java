@@ -6,15 +6,17 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.shared.exception.NodeAlreadyExistsException;
 import de.applejuicenet.client.gui.tables.Node;
+import de.applejuicenet.client.gui.controller.DataManager;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ArrayList;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.5 2003/07/06 20:00:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.6 2003/08/09 10:56:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +25,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadNode.java,v $
+ * Revision 1.6  2003/08/09 10:56:38  maj0r
+ * DownloadTabelle weitergeführt.
+ *
  * Revision 1.5  2003/07/06 20:00:19  maj0r
  * DownloadTable bearbeitet.
  *
@@ -97,7 +102,6 @@ public class DownloadNode implements Node {
     }
     else{
         //Werte werden per Referenz automatisch aktualisiert
-        DownloadDO altesDO = existent.getDownloadDO();
         DownloadSourceDO[] sources = downloadDO.getSources();
         DownloadNode child = null;
         for (int i=0; i<sources.length; i++){
@@ -114,6 +118,29 @@ public class DownloadNode implements Node {
     }
   }
 
+  public static void clearOldNodes(){
+      ArrayList toRemove = new ArrayList();
+      Iterator it = directoryNodes.values().iterator();
+      MapSetStringKey key = null;
+      HashMap downloads = DataManager.getInstance().getDownloads();
+      DownloadNode node = null;
+      while(it.hasNext()){
+          node = (DownloadNode)it.next();
+          if (node.getNodeType()==DownloadNode.DOWNLOAD_NODE){
+              key = new MapSetStringKey(node.getId());
+              if (!(downloads.containsKey(key))){
+                  toRemove.add(key);
+              }
+          }
+      }
+      int size = toRemove.size();
+      for (int i=0; i<size; i++){
+          directoryNodes.remove(toRemove.get(i));
+      }
+
+      //(DownloadNode)directoryNodes.get(new MapSetStringKey(downloadDO.getId()));
+  }
+
   private DownloadNode(DownloadSourceDO downloadSource){
       nodetype = SOURCE_NODE;
       downloadSourceDO = downloadSource;
@@ -127,21 +154,6 @@ public class DownloadNode implements Node {
       else{
           return false;
       }
-  }
-
-  public long getSpeedInBytes(){
-      if (nodetype == SOURCE_NODE)
-          return (long)downloadSourceDO.getSpeed().intValue();
-      else if (nodetype == DOWNLOAD_NODE)
-      {
-          long speed = 0;
-          Iterator it = children.values().iterator();
-          while (it.hasNext()){
-              speed += (long)((DownloadNode)it.next()).getDownloadSourceDO().getSpeed().intValue();
-          }
-          return speed;
-      }
-      return 0;
   }
 
   private DownloadNode(String pfad){

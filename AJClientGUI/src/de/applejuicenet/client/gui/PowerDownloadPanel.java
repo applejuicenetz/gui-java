@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.16 2003/08/05 20:47:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.17 2003/08/09 10:56:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.17  2003/08/09 10:56:25  maj0r
+ * DownloadTabelle weitergeführt.
+ *
  * Revision 1.16  2003/08/05 20:47:06  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -147,11 +150,13 @@ public class PowerDownloadPanel
 
     btnPdlUp.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
+        btnAktiv.setSelected(true);
         alterRatio(true);
       }
     });
     btnPdlDown.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
+        btnAktiv.setSelected(true);
         alterRatio(false);
       }
     });

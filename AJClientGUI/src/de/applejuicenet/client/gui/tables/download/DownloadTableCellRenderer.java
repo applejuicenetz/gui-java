@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.6 2003/07/06 20:00:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.7 2003/08/09 10:56:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.7  2003/08/09 10:56:38  maj0r
+ * DownloadTabelle weitergeführt.
+ *
  * Revision 1.6  2003/07/06 20:00:19  maj0r
  * DownloadTable bearbeitet.
  *
@@ -81,15 +84,19 @@ public class DownloadTableCellRenderer
                                                  int column){
     DownloadDO downloadDO = node.getDownloadDO();
     if (column == 6) {
-        String prozent = downloadDO.getProzentGeladen();
+        String prozent = downloadDO.getProzentGeladenAsString();
+        String wert = null;
         int i;
-        if ( (i = prozent.indexOf(",")) != -1) {
-          prozent = prozent.substring(0, i);
+        if ( (i = prozent.indexOf(".")) != -1) {
+          wert = prozent.substring(0, i);
+        }
+        else{
+          wert = prozent;
         }
         JProgressBar progress = new JProgressBar(JProgressBar.HORIZONTAL, 0,
                                                  100);
-        progress.setValue(Integer.parseInt(prozent));
-        progress.setString(downloadDO.getProzentGeladen() + " %");
+        progress.setValue(Integer.parseInt(wert));
+        progress.setString(prozent + " %");
         progress.setStringPainted(true);
         return progress;
       }
@@ -177,7 +184,7 @@ public class DownloadTableCellRenderer
                       }
                   default:
                       {
-                          image.setIcon(IconManager.getInstance().getIcon("winsymbol"));
+                          image.setIcon(IconManager.getInstance().getIcon("linuxsymbol"));
                       }
 
               }

@@ -21,7 +21,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.31 2003/08/05 20:47:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.32 2003/08/09 10:56:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.32  2003/08/09 10:56:25  maj0r
+ * DownloadTabelle weitergeführt.
+ *
  * Revision 1.31  2003/08/05 20:47:06  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -370,6 +373,7 @@ public class DownloadPanel
                     node = new DownloadNode(downloadDO);
 
                 }
+                DownloadNode.clearOldNodes();
                 downloadTable.updateUI();
             }
         }

@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.6 2003/07/06 20:00:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.7 2003/08/09 10:56:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.7  2003/08/09 10:56:38  maj0r
+ * DownloadTabelle weitergeführt.
+ *
  * Revision 1.6  2003/07/06 20:00:19  maj0r
  * DownloadTable bearbeitet.
  *
@@ -52,6 +55,16 @@ public class DownloadModel
 
   static protected String[] cNames = {"", "", "", "", "", "", "", "", "", ""};
 
+  //Download-Stati
+  private String suchen = "";
+  private String laden = "";
+  private String keinPlatz = "";
+  private String fertigstellen = "";
+  private String fertig = "";
+  private String abbrechen = "";
+  private String abgebrochen = "";
+
+  //Source-Stati
   private String ungefragt = "";
   private String versucheZuVerbinden = "";
   private String ggstZuAlteVersion = "";
@@ -64,6 +77,7 @@ public class DownloadModel
   private String keineVerbindungMoeglich = "";
   private String pausiert = "";
   private String position = "";
+  private String versucheIndirekt = "";
 
   static protected Class[] cTypes = {
       TreeTableModel.class, String.class, String.class, String.class, String.class,
@@ -107,10 +121,18 @@ public class DownloadModel
         switch (column) {
           case 0:
                 return downloadDO.getFilename();
+          case 1:
+                return getStatus(downloadDO);
           case 2:
                 return parseGroesse(downloadDO.getGroesse());
+          case 3:
+                return parseGroesse(downloadDO.getReady());
           case 4:
-                return getSpeedAsString(downloadNode.getSpeedInBytes());
+                return getSpeedAsString(downloadDO.getSpeedInBytes());
+          case 5:
+                return downloadDO.getRestZeitAsString();
+          case 7:
+                return parseGroesse(new Long(downloadDO.getGroesse().longValue()-downloadDO.getReady().longValue()));
           case 8:
                 return powerdownload(downloadDO.getPowerDownload());
           default:
@@ -138,11 +160,11 @@ public class DownloadModel
             case 0:
                 return downloadSourceDO.getFilename();
             case 1:
-                return getStatusForSource(downloadSourceDO);
+                return getStatus(downloadSourceDO);
             case 2:
-                return parseGroesse(Integer.toString(downloadSourceDO.getSize()));
+                return parseGroesse(new Long(downloadSourceDO.getSize()));
             case 3:
-                return parseGroesse(Integer.toString(downloadSourceDO.getBereitsGeladen()));
+                return parseGroesse(new Long(downloadSourceDO.getBereitsGeladen()));
             case 4:
                   {
                       if (downloadSourceDO.getStatus()!=DownloadSourceDO.UEBERTRAGUNG)
@@ -155,7 +177,7 @@ public class DownloadModel
             case 6:
                   break;
             case 7:
-                  return parseGroesse(Integer.toString(downloadSourceDO.getNochZuLaden()));
+                  return parseGroesse(new Long(downloadSourceDO.getNochZuLaden()));
             case 8:
                   return powerdownload(downloadSourceDO.getPowerDownload());
             case 9:
@@ -171,6 +193,17 @@ public class DownloadModel
     }
     return null;
   }
+
+    private String getStatus(Object objectDO){
+        if (objectDO instanceof DownloadDO){
+            return getStatusForDownload((DownloadDO)objectDO);
+        }
+        else if (objectDO instanceof DownloadSourceDO){
+            return getStatusForSource((DownloadSourceDO)objectDO);
+        }
+        else
+            return "";
+    }
 
     private String getStatusForSource(DownloadSourceDO downloadSourceDO){
         switch(downloadSourceDO.getStatus()){
@@ -200,6 +233,36 @@ public class DownloadModel
                     return keineVerbindungMoeglich;
             case DownloadSourceDO.PAUSIERT:
                     return pausiert;
+            case DownloadSourceDO.VERSUCHE_INDIREKT:
+                    return versucheIndirekt;
+            default:
+                return "";
+        }
+    }
+
+    private String getStatusForDownload(DownloadDO downloadDO){
+        switch(downloadDO.getStatus()){
+            case DownloadDO.PAUSIERT:
+                return pausiert;
+            case DownloadDO.ABBRECHEN:
+                return abbrechen;
+            case DownloadDO.AGBEGROCHEN:
+                return abgebrochen;
+            case DownloadDO.FERTIG:
+                return fertig;
+            case DownloadDO.NICHT_GENUG_PLATZ_FEHLER:
+                return keinPlatz;
+            case DownloadDO.SUCHEN_LADEN:
+                {
+                    DownloadSourceDO[] sources = downloadDO.getSources();
+                    for (int i=0; i<sources.length; i++){
+                        if (sources[i].getStatus()==DownloadSourceDO.UEBERTRAGUNG)
+                            return laden;
+                    }
+                    return suchen;
+                }
+            case DownloadDO.FERTIGSTELLEN:
+                return fertigstellen;
             default:
                 return "";
         }
@@ -215,8 +278,8 @@ public class DownloadModel
         return "1:" + temp;
     }
 
-    private String parseGroesse(String groesse){
-        double share = Double.parseDouble(groesse);
+    private String parseGroesse(Long groesse){
+        double share = Double.parseDouble(groesse.toString());
         int faktor;
         if (share == 0) {
           return "";
@@ -296,5 +359,14 @@ public class DownloadModel
         keineVerbindungMoeglich = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", ""}));
         pausiert = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat13"}));
         position = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat51"}));
+        versucheIndirekt = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "userstat10"}));
+
+        suchen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestatlook"}));
+        laden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestattransfer"}));
+        keinPlatz = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat1"}));
+        fertigstellen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat12"}));
+        fertig = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat14"}));
+        abbrechen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat15"}));
+        abgebrochen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "queue", "queuestat17"}));
     }
 }
