@@ -37,7 +37,11 @@ public class PowerDownloadPanel extends JPanel {
     constraints.gridy=0;
     constraints.gridheight=1;
     constraints.gridwidth=3;
-    add(new JLabel("Powerdownload"), constraints);
+    JLabel powerdownload = new JLabel("Powerdownload");
+    powerdownload.setForeground(Color.white);
+    powerdownload.setOpaque(true);
+    powerdownload.setBackground(Color.blue);
+    add(powerdownload, constraints);
     constraints.gridy=1;
     add(new JLabel("Wieviel willst Du maximal für 1 Byte bezahlen?"), constraints);
     constraints.gridwidth=1;
