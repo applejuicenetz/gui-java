@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -25,10 +26,9 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import javax.swing.JScrollPane;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.44 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.45 2004/02/24 15:55:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +37,9 @@ import javax.swing.JScrollPane;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.45  2004/02/24 15:55:08  maj0r
+ * Link zur FAQ im Startbereich hinzugefuegt.
+ *
  * Revision 1.44  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -161,7 +164,7 @@ import javax.swing.JScrollPane;
  * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
  *
  * Revision 1.7  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -183,6 +186,7 @@ public class StartPanel
     private JLabel label9;
     private JLabel label10;
     private JLabel version;
+    private JTextPane faq;
     private JLabel warnungIcon;
 
     private String label9Text;
@@ -252,12 +256,32 @@ public class StartPanel
         panel3.add(deinClient, constraints);
         constraints.weightx = 0;
 
-        constraints.gridy = 1;
+        constraints.gridy++;
         constraints.insets.left = 15;
         version = new JLabel();
         panel3.add(version, constraints);
+        constraints.gridy++;
+        constraints.insets.left = 15;
+        faq = new JTextPane();
+        faq.setContentType("text/html");
+        faq.setEditable(false);
+        faq.setText("<html><a href=\"http://www.applejuicenet.de/13.0.html\">FAQ</a></html>");
+        faq.addHyperlinkListener(new HyperlinkListener() {
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if (e.getEventType() ==
+                    HyperlinkEvent.EventType.ACTIVATED) {
+                    if (e.getURL() != null) {
+                        String url = e.getURL().toString();
+                        if (url.length() != 0) {
+                            executeLink(url);
+                        }
+                    }
+                }
+            }
+        });
+        panel3.add(faq, constraints);
 
-        constraints.gridy = 2;
+        constraints.gridy++;
         constraints.insets.left = 5;
         constraints.gridx = 0;
         ImageIcon icon3 = im.getIcon("warnung");
@@ -269,14 +293,14 @@ public class StartPanel
         warnungen.setForeground(APFEL_ROT);
         panel3.add(warnungen, constraints);
 
-        constraints.gridy = 3;
+        constraints.gridy++;
         constraints.insets.left = 15;
         label7 = new JLabel();
         label7.setForeground(Color.RED);
 
         panel3.add(label7, constraints);
 
-        constraints.gridy = 4;
+        constraints.gridy++;
         constraints.insets.left = 5;
         constraints.gridx = 0;
         ImageIcon icon4 = im.getIcon("netzwerk");
@@ -289,12 +313,12 @@ public class StartPanel
         label8.setForeground(APFEL_ROT);
         panel3.add(label8, constraints);
 
-        constraints.gridy = 5;
+        constraints.gridy++;
         constraints.insets.left = 15;
         nachrichten = new JTextPane();
         panel3.add(nachrichten, constraints);
 
-        constraints.gridy = 6;
+        constraints.gridy++;
         constraints.insets.left = 5;
         constraints.gridx = 0;
         ImageIcon icon5 = im.getIcon("server");
@@ -307,17 +331,17 @@ public class StartPanel
         netzwerk.setForeground(APFEL_ROT);
         panel3.add(netzwerk, constraints);
 
-        constraints.gridy = 7;
+        constraints.gridy++;
         constraints.insets.left = 15;
         label9 = new JLabel("Du bist mit xxxx vielleicht verbunden.");
         panel3.add(label9, constraints);
 
         label10 = new JLabel("10 Verbindungen.");
-        constraints.gridy = 8;
+        constraints.gridy++;
         constraints.insets.top = 5;
         panel3.add(label10, constraints);
 
-        constraints.gridy = 9;
+        constraints.gridy++;
         label6 = new JLabel();
         panel3.add(label6, constraints);
 
@@ -341,7 +365,8 @@ public class StartPanel
                     version.setText("<html>GUI: " +
                                     ApplejuiceFassade.GUI_VERSION +
                                     "<br>Core: " +
-                                    coreVersion + "</html>");
+                                    coreVersion +
+                                    "</html>");
                     String nachricht = "verwendeter Core: " + coreVersion;
                     if (logger.isEnabledFor(Level.INFO)) {
                         logger.info(nachricht);
