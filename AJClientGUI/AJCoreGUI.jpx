@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--JBuilder XML Project-->
 <project>
+  <property category="generalFormatting" name="blockIndent" value="4"/>
   <property category="runtime" name="DefaultConfiguration" value="-1"/>
   <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.0" name="ConfigurationName" value="AJCoreGUI"/>
