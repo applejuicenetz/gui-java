@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.15 2003/08/28 10:57:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.16 2003/08/28 15:47:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.16  2003/08/28 15:47:26  maj0r
+ * Warten auf Antwort vom Core entfernt.
+ *
  * Revision 1.15  2003/08/28 10:57:04  maj0r
  * Versionierung geaendert und erhoeht.
  * Version 0.16 Beta.
@@ -294,7 +297,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setsettings?password=" + password + "&" + parameters);
+                                                  "/function/setsettings?password=" + password + "&" + parameters, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -335,7 +338,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/resumedownload?password=" + password + "&id=" + id);
+                                                  "/function/resumedownload?password=" + password + "&id=" + id, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -350,7 +353,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setpassword?password=" + password + "&newpassword=" + passwordAsMD5);
+                                                  "/function/setpassword?password=" + password + "&newpassword=" + passwordAsMD5, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -364,7 +367,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/canceldownload?password=" + password + "&id=" + id);
+                                                  "/function/canceldownload?password=" + password + "&id=" + id, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -379,7 +382,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/cleandownloadlist?password=" + password);
+                                                  "/function/cleandownloadlist?password=" + password, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -393,7 +396,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/pausedownload?password=" + password + "&id=" + id);
+                                                  "/function/pausedownload?password=" + password + "&id=" + id, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -407,7 +410,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/serverlogin?password=" + password + "&id=" + id);
+                                                  "/function/serverlogin?password=" + password + "&id=" + id, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -421,7 +424,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/removeserver?password=" + password + "&id=" + id);
+                                                  "/function/removeserver?password=" + password + "&id=" + id, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -440,7 +443,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet);
+                                                  "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -460,7 +463,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/processlink?password=" + password + "&link=" + link);
+                                                  "/function/processlink?password=" + password + "&link=" + link, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -479,7 +482,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload);
+                                                  "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload
+                                         , false);
         }
         catch (WebSiteNotFoundException ex)
         {
