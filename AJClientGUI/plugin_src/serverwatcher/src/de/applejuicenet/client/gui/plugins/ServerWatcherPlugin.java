@@ -9,17 +9,25 @@ import java.net.*;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import de.applejuicenet.client.gui.plugins.serverwatcher.ServerXML;
+import de.applejuicenet.client.gui.plugins.serverwatcher.ServerConfig;
+import de.applejuicenet.client.gui.plugins.serverwatcher.NewServerDialog;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.2 2003/09/12 06:29:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.3 2003/09/12 11:15:49 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
+ * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerWatcherPlugin.java,v $
+ * Revision 1.3  2003/09/12 11:15:49  maj0r
+ * Server lassen sich nun speichern und entfernen.
+ * Version 1.1
+ *
  * Revision 1.2  2003/09/12 06:29:03  maj0r
  * ServerWatcher v1.0
  *
@@ -32,12 +40,11 @@ import org.apache.log4j.Level;
 public class ServerWatcherPlugin extends PluginConnector {
     private JPanel topPanel = new JPanel(new GridBagLayout());
     private JEditorPane editorPane = new JEditorPane();
-    private JTextField ip = new JTextField();
-    private JTextField port = new JTextField("8001");
-    private JTextField user = new JTextField();
-    private JTextField pass = new JTextField();
+    private JComboBox ip = new JComboBox();
     private JButton status = new JButton("Status");
     private JButton serverliste = new JButton("Serverliste");
+    private JButton neu = new JButton("Neu");
+    private JButton entfernen = new JButton("Entfernen");
     private JLabel statusText = new JLabel();
     private static Logger logger;
 
@@ -45,13 +52,8 @@ public class ServerWatcherPlugin extends PluginConnector {
         logger = Logger.getLogger(getClass());
         try{
             setLayout(new BorderLayout());
-            ip.setColumns(15);
-            port.setColumns(6);
+            initServerList();
             int height = ip.getPreferredSize().height;
-            user.setColumns(15);
-            user.setPreferredSize(new Dimension(user.getPreferredSize().width, height));
-            pass.setColumns(15);
-            pass.setPreferredSize(new Dimension(pass.getPreferredSize().width, height));
             status.setPreferredSize(new Dimension(status.getPreferredSize().width, height));
             serverliste.setPreferredSize(new Dimension(serverliste.getPreferredSize().width, height));
             statusText.setPreferredSize(new Dimension(statusText.getPreferredSize().width, height));
@@ -60,33 +62,19 @@ public class ServerWatcherPlugin extends PluginConnector {
             constraints.fill = GridBagConstraints.BOTH;
             constraints.gridx = 0;
             constraints.gridy = 0;
-            JPanel panel1 = new JPanel(new FlowLayout());
-            panel1.add(new JLabel("IP "));
+            JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            panel1.add(new JLabel("Server "));
             panel1.add(ip);
-            panel1.add(new JLabel("Port "));
-            panel1.add(port);
-            JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            panel1.add(new JLabel("             "));
+            panel1.add(neu);
+            panel1.add(entfernen);
+            JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
             panel2.add(status);
             panel2.add(serverliste);
             topPanel.add(panel1, constraints);
             constraints.gridy = 1;
             topPanel.add(panel2, constraints);
-
             constraints.gridx = 1;
-            constraints.gridy = 0;
-            JLabel label1 = new JLabel("User ");
-            label1.setPreferredSize(new Dimension(label1.getPreferredSize().width, height));
-            topPanel.add(label1, constraints);
-            constraints.gridy = 1;
-            JLabel label2 = new JLabel("Passwort ");
-            label2.setPreferredSize(new Dimension(label2.getPreferredSize().width, height));
-            topPanel.add(label2, constraints);
-            constraints.gridx = 2;
-            constraints.gridy = 0;
-            topPanel.add(user, constraints);
-            constraints.gridy = 1;
-            topPanel.add(pass, constraints);
-            constraints.gridx = 3;
             constraints.weightx = 1;
             topPanel.add(new JLabel(), constraints);
 
@@ -97,17 +85,37 @@ public class ServerWatcherPlugin extends PluginConnector {
 
             status.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent ae){
-                    if (ip.getText().length()>0 && port.getText().length()>0
-                        && user.getText().length()>0 && pass.getText().length()>0){
+                    if (ip.getSelectedIndex()!=-1){
                         getHtmlContent(false);
                     }
                 }
             });
             serverliste.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent ae){
-                    if (ip.getText().length()>0 && port.getText().length()>0
-                        && user.getText().length()>0 && pass.getText().length()>0){
+                    if (ip.getSelectedIndex()!=-1){
                         getHtmlContent(true);
+                    }
+                }
+            });
+            neu.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent ae){
+                    NewServerDialog newServerDialog = new NewServerDialog(AppleJuiceDialog.getApp(), true);
+                    Dimension appDimension = newServerDialog.getSize();
+                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                    newServerDialog.setLocation((screenSize.width - appDimension.width)/2,
+                                   (screenSize.height - appDimension.height)/2);
+                    newServerDialog.show();
+                    if (newServerDialog.isSave()){
+                        ServerXML.addServer(newServerDialog.getServerConfig());
+                    }
+                    initServerList();
+                }
+            });
+            entfernen.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent ae){
+                    if (ip.getSelectedIndex()!=-1){
+                        ServerXML.removeServer((ServerConfig)ip.getSelectedItem());
+                        initServerList();
                     }
                 }
             });
@@ -123,6 +131,14 @@ public class ServerWatcherPlugin extends PluginConnector {
         }
     }
 
+    private void initServerList(){
+        ip.removeAllItems();
+        ServerConfig[] server = ServerXML.getServer();
+        for (int i=0; i<server.length; i++){
+            ip.addItem(server[i]);
+        }
+    }
+
     private void getHtmlContent(final boolean serverList){
         Thread serverWatcherWorker = new Thread(){
             public void run(){
@@ -132,7 +148,8 @@ public class ServerWatcherPlugin extends PluginConnector {
                 status.setEnabled(false);
                 StringBuffer htmlContent = new StringBuffer();
                 try {
-                    String tmpUrl = "http://" + ip.getText() + ":" + port.getText();
+                    ServerConfig server = (ServerConfig) ip.getSelectedItem();
+                    String tmpUrl = "http://" + server.getDyn() + ":" + server.getPort();
                     if (serverList){
                         tmpUrl += "/serverlist.htm";
                     }
@@ -140,10 +157,8 @@ public class ServerWatcherPlugin extends PluginConnector {
                         tmpUrl += "/status.htm";
                     }
                     URL url = new URL(tmpUrl);
-                    String encoding = new sun.misc.BASE64Encoder().encode((user.getText() + ":" +
-                            pass.getText()).getBytes());
                     URLConnection uc = url.openConnection();
-                    uc.setRequestProperty("Authorization", "Basic " + encoding);
+                    uc.setRequestProperty("Authorization", "Basic " + server.getUserPass());
                     InputStream content = uc.getInputStream();
                     BufferedReader in =
                             new BufferedReader(new InputStreamReader(content));
@@ -195,11 +210,11 @@ public class ServerWatcherPlugin extends PluginConnector {
     }
 
     public String getBeschreibung() {
-        return "Mit dem Serverwatcher kann der Status von Server angezeigt werden.";
+        return "Mit dem Serverwatcher kann der Status von\r\nServern angezeigt werden.";
     }
 
     public String getVersion() {
-        return "1.0";
+        return "1.1";
     }
 
     public boolean istReiter() {
