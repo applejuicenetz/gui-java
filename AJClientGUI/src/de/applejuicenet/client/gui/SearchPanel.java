@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,11 +15,11 @@ import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.SearchResultTabbedPane;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
@@ -28,7 +29,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.22 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.23 2004/02/10 16:03:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +38,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.23  2004/02/10 16:03:42  maj0r
+ * Suchdarstellung verschoenert.
+ *
  * Revision 1.22  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -96,7 +100,7 @@ public class SearchPanel
     implements LanguageListener, RegisterI, DataUpdateListener {
 
     private static SearchPanel instance;
-    private JTabbedPane resultPanel = new JTabbedPane();
+    private SearchResultTabbedPane resultPanel = new SearchResultTabbedPane();
     private JButton btnStartStopSearch = new JButton("Suche starten");
     private JTextField suchbegriff = new JTextField();
     private JLabel label1 = new JLabel("Suchbegriff: ");
@@ -289,8 +293,9 @@ public class SearchPanel
                             getId();
                         searchKey = Integer.toString(id);
                         if (! ( (HashMap) content).containsKey(searchKey)) {
-                            ( (SearchResultPanel) searchPanels[i]).
-                                setActiveSearch(false);
+                            int index = resultPanel.indexOfComponent((Component)searchPanels[i]);
+                            searchIds.remove(searchKey);
+                            resultPanel.enableIconAt(index);
                         }
                     }
                     label2.setText(bearbeitung.replaceAll("%d",
@@ -303,13 +308,6 @@ public class SearchPanel
                 logger.error("Unbehandelte Exception", e);
             }
         }
-    }
-
-    public void close(SearchResultPanel aSearchResultPanel) {
-        String searchKey = Integer.toString(aSearchResultPanel.getSearch().
-                                            getId());
-        searchIds.remove(searchKey);
-        resultPanel.remove(aSearchResultPanel);
     }
 
     public void lostSelection() {

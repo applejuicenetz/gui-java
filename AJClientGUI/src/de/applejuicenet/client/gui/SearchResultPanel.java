@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.Search.SearchEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.13 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.14 2004/02/10 16:03:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,9 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.14  2004/02/10 16:03:42  maj0r
+ * Suchdarstellung verschoenert.
+ *
  * Revision 1.13  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -93,7 +96,6 @@ public class SearchResultPanel
     private SearchResultTableModel tableModel;
     private Search search;
     private JButton sucheAbbrechen = new JButton();
-    private JButton schliessen = new JButton("X");
     private static String offeneSuchen = "%i offene Suchen";
     private static String gefundeneDateien = "%i gefundene Dateien";
     private static String durchsuchteClients = "%i durchsuchte Clients";
@@ -105,7 +107,6 @@ public class SearchResultPanel
     private JLabel label3 = new JLabel();
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem item1 = new JMenuItem();
-    private boolean activeSearch = true;
     private SearchPanel parentSearchPanel;
     private int searchHitsCount;
 
@@ -129,12 +130,6 @@ public class SearchResultPanel
         return search;
     }
 
-    public void setActiveSearch(boolean active) {
-        activeSearch = active;
-        schliessen.setEnabled(!active);
-        sucheAbbrechen.setEnabled(active);
-    }
-
     private void init() throws Exception {
         IconManager im = IconManager.getInstance();
         item1.setText(linkLaden);
@@ -146,17 +141,6 @@ public class SearchResultPanel
                 ApplejuiceFassade.getInstance().cancelSearch(search.getId());
             }
         });
-        schliessen.setEnabled(false);
-        schliessen.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        parentSearchPanel.close(SearchResultPanel.this);
-                    }
-                });
-            }
-        });
-
         popup.add(item1);
         setLayout(new BorderLayout());
         updateZahlen();
@@ -171,7 +155,6 @@ public class SearchResultPanel
         textPanel.add(label3);
 
         JPanel panel1 = new JPanel(new FlowLayout());
-        panel1.add(schliessen);
         panel1.add(sucheAbbrechen);
         southPanel.add(panel1, BorderLayout.WEST);
         southPanel.add(textPanel, BorderLayout.CENTER);
