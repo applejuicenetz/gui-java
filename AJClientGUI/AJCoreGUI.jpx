@@ -2,7 +2,7 @@
 <!--JBuilder XML Project-->
 <project>
   <property category="generalFormatting" name="blockIndent" value="4"/>
-  <property category="javaFormatting" name="alwaysClasses" value="1"/>
+  <property category="javaFormatting" name="packageThreshold" value="0"/>
   <property category="runtime" name="ConfigurationCount" value="1"/>
   <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.0" name="ConfigurationName" value="AJCoreGUI"/>
@@ -12,7 +12,7 @@
   <property category="runtime.1" name="ConfigurationName" value="AJCoreGUI mit Link"/>
   <property category="runtime.1" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
   <property category="runtime.1" name="application.class" value="de.applejuicenet.client.AppleJuiceClient"/>
-  <property category="runtime.1" name="application.parameters" value="ajfsp://file|Sexy-Wallpapers.(.by-Toyota.).rar|27D9CE5ED8A0D9DC2E47805D34DDE128|13696826/"/>
+  <property category="runtime.1" name="application.parameters" value="ajfsp://file|Sexy-Wallpapers.(.by-Toyota.).rar|27D9CE5ED8A0D9DC2E47805D34DDE128|13696826/ C:\CrefoTeam\AJClientGUI"/>
   <property category="serverservices" name="disabled.services" value="connector;jdatastore"/>
   <property category="serverservices" name="single.server.name" value="Tomcat 4.0"/>
   <property category="sys" name="AuthorLabel" value="@author"/>
@@ -42,5 +42,24 @@
   <property category="sys" name="Version" value="1.0"/>
   <property category="sys" name="VersionLabel" value="@version"/>
   <property category="sys" name="WorkingDirectory" value="."/>
+  <node name="AJCoreGUI" type="Archive">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ExecutableArchiver"/>
+    <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
+    <property category="archiving" name="executableEnabled.1" value="1"/>
+    <property category="archiving" name="executableEnabled.2" value="0"/>
+    <property category="archiving" name="executableEnabled.3" value="0"/>
+    <property category="archiving" name="executableEnabled.4" value="0"/>
+    <property category="archiving" name="executableEnabled.5" value="0"/>
+    <property category="archiving" name="executableFiles.1" value="AJCoreGUI.exe"/>
+    <property category="archiving" name="executableFiles.2" value=""/>
+    <property category="archiving" name="executableFiles.3" value=""/>
+    <property category="archiving" name="executableFiles.4" value=""/>
+    <property category="archiving" name="executableFiles.5" value=""/>
+    <property category="archiving" name="libraryStates.1" value="3:AJLibs"/>
+    <property category="archiving" name="manifestConfigFile" value="0"/>
+    <property category="archiving" name="targetCompressed" value="1"/>
+    <property category="archiving" name="targetPath" value="AJCoreGUI.jar"/>
+    <property category="archiving" name="usingRules" value="1"/>
+  </node>
   <file path="build/build.xml"/>
 </project>
