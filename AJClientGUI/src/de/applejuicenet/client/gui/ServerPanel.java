@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.shared.HeaderListener;
@@ -42,153 +43,19 @@ import de.applejuicenet.client.gui.tables.server.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.tables.server.ServerTableModel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
+import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
-import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.56 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.57 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ServerPanel.java,v $
- * Revision 1.56  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.55  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.54  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.53  2004/02/13 14:50:56  maj0r
- * Bug #129 gefixt (Danke an dsp2004)
- * WebsiteException durch Ueberlastung des Servers sollte nun weitgehend unterbunden sein.
- *
- * Revision 1.52  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.51  2004/02/04 14:26:05  maj0r
- * Bug #185 gefixt (Danke an muhviestarr)
- * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
- *
- * Revision 1.50  2004/02/04 14:03:12  maj0r
- * Kleinen Schoenheitsfehler beim Serverlink behoben.
- *
- * Revision 1.49  2004/02/04 13:33:09  maj0r
- * Serverlinks koennen nun auch in die Ablage kopiert werden.
- *
- * Revision 1.48  2004/01/24 08:10:08  maj0r
- * Anzahl der Verbindungsversuche eingebaut.
- *
- * Revision 1.47  2004/01/21 14:16:35  maj0r
- * Icons ins Kontextmenue eingebaut.
- *
- * Revision 1.46  2004/01/08 07:48:22  maj0r
- * Wenn das Panel nicht selektiert ist, wird die Tabelle nun nicht mehr aktualisiert.
- *
- * Revision 1.45  2004/01/07 16:15:20  maj0r
- * Warnmeldung bezueglich 30-Minuten-Sperre bei manuellem Serverwechsel eingebaut.
- *
- * Revision 1.44  2004/01/02 16:48:30  maj0r
- * Serverliste holen geaendert.
- *
- * Revision 1.43  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.42  2003/12/29 09:39:21  maj0r
- * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
- *
- * Revision 1.41  2003/12/27 14:02:15  maj0r
- * Legende fuer die Servertabelle eingebaut (Danke an muhviestarr).
- *
- * Revision 1.40  2003/12/26 19:26:40  maj0r
- * Gridlines werden nun in der Servertabelle nicht mehr angezeigt (Danke an muhviestarr).
- *
- * Revision 1.39  2003/12/17 16:42:16  maj0r
- * Verhalten des Popupmenues der Servertabelle ueberarbeitet.
- * Muell entfernt.
- *
- * Revision 1.38  2003/12/17 11:06:29  maj0r
- * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
- *
- * Revision 1.37  2003/12/05 11:18:02  maj0r
- * Workaround fürs Setzen der Hintergrundfarben der Scrollbereiche ausgebaut.
- *
- * Revision 1.36  2003/11/30 17:01:33  maj0r
- * Hintergrundfarbe aller Scrollbereiche an ihre Tabellen angepasst.
- *
- * Revision 1.35  2003/10/31 11:31:45  maj0r
- * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
- *
- * Revision 1.34  2003/10/18 19:19:26  maj0r
- * Mehrfachselektion in der Servertabelle nun moeglich.
- *
- * Revision 1.33  2003/10/06 12:08:36  maj0r
- * Server holen in Thread ausgelagert.
- *
- * Revision 1.32  2003/10/05 11:48:36  maj0r
- * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
- * Userpartlisten werden angezeigt.
- * Downloadpartlisten werden alle 15 Sek. aktualisiert.
- *
- * Revision 1.31  2003/10/01 14:45:40  maj0r
- * Suche fortgesetzt.
- *
- * Revision 1.30  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- * Revision 1.29  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.28  2003/09/08 06:26:31  maj0r
- * Ein Panel entfernt. War ohne Funktion.
- *
- * Revision 1.27  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
- *
- * Revision 1.26  2003/09/04 10:13:28  maj0r
- * Logger eingebaut.
- *
- * Revision 1.25  2003/08/26 19:46:34  maj0r
- * Sharebereich weiter vervollstaendigt.
- *
- * Revision 1.24  2003/08/20 16:18:51  maj0r
- * Server koennen nun entfernt werden.
- *
- * Revision 1.23  2003/08/19 16:02:16  maj0r
- * Optimierungen.
- *
- * Revision 1.22  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.21  2003/08/10 21:08:18  maj0r
- * Diverse Änderungen.
- *
- * Revision 1.20  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.19  2003/07/01 18:41:39  maj0r
- * Struktur verändert.
- *
- * Revision 1.18  2003/07/01 14:53:48  maj0r
- * Unnützes Update der Serverliste entfernt.
- *
- * Revision 1.17  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingefügt.
- * Servertabelle kann nun spaltenweise sortiert werden.
- *
- * Revision 1.16  2003/06/22 20:34:25  maj0r
- * Konsolenausgaben hinzugefügt.
- *
- * Revision 1.15  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -272,13 +139,32 @@ public class ServerPanel
                 ServerDO server = (ServerDO) ( (ServerTableModel) serverTable.
                                               getModel()).
                     getRow(selected);
-                if (ApplejuiceFassade.getInstance().getInformation().
-                    getVerbindungsStatus() == Information.VERBUNDEN) {
-                    int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.
-                        getApp(), warnungNachricht, warnungTitel,
-                        JOptionPane.YES_NO_OPTION);
-                    if (result != JOptionPane.YES_OPTION) {
-                        return;
+                ApplejuiceFassade af = ApplejuiceFassade.getInstance();
+                if (af.getInformation().getVerbindungsStatus() == Information.VERBUNDEN) {
+                    NetworkInfo netInfo = af.getNetworkInfo();
+                    long timestamp = af.getLastCoreTimestamp();
+                    if (timestamp == 0){
+                        /*
+                            Es wurden noch keine Referenzdaten geholt.
+                            Wir nehmen die eigene Zeit, in der Hoffnung, dass die uebereinstimmen.
+                         */
+                        timestamp = System.currentTimeMillis();
+                    }
+                    long timeDiff = timestamp - netInfo.getConnectionTime();
+                    int minuten = (int) (timeDiff / 60000);
+                    if (minuten < 0 ){
+                        minuten = 0;
+                    }
+                    if (minuten <= 30){
+                        String tmp = warnungNachricht.replaceAll("%s",
+                            Integer.toString(minuten));
+                        int result = JOptionPane.showConfirmDialog(
+                            AppleJuiceDialog.
+                            getApp(), tmp, warnungTitel,
+                            JOptionPane.YES_NO_OPTION);
+                        if (result != JOptionPane.YES_OPTION) {
+                            return;
+                        }
                     }
                 }
                 ApplejuiceFassade.getInstance().connectToServer(server.

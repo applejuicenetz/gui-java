@@ -86,7 +86,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.121 2004/06/01 14:26:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.122 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -1247,13 +1247,14 @@ public class AppleJuiceDialog
         xmlData.append("                </download>\r\n");
         xmlData.append("                <upload>\r\n");
         xmlData.append(
-            "                        <column0 width=\"136\" index=\"0\" />\r\n");
-        xmlData.append("                        <column1 width=\"111\" visibility=\"true\" index=\"1\" />\r\n");
-        xmlData.append("                        <column2 width=\"111\" visibility=\"true\" index=\"2\" />\r\n");
-        xmlData.append("                        <column3 width=\"111\" visibility=\"true\" index=\"3\" />\r\n");
-        xmlData.append("                        <column4 width=\"111\" visibility=\"true\" index=\"4\" />\r\n");
-        xmlData.append("                        <column5 width=\"112\" visibility=\"true\" index=\"5\" />\r\n");
-        xmlData.append("                        <column6 width=\"111\" visibility=\"true\" index=\"6\" />\r\n");
+            "                        <column0 width=\"90\" index=\"0\" />\r\n");
+        xmlData.append("                        <column1 width=\"90\" visibility=\"true\" index=\"1\" />\r\n");
+        xmlData.append("                        <column2 width=\"90\" visibility=\"true\" index=\"2\" />\r\n");
+        xmlData.append("                        <column3 width=\"90\" visibility=\"true\" index=\"3\" />\r\n");
+        xmlData.append("                        <column4 width=\"90\" visibility=\"true\" index=\"4\" />\r\n");
+        xmlData.append("                        <column5 width=\"90\" visibility=\"true\" index=\"5\" />\r\n");
+        xmlData.append("                        <column6 width=\"90\" visibility=\"true\" index=\"6\" />\r\n");
+        xmlData.append("                        <column7 width=\"90\" visibility=\"true\" index=\"7\" />\r\n");
         xmlData.append("                </upload>\r\n");
         xmlData.append("                <server>\r\n");
         xmlData.append(

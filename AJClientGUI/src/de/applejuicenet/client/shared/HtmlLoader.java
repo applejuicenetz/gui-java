@@ -17,7 +17,7 @@ import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.29 2004/05/10 16:14:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.30 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -238,8 +238,7 @@ public abstract class HtmlLoader {
                 throw wnfE;
             }
         }
-        String test = urlContent.toString();
-        return test;
+        return urlContent.toString();
     }
 
     private static String readLn(DataInputStream in) {

@@ -36,7 +36,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.39 2004/05/29 13:58:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.40 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -83,17 +83,7 @@ public class ModifiedXMLHolder
     private ModifiedXMLHolder() {
         logger = Logger.getLogger(getClass());
         try {
-            ConnectionSettings rc = OptionsManagerImpl.getInstance().
-                getRemoteSettings();
-            host = rc.getHost();
-            password = rc.getOldPassword();
-            if (host == null || host.length() == 0) {
-                host = "localhost";
-            }
-            if (host.compareToIgnoreCase("localhost") != 0 &&
-                host.compareTo("127.0.0.1") != 0) {
-                zipMode = "mode=zip&";
-            }
+            init();
             xmlCommand = "/xml/modified.xml";
             Class parser = SAXParser.class;
             xr = XMLReaderFactory.createXMLReader(parser.getName());
@@ -112,6 +102,31 @@ public class ModifiedXMLHolder
         }
         return instance;
 
+    }
+
+    private void init() {
+        try {
+            ConnectionSettings rc = OptionsManagerImpl.getInstance().
+                getRemoteSettings();
+            host = rc.getHost();
+            password = rc.getOldPassword();
+            if (host == null || host.length() == 0) {
+                host = "localhost";
+            }
+            if (host.compareToIgnoreCase("localhost") != 0 &&
+                host.compareTo("127.0.0.1") != 0) {
+                zipMode = "mode=zip&";
+            }
+        }
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            }
+        }
+    }
+
+    public void reinit(){
+        init();
     }
 
     public Map getServer() {
@@ -140,7 +155,7 @@ public class ModifiedXMLHolder
 
     private boolean tryToReload() {
         if (reloadInProgress) {
-            return false;
+            return true;
         }
         else {
             switch (count) {
@@ -172,6 +187,10 @@ public class ModifiedXMLHolder
 
     public Information getInformation(){
         return information;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 
     public Map getSpeeds() {
@@ -228,6 +247,7 @@ public class ModifiedXMLHolder
         netInfo.setExterneIP((String)userAttributes.get("ip"));
         netInfo.setTryConnectToServer(Integer.parseInt((String)userAttributes.get("tryconnecttoserver")));
         netInfo.setConnectedWithServerId(Integer.parseInt((String)userAttributes.get("connectedwithserverid")));
+        netInfo.setConnectionTime(Long.parseLong((String)userAttributes.get("connectedsince")));
     }
 
     private void checkNetworkInfoAttributes(Attributes attr){
@@ -282,6 +302,7 @@ public class ModifiedXMLHolder
         uploadDO.setSpeed(Integer.parseInt((String)userAttributes.get("speed")));
         uploadDO.setNick((String)userAttributes.get("nick"));
         uploadDO.setLastConnection(Long.parseLong((String)userAttributes.get("lastconnection")));
+        uploadDO.setLoaded(Double.parseDouble((String)userAttributes.get("loaded")));
         String versionNr = (String)userAttributes.get("version");
         int os = Integer.parseInt((String)userAttributes.get("operatingsystem"));
         if (!versionNr.equals("0.0.0.0") && os != -1) {
@@ -751,6 +772,7 @@ public class ModifiedXMLHolder
             reloadSession = true;
         }
         catch (IllegalArgumentException webSiteNotFound) {
+            webSiteNotFound.printStackTrace();
             reloadSession = true;
         }
         catch (Exception ex) {

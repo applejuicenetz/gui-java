@@ -1,36 +1,13 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.12 2004/05/22 20:39:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.13 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: NetworkInfo.java,v $
- * Revision 1.12  2004/05/22 20:39:30  maj0r
- * ServerWelcomemessage eingebaut.
- *
- * Revision 1.11  2004/02/18 17:24:21  maj0r
- * Von DOM auf SAX umgebaut.
- *
- * Revision 1.10  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.9  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.8  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.7  2003/07/06 20:00:19  maj0r
- * DownloadTable bearbeitet.
- *
- * Revision 1.6  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -43,6 +20,7 @@ public class NetworkInfo {
     private int tryConnectToServer;
     private int connectedWithServerId;
     private String welcomeMessage;
+    private long connectionTime;
 
     public NetworkInfo(){
 
@@ -52,7 +30,7 @@ public class NetworkInfo {
                        String ajGesamtShare, boolean firewalled,
                        String externeIP,
                        int tryConnectToServer, int connectedWithServerId,
-                       String welcomeMessage) {
+                       String welcomeMessage, long connectionTime) {
         this.ajUserGesamt = ajUserGesamt;
         this.ajAnzahlDateien = ajAnzahlDateien;
         this.ajGesamtShare = ajGesamtShare;
@@ -60,6 +38,7 @@ public class NetworkInfo {
         this.externeIP = externeIP;
         this.tryConnectToServer = tryConnectToServer;
         this.connectedWithServerId = connectedWithServerId;
+        this.connectionTime = connectionTime;
         setWelcomeMessage(welcomeMessage);
     }
 
@@ -97,6 +76,10 @@ public class NetworkInfo {
         }
         welcomeMessage = welcomeMessage.replaceAll("\n", "<br>");
         this.welcomeMessage = welcomeMessage;
+    }
+
+    public void setConnectionTime(long connectionTime) {
+        this.connectionTime = connectionTime;
     }
 
     public NetworkInfo(String ajUserGesamt, String ajAnzahlDateien,
@@ -236,5 +219,9 @@ public class NetworkInfo {
             return "";
         }
         return welcomeMessage;
+    }
+
+    public long getConnectionTime() {
+        return connectionTime;
     }
 }

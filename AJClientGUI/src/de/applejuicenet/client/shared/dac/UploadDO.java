@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadColumnComponent;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.21 2004/05/24 09:49:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.22 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -42,10 +42,14 @@ public class UploadDO implements UploadColumnComponent{
     private long lastConnection;
 
     private JProgressBar progress;
+    private JProgressBar wholeLoadedProgress;
     private JLabel progressbarLabel;
+    private JLabel wholeLoadedProgressbarLabel;
     private JLabel versionLabel;
     private boolean progressChanged = false;
+    private boolean wholeLoadedProgressChanged = false;
     private boolean versionChanged = false;
+    private int loaded;
 
     public UploadDO(int uploadID){
         this.uploadID = uploadID;
@@ -56,7 +60,7 @@ public class UploadDO implements UploadColumnComponent{
                     String status,
                     String nick, long uploadFrom, long uploadTo,
                     long actualUploadPosition, int speed, int prioritaet,
-                    int directstate, long lastConnection) {
+                    int directstate, long lastConnection, double loaded) {
         this.uploadID = uploadID;
         this.shareFileID = shareFileID;
         this.version = version;
@@ -69,6 +73,7 @@ public class UploadDO implements UploadColumnComponent{
         this.prioritaet = prioritaet;
         this.directstate = directstate;
         this.lastConnection = lastConnection;
+        this.setLoaded(loaded);
         progressChanged = true;
         versionChanged = true;
         init();
@@ -77,8 +82,12 @@ public class UploadDO implements UploadColumnComponent{
     private void init(){
         progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
         progress.setStringPainted(true);
+        wholeLoadedProgress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
+        wholeLoadedProgress.setStringPainted(true);
         progressbarLabel = new JLabel();
         progressbarLabel.setOpaque(true);
+        wholeLoadedProgressbarLabel = new JLabel();
+        wholeLoadedProgressbarLabel.setOpaque(true);
         progress.setOpaque(false);
         versionLabel = new JLabel();
         versionLabel.setOpaque(true);
@@ -192,12 +201,32 @@ public class UploadDO implements UploadColumnComponent{
         return lastConnection;
     }
 
+    public int getLoaded() {
+        return loaded;
+    }
+
     public void setDateiName(String dateiName) {
         this.dateiName = dateiName;
     }
 
     public void setLastConnection(long lastConnection) {
         this.lastConnection = lastConnection;
+    }
+
+    public void setLoaded(double newValue) {
+        if (newValue == -1){
+            if (newValue != loaded){
+                wholeLoadedProgressChanged = true;
+                loaded = -1;
+            }
+        }
+        else{
+            int tmp = (int) (newValue * 100);
+            if (tmp != loaded){
+                wholeLoadedProgressChanged = true;
+                loaded = tmp;
+            }
+        }
     }
 
     public String getDownloadPercentAsString() {
@@ -256,5 +285,20 @@ public class UploadDO implements UploadColumnComponent{
             versionChanged = false;
         }
         return versionLabel;
+    }
+
+    public Component getWholeLoadedProgressbarComponent(JTable table,
+        Object value) {
+        if (loaded != -1) {
+            if (wholeLoadedProgressChanged){
+                wholeLoadedProgress.setString(loaded + " %");
+                wholeLoadedProgress.setValue(loaded);
+                wholeLoadedProgressChanged = false;
+            }
+            return wholeLoadedProgress;
+        }
+        else {
+            return wholeLoadedProgressbarLabel;
+        }
     }
 }

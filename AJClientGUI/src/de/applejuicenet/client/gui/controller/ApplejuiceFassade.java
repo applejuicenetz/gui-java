@@ -36,9 +36,10 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import java.util.HashSet;
+import de.applejuicenet.client.shared.NetworkInfo;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.136 2004/06/10 11:11:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.137 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -49,8 +50,8 @@ import java.util.HashSet;
  */
 
 public class ApplejuiceFassade {
-    public static final String GUI_VERSION = "0.59.0";
-    public static final String MIN_NEEDED_CORE_VERSION = "0.30.144.522";
+    public static final String GUI_VERSION = "0.59.1";
+    public static final String MIN_NEEDED_CORE_VERSION = "0.30.145.610";
 
     public static final String ERROR_MESSAGE = "Unbehandelte Exception";
 
@@ -86,8 +87,6 @@ public class ApplejuiceFassade {
     private ApplejuiceFassade() {
         logger = Logger.getLogger(getClass());
         try {
-            //load XMLs
-            modifiedXML = ModifiedXMLHolder.getInstance();
 
             DataUpdateInformer downloadInformer = new DataUpdateInformer(DataUpdateListener.DOWNLOAD_CHANGED){
                 protected Object getContentObject() {
@@ -137,15 +136,20 @@ public class ApplejuiceFassade {
                 }
             };
             informer.put(Integer.toString(informationInformer.getDataUpdateListenerType()), informationInformer);
-
-            informationXML = InformationXMLHolder.getInstance();
-            directoryXML = new DirectoryXMLHolder();
-            shareXML = new ShareXMLHolder();
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error(ERROR_MESSAGE, e);
             }
+        }
+    }
+
+    public long getLastCoreTimestamp(){
+        if (modifiedXML != null){
+            return modifiedXML.getTimestamp();
+        }
+        else{
+            return -1;
         }
     }
 
@@ -252,6 +256,11 @@ public class ApplejuiceFassade {
                 }
                 try {
                     int versuch = 0;
+                    //load XMLs
+                    modifiedXML = ModifiedXMLHolder.getInstance();
+                    informationXML = InformationXMLHolder.getInstance();
+                    directoryXML = new DirectoryXMLHolder();
+                    shareXML = new ShareXMLHolder();
                     if (coreVersion == null){
                         coreVersion = informationXML.getCoreVersion();
                         checkForValidCore();
@@ -943,5 +952,9 @@ public class ApplejuiceFassade {
 
     public void getDirectory(String directory, ApplejuiceNode directoryNode) {
         directoryXML.getDirectory(directory, directoryNode);
+    }
+
+    public NetworkInfo getNetworkInfo(){
+        return modifiedXML.getNetworkInfo();
     }
 }

@@ -12,63 +12,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.15 2004/05/24 08:04:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.16 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: UploadDataTableModel.java,v $
- * Revision 1.15  2004/05/24 08:04:09  maj0r
- * In der Statusspalte eines nicht aktiven Uploads wird nun die Corezeit der letzen Aktivitaet angezeigt.
- *
- * Revision 1.14  2004/05/23 17:58:29  maj0r
- * Anpassungen an neue Schnittstelle.
- *
- * Revision 1.13  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.12  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.11  2004/02/09 14:21:32  maj0r
- * Icons für Upload-DirectStates eingebaut.
- *
- * Revision 1.10  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.9  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.8  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.7  2003/09/01 15:50:52  maj0r
- * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
- *
- * Revision 1.6  2003/08/30 19:44:32  maj0r
- * Auf JTreeTable umgebaut.
- *
- * Revision 1.5  2003/08/18 17:37:08  maj0r
- * UploadTabelle wesentlich vereinfacht.
- *
- * Revision 1.4  2003/08/18 14:51:52  maj0r
- * Alte Eintraege loeschen.
- *
- * Revision 1.3  2003/08/09 10:57:14  maj0r
- * UploadTabelle weitergeführt.
- *
- * Revision 1.2  2003/08/03 19:54:05  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.1  2003/07/01 18:41:39  maj0r
- * Struktur verändert.
- *
- * Revision 1.4  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -77,11 +27,11 @@ public class UploadDataTableModel
     implements LanguageListener {
 
     final static String[] COL_NAMES = {
-        "Dateiname", "Status", "Wer", "Geschwindigkeit", "Prozent geladen",
+        "Dateiname", "Status", "Wer", "Geschwindigkeit", "Prozent geladen", "Gesamt geladen",
         "Priorität", "Client"};
 
     static protected Class[] cTypes = {
-        TreeTableModel.class, String.class, String.class, String.class, String.class,
+        TreeTableModel.class, String.class, String.class, String.class, String.class, String.class,
         Integer.class, String.class};
 
     private SimpleDateFormat formatter = new SimpleDateFormat(
@@ -154,16 +104,14 @@ public class UploadDataTableModel
                     }
                 }
                 case 4: {
-                    if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG) {
-                        return getSpeedAsString(upload.getSpeed());
-                    }
-                    else {
-                        return "";
-                    }
+                    return "";
                 }
-                case 5:
-                    return new Integer(upload.getPrioritaet());
+                case 5: {
+                    return "";
+                }
                 case 6:
+                    return new Integer(upload.getPrioritaet());
+                case 7:
                     return upload.getVersion().getVersion();
                 default:
                     return "Fehler";

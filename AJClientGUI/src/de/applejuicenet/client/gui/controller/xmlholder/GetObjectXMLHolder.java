@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.9 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.10 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,12 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: GetObjectXMLHolder.java,v $
+ * Revision 1.10  2004/06/11 09:24:30  maj0r
+ * [Maj0r] Wasserstände der einzelnen Uploader werden angezeigt.
+ * [Maj0r] Beim Serverwechsel wird nun eine qualifizierte Warnung ausgegeben, wenn die aktuelle Verbindung noch keine 30 Minuten besteht.
+ * [Maj0r] Bugfix
+ *      Beim Neuerzeigen der properties.xml wurden die neuen Coredaten nicht für die aktuelle Sitzung übernommen. Folge war ein Verbindungsverlust.
+ *
  * Revision 1.9  2004/05/23 17:58:29  maj0r
  * Anpassungen an neue Schnittstelle.
  *
@@ -146,6 +152,7 @@ public class GetObjectXMLHolder
         long lastConnection;
         int speed;
         int directstate;
+        double loaded;
         e = (Element) nodes.item(0);
         id = Integer.parseInt(e.getAttribute("id"));
         shareId = Integer.parseInt(e.getAttribute("shareid"));
@@ -166,9 +173,10 @@ public class GetObjectXMLHolder
         speed = Integer.parseInt(e.getAttribute("speed"));
         directstate = Integer.parseInt(e.getAttribute("directstate"));
         lastConnection = Long.parseLong(e.getAttribute("lastconnection"));
+        loaded = Double.parseDouble(e.getAttribute("loaded"));
         upload = new UploadDO(id, shareId, version, status, nick,
                               uploadFrom, uploadTo, actualUploadPos,
-                              speed, prioritaet, directstate, lastConnection);
+                              speed, prioritaet, directstate, lastConnection, loaded);
         return upload;
     }
 

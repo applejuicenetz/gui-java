@@ -30,198 +30,13 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.44 2004/04/06 14:44:31 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.45 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: PropertiesManager.java,v $
- * Revision 1.44  2004/04/06 14:44:31  loevenwong
- * Combobox zur Auswahl der letzten 3 Verbindungen eingebaut.
- *
- * Revision 1.43  2004/04/02 09:24:58  loevenwong
- * Einstellungen der Goodies werden jetzt auch gespeichert.
- *
- * Revision 1.42  2004/03/23 14:51:13  maj0r
- * Bug behoben, der sich durch die dynamische Generierung der properties.xml ohne Neustart eingeschlichen hat.
- *
- * Revision 1.41  2004/03/15 13:46:00  loevenwong
- * GUI neustart aufgrund fehlender property-datei verhindert.
- *
- * Revision 1.40  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.39  2004/03/08 07:11:45  maj0r
- * Begonnen, JGoddies einzubauen.
- *
- * Revision 1.38  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.37  2004/03/04 18:31:15  maj0r
- * Nicht vorhandene Unterverzeichnisse muessen nacheinander erzeugt werden.
- *
- * Revision 1.36  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.35  2004/03/03 12:36:07  maj0r
- * Modifizierbare und potenziell modifizierbare Dateien bei Nicht-Windows-System verschoben.
- *
- * Revision 1.34  2004/03/01 21:14:45  maj0r
- * Unter Linux ist die properties.xml nun unter ~/appleJuice zu finden.
- *
- * Revision 1.33  2004/02/22 08:36:59  maj0r
- * Bug #235 gefixt (Danke an uselessplayer)
- * Passwortfeld im Logindialog funktioniert wieder ordentlich.
- *
- * Revision 1.32  2004/02/20 14:55:02  maj0r
- * Speicheroptimierungen.
- *
- * Revision 1.31  2004/02/17 15:26:38  maj0r
- * Bug #219 gefixt (Danke an uselessplayer)
- * 100%-CPU bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt.
- *
- * Revision 1.30  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.29  2004/01/29 15:52:34  maj0r
- * Bug #153 umgesetzt (Danke an jr17)
- * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
- *
- * Revision 1.28  2004/01/24 09:52:01  maj0r
- * Spalte Verbindungsversuche eingebaut.
- *
- * Revision 1.27  2004/01/24 08:17:21  maj0r
- * Formataenderung wird nun korrekt erkannt.
- *
- * Revision 1.26  2004/01/21 07:15:38  maj0r
- * Formataenderung wird nun korrekt erkannt.
- *
- * Revision 1.25  2004/01/20 12:45:13  maj0r
- * Spaltenindizes werden jetzt gespeichert.
- *
- * Revision 1.24  2004/01/20 11:18:03  maj0r
- * Format der properties.xml geaendert.
- *
- * Revision 1.23  2004/01/12 09:36:20  maj0r
- * Speichern korrigiert.
- *
- * Revision 1.22  2004/01/12 07:49:25  maj0r
- * Kleine Bugs behoben.
- *
- * Revision 1.21  2004/01/12 07:26:10  maj0r
- * Tabellenspalte nun ueber Headerkontextmenue ein/ausblendbar.
- *
- * Revision 1.20  2004/01/05 19:17:19  maj0r
- * Bug #56 gefixt (Danke an MeineR)
- * Das Laden der Plugins beim Start kann \uFFFDber das Optionenmenue deaktiviert werden.
- *
- * Revision 1.19  2004/01/05 17:08:36  maj0r
- * Fehlerbehandlung korrigiert.
- *
- * Revision 1.18  2004/01/05 07:28:59  maj0r
- * Begonnen einen Standardwebbrowser einzubauen.
- *
- * Revision 1.17  2004/01/02 16:48:30  maj0r
- * Serverliste holen geaendert.
- *
- * Revision 1.16  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.15  2003/12/29 15:20:05  maj0r
- * Neue Versionupdatebenachrichtigung fertiggestellt.
- *
- * Revision 1.14  2003/12/29 07:23:18  maj0r
- * Begonnen, auf neues Versionupdateinformationssystem umzubauen.
- *
- * Revision 1.13  2003/12/27 21:14:24  maj0r
- * Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
- *
- * Revision 1.12  2003/11/18 16:41:50  maj0r
- * Erste Version des LinkListener eingebaut.
- * Themes koennen nun ueber die properties.xml komplett deaktiviert werden.
- *
- * Revision 1.11  2003/11/16 12:34:23  maj0r
- * Themes einngebaut (Danke an LinuxDoc)
- *
- * Revision 1.10  2003/10/31 11:31:45  maj0r
- * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
- *
- * Revision 1.9  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.8  2003/10/17 13:33:02  maj0r
- * properties.xml wird nun im Fehlerfall automatisch generiert.
- *
- * Revision 1.7  2003/10/14 15:42:05  maj0r
- * An pflegbaren Xml-Port angepasst.
- *
- * Revision 1.6  2003/10/05 11:48:36  maj0r
- * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
- * Userpartlisten werden angezeigt.
- * Downloadpartlisten werden alle 15 Sek. aktualisiert.
- *
- * Revision 1.5  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- * Revision 1.4  2003/09/12 13:46:41  maj0r
- * Bug behoben.
- *
- * Revision 1.3  2003/09/12 13:31:55  maj0r
- * Bugs behoben.
- *
- * Revision 1.2  2003/09/12 13:19:26  maj0r
- * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
- * Version 0.30
- *
- * Revision 1.1  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.23  2003/09/08 06:27:11  maj0r
- * Um Wizard erweitert, aber noch nicht fertiggestellt.
- *
- * Revision 1.22  2003/08/22 10:54:25  maj0r
- * Klassen umbenannt.
- * ConnectionSettings ueberarbeitet.
- *
- * Revision 1.21  2003/08/19 12:38:47  maj0r
- * Passworteingabe und md5 korrigiert.
- *
- * Revision 1.20  2003/08/16 18:40:25  maj0r
- * Passworteingabe korrigiert.
- *
- * Revision 1.19  2003/08/16 17:50:06  maj0r
- * Diverse Farben k\uFFFDnnen nun manuell eingestellt bzw. deaktiviert werden.
- * DownloaduebersichtTabelle kann deaktiviert werden.
- *
- * Revision 1.18  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.17  2003/08/11 14:10:28  maj0r
- * DownloadPartList eingef\uFFFDgt.
- * Diverse Aenderungen.
- *
- * Revision 1.16  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.15  2003/07/01 14:55:06  maj0r
- * Unn\uFFFDtze Abfrage entfernt.
- *
- * Revision 1.14  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingef\uFFFDgt.
- * Servertabelle kann nun spaltenweise sortiert werden.
- *
- * Revision 1.13  2003/06/24 12:06:49  maj0r
- * log4j eingef\uFFFDgt (inkl. Bedienung \uFFFDber Einstellungsdialog).
- *
- * Revision 1.12  2003/06/22 19:01:22  maj0r
- * Hostverwendung korrigiert.
- *
- * Revision 1.11  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -855,6 +670,7 @@ class PropertiesManager
                               , remote.getNewPassword());
         setAttributeByTagName(new String[] {"options", "remote", "port"}
                               , Integer.toString(remote.getXmlPort()));
+        connectionSettings = remote;
     }
 
     public void saveAJSettings(AJSettings ajSettings) {
@@ -924,7 +740,7 @@ class PropertiesManager
             downloadWidths[9] = Integer.parseInt(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "download", "column9", "width"}));
 
-            uploadWidths = new int[7];
+            uploadWidths = new int[8];
             uploadWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "upload", "column0", "width"}));
             uploadWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new
@@ -939,6 +755,8 @@ class PropertiesManager
                 String[] {"options", "columns", "upload", "column5", "width"}));
             uploadWidths[6] = Integer.parseInt(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "upload", "column6", "width"}));
+            uploadWidths[7] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column7", "width"}));
 
             serverWidths = new int[5];
             serverWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new
@@ -1001,7 +819,7 @@ class PropertiesManager
                 String[] {"options", "columns", "download", "column9",
                 "visibility"})).booleanValue();
 
-            uploadVisibilities = new boolean[7];
+            uploadVisibilities = new boolean[8];
             uploadVisibilities[0] = true;
             uploadVisibilities[1] = new Boolean(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "upload", "column1",
@@ -1020,6 +838,9 @@ class PropertiesManager
                 "visibility"})).booleanValue();
             uploadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "upload", "column6",
+                "visibility"})).booleanValue();
+            uploadVisibilities[7] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column7",
                 "visibility"})).booleanValue();
 
             downloadIndex = new int[10];
@@ -1050,7 +871,7 @@ class PropertiesManager
             downloadIndex[9] = Integer.parseInt(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "download", "column9", "index"}));
 
-            uploadIndex = new int[7];
+            uploadIndex = new int[8];
             uploadIndex[0] = Integer.parseInt(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "upload", "column0", "index"}));
             uploadIndex[1] = Integer.parseInt(getFirstAttrbuteByTagName(new
@@ -1065,6 +886,8 @@ class PropertiesManager
                 String[] {"options", "columns", "upload", "column5", "index"}));
             uploadIndex[6] = Integer.parseInt(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "upload", "column6", "index"}));
+            uploadIndex[7] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column7", "index"}));
             boolean use = new Boolean(getFirstAttrbuteByTagName(new String[] {
                 "options", "proxy", "use"})).booleanValue();
             String host = getFirstAttrbuteByTagName(new String[] {"options",
@@ -1162,6 +985,9 @@ class PropertiesManager
             setAttributeByTagName(new String[] {"options", "columns", "upload",
                                   "column6", "width"}
                                   , uploadWidths[6]);
+            setAttributeByTagName(new String[] {"options", "columns", "upload",
+                                  "column7", "width"}
+                                  , uploadWidths[7]);
 
             setAttributeByTagName(new String[] {"options", "columns", "server",
                                   "column0", "width"}
@@ -1235,6 +1061,9 @@ class PropertiesManager
             setAttributeByTagName(new String[] {"options", "columns", "upload",
                                   "column6", "visibility"}
                                   , Boolean.toString(uploadVisibilities[6]));
+            setAttributeByTagName(new String[] {"options", "columns", "upload",
+                                  "column7", "visibility"}
+                                  , Boolean.toString(uploadVisibilities[7]));
 
             setAttributeByTagName(new String[] {"options", "columns",
                                   "download", "column0", "index"}
@@ -1288,6 +1117,9 @@ class PropertiesManager
             setAttributeByTagName(new String[] {"options", "columns", "upload",
                                   "column6", "index"}
                                   , Integer.toString(uploadIndex[6]));
+            setAttributeByTagName(new String[] {"options", "columns", "upload",
+                                  "column7", "index"}
+                                  , Integer.toString(uploadIndex[7]));
 
             saveDom();
         }

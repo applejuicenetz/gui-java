@@ -36,10 +36,11 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.upload.UploadDataTableModel;
 import de.applejuicenet.client.gui.tables.upload.UploadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
+import de.applejuicenet.client.gui.tables.upload.UploadTableWholeLoadedPercentCellRenderer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.45 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.46 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -66,7 +67,7 @@ public class UploadPanel
     private boolean panelSelected = false;
 
     private JPopupMenu columnPopup = new JPopupMenu();
-    private TableColumn[] columns = new TableColumn[7];
+    private TableColumn[] columns = new TableColumn[8];
     private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[
         columns.length];
 
@@ -109,7 +110,10 @@ public class UploadPanel
         });
         uploadDataTable.getColumnModel().getColumn(4).setCellRenderer(new
             UploadTablePercentCellRenderer());
-        uploadDataTable.getColumnModel().getColumn(6).setCellRenderer(new
+        uploadDataTable.getColumnModel().getColumn(5).setCellRenderer(new
+            UploadTableWholeLoadedPercentCellRenderer());
+
+        uploadDataTable.getColumnModel().getColumn(7).setCellRenderer(new
             UploadTableVersionCellRenderer());
 
         TableColumnModel model = uploadDataTable.getColumnModel();
@@ -201,7 +205,7 @@ public class UploadPanel
         clientText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.mainform.uplcounttext"));
         label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
-        String[] columnsText = new String[7];
+        String[] columnsText = new String[8];
         columnsText[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.mainform.uploads.col0caption"));
         columnsText[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
@@ -213,8 +217,10 @@ public class UploadPanel
         columnsText[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.mainform.queue.col6caption"));
         columnsText[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.mainform.uploads.col4caption"));
+            getFirstAttrbuteByTagName(".root.javagui.uploadform.columnwasserstand"));
         columnsText[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(".root.mainform.uploads.col4caption"));
+        columnsText[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.mainform.uploads.col5caption"));
         for (int i = 0; i < columns.length; i++) {
             columns[i].setHeaderValue(columnsText[i]);
