@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.3 2003/08/11 18:19:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.4 2003/08/12 11:01:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.4  2003/08/12 11:01:58  maj0r
+ * Anzeige korrigiert.
+ *
  * Revision 1.3  2003/08/11 18:19:43  maj0r
  * Korrektur: GridBagLayout kann nur 512 Components pro Zeile.
  *
@@ -106,6 +109,14 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
             if (anzahlParts>5120){
                 anzahlGanzeZeilen = anzahlParts / 512;
                 anzahlProZeile = 512;
+            }
+            else if (anzahlParts<10){
+                anzahlGanzeZeilen = 1;
+                anzahlProZeile = anzahlParts;
+            }
+            else if (anzahlParts<100){
+                anzahlGanzeZeilen = anzahlParts / 10;
+                anzahlProZeile = anzahlParts / anzahlGanzeZeilen;
             }
             else{
                 anzahlGanzeZeilen = 10;
