@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.17 2003/08/20 07:49:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.18 2003/08/25 13:18:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.18  2003/08/25 13:18:35  maj0r
+ * Farbe in ein geiles Rot geaendert,
+ *
  * Revision 1.17  2003/08/20 07:49:50  maj0r
  * Programmstart beschleunigt.
  *
@@ -62,7 +65,7 @@ import org.apache.log4j.Level;
 public class StartPanel
         extends JPanel
         implements LanguageListener, RegisterI, DataUpdateListener {
-    private static final Color APFEL_GRUEN = new Color(34, 146, 14);
+    private static final Color APFEL_ROT = new Color(146, 36, 60);
 
     private AppleJuiceDialog parent;
 
@@ -100,7 +103,6 @@ public class StartPanel
 
     private void jbInit() throws Exception {
         setLayout(new BorderLayout());
-//    netInfo = ApplejuiceFassade.getInstance().getNetworkInfo();
         JPanel panel3 = new JPanel(new GridBagLayout());
         panel3.setBackground(Color.WHITE);
         JPanel panel4 = new JPanel(new BorderLayout());
@@ -129,7 +131,7 @@ public class StartPanel
         constraints.gridx = 1;
         constraints.weightx = 1;
         deinClient = new JLabel("<html><font><h2>Dein Core</h2></font></html>");
-        deinClient.setForeground(APFEL_GRUEN);
+        deinClient.setForeground(APFEL_ROT);
         panel3.add(deinClient, constraints);
         constraints.weightx = 0;
 
@@ -149,7 +151,7 @@ public class StartPanel
 
         constraints.gridx = 1;
         warnungen = new JLabel("<html><font><h2>Warnungen</h2></font></html>");
-        warnungen.setForeground(APFEL_GRUEN);
+        warnungen.setForeground(APFEL_ROT);
         panel3.add(warnungen, constraints);
 
         constraints.gridy = 3;
@@ -169,13 +171,13 @@ public class StartPanel
         constraints.gridx = 1;
         label8 = new JLabel(
                 "<html><font><h2>Netzwerk, Neuigkeiten und Nachrichten</h2></font></html>");
-        label8.setForeground(APFEL_GRUEN);
+        label8.setForeground(APFEL_ROT);
         panel3.add(label8, constraints);
 
         constraints.gridy = 5;
         constraints.insets.left = 15;
         nachrichten = new JLabel();
-        nachrichten.setForeground(APFEL_GRUEN);
+        nachrichten.setForeground(APFEL_ROT);
         panel3.add(nachrichten, constraints);
 
         constraints.gridy = 6;
@@ -188,7 +190,7 @@ public class StartPanel
         constraints.gridx = 1;
         netzwerk = new JLabel(
                 "<html><font><h2>appleJuice Netzwerk</h2></font></html>");
-        netzwerk.setForeground(APFEL_GRUEN);
+        netzwerk.setForeground(APFEL_ROT);
         panel3.add(netzwerk, constraints);
 
         constraints.gridy = 7;
