@@ -145,7 +145,7 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI{
     constraints.gridy = 8;
     constraints.insets.top = 5;
     label6 = new JLabel();
-    label6.setText(netInfo.getAJUserGesamtAsString() + " Benutzer haben " + netInfo.getAJAnzahlDateienAsString() + " Dateien ( " + netInfo.getAJGesamtShare() + " )" );
+    label6.setText(netInfo.getAJUserGesamtAsString() + " Benutzer haben " + netInfo.getAJAnzahlDateienAsString() + " Dateien ( " + netInfo.getAJGesamtShare(0) + " )" );
     panel3.add(label6, constraints);
 
     constraints.insets.top = 0;
@@ -157,6 +157,11 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI{
   }
 
   public void registerSelected(){
+    updateContent();
+  }
+
+  private void updateContent(){
+    fireLanguageChanged();  //ein bischen missbraucht, aber schwachsinnig dies doppelt zu implementieren
   }
 
   public void fireLanguageChanged(){
@@ -177,9 +182,9 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI{
     temp = temp.replaceAll("%s", "-");
     label9.setText(temp);
     temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "status", "status2"}));
-    temp = temp.replaceFirst("%d", netInfo.getAJUserGesamtAsString());
-    temp = temp.replaceFirst("%d", netInfo.getAJAnzahlDateienAsString());
-    temp = temp.replaceFirst("%s", netInfo.getAJGesamtShare());
+    temp = temp.replaceFirst("%d", netInfo.getAJUserGesamtAsStringWithPoints());
+    temp = temp.replaceFirst("%d", netInfo.getAJAnzahlDateienAsStringWithPoints());
+    temp = temp.replaceFirst("%s", netInfo.getAJGesamtShareWithPoints(0));
     label6.setText(temp);
     warnungen.setText("<html><font><h2>" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "html15"})) + "</h2></font></html>");
   }

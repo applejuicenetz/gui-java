@@ -38,8 +38,34 @@ public class NetworkInfo {
     this.externeIP = externeIP;
   }
 
-  public String getAJGesamtShare(){
-    return ajGesamtShare;
+  public String getAJGesamtShare(long faktor){
+    ajGesamtShare = ajGesamtShare.replace(',', '.');
+    double share = Double.parseDouble(ajGesamtShare);
+    if (faktor==0){  //selbst entscheiden
+      if (share /1000 < 1000)
+        faktor=1000;
+      else if (share /1000000 < 1000)
+        faktor=1000000;
+      else faktor = 1;
+    }
+    share = share / faktor;
+    String result = Double.toString(share);
+    result = result.substring(0, result.indexOf(".")+3);
+    result = result.replace('.', ',');
+    if (faktor==1)
+      result += " MB";
+    else if (faktor==1000)
+      result += " GB";
+    else if (faktor==1000000)
+      result += " TB";
+    else
+      result += " ??";
+    return result;
+  }
+
+  public String getAJGesamtShareWithPoints(long faktor){
+    String result = getAJGesamtShare(faktor);
+    return insertPoints(result);
   }
 
   public boolean isFirewalled(){
@@ -58,11 +84,42 @@ public class NetworkInfo {
     return Long.toString(ajUserGesamt);
   }
 
+  public String getAJUserGesamtAsStringWithPoints(){
+    String result = getAJUserGesamtAsString();
+    return insertPoints(result);
+  }
+
   public long getAJAnzahlDateien(){
     return ajAnzahlDateien;
   }
 
   public String getAJAnzahlDateienAsString(){
     return Long.toString(ajAnzahlDateien);
+  }
+
+  public String getAJAnzahlDateienAsStringWithPoints(){
+    return insertPoints(Long.toString(ajAnzahlDateien));
+  }
+
+  private String insertPoints(String tochange){
+    StringBuffer result = new StringBuffer(tochange);
+    int laenge;
+    if (result.indexOf(",")==-1){
+      if (result.indexOf(" ")==-1)
+       laenge = result.length();
+      else
+        laenge=result.indexOf(" ");
+    }
+    else
+      laenge=result.indexOf(",");
+    int zaehler=0;
+    for (int i = laenge-1; i>0; i--){
+      zaehler++;
+      if (zaehler==3){
+        zaehler=0;
+        result.insert(i, '.');
+      }
+    }
+    return result.toString();
   }
 }
