@@ -12,15 +12,18 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.1 2003/09/02 16:06:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.2 2003/10/16 12:06:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadMainNode.java,v $
+ * Revision 1.2  2003/10/16 12:06:37  maj0r
+ * Diverse Schoenheitskorrekturen und Optimierungen.
+ *
  * Revision 1.1  2003/09/02 16:06:26  maj0r
  * Downloadbaum komplett umgebaut.
  *
@@ -38,6 +41,11 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
 
     private DownloadMainNode[] children;
     private DownloadDO downloadDO;
+
+    private static Icon waitingIcon = IconManager.getInstance().getIcon("cool");
+    private static Icon loadingIcon = IconManager.getInstance().getIcon("download");
+    private static Icon restIcon = IconManager.getInstance().getIcon("eek");
+    private static Icon rootIcon = IconManager.getInstance().getIcon("treeRoot");
 
     public DownloadMainNode(DownloadDO downloadDO){
         type = ROOT_NODE;
@@ -69,32 +77,27 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
 
     public Icon getConvenientIcon() {
         if (type==LOADING_DOWNLOADS){
-            return IconManager.getInstance().getIcon("download");
+            return loadingIcon;
         }
         else if (type==WAITING_DOWNLOADS){
-            return IconManager.getInstance().getIcon("cool");
+            return waitingIcon;
         }
         else if (type==REST_DOWNLOADS){
-            return IconManager.getInstance().getIcon("eek");
+            return restIcon;
         }
         else if (type==ROOT_NODE){
-            return IconManager.getInstance().getIcon("treeRoot");
+            return rootIcon;
         }
         else
             return null;
     }
 
     public int getChildCount(){
-        if (type==ROOT_NODE){
-            return 3;
-        }
-        else {
-            Object[] obj = getChildren();
-            if (obj==null)
-                return 0;
-            else
-                return obj.length;
-        }
+        Object[] obj = getChildren();
+        if (obj==null)
+            return 0;
+        else
+            return obj.length;
     }
 
     public boolean isLeaf() {
@@ -104,7 +107,24 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
     public Object[] getChildren() {
         switch (type){
             case ROOT_NODE:{
-                return children;
+                if (downloadDO.getStatus()==DownloadDO.SUCHEN_LADEN){
+                    return children;
+                }
+                else{
+                    boolean childFound = false;
+                    for (int i=0; i<children.length; i++){
+                        if (children[i].getChildCount()>0){
+                            childFound = true;
+                            break;
+                        }
+                    }
+                    if (childFound){
+                        return children;
+                    }
+                    else{
+                        return null;
+                    }
+                }
             }
             case LOADING_DOWNLOADS:{
                 ArrayList kinder = new ArrayList();
