@@ -113,9 +113,9 @@ public class ODVerbindungPanel extends JPanel {
     kbSlot = new JLabel("3 kb/s");
 
     IconManager im = IconManager.getInstance();
-    ImageIcon icon2 = im.getIcon("upload");
+    ImageIcon icon2 = im.getIcon("increase");
     btnPdlUp = new JLabel(icon2);
-    ImageIcon icon3 = im.getIcon("download");
+    ImageIcon icon3 = im.getIcon("decrease");
     btnPdlDown = new JLabel(icon3);
     SlotMouseAdapter slotMA = new SlotMouseAdapter();
     btnPdlUp.addMouseListener(slotMA);

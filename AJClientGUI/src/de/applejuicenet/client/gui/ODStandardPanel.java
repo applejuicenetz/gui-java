@@ -103,7 +103,7 @@ public class ODStandardPanel
     for (int i = 1; i < 11; i++) {
       cmbUploadPrio.addItem(new Integer(i));
     }
-    Icon icon2 = UIManager.getIcon("FileChooser.detailsViewIcon");
+    Icon icon2 = im.getIcon("folderopen");
     FileChooserMouseAdapter fcMouseAdapter = new FileChooserMouseAdapter();
     openTemp = new JLabel(icon2);
     openTemp.addMouseListener(fcMouseAdapter);

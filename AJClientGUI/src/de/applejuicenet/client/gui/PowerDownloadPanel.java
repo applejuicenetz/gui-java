@@ -116,13 +116,21 @@ public class PowerDownloadPanel
     backPanel.add(btnInaktiv, constraints);
     constraints.gridy = 3;
     backPanel.add(btnAktiv, constraints);
-    JPanel tempFlowPanel = new JPanel();
-    tempFlowPanel.setLayout(new FlowLayout());
-    tempFlowPanel.add(label7);
-    ImageIcon icon2 = im.getIcon("upload");
+
+    JPanel tempPanel3 = new JPanel(new GridBagLayout());
+    GridBagConstraints constraints2 = new GridBagConstraints();
+    constraints2.anchor = GridBagConstraints.NORTH;
+    constraints2.fill = GridBagConstraints.BOTH;
+    constraints2.gridx = 0;
+    constraints2.gridy = 0;
+
+    tempPanel3.add(label7, constraints2);
+    ImageIcon icon2 = im.getIcon("increase");
     btnPdlUp = new JLabel(icon2);
-    ImageIcon icon3 = im.getIcon("download");
+    ImageIcon icon3 = im.getIcon("decrease");
     btnPdlDown = new JLabel(icon3);
+
+
     btnPdlUp.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
         alterRatio(true);
@@ -133,13 +141,18 @@ public class PowerDownloadPanel
         alterRatio(false);
       }
     });
-    tempFlowPanel.add(btnPdlUp);
-    tempFlowPanel.add(ratio);
-    tempFlowPanel.add(btnPdlDown);
-    tempFlowPanel.add(label8);
+    constraints2.gridx = 1;
+    tempPanel3.add(btnPdlUp, constraints2);
+    constraints2.gridx = 2;
+    tempPanel3.add(ratio, constraints2);
+    constraints2.gridx = 3;
+    tempPanel3.add(btnPdlDown, constraints2);
+    constraints2.gridx = 4;
+    constraints2.insets.left = 5;
+    tempPanel3.add(label8, constraints2);
 
     constraints.gridy = 4;
-    backPanel.add(tempFlowPanel, constraints);
+    backPanel.add(tempPanel3, constraints);
     constraints.gridy = 5;
     constraints.gridwidth = 3;
     backPanel.add(btnPdl, constraints);
