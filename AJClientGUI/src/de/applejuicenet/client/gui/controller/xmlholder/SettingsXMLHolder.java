@@ -9,9 +9,10 @@ import org.w3c.dom.NodeList;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.ShareEntry;
+import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.6 2004/02/16 07:42:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.7 2004/03/03 17:27:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,9 @@ import de.applejuicenet.client.shared.ShareEntry;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SettingsXMLHolder.java,v $
+ * Revision 1.7  2004/03/03 17:27:55  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.6  2004/02/16 07:42:43  maj0r
  * alten Timestampfehler beseitig
  * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
@@ -114,7 +118,7 @@ public class SettingsXMLHolder
             String incomingDir = nodes.item(0).getFirstChild().getNodeValue();
             nodes = document.getElementsByTagName("temporarydirectory");
             String tempDir = nodes.item(0).getFirstChild().getNodeValue();
-            HashSet shareEntries = new HashSet();
+            Set shareEntries = new HashSet();
             nodes = document.getElementsByTagName("directory");
             Element e = null;
             String dir = null;

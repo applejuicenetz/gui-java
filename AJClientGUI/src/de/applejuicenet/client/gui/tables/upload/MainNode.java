@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/MainNode.java,v 1.7 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/MainNode.java,v 1.8 2004/03/03 17:27:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MainNode.java,v $
+ * Revision 1.8  2004/03/03 17:27:55  maj0r
+ * PMD-Optimierung
+ *
  * Revision 1.7  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -125,46 +128,35 @@ public class MainNode
         }
     }
 
+    public UploadDO[] getChildrenByStatus(int statusToCheck){
+        if (uploads == null) {
+            return null;
+        }
+        else {
+            ArrayList children = new ArrayList();
+            UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
+                toArray(new UploadDO[uploads.size()]);
+            for (int i = 0; i < uploadsForThread.length; i++) {
+                if (uploadsForThread[i].getStatus() ==
+                    statusToCheck) {
+                    children.add(uploadsForThread[i]);
+                }
+            }
+            return (UploadDO[]) children.toArray(new UploadDO[children.
+                size()]);
+        }
+    }
+
     public Object[] getChildren() {
         if (type == ROOT_NODE) {
             return children;
         }
         else{
             if (getType() == MainNode.LOADING_UPLOADS) {
-                if (uploads == null) {
-                    return null;
-                }
-                else {
-                    ArrayList children = new ArrayList();
-                    UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
-                        toArray(new UploadDO[uploads.size()]);
-                    for (int i = 0; i < uploadsForThread.length; i++) {
-                        if (uploadsForThread[i].getStatus() ==
-                            UploadDO.AKTIVE_UEBERTRAGUNG) {
-                            children.add(uploadsForThread[i]);
-                        }
-                    }
-                    return (UploadDO[]) children.toArray(new UploadDO[children.
-                        size()]);
-                }
+                return getChildrenByStatus(UploadDO.AKTIVE_UEBERTRAGUNG);
             }
             else if (getType() == MainNode.WAITING_UPLOADS) {
-                if (uploads == null) {
-                    return null;
-                }
-                else {
-                    ArrayList children = new ArrayList();
-                    UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
-                        toArray(new UploadDO[uploads.size()]);
-                    for (int i = 0; i < uploadsForThread.length; i++) {
-                        if (uploadsForThread[i].getStatus() ==
-                            UploadDO.WARTESCHLANGE) {
-                            children.add(uploadsForThread[i]);
-                        }
-                    }
-                    return (UploadDO[]) children.toArray(new UploadDO[children.
-                        size()]);
-                }
+                return getChildrenByStatus(UploadDO.WARTESCHLANGE);
             }
             else if (getType() == MainNode.REST_UPLOADS) {
                 if (uploads == null) {
