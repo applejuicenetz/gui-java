@@ -12,7 +12,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.21 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.22 2004/02/12 16:42:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,10 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.22  2004/02/12 16:42:42  maj0r
+ * Bug #198 gefixt (Danke an froeschle567)
+ * Sortierung nach Downloadstatus korrigiert.
+ *
  * Revision 1.21  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -104,7 +108,7 @@ public class DownloadRootNode
     public static int SORT_PWDL = 5;
     public static int SORT_REST_ZU_LADEN = 6;
     public static int SORT_GESCHWINDIGKEIT = 7;
-    public static int SORT_STATUS = 7;
+    public static int SORT_STATUS = 8;
 
     private HashMap downloads;
 
