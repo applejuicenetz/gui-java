@@ -73,7 +73,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.96 2004/02/17 15:31:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.97 2004/02/20 16:13:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.97  2004/02/20 16:13:33  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.96  2004/02/17 15:31:18  maj0r
  * Moeglichen NullPointer behoben.
  *
@@ -319,7 +322,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
  *
  * Revision 1.21  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -560,13 +563,10 @@ public class AppleJuiceDialog
                 LanguageSelector languageSelector = LanguageSelector.
                     getInstance();
                 String fehlerTitel = ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[] {
-                    "mainform", "caption"}));
+                    languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
 
                 String fehlerNachricht = ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[] {
-                    "javagui", "startup",
-                    "trayfehler"}));
+                    languageSelector.getFirstAttrbuteByTagName(".root.javagui.startup.trayfehler"));
 
                 JOptionPane.showMessageDialog(this, fehlerNachricht,
                                               fehlerTitel,
@@ -683,7 +683,7 @@ public class AppleJuiceDialog
     private static void einstellungenSpeichern() {
         try {
             String sprachText = LanguageSelector.getInstance().
-                getFirstAttrbuteByTagName(new String[] {"Languageinfo", "name"});
+                getFirstAttrbuteByTagName(".root.Languageinfo.name");
             PropertiesManager.getOptionsManager().setSprache(sprachText);
             int[] downloadWidths = DownloadPanel.getInstance().getColumnWidths();
             int[] uploadWidths = UploadPanel.getInstance().getColumnWidths();
@@ -830,8 +830,7 @@ public class AppleJuiceDialog
             while (it.hasNext()) {
                 String sprachText = LanguageSelector.getInstance(path +
                     (String) it.next()).
-                    getFirstAttrbuteByTagName(new String[] {"Languageinfo",
-                                              "name"});
+                    getFirstAttrbuteByTagName(".root.Languageinfo.name");
                 JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
                 if (PropertiesManager.getOptionsManager().getSprache().
                     equalsIgnoreCase(sprachText)) {
@@ -1056,74 +1055,57 @@ public class AppleJuiceDialog
             String versionsNr = ApplejuiceFassade.getInstance().getCoreVersion().
                 getVersion();
             titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new
-                                          String[] {"mainform", "caption"})) +
+                getFirstAttrbuteByTagName(".root.mainform.caption")) +
                 " (Core " + versionsNr +
                 " - GUI " + ApplejuiceFassade.GUI_VERSION + ")";
             setTitle(titel);
-            keinServer = languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "javagui", "mainform", "keinserver"});
+            keinServer = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.keinserver");
             themeSupportTitel = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.caption"));
             themeSupportNachricht = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "mainform",
-                                          "themesupportnachricht"}));
+                getFirstAttrbuteByTagName(".root.javagui.mainform.themesupportnachricht"));
             sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"einstform",
-                                          "languagesheet",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.einstform.languagesheet.caption")));
             menuItemOptionen.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "optbtn",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.optbtn.caption")));
             menuItemOptionen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "optbtn",
-                                          "hint"})));
+                getFirstAttrbuteByTagName(".root.mainform.optbtn.hint")));
             menuItemCoreBeenden.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                          "corebeenden"})));
+                getFirstAttrbuteByTagName(".root.javagui.menu.corebeenden")));
             menuItemCoreBeenden.setToolTipText(ZeichenErsetzer.
                                                korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                          "corebeendenhint"})));
+                getFirstAttrbuteByTagName(".root.javagui.menu.corebeendenhint")));
             menuItemUeber.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.aboutbtn.caption")));
             menuItemUeber.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
-                                          "hint"})));
+                getFirstAttrbuteByTagName(".root.mainform.aboutbtn.hint")));
             menuItemDeaktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                          "deaktivieren"})));
+                getFirstAttrbuteByTagName(".root.javagui.menu.deaktivieren")));
             optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                          "extras"})));
+                getFirstAttrbuteByTagName(".root.javagui.menu.extras")));
             menuItemDateiliste.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                          "dateiliste"})));
+                getFirstAttrbuteByTagName(".root.javagui.menu.dateiliste")));
             menuItemDateiliste.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                          "dateilistehint"})));
+                getFirstAttrbuteByTagName(".root.javagui.menu.dateilistehint")));
             themesMenu.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                          "themes"})));
+                getFirstAttrbuteByTagName(".root.javagui.menu.themes")));
             bestaetigung = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                          "bestaetigung"}));
+                getFirstAttrbuteByTagName(".root.javagui.menu.bestaetigung"));
 
             if (useTrayIcon) {
                 trayIcon.setToolTipText(titel);
@@ -1131,12 +1113,10 @@ public class AppleJuiceDialog
                 popupAboutMenuItem.setToolTipText(menuItemUeber.getToolTipText());
                 zeigen = ZeichenErsetzer.korrigiereUmlaute(
                     languageSelector.
-                    getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                              "zeigen"}));
+                    getFirstAttrbuteByTagName(".root.javagui.menu.zeigen"));
                 verstecken = ZeichenErsetzer.korrigiereUmlaute(
                     languageSelector.
-                    getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
-                                              "verstecken"}));
+                    getFirstAttrbuteByTagName(".root.javagui.menu.verstecken"));
                 popupOptionenMenuItem.setText(menuItemOptionen.getText());
                 popupOptionenMenuItem.setToolTipText(menuItemOptionen.
                     getToolTipText());

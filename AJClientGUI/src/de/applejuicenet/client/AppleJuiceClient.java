@@ -39,7 +39,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.61 2004/02/06 10:49:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.62 2004/02/20 16:13:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.62  2004/02/20 16:13:33  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.61  2004/02/06 10:49:03  maj0r
  * Loggen der verwendeten Java-Version.
  *
@@ -414,13 +417,10 @@ public class AppleJuiceClient {
                 if (!showDialog) {
                     versuche++;
                     titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                        getFirstAttrbuteByTagName(new String[] {"mainform",
-                                                  "caption"}));
+                        getFirstAttrbuteByTagName(".root.mainform.caption"));
                     nachricht = ZeichenErsetzer.korrigiereUmlaute(
                         languageSelector.
-                        getFirstAttrbuteByTagName(new String[] {"javagui",
-                                                  "startup",
-                                                  "fehlversuch"}));
+                        getFirstAttrbuteByTagName(".root.javagui.startup.fehlversuch"));
                     SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
                     JOptionPane.showMessageDialog(connectFrame, nachricht,
                                                   titel,
@@ -433,9 +433,7 @@ public class AppleJuiceClient {
                     QuickConnectionSettingsDialog.ABGEBROCHEN) {
                     nachricht = ZeichenErsetzer.korrigiereUmlaute(
                         languageSelector.
-                        getFirstAttrbuteByTagName(new String[] {"javagui",
-                                                  "startup",
-                                                  "verbindungsfehler"}));
+                        getFirstAttrbuteByTagName(".root.javagui.startup.verbindungsfehler"));
                     nachricht = nachricht.replaceFirst("%s",
                         PropertiesManager.getOptionsManager().
                         getRemoteSettings().
