@@ -28,9 +28,11 @@ import de.applejuicenet.client.gui.tables.upload.UploadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.tables.upload.UploadTableTreeCellRenderer;
 import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import javax.swing.table.JTableHeader;
+import java.awt.event.MouseMotionAdapter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.32 2004/01/09 14:35:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.33 2004/01/09 15:08:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +41,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.33  2004/01/09 15:08:44  maj0r
+ * Erste Spalte kann nun nicht mehr verschoben werden.
+ *
  * Revision 1.32  2004/01/09 14:35:15  maj0r
  * Spalten der Uploadtabelle koennen nun ordentlich verschoben werden.
  *
@@ -155,13 +160,15 @@ public class UploadPanel
                 }
             }
         });
-//        uploadDataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         uploadDataTable.getColumnModel().getColumn(0).setCellRenderer(new
             UploadTableTreeCellRenderer());
         uploadDataTable.getColumnModel().getColumn(4).setCellRenderer(new
             UploadTablePercentCellRenderer());
         uploadDataTable.getColumnModel().getColumn(6).setCellRenderer(new
             UploadTableVersionCellRenderer());
+        JTableHeader header = uploadDataTable.getTableHeader();
+        header.addMouseMotionListener(new HeaderDragListener(header));
+
         JScrollPane aScrollPane = new JScrollPane(uploadDataTable);
         aScrollPane.setBackground(uploadDataTable.getBackground());
         aScrollPane.getViewport().setOpaque(false);
@@ -276,4 +283,25 @@ public class UploadPanel
     public void lostSelection() {
         panelSelected = false;
     }
+
+    class HeaderDragListener
+         extends MouseMotionAdapter {
+         private JTableHeader header;
+
+         public HeaderDragListener(JTableHeader header) {
+             this.header = header;
+         }
+
+         public void mouseDragged(MouseEvent e) {
+             int col = header.columnAtPoint(e.getPoint());
+             if (col == 0) {
+                 header.setDraggedColumn(null);
+                 header.setDraggedDistance(0);
+             }
+             else{
+                 super.mouseDragged(e);
+             }
+         }
+
+     }
 }
