@@ -39,7 +39,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.50 2004/12/01 13:08:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.51 2004/12/01 15:28:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -506,12 +506,10 @@ public class ModifiedXMLHolder
             }
         }
         downloadMap.remove(id);
-        if (downloadDO != null) {
-        	downloadEvents.add(
-	        		new DownloadDataPropertyChangeEvent(
-	        				downloadMap, DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED, 
-							downloadDO, null));
-        }
+    	downloadEvents.add(
+        		new DownloadDataPropertyChangeEvent(
+        				downloadMap, DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED, 
+        				id, null));
     }
 
     private void checkRemovedAttributes(Attributes attr){
