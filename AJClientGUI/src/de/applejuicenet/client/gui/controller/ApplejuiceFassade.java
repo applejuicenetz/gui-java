@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.150 2004/07/02 13:51:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.151 2004/07/02 15:22:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -150,63 +150,146 @@ public class ApplejuiceFassade {
             return -1;
         }
     }
+    
+    public String getFormatedStats(String template){
+    	String stats = template;
+    	if (stats.indexOf("%cv") != -1){
+	    	// core version
+	    	stats = stats.replaceAll("%cv", getCoreVersion().getVersion());
+    	}
+    	if (stats.indexOf("%gv") != -1){
+	    	// gui version
+	    	stats = stats.replaceAll("%gv", ApplejuiceFassade.GUI_VERSION);
+    	}
+    	if (stats.indexOf("%os") != -1){
+	    	// os version
+	    	stats = stats.replaceAll("%os", System.getProperty("os.name"));
+    	}
+    	if (stats.indexOf("%cd") != -1){
+	    	// current down
+	    	stats = stats.replaceAll("%cd", getInformation().getDownAsString());
+    	}
+    	if (stats.indexOf("%cu") != -1){
+	    	// current up
+	    	stats = stats.replaceAll("%cu", getInformation().getUpAsString());
+    	}
+    	if (stats.indexOf("%cc") != -1){
+	    	// credits
+	    	stats = stats.replaceAll("%cc", getInformation().getCreditsAsString());
+    	}
+    	if (stats.indexOf("%dc") != -1){
+	    	// download count
+	    	stats = stats.replaceAll("%dc", Integer.toString(getDownloadsSnapshot().size()));
+    	}
+    	if (stats.indexOf("%con") != -1){
+	    	// connections
+	    	stats = stats.replaceAll("%con", Long.toString(getInformation().getOpenConnections()));
+    	}
+    	if (stats.indexOf("%xd") != -1){
+	    	// entire down
+	    	stats = stats.replaceAll("%xd", Information.bytesUmrechnen(getInformation().getSessionDownload()));
+    	}
+    	if (stats.indexOf("%xu") != -1){
+	    	// entire up
+	    	stats = stats.replaceAll("%xu", Information.bytesUmrechnen(getInformation().getSessionUpload()));
+    	}
+    	if (stats.indexOf("%ct") != -1){
+        	// connection time
+            NetworkInfo netInfo = getNetworkInfo();
+            long timestamp = getLastCoreTimestamp();
+            if (timestamp == 0){
+                /*
+                    Es wurden noch keine Referenzdaten geholt.
+                    Wir nehmen die eigene Zeit, in der Hoffnung, dass die uebereinstimmen.
+                 */
+                timestamp = System.currentTimeMillis();
+            }
+            long timeDiff = timestamp - netInfo.getConnectionTime();
+            int minuten = (int) (timeDiff / 60000);
+            if (minuten < 0 ){
+                minuten = 0;
+            }
+    		stats = stats.replaceAll("%ct", Integer.toString(minuten));
+    	}
+    	if (stats.indexOf("%fw") != -1){
+        	// firewalled
+    		stats = stats.replaceAll("%fw", (getNetworkInfo().isFirewalled() ? "Ja" : "Nein"));
+    	}
+    	AJSettings settings = null;
+    	if (stats.indexOf("%opxv") != -1){
+        	// allowed connection
+    		if (settings == null){
+        		settings = getCurrentAJSettings();
+    		}
+    		stats = stats.replaceAll("%opxv", Long.toString(settings.getMaxConnections()));
+    	}
+    	if (stats.indexOf("%opxu") != -1){
+        	// allowed up
+    		if (settings == null){
+        		settings = getCurrentAJSettings();
+    		}
+    		stats = stats.replaceAll("%opxu", Long.toString(settings.getMaxUploadInKB()));
+    	}
+    	if (stats.indexOf("%opxd") != -1){
+        	// allowed down
+    		if (settings == null){
+        		settings = getCurrentAJSettings();
+    		}
+    		stats = stats.replaceAll("%opxd", Long.toString(settings.getMaxDownloadInKB()));
+    	}
+    	if (stats.indexOf("%opss") != -1){
+        	// speed per slot
+    		if (settings == null){
+        		settings = getCurrentAJSettings();
+    		}
+    		stats = stats.replaceAll("%opss", Long.toString(settings.getSpeedPerSlot()));
+    	}
+    	if (stats.indexOf("%opct") != -1){
+        	// new connection per turn
+    		if (settings == null){
+        		settings = getCurrentAJSettings();
+    		}
+    		stats = stats.replaceAll("%opct", Long.toString(settings.getMaxNewConnectionsPerTurn()));
+    	}
+    	if (stats.indexOf("%opxs") != -1){
+        	// max sources per file
+    		if (settings == null){
+        		settings = getCurrentAJSettings();
+    		}
+    		stats = stats.replaceAll("%opxs", Long.toString(settings.getMaxSourcesPerFile()));
+    	}
+    	if (stats.indexOf("%opcp") != -1){
+        	// max sources per file
+    		if (settings == null){
+        		settings = getCurrentAJSettings();
+    		}
+    		stats = stats.replaceAll("%opcp", Long.toString(settings.getPort()));
+    	}
+    	if (stats.indexOf("%opgp") != -1){
+        	// max sources per file
+    		if (settings == null){
+        		settings = getCurrentAJSettings();
+    		}
+    		stats = stats.replaceAll("%opgp", Long.toString(settings.getXMLPort()));
+    	}
+    	return "ok|" + stats;
+    }
 
     public String getStats() {
         /* ** JavaCore(0.30.145.610) * Down: 4.22KB/s * Up: 6.66KB/s * Credits: 370.26MB * Download(s): 3 *
                     Connections: 20 * Firewalled: NO * IN: 1.44GB * OUT: 1.57GB * connected: 42mins ***        */
-        StringBuffer stats = new StringBuffer();
-        stats.append("ok|*** Core(" + getCoreVersion().getVersion() + ")");
-        stats.append(" * Down: " + getInformation().getDownAsString());
-        stats.append(" * Up: " + getInformation().getUpAsString());
-        stats.append(" * " + getInformation().getCreditsAsString());
-        stats.append(" * Downloads: " + getDownloadsSnapshot().size());
-        stats.append(" * Connections: " + getInformation().getOpenConnections());
-        stats.append(" * Firewalled: " + (getNetworkInfo().isFirewalled() ? "Ja" : "Nein") );
-        stats.append(" * IN: " + Information.bytesUmrechnen(getInformation().getSessionDownload()));
-        stats.append(" * OUT: " + Information.bytesUmrechnen(getInformation().getSessionUpload()));
-        NetworkInfo netInfo = getNetworkInfo();
-        long timestamp = getLastCoreTimestamp();
-        if (timestamp == 0){
-            /*
-                Es wurden noch keine Referenzdaten geholt.
-                Wir nehmen die eigene Zeit, in der Hoffnung, dass die uebereinstimmen.
-             */
-            timestamp = System.currentTimeMillis();
-        }
-        long timeDiff = timestamp - netInfo.getConnectionTime();
-        int minuten = (int) (timeDiff / 60000);
-        if (minuten < 0 ){
-            minuten = 0;
-        }
-        stats.append(" * connected: " + minuten + " Mins. ***");
-        return stats.toString();
+    	return getFormatedStats("*** Core(%cv) * Down: %cd * Up: %cu * %cc * Download(s): %dc * " +
+                "Connections: %con * Firewalled: %fw * IN: %xd * OUT: %xu * connected: %ctmins ***");
     }
 
     public String getVersionInformation() {
         /* *** JavaCore: 0.30.145.610 * JavaGUI: 0.59.4 ***        */
-        StringBuffer versioninfo = new StringBuffer();
-        versioninfo.append("ok|*** Core: " + getCoreVersion().getVersion());
-        versioninfo.append(" * JavaGUI: " + ApplejuiceFassade.GUI_VERSION);
-        versioninfo.append(" * Javaversion: " + System.getProperty("java.version"));
-        versioninfo.append(" * OS: " + System.getProperty("os.name"));
-        versioninfo.append(" ***");
-        return versioninfo.toString();
+        return getFormatedStats("*** Core: %cv * JavaGUI: %gv * OS: %os ***");
     }
 
     public String getOptionsInformation() {
-        /* *** JavaCore: 0.30.145.610 * JavaGUI: 0.59.4 ***        */
-        StringBuffer versioninfo = new StringBuffer();
-        AJSettings settings = getCurrentAJSettings();
-        versioninfo.append("ok|*** max Verb.: " + settings.getMaxConnections());
-        versioninfo.append(" * max Up: " + settings.getMaxUploadInKB());
-        versioninfo.append(" * max Down: " + settings.getMaxDownloadInKB());
-        versioninfo.append(" * kb/Slot: " + settings.getSpeedPerSlot());
-        versioninfo.append(" * Verb./10 Sek: " + settings.getMaxNewConnectionsPerTurn());
-        versioninfo.append(" * max Quellen/Datei: " + settings.getMaxSourcesPerFile());
-        versioninfo.append(" * Core-Port: " + settings.getPort());
-        versioninfo.append(" * GUI-Port: " + settings.getXMLPort());
-        versioninfo.append(" ***");
-        return versioninfo.toString();
+        return getFormatedStats("*** max Verb.: %opxv * max Up: %opxu * max Down: %opxd * kb/Slot: %opss " +
+        		"* Verb./10 Sek: %opct * max Quellen/Datei: %opxs * Core-Port: %opcp * GUI-Port: %opgp ***");
     }
 
     public void addDataUpdateListener(DataUpdateListener listener, int type) {
