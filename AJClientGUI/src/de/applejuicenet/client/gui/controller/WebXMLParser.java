@@ -20,9 +20,10 @@ import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.PartlistException;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.27 2004/02/16 07:42:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.28 2004/02/17 14:42:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,9 +32,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
- * Revision 1.27  2004/02/16 07:42:43  maj0r
- * alten Timestampfehler beseitig
- * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
+ * Revision 1.28  2004/02/17 14:42:57  maj0r
+ * Bug #220 gefixt (Danke an dsp2004)
+ * OutOfMemoryError behoben.
  *
  * Revision 1.26  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
@@ -128,14 +129,34 @@ public abstract class WebXMLParser
     implements DataUpdateListener {
     private String host;
     private String xmlCommand;
+    private long timestamp = 0;
+    private boolean firstRun = true;
+    private boolean useTimestamp = false;
     private String password;
     private Logger logger;
     private String zipMode = "";
+    private static DocumentBuilder builder;
+
+    static{
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            builder = factory.newDocumentBuilder();
+        }
+        catch (ParserConfigurationException ex) {
+        }
+    }
 
     public WebXMLParser(String xmlCommand, String parameters) {
         super();
         init(xmlCommand);
         PropertiesManager.getOptionsManager().addSettingsListener(this);
+    }
+
+    public WebXMLParser(String xmlCommand, String parameters,
+                        boolean useTimestamp) {
+        super();
+        this.useTimestamp = useTimestamp;
+        init(xmlCommand);
     }
 
     private void init(String xmlCommand) {
@@ -163,11 +184,17 @@ public abstract class WebXMLParser
             if (parameters.indexOf("mode=zip") == -1) {
                 command += zipMode;
             }
-            if (parameters.length() != 0) {
-                command += "password=" + password + "&" + parameters;
+            if (useTimestamp) {
+                command += "password=" + password + "&timestamp=" +
+                    timestamp + parameters;
             }
             else {
-                command += "password=" + password;
+                if (parameters.length() != 0) {
+                    command += "password=" + password + "&" + parameters;
+                }
+                else {
+                    command += "password=" + password;
+                }
             }
             xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
                 command);
@@ -183,11 +210,14 @@ public abstract class WebXMLParser
                 return;
             }
         }
-        DocumentBuilderFactory factory =
-            DocumentBuilderFactory.newInstance();
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
             document = builder.parse(new InputSource(new StringReader(xmlData)));
+            if (useTimestamp) {
+                timestamp = Long.parseLong(getFirstAttrbuteByTagName(new
+                    String[] {
+                    "applejuice", "time"}
+                    , true));
+            }
         }
         catch (Exception e) {
             Exception x = e;

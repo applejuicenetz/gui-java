@@ -23,7 +23,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.16 2004/02/12 21:16:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.17 2004/02/17 14:42:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,10 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.17  2004/02/17 14:42:57  maj0r
+ * Bug #220 gefixt (Danke an dsp2004)
+ * OutOfMemoryError behoben.
+ *
  * Revision 1.16  2004/02/12 21:16:51  maj0r
  * Bug #23 gefixt (Danke an computer.ist.org)
  * Suche abbrechen korrigiert.
@@ -236,7 +240,7 @@ public class ModifiedXMLHolder
     private Logger logger;
 
     public ModifiedXMLHolder() {
-        super("/xml/modified.xml", "");
+        super("/xml/modified.xml", "", true);
         logger = Logger.getLogger(getClass());
     }
 
@@ -515,11 +519,11 @@ public class ModifiedXMLHolder
     private void updateIDs() {
         try {
             NodeList nodes = document.getElementsByTagName("removed");
-            if (nodes == null || nodes.getLength() == 0) {
+            if ( nodes == null ) {
                 return;
             }
             nodes = nodes.item(0).getChildNodes();
-            if (nodes == null || nodes.getLength() == 0) {
+            if ( nodes == null ) {
                 return;
             }
             Element e = null;
@@ -568,21 +572,6 @@ public class ModifiedXMLHolder
                         Search.currentSearchCount = searchMap.size();
                         continue;
                     }
-                }
-            }
-            gcCounter++;
-            if (gcCounter - 30 == 0) {
-                gcCounter = 0;
-                if (logger.isEnabledFor(Level.DEBUG)) {
-                    Runtime runtime = Runtime.getRuntime();
-                    float freeMemoryOld = (float) runtime.freeMemory();
-                    runtime.gc();
-                    float freeMemoryNew = (float) runtime.freeMemory();
-                    logger.debug(String.valueOf( (int) (freeMemoryNew -
-                        freeMemoryOld) / 1024) + "K freed");
-                }
-                else {
-                    Runtime.getRuntime().gc();
                 }
             }
         }

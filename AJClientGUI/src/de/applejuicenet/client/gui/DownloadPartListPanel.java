@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.18 2004/02/16 07:42:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.19 2004/02/17 14:42:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,13 +23,9 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
- * Revision 1.18  2004/02/16 07:42:43  maj0r
- * alten Timestampfehler beseitig
- * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
- *
- * Revision 1.17  2004/02/15 18:44:14  maj0r
- * Bug #215 gefixt (Danke an dsp2004)
- * Partliste wird nun auch bei kleinen Dateien korrekt gezeichnet.
+ * Revision 1.19  2004/02/17 14:42:57  maj0r
+ * Bug #220 gefixt (Danke an dsp2004)
+ * OutOfMemoryError behoben.
  *
  * Revision 1.16  2004/02/12 18:18:32  maj0r
  * Zeichnen des letzten Parts korrigiert.
@@ -87,6 +83,7 @@ public class DownloadPartListPanel
     private int width;
     private int height;
     private long fertigSeit = -1;
+    private boolean miniFile = false;
 
     public DownloadPartListPanel() {
         super(new BorderLayout());
@@ -116,29 +113,27 @@ public class DownloadPartListPanel
             if (partListDO != null) {
                 int zeilenHoehe = 15;
                 int zeilen = height / zeilenHoehe;
-                int pixelSize = (int) (partListDO.getGroesse() / (zeilen * width));
+                miniFile = false;
+                int pixelSize = (int) (partListDO.getGroesse() / (zeilen * width) );
                 if (pixelSize == 0){
-                    pixelSize = (int) ((zeilen * width) / partListDO.getGroesse());
+                    pixelSize = (int) ((zeilen * width) / partListDO.getGroesse() );
+                    miniFile = true;
                 }
                 BufferedImage tempImage = new BufferedImage(width * zeilen, 15,
                                           BufferedImage.TYPE_INT_ARGB);
                 Graphics graphics = tempImage.getGraphics();
                 int obenLinks = 0;
                 int breite = 0;
+                fertigSeit = -1;
                 Part[] parts = partListDO.getParts();
                 for (int i=0; i<parts.length-1; i++){
                     drawPart(false, (partListDO.getPartListType()==PartListDO.MAIN_PARTLIST),
                              graphics, pixelSize, parts[i].getType(), zeilenHoehe,
                                          parts[i].getFromPosition(), parts[i+1].getFromPosition());
                 }
-                if (parts[parts.length - 1].getFromPosition()<partListDO.getGroesse()){
-                    drawPart(true,
-                             (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST),
-                             graphics, pixelSize,
-                             parts[parts.length - 1].getType(), zeilenHoehe,
-                             parts[parts.length - 1].getFromPosition(),
-                             partListDO.getGroesse());
-                }
+                drawPart(true, (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST), graphics, pixelSize,
+                         parts[parts.length - 1].getType(), zeilenHoehe, parts[parts.length - 1].getFromPosition(),
+                         partListDO.getGroesse());
                 if (partListDO.getPartListType()==PartListDO.MAIN_PARTLIST){
                     DownloadDO downloadDO = (DownloadDO)partListDO.getValueDO();
                     if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
@@ -146,10 +141,18 @@ public class DownloadPartListPanel
                         for (int i = 0; i < sources.length; i++) {
                             if (sources[i].getStatus() ==
                                 DownloadSourceDO.UEBERTRAGUNG) {
-                                obenLinks = sources[i].getDownloadFrom() /
-                                    pixelSize;
-                                breite = (sources[i].getDownloadTo() /
-                                    pixelSize) - obenLinks;
+                                if (!miniFile){
+                                    obenLinks = sources[i].getDownloadFrom() /
+                                        pixelSize;
+                                    breite = (sources[i].getDownloadTo() /
+                                              pixelSize) - obenLinks;
+                                }
+                                else{
+                                    obenLinks = sources[i].getDownloadFrom() *
+                                        pixelSize;
+                                    breite = (sources[i].getDownloadTo() *
+                                              pixelSize) - obenLinks;
+                                }
                                 graphics.setColor(getColorByPercent(sources[i].getReadyPercent()));
                                 graphics.fillRect(obenLinks, 0,
                                                   breite, zeilenHoehe);
@@ -160,10 +163,18 @@ public class DownloadPartListPanel
                 else{
                     DownloadSourceDO downloadSourceDO = (DownloadSourceDO)partListDO.getValueDO();
                     if (downloadSourceDO.getStatus()==downloadSourceDO.UEBERTRAGUNG){
-                        obenLinks = downloadSourceDO.getDownloadFrom() /
-                            pixelSize;
-                        breite = (downloadSourceDO.getDownloadTo() /
-                            pixelSize) - obenLinks;
+                        if (!miniFile){
+                            obenLinks = downloadSourceDO.getDownloadFrom() /
+                                pixelSize;
+                            breite = (downloadSourceDO.getDownloadTo() /
+                                      pixelSize) - obenLinks;
+                        }
+                        else{
+                            obenLinks = downloadSourceDO.getDownloadFrom() *
+                                pixelSize;
+                            breite = (downloadSourceDO.getDownloadTo() *
+                                      pixelSize) - obenLinks;
+                        }
                         graphics.setColor(getColorByPercent(downloadSourceDO.getReadyPercent()));
                         graphics.fillRect(obenLinks, 0,
                                           breite, zeilenHoehe);
@@ -211,7 +222,7 @@ public class DownloadPartListPanel
                     obenLinks += breite;
                     breite = (int) (currentFrom / pixelSize) -
                         obenLinks;
-                    if (partType == -1){
+                    if (partType == -1 || forceDraw){
                         graphics.setColor(PartListDO.COLOR_TYPE_UEBERPRUEFT);
                     }
                     else{
@@ -226,17 +237,30 @@ public class DownloadPartListPanel
                     fertigSeit = -1;
                 }
                 else {
-                    obenLinks = (int) (currentFrom / pixelSize);
-                    breite = (int) (nextFrom / pixelSize) -
-                        obenLinks;
+                    if (!miniFile){
+                        obenLinks = (int) (currentFrom / pixelSize);
+                        breite = (int) (nextFrom / pixelSize) -
+                            obenLinks;
+                    }
+                    else{
+                        obenLinks = (int) (currentFrom * pixelSize);
+                        breite = (int) (nextFrom * pixelSize) -
+                            obenLinks;
+                    }
                     graphics.setColor(getColorByType(partType));
                     graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
                 }
             }
         }
         else{
-            obenLinks = (int)(currentFrom / pixelSize);
-            breite = (int)(nextFrom / pixelSize) - obenLinks;
+            if (!miniFile){
+                obenLinks = (int) (currentFrom / pixelSize);
+                breite = (int) (nextFrom / pixelSize) - obenLinks;
+            }
+            else{
+                obenLinks = (int) (currentFrom * pixelSize);
+                breite = (int) (nextFrom * pixelSize) - obenLinks;
+            }
             graphics.setColor(getColorByType(partType));
             graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
         }
