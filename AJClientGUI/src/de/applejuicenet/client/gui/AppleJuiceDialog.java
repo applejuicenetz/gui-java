@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.88 2004/01/26 19:26:41 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.89 2004/01/28 20:18:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.89  2004/01/28 20:18:00  maj0r
+ * Fehlerhafte Anzeige von Menuetexten bei Nicht-Windows-Systemen gefixt.
+ *
  * Revision 1.88  2004/01/26 19:26:41  maj0r
  * TrayIcon hat nun einen richtigen Parent erhalten.
  *
@@ -314,6 +317,9 @@ public class AppleJuiceDialog
     private JMenuItem menuItemCoreBeenden = new JMenuItem();
     private JMenuItem menuItemUeber = new JMenuItem();
     private JMenuItem menuItemDeaktivieren = new JMenuItem();
+    private JMenuItem popupOptionenMenuItem = new JMenuItem("Optionen");
+    private JMenuItem popupAboutMenuItem = new JMenuItem("&Info");
+    private JMenuItem popupShowHideMenuItem = new JMenuItem("%Show");
     private JFrame _this;
     private JButton sound = new JButton();
     private JButton memory = new JButton();
@@ -336,9 +342,6 @@ public class AppleJuiceDialog
     private Point lastFrameLocation;
 
     private static boolean useTrayIcon = false;
-    private JMenuItem popupShowHideMenuItem;
-    private JMenuItem popupAboutMenuItem;
-    private JMenuItem popupOptionenMenuItem;
     private String zeigen = "";
     private String verstecken = "";
     private WindowsTrayIcon trayIcon;
@@ -1051,8 +1054,6 @@ public class AppleJuiceDialog
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"mainform", "optbtn",
                                           "hint"})));
-            popupOptionenMenuItem.setText(menuItemOptionen.getText());
-            popupOptionenMenuItem.setToolTipText(menuItemOptionen.getToolTipText());
             menuItemCoreBeenden.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
@@ -1097,11 +1098,8 @@ public class AppleJuiceDialog
 
             if (useTrayIcon) {
                 trayIcon.setToolTipText(titel);
-                popupAboutMenuItem.setText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.
-                    getFirstAttrbuteByTagName(new String[] {"mainform",
-                                              "aboutbtn",
-                                              "caption"})));
+                popupAboutMenuItem.setText(menuItemUeber.getText());
+                popupAboutMenuItem.setToolTipText(menuItemUeber.getToolTipText());
                 zeigen = ZeichenErsetzer.korrigiereUmlaute(
                     languageSelector.
                     getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
@@ -1110,6 +1108,8 @@ public class AppleJuiceDialog
                     languageSelector.
                     getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
                                               "verstecken"}));
+                popupOptionenMenuItem.setText(menuItemOptionen.getText());
+                popupOptionenMenuItem.setToolTipText(menuItemOptionen.getToolTipText());
             }
         }
         catch (Exception e) {
@@ -1150,7 +1150,6 @@ public class AppleJuiceDialog
 
     public SwingTrayPopup makeSwingPopup() {
         final SwingTrayPopup popup = new SwingTrayPopup();
-        popupShowHideMenuItem = new JMenuItem("%Show");
         popupShowHideMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 if (!isVisible()) {
@@ -1164,7 +1163,6 @@ public class AppleJuiceDialog
             }
         });
         popup.add(popupShowHideMenuItem);
-        popupOptionenMenuItem = new JMenuItem("Optionen");
         popupOptionenMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 showOptionsDialog();
@@ -1177,7 +1175,7 @@ public class AppleJuiceDialog
         zeigenIcon = im.getIcon("applejuice");
         Icon aboutIcon = im.getIcon("about");
         popupOptionenMenuItem.setIcon(im.getIcon("optionen"));
-        popupAboutMenuItem = new JMenuItem("&Info", aboutIcon);
+        popupAboutMenuItem.setIcon(aboutIcon);
         popupAboutMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 showAboutDialog();
