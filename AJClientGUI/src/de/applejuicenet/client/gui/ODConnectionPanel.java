@@ -24,7 +24,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.19 2004/10/06 12:29:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.20 2004/10/13 13:08:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -119,53 +119,27 @@ public class ODConnectionPanel
                 remote.setNewPassword(new String(passwortNeu.getPassword()));
             }
         });
-        if (quickConnectionSettingsDialog != null) {
-        	host.addKeyListener(new KeyAdapter(){
-                public void keyPressed(KeyEvent ke) {
-                    if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-                        dirty = true;
-                        remote.setNewPassword(new String(passwortNeu.
-                            getPassword()));
-                        quickConnectionSettingsDialog.pressOK();
-                    }
-                    else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    	quickConnectionSettingsDialog.pressAbbrechen();
-                    }
-                    else {
-                        super.keyPressed(ke);
-                    }
-                }});
-        	port.addKeyListener(new KeyAdapter(){
-                public void keyPressed(KeyEvent ke) {
-                    if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-                        dirty = true;
-                        remote.setNewPassword(new String(passwortNeu.
-                            getPassword()));
-                        quickConnectionSettingsDialog.pressOK();
-                    }
-                    else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    	quickConnectionSettingsDialog.pressAbbrechen();
-                    }
-                    else {
-                        super.keyPressed(ke);
-                    }
-        	}});
-            passwortNeu.addKeyListener(new KeyAdapter() {
-                public void keyPressed(KeyEvent ke) {
-                    if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-                        dirty = true;
-                        remote.setNewPassword(new String(passwortNeu.
-                            getPassword()));
-                        quickConnectionSettingsDialog.pressOK();
-                    }
-                    else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    	quickConnectionSettingsDialog.pressAbbrechen();
-                    }
-                    else {
-                        super.keyPressed(ke);
-                    }
+        KeyAdapter keyAdapter = new KeyAdapter(){
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    dirty = true;
+                    remote.setHost(host.getText());
+                    remote.setXmlPort(Integer.parseInt(port.getText()));
+                    remote.setNewPassword(new String(passwortNeu.
+                        getPassword()));
+                    quickConnectionSettingsDialog.pressOK();
                 }
-            });
+                else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                	quickConnectionSettingsDialog.pressAbbrechen();
+                }
+                else {
+                    super.keyPressed(ke);
+                }
+            }};
+        if (quickConnectionSettingsDialog != null) {
+        	host.addKeyListener(keyAdapter);
+        	port.addKeyListener(keyAdapter);
+            passwortNeu.addKeyListener(keyAdapter);
         }
         port.setDocument(new NumberInputVerifier());
         port.setText(Integer.toString(remote.getXmlPort()));
