@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.13 2003/12/17 20:35:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.14 2003/12/18 10:48:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.14  2003/12/18 10:48:03  maj0r
+ * Bei der Sortierung werden nun Ordner zuerst gelistet.
+ *
  * Revision 1.13  2003/12/17 20:35:54  maj0r
  * Bug beim Sortieren der Sharetabelle behoben.
  *
@@ -222,7 +225,7 @@ public class ShareNode
         for (int i = 0; i < n - 1; i++) {
             int k = i;
             for (int j = i + 1; j < n; j++) {
-                if (childNodes[j].toString().compareToIgnoreCase(childNodes[k].toString()) < 0) {
+                if (compare(childNodes[j], childNodes[k]) < 0) {
                     k = j;
                 }
             }
@@ -231,6 +234,18 @@ public class ShareNode
             childNodes[k] = tmp;
         }
         return childNodes;
+    }
+
+    private int compare(ShareNode shareNode1, ShareNode shareNode2){
+        if (shareNode1.getDO()==null && shareNode2.getDO()!=null){
+            return -1;
+        }
+        else if (shareNode1.getDO()!=null && shareNode2.getDO()==null){
+            return 1;
+        }
+        else{
+            return shareNode1.toString().compareToIgnoreCase(shareNode2.toString());
+        }
     }
 
     public void setPriority(int prio) {
