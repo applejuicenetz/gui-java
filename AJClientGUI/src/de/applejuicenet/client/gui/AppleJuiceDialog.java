@@ -63,6 +63,7 @@ import com.jeans.trayicon.SwingTrayPopup;
 import com.jeans.trayicon.WindowsTrayIcon;
 import com.l2fprod.gui.plaf.skin.Skin;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
@@ -81,13 +82,13 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.114 2004/04/06 14:44:31 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.115 2004/04/27 13:39:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author: Maj0r [maj0r@applejuicenet.de]
  *
  */
 
@@ -263,8 +264,18 @@ public class AppleJuiceDialog
             "language" +
             File.separator;
         path += OptionsManagerImpl.getInstance().getSprache() + ".xml";
+        if (AppleJuiceClient.splash != null){
+            AppleJuiceClient.splash.setProgress(25, "Initialisiere Sprache...");
+        }
+        LanguageSelector languageSelector = LanguageSelector.getInstance(path);
+        if (AppleJuiceClient.splash != null){
+            AppleJuiceClient.splash.setProgress(30, "Erstelle Register...");
+        }
         registerPane = new RegisterPanel(this);
-        LanguageSelector.getInstance(path);
+        languageSelector.fireLanguageChanged();
+        if (AppleJuiceClient.splash != null){
+            AppleJuiceClient.splash.setProgress(95, "Register erstellt..");
+        }
         addWindowListener(
             new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
@@ -341,7 +352,7 @@ public class AppleJuiceDialog
                 }
             }
             catch (UnsatisfiedLinkError error) {
-                LanguageSelector languageSelector = LanguageSelector.
+                languageSelector = LanguageSelector.
                     getInstance();
                 String fehlerTitel = ZeichenErsetzer.korrigiereUmlaute(
                     languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));

@@ -30,23 +30,23 @@ import de.applejuicenet.client.gui.WizardDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.LinkListener;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.67 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.68 2004/04/27 13:40:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author: Maj0r [maj0r@applejuicenet.de]
  *
  */
 
@@ -54,6 +54,7 @@ public class AppleJuiceClient {
     private static Logger logger;
     private static String fileAppenderPath;
     private static HTMLLayout layout;
+    public static Splash splash = null;
 
     public static HTMLLayout getLoggerHtmlLayout() {
         return layout;
@@ -173,24 +174,6 @@ public class AppleJuiceClient {
         Logger rootLogger = Logger.getRootLogger();
         logger = Logger.getLogger(AppleJuiceClient.class.getName());
 
-        try {
-            if (OptionsManagerImpl.getInstance().isThemesSupported()) {
-                java.lang.reflect.Method method = JFrame.class.
-                    getMethod("setDefaultLookAndFeelDecorated",
-                              new Class[] {boolean.class});
-                method.invoke(null, new Object[] {Boolean.TRUE});
-
-                method = JDialog.class.
-                    getMethod("setDefaultLookAndFeelDecorated",
-                              new Class[] {boolean.class});
-                method.invoke(null, new Object[] {Boolean.TRUE});
-            }
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.FATAL)) {
-                logger.fatal("Programmabbruch", e);
-            }
-        }
         String datum = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date(
             System.currentTimeMillis()));
         String dateiName;
@@ -232,12 +215,28 @@ public class AppleJuiceClient {
             String nachricht = "appleJuice-Core-GUI Version " +
                 ApplejuiceFassade.GUI_VERSION + " wird gestartet...";
             ConnectFrame connectFrame = new ConnectFrame();
-//            connectFrame.show();
-//            connectFrame.hide();
-            Splash splash = new Splash(connectFrame,
+            splash = new Splash(connectFrame,
                                        IconManager.getInstance().getIcon(
-                "splashscreen").getImage());
+                "splashscreen").getImage(), 0, 100);
             splash.show();
+            try {
+                if (OptionsManagerImpl.getInstance().isThemesSupported()) {
+                    java.lang.reflect.Method method = JFrame.class.
+                        getMethod("setDefaultLookAndFeelDecorated",
+                                  new Class[] {boolean.class});
+                    method.invoke(null, new Object[] {Boolean.TRUE});
+
+                    method = JDialog.class.
+                        getMethod("setDefaultLookAndFeelDecorated",
+                                  new Class[] {boolean.class});
+                    method.invoke(null, new Object[] {Boolean.TRUE});
+                }
+            }
+            catch (Exception e) {
+                if (logger.isEnabledFor(Level.FATAL)) {
+                    logger.fatal("Programmabbruch", e);
+                }
+            }
             if (logger.isEnabledFor(Level.INFO)) {
                 logger.info(nachricht);
             }
@@ -251,7 +250,9 @@ public class AppleJuiceClient {
             String titel = null;
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog = null;
+            splash.setProgress(5, "Lade Themes...");
             AppleJuiceDialog.initThemes();
+            splash.setProgress(10, "Teste Verbindung...");
             boolean showDialog = OptionsManagerImpl.getInstance().
                 shouldShowConnectionDialogOnStartup();
             while (showDialog || !ApplejuiceFassade.istCoreErreichbar()) {
@@ -284,14 +285,15 @@ public class AppleJuiceClient {
                                                   JOptionPane.OK_OPTION);
                     logger.fatal(nachricht);
                     System.out.println("Fehler: " + nachricht);
-//                    connectFrame.dispose();
                     System.exit( -1);
                 }
                 splash.setVisible(true);
             }
             SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
             PositionManager lm = PositionManagerImpl.getInstance();
+            splash.setProgress(20, "Lade Hauptdialog...");
             final AppleJuiceDialog theApp = new AppleJuiceDialog();
+            splash.setProgress(100, "GUI geladen...");
             if (lm.isLegal()) {
                 theApp.setLocation(lm.getMainXY());
                 theApp.setSize(lm.getMainDimension());
@@ -316,8 +318,6 @@ public class AppleJuiceClient {
                 theApp.setSize(appScreenSize);
                 theApp.setLocation(location);
             }
-
-//            connectFrame.dispose();
             theApp.show();
             nachricht = "appleJuice-Core-GUI läuft...";
             if (logger.isEnabledFor(Level.INFO)) {

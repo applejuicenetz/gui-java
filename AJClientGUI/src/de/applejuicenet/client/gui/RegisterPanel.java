@@ -12,6 +12,7 @@ import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -22,13 +23,13 @@ import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.38 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.39 2004/04/27 13:38:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r [maj0r@applejuicenet.de]
  *
  */
 
@@ -76,10 +77,25 @@ public class RegisterPanel
             }
         });
         startPanel = StartPanel.getInstance();
+        if (AppleJuiceClient.splash != null) {
+            AppleJuiceClient.splash.setProgress(40, "Lade Sharepanel...");
+        }
         sharePanel = SharePanel.getInstance();
+        if (AppleJuiceClient.splash != null) {
+            AppleJuiceClient.splash.setProgress(50, "Lade Downloadpanel...");
+        }
         downloadPanel = DownloadPanel.getInstance();
+        if (AppleJuiceClient.splash != null) {
+            AppleJuiceClient.splash.setProgress(60, "Lade Uploadpanel...");
+        }
         uploadPanel = UploadPanel.getInstance();
+        if (AppleJuiceClient.splash != null) {
+            AppleJuiceClient.splash.setProgress(70, "Lade Searchpanel...");
+        }
         searchPanel = SearchPanel.getInstance();
+        if (AppleJuiceClient.splash != null) {
+            AppleJuiceClient.splash.setProgress(80, "Lade Serverpanel...");
+        }
         serverPanel = ServerPanel.getInstance();
 
         IconManager im = IconManager.getInstance();
@@ -102,6 +118,9 @@ public class RegisterPanel
         ImageIcon icon5 = im.getIcon("server");
         addTab("Server", icon5, serverPanel);
 
+        if (AppleJuiceClient.splash != null) {
+            AppleJuiceClient.splash.setProgress(90, "Lade Plugins...");
+        }
         if (OptionsManagerImpl.getInstance().shouldLoadPluginsOnStartup()) {
             loadPlugins();
         }
