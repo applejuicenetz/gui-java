@@ -34,7 +34,7 @@ import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.6 2005/02/28 14:58:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.7 2005/03/04 08:52:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -144,7 +144,7 @@ public class AboutDialog
             catch (InterruptedException x) {
                 //kein Bild da, dann kack drauf ;-)
             }
-            version.setText("VersionDO " + AppleJuiceDialog.GUI_VERSION 
+            version.setText("Version " + AppleJuiceDialog.GUI_VERSION 
             		 + "/" + ApplejuiceFassade.FASSADE_VERSION);
             Font font = version.getFont();
             font = new Font(font.getName(), Font.PLAIN, font.getSize());
