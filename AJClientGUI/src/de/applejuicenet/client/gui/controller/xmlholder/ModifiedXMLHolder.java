@@ -22,7 +22,7 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.2 2004/01/01 14:25:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.3 2004/01/01 15:36:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.3  2004/01/01 15:36:52  maj0r
+ * Information-ID wird nicht richtig uebertragen...
+ *
  * Revision 1.2  2004/01/01 14:25:25  maj0r
  * Information-Id wird nun auch ausgelesen.
  *
@@ -276,7 +279,7 @@ public class ModifiedXMLHolder
             externeIP = netInfo.getExterneIP();
             if (nodes.getLength() != 0) {
                 Element e = (Element) nodes.item(0);
-                int id = Integer.parseInt(e.getAttribute("id"));
+//                int id = Integer.parseInt(e.getAttribute("id"));
                 credits = Long.parseLong(e.getAttribute("credits"));
                 uploadSpeed = Long.parseLong(e.getAttribute("uploadspeed"));
                 downloadSpeed = Long.parseLong(e.getAttribute("downloadspeed"));
@@ -285,7 +288,7 @@ public class ModifiedXMLHolder
                 sessionUpload = Long.parseLong(e.getAttribute("sessionupload"));
                 sessionDownload = Long.parseLong(e.getAttribute(
                     "sessiondownload"));
-                information = new Information(id, sessionUpload, sessionDownload,
+                information = new Information(-1, sessionUpload, sessionDownload,
                                               credits, uploadSpeed,
                                               downloadSpeed,
                                               openConnections,
