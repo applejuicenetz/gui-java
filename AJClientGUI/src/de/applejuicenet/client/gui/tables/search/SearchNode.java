@@ -4,13 +4,12 @@ import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Search;
-import de.applejuicenet.client.shared.MapSetStringKey;
 
 import javax.swing.*;
 import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.6 2004/01/12 14:20:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.7 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +18,9 @@ import java.util.HashMap;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchNode.java,v $
+ * Revision 1.7  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.6  2004/01/12 14:20:31  maj0r
  * Sortierung eingebaut.
  *
@@ -99,7 +101,7 @@ public class SearchNode implements Node{
                 children = new HashMap();
                 Search.SearchEntry[] entries = ((Search)valueObject).getSearchEntries();
                 for (int i=0; i<entries.length; i++){
-                    children.put(new MapSetStringKey(entries[i].getId()), new SearchNode(entries[i]));
+                    children.put(Integer.toString(entries[i].getId()), new SearchNode(entries[i]));
                 }
                 ((Search)valueObject).setChanged(false);
             }
@@ -108,9 +110,9 @@ public class SearchNode implements Node{
                     Search.SearchEntry[] entries = ( (Search) valueObject).
                         getSearchEntries();
                     ((Search)valueObject).setChanged(false);
-                    MapSetStringKey key;
+                    String key;
                     for (int i = 0; i < entries.length; i++) {
-                        key = new MapSetStringKey(entries[i].getId());
+                        key = Integer.toString(entries[i].getId());
                         if (!children.containsKey(key)) {
                             children.put(key, new SearchNode(entries[i]));
                             sort = true;

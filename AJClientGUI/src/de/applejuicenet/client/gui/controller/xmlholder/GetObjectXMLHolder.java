@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.3 2004/01/24 09:46:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.4 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: GetObjectXMLHolder.java,v $
+ * Revision 1.4  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.3  2004/01/24 09:46:40  maj0r
  * An neue Doku angepasst.
  *
@@ -28,7 +31,6 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
 import de.applejuicenet.client.gui.controller.PartListHolder;
 import de.applejuicenet.client.shared.Version;
-import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 public class GetObjectXMLHolder

@@ -1,7 +1,5 @@
 package de.applejuicenet.client.gui.plugins.speedgraph;
 
-import de.applejuicenet.client.shared.MapSetStringKey;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,7 +8,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/GraphPanel.java,v 1.3 2003/12/22 16:25:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/GraphPanel.java,v 1.4 2004/01/30 16:35:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +17,9 @@ import java.text.SimpleDateFormat;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: GraphPanel.java,v $
+ * Revision 1.4  2004/01/30 16:35:00  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.3  2003/12/22 16:25:02  maj0r
  * Bug behoben, der auftratt, wenn das Plugin aktualisiert wurde, obwohl es noch nicht angezeigt wird (Danke an Luke).
  *
@@ -32,8 +33,8 @@ import java.text.SimpleDateFormat;
  */
 
 public class GraphPanel extends JPanel{
-    private MapSetStringKey uploadSpeedKey = new MapSetStringKey("uploadspeed");
-    private MapSetStringKey downloadSpeedKey = new MapSetStringKey("downloadspeed");
+    private String uploadSpeedKey = "uploadspeed";
+    private String downloadSpeedKey = "downloadspeed";
 
     private int x = 33;
     private int lastUp = 0;

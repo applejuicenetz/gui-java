@@ -47,7 +47,6 @@ import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.gui.tables.download.DownloadRootNode;
 import de.applejuicenet.client.gui.tables.download.DownloadTableCellRenderer;
-import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
@@ -62,7 +61,7 @@ import javax.swing.JCheckBoxMenuItem;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.86 2004/01/25 08:31:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.87 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -71,6 +70,9 @@ import de.applejuicenet.client.shared.IconManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.87  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.86  2004/01/25 08:31:11  maj0r
  * Icons eingebaut.
  *
@@ -405,7 +407,7 @@ public class DownloadPanel
                             selectedItems[0];
                         HashMap downloads = ApplejuiceFassade.getInstance().
                             getDownloadsSnapshot();
-                        MapSetStringKey key = new MapSetStringKey(
+                        String key = Integer.toString(
                             downloadSourceDO.getDownloadId());
                         DownloadDO downloadDO = (DownloadDO) downloads.get(key);
                         if (downloadDO != null) {

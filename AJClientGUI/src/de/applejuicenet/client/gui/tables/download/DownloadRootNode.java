@@ -7,11 +7,10 @@ import javax.swing.Icon;
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.19 2004/01/12 14:37:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.20 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +19,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.20  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.19  2004/01/12 14:37:26  maj0r
  * Bug #82 gefixt (Danke an hirsch.marcel)
  * Sortierung von Downloads innerhalb von Unterverzeichnissen der Downloadtabelle korrigiert.
@@ -125,7 +127,7 @@ public class DownloadRootNode
             return null;
         }
         DownloadDO downloadDO;
-        MapSetStringKey key;
+        String key;
         DownloadDirectoryNode newNode;
         boolean sort = false;
         synchronized (this) {
@@ -135,7 +137,7 @@ public class DownloadRootNode
                 obj = children.get(i);
                 if (obj.getClass() == DownloadMainNode.class) {
                     downloadDO = ( (DownloadMainNode) obj).getDownloadDO();
-                    key = new MapSetStringKey(downloadDO.getId());
+                    key = Integer.toString(downloadDO.getId());
                     if (!downloads.containsKey(key) ||
                         downloadDO.getTargetDirectory().length() > 0) {
                         children.remove(i);
@@ -152,10 +154,10 @@ public class DownloadRootNode
             Iterator it = downloads.values().iterator();
             String pfad;
             PathEntry pathEntry;
-            MapSetStringKey mapKey;
+            String mapKey;
             while (it.hasNext()) {
                 downloadDO = (DownloadDO) it.next();
-                mapKey = new MapSetStringKey(downloadDO.getId());
+                mapKey = Integer.toString(downloadDO.getId());
                 pfad = downloadDO.getTargetDirectory();
                 pathEntry = (PathEntry) childrenPath.get(mapKey);
                 if (pathEntry != null) {
@@ -173,7 +175,7 @@ public class DownloadRootNode
                         children.add(new DownloadMainNode(downloadDO));
                     }
                     else {
-                        key = new MapSetStringKey(downloadDO.getTargetDirectory());
+                        key = downloadDO.getTargetDirectory();
                         if (!targetDirs.containsKey(key)) {
                             newNode = new DownloadDirectoryNode(downloadDO.
                                 getTargetDirectory());

@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.19 2004/01/08 07:47:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.20 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.20  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.19  2004/01/08 07:47:11  maj0r
  * 98%-CPU-Last Bug durch Suche gefixt.
  *
@@ -245,10 +248,10 @@ public class SearchPanel
                     }
                     Object[] searchPanels = resultPanel.getComponents();
                     int id;
-                    MapSetStringKey searchKey;
+                    String searchKey;
                     for (int i=0; i<searchPanels.length; i++){
                         id = ((SearchResultPanel)searchPanels[i]).getSearch().getId();
-                        searchKey = new MapSetStringKey(id);
+                        searchKey = Integer.toString(id);
                         if (!((HashMap)content).containsKey(searchKey)){
                             ((SearchResultPanel)searchPanels[i]).setActiveSearch(false);
                         }
@@ -264,7 +267,7 @@ public class SearchPanel
     }
 
     public void close(SearchResultPanel aSearchResultPanel){
-        MapSetStringKey searchKey = new MapSetStringKey(aSearchResultPanel.getSearch().getId());
+        String searchKey = Integer.toString(aSearchResultPanel.getSearch().getId());
         searchIds.remove(searchKey);
         resultPanel.remove(aSearchResultPanel);
     }

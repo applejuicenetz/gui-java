@@ -7,7 +7,6 @@ import org.apache.log4j.Level;
 import java.util.ArrayList;
 import java.util.Iterator;
 import de.applejuicenet.client.shared.dac.UploadDO;
-import de.applejuicenet.client.shared.MapSetStringKey;
 import java.util.HashSet;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
@@ -25,7 +24,7 @@ import javax.swing.ListSelectionModel;
 import java.awt.Color;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.1 2004/01/27 15:45:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.2 2004/01/30 16:32:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +33,9 @@ import java.awt.Color;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MainPanel.java,v $
+ * Revision 1.2  2004/01/30 16:32:56  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.1  2004/01/27 15:45:45  maj0r
  * Erste Version des Plugins VersionChecker gebaut.
  *
@@ -79,8 +81,8 @@ public class MainPanel
     public void updateByDownload(HashMap downloads) {
         DownloadDO downloadDO = null;
         String versionsNr;
-        MapSetStringKey key;
-        MapSetStringKey key2;
+        String key;
+        String key2;
         VersionHolder versionHolder;
         DownloadSourceDO[] sources;
         boolean updateView = false;
@@ -97,12 +99,12 @@ public class MainPanel
                         if (sources[i] == null || sources[i].getVersion() == null) {
                             continue;
                         }
-                        key = new MapSetStringKey(sources[i].getId());
+                        key = Integer.toString(sources[i].getId());
                         if (!ids.contains(key)) {
                             updateView = true;
                             ids.add(key);
                             versionsNr = sources[i].getVersion().getVersion();
-                            key2 = new MapSetStringKey(versionsNr);
+                            key2 = versionsNr;
                             if (versions.containsKey(key2)) {
                                 versionHolder = (VersionHolder) versions.get(
                                     key2);
@@ -133,8 +135,8 @@ public class MainPanel
     public void updateByUploads(HashMap uploads) {
         UploadDO uploadDO = null;
         String versionsNr;
-        MapSetStringKey key;
-        MapSetStringKey key2;
+        String key;
+        String key2;
         VersionHolder versionHolder;
         boolean updateView = false;
         try {
@@ -145,12 +147,12 @@ public class MainPanel
                     if (uploadDO == null || uploadDO.getVersion() == null) {
                         continue;
                     }
-                    key = new MapSetStringKey(uploadDO.getUploadID());
+                    key = Integer.toString(uploadDO.getUploadID());
                     if (!ids.contains(key)) {
                         updateView = true;
                         ids.add(key);
                         versionsNr = uploadDO.getVersion().getVersion();
-                        key2 = new MapSetStringKey(versionsNr);
+                        key2 = versionsNr;
                         if (versions.containsKey(key2)) {
                             versionHolder = (VersionHolder) versions.get(key2);
                         }

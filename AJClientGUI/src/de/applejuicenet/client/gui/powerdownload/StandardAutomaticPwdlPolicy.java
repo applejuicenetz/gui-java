@@ -1,7 +1,6 @@
 package de.applejuicenet.client.gui.powerdownload;
 
 import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.MapSetStringKey;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,7 +8,7 @@ import javax.swing.JOptionPane;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/Attic/StandardAutomaticPwdlPolicy.java,v 1.7 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/Attic/StandardAutomaticPwdlPolicy.java,v 1.8 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +17,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StandardAutomaticPwdlPolicy.java,v $
+ * Revision 1.8  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.7  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -90,8 +92,8 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
                 if (maxProzentId[0]==maxProzentId[1]){
                     maxProzentId[0]=-1;
                 }
-                MapSetStringKey key = new MapSetStringKey(maxProzentId[0]);
-                MapSetStringKey key2 = new MapSetStringKey(maxProzentId[1]);
+                String key = Integer.toString(maxProzentId[0]);
+                String key2 = Integer.toString(maxProzentId[1]);
                 downloadDO[0] = (DownloadDO) downloads.get(key);
                 downloadDO[1] = (DownloadDO) downloads.get(key2);
                 for (int i=0; i<maxProzentId.length; i++){

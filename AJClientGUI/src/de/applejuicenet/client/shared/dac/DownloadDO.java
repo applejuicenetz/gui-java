@@ -6,10 +6,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
-import de.applejuicenet.client.shared.MapSetStringKey;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.18 2004/01/26 11:01:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.19 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +17,9 @@ import de.applejuicenet.client.shared.MapSetStringKey;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.19  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.18  2004/01/26 11:01:14  maj0r
  * Neuen Downloadstatus eingebaut.
  *
@@ -153,7 +155,7 @@ public class DownloadDO
     }
 
     public DownloadSourceDO getSourceById(int sourceId) {
-        MapSetStringKey key = new MapSetStringKey(sourceId);
+        String key = Integer.toString(sourceId);
         if (sourcen.containsKey(key)) {
             return (DownloadSourceDO) sourcen.get(key);
         }
@@ -163,7 +165,7 @@ public class DownloadDO
     }
 
     public void addSource(DownloadSourceDO downloadSourceDO) {
-        MapSetStringKey key = new MapSetStringKey(downloadSourceDO.getId());
+        String key = Integer.toString(downloadSourceDO.getId());
         if (!sourcen.containsKey(key)) {
             sourcen.put(key, downloadSourceDO);
         }
@@ -179,7 +181,7 @@ public class DownloadDO
     }
 
     public void removeSource(String id) {
-        MapSetStringKey key = new MapSetStringKey(id);
+        String key = id;
         if (sourcen.containsKey(key)) {
             sourcen.remove(key);
         }

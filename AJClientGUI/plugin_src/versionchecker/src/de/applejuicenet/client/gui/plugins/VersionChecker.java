@@ -9,7 +9,7 @@ import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.1 2004/01/27 15:45:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.2 2004/01/30 16:32:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: VersionChecker.java,v $
+ * Revision 1.2  2004/01/30 16:32:56  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.1  2004/01/27 15:45:45  maj0r
  * Erste Version des Plugins VersionChecker gebaut.
  *
@@ -75,11 +78,12 @@ public class VersionChecker extends PluginConnector {
     public String getBeschreibung() {
         return "Welche Core-Versionen sind zurzeit im Einsatz?\r\n" +
             "Welche Betriebssysteme werden eingesetzt?\r\n" +
-            "Dieses Plugin beantwortet Deine Fragen.";
+            "Dieses Plugin beantwortet Deine Fragen.\r\n\r\n" +
+            "GUI ab 0.54.7 wird benötigt.";
     }
 
     public String getVersion() {
-        return "1.0";
+        return "1.1";
     }
 
     public boolean istReiter() {

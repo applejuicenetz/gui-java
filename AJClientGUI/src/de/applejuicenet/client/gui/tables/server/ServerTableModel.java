@@ -5,12 +5,11 @@ import java.util.*;
 import javax.swing.table.*;
 
 import de.applejuicenet.client.shared.dac.*;
-import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.gui.shared.SortableTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.7 2004/01/24 08:10:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.8 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +18,9 @@ import de.applejuicenet.client.gui.shared.SortableTableModel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerTableModel.java,v $
+ * Revision 1.8  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.7  2004/01/24 08:10:24  maj0r
  * Anzahl der Verbindungsversuche eingebaut.
  *
@@ -134,10 +136,10 @@ public class ServerTableModel
 
   public void setTable(HashMap changedContent) {
     //alte Server entfernen
-    MapSetStringKey suchKey = null;
+    String suchKey = null;
     ArrayList toRemove = new ArrayList();
     for(int i=0; i<servers.size(); i++){
-        suchKey = new MapSetStringKey(((ServerDO)servers.get(i)).getIDasString());
+        suchKey = Integer.toString(((ServerDO)servers.get(i)).getID());
         if (!changedContent.containsKey(suchKey)){
               toRemove.add(servers.get(i));
         }

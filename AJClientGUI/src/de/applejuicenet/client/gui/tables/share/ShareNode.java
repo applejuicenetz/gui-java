@@ -9,12 +9,11 @@ import javax.swing.ImageIcon;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.17 2004/01/05 15:30:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.18 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +22,9 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.18  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.17  2004/01/05 15:30:22  maj0r
  * Bug #43 gefixt (Danke an flabeg)
  * Shareverzeichnis wird bei Prioritaetenaenderung nicht mehr komplett neu geladen, sondern nur aktualsiert.
@@ -174,7 +176,7 @@ public class ShareNode
         ShareNode childNode = null;
         if (pos != -1) {
             String tmpPath = restPath.substring(0, pos);
-            MapSetStringKey aKey = new MapSetStringKey(tmpPath);
+            String aKey = tmpPath;
             if (children.containsKey(aKey)) {
                 childNode = (ShareNode) children.get(aKey);
                 childNode.addChild(shareDOtoAdd);
@@ -186,7 +188,7 @@ public class ShareNode
             }
         }
         else {
-            MapSetStringKey key = new MapSetStringKey(shareDOtoAdd.getId());
+            String key = Integer.toString(shareDOtoAdd.getId());
             if (children.containsKey(key)){
                 childNode = (ShareNode)children.get(key);
                 ShareDO shareDO = childNode.getDO();

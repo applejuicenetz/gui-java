@@ -10,18 +10,20 @@ import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.plugins.speedgraph.GraphPanel;
-import de.applejuicenet.client.shared.MapSetStringKey;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/Attic/SpeedGraphPlugin.java,v 1.3 2003/12/22 16:25:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/Attic/SpeedGraphPlugin.java,v 1.4 2004/01/30 16:35:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SpeedGraphPlugin.java,v $
+ * Revision 1.4  2004/01/30 16:35:00  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.3  2003/12/22 16:25:35  maj0r
  * Version erhoeht.
  *
@@ -77,11 +79,12 @@ public class SpeedGraphPlugin extends PluginConnector {
     }
 
     public String getBeschreibung() {
-        return "Der SpeedGraph zeigt die Historie der\r\nDownload- und Uploadgeschwindigkeit an.";
+        return "Der SpeedGraph zeigt die Historie der\r\nDownload- und Uploadgeschwindigkeit an.\r\n\r\n" +
+            "GUI ab 0.54.7 wird benötigt.";
     }
 
     public String getVersion() {
-        return "1.11";
+        return "1.12";
     }
 
     public boolean istReiter() {

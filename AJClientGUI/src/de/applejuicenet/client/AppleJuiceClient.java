@@ -39,7 +39,7 @@ import java.awt.Insets;
 import java.awt.Point;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.58 2004/01/29 15:52:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.59 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,9 @@ import java.awt.Point;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.59  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.58  2004/01/29 15:52:33  maj0r
  * Bug #153 umgesetzt (Danke an jr17)
  * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
@@ -217,6 +220,18 @@ public class AppleJuiceClient {
     }
 
     public static void main(String[] args) {
+        AppleJuiceClientTG tg = new AppleJuiceClientTG();
+        final String[] myargs = args;
+        Runnable runnable = new Runnable() {
+            public void run() {
+                AppleJuiceClient.runmain(myargs);
+            }
+        };
+        Thread t = new Thread(tg, runnable, "appleJuiceCoreGUI");
+        t.start();
+    }
+
+    public static void runmain(String[] args) {
         String javaVersion = System.getProperty("java.version");
         StringBuffer version = new StringBuffer(javaVersion);
         for (int i=version.length()-1; i>=0; i--){

@@ -5,11 +5,10 @@ import java.util.*;
 import javax.swing.table.*;
 
 import de.applejuicenet.client.shared.dac.*;
-import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.5 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.6 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +17,9 @@ import de.applejuicenet.client.gui.tables.share.ShareNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DateiListeTableModel.java,v $
+ * Revision 1.6  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.5  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -92,7 +94,7 @@ public class DateiListeTableModel
 
     public void addNodes(ShareNode shareNode) {
         if (shareNode.isLeaf()){
-            dateien.put(new MapSetStringKey(shareNode.getDO().getId()), shareNode.getDO());
+            dateien.put(Integer.toString(shareNode.getDO().getId()), shareNode.getDO());
         }
         else{
             Iterator it = shareNode.getChildrenMap().values().iterator();
@@ -106,7 +108,7 @@ public class DateiListeTableModel
     public void removeRow(int row){
         Object toRemove = getRow(row);
         if (toRemove!=null){
-            dateien.remove(new MapSetStringKey(((ShareDO)toRemove).getId()));
+            dateien.remove(Integer.toString(((ShareDO)toRemove).getId()));
             fireTableDataChanged();
         }
     }

@@ -6,11 +6,10 @@ import org.w3c.dom.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 import de.applejuicenet.client.shared.dac.*;
-import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.2 2004/01/06 17:32:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.3 2004/01/30 16:32:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +18,9 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.3  2004/01/30 16:32:47  maj0r
+ * MapSetStringKey ausgebaut.
+ *
  * Revision 1.2  2004/01/06 17:32:50  maj0r
  * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
  *
@@ -116,7 +118,7 @@ public class ShareXMLHolder
                 checksum = e.getAttribute("checksum");
                 prioritaet = Integer.parseInt(e.getAttribute("priority"));
                 share = new ShareDO(id_key, filename, shortfilename, size, checksum, prioritaet);
-                shareMap.put(new MapSetStringKey(id_key), share);
+                shareMap.put(Integer.toString(id_key), share);
             }
         }
         catch (Exception e){
