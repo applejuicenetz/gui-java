@@ -39,7 +39,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.62 2004/02/20 16:13:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.63 2004/02/26 11:50:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.63  2004/02/26 11:50:31  maj0r
+ * Soundausgabe bei korrektem Login korrigiert.
+ *
  * Revision 1.62  2004/02/20 16:13:33  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -408,14 +411,12 @@ public class AppleJuiceClient {
             String titel = null;
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog = null;
-            int versuche = 0;
             AppleJuiceDialog.initThemes();
             boolean showDialog = PropertiesManager.getOptionsManager().
                 shouldShowConnectionDialogOnStartup();
             while (showDialog || !ApplejuiceFassade.istCoreErreichbar()) {
                 splash.setVisible(false);
                 if (!showDialog) {
-                    versuche++;
                     titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                         getFirstAttrbuteByTagName(".root.mainform.caption"));
                     nachricht = ZeichenErsetzer.korrigiereUmlaute(
@@ -448,9 +449,7 @@ public class AppleJuiceClient {
                 }
                 splash.setVisible(true);
             }
-            if (versuche > 0) {
-                SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
-            }
+            SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
             PositionManager lm = PropertiesManager.getPositionManager();
             final AppleJuiceDialog theApp = new AppleJuiceDialog();
             if (lm.isLegal()) {
