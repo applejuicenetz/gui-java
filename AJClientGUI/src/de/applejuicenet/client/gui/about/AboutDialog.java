@@ -34,7 +34,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.4 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -148,7 +148,7 @@ public class AboutDialog
             catch (InterruptedException x) {
                 //kein Bild da, dann kack drauf ;-)
             }
-            version.setText("Version " + AppleJuiceDialog.GUI_VERSION 
+            version.setText("VersionDO " + AppleJuiceDialog.GUI_VERSION 
             		 + "/" + ApplejuiceFassade.FASSADE_VERSION);
             Font font = version.getFont();
             font = new Font(font.getName(), Font.PLAIN, font.getSize());

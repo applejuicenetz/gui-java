@@ -21,25 +21,12 @@ package de.applejuicenet.client.fassade.listener;
  */
 
 public interface DataUpdateListener {
-	public static final int DOWNLOAD_CHANGED = 0;
+	
+	enum DATALISTENER_TYPE {
+		DOWNLOAD_CHANGED, UPLOAD_CHANGED, SERVER_CHANGED, SHARE_CHANGED,
+		NETINFO_CHANGED, SETTINGS_CHANGED, CONNECTION_SETTINGS_CHANGED, 
+		SPEED_CHANGED, SEARCH_CHANGED, INFORMATION_CHANGED
+	}
 
-	public static final int UPLOAD_CHANGED = 1;
-
-	public static final int SERVER_CHANGED = 2;
-
-	public static final int SHARE_CHANGED = 3;
-
-	public static final int NETINFO_CHANGED = 4;
-
-	public static final int SETTINGS_CHANGED = 6;
-
-	public static final int CONNECTION_SETTINGS_CHANGED = 7;
-
-	public static final int SPEED_CHANGED = 8;
-
-	public static final int SEARCH_CHANGED = 9;
-
-	public static final int INFORMATION_CHANGED = 10;
-
-	public void fireContentChanged(int type, Object content);
+	public void fireContentChanged(DATALISTENER_TYPE type, Object content);
 }

@@ -58,8 +58,8 @@ public class DownloadTreeTableCellRenderer extends DefaultTreeTableCellRenderer
 		return this;
 	}
 	
-	public void fireContentChanged(int type, Object content) {
-		if (type == DataUpdateListener.SETTINGS_CHANGED) {
+	public void fireContentChanged(DATALISTENER_TYPE type, Object content) {
+		if (type == DATALISTENER_TYPE.SETTINGS_CHANGED) {
 			settings = (Settings) content;
 		}
 	}

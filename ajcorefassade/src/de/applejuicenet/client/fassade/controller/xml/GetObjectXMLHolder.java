@@ -1,7 +1,7 @@
 package de.applejuicenet.client.fassade.controller.xml;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xml/GetObjectXMLHolder.java,v 1.4 2005/01/19 11:03:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xml/GetObjectXMLHolder.java,v 1.5 2005/01/19 16:22:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,7 +15,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
-import de.applejuicenet.client.fassade.shared.Version;
 
 public class GetObjectXMLHolder extends WebXMLParser {
 
@@ -102,7 +101,7 @@ public class GetObjectXMLHolder extends WebXMLParser {
 		int id;
 		int os;
 		String versionsNr = null;
-		Version version = null;
+		VersionDO version = null;
 		int prioritaet;
 		String nick = null;
 		String status = null;
@@ -121,7 +120,7 @@ public class GetObjectXMLHolder extends WebXMLParser {
 			version = null;
 		} else {
 			os = Integer.parseInt(e.getAttribute("operatingsystem"));
-			version = new Version(versionsNr, os);
+			version = new VersionDO(versionsNr, os);
 		}
 		prioritaet = Integer.parseInt(e.getAttribute("priority"));
 		nick = e.getAttribute("nick");
@@ -146,7 +145,7 @@ public class GetObjectXMLHolder extends WebXMLParser {
 		int actualDownloadPosition;
 		int speed;
 		int downloadId;
-		Version version = null;
+		VersionDO version = null;
 		String versionNr = null;
 		String nickname = null;
 		int queuePosition;
@@ -178,7 +177,7 @@ public class GetObjectXMLHolder extends WebXMLParser {
 		} else {
 			temp = e.getAttribute("operatingsystem");
 			os = Integer.parseInt(temp);
-			version = new Version(versionNr, os);
+			version = new VersionDO(versionNr, os);
 		}
 		temp = e.getAttribute("queueposition");
 		queuePosition = Integer.parseInt(temp);

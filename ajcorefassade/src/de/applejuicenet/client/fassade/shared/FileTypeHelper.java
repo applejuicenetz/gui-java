@@ -23,19 +23,12 @@ package de.applejuicenet.client.fassade.shared;
 public abstract class FileTypeHelper {
 
 	public static final String TYPE_PDF = "pdf";
-
 	public static final String TYPE_IMAGE = "image";
-
 	public static final String TYPE_MOVIE = "movie";
-
 	public static final String TYPE_ISO = "iso";
-
 	public static final String TYPE_TEXT = "text";
-
 	public static final String TYPE_SOUND = "sound";
-
 	public static final String TYPE_ARCHIVE = "archive";
-
 	public static final String TYPE_UNKNOWN = "treeRoot";
 
 	private static final String[] allTypes = new String[] { TYPE_PDF,

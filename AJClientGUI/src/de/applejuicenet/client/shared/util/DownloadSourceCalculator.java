@@ -2,13 +2,13 @@ package de.applejuicenet.client.shared.util;
 
 import java.awt.Component;
 
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
 
 import de.applejuicenet.client.fassade.entity.DownloadSource;
-import de.applejuicenet.client.fassade.shared.Version;
+import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.shared.IconManager;
 
@@ -96,7 +96,7 @@ public abstract class DownloadSourceCalculator {
         return versionLabel;
     }
 	
-	public static ImageIcon getVersionIcon(DownloadSource downloadSource) {
+	public static Icon getVersionIcon(DownloadSource downloadSource) {
         switch (downloadSource.getVersion().getBetriebsSystem()) {
 	        case Version.WIN32: {
 	            return IconManager.getInstance().getIcon("winsymbol");

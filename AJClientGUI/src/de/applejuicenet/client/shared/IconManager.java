@@ -14,7 +14,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.15 2004/12/08 21:14:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.16 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,12 +27,12 @@ import org.apache.log4j.Logger;
 public class IconManager {
     private static IconManager instance = null;
     private final Logger logger;
-    private Map icons;
+    private Map<String, ImageIcon> icons;
     private String pluginPath;
     
     private IconManager() {
         logger = Logger.getLogger(getClass());
-        icons = new HashMap();
+        icons = new HashMap<String, ImageIcon>();
         if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1) {
             pluginPath = System.getProperty("user.home") + File.separator +
                 "appleJuice" + File.separator +
@@ -52,11 +52,11 @@ public class IconManager {
     }
 
     public ImageIcon getIcon(String key) {
-        ImageIcon result = null;
+    	ImageIcon result = null;
         try {
             String hashtableKey = key;
             if (icons.containsKey(hashtableKey)) {
-                result = (ImageIcon) icons.get(hashtableKey);
+                result = icons.get(hashtableKey);
             }
             else {
                 String path = System.getProperty("user.dir") + File.separator +
@@ -82,7 +82,7 @@ public class IconManager {
         try {
             String hashtableKey = key;
             if (icons.containsKey(hashtableKey)) {
-                result = (ImageIcon) icons.get(hashtableKey);
+                result = icons.get(hashtableKey);
             }
             else {
                 String path = pluginPath + key + ".gif";

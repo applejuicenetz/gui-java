@@ -4,17 +4,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
 
 public abstract class DataUpdateInformer {
-	private final int listenerType;
+	private final DATALISTENER_TYPE listenerType;
 
 	private Set<DataUpdateListener> listener = new HashSet<DataUpdateListener>();
 
-	protected DataUpdateInformer(int dataUpdateListenerType) {
+	protected DataUpdateInformer(DATALISTENER_TYPE dataUpdateListenerType) {
 		listenerType = dataUpdateListenerType;
 	}
 
-	public int getDataUpdateListenerType() {
+	public DATALISTENER_TYPE getDataUpdateListenerType() {
 		return listenerType;
 	}
 

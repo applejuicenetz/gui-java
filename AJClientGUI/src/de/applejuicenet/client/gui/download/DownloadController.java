@@ -8,7 +8,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
@@ -172,10 +174,10 @@ public class DownloadController extends GuiController {
 
 		JComboBox targetDirs = downloadPanel.getTargetDirField();
 		String[] dirs = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
-		for (int i = 0; i < dirs.length; i++) {
-			targetDirs.addItem(dirs[i]);
-            if (dirs[i].equals("")) {
-            	targetDirs.setSelectedItem(dirs[i]);
+		for (String curDir : dirs) {
+			targetDirs.addItem(curDir);
+            if (curDir.equals("")) {
+            	targetDirs.setSelectedItem(curDir);
             }
         }
 		targetDirs.setEditable(true);
@@ -413,14 +415,13 @@ public class DownloadController extends GuiController {
                     }
                     powerDownload = (int) (power * 10 - 10);
                 }
-                ArrayList temp = new ArrayList();
+                List<Download> temp = new Vector<Download>();
                 for (int i = 0; i < selectedItems.length; i++) {
                     if (selectedItems[i].getClass() == DownloadMainNode.class) {
                         temp.add(( (DownloadMainNode) selectedItems[i]).getDownload());
                     }
                 }
-                Download[] toChange = (Download[])temp.toArray(new Download[temp.size()]);
-                AppleJuiceClient.getAjFassade().setPowerDownload(toChange,
+                AppleJuiceClient.getAjFassade().setPowerDownload(temp,
                     new Integer(powerDownload));
                 if (downloadPanel.getBtnPowerDownloadAktiv().isSelected()) {
                     SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
@@ -566,7 +567,7 @@ public class DownloadController extends GuiController {
 		Object[] selectedItems = getSelectedDownloadItems();
 		if (selectedItems != null && selectedItems.length != 0
 				&& !downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
-			final ArrayList pausieren = new ArrayList();
+			final List<Download> pausieren = new Vector<Download>();
 			for (int i = 0; i < selectedItems.length; i++) {
 				if (selectedItems[i].getClass() == DownloadMainNode.class) {
 					Download download = ((DownloadMainNode) selectedItems[i])
@@ -579,10 +580,8 @@ public class DownloadController extends GuiController {
 			if (pausieren.size() > 0) {
 				new Thread() {
 					public void run() {
-						Download[] toPause = 
-							(Download[]) pausieren.toArray(new Download[pausieren.size()]);
 						try {
-							AppleJuiceClient.getAjFassade().pauseDownload(toPause);
+							AppleJuiceClient.getAjFassade().pauseDownload(pausieren);
 						} catch (IllegalArgumentException e) {
 							logger.error(e);
 						}
@@ -596,7 +595,7 @@ public class DownloadController extends GuiController {
 		Object[] selectedItems = getSelectedDownloadItems();
 		if (selectedItems != null && selectedItems.length != 0
 				&& !downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
-			final ArrayList fortsetzen = new ArrayList();
+			final List<Download> fortsetzen = new Vector<Download>();
 			for (int i = 0; i < selectedItems.length; i++) {
 				if (selectedItems[i].getClass() == DownloadMainNode.class) {
 					Download download = ((DownloadMainNode) selectedItems[i])
@@ -609,10 +608,8 @@ public class DownloadController extends GuiController {
 			if (fortsetzen.size() > 0) {
 				new Thread() {
 					public void run() {
-						Download[] toContinue = 
-							(Download[]) fortsetzen.toArray(new Download[fortsetzen.size()]);
 						try {
-							AppleJuiceClient.getAjFassade().resumeDownload(toContinue);
+							AppleJuiceClient.getAjFassade().resumeDownload(fortsetzen);
 						} catch (IllegalArgumentException e) {
 							logger.error(e);
 						}
@@ -691,6 +688,7 @@ public class DownloadController extends GuiController {
 				neuerName = neuerName.substring(1);
 			}
 		}
+		List<Download> toChange = new Vector<Download>();
 		Download download;
 		for (int i = 0; i < selectedItems.length; i++) {
 			if (selectedItems[i].getClass() == DownloadMainNode.class
@@ -698,13 +696,15 @@ public class DownloadController extends GuiController {
 				download = ((DownloadMainNode) selectedItems[i])
 						.getDownload();
 				if (download.getTargetDirectory().compareTo(neuerName) != 0) {
-					try {
-						AppleJuiceClient.getAjFassade().setTargetDir(
-								download, neuerName);
-					} catch (IllegalArgumentException e) {
-						logger.error(e);
-					}
+					toChange.add(download);
 				}
+			}
+		}
+		if (toChange.size()>0) {
+			try {
+				AppleJuiceClient.getAjFassade().setTargetDir(toChange, neuerName);
+			} catch (IllegalArgumentException e) {
+				logger.error(e);
 			}
 		}
 	}
@@ -844,7 +844,7 @@ public class DownloadController extends GuiController {
 					.getApp(), downloadAbbrechen, dialogTitel,
 					JOptionPane.YES_NO_OPTION);
 			if (result == JOptionPane.YES_OPTION) {
-				final ArrayList abbrechen = new ArrayList();
+				final List<Download> abbrechen = new Vector<Download>();
 				for (int i = 0; i < selectedItems.length; i++) {
 					if (selectedItems[i].getClass() == DownloadMainNode.class) {
 						Download download = ((DownloadMainNode) selectedItems[i])
@@ -855,11 +855,9 @@ public class DownloadController extends GuiController {
 				if (abbrechen.size() > 0) {
 					new Thread() {
 						public void run() {
-							Download[] toCancel = 
-								(Download[])abbrechen.toArray(new Download[abbrechen.size()]);
 							try {
 								AppleJuiceClient.getAjFassade()
-										.cancelDownload(toCancel);
+										.cancelDownload(abbrechen);
 								SoundPlayer.getInstance().playSound(
 										SoundPlayer.ABGEBROCHEN);
 							} catch (IllegalArgumentException e) {
@@ -1041,7 +1039,7 @@ public class DownloadController extends GuiController {
 				.getFirstAttrbuteByTagName(".root.javagui.downloadform.sonstigerlinkfehlerlang"));
 	}
 
-	protected void contentChanged(int type, final Object content) {
+	protected void contentChanged(DATALISTENER_TYPE type, final Object content) {
 		// wird jetzt ueber die neuen Events verarbeitet
 	}
 

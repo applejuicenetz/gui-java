@@ -20,19 +20,18 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.controller.DataPropertyChangeInformer;
+import de.applejuicenet.client.fassade.controller.xml.SearchDO.SearchEntryDO;
+import de.applejuicenet.client.fassade.controller.xml.SearchDO.SearchEntryDO.FileNameDO;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.entity.Information;
+import de.applejuicenet.client.fassade.entity.Search;
 import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
-import de.applejuicenet.client.fassade.shared.Search;
-import de.applejuicenet.client.fassade.shared.Version;
-import de.applejuicenet.client.fassade.shared.Search.SearchEntry;
-import de.applejuicenet.client.fassade.shared.Search.SearchEntry.FileName;
 
 /**
  * $Header:
@@ -63,7 +62,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 	private Map<String, Server> serverMap = new HashMap<String, Server>();
 	private Map<String, Download> downloadMap = new HashMap<String, Download>();
 	private Map<String, Upload> uploadMap = new HashMap<String, Upload>();
-	private Map<String, Search> searchMap = new HashMap<String, Search>();
+	private Map<String, SearchDO> searchMap = new HashMap<String, SearchDO>();
 	private NetworkInfo netInfo;
 	private InformationDO information;
 	private int count = 0;
@@ -127,7 +126,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		return downloadMap;
 	}
 
-	public Map<String, Search> getSearchs() {
+	public Map<String, SearchDO> getSearchs() {
 		return searchMap;
 	}
 
@@ -305,7 +304,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		int os = Integer.parseInt((String) userAttributes
 				.get("operatingsystem"));
 		if (!versionNr.equals("0.0.0.0") && os != -1) {
-			Version version = new Version(versionNr, os);
+			VersionDO version = new VersionDO(versionNr, os);
 			uploadDO.setVersion(version);
 		}
 	}
@@ -370,7 +369,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		int os = Integer.parseInt((String) userAttributes
 				.get("operatingsystem"));
 		if (!versionNr.equals("0.0.0.0") && os != -1) {
-			Version version = new Version(versionNr, os);
+			VersionDO version = new VersionDO(versionNr, os);
 			downloadSourceDO.setVersion(version);
 		}
 	}
@@ -538,7 +537,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		}
 	}
 
-	private void checkSearchMap(Search aSearch, Map userAttributes) {
+	private void checkSearchMap(SearchDO aSearch, Map userAttributes) {
 		aSearch.setSuchText((String) userAttributes.get("searchtext"));
 		aSearch.setOffeneSuchen(Integer.parseInt((String) userAttributes
 				.get("opensearches")));
@@ -557,18 +556,18 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		}
 		int id = Integer.parseInt((String) attributes.get("id"));
 		String key = Integer.toString(id);
-		Search aSearch;
+		SearchDO aSearch;
 		if (searchMap.containsKey(key)) {
 			aSearch = searchMap.get(key);
 		} else {
-			aSearch = new Search(id);
+			aSearch = new SearchDO(id);
 			searchMap.put(key, aSearch);
 		}
 		checkSearchMap(aSearch, attributes);
 		attributes.clear();
 	}
 
-	private SearchEntry tmpSearchEntry = null;
+	private SearchEntryDO tmpSearchEntry = null;
 
 	private void checkSearchEntryAttributes(Attributes attr) {
 		int searchId = -1;
@@ -588,23 +587,23 @@ public class ModifiedXMLHolder extends DefaultHandler {
 			}
 		}
 		String key = Integer.toString(searchId);
-		Search aSearch;
+		SearchDO aSearch;
 		if (searchMap.containsKey(key)) {
-			aSearch = (Search) searchMap.get(key);
-			tmpSearchEntry = aSearch.getSearchEntryById(id);
+			aSearch = (SearchDO) searchMap.get(key);
+			tmpSearchEntry = (SearchEntryDO)aSearch.getSearchEntryById(id);
 			if (tmpSearchEntry == null) {
-				tmpSearchEntry = aSearch.new SearchEntry(id, searchId,
+				tmpSearchEntry = aSearch.new SearchEntryDO(id, searchId,
 						checksum, groesse);
 				aSearch.addSearchEntry(tmpSearchEntry);
 			}
 		} else {
-			tmpSearchEntry = new Search(-1).new SearchEntry(id, searchId,
+			tmpSearchEntry = new SearchDO(-1).new SearchEntryDO(id, searchId,
 					checksum, groesse);
 			searchEntriesToDo.add(tmpSearchEntry);
 		}
 	}
 
-	private Set<SearchEntry> searchEntriesToDo = new HashSet<SearchEntry>();
+	private Set<SearchEntryDO> searchEntriesToDo = new HashSet<SearchEntryDO>();
 
 	private Set<DownloadSourceDO> downloadSourcesToDo = new HashSet<DownloadSourceDO>();
 
@@ -622,7 +621,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 				haeufigkeit = Integer.parseInt(attr.getValue(i));
 			}
 		}
-		FileName filename = tmpSearchEntry.new FileName(dateiName, haeufigkeit);
+		FileNameDO filename = tmpSearchEntry.new FileNameDO(dateiName, haeufigkeit);
 		tmpSearchEntry.addFileName(filename);
 	}
 
@@ -751,14 +750,14 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		information.setExterneIP(netInfo.getExterneIP());
 
 		if (searchEntriesToDo.size() > 0) {
-			Search aSearch;
-			SearchEntry searchEntry;
+			SearchDO aSearch;
+			SearchEntryDO searchEntry;
 			Iterator it = searchEntriesToDo.iterator();
 			while (it.hasNext()) {
-				searchEntry = (SearchEntry) it.next();
+				searchEntry = (SearchEntryDO) it.next();
 				if (searchMap.containsKey(Integer.toString(searchEntry
 						.getSearchId()))) {
-					aSearch = (Search) searchMap.get(Integer
+					aSearch = (SearchDO) searchMap.get(Integer
 							.toString(searchEntry.getSearchId()));
 					aSearch.addSearchEntry(searchEntry);
 				}

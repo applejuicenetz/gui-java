@@ -4,14 +4,16 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.Search;
+import de.applejuicenet.client.fassade.entity.FileName;
+import de.applejuicenet.client.fassade.entity.Search;
+import de.applejuicenet.client.fassade.entity.SearchEntry;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/table/Attic/SearchResultTableModel.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/table/Attic/SearchResultTableModel.java,v 1.4 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -104,10 +106,10 @@ public class SearchResultTableModel
                     return "";
                 }
                 else {
-                    Search.SearchEntry entry = (Search.SearchEntry) o;
+                    SearchEntry entry = (SearchEntry) o;
                     switch (column) {
                         case 0: {
-                            Search.SearchEntry.FileName[] filenames = entry.
+                            FileName[] filenames = entry.
                                 getFileNames();
                             int haeufigkeit = 0;
                             String dateiname = "";
@@ -122,7 +124,7 @@ public class SearchResultTableModel
                         case 1:
                             return DownloadModel.parseGroesse(entry.getGroesse());
                         case 2: {
-                            Search.SearchEntry.FileName[] filenames = entry.
+                            FileName[] filenames = entry.
                                 getFileNames();
                             int haeufigkeit = 0;
                             for (int i = 0; i < filenames.length; i++) {
@@ -135,9 +137,8 @@ public class SearchResultTableModel
                     }
                 }
             }
-            else if (node.getClass() == Search.SearchEntry.FileName.class) {
-                Search.SearchEntry.FileName filename = (Search.SearchEntry.
-                    FileName) node;
+            else if (node instanceof FileName) {
+                FileName filename = (FileName) node;
                 switch (column) {
                     case 0:
                         return filename.getDateiName();

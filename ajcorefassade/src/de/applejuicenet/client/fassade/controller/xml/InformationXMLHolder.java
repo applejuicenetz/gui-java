@@ -14,7 +14,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
-import de.applejuicenet.client.fassade.shared.Version;
 
 /**
  * $Header:
@@ -38,7 +37,7 @@ import de.applejuicenet.client.fassade.shared.Version;
 
 public class InformationXMLHolder extends DefaultHandler {
 
-	private Version version = null;
+	private VersionDO version = null;
 
 	private static InformationXMLHolder instance = null;
 
@@ -64,12 +63,12 @@ public class InformationXMLHolder extends DefaultHandler {
 		}
 	}
 
-	public Version getCoreVersion() {
+	public VersionDO getCoreVersion() {
 		if (version == null) {
 			try {
 				String xmlString = getXMLString();
 				xr.parse(new InputSource(new StringReader(xmlString)));
-				version = new Version(coreVersion, Version
+				version = new VersionDO(coreVersion, VersionDO
 						.getOSTypByOSName((String) System.getProperties().get(
 								"os.name")));
 			} catch (Exception ex) {

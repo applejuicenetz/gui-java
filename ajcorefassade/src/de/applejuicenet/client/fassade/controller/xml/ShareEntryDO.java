@@ -1,8 +1,10 @@
-package de.applejuicenet.client.fassade.shared;
+package de.applejuicenet.client.fassade.controller.xml;
+
+import de.applejuicenet.client.fassade.entity.ShareEntry;
 
 /**
  * $Header:
- * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/shared/ShareEntry.java,v
+ * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/shared/ShareEntryDO.java,v
  * 1.1 2004/12/03 07:57:12 maj0r Exp $
  * 
  * <p>
@@ -20,25 +22,19 @@ package de.applejuicenet.client.fassade.shared;
  * 
  */
 
-public class ShareEntry {
-	public static final int SUBDIRECTORY = 0;
-
-	public static final int SINGLEDIRECTORY = 1;
-
+class ShareEntryDO implements ShareEntry{
 	private static final String sSUBDIRECTORY = "subdirectory";
-
 	private static final String sSINGLEDIRECTORY = "singledirectory";
 
 	private String dir;
+	private SHAREMODE shareMode;
 
-	private int shareMode;
-
-	public ShareEntry(String dir, int shareMode) {
+	public ShareEntryDO(String dir, SHAREMODE shareMode) {
 		this.dir = dir;
 		this.shareMode = shareMode;
 	}
 
-	public ShareEntry(String dir, String shareMode) {
+	public ShareEntryDO(String dir, String shareMode) {
 		this.dir = dir;
 		setShareMode(shareMode);
 	}
@@ -51,17 +47,17 @@ public class ShareEntry {
 		this.dir = dir;
 	}
 
-	public void setShareMode(int shareMode) {
+	public void setShareMode(SHAREMODE shareMode) {
 		this.shareMode = shareMode;
 	}
 
 	private void setShareMode(String shareMode) {
 		if (shareMode.compareToIgnoreCase(sSUBDIRECTORY) == 0) {
-			this.shareMode = SUBDIRECTORY;
+			this.shareMode = SHAREMODE.SUBDIRECTORY;
 		} else if (shareMode.compareToIgnoreCase(sSINGLEDIRECTORY) == 0) {
-			this.shareMode = SINGLEDIRECTORY;
+			this.shareMode = SHAREMODE.SINGLEDIRECTORY;
 		} else {
-			this.shareMode = -1;
+			this.shareMode = SHAREMODE.NOT_SHARED;
 		}
 	}
 
@@ -69,7 +65,7 @@ public class ShareEntry {
 		return dir;
 	}
 
-	public int getShareMode() {
+	public SHAREMODE getShareMode() {
 		return shareMode;
 	}
 }

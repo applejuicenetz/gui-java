@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
@@ -168,7 +169,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 		Iterator it = settingsListener.iterator();
 		while (it.hasNext()) {
 			((DataUpdateListener) it.next()).fireContentChanged(
-					DataUpdateListener.SETTINGS_CHANGED, settings);
+					DATALISTENER_TYPE.SETTINGS_CHANGED, settings);
 		}
 	}
 
@@ -176,7 +177,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 		Iterator it = connectionSettingsListener.iterator();
 		while (it.hasNext()) {
 			((DataUpdateListener) it.next()).fireContentChanged(
-					DataUpdateListener.CONNECTION_SETTINGS_CHANGED, settings);
+					DATALISTENER_TYPE.CONNECTION_SETTINGS_CHANGED, settings);
 		}
 	}
 

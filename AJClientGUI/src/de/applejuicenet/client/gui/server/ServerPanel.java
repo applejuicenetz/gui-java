@@ -14,6 +14,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -192,16 +194,18 @@ public class ServerPanel extends JPanel implements LanguageListener,
 				int selected[] = serverTable.getSelectedRows();
 				if (selected.length > 0) {
 					Server server = null;
+					List<Server> toRemove = new Vector<Server>();
 					for (int i = 0; i < selected.length; i++) {
 						server = (Server) ((ServerTableModel) serverTable
 								.getModel()).getRow(selected[i]);
 						if (server != null) {
-							try {
-								AppleJuiceClient.getAjFassade().entferneServer(server);
-							} catch (IllegalArgumentException e) {
-								logger.error(e);
-							}
+							toRemove.add(server);
 						}
+					}
+					try {
+						AppleJuiceClient.getAjFassade().entferneServer(toRemove);
+					} catch (IllegalArgumentException e) {
+						logger.error(e);
 					}
 				}
 			}
@@ -379,7 +383,7 @@ public class ServerPanel extends JPanel implements LanguageListener,
 		legende.add(juenger24h);
 		add(legende, BorderLayout.SOUTH);
 		AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
-				DataUpdateListener.SERVER_CHANGED);
+				DATALISTENER_TYPE.SERVER_CHANGED);
 	}
 
 	public void registerSelected() {
@@ -410,8 +414,8 @@ public class ServerPanel extends JPanel implements LanguageListener,
 		}
 	}
 
-	public void fireContentChanged(int type, final Object content) {
-		if (type == DataUpdateListener.SERVER_CHANGED) {
+	public void fireContentChanged(DATALISTENER_TYPE type, final Object content) {
+		if (type == DATALISTENER_TYPE.SERVER_CHANGED) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {

@@ -2,6 +2,8 @@ package de.applejuicenet.client.fassade.shared;
 
 import java.util.Set;
 
+import de.applejuicenet.client.fassade.entity.ShareEntry;
+
 /**
  * $Header:
  * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/shared/AJSettings.java,v
@@ -24,34 +26,22 @@ import java.util.Set;
 
 public class AJSettings {
 	private String nick;
-
 	private long port;
-
 	private long xmlPort;
-
 	private long maxUpload;
-
 	private long maxDownload;
-
 	private long maxConnections;
-
 	private boolean autoConnect;
-
 	private int speedPerSlot;
-
 	private String incomingDir;
-
 	private String tempDir;
-
-	private Set shareDirs;
-
+	private Set<ShareEntry> shareDirs;
 	private long maxNewConnectionsPerTurn;
-
 	private long maxSourcesPerFile;
 
 	public AJSettings(String nick, long port, long xmlPort, long maxUpload,
 			long maxDownload, int speedPerSlot, String incomingDir,
-			String tempDir, Set shareDirs, long maxConnections,
+			String tempDir, Set<ShareEntry> shareDirs, long maxConnections,
 			boolean autoConnect, long maxNewConnectionsPerTurn,
 			long maxSourcesPerFile) {
 		this.nick = nick;
@@ -149,13 +139,13 @@ public class AJSettings {
 		this.tempDir = tempDir;
 	}
 
-	public Set getShareDirs() {
+	public Set<ShareEntry> getShareDirs() {
 		return shareDirs;
 	}
 
-	public void setShareDirs(Set shareDirs) {
+	/*public void setShareDirs(Set shareDirs) {
 		this.shareDirs = shareDirs;
-	}
+	}*/
 
 	public long getMaxConnections() {
 		return maxConnections;

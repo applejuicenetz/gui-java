@@ -22,26 +22,16 @@ package de.applejuicenet.client.fassade.shared;
 
 public class NetworkInfo {
 	private long ajUserGesamt;
-
 	private long ajAnzahlDateien;
-
 	private String ajGesamtShare;
-
 	private boolean firewalled;
-
 	private String externeIP;
-
 	private int tryConnectToServer;
-
 	private int connectedWithServerId;
-
 	private String welcomeMessage;
-
 	private long connectionTime;
 
-	public NetworkInfo() {
-
-	}
+	public NetworkInfo() {}
 
 	public NetworkInfo(long ajUserGesamt, long ajAnzahlDateien,
 			String ajGesamtShare, boolean firewalled, String externeIP,

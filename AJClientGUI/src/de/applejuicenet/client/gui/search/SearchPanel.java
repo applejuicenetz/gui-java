@@ -24,9 +24,9 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.entity.Search;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.fassade.shared.Search;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -34,7 +34,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.7 2005/01/18 17:35:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.8 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -134,7 +134,7 @@ public class SearchPanel
         });
 
         AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
-            DataUpdateListener.SEARCH_CHANGED);
+        		DATALISTENER_TYPE.SEARCH_CHANGED);
     }
 
     public void registerSelected() {
@@ -206,8 +206,8 @@ public class SearchPanel
         }
     }
 
-    public void fireContentChanged(int type, final Object content) {
-        if (type == DataUpdateListener.SEARCH_CHANGED) {
+    public void fireContentChanged(DATALISTENER_TYPE type, final Object content) {
+        if (type == DATALISTENER_TYPE.SEARCH_CHANGED) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {

@@ -25,13 +25,15 @@ import de.applejuicenet.client.fassade.entity.Directory;
  * 
  */
 
-public class DirectoryDO extends Directory {
+class DirectoryDO extends Directory {
 
 	private String name;
 	private int type;
 	private boolean fileSystem;
 	private String path;
 	private List<Directory> children = null;
+
+	//public DirectoryDO() {}
 
 	public DirectoryDO(String name, int type, boolean fileSystem, String path) {
 		this.name = name;

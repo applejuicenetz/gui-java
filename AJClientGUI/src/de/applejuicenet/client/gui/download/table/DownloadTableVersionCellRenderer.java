@@ -16,7 +16,7 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.util.DownloadSourceCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTableVersionCellRenderer.java,v 1.5 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTableVersionCellRenderer.java,v 1.6 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -145,8 +145,8 @@ public class DownloadTableVersionCellRenderer
         return c;
     }
 
-    public void fireContentChanged(int type, Object content) {
-        if (type == DataUpdateListener.SETTINGS_CHANGED) {
+    public void fireContentChanged(DATALISTENER_TYPE type, Object content) {
+        if (type == DATALISTENER_TYPE.SETTINGS_CHANGED) {
             settings = (Settings) content;
         }
     }

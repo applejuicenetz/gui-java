@@ -5,13 +5,15 @@ import java.util.Map;
 
 import javax.swing.Icon;
 
-import de.applejuicenet.client.fassade.shared.Search;
+import de.applejuicenet.client.fassade.entity.FileName;
+import de.applejuicenet.client.fassade.entity.Search;
+import de.applejuicenet.client.fassade.entity.SearchEntry;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/table/Attic/SearchNode.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/table/Attic/SearchNode.java,v 1.4 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,7 +46,7 @@ public class SearchNode
         type = ROOT_NODE;
     }
 
-    public SearchNode(Search.SearchEntry aSearchEntry) {
+    public SearchNode(SearchEntry aSearchEntry) {
         valueObject = aSearchEntry;
         type = ENTRY_NODE;
     }
@@ -54,7 +56,7 @@ public class SearchNode
             return IconManager.getInstance().getIcon("treeRoot");
         }
         else{
-            return IconManager.getInstance().getIcon(((Search.SearchEntry)valueObject).getFileType());
+            return IconManager.getInstance().getIcon(((SearchEntry)valueObject).getFileType());
         }
     }
 
@@ -63,7 +65,7 @@ public class SearchNode
             return "";
         }
         else if (type == ENTRY_NODE) {
-            Search.SearchEntry.FileName[] filenames = ( (Search.SearchEntry) valueObject).
+            FileName[] filenames = ( (SearchEntry) valueObject).
                 getFileNames();
             int haeufigkeit = 0;
             String dateiname = "";
@@ -110,7 +112,7 @@ public class SearchNode
                     children.clear();
                     sortedChildNodes = null;
                 }
-                Search.SearchEntry[] entries = ( (Search) valueObject).
+                SearchEntry[] entries = ( (Search) valueObject).
                     getSearchEntries();
                 for (int i = 0; i < entries.length; i++) {
                     children.put(Integer.toString(entries[i].getId()),
@@ -121,7 +123,7 @@ public class SearchNode
             else {
                 if ( ( (Search) valueObject).isChanged()) {
                     sort = true;
-                    Search.SearchEntry[] entries = ( (Search) valueObject).
+                    SearchEntry[] entries = ( (Search) valueObject).
                         getSearchEntries();
                     ( (Search) valueObject).setChanged(false);
                     String key;
@@ -142,7 +144,7 @@ public class SearchNode
             }
         }
         else if (type == ENTRY_NODE) {
-            return ( (Search.SearchEntry) valueObject).getFileNames();
+            return ( (SearchEntry) valueObject).getFileNames();
         }
         else {
             return null;
@@ -201,9 +203,9 @@ public class SearchNode
         Object o2 = null;
 
         if (sort == SORT_FILENAME) {
-            Search.SearchEntry entry1 = (Search.SearchEntry) ( (SearchNode)
+            SearchEntry entry1 = (SearchEntry) ( (SearchNode)
                 childNodes[row1]).getValueObject();
-            Search.SearchEntry.FileName[] filenames = entry1.getFileNames();
+            FileName[] filenames = entry1.getFileNames();
             int haeufigkeit = 0;
             String dateiname = "";
             for (int i = 0; i < filenames.length; i++) {
@@ -213,7 +215,7 @@ public class SearchNode
                 }
             }
             o1 = dateiname;
-            Search.SearchEntry entry2 = (Search.SearchEntry) ( (SearchNode)
+            SearchEntry entry2 = (SearchEntry) ( (SearchNode)
                 childNodes[row2]).getValueObject();
             filenames = entry2.getFileNames();
             haeufigkeit = 0;
@@ -227,23 +229,23 @@ public class SearchNode
             o2 = dateiname;
         }
         else if (sort == SORT_GROESSE) {
-            Search.SearchEntry entry1 = (Search.SearchEntry) ( (SearchNode)
+            SearchEntry entry1 = (SearchEntry) ( (SearchNode)
                 childNodes[row1]).getValueObject();
             o1 = new Long(entry1.getGroesse());
-            Search.SearchEntry entry2 = (Search.SearchEntry) ( (SearchNode)
+            SearchEntry entry2 = (SearchEntry) ( (SearchNode)
                 childNodes[row2]).getValueObject();
             o2 = new Long(entry2.getGroesse());
         }
         else if (sort == SORT_ANZAHL) {
-            Search.SearchEntry entry1 = (Search.SearchEntry) ( (SearchNode)
+            SearchEntry entry1 = (SearchEntry) ( (SearchNode)
                 childNodes[row1]).getValueObject();
-            Search.SearchEntry.FileName[] filenames = entry1.getFileNames();
+            FileName[] filenames = entry1.getFileNames();
             int haeufigkeit = 0;
             for (int i = 0; i < filenames.length; i++) {
                 haeufigkeit += filenames[i].getHaeufigkeit();
             }
             o1 = new Integer(haeufigkeit);
-            Search.SearchEntry entry2 = (Search.SearchEntry) ( (SearchNode)
+            SearchEntry entry2 = (SearchEntry) ( (SearchNode)
                 childNodes[row2]).getValueObject();
             filenames = entry2.getFileNames();
             haeufigkeit = 0;

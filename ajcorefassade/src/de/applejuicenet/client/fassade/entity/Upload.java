@@ -1,6 +1,5 @@
 package de.applejuicenet.client.fassade.entity;
 
-import de.applejuicenet.client.fassade.shared.Version;
 
 public abstract class Upload {
 	public static final int AKTIVE_UEBERTRAGUNG = 1;

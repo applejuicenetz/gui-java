@@ -18,7 +18,8 @@ public abstract class DataPropertyChangeEvent {
 		events = null;
 	}
 
-	public DataPropertyChangeEvent(Vector dataPropertyChangeEvents) {
+	public DataPropertyChangeEvent(
+			Vector<DataPropertyChangeEvent> dataPropertyChangeEvents) {
 		events = (DataPropertyChangeEvent[]) dataPropertyChangeEvents
 				.toArray(new DataPropertyChangeEvent[dataPropertyChangeEvents
 						.size()]);

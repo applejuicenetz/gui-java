@@ -6,8 +6,10 @@ import java.awt.datatransfer.StringSelection;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.JComponent;
 import javax.swing.JTable;
@@ -21,8 +23,8 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Information;
 import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.fassade.entity.ShareEntry.SHAREMODE;
 import de.applejuicenet.client.fassade.shared.AJSettings;
-import de.applejuicenet.client.fassade.shared.ShareEntry;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
@@ -38,7 +40,7 @@ import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.13 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.14 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -303,31 +305,27 @@ public class ShareController extends GuiController {
 	}
 	
 	private void mitUnterverzeichnisSharen(){
-        Set shares = AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs();
         DirectoryNode node = (DirectoryNode) sharePanel.getDirectoryTree().
             getLastSelectedPathComponent();
         if (node != null) {
-            String path = node.getDO().getPath();
-            ShareEntry entry = new ShareEntry(path,
-                ShareEntry.SUBDIRECTORY);
-            shares.add(entry);
-            AppleJuiceClient.getAjFassade().setShare(shares);
-            DirectoryNode.setShareDirs(shares);
+            String path = node.getDirectory().getPath();
+            List<String> entries = new Vector<String>();
+            entries.add(path);
+            AppleJuiceClient.getAjFassade().addShareEntry(entries, SHAREMODE.SUBDIRECTORY);
+            DirectoryNode.setShareDirs(AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs());
             sharePanel.getDirectoryTree().updateUI();
         }
 	}
 	
 	private void ohneUnterverzeichnisSharen(){
-        Set shares = AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs();
         DirectoryNode node = (DirectoryNode) sharePanel.getDirectoryTree().
             getLastSelectedPathComponent();
         if (node != null) {
-            String path = node.getDO().getPath();
-            ShareEntry entry = new ShareEntry(path,
-                ShareEntry.SINGLEDIRECTORY);
-            shares.add(entry);
-            AppleJuiceClient.getAjFassade().setShare(shares);
-            DirectoryNode.setShareDirs(shares);
+            String path = node.getDirectory().getPath();
+            List<String> entries = new Vector<String>();
+            entries.add(path);
+            AppleJuiceClient.getAjFassade().addShareEntry(entries, SHAREMODE.SINGLEDIRECTORY);
+            DirectoryNode.setShareDirs(AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs());
             sharePanel.getDirectoryTree().updateUI();
         }
 	}
@@ -337,22 +335,12 @@ public class ShareController extends GuiController {
         DirectoryNode node = (DirectoryNode) sharePanel.getDirectoryTree().
             getLastSelectedPathComponent();
         if (node != null) {
-            String path = node.getDO().getPath();
-            Iterator it = shares.iterator();
-            ShareEntry toRemove = null;
-            while (it.hasNext()) {
-                toRemove = (ShareEntry) it.next();
-                if (toRemove.getDir().compareToIgnoreCase(path) == 0) {
-                    break;
-                }
-                toRemove = null;
-            }
-            if (toRemove != null) {
-                shares.remove(toRemove);
-                AppleJuiceClient.getAjFassade().setShare(shares);
-                DirectoryNode.setShareDirs(shares);
-                sharePanel.getDirectoryTree().updateUI();
-            }
+            String path = node.getDirectory().getPath();
+            List<String> entries = new Vector<String>();
+            entries.add(path);
+            AppleJuiceClient.getAjFassade().removeShareEntry(entries);
+            DirectoryNode.setShareDirs(AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs());
+            sharePanel.getDirectoryTree().updateUI();
         }
 	}
 	
@@ -639,7 +627,7 @@ public class ShareController extends GuiController {
         }
 	}
 
-	protected void contentChanged(int type, Object content) {
+	protected void contentChanged(DATALISTENER_TYPE type, Object content) {
 		// nix zu tun
 	}
 }

@@ -211,25 +211,23 @@ public class DownloadPartListPanel extends JPanel implements
 			Download download = (Download) partList
 					.getValueObject();
 			if (download.getStatus() == Download.SUCHEN_LADEN) {
-				DownloadSource[] sources = download
-						.getSources();
-				for (int i = 0; i < sources.length; i++) {
-					if (sources[i].getStatus() == DownloadSource.UEBERTRAGUNG) {
+				for (DownloadSource curSource : download.getSources()) {
+					if (curSource.getStatus() == DownloadSource.UEBERTRAGUNG) {
 						if (!miniFile) {
-							obenLinks = sources[i]
+							obenLinks = curSource
 									.getDownloadFrom()
 									/ pixelSize;
-							breite = (sources[i].getDownloadTo() / pixelSize)
+							breite = (curSource.getDownloadTo() / pixelSize)
 									- obenLinks;
 						} else {
-							obenLinks = sources[i]
+							obenLinks = curSource
 									.getDownloadFrom()
 									* pixelSize;
-							breite = (sources[i].getDownloadTo() * pixelSize)
+							breite = (curSource.getDownloadTo() * pixelSize)
 									- obenLinks;
 						}
 						graphics
-								.setColor(getColorByPercent(sources[i]
+								.setColor(getColorByPercent(curSource
 										.getReadyPercent()));
 						graphics.fillRect(obenLinks, 0, breite,
 								zeilenHoehe);

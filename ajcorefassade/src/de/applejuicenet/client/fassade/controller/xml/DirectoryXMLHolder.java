@@ -1,11 +1,14 @@
 package de.applejuicenet.client.fassade.controller.xml;
 
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.Vector;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
+import de.applejuicenet.client.fassade.entity.Directory;
 
 /**
  * $Header:
@@ -31,7 +34,7 @@ public class DirectoryXMLHolder extends WebXMLParser {
 
 	private String directory;
 
-	private DirectoryDO directoryDO;
+	private Vector<Directory> directories;
 
 	public DirectoryXMLHolder(CoreConnectionSettingsHolder coreHolder) {
 		super(coreHolder, "/xml/directory.xml", "");
@@ -55,44 +58,53 @@ public class DirectoryXMLHolder extends WebXMLParser {
 			nodes = document.getElementsByTagName("dir");
 			for (int i = 0; i < nodes.getLength(); i++) {
 				e = (Element) nodes.item(i);
-				getNodes(e, directoryDO);
+				getNodes(e);
 			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-	private void getNodes(Element element, DirectoryDO directoryDO) {
+	private void getNodes(Element element) {
 		int type;
 		boolean fileSystem;
 		String name;
 		String path;
 		name = element.getAttribute("name");
+		if (name.equals("//")) {
+			name = "/";
+		}
 		fileSystem = element.getAttribute("isfilesystem").equalsIgnoreCase(
 				"true");
 		type = Integer.parseInt(element.getAttribute("type"));
 		path = element.getAttribute("path");
 		if (path.length() == 0) {
-			if (directoryDO != null) {
-				String parentPfad = directoryDO.getPath();
-				if (parentPfad.length() != 0
-						&& parentPfad.lastIndexOf(DirectoryDO.getSeparator()) == parentPfad
+			if (directory != null) {
+				if (directory.length() != 0
+						&& directory.lastIndexOf(
+								DirectoryDO.getSeparator()) == directory
 								.length() - 1) {
-					path = parentPfad + name;
+					path = directory + name;
 				} else {
-					path = parentPfad + DirectoryDO.getSeparator() + name;
+					if (directory.length() == 0){
+						path = name;
+					}
+					else{
+						path = directory + DirectoryDO.getSeparator() + name;
+					}
 				}
 			} else {
 				path = DirectoryDO.getSeparator();
 			}
 		}
 		DirectoryDO childDO = new DirectoryDO(name, type, fileSystem, path);
-		directoryDO.addChild(directoryDO);
+		directories.add(childDO);
 	}
 
-	public void getDirectory(String directory, DirectoryDO directoryDO) {
+	public List<Directory> getDirectories(String directory) {
 		this.directory = directory;
-		this.directoryDO = directoryDO;
+		directories = new Vector<Directory>();
 		update();
+		return directories;
 	}
 }

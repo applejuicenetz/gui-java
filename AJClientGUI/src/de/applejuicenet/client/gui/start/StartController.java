@@ -11,7 +11,6 @@ import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Information;
 import de.applejuicenet.client.fassade.entity.Server;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.GuiController;
@@ -19,7 +18,7 @@ import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.8 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.9 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -71,9 +70,9 @@ public class StartController extends GuiController {
 		startPanel.getFaqPane().addHyperlinkListener(hyperlinkAdapter);
 
 		AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
-				DataUpdateListener.NETINFO_CHANGED);
+				DATALISTENER_TYPE.NETINFO_CHANGED);
 		AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
-				DataUpdateListener.INFORMATION_CHANGED);
+				DATALISTENER_TYPE.INFORMATION_CHANGED);
 		LanguageSelector.getInstance().addLanguageListener(this);
 	}
 
@@ -203,8 +202,8 @@ public class StartController extends GuiController {
 						+ "</h2></font></html>");
 	}
 
-	protected void contentChanged(int type, final Object content) {
-		if (type == DataUpdateListener.NETINFO_CHANGED) {
+	protected void contentChanged(DATALISTENER_TYPE type, final Object content) {
+		if (type == DATALISTENER_TYPE.NETINFO_CHANGED) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {
@@ -258,7 +257,7 @@ public class StartController extends GuiController {
 					}
 				}
 			});
-		} else if (type == DataUpdateListener.INFORMATION_CHANGED) {
+		} else if (type == DATALISTENER_TYPE.INFORMATION_CHANGED) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {

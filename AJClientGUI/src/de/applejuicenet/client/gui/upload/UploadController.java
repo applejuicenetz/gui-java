@@ -22,7 +22,6 @@ import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.entity.Upload;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
@@ -57,7 +56,7 @@ public class UploadController extends GuiController {
 			init();
 			LanguageSelector.getInstance().addLanguageListener(this);
 			AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
-					DataUpdateListener.UPLOAD_CHANGED);
+					DATALISTENER_TYPE.UPLOAD_CHANGED);
 		} catch (Exception e) {
 			if (logger.isEnabledFor(Level.ERROR)) {
 				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
@@ -297,8 +296,8 @@ public class UploadController extends GuiController {
 								.getFirstAttrbuteByTagName(".root.mainform.getlink1.caption")));
 	}
 
-	protected void contentChanged(int type, final Object content) {
-		if (type == DataUpdateListener.UPLOAD_CHANGED) {
+	protected void contentChanged(DATALISTENER_TYPE type, final Object content) {
+		if (type == DATALISTENER_TYPE.UPLOAD_CHANGED) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {

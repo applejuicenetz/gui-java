@@ -27,10 +27,11 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.entity.FileName;
+import de.applejuicenet.client.fassade.entity.Search;
+import de.applejuicenet.client.fassade.entity.SearchEntry;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.FileTypeHelper;
-import de.applejuicenet.client.fassade.shared.Search;
-import de.applejuicenet.client.fassade.shared.Search.SearchEntry;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
@@ -42,7 +43,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.9 2005/01/18 17:35:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.10 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -186,7 +187,7 @@ public class SearchResultPanel
                                          searchResultTable.getModel()).
                             nodeForRow(sel);
                         if (result.getClass() == SearchNode.class ||
-                            result.getClass() == Search.SearchEntry.FileName.class) {
+                            result instanceof FileName) {
                             popup.show(searchResultTable, e.getX(), e.getY());
                         }
                     }
@@ -201,7 +202,7 @@ public class SearchResultPanel
                     Object result = ( (TreeTableModelAdapter) searchResultTable.
                                      getModel()).nodeForRow(sel);
                     if (result.getClass() == SearchNode.class) {
-                        Search.SearchEntry entry = (Search.SearchEntry) ( (
+                        SearchEntry entry = (SearchEntry) ( (
                             SearchNode) result).getValueObject();
                         StringBuffer toCopy = new StringBuffer();
                         toCopy.append("ajfsp://file|");
@@ -211,8 +212,8 @@ public class SearchResultPanel
                         String link = toCopy.toString();
                         processLink(link);
                     }
-                    else if (result.getClass() == Search.SearchEntry.FileName.class) {
-                        String dateiname = ( (Search.SearchEntry.FileName)
+                    else if (result instanceof FileName) {
+                        String dateiname = ( (FileName)
                                             result).getDateiName();
                         int i = sel;
                         Object temp = null;
@@ -225,7 +226,7 @@ public class SearchResultPanel
                             }
                         }
                         if (temp != null && temp.getClass() == SearchNode.class) {
-                            Search.SearchEntry entry = (Search.SearchEntry) ( (
+                            SearchEntry entry = (SearchEntry) ( (
                                 SearchNode) temp).getValueObject();
                             StringBuffer toCopy = new StringBuffer();
                             toCopy.append("ajfsp://file|");

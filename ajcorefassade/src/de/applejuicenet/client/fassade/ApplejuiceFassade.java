@@ -12,7 +12,6 @@ import java.util.Set;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.controller.DataPropertyChangeInformer;
 import de.applejuicenet.client.fassade.controller.DataUpdateInformer;
-import de.applejuicenet.client.fassade.controller.xml.DirectoryDO;
 import de.applejuicenet.client.fassade.controller.xml.DirectoryXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.GetObjectXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.InformationXMLHolder;
@@ -21,21 +20,24 @@ import de.applejuicenet.client.fassade.controller.xml.NetworkServerXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.PartListXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.SettingsXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.ShareXMLHolder;
+import de.applejuicenet.client.fassade.entity.Directory;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.entity.Information;
 import de.applejuicenet.client.fassade.entity.PartList;
+import de.applejuicenet.client.fassade.entity.Search;
 import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.fassade.entity.ShareEntry;
+import de.applejuicenet.client.fassade.entity.Version;
+import de.applejuicenet.client.fassade.entity.ShareEntry.SHAREMODE;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
-import de.applejuicenet.client.fassade.shared.Search;
-import de.applejuicenet.client.fassade.shared.ShareEntry;
-import de.applejuicenet.client.fassade.shared.Version;
 import de.applejuicenet.client.fassade.tools.MD5Encoder;
 
 /**
@@ -68,8 +70,8 @@ public class ApplejuiceFassade {
 
 	private final CoreConnectionSettingsHolder coreHolder;
 
-	private Map<String, DataUpdateInformer> informer = 
-		new HashMap<String, DataUpdateInformer>();
+	private Map<DATALISTENER_TYPE, DataUpdateInformer> informer = 
+		new HashMap<DATALISTENER_TYPE, DataUpdateInformer>();
 	private ModifiedXMLHolder modifiedXML = null;
 	private InformationXMLHolder informationXML = null;
 	private ShareXMLHolder shareXML = null;
@@ -90,71 +92,69 @@ public class ApplejuiceFassade {
 				passwordIsPlaintext);
 		modifiedXML = new ModifiedXMLHolder(coreHolder, this);
 		DataUpdateInformer downloadInformer = new DataUpdateInformer(
-				DataUpdateListener.DOWNLOAD_CHANGED) {
+				DATALISTENER_TYPE.DOWNLOAD_CHANGED) {
 			protected Object getContentObject() {
 				return modifiedXML.getDownloads();
 			}
 		};
-		informer.put(Integer.toString(downloadInformer
-				.getDataUpdateListenerType()), downloadInformer);
+		informer.put(downloadInformer
+				.getDataUpdateListenerType(), downloadInformer);
 		DataUpdateInformer searchInformer = new DataUpdateInformer(
-				DataUpdateListener.SEARCH_CHANGED) {
+				DATALISTENER_TYPE.SEARCH_CHANGED) {
 			protected Object getContentObject() {
 				return modifiedXML.getSearchs();
 			}
 		};
-		informer.put(Integer.toString(searchInformer
-				.getDataUpdateListenerType()), searchInformer);
+		informer.put(searchInformer
+				.getDataUpdateListenerType(), searchInformer);
 		DataUpdateInformer serverInformer = new DataUpdateInformer(
-				DataUpdateListener.SERVER_CHANGED) {
+				DATALISTENER_TYPE.SERVER_CHANGED) {
 			protected Object getContentObject() {
 				return modifiedXML.getServer();
 			}
 		};
-		informer.put(Integer.toString(serverInformer
-				.getDataUpdateListenerType()), serverInformer);
+		informer.put(serverInformer
+				.getDataUpdateListenerType(), serverInformer);
 		DataUpdateInformer uploadInformer = new DataUpdateInformer(
-				DataUpdateListener.UPLOAD_CHANGED) {
+				DATALISTENER_TYPE.UPLOAD_CHANGED) {
 			protected Object getContentObject() {
 				return modifiedXML.getUploads();
 			}
 		};
-		informer.put(Integer.toString(uploadInformer
-				.getDataUpdateListenerType()), uploadInformer);
+		informer.put(uploadInformer
+				.getDataUpdateListenerType(), uploadInformer);
 		DataUpdateInformer shareInformer = new DataUpdateInformer(
-				DataUpdateListener.SHARE_CHANGED) {
+				DATALISTENER_TYPE.SHARE_CHANGED) {
 			protected Object getContentObject() {
 				return shareXML.getShare();
 			}
 		};
-		informer.put(Integer
-				.toString(shareInformer.getDataUpdateListenerType()),
+		informer.put(shareInformer.getDataUpdateListenerType(),
 				shareInformer);
 		DataUpdateInformer networkInformer = new DataUpdateInformer(
-				DataUpdateListener.NETINFO_CHANGED) {
+				DATALISTENER_TYPE.NETINFO_CHANGED) {
 			protected Object getContentObject() {
 				return modifiedXML.getNetworkInfo();
 			}
 		};
-		informer.put(Integer.toString(networkInformer
-				.getDataUpdateListenerType()), networkInformer);
+		informer.put(networkInformer
+				.getDataUpdateListenerType(), networkInformer);
 		DataUpdateInformer speedInformer = new DataUpdateInformer(
-				DataUpdateListener.SPEED_CHANGED) {
+				DATALISTENER_TYPE.SPEED_CHANGED) {
 			protected Object getContentObject() {
 				return modifiedXML.getSpeeds();
 			}
 		};
-		informer.put(Integer
-				.toString(speedInformer.getDataUpdateListenerType()),
+		informer.put(speedInformer.getDataUpdateListenerType(),
 				speedInformer);
 		DataUpdateInformer informationInformer = new DataUpdateInformer(
-				DataUpdateListener.INFORMATION_CHANGED) {
+				DATALISTENER_TYPE.INFORMATION_CHANGED) {
 			protected Object getContentObject() {
 				return modifiedXML.getInformation();
 			}
 		};
-		informer.put(Integer.toString(informationInformer
-				.getDataUpdateListenerType()), informationInformer);
+		informer.put(informationInformer
+				.getDataUpdateListenerType(), informationInformer);
 	}
 
 	public DataPropertyChangeInformer getDownloadPropertyChangeInformer() {
@@ -169,18 +169,16 @@ public class ApplejuiceFassade {
 		}
 	}
 
-	public void addDataUpdateListener(DataUpdateListener listener, int type) {
-		String key = Integer.toString(type);
-		if (informer.containsKey(key)) {
-			DataUpdateInformer anInformer = informer.get(key);
+	public void addDataUpdateListener(DataUpdateListener listener, DATALISTENER_TYPE type) {
+		if (informer.containsKey(type)) {
+			DataUpdateInformer anInformer = informer.get(type);
 			anInformer.addDataUpdateListener(listener);
 		}
 	}
 
-	public void removeDataUpdateListener(DataUpdateListener listener, int type) {
-		String key = Integer.toString(type);
-		if (informer.containsKey(key)) {
-			DataUpdateInformer anInformer = informer.get(key);
+	public void removeDataUpdateListener(DataUpdateListener listener, DATALISTENER_TYPE type) {
+		if (informer.containsKey(type)) {
+			DataUpdateInformer anInformer = informer.get(type);
 			anInformer.removeDataUpdateListener(listener);
 		}
 	}
@@ -193,9 +191,7 @@ public class ApplejuiceFassade {
 		if (getCoreVersion() == null) {
 			return;
 		}
-		Version neededVersion = new Version();
-		neededVersion.setVersion(ApplejuiceFassade.MIN_NEEDED_CORE_VERSION);
-		if (getCoreVersion().compareTo(neededVersion) < 0) {
+		if (getCoreVersion().checkForValidCoreVersion() < 0) {
 			throw new RuntimeException("invalid coreversion");
 		}
 	}
@@ -390,39 +386,45 @@ public class ApplejuiceFassade {
 	public synchronized boolean updateModifiedXML() {
 		try {
 			if (modifiedXML.update()) {
-				informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
-				informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
-				informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
-				informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
-				informDataUpdateListener(DataUpdateListener.SPEED_CHANGED);
-				informDataUpdateListener(DataUpdateListener.SEARCH_CHANGED);
-				informDataUpdateListener(DataUpdateListener.INFORMATION_CHANGED);
+				informDataUpdateListener(DATALISTENER_TYPE.SERVER_CHANGED);
+				informDataUpdateListener(DATALISTENER_TYPE.DOWNLOAD_CHANGED);
+				informDataUpdateListener(DATALISTENER_TYPE.UPLOAD_CHANGED);
+				informDataUpdateListener(DATALISTENER_TYPE.NETINFO_CHANGED);
+				informDataUpdateListener(DATALISTENER_TYPE.SPEED_CHANGED);
+				informDataUpdateListener(DATALISTENER_TYPE.SEARCH_CHANGED);
+				informDataUpdateListener(DATALISTENER_TYPE.INFORMATION_CHANGED);
 			}
 			return true;
 		} catch (RuntimeException re) {
 			// connection to core lost, next try
-			re.printStackTrace();
 			return false;
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
-	public void resumeDownload(Download[] downloads)
+	public void resumeDownload(List<Download> downloads)
 			throws IllegalArgumentException {
 		if (downloads == null) {
-			throw new IllegalArgumentException("invalid download-array");
+			throw new IllegalArgumentException("invalid download-list");
 		}
-		for (int i = 0; i < downloads.length; i++) {
-			if (downloads[i] == null) {
-				throw new IllegalArgumentException("invalid download-array");
+		if (downloads.size() == 0) {
+			return;
+		}
+		for(Download curDownload : downloads) {
+			if (curDownload == null) {
+				throw new IllegalArgumentException("invalid download-list");
 			}
 		}
-		String parameters = "&id=" + downloads[0].getId();
-		if (downloads.length > 1) {
-			for (int i = 1; i < downloads.length; i++) {
-				parameters += "&id" + i + "=" + downloads[i].getId();
+		StringBuffer parameters = new StringBuffer();
+		int index = 0;
+		for(Download curDownload : downloads) {
+			parameters.append("&id");
+			if (index != 0){
+				parameters.append(Integer.toString(index));
 			}
+			parameters.append("=" + curDownload.getId());
+			index++;
 		}
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
 				.getCorePort(), HtmlLoader.POST,
@@ -454,9 +456,7 @@ public class ApplejuiceFassade {
 
 	private class CancelThread extends Thread {
 		private Search search;
-
 		private boolean cancel = false;
-
 		private Thread innerThread;
 
 		public CancelThread(Search search) {
@@ -521,21 +521,26 @@ public class ApplejuiceFassade {
 						+ download.getId() + "&name=" + encodedName, false);
 	}
 
-	public void setTargetDir(Download download, String newDirectoryName)
+	public void setTargetDir(List<Download> downloads, String newDirectoryName)
 			throws IllegalArgumentException {
-		if (download == null) {
-			throw new IllegalArgumentException("invalid download");
+		if (downloads == null) {
+			throw new IllegalArgumentException("invalid download-list");
+		}
+		if (downloads.size() == 0) {
+			return;
 		}
 		if (newDirectoryName == null || newDirectoryName.length() == 0
 				|| newDirectoryName.trim().length() == 0) {
 			throw new IllegalArgumentException("invalid directoryname");
 		}
-		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
-				.getCorePort(), HtmlLoader.POST,
-				"/function/settargetdir?password="
-						+ coreHolder.getCorePassword() + "&id="
-						+ download.getId() + "&dir=" + newDirectoryName,
-				false);
+		for(Download curDownload : downloads) {
+			HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
+					.getCorePort(), HtmlLoader.POST,
+					"/function/settargetdir?password="
+							+ coreHolder.getCorePassword() + "&id="
+							+ curDownload.getId() + "&dir=" + newDirectoryName,
+					false);
+		}
 	}
 
 	public void shutdownCore() {
@@ -547,8 +552,8 @@ public class ApplejuiceFassade {
 	public void setPassword(String password, boolean passwordIsPlaintext)
 			throws IllegalArgumentException {
 		if (password == null
-				|| (!passwordIsPlaintext && (password.length() == 0 || password
-						.trim().length() == 0))) {
+				|| (!passwordIsPlaintext 
+				&& (password.length() == 0 || password.trim().length() == 0))) {
 			throw new IllegalArgumentException("invalid password");
 		}
 		String newPassword = passwordIsPlaintext ? MD5Encoder.getMD5(password)
@@ -560,22 +565,30 @@ public class ApplejuiceFassade {
 						+ newPassword, false);
 	}
 
-	public void cancelDownload(Download[] downloads)
+	public void cancelDownload(List<Download> downloads)
 			throws IllegalArgumentException {
 		if (downloads == null) {
-			throw new IllegalArgumentException("invalid download-array");
+			throw new IllegalArgumentException("invalid download-list");
 		}
-		for (int i = 0; i < downloads.length; i++) {
-			if (downloads[i] == null) {
-				throw new IllegalArgumentException("invalid download-array");
+		if (downloads.size() == 0) {
+			return;
+		}
+		for(Download curDownload : downloads) {
+			if (curDownload == null) {
+				throw new IllegalArgumentException("invalid download-list");
 			}
 		}
-		String parameters = "&id=" + downloads[0].getId();
-		if (downloads.length > 1) {
-			for (int i = 1; i < downloads.length; i++) {
-				parameters += "&id" + i + "=" + downloads[i].getId();
+		StringBuffer parameters = new StringBuffer();
+		int index = 0;
+		for(Download curDownload : downloads) {
+			parameters.append("&id");
+			if (index != 0){
+				parameters.append(Integer.toString(index));
 			}
+			parameters.append("=" + curDownload.getId());
+			index++;
 		}
+		
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
 				.getCorePort(), HtmlLoader.POST,
 				"/function/canceldownload?password="
@@ -589,21 +602,28 @@ public class ApplejuiceFassade {
 						+ coreHolder.getCorePassword(), false);
 	}
 
-	public void pauseDownload(Download[] downloads)
+	public void pauseDownload(List<Download> downloads)
 			throws IllegalArgumentException {
 		if (downloads == null) {
-			throw new IllegalArgumentException("invalid download-array");
+			throw new IllegalArgumentException("invalid download-list");
 		}
-		for (int i = 0; i < downloads.length; i++) {
-			if (downloads[i] == null) {
-				throw new IllegalArgumentException("invalid download-array");
+		if (downloads.size() == 0) {
+			return;
+		}
+		for(Download curDownload : downloads) {
+			if (curDownload == null) {
+				throw new IllegalArgumentException("invalid download-list");
 			}
 		}
-		String parameters = "&id=" + downloads[0].getId();
-		if (downloads.length > 1) {
-			for (int i = 1; i < downloads.length; i++) {
-				parameters += "&id" + i + "=" + downloads[i].getId();
+		StringBuffer parameters = new StringBuffer();
+		int index = 0;
+		for(Download curDownload : downloads) {
+			parameters.append("&id");
+			if (index != 0){
+				parameters.append(Integer.toString(index));
 			}
+			parameters.append("=" + curDownload.getId());
+			index++;
 		}
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
 				.getCorePort(), HtmlLoader.POST,
@@ -632,16 +652,21 @@ public class ApplejuiceFassade {
 		return getObjectXMLHolder.getObjectByID(id.intValue());
 	}
 
-	public void entferneServer(Server server)
+	public void entferneServer(List<Server> server)
 			throws IllegalArgumentException {
 		if (server == null) {
 			throw new IllegalArgumentException("invalid server");
 		}
-		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
-				.getCorePort(), HtmlLoader.POST,
-				"/function/removeserver?password="
-						+ coreHolder.getCorePassword() + "&id="
-						+ server.getID(), false);
+		if (server.size() == 0) {
+			return;
+		}
+		for(Server curServer : server) {
+			HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
+					.getCorePort(), HtmlLoader.POST,
+					"/function/removeserver?password="
+							+ coreHolder.getCorePassword() + "&id="
+							+ curServer.getID(), false);
+		}
 	}
 
 	public void setPrioritaet(Share share, Integer priority) 
@@ -725,17 +750,13 @@ public class ApplejuiceFassade {
 	public void setPowerDownload(List<Download> downloads, Integer powerDownload)
 		throws IllegalArgumentException {
 		if (downloads == null || downloads.size() == 0) {
-			throw new IllegalArgumentException("invalid download-array");
+			throw new IllegalArgumentException("invalid downloadlist");
 		}
-		setPowerDownload(downloads.toArray(new Download[]{}), powerDownload);
-	}
-	public void setPowerDownload(Download[] downloads, Integer powerDownload)
-			throws IllegalArgumentException {
-		if (downloads == null) {
-			throw new IllegalArgumentException("invalid download-array");
+		if (downloads.size() == 0) {
+			return;
 		}
-		for (int i = 0; i < downloads.length; i++) {
-			if (downloads[i] == null) {
+		for (Download curDownload : downloads) {
+			if (curDownload == null) {
 				throw new IllegalArgumentException("invalid download-array");
 			}
 		}
@@ -743,18 +764,22 @@ public class ApplejuiceFassade {
 			throw new IllegalArgumentException(
 					"invalid priority: has to be 1<= x <=490");
 		}
-		String parameters = "&powerdownload=" + powerDownload + "&id="
-				+ downloads[0].getId();
-		if (downloads.length > 1) {
-			for (int i = 1; i < downloads.length; i++) {
-				parameters += "&id" + i + "=" + downloads[i].getId();
+		StringBuffer parameters = new StringBuffer("&powerdownload=" + powerDownload);
+		int index = 0;
+		for(Download curDownload : downloads) {
+			parameters.append("&id");
+			if (index != 0){
+				parameters.append(Integer.toString(index));
 			}
+			parameters.append("=" + curDownload.getId());
+			index++;
 		}
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
 				.getCorePort(), HtmlLoader.POST,
 				"/function/setpowerdownload?password="
 						+ coreHolder.getCorePassword() + parameters, false);
 	}
+
 
 	/**
 	 * 
@@ -787,10 +812,9 @@ public class ApplejuiceFassade {
 		return modifiedXML.getDownloads();
 	}
 
-	public void informDataUpdateListener(int type) {
-		String key = Integer.toString(type);
-		if (informer.containsKey(key)) {
-			DataUpdateInformer anInformer = informer.get(key);
+	public void informDataUpdateListener(DATALISTENER_TYPE type) {
+		if (informer.containsKey(type)) {
+			DataUpdateInformer anInformer = informer.get(type);
 			anInformer.informDataUpdateListener();
 		}
 	}
@@ -801,7 +825,63 @@ public class ApplejuiceFassade {
 		}
 		return share;
 	}
+	
+	public void addShareEntry(List<String> paths, SHAREMODE shareMode){
+		Set<ShareEntry> shareDirs = getAJSettings().getShareDirs();
+		String parameters = "countshares=" + shareDirs.size() + paths.size();
+		int i = 1;
+		for (ShareEntry curShareEntry : shareDirs) {
+			try {
+				parameters += "&sharedirectory" + i + "="
+						+ URLEncoder.encode(curShareEntry.getDir(), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			parameters += "&sharesub"
+					+ i
+					+ "="
+					+ (curShareEntry.getShareMode() == SHAREMODE.SUBDIRECTORY ? "true"
+							: "false");
+			i++;
+		}
+		for (String curPath : paths) {
+			try {
+				parameters += "&sharedirectory" + i + "="
+						+ URLEncoder.encode(curPath, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			parameters += "&sharesub"
+					+ i
+					+ "="
+					+ (shareMode == SHAREMODE.SUBDIRECTORY ? "true"
+							: "false");
+			i++;
+		}		
+		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
+				.getCorePort(), HtmlLoader.GET,
+				"/function/setsettings?password="
+						+ coreHolder.getCorePassword() + "&" + parameters,
+				false);
+	}
 
+	public void removeShareEntry(List<String> paths){
+		Set<ShareEntry> shareDirs = getAJSettings().getShareDirs();
+        ArrayList<ShareEntry> toRemove = new ArrayList<ShareEntry>();
+    	for(String curPath : paths) {
+	        for (ShareEntry curShareEntry : shareDirs) {
+                if (curShareEntry.getDir().compareToIgnoreCase(curPath) == 0) {
+                	toRemove.add(curShareEntry);
+                	break;
+                }
+	        }
+    	}
+		for(ShareEntry curShareEntry : toRemove) {
+			shareDirs.remove(curShareEntry);
+		}
+		setShare(shareDirs);
+	}
+	
 	public void setShare(Set<ShareEntry> newShare) {
 		if (newShare == null) {
 			return;
@@ -818,7 +898,7 @@ public class ApplejuiceFassade {
 			parameters += "&sharesub"
 					+ i
 					+ "="
-					+ (curShareEntry.getShareMode() == ShareEntry.SUBDIRECTORY ? "true"
+					+ (curShareEntry.getShareMode() == SHAREMODE.SUBDIRECTORY ? "true"
 							: "false");
 			i++;
 		}
@@ -829,15 +909,9 @@ public class ApplejuiceFassade {
 				false);
 	}
 
-	public void getDirectory(String directory, DirectoryDO directoryDO)
+	public List<Directory> getDirectories(String directory)
 			throws IllegalArgumentException {
-		if (directoryDO == null) {
-			throw new IllegalArgumentException("invalid directoryDO");
-		}
-		if (directory == null || directory.length() == 0) {
-			throw new IllegalArgumentException("invalid directory");
-		}
-		directoryXML.getDirectory(directory, directoryDO);
+		return directoryXML.getDirectories(directory);
 	}
 
 	public NetworkInfo getNetworkInfo() {

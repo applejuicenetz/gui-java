@@ -7,8 +7,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
+import de.applejuicenet.client.fassade.entity.ShareEntry;
 import de.applejuicenet.client.fassade.shared.AJSettings;
-import de.applejuicenet.client.fassade.shared.ShareEntry;
 
 /**
  * $Header:
@@ -82,13 +82,13 @@ public class SettingsXMLHolder extends WebXMLParser {
 		Element e = null;
 		String dir = null;
 		String shareMode = null;
-		ShareEntry entry = null;
+		ShareEntryDO entry = null;
 		int nodesSize = nodes.getLength();
 		for (int i = 0; i < nodesSize; i++) {
 			e = (Element) nodes.item(i);
 			dir = e.getAttribute("name");
 			shareMode = e.getAttribute("sharemode");
-			entry = new ShareEntry(dir, shareMode);
+			entry = new ShareEntryDO(dir, shareMode);
 			shareEntries.add(entry);
 		}
 		settings = new AJSettings(nick, port, xmlPort, maxUpload, maxDownload,

@@ -20,7 +20,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -53,7 +54,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.PolicyJarClassLoader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.5 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.6 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -372,9 +373,9 @@ public class PowerDownloadPanel
             }
         });
         AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
-            DataUpdateListener.INFORMATION_CHANGED);
+        		DATALISTENER_TYPE.INFORMATION_CHANGED);
         AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
-            DataUpdateListener.DOWNLOAD_CHANGED);
+        		DATALISTENER_TYPE.DOWNLOAD_CHANGED);
     }
 
     public void setPwdlValue(int pwdlValue) {
@@ -626,9 +627,9 @@ public class PowerDownloadPanel
         }
     }
 
-    public void fireContentChanged(int type, Object content) {
+    public void fireContentChanged(DATALISTENER_TYPE type, Object content) {
         try {
-            if (type == DataUpdateListener.INFORMATION_CHANGED) {
+            if (type == DATALISTENER_TYPE.INFORMATION_CHANGED) {
                 lastInformation = (Information) content;
                 if (!pwdlPolicies.isEnabled() && autoPwdlThread != null &&
                     lastInformation != null) {
@@ -646,22 +647,20 @@ public class PowerDownloadPanel
                     }
                 }
             }
-            else if (type == DataUpdateListener.DOWNLOAD_CHANGED &&
+            else if (type == DATALISTENER_TYPE.DOWNLOAD_CHANGED &&
                      autoPwdlThread != null &&
                      !pwdlPolicies.isEnabled() && autoPwdlThread.isPaused()) {
                 if (autoPwdlThread.shouldPause()){
-                    HashMap downloads = (HashMap) content;
-                    Download download;
+                    HashMap<String, Download> downloads = (HashMap) content;
                     synchronized (downloads) {
-                        Iterator it = downloads.values().iterator();
-                        while (it.hasNext()) {
-                            download = (Download) it.next();
-                            if (download.getStatus() ==
+                        List<Download> toPause = new Vector<Download>();
+                        for (Download curDownload : downloads.values()) {
+                            if (curDownload.getStatus() ==
                                 Download.SUCHEN_LADEN) {
-                            	AppleJuiceClient.getAjFassade().pauseDownload(new Download[] {
-                                    download});
+                            	toPause.add(curDownload);
                             }
                         }
+                    	AppleJuiceClient.getAjFassade().pauseDownload(toPause);
                     }
                 }
             }

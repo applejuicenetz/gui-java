@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -52,7 +53,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.90 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.91 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -137,15 +138,15 @@ public class AppleJuiceClient {
         boolean linkListenerStartet = false;
         if (args != null && args.length > 0) {
             try {
-                for (int i = 0; i < args.length; i++) {
-                    if (args[i].indexOf("-path=") != -1) {
-                        System.setProperty("user.dir", args[i].substring(6));
+            	for (String curArg : args) {
+                    if (curArg.indexOf("-path=") != -1) {
+                        System.setProperty("user.dir", curArg.substring(6));
                         break;
                     }
                 }
                 boolean hilfeAusgegeben = false;
-                for (int i = 0; i < args.length; i++) {
-                    if (args[i].compareTo("-help") == 0) {
+                for (String curArg : args) {
+                    if (curArg.compareTo("-help") == 0) {
                         if (hilfeAusgegeben) {
                             continue;
                         }
@@ -159,7 +160,7 @@ public class AppleJuiceClient {
                         System.out.println();
                         hilfeAusgegeben = true;
                     }
-                    else if (args[i].indexOf("-command=") != -1) {
+                    else if (curArg.indexOf("-command=") != -1) {
                     	if (!linkListenerStartet){
                     		linkListenerStartet = true;
 	                        try {
@@ -180,7 +181,7 @@ public class AppleJuiceClient {
                                 getOutputStream());
                             DataInputStream in = new DataInputStream(socket.
                                 getInputStream());
-                            out.println(passwort + "|" + args[i]);
+                            out.println(passwort + "|" + curArg);
                             BufferedReader reader = new BufferedReader(new
                                 InputStreamReader(in));
                             String line = reader.readLine();
@@ -193,7 +194,7 @@ public class AppleJuiceClient {
                             System.exit(1);
                         }
                     }
-                    else if (args[i].indexOf("-link=") != -1) {
+                    else if (curArg.indexOf("-link=") != -1) {
                     	if (!linkListenerStartet){
                     		linkListenerStartet = true;
 	                        try {
@@ -212,7 +213,7 @@ public class AppleJuiceClient {
                             Socket socket = new Socket("localhost", PORT);
                             PrintStream out = new PrintStream(socket.
                                 getOutputStream());
-                            out.println(passwort + "|" + args[i]);
+                            out.println(passwort + "|" + curArg);
                             socket.close();
                             //war nur Linkprocessing, also GUI schliessen
                             System.exit(1);
@@ -288,13 +289,13 @@ public class AppleJuiceClient {
         rootLogger.setLevel(logLevel);
 
         try {
-            String nachricht = "appleJuice-Core-GUI Version " +
+            String nachricht = "appleJuice-Core-GUI VersionDO " +
             	AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION + 
 				" wird gestartet...";
             ConnectFrame connectFrame = new ConnectFrame();
             splash = new Splash(connectFrame,
-                                IconManager.getInstance().getIcon(
-                "splashscreen").getImage(), 0, 100);
+                                ((ImageIcon)IconManager.getInstance().getIcon(
+                "splashscreen")).getImage(), 0, 100);
             KeyStates ks = new KeyStates();
             splash.addKeyListener(ks);
             splash.setVisible(true);
@@ -323,7 +324,7 @@ public class AppleJuiceClient {
             if (logger.isEnabledFor(Level.INFO)) {
                 nachricht = "erkanntes GUI-OS: " + System.getProperty("os.name");
                 logger.info(nachricht);
-                nachricht = "erkannte Java-Version: " + System.getProperty("java.version");
+                nachricht = "erkannte Java-VersionDO: " + System.getProperty("java.version");
                 logger.info(nachricht);
             }
             String titel = null;

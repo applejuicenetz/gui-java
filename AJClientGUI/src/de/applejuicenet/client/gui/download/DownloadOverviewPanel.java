@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.12 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.1 2005/01/19 16:22:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,7 +34,7 @@ import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
-public class DownloadDOOverviewPanel
+public class DownloadOverviewPanel
     extends JPanel
     implements LanguageListener{
 	private DownloadPartListPanel actualDlOverviewTable;
@@ -51,7 +51,7 @@ public class DownloadDOOverviewPanel
     private String verfuegbar;
     private DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-    public DownloadDOOverviewPanel(DownloadPanel parent) {
+    public DownloadOverviewPanel(DownloadPanel parent) {
         logger = Logger.getLogger(getClass());
         try {
             downloadPanel = parent;

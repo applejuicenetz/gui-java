@@ -488,8 +488,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		ToolTipManager.sharedInstance().setDismissDelay(50000);
 		fireLanguageChanged();
 		ApplejuiceFassade dm = AppleJuiceClient.getAjFassade();
-		dm.addDataUpdateListener(this, DataUpdateListener.INFORMATION_CHANGED);
-		dm.addDataUpdateListener(this, DataUpdateListener.NETINFO_CHANGED);
+		dm.addDataUpdateListener(this, DATALISTENER_TYPE.INFORMATION_CHANGED);
+		dm.addDataUpdateListener(this, DATALISTENER_TYPE.NETINFO_CHANGED);
 		dm.startXMLCheck();
 	}
 
@@ -1116,8 +1116,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		}
 	}
 
-	public void fireContentChanged(int type, final Object content) {
-		if (type == DataUpdateListener.NETINFO_CHANGED) {
+	public void fireContentChanged(DATALISTENER_TYPE type, final Object content) {
+		if (type == DATALISTENER_TYPE.NETINFO_CHANGED) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {
@@ -1141,7 +1141,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 				}
 			});
 		}
-		else if (type == DataUpdateListener.INFORMATION_CHANGED) {
+		else if (type == DATALISTENER_TYPE.INFORMATION_CHANGED) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {

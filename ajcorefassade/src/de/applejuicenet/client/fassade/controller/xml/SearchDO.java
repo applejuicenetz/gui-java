@@ -1,4 +1,4 @@
-package de.applejuicenet.client.fassade.shared;
+package de.applejuicenet.client.fassade.controller.xml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,11 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.applejuicenet.client.fassade.shared.Search.SearchEntry.FileName;
+import de.applejuicenet.client.fassade.controller.xml.SearchDO.SearchEntryDO.FileNameDO;
+import de.applejuicenet.client.fassade.entity.FileName;
+import de.applejuicenet.client.fassade.entity.Search;
+import de.applejuicenet.client.fassade.entity.SearchEntry;
+import de.applejuicenet.client.fassade.shared.FileTypeHelper;
 
 /**
  * $Header:
- * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/shared/Search.java,v
+ * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/shared/SearchDO.java,v
  * 1.1 2004/12/03 07:57:12 maj0r Exp $
  * 
  * <p>
@@ -29,21 +33,20 @@ import de.applejuicenet.client.fassade.shared.Search.SearchEntry.FileName;
  * 
  */
 
-public class Search {
+class SearchDO extends Search {
 	private int id;
 	private String suchText;
 	private int offeneSuchen;
 	private int gefundenDateien;
 	private int durchsuchteClients;
-	private Map<String, SearchEntry> mapping = new HashMap<String, SearchEntry>();
-	private List<SearchEntry> entries = new ArrayList<SearchEntry>();
+	private Map<String, SearchEntryDO> mapping = new HashMap<String, SearchEntryDO>();
+	private List<SearchEntryDO> entries = new ArrayList<SearchEntryDO>();
 	private boolean changed = true;
 	private long creationTime;
 	private boolean running;
-	public static int currentSearchCount = 0;
 	private Set<String> filter = new HashSet<String>();
 
-	public Search(int id) {
+	public SearchDO(int id) {
 		this.id = id;
 		creationTime = System.currentTimeMillis();
 	}
@@ -116,16 +119,16 @@ public class Search {
 		filter.clear();
 	}
 
-	public void addSearchEntry(SearchEntry searchEntry) {
+	public void addSearchEntry(SearchEntryDO searchEntry) {
 		String key = Integer.toString(searchEntry.getId());
 		if (!mapping.containsKey(key)) {
 			mapping.put(key, searchEntry);
 			entries.add(searchEntry);
 			setChanged(true);
 		} else {
-			SearchEntry oldSearchEntry = mapping.get(key);
+			SearchEntryDO oldSearchEntry = mapping.get(key);
 			for (FileName curFileName : searchEntry.getFileNames()) {
-				oldSearchEntry.addFileName(curFileName);
+				oldSearchEntry.addFileName((FileNameDO)curFileName);
 			}
 		}
 	}
@@ -135,7 +138,7 @@ public class Search {
 	}
 
 	public SearchEntry getSearchEntryById(int id) {
-		for (SearchEntry curSearchEntry : entries) {
+		for (SearchEntryDO curSearchEntry : entries) {
 			if (curSearchEntry.getId() == id) {
 				return curSearchEntry;
 			}
@@ -148,8 +151,8 @@ public class Search {
 			return (SearchEntry[]) entries.toArray(new SearchEntry[entries
 					.size()]);
 		}
-		ArrayList<SearchEntry> neededEntries = new ArrayList<SearchEntry>();
-		for (SearchEntry curSearchEntry : entries) {
+		ArrayList<SearchEntryDO> neededEntries = new ArrayList<SearchEntryDO>();
+		for (SearchEntryDO curSearchEntry : entries) {
 			if (!filter.contains(curSearchEntry.getFileType())) {
 				neededEntries.add(curSearchEntry);
 			}
@@ -166,17 +169,17 @@ public class Search {
 		return running;
 	}
 
-	public class SearchEntry {
+	class SearchEntryDO implements SearchEntry{
 		private int id;
 		private int searchId;
 		private String checksumme;
 		private long groesse;
 		private String groesseAsString = null;
-		private List<FileName> fileNames = new ArrayList<FileName>();
+		private List<FileNameDO> fileNames = new ArrayList<FileNameDO>();
 		private Set<String> keys = new HashSet<String>();
 		private String type = FileTypeHelper.TYPE_UNKNOWN;
 
-		public SearchEntry(int id, int searchId, String checksumme, long groesse) {
+		public SearchEntryDO(int id, int searchId, String checksumme, long groesse) {
 			this.id = id;
 			this.searchId = searchId;
 			this.checksumme = checksumme;
@@ -267,7 +270,7 @@ public class Search {
 			}
 		}
 
-		public void addFileName(FileName fileName) {
+		public void addFileName(FileNameDO fileName) {
 			String key = fileName.getDateiName();
 			if (!keys.contains(key)) {
 				keys.add(key);
@@ -275,7 +278,7 @@ public class Search {
 				recalculatePossibleFileType();
 				setChanged(true);
 			} else {
-				for (FileName curFileName : fileNames) {
+				for (FileNameDO curFileName : fileNames) {
 					if (curFileName.getDateiName().compareToIgnoreCase(
 							fileName.getDateiName()) == 0) {
 						curFileName.setHaeufigkeit(fileName.getHaeufigkeit());
@@ -289,12 +292,12 @@ public class Search {
 					.toArray(new FileName[fileNames.size()]);
 		}
 
-		public class FileName {
+		class FileNameDO implements FileName{
 			private String dateiName;
 			private int haeufigkeit;
 			private String fileType = FileTypeHelper.TYPE_UNKNOWN;
 
-			public FileName(String dateiName, int haeufigkeit) {
+			public FileNameDO(String dateiName, int haeufigkeit) {
 				this.dateiName = dateiName;
 				this.haeufigkeit = haeufigkeit;
 				fileType = FileTypeHelper.calculatePossibleFileType(dateiName);

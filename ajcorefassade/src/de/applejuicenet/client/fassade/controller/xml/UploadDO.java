@@ -1,7 +1,6 @@
 package de.applejuicenet.client.fassade.controller.xml;
 
 import de.applejuicenet.client.fassade.entity.Upload;
-import de.applejuicenet.client.fassade.shared.Version;
 
 /**
  * $Header:
@@ -28,7 +27,7 @@ class UploadDO extends Upload{
 	private final int uploadID;
 	private String dateiName;
 	private int shareFileID;
-	private Version version = null;
+	private VersionDO version = null;
 	private int status;
 	private String nick;
 	private long uploadFrom;
@@ -47,7 +46,7 @@ class UploadDO extends Upload{
 		this.uploadID = uploadID;
 	}
 
-	public UploadDO(int uploadID, int shareFileID, Version version,
+	public UploadDO(int uploadID, int shareFileID, VersionDO version,
 			String status, String nick, long uploadFrom, long uploadTo,
 			long actualUploadPosition, int speed, int prioritaet,
 			int directstate, long lastConnection, double loaded) {
@@ -80,11 +79,11 @@ class UploadDO extends Upload{
 		this.shareFileID = shareFileID;
 	}
 
-	public Version getVersion() {
+	public VersionDO getVersion() {
 		return version;
 	}
 
-	public void setVersion(Version version) {
+	public void setVersion(VersionDO version) {
 		this.version = version;
 		versionChanged = true;
 	}

@@ -1,7 +1,6 @@
 package de.applejuicenet.client.fassade.controller.xml;
 
 import de.applejuicenet.client.fassade.entity.DownloadSource;
-import de.applejuicenet.client.fassade.shared.Version;
 
 /**
  * $Header:
@@ -33,7 +32,7 @@ class DownloadSourceDO extends DownloadSource{
 	private int downloadTo;
 	private int actualDownloadPosition;
 	private int speed;
-	private Version version = null;
+	private VersionDO version = null;
 	private int queuePosition;
 	private int powerDownload;
 	private String filename;
@@ -55,7 +54,7 @@ class DownloadSourceDO extends DownloadSource{
 
 	public DownloadSourceDO(int id, int status, int directstate,
 			int downloadFrom, int downloadTo, int actualDownloadPosition,
-			int speed, Version version, int queuePosition, int powerDownload,
+			int speed, VersionDO version, int queuePosition, int powerDownload,
 			String filename, String nickname, int downloadId, int herkunft) {
 		this.id = id;
 		this.status = status;
@@ -141,11 +140,11 @@ class DownloadSourceDO extends DownloadSource{
 		this.speed = speed;
 	}
 
-	public Version getVersion() {
+	public VersionDO getVersion() {
 		return version;
 	}
 
-	public void setVersion(Version version) {
+	public void setVersion(VersionDO version) {
 		this.version = version;
 		versionChanged = true;
 	}

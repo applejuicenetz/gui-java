@@ -8,7 +8,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JTable;
 
 import de.applejuicenet.client.fassade.entity.Upload;
-import de.applejuicenet.client.fassade.shared.Version;
+import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.shared.IconManager;
 
 public abstract class UploadCalculator {

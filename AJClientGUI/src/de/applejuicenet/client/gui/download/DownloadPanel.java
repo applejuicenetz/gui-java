@@ -75,7 +75,7 @@ import de.applejuicenet.client.shared.IconManager;
 
 public class DownloadPanel extends TklPanel {
 
-	private DownloadDOOverviewPanel downloadDOOverviewPanel;
+	private DownloadOverviewPanel downloadDOOverviewPanel;
 	private JTextField downloadLink = new JTextField();
 	private JButton btnStartDownload = new JButton();
 	private PowerDownloadPanel powerDownloadPanel;
@@ -128,7 +128,7 @@ public class DownloadPanel extends TklPanel {
 		return columnPopupItems;
 	}
 	
-	public DownloadDOOverviewPanel getDownloadDOOverviewPanel(){
+	public DownloadOverviewPanel getDownloadDOOverviewPanel(){
 		return downloadDOOverviewPanel;
 	}
 	
@@ -227,7 +227,7 @@ public class DownloadPanel extends TklPanel {
 	public DownloadPanel(GuiController guiController) {
 		super(guiController);
 		try {
-			downloadDOOverviewPanel = new DownloadDOOverviewPanel(this);
+			downloadDOOverviewPanel = new DownloadOverviewPanel(this);
 			powerDownloadPanel = new PowerDownloadPanel((DownloadController)guiController);
 			init();
 		} catch (Exception e) {
