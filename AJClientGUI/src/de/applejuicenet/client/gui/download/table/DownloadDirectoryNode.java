@@ -15,7 +15,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.3 2004/11/30 18:03:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.4 2004/12/10 10:11:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,16 +28,16 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 public class DownloadDirectoryNode
     implements Node, DownloadNode, DownloadColumnValue, DownloadColumnComponent {
 
-    public static int SORT_NO_SORT = -1;
-    public static int SORT_DOWNLOADNAME = 0;
-    public static int SORT_GROESSE = 1;
-    public static int SORT_BEREITS_GELADEN = 2;
-    public static int SORT_RESTZEIT = 3;
-    public static int SORT_PROZENT = 4;
-    public static int SORT_PWDL = 5;
-    public static int SORT_REST_ZU_LADEN = 6;
-    public static int SORT_GESCHWINDIGKEIT = 7;
-    public static int SORT_STATUS = 7;
+    public static final int SORT_NO_SORT = -1;
+    public static final int SORT_DOWNLOADNAME = 0;
+    public static final int SORT_GROESSE = 1;
+    public static final int SORT_BEREITS_GELADEN = 2;
+    public static final int SORT_RESTZEIT = 3;
+    public static final int SORT_PROZENT = 4;
+    public static final int SORT_PWDL = 5;
+    public static final int SORT_REST_ZU_LADEN = 6;
+    public static final int SORT_GESCHWINDIGKEIT = 7;
+    public static final int SORT_STATUS = 7;
 
     private static int sort = SORT_DOWNLOADNAME;
     private static boolean isAscent = true;
