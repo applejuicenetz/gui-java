@@ -21,18 +21,20 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
-import org.apache.xerces.dom.DeferredElementImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.7 2004/01/28 12:34:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.8 2004/01/29 11:07:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.8  2004/01/29 11:07:57  maj0r
+ * Alte Objekte werden wieder korrekt entfernt.
+ *
  * Revision 1.7  2004/01/28 12:34:21  maj0r
  * Beim Start Filter eingebaut.
  * Session wird nun besser aufrecht erhalten.
@@ -246,6 +248,7 @@ public class ModifiedXMLHolder
                     break;
                 }
                 case 1:{
+                    updateIDs();
                     updateDownloads();
                     updateUploads();
                     updateServer();
@@ -284,7 +287,7 @@ public class ModifiedXMLHolder
                 }
                 case 1:{
                     count ++;
-                    filter = "&filter=informations;user";
+                    filter = "&filter=ids;informations;user";
                     break;
                 }
                 case 2:{
@@ -463,11 +466,11 @@ public class ModifiedXMLHolder
     private void updateIDs() {
         try {
             NodeList nodes = document.getElementsByTagName("removed");
-            if (nodes == null || nodes.item(0) == null){
+            if (nodes == null || nodes.getLength() == 0){
                 return;
             }
             nodes = nodes.item(0).getChildNodes();
-            if (nodes.getClass() == DeferredElementImpl.class){
+            if (nodes == null || nodes.getLength() == 0){
                 return;
             }
             Element e = null;
@@ -477,43 +480,46 @@ public class ModifiedXMLHolder
             DownloadDO downloadDO;
             DownloadSourceDO[] sourcen;
             for (int i = 0; i < size; i++) {
-                e = (Element) nodes.item(i);
-                id = e.getAttribute("id");
-                toRemoveKey = new MapSetStringKey(id);
-                if (uploadMap.containsKey(toRemoveKey)) {
-                    uploadMap.remove(toRemoveKey);
-                    continue;
-                }
-                else if (downloadMap.containsKey(toRemoveKey)) {
-                    downloadDO = (DownloadDO) downloadMap.get(
-                        sourcenZuDownloads.get(toRemoveKey));
-                    if (downloadDO != null) {
-                        sourcen = downloadDO.getSources();
-                        if (sourcen != null) {
-                            for (int y = 0; y < sourcen.length; y++) {
-                                sourcenZuDownloads.remove(new MapSetStringKey(
-                                    sourcen[y].getId()));
+                if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE){
+                    e = (Element) nodes.item(i);
+                    id = e.getAttribute("id");
+                    toRemoveKey = new MapSetStringKey(id);
+                    if (uploadMap.containsKey(toRemoveKey)) {
+                        uploadMap.remove(toRemoveKey);
+                        continue;
+                    }
+                    else if (downloadMap.containsKey(toRemoveKey)) {
+                        downloadDO = (DownloadDO) downloadMap.get(
+                            sourcenZuDownloads.get(toRemoveKey));
+                        if (downloadDO != null) {
+                            sourcen = downloadDO.getSources();
+                            if (sourcen != null) {
+                                for (int y = 0; y < sourcen.length; y++) {
+                                    sourcenZuDownloads.remove(new
+                                        MapSetStringKey(
+                                        sourcen[y].getId()));
+                                }
                             }
                         }
+                        downloadMap.remove(toRemoveKey);
+                        continue;
                     }
-                    downloadMap.remove(toRemoveKey);
-                    continue;
-                }
-                else if (serverMap.containsKey(toRemoveKey)) {
-                    serverMap.remove(toRemoveKey);
-                    continue;
-                }
-                else if (sourcenZuDownloads.containsKey(toRemoveKey)) {
-                    downloadDO = (DownloadDO) sourcenZuDownloads.get(
-                        toRemoveKey);
-                    downloadDO.removeSource(id);
-                    sourcenZuDownloads.remove(toRemoveKey);
-                    continue;
-                }
-                else if (searchMap.containsKey(toRemoveKey)) {
-                    searchMap.remove(toRemoveKey);
-                    Search.currentSearchCount = searchMap.size();
-                    continue;
+                    else if (serverMap.containsKey(toRemoveKey)) {
+                        serverMap.remove(toRemoveKey);
+                        continue;
+                    }
+                    else if (sourcenZuDownloads.containsKey(toRemoveKey)) {
+                        downloadDO = (DownloadDO) sourcenZuDownloads.get(
+                            toRemoveKey);
+                        downloadDO.removeSource(id);
+                        sourcenZuDownloads.remove(toRemoveKey);
+                        continue;
+                    }
+                    else if (searchMap.containsKey(toRemoveKey)) {
+                        searchMap.remove(toRemoveKey);
+                        Search.currentSearchCount = searchMap.size();
+                        continue;
+                    }
                 }
             }
             gcCounter++;
