@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.24 2004/02/17 15:26:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.25 2004/02/20 14:59:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.25  2004/02/20 14:59:13  maj0r
+ * Loglevel bei nicht gefundener Webseite geaendert.
+ *
  * Revision 1.24  2004/02/17 15:26:38  maj0r
  * Bug #219 gefixt (Danke an uselessplayer)
  * 100%-CPU bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt.
@@ -278,7 +281,7 @@ public abstract class HtmlLoader {
             }
         }
         catch(WebSiteNotFoundException wnfE){
-            if (logger.isEnabledFor(Level.INFO)){
+            if (logger.isEnabledFor(Level.DEBUG)){
                 int index = command.indexOf("password=");
                 StringBuffer commandBuffer = new StringBuffer(command);
                 if (index != -1){
@@ -286,7 +289,7 @@ public abstract class HtmlLoader {
                         commandBuffer.setCharAt(index + 9 + i, '*');
                     }
                 }
-                logger.info(
+                logger.debug(
                     "WebSiteNotFound: " + host + ":" + ajPort +
                     commandBuffer.toString(),
                     wnfE);
