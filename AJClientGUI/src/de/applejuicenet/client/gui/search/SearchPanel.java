@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.5 2004/12/06 18:31:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.6 2004/12/07 08:25:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -152,7 +152,7 @@ public class SearchPanel
             bearbeitung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.opensearches.caption"));
             label2.setText(bearbeitung.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
-            String[] resultTexte = new String[5];
+            String[] resultTexte = new String[9];
             resultTexte[0] = (ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.searchform.offenesuchen")));
@@ -167,7 +167,17 @@ public class SearchPanel
                 getFirstAttrbuteByTagName(".root.mainform.Getlink3.caption")));
             resultTexte[4] = (ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.cancelsearch.caption")));
+                getFirstAttrbuteByTagName(".root.mainform.cancelsearch.caption")));            
+            resultTexte[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+    				.getFirstAttrbuteByTagName(".root.javagui.downloadform.bereitsgeladen"));
+            resultTexte[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+    				.getFirstAttrbuteByTagName(".root.javagui.downloadform.falscherlink"));
+            resultTexte[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+    				.getFirstAttrbuteByTagName(".root.javagui.downloadform.sonstigerlinkfehlerlang"));
+            resultTexte[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+    				.getFirstAttrbuteByTagName(".root.mainform.caption"));
+
+            
             String[] columns = new String[3];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.searchs.col0caption"));

@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -22,6 +23,7 @@ import javax.swing.table.TableColumnModel;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
@@ -32,11 +34,12 @@ import de.applejuicenet.client.gui.search.table.SearchResultTreeTableCellRendere
 import de.applejuicenet.client.shared.FileTypeHelper;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Search;
+import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Search.SearchEntry;
 import javax.swing.JToggleButton;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.7 2004/12/06 18:12:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.8 2004/12/07 08:25:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -54,6 +57,11 @@ public class SearchResultPanel
     private static String durchsuchteClients = "%i durchsuchte Clients";
     private static String linkLaden = "Link";
     private static String sucheStoppen = "Suche stoppen";
+    private static String alreadyLoaded;
+    private static String invalidLink;
+    private static String linkFailure;
+    private static String dialogTitel;
+
     private static String[] columns;
 
     private Logger logger;
@@ -240,7 +248,29 @@ public class SearchResultPanel
     private void processLink(final String link){
         new Thread(){
             public void run(){
-                ApplejuiceFassade.getInstance().processLink(link, "");
+				final String result = ApplejuiceFassade.getInstance().processLink(link, "");
+				SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
+				if (result.indexOf("ok") != 0){
+				    SwingUtilities.invokeLater(new Runnable(){
+				        public void run(){
+				            String message = null;
+							if (result.indexOf("already downloaded") != -1){
+							    message = alreadyLoaded.replaceAll("%s", link);
+							}
+							else if (result.indexOf("incorrect link") != -1){
+							    message = invalidLink.replaceAll("%s", link);
+							}
+							else if (result.indexOf("failure") != -1){
+							    message = linkFailure;
+							}
+							if (message != null){
+								JOptionPane.showMessageDialog(AppleJuiceDialog
+										.getApp(), message, dialogTitel,
+										JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+							}
+				        }
+				    });
+				}
             }
         }.start();
     }
@@ -251,6 +281,10 @@ public class SearchResultPanel
         durchsuchteClients = texte[2];
         linkLaden = texte[3];
         sucheStoppen = texte[4];
+		alreadyLoaded = texte[5];
+		invalidLink = texte[6];
+		linkFailure = texte[7];
+		dialogTitel = texte[8];
         columns = tableColumns;
     }
 
