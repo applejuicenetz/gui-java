@@ -12,7 +12,7 @@
    <property name="xercesImpl.jar"            location="${basedir}/tools/xercesImpl.jar"/>
    <property name="xmlParserAPIs.jar"            location="${basedir}/tools/xmlParserAPIs.jar"/>
    <property name="log4j-1.2.8.jar"            location="${basedir}/tools/log4j-1.2.8.jar"/>
-   <property name="skinlf.jar"            location="${basedir}/tools/skinlf.jar"/>
+   <property name="skinlf.jar"            location="${basedir}/needed_jars/skinlf.jar"/>
 
    <!-- classpath for compilation ... -->
    <path id="lib.path">
