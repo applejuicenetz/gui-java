@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.89 2004/01/28 20:18:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.90 2004/01/29 15:44:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.90  2004/01/29 15:44:28  maj0r
+ * Formataenderung.
+ *
  * Revision 1.89  2004/01/28 20:18:00  maj0r
  * Fehlerhafte Anzeige von Menuetexten bei Nicht-Windows-Systemen gefixt.
  *
@@ -1268,7 +1271,7 @@ public class AppleJuiceDialog
         xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
         xmlData.append("<root>\r\n");
         xmlData.append(
-            "    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\" ");
+            "    <options dialogzeigen=\"true\" firststart=\"true\" sound=\"true\" sprache=\"deutsch\" ");
         xmlData.append(
             "themes=\"true\" defaulttheme=\"aquathemepack\" loadplugins=\"true\" ");
         xmlData.append(
