@@ -17,7 +17,7 @@ import java.lang.reflect.Constructor;
 import javax.swing.ImageIcon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.15 2004/03/02 21:05:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.16 2004/03/02 21:06:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import javax.swing.ImageIcon;
  * @author: Maj0r aj@tkl-soft.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.16  2004/03/02 21:06:40  maj0r
+ * Kleine Fehler behoben.
+ *
  * Revision 1.15  2004/03/02 21:05:46  maj0r
  * Schnittstelle veraendert.
  *
@@ -94,7 +97,6 @@ public class PluginJarClassLoader
             return (PluginConnector) aPlugin;
         }
         catch (Exception e) {
-            e.printStackTrace();
             if (logger.isEnabledFor(Level.INFO)) {
                 logger.info("Plugin " + jar +
                     " entspricht nicht dem Standard und wurde nicht geladen.");

@@ -1,11 +1,5 @@
 package de.applejuicenet.client.gui.plugins;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 

@@ -1,16 +1,18 @@
 package de.applejuicenet.client.gui.plugins;
 
-import java.awt.BorderLayout;
-import de.applejuicenet.client.gui.plugins.panels.MainPanel;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import java.util.HashMap;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+
+import java.awt.BorderLayout;
 import javax.swing.ImageIcon;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.plugins.panels.MainPanel;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.4 2004/03/02 21:05:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.5 2004/03/02 21:06:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +21,9 @@ import javax.swing.ImageIcon;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: VersionChecker.java,v $
+ * Revision 1.5  2004/03/02 21:06:40  maj0r
+ * Kleine Fehler behoben.
+ *
  * Revision 1.4  2004/03/02 21:05:46  maj0r
  * Schnittstelle veraendert.
  *
