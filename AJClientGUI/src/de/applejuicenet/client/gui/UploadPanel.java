@@ -18,7 +18,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.19 2003/08/30 19:45:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.20 2003/08/31 11:06:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.20  2003/08/31 11:06:44  maj0r
+ * Groesse der ersten Upload-Spalte geaendert.
+ *
  * Revision 1.19  2003/08/30 19:45:20  maj0r
  * Auf JTreeTable umgebaut.
  *
@@ -143,6 +146,7 @@ public class UploadPanel
         for (int i = 0; i < tcm.getColumnCount(); i++) {
             tcm.getColumn(i).setHeaderValue(columns[i]);
         }
+        tcm.getColumn(0).setPreferredWidth(100);
     }
 
     public void fireContentChanged(int type, Object content) {
