@@ -15,6 +15,10 @@ import de.applejuicenet.client.gui.*;
 
 public class AppleJuiceClient {
   public static void main(String[] args) {
-    new AppleJuiceDialog();
+    AppleJuiceDialog theApp = new AppleJuiceDialog();
+    Dimension appDimension = theApp.getSize();
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    theApp.setLocation((screenSize.width-appDimension.width)/2, (screenSize.height-appDimension.height)/2);
+    theApp.show();
   }
 }

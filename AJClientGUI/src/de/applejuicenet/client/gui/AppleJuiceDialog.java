@@ -43,16 +43,11 @@ public class AppleJuiceDialog extends JFrame {
         });
     this.getContentPane().setLayout(new BorderLayout());
     getContentPane().add(registerPane,  BorderLayout.CENTER);
-    Dimension systemDimension = getToolkit().getScreenSize();
-    Dimension dialogDimension = getSize();
-//    setLocation((systemDimension.width - dialogDimension.width)/2,
-  //                      (systemDimension.height - dialogDimension.height)/2);
-    show();
-//    setSize(new Dimension(800, 600));
   }
 
   public Dimension getPreferredSize(){
-    return new Dimension(800, 600);
+    Dimension systemDimension = getToolkit().getScreenSize();
+    return new Dimension((int)systemDimension.getWidth()/4*3, (int)systemDimension.getHeight()/4*3);
   }
 
 
