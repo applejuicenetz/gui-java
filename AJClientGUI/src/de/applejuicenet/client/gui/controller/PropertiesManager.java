@@ -30,7 +30,7 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.40 2004/03/09 16:25:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.41 2004/03/15 13:46:00 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +39,9 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.41  2004/03/15 13:46:00  loevenwong
+ * GUI neustart aufgrund fehlender property-datei verhindert.
+ *
  * Revision 1.40  2004/03/09 16:25:17  maj0r
  * PropertiesManager besser gekapselt.
  *
@@ -240,6 +243,7 @@ class PropertiesManager
 
     private static String path;
 
+    private boolean firstReadError = true;
     private boolean legal = false;
 
     private PropertiesManager(String propertiesPath) {
@@ -1024,11 +1028,19 @@ class PropertiesManager
             proxySettings = new ProxySettings(use, host, port, userpass);
         }
         catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+            if (firstReadError == true) {
+                AppleJuiceDialog.restorePropertiesXml();
+                AppleJuiceDialog.showInformation(PROPERTIES_ERROR);
+                firstReadError = false;
+                super.reload(this.path);
+            }
+            else {
+                AppleJuiceDialog.rewriteProperties = true;
+                AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+            }
         }
     }
 

@@ -1,86 +1,28 @@
 package de.applejuicenet.client.gui;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.zip.*;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.JSlider;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
-import javax.swing.border.BevelBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.event.*;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import com.jeans.trayicon.SwingTrayPopup;
-import com.jeans.trayicon.WindowsTrayIcon;
-import com.l2fprod.gui.plaf.skin.Skin;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.OptionsManager;
-import de.applejuicenet.client.gui.controller.PositionManager;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.gui.plugins.PluginConnector;
-import de.applejuicenet.client.gui.tools.MemoryMonitorDialog;
-import de.applejuicenet.client.shared.AJSettings;
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.Information;
-import de.applejuicenet.client.shared.LookAFeel;
-import de.applejuicenet.client.shared.SoundPlayer;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import org.apache.log4j.*;
+import com.jeans.trayicon.*;
+import com.l2fprod.gui.plaf.skin.*;
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.gui.plugins.*;
+import de.applejuicenet.client.gui.tools.*;
+import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.109 2004/03/09 16:25:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.110 2004/03/15 13:46:11 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -89,6 +31,9 @@ import de.applejuicenet.client.gui.controller.PositionManagerImpl;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.110  2004/03/15 13:46:11  loevenwong
+ * GUI neustart aufgrund fehlender property-datei verhindert.
+ *
  * Revision 1.109  2004/03/09 16:25:16  maj0r
  * PropertiesManager besser gekapselt.
  *
@@ -1385,7 +1330,7 @@ public class AppleJuiceDialog
         return popup;
     }
 
-    private static void restorePropertiesXml() {
+    public static void restorePropertiesXml() {
         String dateiname = ApplejuiceFassade.getPropertiesPath();
         StringBuffer xmlData = new StringBuffer();
 
@@ -1474,6 +1419,11 @@ public class AppleJuiceDialog
         catch (IOException ioE) {
             logger.error(ioE);
         }
+    }
+
+    public static void showInformation(String information) {
+        JOptionPane.showMessageDialog(theApp, information, "appleJuice Client",
+                                      JOptionPane.OK_OPTION);
     }
 
     private class TxtFileFilter
