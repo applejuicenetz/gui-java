@@ -9,9 +9,10 @@ import javax.swing.JPanel;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.shared.dac.PartListDO;
+import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.12 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.13 2004/02/09 17:46:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,9 @@ import de.applejuicenet.client.shared.dac.PartListDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.13  2004/02/09 17:46:11  maj0r
+ * Partliste ueberarbeitet.
+ *
  * Revision 1.12  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -63,6 +67,7 @@ public class DownloadPartListPanel
     private BufferedImage image = null;
     private int width;
     private int height;
+    private long fertigSeit = -1;
 
     public DownloadPartListPanel() {
         super(new BorderLayout());
@@ -75,6 +80,8 @@ public class DownloadPartListPanel
                 width != (int) getVisibleRect().getWidth()) {
                 setPartList(partListDO);
             }
+            g.setColor(Color.WHITE);
+            g.drawRect(0, 0, width, height);
             g.drawImage(image, 0, 0, null);
         }
         else {
@@ -87,92 +94,50 @@ public class DownloadPartListPanel
             this.partListDO = partListDO;
             height = (int) getVisibleRect().getHeight();
             width = (int) getVisibleRect().getWidth();
-            image = new BufferedImage(width, height,
-                                      BufferedImage.TYPE_INT_ARGB);
-            Graphics graphics = image.getGraphics();
             if (partListDO != null) {
-                int anzahlRows = (height / 16) - 1;
-                int anzahlZeile = width / 2;
-                int anzahl = anzahlRows * anzahlZeile;
-                int groesseProPart;
-                int anzahlParts;
-                if (partListDO.getGroesse() > anzahl) {
-                    groesseProPart = (int) partListDO.getGroesse() / anzahl;
-                    anzahlParts = anzahl;
-                }
-                else {
-                    groesseProPart = 1;
-                    anzahlParts = (int) partListDO.getGroesse();
-                }
-                int bisher = 0;
-                int x = 1;
-                int y = 0;
-                long position = 0;
-                int partPos = 0;
-                PartListDO.Part[] parts = partListDO.getParts();
-                long mbStart;
-                long mbEnde;
-                int kleiner;
-                int groesstes;
-                boolean ueberprueft;
-                while (bisher < anzahlParts) {
-                    bisher++;
-                    if (x >= anzahlZeile * 2 - 2) {
-                        y++;
-                        x = 1;
-                    }
-                    position += groesseProPart;
-                    while (parts[partPos].getFromPosition() < position &&
-                           partPos < parts.length - 1) {
-                        partPos++;
-                    }
-                    if (partPos > 0) {
-                        partPos--;
-                    }
-                    if (parts[partPos].getType() == -1 &&
-                        partListDO.getPartListType() ==
-                        PartListDO.MAIN_PARTLIST) {
-                        mbStart = position / 1048576 * 1048576;
-                        mbEnde = mbStart + 1048576;
-                        kleiner = partPos;
-                        groesstes = partPos;
-                        while (parts[kleiner].getFromPosition() > mbStart &&
-                               kleiner > 0) {
-                            kleiner--;
-                        }
-                        while (parts[groesstes].getFromPosition() < mbEnde &&
-                               groesstes < parts.length - 1) {
-                            groesstes++;
-                        }
-                        groesstes--;
-                        ueberprueft = true;
-                        for (int l = kleiner; l <= groesstes; l++) {
-                            if (parts[l].getType() != -1) {
-                                ueberprueft = false;
-                                break;
-                            }
-                        }
-                        if (ueberprueft) {
+                int zeilenHoehe = 15;
+                int zeilen = height / zeilenHoehe;
+                int pixelSize = (int) (partListDO.getGroesse() / (zeilen * width) );
+                BufferedImage tempImage = new BufferedImage(width * zeilen, 15,
+                                          BufferedImage.TYPE_INT_ARGB);
+                Graphics graphics = tempImage.getGraphics();
+                int obenLinks = 0;
+                int obenRechts = 0;
+                Part[] parts = partListDO.getParts();
+                for (int i=0; i<parts.length-1; i++){
+                    obenRechts = obenLinks + (int)((parts[i+1].getFromPosition() - parts[i].getFromPosition()) / pixelSize);
+                    if (partListDO.getPartListType()==PartListDO.MAIN_PARTLIST){
+                        if (isGeprueft(partListDO, i)){
                             graphics.setColor(PartListDO.COLOR_TYPE_UEBERPRUEFT);
                         }
-                        else {
-                            graphics.setColor(PartListDO.COLOR_TYPE_OK);
+                        else{
+                            graphics.setColor(getColorByType(parts[i].getType()));
                         }
                     }
-                    else {
-                        graphics.setColor(getColorByType(parts[partPos].getType()));
+                    else{
+                        graphics.setColor(getColorByType(parts[i].getType()));
                     }
-                    graphics.fillRect(x, (y * 16) + 1, x + 1, (y + 1) * 16);
-                    x += 2;
+                    graphics.fillRect(obenLinks, 0, obenRechts, zeilenHoehe);
+                    obenLinks = obenRechts + 1;
                 }
-                if (x < width) {
-                    graphics.setColor(Color.WHITE);
-                    graphics.fillRect(x, (y * 16) + 1, width - 1, (y + 1) * 16);
-                    y++;
+                obenRechts = obenLinks + (int)((partListDO.getGroesse() - parts[parts.length-1].getFromPosition()) / pixelSize);
+                if (isGeprueft(partListDO, parts.length-1)){
+                    graphics.setColor(PartListDO.COLOR_TYPE_UEBERPRUEFT);
                 }
-                if (y * 16 < height) {
-                    graphics.setColor(Color.WHITE);
-                    graphics.fillRect(0, (y * 16) + 1, width - 1, height - 1);
+                else{
+                    graphics.setColor(getColorByType(parts[parts.length-1].getType()));
+                }
+                fertigSeit = -1;
+                graphics.fillRect(obenLinks, 0, obenRechts, zeilenHoehe);
+                image = new BufferedImage(width, height,
+                                          BufferedImage.TYPE_INT_ARGB);
+                Graphics g = image.getGraphics();
+                g.setColor(Color.WHITE);
+                g.drawRect(0, 0, width, height);
+                int x = 0;
+                for (int i=0; i<zeilen; i++){
+                    g.drawImage(tempImage.getSubimage(x, 0, width, zeilenHoehe), 0, i*zeilenHoehe, null);
+                    x += width;
                 }
             }
             updateUI();
@@ -181,6 +146,30 @@ public class DownloadPartListPanel
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
             }
+        }
+    }
+
+    private boolean isGeprueft(PartListDO partListDO, int index){
+        if (partListDO.getPartListType()==PartListDO.MAIN_PARTLIST){
+            Part[] parts = partListDO.getParts();
+            if (parts[index].getType() == -1) {
+                if (fertigSeit == -1) {
+                    fertigSeit = parts[index].getFromPosition();
+                }
+                if ( (index < parts.length-1) && (parts[index + 1].getFromPosition() - fertigSeit) >= 1048576) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                fertigSeit = -1;
+                return false;
+            }
+        }
+        else{
+            return false;
         }
     }
 
