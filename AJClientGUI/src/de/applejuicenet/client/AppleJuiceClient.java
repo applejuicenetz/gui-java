@@ -40,7 +40,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.70 2004/05/24 10:17:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.71 2004/05/30 08:37:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -352,8 +352,8 @@ public class AppleJuiceClient {
                     }
                     try {
                         String downloadData = WebsiteContentLoader.
-                            getWebsiteContent("http://download.berlios.de", 80,
-                                              "/applejuicejava/version.txt");
+                            getWebsiteContent("http://www.tkl-soft.de", 80,
+                                              "/applejuice/version.txt");
 
                         if (downloadData.length() > 0) {
                             int pos1 = downloadData.indexOf("|");
