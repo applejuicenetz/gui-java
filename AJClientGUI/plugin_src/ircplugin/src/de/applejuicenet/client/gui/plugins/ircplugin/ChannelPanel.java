@@ -43,7 +43,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.17 2004/12/06 20:29:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.18 2004/12/06 20:55:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -142,7 +142,7 @@ public class ChannelPanel
                             User[] users = usernameList.getValues();
                             String compareValue;
                             for (int i=0; i<users.length; i++){
-                                if (users[i].getName().startsWith(searchString)){
+                                if (users[i].getName().toLowerCase().startsWith(searchString)){
                                     treffer += users[i].getName() + " ";
                                     count ++;
                                 }
