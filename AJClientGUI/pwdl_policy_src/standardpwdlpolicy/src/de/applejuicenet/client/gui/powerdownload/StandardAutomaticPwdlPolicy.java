@@ -11,7 +11,7 @@ import java.awt.Dialog;
 import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.4 2004/06/15 15:32:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.5 2004/06/18 11:39:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -178,9 +178,5 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
 
     public String toString() {
         return "StandardPwdlPolicy Vers. " + getVersion();
-    }
-
-    public Dialog getPropertiesDialog(){
-        return new JDialog();
     }
 }
