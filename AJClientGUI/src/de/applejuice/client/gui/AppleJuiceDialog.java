@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -14,11 +15,11 @@ import java.awt.event.WindowEvent;
  * @version 1.0
  */
 
-public class AppleJuiceDialog extends JDialog {
+public class AppleJuiceDialog extends JFrame {
   RegisterPanel registerPane = new RegisterPanel();
 
-  public AppleJuiceDialog(Frame frame) {
-    super(frame, true);
+  public AppleJuiceDialog() {
+    super();
     try {
       jbInit();
       pack();
@@ -30,6 +31,10 @@ public class AppleJuiceDialog extends JDialog {
 
   private void jbInit() throws Exception {
     setTitle("AppleJuice Client");
+    URL url = getClass().getResource("applejuice.gif");
+    Image img = Toolkit.getDefaultToolkit().getImage(url);
+    setIconImage(img);
+
     addWindowListener(
         new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {

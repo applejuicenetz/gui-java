@@ -15,7 +15,6 @@ import de.applejuice.client.gui.*;
 
 public class AppleJuiceClient {
   public static void main(String[] args) {
-    Frame dummyFrame = new Frame();
-    new AppleJuiceDialog(dummyFrame);
+    new AppleJuiceDialog();
   }
 }
