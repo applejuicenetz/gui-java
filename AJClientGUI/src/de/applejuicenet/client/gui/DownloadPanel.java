@@ -53,9 +53,12 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.gui.tables.download.DownloadTablePercentCellRenderer;
+import de.applejuicenet.client.gui.tables.download.DownloadTableVersionCellRenderer;
+import java.awt.event.MouseMotionAdapter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.80 2004/01/08 07:48:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.81 2004/01/09 15:33:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,6 +67,9 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.81  2004/01/09 15:33:56  maj0r
+ * Spalten der Downloadtabelle koennen nun ordentlich verschoben werden.
+ *
  * Revision 1.80  2004/01/08 07:48:22  maj0r
  * Wenn das Panel nicht selektiert ist, wird die Tabelle nun nicht mehr aktualisiert.
  *
@@ -606,11 +612,27 @@ public class DownloadPanel
         downloadModel = new DownloadModel();
         downloadTable = new JTreeTable(downloadModel);
 
-        DownloadTableCellRenderer renderer = new DownloadTableCellRenderer();
-        for (int i = 1; i < downloadTable.getColumnModel().getColumnCount(); i++) {
-            downloadTable.getColumnModel().getColumn(i).setCellRenderer(
-                renderer);
-        }
+        downloadTable.getColumnModel().getColumn(1).setCellRenderer(new
+            DownloadTableCellRenderer());
+        downloadTable.getColumnModel().getColumn(2).setCellRenderer(new
+            DownloadTableCellRenderer());
+        downloadTable.getColumnModel().getColumn(3).setCellRenderer(new
+            DownloadTableCellRenderer());
+        downloadTable.getColumnModel().getColumn(4).setCellRenderer(new
+            DownloadTableCellRenderer());
+        downloadTable.getColumnModel().getColumn(5).setCellRenderer(new
+            DownloadTableCellRenderer());
+        downloadTable.getColumnModel().getColumn(6).setCellRenderer(new
+            DownloadTablePercentCellRenderer());
+        downloadTable.getColumnModel().getColumn(7).setCellRenderer(new
+            DownloadTableCellRenderer());
+        downloadTable.getColumnModel().getColumn(8).setCellRenderer(new
+            DownloadTableCellRenderer());
+        downloadTable.getColumnModel().getColumn(9).setCellRenderer(new
+            DownloadTableVersionCellRenderer());
+        JTableHeader header = downloadTable.getTableHeader();
+        header.addMouseMotionListener(new HeaderDragListener(header));
+
         btnStartDownload.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 startDownload();
@@ -772,7 +794,6 @@ public class DownloadPanel
         for (int i = 0; i < n; i++) {
             model.getColumn(i).setHeaderRenderer(renderer2);
         }
-        JTableHeader header = downloadTable.getTableHeader();
         header.addMouseListener(new SortMouseAdapter(header, renderer2));
         downloadTable.setSelectionMode(ListSelectionModel.
                                        MULTIPLE_INTERVAL_SELECTION);
@@ -1024,7 +1045,6 @@ public class DownloadPanel
                                 SortButtonRenderer renderer) {
             this.header = header;
             this.renderer = renderer;
-            header.setReorderingAllowed(false);
         }
 
         public void mousePressed(MouseEvent e) {
@@ -1164,4 +1184,24 @@ public class DownloadPanel
             worker.start();
         }
     }
+
+    class HeaderDragListener
+         extends MouseMotionAdapter {
+         private JTableHeader header;
+
+         public HeaderDragListener(JTableHeader header) {
+             this.header = header;
+         }
+
+         public void mouseDragged(MouseEvent e) {
+             int col = header.columnAtPoint(e.getPoint());
+             if (col == 0) {
+                 header.setDraggedColumn(null);
+                 header.setDraggedDistance(0);
+             }
+             else{
+                 super.mouseDragged(e);
+             }
+         }
+     }
 }
