@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.4 2003/09/04 10:14:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.5 2003/09/07 12:11:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.5  2003/09/07 12:11:59  maj0r
+ * Anzeige korrigiert, da in der aktuellen Core auch Verfuegbarkeitswerte > 10 vorkommen koennen.
+ *
  * Revision 1.4  2003/09/04 10:14:44  maj0r
  * NullPointer behoben.
  *
@@ -188,7 +191,7 @@ public class DownloadPartListPanel extends JPanel {
             case 10:
                 return PartListDO.COLOR_TYPE_10;
             default:
-                return PartListDO.COLOR_TYPE_0;
+                return PartListDO.COLOR_TYPE_10;
         }
     }
 }
