@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.26 2003/10/27 12:40:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.27 2003/10/31 16:24:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.27  2003/10/31 16:24:58  maj0r
+ * Soundeffekte fuer diverse Ereignisse eingefuegt.
+ *
  * Revision 1.26  2003/10/27 12:40:48  maj0r
  * Bug #1046 fixed (Danke an lova):
  * Buttons entsprechend dem Standard vertauscht.
@@ -404,6 +407,9 @@ public class PowerDownloadPanel
                     ids[i] = ((Integer)temp.get(i)).intValue();
                 }
                 ApplejuiceFassade.getInstance().setPowerDownload(ids, powerDownload);
+                if (btnAktiv.isSelected()){
+                    SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
+                }
             }
         }
         catch (Exception ex)

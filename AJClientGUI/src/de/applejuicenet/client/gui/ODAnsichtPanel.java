@@ -17,15 +17,18 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.5 2003/09/04 10:13:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.6 2003/10/31 16:24:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODAnsichtPanel.java,v $
+ * Revision 1.6  2003/10/31 16:24:58  maj0r
+ * Soundeffekte fuer diverse Ereignisse eingefuegt.
+ *
  * Revision 1.5  2003/09/04 10:13:28  maj0r
  * Logger eingebaut.
  *
@@ -152,13 +155,15 @@ public class ODAnsichtPanel extends JPanel {
         add(panel2, BorderLayout.WEST);
     }
 
-    public void save() {
+    public boolean save() {
         try{
             settings.save();
+            return true;
         }
         catch (Exception e){
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
+            return false;
         }
     }
 

@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.22 2003/10/14 15:43:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.23 2003/10/31 16:24:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.23  2003/10/31 16:24:58  maj0r
+ * Soundeffekte fuer diverse Ereignisse eingefuegt.
+ *
  * Revision 1.22  2003/10/14 15:43:52  maj0r
  * An pflegbaren Xml-Port angepasst.
  *
@@ -159,18 +162,21 @@ public class OptionsDialog
     private void speichern() {
         try{
             OptionsManager om = PropertiesManager.getOptionsManager();
-            ansichtPanel.save();
+            boolean etwasGeaendert;
+            etwasGeaendert = ansichtPanel.save();
             if (standardPanel.isDirty() || verbindungPanel.isDirty())
             {
                 om.saveAJSettings(ajSettings);
                 if (standardPanel.isDirty())
                     om.setLogLevel(standardPanel.getLogLevel());
+                etwasGeaendert = true;
             }
             if (remotePanel.isDirty() || standardPanel.isXmlPortDirty())
             {
                 try
                 {
                     om.saveRemote(remote);
+                    etwasGeaendert = true;
                 }
                 catch (InvalidPasswordException ex)
                 {
@@ -187,13 +193,17 @@ public class OptionsDialog
             if (proxyPanel.isDirty())
             {
                 PropertiesManager.getProxyManager().saveProxySettings(proxyPanel.getProxySettings());
+                etwasGeaendert = true;
             }
-            dispose();
+            if (etwasGeaendert){
+                SoundPlayer.getInstance().playSound(SoundPlayer.GESPEICHERT);
+            }
         }
         catch (Exception e)
         {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
         }
+        dispose();
     }
 }

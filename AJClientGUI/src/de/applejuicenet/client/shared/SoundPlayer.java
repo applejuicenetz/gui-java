@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import javax.sound.sampled.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.1 2003/10/31 11:31:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.2 2003/10/31 16:24:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import javax.sound.sampled.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SoundPlayer.java,v $
+ * Revision 1.2  2003/10/31 16:24:58  maj0r
+ * Soundeffekte fuer diverse Ereignisse eingefuegt.
+ *
  * Revision 1.1  2003/10/31 11:31:45  maj0r
  * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
  *
@@ -28,6 +31,10 @@ public class SoundPlayer {
     public static final int ABGEBROCHEN = 0;
     public static final int SUCHEN = 1;
     public static final int VERBINDEN = 2;
+    public static final int GESPEICHERT = 3;
+    public static final int KOMPLETT = 4;
+    public static final int LADEN = 5;
+    public static final int POWER = 6;
 
     private static SoundPlayer instance = null;
     private static Logger logger;
@@ -65,8 +72,26 @@ public class SoundPlayer {
                 soundFile = new File(soundPath + "verbinden.wav");
                 break;
             }
+            case GESPEICHERT:{
+                soundFile = new File(soundPath + "gespeichert.wav");
+                break;
+            }
+            case KOMPLETT:{
+                soundFile = new File(soundPath + "komplett.wav");
+                break;
+            }
+            case LADEN:{
+                soundFile = new File(soundPath + "laden.wav");
+                break;
+            }
+            case POWER:{
+                soundFile = new File(soundPath + "pwdl.wav");
+                break;
+            }
             default:
-                //nix zu tun
+            {
+                logger.error("SoundPlayer::playSound() ungueltiger Parameter: " + sound);
+            }
         }
         Clip soundToPlay = loadSound(soundFile);
         if (soundToPlay!=null){
