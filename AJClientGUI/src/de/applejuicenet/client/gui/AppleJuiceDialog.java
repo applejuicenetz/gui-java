@@ -66,9 +66,14 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import javax.swing.JSlider;
 import de.applejuicenet.client.shared.AJSettings;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.80 2004/01/12 16:15:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.81 2004/01/19 17:44:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -77,6 +82,9 @@ import de.applejuicenet.client.shared.AJSettings;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.81  2004/01/19 17:44:49  maj0r
+ * ajl-Listen koennen nun ueber das Menue importiert werden.
+ *
  * Revision 1.80  2004/01/12 16:15:04  maj0r
  * Bug #91 umgesetzt (Danke an hirsch.marcel)
  * Maxupload- und Maxdownloadgeschwindigkeit kann nun über das TrayIcon eingestellt werden (Windowsversion).
@@ -281,6 +289,7 @@ public class AppleJuiceDialog
     private JMenu coreMenu;
     private HashSet plugins;
     private JMenuItem menuItemOptionen = new JMenuItem();
+    private JMenuItem menuItemDateiliste = new JMenuItem();
     private JMenuItem menuItemCoreBeenden = new JMenuItem();
     private JMenuItem menuItemUeber = new JMenuItem();
     private JMenuItem menuItemDeaktivieren = new JMenuItem();
@@ -412,6 +421,7 @@ public class AppleJuiceDialog
         menuItemOptionen.setIcon(im.getIcon("optionen"));
         menuItemUeber.setIcon(im.getIcon("info"));
         menuItemCoreBeenden.setIcon(im.getIcon("skull"));
+        menuItemDateiliste.setIcon(im.getIcon("speichern"));
 
         setJMenuBar(createMenuBar());
         if (PropertiesManager.getOptionsManager().isThemesSupported()) {
@@ -742,6 +752,11 @@ public class AppleJuiceDialog
                     od.show();
                 }
             });
+            menuItemDateiliste.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    dateiListeImportieren();
+                }
+            });
             menuItemCoreBeenden.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.
@@ -759,6 +774,7 @@ public class AppleJuiceDialog
                 }
             });
             optionenMenu.add(menuItemOptionen);
+            optionenMenu.add(menuItemDateiliste);
             optionenMenu.add(menuItemUeber);
             menuBar.add(optionenMenu);
 
@@ -928,6 +944,51 @@ public class AppleJuiceDialog
         }
     }
 
+    private void dateiListeImportieren(){
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
+        fileChooser.setFileFilter(new TxtFileFilter());
+        fileChooser.setDialogTitle(menuItemDateiliste.getText());
+        fileChooser.setMultiSelectionEnabled(false);
+        int i = fileChooser.showOpenDialog(this);
+        if (i == JFileChooser.APPROVE_OPTION){
+            File file = fileChooser.getSelectedFile();
+            if (file.isFile()){
+                BufferedReader reader = null;
+                try {
+                    reader = new BufferedReader(new
+                        FileReader(file));
+                    String line = "";
+                    while ( (line = reader.readLine()) != null) {
+                        if (line.compareTo("100") == 0){
+                            break;
+                        }
+                    }
+                    String size = "";
+                    String filename = "";
+                    String checksum = "";
+                    String link = "";
+                    ApplejuiceFassade af = ApplejuiceFassade.getInstance();
+                    while ( (line = reader.readLine()) != null) {
+                        filename  = line;
+                        checksum = reader.readLine();
+                        size = reader.readLine();
+                        if (size != null && checksum != null){
+                            link = "ajfsp://file|" + filename + "|" + checksum + "|" + size + "/";
+                            af.processLink(link);
+                        }
+                    }
+                }
+                catch (FileNotFoundException ex) {
+                    //nix zu tun
+                }
+                catch (IOException ex1) {
+                    //nix zu tun
+                }
+            }
+        }
+    }
+
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
@@ -986,6 +1047,14 @@ public class AppleJuiceDialog
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
                                           "extras"})));
+            menuItemDateiliste.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                          "dateiliste"})));
+            menuItemDateiliste.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                          "dateilistehint"})));
             themesMenu.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
@@ -1202,6 +1271,21 @@ public class AppleJuiceDialog
         }
         catch (IOException ioE) {
             logger.error(ioE);
+        }
+    }
+
+    private class TxtFileFilter extends FileFilter{
+        public boolean accept(File file) {
+            if (!file.isFile())
+                return true;
+            else{
+                String name = file.getName();
+                return (name.toLowerCase().endsWith(".ajl"));
+            }
+        }
+
+        public String getDescription() {
+            return "AJL-Dateien";
         }
     }
 }
