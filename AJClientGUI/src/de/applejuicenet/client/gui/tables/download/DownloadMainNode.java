@@ -17,7 +17,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import javax.swing.JTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.8 2004/02/24 18:21:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.9 2004/02/25 16:20:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import javax.swing.JTable;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadMainNode.java,v $
+ * Revision 1.9  2004/02/25 16:20:16  maj0r
+ * ProgressBar auf opaque=false gesetzt.
+ *
  * Revision 1.8  2004/02/24 18:21:51  maj0r
  * Schrift korrigiert.
  *
@@ -107,6 +110,7 @@ public class DownloadMainNode
     private void init(){
         progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
         progress.setStringPainted(true);
+        progress.setOpaque(false);
         progressbarLabel = new JLabel();
         progressbarLabel.setOpaque(true);
         versionLabel = new JLabel();
