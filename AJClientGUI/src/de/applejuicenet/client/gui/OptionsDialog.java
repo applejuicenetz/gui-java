@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.33 2004/01/26 19:38:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.34 2004/01/27 07:12:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import javax.swing.event.ListSelectionEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.34  2004/01/27 07:12:04  maj0r
+ * Muell entfernt.
+ *
  * Revision 1.33  2004/01/26 19:38:36  maj0r
  * Menueleiste ueberarbeitet.
  *
@@ -105,7 +108,6 @@ import javax.swing.event.ListSelectionEvent;
 
 public class OptionsDialog
         extends JDialog {
-    private JTabbedPane jTabbedPane1 = new JTabbedPane();
     private JFrame parent;
     private JButton speichern;
     private JButton abbrechen;
