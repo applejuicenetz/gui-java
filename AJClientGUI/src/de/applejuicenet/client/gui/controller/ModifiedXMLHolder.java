@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.28 2003/09/02 19:29:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.29 2003/09/06 08:34:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,10 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.29  2003/09/06 08:34:23  maj0r
+ * Nullpointer behoben.
+ * Dank an Fumpi.
+ *
  * Revision 1.28  2003/09/02 19:29:26  maj0r
  * Einige Stellen synchronisiert und Nullpointer behoben.
  * Version 0.21 beta.
@@ -554,6 +558,7 @@ public class ModifiedXMLHolder
             MapSetStringKey idKey = null;
             synchronized(this){
                 HashMap share = ApplejuiceFassade.getInstance().getShare(false);
+                ShareDO shareDO;
                 for (int i = 0; i < size; i++)
                 {
                     e = (Element) nodes.item(i);
@@ -594,10 +599,13 @@ public class ModifiedXMLHolder
                         upload = new UploadDO(id, shareId, version, status, nick,
                                               uploadFrom, uploadTo, actualUploadPos,
                                               speed, prioritaet);
-                        ShareDO shareDO = (ShareDO) share.get(new MapSetStringKey(shareId));
-                        upload.setDateiName(
-                                shareDO.getShortfilename());
-                        uploadMap.put(idKey, upload);
+                        shareDO = (ShareDO) share.get(new MapSetStringKey(shareId));
+                        if (upload!=null && shareDO!=null){
+                            /*wenns die passende Sharedatei aus irgendeinem Grund nicht geben sollte,
+                            wird dieser Upload auch nicht angezeigt*/
+                            upload.setDateiName(shareDO.getShortfilename());
+                            uploadMap.put(idKey, upload);
+                        }
                     }
                 }
             }
