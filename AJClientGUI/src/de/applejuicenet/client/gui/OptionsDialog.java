@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.30 2004/01/05 19:17:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.31 2004/01/21 14:29:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.31  2004/01/21 14:29:05  maj0r
+ * Icons eingebaut.
+ *
  * Revision 1.30  2004/01/05 19:17:18  maj0r
  * Bug #56 gefixt (Danke an MeineR)
  * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
@@ -127,34 +130,47 @@ public class OptionsDialog
     private void init() throws Exception {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         remote = PropertiesManager.getOptionsManager().getRemoteSettings();
+        IconManager im = IconManager.getInstance();
 
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                    getFirstAttrbuteByTagName(new
                                                            String[]{"einstform", "caption"})));
         standardPanel = new ODStandardPanel(this, ajSettings, remote); //Standard-Reiter
-        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        jTabbedPane1.addTab(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"einstform", "standardsheet",
-                                                                                                  "caption"})), standardPanel);
+                                                                                                  "caption"})),
+                                                                                        im.getIcon("opt_standard"),
+                                                                                        standardPanel);
         verbindungPanel = new ODVerbindungPanel(ajSettings); //Verbindungs-Reiter
-        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        jTabbedPane1.addTab(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"einstform", "connectionsheet",
-                                                                                                  "caption"})), verbindungPanel);
+                                                                                                  "caption"})),
+                                                                                     im.getIcon("opt_verbindung"),
+                                                                                     verbindungPanel);
         remotePanel = new ODConnectionPanel(remote, null); //Fernzugriff-Reiter
-        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        jTabbedPane1.addTab(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"einstform", "pwsheet",
-                                                                                                  "caption"})), remotePanel);
+                                                                                                  "caption"})),
+                                                                                        im.getIcon("opt_passwort"),
+                                                                                        remotePanel);
         proxyPanel = new ODProxyPanel(); //Proxy-Reiter
-        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        jTabbedPane1.addTab(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"javagui", "options", "proxy",
-                                                                                                  "caption"})), proxyPanel);
+                                                                                                  "caption"})),
+                                                                                        im.getIcon("opt_proxy"),
+                                                                                        proxyPanel);
         ansichtPanel = new ODAnsichtPanel();
-        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        jTabbedPane1.addTab(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
-                                                                                                  "caption"})), ansichtPanel);
+                                                                                                  "caption"})),
+                                                                                        im.getIcon("opt_ansicht"),
+                                                                                        ansichtPanel);
         pluginPanel = new ODPluginPanel(this); //Plugin-Reiter
-        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+        jTabbedPane1.addTab(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"einstform", "TabSheet1",
-                                                                                                  "caption"})), pluginPanel);
+                                                                                                  "caption"})),
+                                                                                        im.getIcon("opt_plugins"),
+                                                                                        pluginPanel);
         getContentPane().add(jTabbedPane1, BorderLayout.CENTER);
         speichern = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                   getFirstAttrbuteByTagName(new String[]{"einstform", "Button1",
