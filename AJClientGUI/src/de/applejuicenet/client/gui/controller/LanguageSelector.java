@@ -18,9 +18,10 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import java.io.FileInputStream;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.14 2004/02/24 14:26:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.15 2004/02/26 13:58:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +30,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.15  2004/02/26 13:58:19  maj0r
+ * Unicodefehler behoben.
+ *
  * Revision 1.14  2004/02/24 14:26:13  maj0r
  * Eingelesene Woerter werden nicht mehr entfernt, sondern nur noch ueberschrieben.
  *
@@ -107,7 +111,7 @@ public class LanguageSelector
                 key.delete(0, key.length() - 1);
             }
             xr.parse( new InputSource(
-                new FileReader( languageFile )) );
+                new FileInputStream( languageFile )) );
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
