@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.4 2004/02/18 20:44:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.5 2004/02/19 07:03:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListXMLHolder.java,v $
+ * Revision 1.5  2004/02/19 07:03:57  maj0r
+ * Bug #223 behoben.
+ *
  * Revision 1.4  2004/02/18 20:44:37  maj0r
  * Bugs #223 und #224 behoben.
  *
@@ -100,7 +103,7 @@ public class PartListXMLHolder
     private static PartListXMLHolder instance = null;
     private CharArrayWriter contents = new CharArrayWriter();
     private PartListDO partListDO;
-    private String zipMode;
+    private String zipMode = "";
 
     private PartListXMLHolder() {
         logger = Logger.getLogger(getClass());
