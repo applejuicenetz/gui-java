@@ -46,7 +46,11 @@ public class SwingTrayPopup
         //    setAlwaysOnTop and updateUI() hint
 
         WindowsTrayIcon.setMouseClickHook(new ClickListener());
-        //WindowsTrayIcon.setAlwaysOnTop(parent, true);
+        parent.setAlwaysOnTop(true);
+        parent.setAlwaysOnTop(false);
+        if (isVisible()){
+            return;         
+        }
         Dimension d = getPreferredSize();
         if (parent.isVisible()){
         	show(parent, xp - d.width, yp - d.height);
@@ -55,6 +59,7 @@ public class SwingTrayPopup
         	show(WindowsTrayIcon.getDummyComponent(), xp - d.width, yp - d.height);
         }
         updateUI();
+        
     }
 
     // Test if mouse is in menu or submenu

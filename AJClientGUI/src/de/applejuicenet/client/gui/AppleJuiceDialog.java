@@ -1189,9 +1189,13 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 			public void actionPerformed(ActionEvent ae) {
 				if (!isVisible()) {
 					setVisible(true);
-					toFront();
+					setAlwaysOnTop(true);
+                    setAlwaysOnTop(false);
 					requestFocus();
 				} else {
+                    if (popup.isVisible()){
+                        popup.setVisible(false);
+                    }
 					setVisible(false);
 				}
 			}
