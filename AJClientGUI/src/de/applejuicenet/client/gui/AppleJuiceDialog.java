@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.47 2003/09/09 17:43:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.48 2003/09/11 08:39:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.48  2003/09/11 08:39:29  maj0r
+ * Start durch Einbau von Threads beschleunigt.
+ *
  * Revision 1.47  2003/09/09 17:43:24  maj0r
  * Memory-Anzeige entfernt.
  *
@@ -233,38 +236,6 @@ public class AppleJuiceDialog
         ApplejuiceFassade dm = ApplejuiceFassade.getInstance();
         dm.addDataUpdateListener(this,
                                  DataUpdateListener.STATUSBAR_CHANGED);
-
-        try{
-            //http://download.berlios.de/applejuicejava/version.txt
-            String strAktuellsteVersion = HtmlLoader.getHtmlContent("download.berlios.de", 80, HtmlLoader.GET,
-                                                        "/applejuicejava/version.txt");
-            if (strAktuellsteVersion.length()>0){
-                int pos = ApplejuiceFassade.GUI_VERSION.indexOf(' ');
-                double aktuelleVersion;
-                if (pos!=-1){
-                    aktuelleVersion = Double.parseDouble(ApplejuiceFassade.GUI_VERSION.substring(0, pos));
-                }
-                else{
-                    aktuelleVersion = Double.parseDouble(ApplejuiceFassade.GUI_VERSION);
-                }
-                double aktuellsteVersion = Double.parseDouble(strAktuellsteVersion);
-                if (aktuellsteVersion>aktuelleVersion){
-                    String titel = ls.getFirstAttrbuteByTagName(new String[]{"javagui", "startup", "newversiontitel"});
-                    String nachricht = ls.getFirstAttrbuteByTagName(new String[]{"javagui", "startup", "newversionnachricht"});
-                    nachricht = nachricht.replaceFirst("%s", strAktuellsteVersion);
-                    JOptionPane.showMessageDialog(this, nachricht, titel,
-                            JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        }
-        catch (WebSiteNotFoundException e){
-            if (logger.isEnabledFor(Level.INFO))
-                logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Proxy?");
-        }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.INFO))
-                logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
-        }
         dm.startXMLCheck();
     }
 

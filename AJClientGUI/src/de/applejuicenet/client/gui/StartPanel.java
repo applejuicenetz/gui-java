@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.23 2003/09/11 06:54:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.24 2003/09/11 08:39:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.24  2003/09/11 08:39:30  maj0r
+ * Start durch Einbau von Threads beschleunigt.
+ *
  * Revision 1.23  2003/09/11 06:54:15  maj0r
  * Auf neues Sessions-Prinzip umgebaut.
  * Sprachenwechsel korrigert, geht nun wieder flott.
@@ -226,8 +229,10 @@ public class StartPanel
         add(panel4, BorderLayout.CENTER);
         languageSelector = LanguageSelector.getInstance();
         languageSelector.addLanguageListener(this);
-        Thread informer = new Thread(){
+        Thread aktualisierungWorker = new Thread(){
             public void run(){
+                if (logger.isEnabledFor(Level.DEBUG))
+                    logger.debug("AktualisierungsWorkerThread gestartet. " + this);
                 try{
                     String coreVersion = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
                     version.setText("GUI: " + ApplejuiceFassade.GUI_VERSION + " Core: " +
@@ -252,9 +257,11 @@ public class StartPanel
                     if (logger.isEnabledFor(Level.INFO))
                         logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Server down?");
                 }
+                if (logger.isEnabledFor(Level.DEBUG))
+                    logger.debug("AktualisierungsWorkerThread beendet. " + this);
             }
         };
-        SwingUtilities.invokeLater(informer);
+        aktualisierungWorker.start();
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
                                                               DataUpdateListener.NETINFO_CHANGED);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
