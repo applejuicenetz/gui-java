@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.16 2004/02/12 18:18:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.17 2004/02/15 18:44:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.17  2004/02/15 18:44:14  maj0r
+ * Bug #215 gefixt (Danke an dsp2004)
+ * Partliste wird nun auch bei kleinen Dateien korrekt gezeichnet.
+ *
  * Revision 1.16  2004/02/12 18:18:32  maj0r
  * Zeichnen des letzten Parts korrigiert.
  *
@@ -108,7 +112,13 @@ public class DownloadPartListPanel
             if (partListDO != null) {
                 int zeilenHoehe = 15;
                 int zeilen = height / zeilenHoehe;
-                int pixelSize = (int) (partListDO.getGroesse() / (zeilen * width) );
+                int pixelSize;
+                if (partListDO.getGroesse() > (zeilen * width)){
+                    pixelSize = (int) (partListDO.getGroesse() / (zeilen * width));
+                }
+                else{
+                    pixelSize = (int) ((zeilen * width) / partListDO.getGroesse());
+                }
                 BufferedImage tempImage = new BufferedImage(width * zeilen, 15,
                                           BufferedImage.TYPE_INT_ARGB);
                 Graphics graphics = tempImage.getGraphics();
