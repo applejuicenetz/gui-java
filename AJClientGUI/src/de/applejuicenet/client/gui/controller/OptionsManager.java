@@ -40,13 +40,11 @@ public class OptionsManager extends XMLDecoder {
   public ProxyConfiguration getProxySettings(){
     String[] proxySettings = new String[4];
     proxySettings[0] = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "ip"});
-    if (proxySettings[0].compareTo("")==0)
-      return null;
     proxySettings[1] = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "port"});
     proxySettings[2] = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "user"});
     proxySettings[3] = Base64.decode(getFirstAttrbuteByTagName(new String[] {"options", "proxy", "pass"}));
     boolean use = getFirstAttrbuteByTagName(new String[] {"options", "proxy", "use"}).equals("1");
-    return new ProxyConfiguration(proxySettings[0], Integer.parseInt(proxySettings[1]), proxySettings[2], proxySettings[3], use);
+    return new ProxyConfiguration(proxySettings[0], (proxySettings[1].equalsIgnoreCase(""))? 0 : Integer.parseInt(proxySettings[1]), proxySettings[2], proxySettings[3], use);
   }
 
   public void saveProxy(ProxyConfiguration proxy){
