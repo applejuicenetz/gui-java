@@ -13,10 +13,13 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -24,6 +27,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -60,10 +64,9 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import javax.swing.Icon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.77 2004/01/07 17:16:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.78 2004/01/09 13:07:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -72,6 +75,10 @@ import javax.swing.Icon;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.78  2004/01/09 13:07:19  maj0r
+ * Bug #33 gefixt (Danke an oz_2k)
+ * Obwohl ich denke, dass es sich um ein Feature der Themes handelt, wurde der Vollbildmodus auf Wunsch vieler Benutzer an Windowsstandard angepasst.
+ *
  * Revision 1.77  2004/01/07 17:16:20  maj0r
  * Button zum Themes deaktivieren an Sprachen angepasst.
  *
@@ -283,6 +290,11 @@ public class AppleJuiceDialog
     private String titel;
     private static boolean themesInitialized = false;
     private String bestaetigung = "";
+    private int desktopHeight;
+    private int desktopWidth;
+    private boolean maximized = false;
+    private Dimension lastFrameSize;
+    private Point lastFrameLocation;
 
     private static boolean useTrayIcon = false;
     private JMenuItem popupShowHideMenuItem;
@@ -409,6 +421,38 @@ public class AppleJuiceDialog
                 closeDialog(evt);
             }
         });
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        desktopWidth = screenSize.width;
+        desktopHeight = screenSize.height;
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int x = getWidth();
+                int y = getHeight();
+                if (x == desktopWidth && y == desktopHeight) {
+                    if (maximized) {
+                        demaximize();
+                    }
+                    else {
+                        maximize();
+                    }
+                }
+                else {
+                    if (!maximized) {
+                        lastFrameSize = getSize();
+                        lastFrameLocation = getLocation();
+                    }
+                    super.componentResized(e);
+                }
+            }
+
+            public void componentMoved(ComponentEvent e) {
+                if (!maximized) {
+                    lastFrameLocation = getLocation();
+                }
+                super.componentMoved(e);
+            }
+        });
+
         if (osName.toLowerCase().indexOf("win") != -1) {
             try {
                 if (!WindowsTrayIcon.isRunning(titel)) {
@@ -548,6 +592,23 @@ public class AppleJuiceDialog
         dm.addDataUpdateListener(this,
                                  DataUpdateListener.INFORMATION_CHANGED);
         dm.startXMLCheck();
+    }
+
+    private void demaximize() {
+        setSize(lastFrameSize);
+        setLocation(lastFrameLocation);
+        maximized = false;
+    }
+
+    private void maximize() {
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Dimension screenSize = tk.getScreenSize();
+        Insets insets = tk.getScreenInsets(getGraphicsConfiguration());
+        screenSize.width -= (insets.left + insets.right);
+        screenSize.height -= (insets.top + insets.bottom);
+        setSize(screenSize);
+        setLocation(insets.left, insets.top);
+        maximized = true;
     }
 
     private static void einstellungenSpeichern() {
@@ -925,11 +986,12 @@ public class AppleJuiceDialog
                 getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
                                           "bestaetigung"}));
 
-            if (useTrayIcon){
+            if (useTrayIcon) {
                 trayIcon.setToolTipText(titel);
                 popupAboutMenuItem.setText(ZeichenErsetzer.korrigiereUmlaute(
                     languageSelector.
-                    getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
+                    getFirstAttrbuteByTagName(new String[] {"mainform",
+                                              "aboutbtn",
                                               "caption"})));
                 zeigen = ZeichenErsetzer.korrigiereUmlaute(
                     languageSelector.
@@ -993,10 +1055,10 @@ public class AppleJuiceDialog
             }
         });
         popup.add(popupShowHideMenuItem);
-	IconManager im = IconManager.getInstance();
+        IconManager im = IconManager.getInstance();
         versteckenIcon = im.getIcon("hide");
         zeigenIcon = im.getIcon("applejuice");
-	Icon aboutIcon = im.getIcon("about");
+        Icon aboutIcon = im.getIcon("about");
         popupAboutMenuItem = new JMenuItem("&Info", aboutIcon);
         popupAboutMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
