@@ -1,0 +1,1 @@
+In dieses Verzeichnis kommen die Plugins als jar-Archive rein.

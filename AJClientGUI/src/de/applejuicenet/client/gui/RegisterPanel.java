@@ -9,6 +9,11 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
+import java.io.File;
+import java.net.MalformedURLException;
+import de.applejuicenet.client.shared.PluginJarClassLoader;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.gui.controller.DataManager;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -71,6 +76,41 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener{
     ImageIcon icon5 = new ImageIcon();
     icon5.setImage(img);
     addTab("Server", icon5, serverPanel);
+
+    loadPlugins();
+  }
+
+  private void loadPlugins(){
+    String path = System.getProperty("user.dir") + File.separator + "plugins" + File.separator;
+    File pluginPath = new File(path);
+    String[] tempListe = pluginPath.list();
+    for (int i = 0; i < tempListe.length; i++) {
+      if (tempListe[i].indexOf(".jar")!=-1){
+        URL url = null;
+        try {
+          url = new URL("file://" + path + tempListe[i]);
+        }
+        catch (MalformedURLException ex) {
+          continue;
+        }
+        try{
+          PluginJarClassLoader jarLoader = new PluginJarClassLoader(url);
+          PluginConnector aPlugin = jarLoader.getPlugin();
+          if (aPlugin != null) {
+            if (aPlugin.istReiter()) {
+              ImageIcon icon = aPlugin.getIcon();
+              addTab(aPlugin.getTitle(), icon, aPlugin);
+            }
+            DataManager.getInstance().addGlobalListener(aPlugin);
+            LanguageSelector.getInstance().addLanguageListener(aPlugin);
+          }
+        }
+        catch (Exception e){
+          //Von einem Plugin lassen wir uns nicht beirren! ;-)
+          e.printStackTrace();
+        }
+      }
+    }
   }
 
   public void fireLanguageChanged(){

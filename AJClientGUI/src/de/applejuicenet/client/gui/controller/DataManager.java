@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 public class DataManager {   //Singleton-Implementierung
   private DownloadSourceDO[] downloads;
   private HashSet downloadListener;
+  private HashSet globalListener;
   private static DataManager instance = null;
   private static int x=0;
   private JLabel[] statusbar;
@@ -28,8 +29,14 @@ public class DataManager {   //Singleton-Implementierung
       downloadListener.add(listener);
   }
 
+  public void addGlobalListener(DataUpdateListener listener){
+    if (!(globalListener.contains(listener)))
+      globalListener.add(listener);
+  }
+
   private DataManager(){
     downloadListener = new HashSet();
+    globalListener = new HashSet();
    //Dummy-Implementierung
    Version version = new Version("0.27", "Java", "Win");
    DownloadSourceDO source = new DownloadSourceDO(false, "datei2.jpg", DownloadSourceDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "Maj0r", null);
@@ -51,6 +58,13 @@ public class DataManager {   //Singleton-Implementierung
 
   private void informDownloadListener(){
     Iterator it = downloadListener.iterator();
+    while (it.hasNext()){
+      ((DataUpdateListener)it.next()).fireContentChanged();
+    }
+  }
+
+  private void informGlobalListener(){
+    Iterator it = globalListener.iterator();
     while (it.hasNext()){
       ((DataUpdateListener)it.next()).fireContentChanged();
     }
@@ -79,6 +93,7 @@ public class DataManager {   //Singleton-Implementierung
     //dummy
     x++;
     downloads[1].setGroesse(Integer.toString(x));
+    informGlobalListener();
     informDownloadListener();
   }
 }

@@ -14,6 +14,8 @@ import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedE
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import java.util.HashSet;
 import java.util.Iterator;
+import de.applejuicenet.client.shared.PluginJarClassLoader;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
