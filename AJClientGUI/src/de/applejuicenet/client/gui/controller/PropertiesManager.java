@@ -28,15 +28,18 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.36 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.37 2004/03/04 18:31:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.37  2004/03/04 18:31:15  maj0r
+ * Nicht vorhandene Unterverzeichnisse muessen nacheinander erzeugt werden.
+ *
  * Revision 1.36  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -256,9 +259,14 @@ public class PropertiesManager
     public static String getPropertiesPath(){
         if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1){
             String dir = System.getProperty("user.home") + File.separator +
-                "appleJuice" + File.separator + "gui";
+                "appleJuice";
             File directory = new File(dir);
             if (!directory.isDirectory()){
+                directory.mkdir();
+            }
+            dir += File.separator + "gui";
+            directory = new File(dir);
+            if (!directory.isDirectory()) {
                 directory.mkdir();
             }
             dir += File.separator + "properties.xml";
