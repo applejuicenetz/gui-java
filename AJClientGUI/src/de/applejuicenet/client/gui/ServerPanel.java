@@ -42,7 +42,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.41 2003/12/27 14:02:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.42 2003/12/29 09:39:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -51,13 +51,14 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.42  2003/12/29 09:39:21  maj0r
+ * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
+ *
  * Revision 1.41  2003/12/27 14:02:15  maj0r
- * Bug #1232 fixed (Danke an muhviestarr)
- * Legende fuer die Servertabelle eingebaut.
+ * Legende fuer die Servertabelle eingebaut (Danke an muhviestarr).
  *
  * Revision 1.40  2003/12/26 19:26:40  maj0r
- * Bug #1231 fixed (Danke an muhviestarr)
- * Gridlines werden nun in der Servertabelle nicht mehr angezeigt.
+ * Gridlines werden nun in der Servertabelle nicht mehr angezeigt (Danke an muhviestarr).
  *
  * Revision 1.39  2003/12/17 16:42:16  maj0r
  * Verhalten des Popupmenues der Servertabelle ueberarbeitet.

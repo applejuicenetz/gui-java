@@ -18,7 +18,7 @@ import java.util.Iterator;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.32 2003/11/24 21:12:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.33 2003/12/29 09:39:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.33  2003/12/29 09:39:21  maj0r
+ * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
+ *
  * Revision 1.32  2003/11/24 21:12:35  maj0r
  * Hier trat merkwuerdigerweise ein Bug auf, spezielleres Logging fuer bessere Auswertung eingebaut.
  *
@@ -46,8 +49,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * Soundeffekte fuer diverse Ereignisse eingefuegt.
  *
  * Revision 1.26  2003/10/27 12:40:48  maj0r
- * Bug #1046 fixed (Danke an lova):
- * Buttons entsprechend dem Standard vertauscht.
+ * Buttons entsprechend dem Standard vertauscht (Danke an lova).
  *
  * Revision 1.25  2003/10/16 12:06:51  maj0r
  * Diverse Schoenheitskorrekturen.

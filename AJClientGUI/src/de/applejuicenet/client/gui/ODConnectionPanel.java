@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.6 2003/12/27 19:06:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.7 2003/12/29 09:39:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,9 +19,11 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODConnectionPanel.java,v $
+ * Revision 1.7  2003/12/29 09:39:21  maj0r
+ * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
+ *
  * Revision 1.6  2003/12/27 19:06:33  maj0r
- * Bug #1233 fixed (Danke an muhviestarr)
- * Im Verbindungsfenster geht nun ein einfaches <Enter>.
+ * Im Verbindungsfenster geht nun ein einfaches <Enter> (Danke an muhviestarr).
  *
  * Revision 1.5  2003/10/14 19:21:23  maj0r
  * Korrekturen zur Xml-Port-Verwendung.

@@ -5,7 +5,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModel;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareModel.java,v 1.5 2003/12/28 10:48:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareModel.java,v 1.6 2003/12/29 09:39:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,9 +14,11 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ShareModel.java,v $
+ * Revision 1.6  2003/12/29 09:39:21  maj0r
+ * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
+ *
  * Revision 1.5  2003/12/28 10:48:44  maj0r
- * Bug #1247 fixed (Danke an schnigger und TuxHomer)
- * Dateigroessen in der Sharetabelle werden nun korrekt ausgegeben.
+ * Dateigroessen in der Sharetabelle werden nun korrekt ausgegeben (Danke an schnigger und TuxHomer).
  *
  * Revision 1.4  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.

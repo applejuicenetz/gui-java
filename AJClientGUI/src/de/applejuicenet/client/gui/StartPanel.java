@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.35 2003/12/28 10:31:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.36 2003/12/29 09:39:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,15 +17,15 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.36  2003/12/29 09:39:21  maj0r
+ * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
+ *
  * Revision 1.35  2003/12/28 10:31:31  maj0r
- * Bug #1248 fixed (Danke an paderborner)
- * Nullpointer behoben der auftrat, wenn der verbundene Server keinen Namen hat.
+ * Nullpointer behoben der auftrat, wenn der verbundene Server keinen Namen hat (Danke an paderborner).
  *
  * Revision 1.34  2003/12/27 13:33:18  maj0r
- * Bug #1229 fixed (Danke an muhviestarr)
- * Text von Netzwerk, Neuigkeiten und Nachrichten ist nun auch schwarz.
- * Bug #1226 fixed (Danke an muhviestarr)
- * Die Ueberschrift "Warnungen" auf der Startseite wird nun ausgeblendet, wenn es keine Warnungen gibt.
+ * Text von Netzwerk, Neuigkeiten und Nachrichten ist nun auch schwarz (Danke an muhviestarr).
+ * Die Ueberschrift "Warnungen" auf der Startseite wird nun ausgeblendet, wenn es keine Warnungen gibt (Danke an muhviestarr).
  *
  * Revision 1.33  2003/12/17 11:06:30  maj0r
  * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.

@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.15 2003/12/27 21:14:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.16 2003/12/29 09:39:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,18 +19,20 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.16  2003/12/29 09:39:21  maj0r
+ * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
+ *
  * Revision 1.15  2003/12/27 21:14:24  maj0r
  * Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
  *
  * Revision 1.14  2003/10/27 13:00:17  maj0r
- * Bug #1039 fixed (Danke an xcalibur):
- * Ist im Core noch nicht implementiert und deshalb erstmal wieder aus dem GUI geflogen.
+ * Ist im Core noch nicht implementiert und deshalb erstmal wieder aus dem GUI geflogen (Danke an xcalibur).
  *
  * Revision 1.13  2003/10/14 15:43:52  maj0r
  * An pflegbaren Xml-Port angepasst.
  *
  * Revision 1.12  2003/10/13 12:37:48  maj0r
- * Bug #1003 behoben.
+ * Bug behoben.
  *
  * Revision 1.11  2003/09/11 06:54:15  maj0r
  * Auf neues Sessions-Prinzip umgebaut.
