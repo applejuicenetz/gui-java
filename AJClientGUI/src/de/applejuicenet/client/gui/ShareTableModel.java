@@ -8,7 +8,7 @@ import javax.swing.table.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ShareTableModel.java,v 1.5 2003/06/30 19:46:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ShareTableModel.java,v 1.6 2003/07/01 18:34:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareTableModel.java,v $
+ * Revision 1.6  2003/07/01 18:34:28  maj0r
+ * Struktur ver�ndert.
+ *
  * Revision 1.5  2003/06/30 19:46:11  maj0r
  * Sourcestil verbessert.
  *
@@ -32,7 +35,7 @@ import de.applejuicenet.client.shared.dac.*;
 public class ShareTableModel
     extends AbstractTableModel {
   final static String[] COL_NAMES = {
-      "Dateiname", "Gr��e", "Priorit�t"};
+      "Dateiname", "Größe", "Priorität"};
 
   ArrayList shares = new ArrayList();
 
