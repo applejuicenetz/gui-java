@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.7 2003/10/15 09:12:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.8 2003/12/16 09:28:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.8  2003/12/16 09:28:04  maj0r
+ * NullPointer behoben.
+ *
  * Revision 1.7  2003/10/15 09:12:34  maj0r
  * Beim Deaktivieren der Partliste wird diese nun auch zurueck gesetzt,
  *
@@ -44,8 +47,8 @@ public class DownloadPartListPanel extends JPanel {
     private PartListDO partListDO;
     private Logger logger;
     private BufferedImage image = null;
-    int width;
-    int height;
+    private int width;
+    private int height;
 
     public DownloadPartListPanel() {
         super(new BorderLayout());
@@ -53,7 +56,7 @@ public class DownloadPartListPanel extends JPanel {
     }
 
     public void paintComponent(Graphics g) {
-        if (partListDO != null)
+        if (partListDO != null && image!=null)
         {
             if (height != getHeight() || width != getWidth()){
                 setPartList(partListDO);
