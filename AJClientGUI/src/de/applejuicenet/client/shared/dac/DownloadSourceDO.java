@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.Version;
 import javax.swing.JTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.22 2004/02/24 18:21:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.23 2004/02/25 16:20:01 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import javax.swing.JTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.23  2004/02/25 16:20:01  maj0r
+ * ProgressBar auf opaque=false gesetzt.
+ * VersionLabel und ProgressBar wird nur bei tatsaechlicher Wertaenderung aktualisiert.
+ *
  * Revision 1.22  2004/02/24 18:21:51  maj0r
  * Schrift korrigiert.
  *
@@ -136,6 +140,8 @@ public class DownloadSourceDO
     private JProgressBar progress;
     private JLabel progressbarLabel;
     private JLabel versionLabel;
+    private boolean progressChanged = false;
+    private boolean versionChanged = false;
 
     public DownloadSourceDO(int id){
         this.id = id;
@@ -161,12 +167,15 @@ public class DownloadSourceDO
         this.filename = filename;
         this.nickname = nickname;
         this.downloadId = downloadId;
+        progressChanged = true;
+        versionChanged = true;
         init();
     }
 
     private void init(){
         progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
         progress.setStringPainted(true);
+        progress.setOpaque(false);
         progressbarLabel = new JLabel();
         progressbarLabel.setOpaque(true);
         versionLabel = new JLabel();
@@ -288,6 +297,7 @@ public class DownloadSourceDO
 
     public void setDownloadFrom(int downloadFrom) {
         this.downloadFrom = downloadFrom;
+        progressChanged = true;
     }
 
     public int getDownloadTo() {
@@ -296,6 +306,7 @@ public class DownloadSourceDO
 
     public void setDownloadTo(int downloadTo) {
         this.downloadTo = downloadTo;
+        progressChanged = true;
     }
 
     public int getActualDownloadPosition() {
@@ -304,6 +315,7 @@ public class DownloadSourceDO
 
     public void setActualDownloadPosition(int actualDownloadPosition) {
         this.actualDownloadPosition = actualDownloadPosition;
+        progressChanged = true;
     }
 
     public int getSpeed() {
@@ -320,6 +332,7 @@ public class DownloadSourceDO
 
     public void setVersion(Version version) {
         this.version = version;
+        versionChanged = true;
     }
 
     public int getQueuePosition() {
@@ -471,14 +484,17 @@ public class DownloadSourceDO
 
     public Component getProgressbarComponent(JTable table, Object value) {
         if (status == DownloadSourceDO.UEBERTRAGUNG) {
-            String prozent = getDownloadPercentAsString();
-            int pos = prozent.indexOf('.');
-            String balken = prozent;
-            if (pos != -1) {
-                balken = balken.substring(0, pos);
+            if (progressChanged){
+                String prozent = getDownloadPercentAsString();
+                int pos = prozent.indexOf('.');
+                String balken = prozent;
+                if (pos != -1) {
+                    balken = balken.substring(0, pos);
+                }
+                progress.setValue(Integer.parseInt(balken));
+                progress.setString(prozent + " %");
+                progressChanged = false;
             }
-            progress.setValue(Integer.parseInt(balken));
-            progress.setString(prozent + " %");
             return progress;
         }
         else {
@@ -487,14 +503,17 @@ public class DownloadSourceDO
     }
 
     public Component getVersionComponent(JTable table, Object value) {
-        if (getVersion() == null) {
-            versionLabel.setIcon(null);
-            versionLabel.setText("");
-        }
-        else {
-            versionLabel.setFont(table.getFont());
-            versionLabel.setIcon(getVersion().getVersionIcon());
-            versionLabel.setText(getVersion().getVersion());
+        if(versionChanged){
+            if (getVersion() == null) {
+                versionLabel.setIcon(null);
+                versionLabel.setText("");
+            }
+            else {
+                versionLabel.setFont(table.getFont());
+                versionLabel.setIcon(getVersion().getVersionIcon());
+                versionLabel.setText(getVersion().getVersion());
+            }
+            versionChanged = false;
         }
         return versionLabel;
     }
