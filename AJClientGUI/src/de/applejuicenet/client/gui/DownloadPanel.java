@@ -67,7 +67,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.91 2004/02/09 14:10:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.92 2004/02/12 18:40:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -76,6 +76,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.92  2004/02/12 18:40:35  maj0r
+ * Muell entfernt.
+ *
  * Revision 1.91  2004/02/09 14:10:01  maj0r
  * Rand der JSplitPane im Downloadbereich entfernt (Danke an muhviestarr).
  *
@@ -335,9 +338,7 @@ public class DownloadPanel
     private String dialogTitel;
     private JMenuItem item7;
     private Logger logger;
-    private boolean isDownloadUebersicht;
     private String neuerDateiname;
-    private String neuesVerzeichnis;
     private boolean panelSelected = false;
 
     private JPopupMenu columnPopup = new JPopupMenu();
@@ -360,7 +361,6 @@ public class DownloadPanel
         try {
             downloadDOOverviewPanel = new DownloadDOOverviewPanel(this);
             powerDownloadPanel = new PowerDownloadPanel(this);
-            isDownloadUebersicht = Settings.getSettings().isDownloadUebersicht();
             init();
             LanguageSelector.getInstance().addLanguageListener(this);
         }
