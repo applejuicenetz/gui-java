@@ -127,8 +127,8 @@ public class AppleJuiceDialog
     //Tooltipps einstellen
     ToolTipManager.sharedInstance().setInitialDelay(1);
     ToolTipManager.sharedInstance().setDismissDelay(50000);
-
     fireLanguageChanged();
+    DataManager.getInstance().startXMLCheck();
   }
 
   public Dimension getPreferredSize() {

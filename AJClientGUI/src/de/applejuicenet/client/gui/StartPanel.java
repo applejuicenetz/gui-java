@@ -8,6 +8,8 @@ import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import java.util.HashMap;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -18,7 +20,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @version 1.0
  */
 
-public class StartPanel extends JPanel implements LanguageListener, RegisterI{
+public class StartPanel extends JPanel implements LanguageListener, RegisterI, DataUpdateListener{
   private static final Color APFEL_GRUEN = new Color(34, 146, 14);
 
   private JLabel warnungen;
@@ -29,6 +31,8 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI{
   private JLabel netzwerk;
   private JLabel label6;
   private JLabel label9;
+
+  private LanguageSelector languageSelector;
 
   public StartPanel() {
     try {
@@ -153,11 +157,13 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI{
     add(panel1, BorderLayout.NORTH);
     panel4.add(panel3, BorderLayout.NORTH);
     add(panel4, BorderLayout.CENTER);
-    LanguageSelector.getInstance().addLanguageListener(this);
+    languageSelector = LanguageSelector.getInstance();
+    languageSelector.addLanguageListener(this);
+    DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.NETINFO_CHANGED);
   }
 
   public void registerSelected(){
-    updateContent();
+//    updateContent();
   }
 
   private void updateContent(){
@@ -166,7 +172,6 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI{
 
   public void fireLanguageChanged(){
     NetworkInfo netInfo = DataManager.getInstance().getNetworkInfo();
-    LanguageSelector languageSelector = LanguageSelector.getInstance();
     netzwerk.setText("<html><font><h2>" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "html7"})) + "</h2></font></html>");
     nachrichten.setText("<html><font><h2>" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "html13"})) + "</h2></font></html>");
     deinClient.setText("<html><font><h2>" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "html1"})) + "</h2></font></html>");
@@ -187,5 +192,16 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI{
     temp = temp.replaceFirst("%s", netInfo.getAJGesamtShareWithPoints(0));
     label6.setText(temp);
     warnungen.setText("<html><font><h2>" + ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "html15"})) + "</h2></font></html>");
+  }
+
+  public void fireContentChanged(int type, Object content){
+    if (type != DataUpdateListener.NETINFO_CHANGED || !(content instanceof NetworkInfo))
+      return;
+    NetworkInfo netInfo = (NetworkInfo) content;
+    String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "status", "status2"}));
+    temp = temp.replaceFirst("%d", netInfo.getAJUserGesamtAsStringWithPoints());
+    temp = temp.replaceFirst("%d", netInfo.getAJAnzahlDateienAsStringWithPoints());
+    temp = temp.replaceFirst("%s", netInfo.getAJGesamtShareWithPoints(0));
+    label6.setText(temp);
   }
 }

@@ -44,10 +44,10 @@ public class NetworkInfo {
     if (share==0)
       return "0,00 MB";
     if (faktor==0){  //selbst entscheiden
-      if (share /1000 < 1000)
-        faktor=1000;
-      else if (share /1000000 < 1000)
-        faktor=1000000;
+      if (share /1024 < 1024)
+        faktor=1024;
+      else if (share /1048576 < 1000)
+        faktor=1048576;
       else faktor = 1;
     }
     share = share / faktor;
@@ -56,9 +56,9 @@ public class NetworkInfo {
     result = result.replace('.', ',');
     if (faktor==1)
       result += " MB";
-    else if (faktor==1000)
+    else if (faktor==1024)
       result += " GB";
-    else if (faktor==1000000)
+    else if (faktor==1048576)
       result += " TB";
     else
       result += " ??";

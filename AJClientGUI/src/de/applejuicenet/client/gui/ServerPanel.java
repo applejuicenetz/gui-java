@@ -124,16 +124,21 @@ public class ServerPanel
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(serverTable);
     add(aScrollPane, BorderLayout.CENTER);
-    DataManager.getInstance().addServerListener(this);
+    DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.SERVER_CHANGED);
   }
 
   public void registerSelected(){
     DataManager.getInstance().updateModifiedXML();
   }
 
-  public void fireContentChanged(int type, HashMap content){
-    if (type == DataUpdateListener.SERVER_CHANGED)
-      ((ServerTableModel)serverTable.getModel()).setTable(content);
+  public void fireContentChanged(int type, Object content){
+    if (type != DataUpdateListener.SERVER_CHANGED || !(content instanceof HashMap))
+      return;
+    int selected = serverTable.getSelectedRow();
+    ( (ServerTableModel) serverTable.getModel()).setTable((HashMap)content);
+    if (selected != -1 && selected < serverTable.getRowCount())
+      serverTable.setRowSelectionInterval(selected, selected);
+
   }
 
   public void fireLanguageChanged() {

@@ -112,6 +112,10 @@ public class DownloadSourceDO {
     return bereitsGeladen;
   }
 
+  public void setProzentGeladen(String prozent) {
+    prozentGeladen = prozent;
+  }
+
   public String getProzentGeladen() {
     //to do
     return prozentGeladen;
@@ -142,7 +146,7 @@ public class DownloadSourceDO {
   }
 
   public void addDownloadSource(DownloadSourceDO source) {
-    if (! (sources.contains(source))) {
+    if (source!=null && !(sources.contains(source))) {
       sources.add(source);
     }
   }

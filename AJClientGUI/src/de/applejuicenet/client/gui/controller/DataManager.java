@@ -4,7 +4,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.Timer;
 
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
@@ -24,6 +26,7 @@ public class DataManager { //Singleton-Implementierung
   private HashSet shareListener;
   private HashSet uploadListener;
   private HashSet serverListener;
+  private HashSet networkInfoListener;
   private static DataManager instance = null;
   private static int x = 0;
   private JLabel[] statusbar;
@@ -32,28 +35,24 @@ public class DataManager { //Singleton-Implementierung
   private ShareXMLHolder shareXML = null;
   private SettingsXMLHolder settingsXML = null;
   private Version coreVersion;
+  private Timer modifiedTimer;
 
-  public void addDownloadListener(DataUpdateListener listener) {
-    if (! (downloadListener.contains(listener))) {
-      downloadListener.add(listener);
-    }
-  }
-
-  public void addUploadListener(DataUpdateListener listener) {
-    if (! (uploadListener.contains(listener))) {
-      uploadListener.add(listener);
-    }
-  }
-
-  public void addShareListener(DataUpdateListener listener) {
-    if (! (shareListener.contains(listener))) {
-      shareListener.add(listener);
-    }
-  }
-
-  public void addServerListener(DataUpdateListener listener) {
-    if (! (serverListener.contains(listener))) {
-      serverListener.add(listener);
+  public void addDataUpdateListener(DataUpdateListener listener, int type) {
+    HashSet listenerSet = null;
+    if (type == DataUpdateListener.DOWNLOAD_CHANGED)
+      listenerSet = downloadListener;
+    else if (type == DataUpdateListener.NETINFO_CHANGED)
+      listenerSet = networkInfoListener;
+    else if (type == DataUpdateListener.SERVER_CHANGED)
+      listenerSet = serverListener;
+    else if (type == DataUpdateListener.SHARE_CHANGED)
+      listenerSet = shareListener;
+    else if (type == DataUpdateListener.UPLOAD_CHANGED)
+      listenerSet = uploadListener;
+    else
+      return;
+    if (! (listenerSet.contains(listener))) {
+      listenerSet.add(listener);
     }
   }
 
@@ -62,6 +61,7 @@ public class DataManager { //Singleton-Implementierung
     serverListener = new HashSet();
     uploadListener = new HashSet();
     shareListener = new HashSet();
+    networkInfoListener = new HashSet();
 
     //load XMLs
     modifiedXML = new ModifiedXMLHolder();
@@ -75,6 +75,23 @@ public class DataManager { //Singleton-Implementierung
     coreVersion = new Version(versionsTag, "Java",
                               Version.getOSTypByOSName( (String) System.
         getProperties().get("os.name")));
+
+    ActionListener modifiedAction = new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        updateModifiedXML();
+      }
+    };
+    modifiedTimer = new Timer(1000, modifiedAction);
+  }
+
+  public void startXMLCheck(){
+    if (!modifiedTimer.isRunning())
+      modifiedTimer.start();
+  }
+
+  public void stopXMLCheck(){
+    if (modifiedTimer.isRunning())
+      modifiedTimer.stop();
   }
 
   public AJSettings getAJSettings() {
@@ -121,9 +138,11 @@ public class DataManager { //Singleton-Implementierung
 
   public void updateModifiedXML() {
     modifiedXML.update();
-    informServerListener();
-    informDownloadListener();
-    informUploadListener();
+    informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
+    informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
+    informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
+    informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
+    updateStatusbar();
   }
 
   public static boolean connectToServer(int id) {
@@ -177,51 +196,58 @@ public class DataManager { //Singleton-Implementierung
     return coreVersion;
   }
 
-  private void informDownloadListener() {
-    HashMap content = modifiedXML.getDownloads();
-    if (content.size() == 0) {
-      return;
+  private void informDataUpdateListener(int type) {
+    if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
+      HashMap content = modifiedXML.getDownloads();
+      if (content.size() == 0) {
+        return;
+      }
+      Iterator it = downloadListener.iterator();
+      while (it.hasNext()) {
+        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+            DOWNLOAD_CHANGED, content);
+      }
     }
-    Iterator it = downloadListener.iterator();
-    while (it.hasNext()) {
-      ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-          DOWNLOAD_CHANGED, content);
-    }
-  }
+    else if (type == DataUpdateListener.UPLOAD_CHANGED) {
+      HashMap content = modifiedXML.getUploads();
+      if (content.size() == 0) {
+        return;
+      }
+      Iterator it = uploadListener.iterator();
+      while (it.hasNext()) {
+        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+            UPLOAD_CHANGED, content);
+      }
 
-  private void informUploadListener() {
-    HashMap content = modifiedXML.getUploads();
-    if (content.size() == 0) {
-      return;
     }
-    Iterator it = uploadListener.iterator();
-    while (it.hasNext()) {
-      ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-          UPLOAD_CHANGED, content);
+    else if (type == DataUpdateListener.SERVER_CHANGED) {
+      HashMap content = modifiedXML.getServer();
+      if (content.size() == 0) {
+        return;
+      }
+      Iterator it = serverListener.iterator();
+      while (it.hasNext()) {
+        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+            SERVER_CHANGED, content);
+      }
     }
-  }
-
-  private void informShareListener() {
-    HashMap content = shareXML.getShare();
-    if (content.size() == 0) {
-      return;
+    else if (type == DataUpdateListener.SHARE_CHANGED) {
+      HashMap content = shareXML.getShare();
+      if (content.size() == 0) {
+        return;
+      }
+      Iterator it = shareListener.iterator();
+      while (it.hasNext()) {
+        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+            SHARE_CHANGED, content);
+      }
     }
-    Iterator it = shareListener.iterator();
-    while (it.hasNext()) {
-      ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-          SHARE_CHANGED, content);
-    }
-  }
-
-  private void informServerListener() {
-    HashMap content = modifiedXML.getServer();
-    if (content.size() == 0) {
-      return;
-    }
-    Iterator it = serverListener.iterator();
-    while (it.hasNext()) {
-      ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-          SERVER_CHANGED, content);
+    else if (type == DataUpdateListener.NETINFO_CHANGED) {
+      NetworkInfo content = modifiedXML.getNetworkInfo();
+      Iterator it = networkInfoListener.iterator();
+      while (it.hasNext()) {
+        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.NETINFO_CHANGED, content);
+      }
     }
   }
 
@@ -232,10 +258,13 @@ public class DataManager { //Singleton-Implementierung
 
   public void updateStatusbar() {
     //dummy
+    String[] status = modifiedXML.getStatusBar();
     if (statusbar != null) {
-      statusbar[0].setText("Nicht verbunden");
-      statusbar[3].setText("Credits: 0,00 MB");
-      statusbar[4].setText("Version 0.01PreA");
+      statusbar[0].setText(status[0]);
+      statusbar[1].setText(status[1]);
+      statusbar[2].setText(status[2]);
+      statusbar[3].setText(status[3]);
+      statusbar[4].setText(status[4]);
     }
   }
 

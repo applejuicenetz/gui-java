@@ -144,7 +144,7 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI, D
     prioritaetAufheben.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform", "clearprio", "hint"})));
   }
 
-  public void fireContentChanged(int type, HashMap content){
+  public void fireContentChanged(int type, Object content){
 
   }
 }

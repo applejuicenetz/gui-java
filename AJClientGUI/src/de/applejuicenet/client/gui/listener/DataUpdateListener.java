@@ -16,6 +16,7 @@ public interface DataUpdateListener {
   public static final int UPLOAD_CHANGED = 1;
   public static final int SERVER_CHANGED = 2;
   public static final int SHARE_CHANGED = 3;
+  public static final int NETINFO_CHANGED = 4;
 
-  public void fireContentChanged(int type, HashMap content);
+  public void fireContentChanged(int type, Object content);
 }

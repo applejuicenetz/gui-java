@@ -38,10 +38,13 @@ public class JTreeTable
 
     setShowGrid(false);
     setIntercellSpacing(new Dimension(0, 0));
-    DataManager.getInstance().addDownloadListener(this);
+    DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
   }
 
-  public void fireContentChanged(int type, HashMap content) {
+  public void fireContentChanged(int type, Object content) {
+    if (type != DataUpdateListener.DOWNLOAD_CHANGED)
+      return;
+    ((TreeTableModelAdapter)getModel()).fillTree();
     repaint();
   }
 

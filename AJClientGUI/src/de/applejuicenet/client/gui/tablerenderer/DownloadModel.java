@@ -40,6 +40,15 @@ public class DownloadModel
     }
   }
 
+  public void fillTree(){
+    HashMap downloads = DataManager.getInstance().getDownloads();
+    Iterator it = downloads.values().iterator();
+    while (it.hasNext()){
+      DownloadSourceDO download = (DownloadSourceDO) it.next();
+//      DownloadNode node = ((DownloadNode) getRoot()).getChildrenMap().get(download.getId());
+    }
+  }
+
   private void loadHeader(){
     LanguageSelector languageSelector = LanguageSelector.getInstance();
     cNames = new String[10];
@@ -134,22 +143,22 @@ class DownloadNode
   private static ImageIcon indirektIcon;
 
   DownloadSourceDO download;
-  HashSet children;
+  HashMap children;
 
   public DownloadNode(DownloadSourceDO download) {
     initIcons();
     this.download = download;
-    children = new HashSet();
+    children = new HashMap();
     if (download.getSources() != null && download.getSources().length != 0) {
       for (int i = 0; i < download.getSources().length; i++) {
-        children.add(new DownloadNode(download.getSources()[i]));
+        children.put(download.getSources()[i].getId(), new DownloadNode(download.getSources()[i]));
       }
     }
   }
 
   public DownloadNode() {
     initIcons();
-    children = new HashSet();
+    children = new HashMap();
   }
 
   private void initIcons() {
@@ -183,8 +192,10 @@ class DownloadNode
     }
   }
 
-  public void addChild(DownloadSourceDO download) {
-    children.add(new DownloadNode(download));
+  public DownloadNode addChild(DownloadSourceDO download) {
+    DownloadNode childNode = new DownloadNode(download);
+    children.put(download.getId(), childNode);
+    return childNode;
   }
 
   public DownloadSourceDO getDO() {
@@ -198,7 +209,11 @@ class DownloadNode
     return download.getDateiname();
   }
 
+  public HashMap getChildrenMap() {
+    return children;
+  }
+
   protected Object[] getChildren() {
-    return children.toArray(new DownloadNode[children.size()]);
+    return children.values().toArray(new DownloadNode[children.size()]);
   }
 }

@@ -28,6 +28,10 @@ public class TreeTableModelAdapter extends AbstractTableModel
 	});
     }
 
+    public void fillTree(){
+      treeTableModel.fillTree();
+    }
+
     public void expandOrCollapseRow(int row){
       if (tree.isExpanded(row))
         tree.collapseRow(row);

@@ -10,5 +10,6 @@ public interface TreeTableModel extends TreeModel
     public Object getValueAt(Object node, int column);
     public boolean isCellEditable(Object node, int column);
     public void setValueAt(Object aValue, Object node, int column);
+    public void fillTree();
 }
 

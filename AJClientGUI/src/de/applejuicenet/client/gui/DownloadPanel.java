@@ -28,6 +28,8 @@ import de.applejuicenet.client.gui.tablerenderer.DownloadTableCellRenderer;
 import javax.swing.SwingUtilities;
 import de.applejuicenet.client.gui.tablerenderer.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.controller.DataManager;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import java.util.HashMap;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -191,7 +193,7 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
   }
 
   public void registerSelected(){
-    DataManager.getInstance().updateModifiedXML();
+//    DataManager.getInstance().updateModifiedXML();
   }
 
   public void fireLanguageChanged(){

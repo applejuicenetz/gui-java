@@ -53,7 +53,7 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI, 
     panel2.setLayout(new BorderLayout());
     panel2.add(panel, BorderLayout.WEST);
     add(panel2, BorderLayout.SOUTH);
-    DataManager.getInstance().addUploadListener(this);
+    DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.UPLOAD_CHANGED);
   }
 
   public void fireLanguageChanged() {
@@ -74,13 +74,13 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI, 
     }
   }
 
-  public void fireContentChanged(int type, HashMap content){
-    if (type != DataUpdateListener.UPLOAD_CHANGED)
+  public void fireContentChanged(int type, Object content){
+    if (type != DataUpdateListener.UPLOAD_CHANGED || !(content instanceof HashMap))
       return;
-    ((UploadDataTableModel)uploadDataTable.getModel()).setTable(content);
+    ((UploadDataTableModel)uploadDataTable.getModel()).setTable((HashMap)content);
   }
 
   public void registerSelected(){
-    DataManager.getInstance().updateModifiedXML();
+//    DataManager.getInstance().updateModifiedXML();
   }
 }
