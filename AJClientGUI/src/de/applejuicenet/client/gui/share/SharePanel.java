@@ -3,8 +3,6 @@ package de.applejuicenet.client.gui.share;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -37,7 +35,7 @@ import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.layout.Synchronizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.7 2005/02/21 16:04:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.8 2005/02/21 17:37:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -74,23 +72,23 @@ public class SharePanel extends TklPanel{
     private JMenuItem itemOpenWithProgram = new JMenuItem();
     private Logger logger;
     
-    public JButton getBtnPrioritaetAufheben(){
+    public TKLButton getBtnPrioritaetAufheben(){
     	return prioritaetAufheben;
     }
     
-    public JButton getBtnPrioritaetSetzen(){
+    public TKLButton getBtnPrioritaetSetzen(){
     	return prioritaetSetzen;
     }
 
-    public JButton getBtnNeuLaden(){
+    public TKLButton getBtnNeuLaden(){
     	return neuLaden;
     }
 
-    public JButton getBtnRefresh(){
+    public TKLButton getBtnRefresh(){
     	return refresh;
     }
 
-    public JButton getBtnNeueListe(){
+    public TKLButton getBtnNeueListe(){
     	return neueListe;
     }
     
@@ -134,7 +132,7 @@ public class SharePanel extends TklPanel{
     	return dateien;
     }
     
-    public JComboBox getCmbPrioritaet(){
+    public TKLComboBox getCmbPrioritaet(){
     	return cmbPrio;
     }
     

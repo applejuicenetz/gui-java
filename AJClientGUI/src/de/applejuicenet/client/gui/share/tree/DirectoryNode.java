@@ -24,7 +24,7 @@ import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/DirectoryNode.java,v 1.5 2005/01/19 16:22:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/DirectoryNode.java,v 1.6 2005/02/21 17:37:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -226,7 +226,6 @@ public class DirectoryNode
     				children.add(new DirectoryNode(this, curDirectory));
     			}
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
 				logger.error(e);
 			}
             sortChildren();

@@ -16,10 +16,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -27,7 +28,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -52,6 +52,10 @@ import de.applejuicenet.client.gui.download.table.DownloadTableVersionCellRender
 import de.applejuicenet.client.gui.download.table.DownloadTreeTable;
 import de.applejuicenet.client.gui.download.table.DownloadTreeTableCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
+import de.tklsoft.gui.controls.InvalidRule;
+import de.tklsoft.gui.controls.TKLComboBox;
+import de.tklsoft.gui.controls.TKLTextField;
+import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
 
 /**
  * $Header:
@@ -76,7 +80,7 @@ import de.applejuicenet.client.shared.IconManager;
 public class DownloadPanel extends TklPanel {
 
 	private DownloadOverviewPanel downloadDOOverviewPanel;
-	private JTextField downloadLink = new JTextField();
+	private TKLTextField downloadLink = new TKLTextField();
 	private JButton btnStartDownload = new JButton();
 	private PowerDownloadPanel powerDownloadPanel;
 	private JTreeTable downloadTable;
@@ -101,7 +105,7 @@ public class DownloadPanel extends TklPanel {
 	private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[columns.length];
 	private JPopupMenu menu;
 	private JMenuItem einfuegen;
-	private JComboBox targetDir = new JComboBox();
+	private TKLComboBox targetDir = new TKLComboBox();
 	private JLabel txtTargetDir = new JLabel();
 	
 	public JTreeTable getDownloadTable(){
@@ -112,11 +116,11 @@ public class DownloadPanel extends TklPanel {
 		return columns;
 	}
 	
-	public JTextField getDownloadLinkField(){
+	public TKLTextField getDownloadLinkField(){
 		return downloadLink;
 	}
 
-	public JComboBox getTargetDirField(){
+	public TKLComboBox getTargetDirField(){
 		return targetDir;
 	}
 
@@ -168,7 +172,7 @@ public class DownloadPanel extends TklPanel {
 		return powerDownloadPanel.btnAktiv;
 	}
 
-	public JTextField getRatioField(){
+	public TKLTextField getRatioField(){
 		return powerDownloadPanel.ratio;
 	}
 	
@@ -331,7 +335,60 @@ public class DownloadPanel extends TklPanel {
 			}
 		};
 		downloadLink.addKeyListener(keyListener);
-		targetDir.addKeyListener(keyListener);
+        InvalidRule downloadloadlinkRule = new InvalidRule(){
+            public boolean isInvalid(JComponent component){
+                String text = ((TKLTextField) component).getText().toLowerCase();
+                if (text.length() == 0){
+                    return false;   
+                }
+                if (!text.startsWith("ajfsp://")){
+                    return true;   
+                }
+                text = text.substring("ajfsp://".length());
+                if (!text.startsWith("file") && !text.startsWith("server")){
+                    return true;   
+                }
+                int count;
+                if (text.startsWith("file")){
+                    count = 3;
+                }
+                else{
+                    count = 2;
+                }
+                for (int i=0; i<text.length(); i++){
+                   if (text.charAt(i)== '|'){
+                    count--;
+                   }
+                }
+                if (count > 0){
+                    return true;
+                }
+                return false;
+            }
+        };
+        downloadLink.ignoreStatus(STATUSFLAG.MODIFIED);
+        downloadLink.addInvalidRule(downloadloadlinkRule);
+
+        targetDir.ignoreStatus(STATUSFLAG.MODIFIED);
+        InvalidRule targetDirRule = new InvalidRule(){
+            public boolean isInvalid(JComponent component){
+                Object obj = ((TKLComboBox) component).getSelectedItem();
+                if (obj == null){
+                    return false;   
+                }
+                String subdir = (String) obj;
+                if (subdir.indexOf(File.separator) != -1
+                        || subdir.indexOf(ApplejuiceFassade.separator) != -1
+                        || subdir.indexOf("..") != -1
+                        || subdir.indexOf(":") != -1) {
+                    return true;
+                }
+                return false;
+            }
+        };
+        targetDir.addInvalidRule(targetDirRule);
+        targetDir.addKeyListener(keyListener);
+        
 		downloadLink.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON3) {

@@ -614,6 +614,9 @@ public class DownloadController extends GuiController {
 	}
 
 	private void startDownload() {
+        if (downloadPanel.getDownloadLinkField().isInvalid()){
+         return;   
+        }
 		final String link = downloadPanel.getDownloadLinkField().getText();
 		Object sel = downloadPanel.getTargetDirField().getSelectedItem();
 		String tmp;
@@ -623,7 +626,7 @@ public class DownloadController extends GuiController {
 		else{
 			tmp = "";
 		}
-		final String targetDir = "";
+		final String targetDir = tmp;
 		if (link.length() != 0) {
 			downloadPanel.getDownloadLinkField().setText("");
 		    Thread linkThread = new Thread(){

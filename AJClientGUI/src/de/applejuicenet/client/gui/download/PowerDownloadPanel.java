@@ -32,7 +32,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JToolTip;
 import javax.swing.SwingConstants;
 
@@ -53,9 +52,11 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.PolicyJarClassLoader;
+import de.tklsoft.gui.controls.TKLTextField;
+import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.11 2005/02/17 16:37:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.12 2005/02/21 17:37:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -80,9 +81,9 @@ public class PowerDownloadPanel
     private JLabel btnPdlUp;
     private JLabel btnPdlDown;
     private float ratioWert = 2.2f;
-    public JTextField ratio = new JTextField("2.2");
-    private JTextField autoAb = new JTextField();
-    private JTextField autoBis = new JTextField();
+    public TKLTextField ratio = new TKLTextField("2.2");
+    private TKLTextField autoAb = new TKLTextField();
+    private TKLTextField autoBis = new TKLTextField();
     public JButton btnPdl = new JButton();
     private JButton btnAutoPdl = new JButton();
     private JLabel powerdownload = new JLabel();
@@ -116,6 +117,9 @@ public class PowerDownloadPanel
     }
 
     private void init() throws Exception {
+        ratio.ignoreStatus(STATUSFLAG.MODIFIED);
+        autoAb.ignoreStatus(STATUSFLAG.MODIFIED);
+        autoBis.ignoreStatus(STATUSFLAG.MODIFIED);
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
         backPanel.setLayout(new GridBagLayout());
