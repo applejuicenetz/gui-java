@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.26 2004/01/21 07:15:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.27 2004/01/24 08:17:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.27  2004/01/24 08:17:21  maj0r
+ * Formataenderung wird nun korrekt erkannt.
+ *
  * Revision 1.26  2004/01/21 07:15:38  maj0r
  * Formataenderung wird nun korrekt erkannt.
  *
@@ -717,6 +720,13 @@ public class PropertiesManager
                 String[] {"options", "columns", "server", "column2", "width"}));
             serverWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "server", "column3", "width"}));
+            xmlTest = getFirstAttrbuteByTagName(new String[] {"options", "columns",
+                                                "server", "column4", "width"});
+            if (xmlTest.length() == 0) {
+                throw new Exception(
+                    "Properties.xml hat altes Format. Wird neu erstellt.");
+            }
+            serverWidths[4] = Integer.parseInt(xmlTest);
 
             shareWidths = new int[3];
             shareWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new
