@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -29,85 +30,13 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.28 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.29 2004/06/28 08:17:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: SearchPanel.java,v $
- * Revision 1.28  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.27  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.26  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.25  2004/02/12 21:16:51  maj0r
- * Bug #23 gefixt (Danke an computer.ist.org)
- * Suche abbrechen korrigiert.
- *
- * Revision 1.24  2004/02/10 16:05:16  maj0r
- * Importfehler behoben.
- *
- * Revision 1.23  2004/02/10 16:03:42  maj0r
- * Suchdarstellung verschoenert.
- *
- * Revision 1.22  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.21  2004/02/04 14:26:05  maj0r
- * Bug #185 gefixt (Danke an muhviestarr)
- * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
- *
- * Revision 1.20  2004/01/30 16:32:47  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.19  2004/01/08 07:47:11  maj0r
- * 98%-CPU-Last Bug durch Suche gefixt.
- *
- * Revision 1.18  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.17  2003/12/17 11:06:29  maj0r
- * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
- *
- * Revision 1.16  2003/12/16 14:51:46  maj0r
- * Suche kann nun GUI-seitig abgebrochen werden.
- *
- * Revision 1.15  2003/10/31 11:31:45  maj0r
- * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
- *
- * Revision 1.14  2003/10/01 16:52:53  maj0r
- * Suche weiter gefuehrt.
- * Version 0.32
- *
- * Revision 1.13  2003/10/01 14:45:40  maj0r
- * Suche fortgesetzt.
- *
- * Revision 1.12  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- * Revision 1.11  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.10  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
- *
- * Revision 1.9  2003/08/24 14:59:59  maj0r
- * Version 0.14
- * Diverse Aenderungen.
- *
- * Revision 1.8  2003/07/01 18:41:39  maj0r
- * Struktur verändert.
- *
- * Revision 1.7  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -259,54 +188,57 @@ public class SearchPanel
         }
     }
 
-    public void fireContentChanged(int type, Object content) {
-        try {
-            if (type == DataUpdateListener.SEARCH_CHANGED) {
-                synchronized (content) {
-                    Iterator it = ( (HashMap) content).keySet().iterator();
-                    Object key;
-                    Search aSearch;
-                    SearchResultPanel searchResultPanel;
-                    while (it.hasNext()) {
-                        key = it.next();
-                        if (!searchIds.containsKey(key)) {
-                            aSearch = (Search) ( (HashMap) content).get(key);
-                            searchResultPanel = new SearchResultPanel(aSearch);
-                            resultPanel.addTab(aSearch.getSuchText(),
-                                               searchResultPanel);
-                            resultPanel.setSelectedComponent(searchResultPanel);
-                            searchIds.put(key, searchResultPanel);
-                        }
-                        else {
-                            searchResultPanel = (SearchResultPanel) searchIds.
-                                get(key);
-                            if (panelSelected) {
-                                searchResultPanel.updateSearchContent();
-                            }
-                        }
-                    }
-                    Object[] searchPanels = resultPanel.getComponents();
-                    int id;
-                    String searchKey;
-                    for (int i = 0; i < searchPanels.length; i++) {
-                        id = ( (SearchResultPanel) searchPanels[i]).getSearch().
-                            getId();
-                        searchKey = Integer.toString(id);
-                        if (! ( (HashMap) content).containsKey(searchKey)) {
-                            int index = resultPanel.indexOfComponent((Component)searchPanels[i]);
-                            searchIds.remove(searchKey);
-                            resultPanel.enableIconAt(index);
-                        }
-                    }
-                    label2.setText(bearbeitung.replaceAll("%d",
-                        Integer.toString(Search.currentSearchCount)));
-                }
-            }
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+    public void fireContentChanged(int type, final Object content) {
+        if (type == DataUpdateListener.SEARCH_CHANGED) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					try {
+			            synchronized (content) {
+			                Iterator it = ( (HashMap) content).keySet().iterator();
+			                Object key;
+			                Search aSearch;
+			                SearchResultPanel searchResultPanel;
+			                while (it.hasNext()) {
+			                    key = it.next();
+			                    if (!searchIds.containsKey(key)) {
+			                        aSearch = (Search) ( (HashMap) content).get(key);
+			                        searchResultPanel = new SearchResultPanel(aSearch);
+			                        resultPanel.addTab(aSearch.getSuchText(),
+			                                           searchResultPanel);
+			                        resultPanel.setSelectedComponent(searchResultPanel);
+			                        searchIds.put(key, searchResultPanel);
+			                    }
+			                    else {
+			                        searchResultPanel = (SearchResultPanel) searchIds.
+			                            get(key);
+			                        if (panelSelected) {
+			                            searchResultPanel.updateSearchContent();
+			                        }
+			                    }
+			                }
+			                Object[] searchPanels = resultPanel.getComponents();
+			                int id;
+			                String searchKey;
+			                for (int i = 0; i < searchPanels.length; i++) {
+			                    id = ( (SearchResultPanel) searchPanels[i]).getSearch().
+			                        getId();
+			                    searchKey = Integer.toString(id);
+			                    if (! ( (HashMap) content).containsKey(searchKey)) {
+			                        int index = resultPanel.indexOfComponent((Component)searchPanels[i]);
+			                        searchIds.remove(searchKey);
+			                        resultPanel.enableIconAt(index);
+			                    }
+			                }
+			                label2.setText(bearbeitung.replaceAll("%d",
+			                    Integer.toString(Search.currentSearchCount)));
+			            }
+			        }
+			        catch (Exception e) {
+			            if (logger.isEnabledFor(Level.ERROR)) {
+			                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+			            }
+			        }
+				}});
         }
     }
 

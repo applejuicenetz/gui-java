@@ -5,15 +5,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import javax.swing.SwingUtilities;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.xmlholder.DirectoryXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
@@ -28,6 +28,7 @@ import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Information;
+import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.shared.Version;
@@ -35,11 +36,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
-import java.util.HashSet;
-import de.applejuicenet.client.shared.NetworkInfo;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.146 2004/06/25 13:49:01 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.147 2004/06/28 08:17:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -508,25 +507,14 @@ public class ApplejuiceFassade {
     public synchronized boolean updateModifiedXML() {
         try {
             if (modifiedXML.update()) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        informDataUpdateListener(DataUpdateListener.
-                                                 SERVER_CHANGED);
-                        informDataUpdateListener(DataUpdateListener.
-                                                 DOWNLOAD_CHANGED);
-                        informDataUpdateListener(DataUpdateListener.
-                                                 UPLOAD_CHANGED);
-                        informDataUpdateListener(DataUpdateListener.
-                                                 NETINFO_CHANGED);
-                        informDataUpdateListener(DataUpdateListener.
-                                                 SPEED_CHANGED);
-                        informDataUpdateListener(DataUpdateListener.
-                                                 SEARCH_CHANGED);
-                        informDataUpdateListener(DataUpdateListener.
-                                                 INFORMATION_CHANGED);
-                    }
-                });
-            }
+				informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
+				informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
+				informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
+				informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
+				informDataUpdateListener(DataUpdateListener.SPEED_CHANGED);
+				informDataUpdateListener(DataUpdateListener.SEARCH_CHANGED);
+				informDataUpdateListener(DataUpdateListener.INFORMATION_CHANGED);
+			}
             return true;
         }
         catch (RuntimeException re) {
