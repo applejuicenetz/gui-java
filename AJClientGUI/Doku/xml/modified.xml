@@ -1,7 +1,14 @@
 <?xml version="1.0"?>
 <applejuice>
-	<time>1053522389796</time>
-	<networkinfo users="0" files="0" filesize="0,00" firewalled="false" ip="0.0.0.0"/>
-	<server id="2" name="appleJuice mainserver" host="applejuice.dyndns.info" lastseen="0" port="9855"/>
-	<server id="3" name="localserver" host="127.0.0.1" lastseen="0" port="9855"/>
+	<time>1056210741455</time>
+	<ids>
+		<serverid id="3"/>
+		<uploadid id="42"/>
+		<serverid id="43"/>
+	</ids>
+	<information credits="0" sessionupload="0" sessiondownload="0"/>
+	<networkinfo users="3559" files="3849372" filesize="111216926,60" firewalled="false" ip="213.54.255.237"/>
+	<server id="3" name="-&#61;Yucom Powerapple V.56 500 User&#61;-" host="Yucom.dynserv.net" lastseen="1056208384176" port="9855"/>
+	<upload id="42" shareid="28" version="0.27.44.222" operatingsystem="1" status="2" priority="1" nick="Kleine" uploadfrom="-1" actualuploadposition="-1" uploadto="-1" speed="0"/>
+	<server id="43" name="Masta&#39;s AJ Server v. 0.56" host="root-project.ath.cx" lastseen="1056208385878" port="9855"/>
 </applejuice>
