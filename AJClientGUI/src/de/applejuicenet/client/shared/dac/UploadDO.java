@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared.dac;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.13 2004/02/09 14:21:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.14 2004/02/18 17:24:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.14  2004/02/18 17:24:21  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.13  2004/02/09 14:21:32  maj0r
  * Icons für Upload-DirectStates eingebaut.
  *
@@ -69,6 +72,10 @@ public class UploadDO {
     private int speed;
     private int prioritaet;
     private int directstate;
+
+    public UploadDO(int uploadID){
+        this.uploadID = uploadID;
+    }
 
     public UploadDO(int uploadID, int shareFileID, Version version, int status,
                     String nick, long uploadFrom, long uploadTo,

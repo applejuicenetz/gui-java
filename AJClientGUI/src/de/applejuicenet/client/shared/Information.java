@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.6 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.7 2004/02/18 17:24:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Information.java,v $
+ * Revision 1.7  2004/02/18 17:24:21  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.6  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -69,12 +72,23 @@ public class Information
         info.fireLanguageChanged();
     }
 
-    private Information() {} //nur fuer den LanguageSelector
+    public Information() {} //nur fuer den LanguageSelector
+
+    public void setExterneIP(String externeIP){
+        this.externeIP = externeIP;
+    }
+
+    public void setVerbindungsStatus(int verbindungsStatus){
+        this.verbindungsStatus = verbindungsStatus;
+        if (verbindungsStatus == NICHT_VERBUNDEN) {
+            this.serverName = "";
+        }
+    }
 
     public Information(int id, long sessionUpload, long sessionDownload,
                        long credits, long uploadSpeed, long downloadSpeed,
                        long openConnections, int verbindungsStatus,
-                       String serverName, String externeIP, ServerDO serverDO) {
+                       String externeIP, ServerDO serverDO) {
         this.id = id;
         this.sessionUpload = sessionUpload;
         this.sessionDownload = sessionDownload;
@@ -82,13 +96,7 @@ public class Information
         this.uploadSpeed = uploadSpeed;
         this.downloadSpeed = downloadSpeed;
         this.openConnections = openConnections;
-        this.verbindungsStatus = verbindungsStatus;
-        if (verbindungsStatus == NICHT_VERBUNDEN || serverName == null) {
-            this.serverName = "";
-        }
-        else {
-            this.serverName = serverName;
-        }
+        setVerbindungsStatus(verbindungsStatus);
         this.externeIP = externeIP;
         setServer(serverDO);
     }
@@ -115,6 +123,7 @@ public class Information
         }
         else {
             serverId = serverDO.getID();
+            serverName = serverDO.getName();
         }
     }
 

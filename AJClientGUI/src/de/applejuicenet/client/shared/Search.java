@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.8 2004/02/12 21:16:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.9 2004/02/18 17:24:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
+ * Revision 1.9  2004/02/18 17:24:21  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.8  2004/02/12 21:16:51  maj0r
  * Bug #23 gefixt (Danke an computer.ist.org)
  * Suche abbrechen korrigiert.
@@ -134,20 +137,26 @@ public class Search {
 
     public class SearchEntry {
         private int id;
+        private int searchId;
         private String checksumme;
         private long groesse;
         private String groesseAsString = null;
         private ArrayList fileNames = new ArrayList();
         private HashSet keys = new HashSet();
 
-        public SearchEntry(int id, String checksumme, long groesse) {
+        public SearchEntry(int id, int searchId, String checksumme, long groesse) {
             this.id = id;
+            this.searchId = searchId;
             this.checksumme = checksumme;
             this.groesse = groesse;
         }
 
         public int getId() {
             return id;
+        }
+
+        public int getSearchId(){
+            return searchId;
         }
 
         public String getChecksumme() {

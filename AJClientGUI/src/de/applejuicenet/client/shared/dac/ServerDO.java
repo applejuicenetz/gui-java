@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.11 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.12 2004/02/18 17:24:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.util.Date;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerDO.java,v $
+ * Revision 1.12  2004/02/18 17:24:21  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.11  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -46,6 +49,10 @@ public class ServerDO {
     private int versuche;
     private boolean connected = false;
     private boolean tryConnect = false;
+
+    public ServerDO(int id){
+        this.id = id;
+    }
 
     public ServerDO(int id, String name, String host, String port,
                     long lastSeen, int versuche) {

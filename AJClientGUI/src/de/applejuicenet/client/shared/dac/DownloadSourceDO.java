@@ -7,7 +7,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.18 2004/02/12 16:35:41 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.19 2004/02/18 17:24:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.19  2004/02/18 17:24:21  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.18  2004/02/12 16:35:41  maj0r
  * Getter fuer aktuelle runtergeladene Prozent hinzugefuegt.
  *
@@ -54,7 +57,7 @@ import de.applejuicenet.client.shared.Version;
  * Sourcestil verbessert.
  *
  * Revision 1.6  2003/06/10 12:31:03  maj0r
- * Historie eingef�gt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -113,6 +116,10 @@ public class DownloadSourceDO
 
     private int oldNochZuLaden;
     private String nochZuLadenAsString;
+
+    public DownloadSourceDO(int id){
+        this.id = id;
+    }
 
     public DownloadSourceDO(int id, int status, int directstate,
                             int downloadFrom, int downloadTo,

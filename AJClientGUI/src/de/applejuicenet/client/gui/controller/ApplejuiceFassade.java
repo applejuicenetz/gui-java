@@ -13,8 +13,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.xmlholder.DirectoryXMLHolder;
-import de.applejuicenet.client.gui.controller.xmlholder.
-    DownloadPartListXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.InformationXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.ModifiedXMLHolder;
@@ -22,7 +20,6 @@ import de.applejuicenet.client.gui.controller.xmlholder.NetworkServerXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.SessionXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.SettingsXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.ShareXMLHolder;
-import de.applejuicenet.client.gui.controller.xmlholder.UserPartListXMLHolder;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import de.applejuicenet.client.shared.AJSettings;
@@ -36,9 +33,10 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.shared.Search;
+import de.applejuicenet.client.gui.controller.xmlholder.PartListXMLHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.113 2004/02/17 15:26:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.114 2004/02/18 17:24:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -296,6 +294,7 @@ public class ApplejuiceFassade {
     private DirectoryXMLHolder directoryXML = null;
     private Version coreVersion;
     private HashMap share = null;
+    private PartListXMLHolder partlistXML = null;
 
     private static ApplejuiceFassade instance = null;
 
@@ -354,7 +353,7 @@ public class ApplejuiceFassade {
             informationListener = new HashSet();
 
             //load XMLs
-            modifiedXML = new ModifiedXMLHolder();
+            modifiedXML = ModifiedXMLHolder.getInstance();
             informationXML = new InformationXMLHolder();
             directoryXML = new DirectoryXMLHolder();
             informationXML.reload("", false);
@@ -470,17 +469,14 @@ public class ApplejuiceFassade {
     }
 
     public Information getInformation() {
-        return modifiedXML.getInformation(false);
+        return modifiedXML.getInformation();
     }
 
-    public PartListDO getPartList(DownloadDO downloadDO) {
-        PartListHolder partlistXML = new DownloadPartListXMLHolder(downloadDO);
-        return partlistXML.getPartList();
-    }
-
-    public PartListDO getPartList(DownloadSourceDO downloadSourceDO) {
-        PartListHolder partlistXML = new UserPartListXMLHolder(downloadSourceDO);
-        return partlistXML.getPartList();
+    public PartListDO getPartList(Object object) {
+        if (partlistXML == null){
+            partlistXML = PartListXMLHolder.getInstance();
+        }
+        return partlistXML.getPartList(object);
     }
 
     public String[] getNetworkKnownServers() {
@@ -1073,7 +1069,7 @@ public class ApplejuiceFassade {
                     break;
                 }
                 case DataUpdateListener.INFORMATION_CHANGED: {
-                    Information content = modifiedXML.getInformation(false);
+                    Information content = modifiedXML.getInformation();
                     Iterator it = informationListener.iterator();
                     while (it.hasNext()) {
                         ( (DataUpdateListener) it.next()).fireContentChanged(

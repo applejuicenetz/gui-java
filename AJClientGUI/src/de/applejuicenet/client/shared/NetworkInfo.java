@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.10 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.11 2004/02/18 17:24:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: NetworkInfo.java,v $
+ * Revision 1.11  2004/02/18 17:24:21  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.10  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -37,6 +40,10 @@ public class NetworkInfo {
     private int tryConnectToServer;
     private int connectedWithServerId;
 
+    public NetworkInfo(){
+
+    }
+
     public NetworkInfo(long ajUserGesamt, long ajAnzahlDateien,
                        String ajGesamtShare, boolean firewalled,
                        String externeIP,
@@ -47,6 +54,34 @@ public class NetworkInfo {
         this.firewalled = firewalled;
         this.externeIP = externeIP;
         this.tryConnectToServer = tryConnectToServer;
+        this.connectedWithServerId = connectedWithServerId;
+    }
+
+    public void setAjUserGesamt(long ajUserGesamt){
+        this.ajUserGesamt = ajUserGesamt;
+    }
+
+    public void setAjAnzahlDateien(long ajAnzahlDateien){
+        this.ajAnzahlDateien = ajAnzahlDateien;
+    }
+
+    public void setAjGesamtShare(String ajGesamtShare){
+        this.ajGesamtShare = ajGesamtShare;
+    }
+
+    public void setFirewalled(boolean firewalled){
+        this.firewalled = firewalled;
+    }
+
+    public void setExterneIP(String externeIP){
+        this.externeIP = externeIP;
+    }
+
+    public void setTryConnectToServer(int tryConnectToServer){
+        this.tryConnectToServer = tryConnectToServer;
+    }
+
+    public void setConnectedWithServerId(int connectedWithServerId){
         this.connectedWithServerId = connectedWithServerId;
     }
 

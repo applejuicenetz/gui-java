@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.20 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.21 2004/02/18 17:24:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.21  2004/02/18 17:24:21  maj0r
+ * Von DOM auf SAX umgebaut.
+ *
  * Revision 1.20  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -120,6 +123,10 @@ public class DownloadDO
     private String speedAsString;
 
     private HashMap sourcen = new HashMap();
+
+    public DownloadDO(int id){
+        this.id = id;
+    }
 
     public DownloadDO(int id, int shareId, String hash, long groesse,
                       long ready,

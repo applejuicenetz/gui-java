@@ -21,9 +21,20 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+import org.xml.sax.*;
+import de.applejuicenet.client.shared.HtmlLoader;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.ConnectionSettings;
+import java.io.StringReader;
+import java.io.CharArrayWriter;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.17 2004/02/17 14:42:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.18 2004/02/18 17:24:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,193 +43,16 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
- * Revision 1.17  2004/02/17 14:42:57  maj0r
- * Bug #220 gefixt (Danke an dsp2004)
- * OutOfMemoryError behoben.
- *
- * Revision 1.16  2004/02/12 21:16:51  maj0r
- * Bug #23 gefixt (Danke an computer.ist.org)
- * Suche abbrechen korrigiert.
- *
- * Revision 1.15  2004/02/09 07:28:24  maj0r
- * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
- *
- * Revision 1.14  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.13  2004/02/04 13:10:37  maj0r
- * Neues Linkformat zusaetzlich in den Downloadbereich eingebaut.
- *
- * Revision 1.12  2004/02/02 19:28:57  maj0r
- * Kompression wird nur beim initialen Laden und bei entferntem Core verwendet.
- *
- * Revision 1.11  2004/01/30 21:34:48  maj0r
- * GUI sollte nun auch bei Ueberlastung des Core besser verbinden (Danke an the_Killerbee).
- *
- * Revision 1.10  2004/01/30 16:32:31  maj0r
- * Verbindung sollte nun auch bei belasteten Verbindungen aufgebaut werden.
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.9  2004/01/29 13:47:57  maj0r
- * Während des ersten Holens der Quellen wird nun alle 5 Seks die Statuszeile aktualisiert.
- *
- * Revision 1.8  2004/01/29 11:07:57  maj0r
- * Alte Objekte werden wieder korrekt entfernt.
- *
- * Revision 1.7  2004/01/28 12:34:21  maj0r
- * Beim Start Filter eingebaut.
- * Session wird nun besser aufrecht erhalten.
- *
- * Revision 1.6  2004/01/24 08:10:24  maj0r
- * Anzahl der Verbindungsversuche eingebaut.
- *
- * Revision 1.5  2004/01/07 16:15:20  maj0r
- * Warnmeldung bezueglich 30-Minuten-Sperre bei manuellem Serverwechsel eingebaut.
- *
- * Revision 1.4  2004/01/06 17:32:50  maj0r
- * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
- *
- * Revision 1.3  2004/01/01 15:36:52  maj0r
- * Information-ID wird nicht richtig uebertragen...
- *
- * Revision 1.2  2004/01/01 14:25:25  maj0r
- * Information-Id wird nun auch ausgelesen.
- *
- * Revision 1.1  2003/12/31 16:13:31  maj0r
- * Refactoring.
- *
- * Revision 1.44  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.43  2003/12/16 14:51:46  maj0r
- * Suche kann nun GUI-seitig abgebrochen werden.
- *
- * Revision 1.42  2003/11/04 15:55:05  maj0r
- * gc eingefuehrt.
- *
- * Revision 1.41  2003/11/03 14:29:16  maj0r
- * Speicheroptimierung.
- *
- * Revision 1.40  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.39  2003/10/21 11:36:32  maj0r
- * Infos werden nun ueber einen Listener geholt.
- *
- * Revision 1.38  2003/10/12 15:57:55  maj0r
- * Kleinere Bugs behoben.
- * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
- *
- * Revision 1.37  2003/10/04 15:53:40  maj0r
- * Kompatibilitaet zur naechsten Coreversion hergestellt.
- *
- * Revision 1.36  2003/10/01 07:25:44  maj0r
- * Suche weiter gefuehrt.
- *
- * Revision 1.35  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- * Revision 1.34  2003/09/14 06:37:39  maj0r
- * Moeglichen NullPointer behoben.
- *
- * Revision 1.33  2003/09/13 11:30:41  maj0r
- * Neuen Listener fuer Geschwindigkeitsanzeigen eingebaut.
- *
- * Revision 1.32  2003/09/11 09:41:16  maj0r
- * Nullpointer behoben.
- *
- * Revision 1.31  2003/09/11 06:54:15  maj0r
- * Auf neues Sessions-Prinzip umgebaut.
- * Sprachenwechsel korrigert, geht nun wieder flott.
- *
- * Revision 1.30  2003/09/10 15:30:48  maj0r
- * Begonnen auf neue Session-Struktur umzubauen.
- *
- * Revision 1.29  2003/09/06 08:34:23  maj0r
- * Nullpointer behoben.
- * Dank an Fumpi.
- *
- * Revision 1.28  2003/09/02 19:29:26  maj0r
- * Einige Stellen synchronisiert und Nullpointer behoben.
- * Version 0.21 beta.
- *
- * Revision 1.27  2003/09/01 15:50:51  maj0r
- * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
- *
- * Revision 1.26  2003/08/31 11:06:22  maj0r
- * CheckInProgress geaendert.
- *
- * Revision 1.25  2003/08/22 10:03:11  maj0r
- * Threadverwendung korrigiert.
- *
- * Revision 1.24  2003/08/21 15:13:29  maj0r
- * Auf Thread umgebaut.
- *
- * Revision 1.23  2003/08/19 15:57:21  maj0r
- * Gesamtgeschwindigkeit wird nun angezeigt.
- *
- * Revision 1.22  2003/08/18 17:11:26  maj0r
- * Alte Uploads wurden nicht entfernt. Korrigiert.
- *
- * Revision 1.21  2003/08/18 14:54:11  maj0r
- * Alte Eintraege loeschen.
- *
- * Revision 1.20  2003/08/16 17:50:06  maj0r
- * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
- * DownloaduebersichtTabelle kann deaktiviert werden.
- *
- * Revision 1.19  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.18  2003/08/14 20:08:42  maj0r
- * Tree fuer Shareauswahl eingefuegt, aber noch nicht fertiggestellt.
- *
- * Revision 1.17  2003/08/10 21:08:18  maj0r
- * Diverse Änderungen.
- *
- * Revision 1.16  2003/08/09 10:57:54  maj0r
- * Upload- und DownloadTabelle weitergeführt.
- *
- * Revision 1.15  2003/08/08 05:35:52  maj0r
- * Nullpointer behoben.
- *
- * Revision 1.14  2003/08/05 20:47:06  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.13  2003/08/05 05:11:59  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.12  2003/08/03 19:54:05  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.11  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.10  2003/07/03 19:11:16  maj0r
- * DownloadTable überarbeitet.
- *
- * Revision 1.9  2003/07/01 14:59:28  maj0r
- * Keyverwendung bei HashSets und HashMaps korrigiert.
- * Server-IDs werden nun abgeglichen, alte werden entfernt.
- *
- * Revision 1.8  2003/06/30 20:35:50  maj0r
- * Code optimiert.
- *
- * Revision 1.7  2003/06/22 19:00:27  maj0r
- * Basisklasse umbenannt.
- *
- * Revision 1.6  2003/06/22 16:24:09  maj0r
- * Umrechnung korrigiert.
- *
- * Revision 1.5  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
+ * Revision 1.18  2004/02/18 17:24:21  maj0r
+ * Von DOM auf SAX umgebaut.
  *
  *
  */
 
 public class ModifiedXMLHolder
-    extends WebXMLParser {
+    extends DefaultHandler  {
     private HashMap sourcenZuDownloads = new HashMap();
+    private XMLReader xr = null;
 
     private HashMap serverMap = new HashMap();
     private HashMap downloadMap = new HashMap();
@@ -239,9 +73,45 @@ public class ModifiedXMLHolder
     private int gcCounter = 0;
     private Logger logger;
 
-    public ModifiedXMLHolder() {
-        super("/xml/modified.xml", "", true);
+    private String host;
+    private String password;
+    private String zipMode = "";
+    private String xmlCommand;
+    private long timestamp = 0;
+    private CharArrayWriter contents = new CharArrayWriter();
+    private static ModifiedXMLHolder instance = null;
+
+    private ModifiedXMLHolder() {
         logger = Logger.getLogger(getClass());
+        ConnectionSettings rc = PropertiesManager.getOptionsManager().
+            getRemoteSettings();
+        host = rc.getHost();
+        password = rc.getOldPassword();
+        if (host == null || host.length() == 0) {
+            host = "localhost";
+        }
+        if (host.compareToIgnoreCase("localhost") != 0 &&
+            host.compareTo("127.0.0.1") != 0) {
+            zipMode = "mode=zip&";
+        }
+        xmlCommand = "/xml/modified.xml";
+        try {
+            System.setProperty("org.xml.sax.parser",
+                               "org.apache.xerces.parsers.SAXParser");
+            xr = XMLReaderFactory.createXMLReader();
+            xr.setContentHandler( this );
+        }
+        catch (SAXException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static ModifiedXMLHolder getInstance(){
+        if (instance == null){
+            instance = new ModifiedXMLHolder();
+        }
+        return instance;
+
     }
 
     public HashMap getServer() {
@@ -269,37 +139,6 @@ public class ModifiedXMLHolder
             sessionKontext = "&session=" + sessionId;
         }
         if (tryToReload()) {
-            switch (count) {
-                case 0: {
-                    updateIDs();
-                    updateDownloads();
-                    updateUploads();
-                    updateServer();
-                    updateNetworkInfo();
-                    updateSuche();
-                    getInformation(true);
-                    break;
-                }
-                case 1: {
-                    updateIDs();
-                    updateDownloads();
-                    updateUploads();
-                    updateServer();
-                    updateNetworkInfo();
-                    updateSuche();
-                    getInformation(true);
-                    break;
-                }
-                default: {
-                    updateIDs();
-                    updateDownloads();
-                    updateUploads();
-                    updateServer();
-                    updateNetworkInfo();
-                    getInformation(true);
-                    updateSuche();
-                }
-            }
             return true;
         }
         else {
@@ -351,12 +190,649 @@ public class ModifiedXMLHolder
         }
     }
 
+    public Information getInformation(){
+        return information;
+    }
+
+    public HashMap getSpeeds() {
+           HashMap speeds = new HashMap();
+           if (information != null){
+               speeds.put("uploadspeed",
+                          new Long(information.getUploadSpeed()));
+               speeds.put("downloadspeed",
+                          new Long(information.getDownloadSpeed()));
+               speeds.put("credits",
+                          new Long(information.getCredits()));
+               speeds.put("sessionupload",
+                          new Long(information.getSessionUpload()));
+               speeds.put("sessiondownload",
+                          new Long(information.getSessionDownload()));
+           }
+           return speeds;
+       }
+
+
+    private void checkInformationAttributes(Attributes attr){
+        if (information == null){
+            information = new Information();
+        }
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("credits")){
+                information.setCredits(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("sessionupload")){
+                information.setSessionUpload(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("sessiondownload")){
+                information.setSessionDownload(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("uploadspeed")){
+                information.setUploadSpeed(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("downloadspeed")){
+                information.setDownloadSpeed(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("openconnections")){
+                information.setOpenConnections(Long.parseLong(attr.getValue(i)));
+            }
+            else{
+                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
+                                   " VALUE: " + attr.getValue(i));
+            }
+        }
+    }
+
+    private void checkNetworkInfoAttributes(Attributes attr){
+        if (netInfo == null){
+            netInfo = new NetworkInfo();
+        }
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("users")){
+                netInfo.setAjUserGesamt(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("files")){
+                netInfo.setAjAnzahlDateien(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("filesize")){
+                netInfo.setAjGesamtShare(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("firewalled")){
+                netInfo.setFirewalled(attr.getValue(i).equals("true"));
+            }
+            else if (attr.getLocalName(i).equals("ip")){
+                netInfo.setExterneIP(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("tryconnecttoserver")){
+                netInfo.setTryConnectToServer(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("connectedwithserverid")){
+                netInfo.setConnectedWithServerId(Integer.parseInt(attr.getValue(i)));
+            }
+            else{
+/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
+                                   " VALUE: " + attr.getValue(i));*/
+            }
+        }
+    }
+
+    private void checkServerAttributes(Attributes attr){
+        int id = -1;
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("id")) {
+                id = Integer.parseInt(attr.getValue(i));
+                break;
+            }
+        }
+        if (id == -1) {
+            return;
+        }
+        String key = Integer.toString(id);
+        ServerDO serverDO;
+        if (uploadMap.containsKey(key)) {
+            serverDO = (ServerDO) serverMap.get(key);
+        }
+        else {
+            serverDO = new ServerDO(id);
+            serverMap.put(key, serverDO);
+        }
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("name")) {
+                serverDO.setName(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("host")) {
+                serverDO.setHost(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("lastseen")) {
+                serverDO.setTimeLastSeen(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("port")) {
+                serverDO.setPort(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("connectiontry")) {
+                serverDO.setVersuche(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("id")) {
+                continue;
+            }
+            else {
+/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
+                                   " VALUE: " + attr.getValue(i));*/
+            }
+        }
+    }
+
+    private HashMap shareMap = null;
+
+    private void checkUploadAttributes(Attributes attr){
+        int id = -1;
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("id")) {
+                id = Integer.parseInt(attr.getValue(i));
+                break;
+            }
+        }
+        if (id == -1) {
+            return;
+        }
+        String key = Integer.toString(id);
+        UploadDO uploadDO;
+        if (uploadMap.containsKey(key)) {
+            uploadDO = (UploadDO) uploadMap.get(key);
+        }
+        else{
+            uploadDO = new UploadDO(id);
+            uploadMap.put(key, uploadDO);
+        }
+        String versionNr = "";
+        int os = -1;
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("shareid")) {
+                uploadDO.setShareFileID(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("version")) {
+                versionNr = attr.getValue(i);
+            }
+            else if (attr.getLocalName(i).equals("operatingsystem")) {
+                os = Integer.parseInt(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("status")) {
+                uploadDO.setStatus(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("directstate")) {
+                uploadDO.setDirectState(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("priority")) {
+                uploadDO.setPrioritaet(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("nick")) {
+                uploadDO.setNick(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("uploadfrom")) {
+                uploadDO.setUploadFrom(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("actualuploadposition")) {
+                uploadDO.setActualUploadPosition(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("uploadto")) {
+                uploadDO.setUploadTo(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("speed")) {
+                uploadDO.setSpeed(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("id")) {
+                continue;
+            }
+            else {
+/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
+                                   " VALUE: " + attr.getValue(i));*/
+            }
+        }
+        if (!versionNr.equals("0.0.0.0")) {
+            Version version = new Version(versionNr, os);
+            uploadDO.setVersion(version);
+        }
+        if (shareMap == null){
+            shareMap = ApplejuiceFassade.getInstance().getShare(false);
+        }
+        ShareDO shareDO = (ShareDO) shareMap.get(uploadDO.getShareFileIDAsString());
+        if (shareDO != null) {
+            uploadDO.setDateiName(shareDO.getShortfilename());
+        }
+        else{
+            //wenns die passende Sharedatei aus irgendeinem Grund nicht geben sollte,
+            //wird dieser Upload auch nicht angezeigt
+            uploadMap.remove(key);
+        }
+    }
+
+    private void checkUserAttributes(Attributes attr){
+        int id = -1;
+        int downloadId = -1;
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("id")) {
+                id = Integer.parseInt(attr.getValue(i));
+                continue;
+            }
+            else if (attr.getLocalName(i).equals("downloadid")) {
+                downloadId = Integer.parseInt(attr.getValue(i));
+                continue;
+            }
+        }
+        if (id == -1 || downloadId == -1) {
+            return;
+        }
+        String downloadKey = Integer.toString(downloadId);
+        DownloadDO downloadDO = (DownloadDO) downloadMap.get(downloadKey);
+        if (downloadDO != null) {
+            DownloadSourceDO downloadSourceDO = downloadDO.getSourceById(id);
+            if (downloadSourceDO == null) {
+                downloadSourceDO = new DownloadSourceDO(id);
+                downloadDO.addSource(downloadSourceDO);
+                sourcenZuDownloads.put(Integer.toString(id),
+                                       downloadDO);
+                downloadSourceDO.setDownloadId(downloadId);
+            }
+            String versionNr = "";
+            int os = -1;
+            for (int i = 0; i < attr.getLength(); i++) {
+                if (attr.getLocalName(i).equals("id")) {
+                    continue;
+                }
+                else if (attr.getLocalName(i).equals("downloadid")) {
+                    continue;
+                }
+                else if (attr.getLocalName(i).equals("status")) {
+                    downloadSourceDO.setStatus(Integer.parseInt(attr.getValue(i)));
+                }
+                else if (attr.getLocalName(i).equals("directstate")) {
+                    downloadSourceDO.setDirectstate(Integer.parseInt(attr.getValue(i)));
+                }
+                else if (attr.getLocalName(i).equals("downloadfrom")) {
+                    downloadSourceDO.setDownloadFrom(Integer.parseInt(attr.getValue(i)));
+                }
+                else if (attr.getLocalName(i).equals("downloadto")) {
+                    downloadSourceDO.setDownloadTo(Integer.parseInt(attr.getValue(i)));
+                }
+                else if (attr.getLocalName(i).equals("actualdownloadposition")) {
+                    downloadSourceDO.setActualDownloadPosition(Integer.parseInt(attr.getValue(i)));
+                }
+                else if (attr.getLocalName(i).equals("speed")) {
+                    downloadSourceDO.setSpeed(Integer.parseInt(attr.getValue(i)));
+                }
+                else if (attr.getLocalName(i).equals("version")) {
+                    versionNr = attr.getValue(i);
+                }
+                else if (attr.getLocalName(i).equals("operatingsystem")) {
+                    os = Integer.parseInt(attr.getValue(i));
+                }
+                else if (attr.getLocalName(i).equals("queueposition")) {
+                    downloadSourceDO.setQueuePosition(Integer.parseInt(attr.getValue(i)));
+                }
+                else if (attr.getLocalName(i).equals("powerdownload")) {
+                    downloadSourceDO.setPowerDownload(Integer.parseInt(attr.getValue(i)));
+                }
+                else if (attr.getLocalName(i).equals("filename")) {
+                    downloadSourceDO.setFilename(attr.getValue(i));
+                }
+                else if (attr.getLocalName(i).equals("nickname")) {
+                    downloadSourceDO.setNickname(attr.getValue(i));
+                }
+            }
+            if (!versionNr.equals("0.0.0.0")) {
+                Version version = new Version(versionNr, os);
+                downloadSourceDO.setVersion(version);
+            }
+        }
+        else{
+            //todo
+            int i=0;
+        }
+    }
+
+    private void checkDownloadAttributes(Attributes attr){
+        int id = -1;
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("id")){
+                id = Integer.parseInt(attr.getValue(i));
+                break;
+            }
+        }
+        if (id == -1){
+            return;
+        }
+        String key = Integer.toString(id);
+        DownloadDO downloadDO;
+        if (downloadMap.containsKey(key)) {
+            downloadDO = (DownloadDO) downloadMap.get(key);
+        }
+        else{
+            downloadDO = new DownloadDO(id);
+            downloadMap.put(key, downloadDO);
+        }
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("shareid")) {
+                downloadDO.setShareId(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("hash")) {
+                downloadDO.setHash(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("size")) {
+                downloadDO.setGroesse(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("status")) {
+                downloadDO.setStatus(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("powerdownload")) {
+                downloadDO.setPowerDownload(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("temporaryfilenumber")) {
+                downloadDO.setTemporaryFileNumber(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("filename")) {
+                downloadDO.setFilename(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("targetdirectory")) {
+                downloadDO.setTargetDirectory(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("ready")) {
+                downloadDO.setReady(Long.parseLong(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("id")) {
+                continue;
+            }
+            else {
+/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
+                                   " VALUE: " + attr.getValue(i));*/
+            }
+        }
+    }
+
+    private void checkRemovedAttributes(Attributes attr){
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("id")){
+                String id = attr.getValue(i);
+                if (uploadMap.containsKey(id)) {
+                    uploadMap.remove(id);
+                    continue;
+                }
+                else if (downloadMap.containsKey(id)) {
+                    DownloadDO downloadDO = (DownloadDO) downloadMap.get(
+                        sourcenZuDownloads.get(id));
+                    if (downloadDO != null) {
+                        DownloadSourceDO[] sourcen = downloadDO.getSources();
+                        if (sourcen != null) {
+                            for (int y = 0; y < sourcen.length; y++) {
+                                sourcenZuDownloads.remove(Integer.toString(
+                                    sourcen[y].getId()));
+                            }
+                        }
+                    }
+                    downloadMap.remove(id);
+                    continue;
+                }
+                else if (serverMap.containsKey(id)) {
+                    serverMap.remove(id);
+                    continue;
+                }
+                else if (sourcenZuDownloads.containsKey(id)) {
+                    DownloadDO downloadDO = (DownloadDO) sourcenZuDownloads.get(
+                        id);
+                    downloadDO.removeSource(id);
+                    sourcenZuDownloads.remove(id);
+                    continue;
+                }
+                else if (searchMap.containsKey(id)) {
+                    searchMap.remove(id);
+                    Search.currentSearchCount = searchMap.size();
+                    continue;
+                }
+            }
+            else{
+/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
+                                   " VALUE: " + attr.getValue(i));*/
+            }
+        }
+    }
+
+    private void checkSearchAttributes(Attributes attr){
+        int id = -1;
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("id")){
+                id = Integer.parseInt(attr.getValue(i));
+                break;
+            }
+        }
+        if (id == -1){
+            return;
+        }
+        String key = Integer.toString(id);
+        Search aSearch;
+        if (searchMap.containsKey(key)) {
+            aSearch = (Search) searchMap.get(key);
+        }
+        else {
+            aSearch = new Search(id);
+            searchMap.put(key, aSearch);
+        }
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("searchtext")) {
+                aSearch.setSuchText(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("opensearches")) {
+                aSearch.setOffeneSuchen(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("foundfiles")) {
+                aSearch.setGefundenDateien(Integer.parseInt(attr.getValue(i)));
+            }
+            else if (attr.getLocalName(i).equals("sumsearches")) {
+                aSearch.setDurchsuchteClients(Integer.parseInt(attr.getValue(i)));
+            }
+            else {
+/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
+                                   " VALUE: " + attr.getValue(i));*/
+            }
+        }
+    }
+
+    private SearchEntry tmpSearchEntry = null;
+
+    private void checkSearchEntryAttributes(Attributes attr){
+        int searchId = -1;
+        int id = -1;
+        String checksum = "";
+        long groesse = -1;
+
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("id")) {
+                id = Integer.parseInt(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("searchid")) {
+                searchId = Integer.parseInt(attr.getValue(i));
+            }
+            else if (attr.getLocalName(i).equals("checksum")) {
+                checksum = attr.getValue(i);
+            }
+            else if (attr.getLocalName(i).equals("size")) {
+                groesse = Long.parseLong(attr.getValue(i));
+            }
+            else {
+/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
+                                   " VALUE: " + attr.getValue(i));*/
+            }
+        }
+        String key = Integer.toString(searchId);
+        Search aSearch;
+        if (searchMap.containsKey(key)) {
+            aSearch = (Search) searchMap.get(key);
+            tmpSearchEntry = aSearch.new SearchEntry(id, searchId, checksum, groesse);
+            aSearch.addSearchEntry(tmpSearchEntry);
+        }
+        else{
+            tmpSearchEntry = new Search(-1).new SearchEntry(id, searchId, checksum, groesse);
+            searchEntriesToDo.add(tmpSearchEntry);
+        }
+    }
+
+    private HashSet searchEntriesToDo = new HashSet();
+
+    private void checkSearchEntryFilenameAttributes(Attributes attr){
+        if (tmpSearchEntry == null){
+            return;
+        }
+        int haeufigkeit = -1;
+        String dateiName = "";
+
+        for (int i = 0; i < attr.getLength(); i++) {
+            if (attr.getLocalName(i).equals("name")) {
+                dateiName = attr.getValue(i);
+            }
+            else if (attr.getLocalName(i).equals("user")) {
+                haeufigkeit = Integer.parseInt(attr.getValue(i));
+            }
+            else {
+/*                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
+                                   " VALUE: " + attr.getValue(i));*/
+            }
+        }
+        FileName filename = tmpSearchEntry.new FileName(
+                                                dateiName, haeufigkeit);
+        tmpSearchEntry.addFileName(filename);
+    }
+
+    public void startElement(String namespaceURI,
+                             String localName,
+                             String qName,
+                             Attributes attr) throws SAXException {
+        contents.reset();
+        if (localName.equals("download")){
+            checkDownloadAttributes(attr);
+        }
+        else if (localName.equals("upload")){
+            checkUploadAttributes(attr);
+        }
+        else if (localName.equals("server")){
+            checkServerAttributes(attr);
+        }
+        else if (localName.equals("information")){
+            checkInformationAttributes(attr);
+        }
+        else if (localName.equals("networkinfo")){
+            checkNetworkInfoAttributes(attr);
+        }
+        else if (localName.equals("object")){
+            checkRemovedAttributes(attr);
+        }
+        else if (localName.equals("user")){
+            checkUserAttributes(attr);
+        }
+        else if (localName.equals("search")){
+            checkSearchAttributes(attr);
+        }
+        else if (localName.equals("searchentry")){
+            checkSearchEntryAttributes(attr);
+        }
+        else if (localName.equals("filename")){
+            checkSearchEntryFilenameAttributes(attr);
+        }
+        else{
+/*            System.out.println("SAX Event: START ELEMENT[ " +
+                               localName + " ]");
+            for (int i = 0; i < attr.getLength(); i++) {
+                System.out.println("   ATTRIBUTE: " + attr.getLocalName(i) +
+                                   " VALUE: " + attr.getValue(i));
+            }*/
+        }
+    }
+
+    public void endElement(String namespaceURI,
+                           String localName,
+                           String qName) throws SAXException {
+        if (localName.equals("time")){
+            timestamp = Long.parseLong(contents.toString());
+        }
+    }
+
+    public void characters(char[] ch, int start, int length) throws
+        SAXException {
+        contents.write(ch, start, length);
+    }
+
+    private String getXMLString(String parameters) throws
+        Exception {
+        String xmlData = null;
+        String command = xmlCommand + "?";
+        if (parameters.indexOf("mode=zip") == -1) {
+            command += zipMode;
+        }
+        command += "password=" + password + "&timestamp=" +
+            timestamp + parameters;
+        xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
+                                               command);
+        if (xmlData.length() == 0) {
+            throw new IllegalArgumentException();
+        }
+        return xmlData;
+    }
+
+    private void parseRest(){
+        int verbindungsStatus = Information.NICHT_VERBUNDEN;
+        ServerDO serverDO = null;
+        if (this.tryConnectToServer != netInfo.getTryConnectToServer()) {
+            Object alterServer = serverMap.get(Integer.toString(this.
+                tryConnectToServer));
+            if (alterServer != null) {
+                ( (ServerDO) alterServer).setTryConnect(false);
+            }
+            if (tryConnectToServer != -1) {
+                serverDO = (ServerDO) serverMap.get(Integer.
+                    toString(netInfo.getTryConnectToServer()));
+                serverDO.setTryConnect(true);
+                verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
+            }
+            this.tryConnectToServer = netInfo.getTryConnectToServer();
+        }
+        Object alterServer = serverMap.get(Integer.toString(this.
+            connectedWithServerId));
+        if (alterServer != null) {
+            ( (ServerDO) alterServer).setConnected(false);
+        }
+        if (netInfo.getConnectedWithServerId() != -1) {
+            serverDO = (ServerDO) serverMap.get(Integer.toString(
+                netInfo.getConnectedWithServerId()));
+            serverDO.setConnected(true);
+            verbindungsStatus = Information.VERBUNDEN;
+            information.setServer(serverDO);
+        }
+        this.connectedWithServerId = netInfo.getConnectedWithServerId();
+        information.setServer(serverDO);
+        information.setVerbindungsStatus(verbindungsStatus);
+        information.setExterneIP(netInfo.getExterneIP());
+
+        Search aSearch;
+        SearchEntry searchEntry;
+        if (searchEntriesToDo.size()>0){
+            Iterator it = searchEntriesToDo.iterator();
+            while(it.hasNext()){
+                searchEntry = (SearchEntry)it.next();
+                if (searchMap.containsKey(Integer.toString(searchEntry.getSearchId()))) {
+                    aSearch = (Search) searchMap.get(Integer.toString(searchEntry.getSearchId()));
+                    aSearch.addSearchEntry(searchEntry);
+                }
+
+            }
+            searchEntriesToDo.clear();
+        }
+    }
+
     public void reload(String parameters) {
         try {
             reloadInProgress = true;
             Securer securer = new Securer();
             securer.start();
-            super.reload(parameters, true);
+            String xmlString = getXMLString(parameters);
+            xr.parse( new InputSource(
+               new StringReader( xmlString )) );
+            parseRest();
             if (!securer.isInterrupted()) {
                 securer.interrupt();
             }
@@ -399,192 +875,13 @@ public class ModifiedXMLHolder
             throw new RuntimeException();
         }
         catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
-            }
-        }
-    }
-
-    public void update() {
-        throw new RuntimeException();
-    }
-
-    public Information getInformation(boolean reload) {
-        try {
-            if (reload || information == null) {
-                NodeList nodes = document.getElementsByTagName("information");
-                long sessionUpload;
-                long sessionDownload;
-                long credits;
-                long uploadSpeed;
-                long downloadSpeed;
-                long openConnections;
-                String serverName = null;
-                String externeIP;
-                int verbindungsStatus = Information.NICHT_VERBUNDEN;
-                ServerDO serverDO = null; ;
-                if (tryConnectToServer != -1) {
-                    serverDO = (ServerDO) serverMap.get(Integer.toString(
-                        tryConnectToServer));
-                    if (serverDO != null) {
-                        verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
-                        serverName = serverDO.getName();
-                    }
-                }
-                else if (connectedWithServerId != -1) {
-                    serverDO = (ServerDO) serverMap.get(Integer.toString(
-                        connectedWithServerId));
-                    if (serverDO != null) {
-                        verbindungsStatus = Information.VERBUNDEN;
-                        serverName = serverDO.getName();
-                    }
-                }
-                else {
-                    verbindungsStatus = Information.NICHT_VERBUNDEN;
-                }
-                externeIP = netInfo.getExterneIP();
-                if (nodes.getLength() != 0) {
-                    Element e = (Element) nodes.item(0);
-//                int id = Integer.parseInt(e.getAttribute("id"));
-                    credits = Long.parseLong(e.getAttribute("credits"));
-                    uploadSpeed = Long.parseLong(e.getAttribute("uploadspeed"));
-                    downloadSpeed = Long.parseLong(e.getAttribute(
-                        "downloadspeed"));
-                    openConnections = Long.parseLong(e.getAttribute(
-                        "openconnections"));
-                    sessionUpload = Long.parseLong(e.getAttribute(
-                        "sessionupload"));
-                    sessionDownload = Long.parseLong(e.getAttribute(
-                        "sessiondownload"));
-                    information = new Information( -1, sessionUpload,
-                                                  sessionDownload,
-                                                  credits, uploadSpeed,
-                                                  downloadSpeed,
-                                                  openConnections,
-                                                  verbindungsStatus, serverName,
-                                                  externeIP, serverDO);
-                }
-                else {
-                    information = new Information(information.getId(),
-                                                  information.getSessionUpload(),
-                                                  information.
-                                                  getSessionDownload(),
-                                                  information.getCredits(),
-                                                  information.getUploadSpeed(),
-                                                  information.getDownloadSpeed(),
-                                                  information.
-                                                  getOpenConnections(),
-                                                  verbindungsStatus, serverName,
-                                                  externeIP, serverDO);
-                }
-            }
-            return information;
-        }
-        catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
-            }
-            return null;
-        }
-    }
-
-    public HashMap getSpeeds() {
-        HashMap speeds = new HashMap();
-        try {
-            NodeList nodes = document.getElementsByTagName("information");
-            if (nodes.getLength() > 0) {
-                Element e = (Element) nodes.item(0);
-                if (e != null) {
-                    speeds.put("uploadspeed",
-                               new Long(e.getAttribute("uploadspeed")));
-                    speeds.put("downloadspeed",
-                               new Long(e.getAttribute("downloadspeed")));
-                    speeds.put("credits",
-                               new Long(e.getAttribute("credits")));
-                    speeds.put("sessionupload",
-                               new Long(e.getAttribute("sessionupload")));
-                    speeds.put("sessiondownload",
-                               new Long(e.getAttribute("sessiondownload")));
-                }
-            }
-        }
-        catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", ex);
-            }
-        }
-        return speeds;
-    }
-
-    private void updateIDs() {
-        try {
-            NodeList nodes = document.getElementsByTagName("removed");
-            if ( nodes == null ) {
-                return;
-            }
-            nodes = nodes.item(0).getChildNodes();
-            if ( nodes == null ) {
-                return;
-            }
-            Element e = null;
-            String id = null;
-            int size = nodes.getLength();
-            String toRemoveKey;
-            DownloadDO downloadDO;
-            DownloadSourceDO[] sourcen;
-            for (int i = 0; i < size; i++) {
-                if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                    e = (Element) nodes.item(i);
-                    id = e.getAttribute("id");
-                    toRemoveKey = id;
-                    if (uploadMap.containsKey(toRemoveKey)) {
-                        uploadMap.remove(toRemoveKey);
-                        continue;
-                    }
-                    else if (downloadMap.containsKey(toRemoveKey)) {
-                        downloadDO = (DownloadDO) downloadMap.get(
-                            sourcenZuDownloads.get(toRemoveKey));
-                        if (downloadDO != null) {
-                            sourcen = downloadDO.getSources();
-                            if (sourcen != null) {
-                                for (int y = 0; y < sourcen.length; y++) {
-                                    sourcenZuDownloads.remove(Integer.toString(
-                                        sourcen[y].getId()));
-                                }
-                            }
-                        }
-                        downloadMap.remove(toRemoveKey);
-                        continue;
-                    }
-                    else if (serverMap.containsKey(toRemoveKey)) {
-                        serverMap.remove(toRemoveKey);
-                        continue;
-                    }
-                    else if (sourcenZuDownloads.containsKey(toRemoveKey)) {
-                        downloadDO = (DownloadDO) sourcenZuDownloads.get(
-                            toRemoveKey);
-                        downloadDO.removeSource(id);
-                        sourcenZuDownloads.remove(toRemoveKey);
-                        continue;
-                    }
-                    else if (searchMap.containsKey(toRemoveKey)) {
-                        searchMap.remove(toRemoveKey);
-                        Search.currentSearchCount = searchMap.size();
-                        continue;
-                    }
-                }
-            }
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
+            ex.printStackTrace();
         }
     }
 
     private void updateSuche() {
         try {
-            NodeList nodes = document.getElementsByTagName("search");
+/*            NodeList nodes = document.getElementsByTagName("search");
             int size = nodes.getLength();
             if (size > 0) {
                 Element e;
@@ -676,361 +973,7 @@ public class ModifiedXMLHolder
                         aSearch.addSearchEntry(searchEntry);
                     }
                 }
-            }
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
-        }
-    }
-
-    private void updateDownloads() {
-        try {
-            Element e = null;
-            int id;
-            int shareid;
-            String hash = null;
-            long fileSize;
-            long sizeReady;
-            String temp = null;
-            int status;
-            String filename = null;
-            String targetDirectory = null;
-            int powerDownload;
-            int temporaryFileNumber;
-            NodeList nodes = document.getElementsByTagName("download");
-            int size = nodes.getLength();
-            DownloadDO downloadDO = null;
-            String key;
-            synchronized (downloadMap) {
-                for (int i = 0; i < size; i++) {
-                    e = (Element) nodes.item(i);
-                    id = Integer.parseInt(e.getAttribute("id"));
-                    key = Integer.toString(id);
-                    if (downloadMap.containsKey(key)) {
-                        downloadDO = (DownloadDO) downloadMap.get(key);
-                        downloadDO.setShareId(Integer.parseInt(e.getAttribute(
-                            "shareid")));
-                        downloadDO.setHash(e.getAttribute("hash"));
-                        downloadDO.setGroesse(Long.parseLong(e.getAttribute(
-                            "size")));
-                        downloadDO.setReady(Long.parseLong(e.getAttribute(
-                            "ready")));
-                        temp = e.getAttribute("status");
-                        downloadDO.setStatus(Integer.parseInt(temp));
-                        downloadDO.setFilename(e.getAttribute("filename"));
-                        downloadDO.setTargetDirectory(e.getAttribute(
-                            "targetdirectory"));
-                        temp = e.getAttribute("powerdownload");
-                        downloadDO.setPowerDownload(Integer.parseInt(temp));
-                        temp = e.getAttribute("temporaryfilenumber");
-                        downloadDO.setTemporaryFileNumber(Integer.parseInt(temp));
-                    }
-                    else {
-                        shareid = Integer.parseInt(e.getAttribute("shareid"));
-                        hash = e.getAttribute("hash");
-                        fileSize = Long.parseLong(e.getAttribute("size"));
-                        sizeReady = Long.parseLong(e.getAttribute("ready"));
-                        temp = e.getAttribute("status");
-                        status = Integer.parseInt(temp);
-                        filename = e.getAttribute("filename");
-                        targetDirectory = e.getAttribute("targetdirectory");
-                        temp = e.getAttribute("powerdownload");
-                        powerDownload = Integer.parseInt(temp);
-                        temp = e.getAttribute("temporaryfilenumber");
-                        temporaryFileNumber = Integer.parseInt(temp);
-
-                        downloadDO = new DownloadDO(id, shareid, hash, fileSize,
-                            sizeReady, status, filename,
-                            targetDirectory, powerDownload, temporaryFileNumber);
-
-                        downloadMap.put(Integer.toString(id), downloadDO);
-                    }
-                }
-            }
-            int directstate;
-            nodes = document.getElementsByTagName("user");
-            size = nodes.getLength();
-            int downloadFrom;
-            int downloadTo;
-            int actualDownloadPosition;
-            int speed;
-            int downloadId;
-            Version version = null;
-            String versionNr = null;
-            String nickname = null;
-            int queuePosition;
-            int os;
-            DownloadSourceDO downloadSourceDO = null;
-            for (int i = 0; i < size; i++) {
-                e = (Element) nodes.item(i);
-                id = Integer.parseInt(e.getAttribute("id"));
-                temp = e.getAttribute("status");
-                status = Integer.parseInt(temp);
-                temp = e.getAttribute("directstate");
-                directstate = Integer.parseInt(temp);
-                if (status == DownloadSourceDO.UEBERTRAGUNG) {
-                    temp = e.getAttribute("downloadfrom");
-                    downloadFrom = Integer.parseInt(temp);
-                    temp = e.getAttribute("downloadto");
-                    downloadTo = Integer.parseInt(temp);
-                    temp = e.getAttribute("actualdownloadposition");
-                    actualDownloadPosition = Integer.parseInt(temp);
-                    temp = e.getAttribute("speed");
-                    speed = Integer.parseInt(temp);
-                }
-                else {
-                    downloadFrom = -1;
-                    downloadTo = -1;
-                    actualDownloadPosition = -1;
-                    speed = 0;
-                }
-                versionNr = e.getAttribute("version");
-                if (versionNr.compareToIgnoreCase("0.0.0.0") == 0) {
-                    version = null;
-                }
-                else {
-                    temp = e.getAttribute("operatingsystem");
-                    os = Integer.parseInt(temp);
-                    version = new Version(versionNr, os);
-                }
-                temp = e.getAttribute("queueposition");
-                queuePosition = Integer.parseInt(temp);
-                temp = e.getAttribute("powerdownload");
-                powerDownload = Integer.parseInt(temp);
-                filename = e.getAttribute("filename");
-                nickname = e.getAttribute("nickname");
-                temp = e.getAttribute("downloadid");
-                downloadId = Integer.parseInt(temp);
-                key = Integer.toString(downloadId);
-                downloadDO = (DownloadDO) downloadMap.get(key);
-                if (downloadDO != null) {
-                    downloadSourceDO = downloadDO.getSourceById(id);
-                    if (downloadSourceDO != null) {
-                        downloadSourceDO.setActualDownloadPosition(
-                            actualDownloadPosition);
-                        downloadSourceDO.setDirectstate(directstate);
-                        downloadSourceDO.setDownloadFrom(downloadFrom);
-                        downloadSourceDO.setDownloadTo(downloadTo);
-                        downloadSourceDO.setFilename(filename);
-                        downloadSourceDO.setNickname(nickname);
-                        downloadSourceDO.setPowerDownload(powerDownload);
-                        downloadSourceDO.setQueuePosition(queuePosition);
-                        downloadSourceDO.setSpeed(speed);
-                        downloadSourceDO.setStatus(status);
-                        downloadSourceDO.setVersion(version);
-                        downloadSourceDO.setDownloadId(downloadId);
-                    }
-                    else {
-                        downloadSourceDO = new DownloadSourceDO(id, status,
-                            directstate, downloadFrom, downloadTo,
-                            actualDownloadPosition, speed, version,
-                            queuePosition,
-                            powerDownload, filename, nickname, downloadId);
-                        downloadDO.addSource(downloadSourceDO);
-                        sourcenZuDownloads.put(Integer.toString(id),
-                                               downloadDO);
-                    }
-                }
-            }
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
-        }
-    }
-
-    private void updateUploads() {
-        try {
-            NodeList nodes = document.getElementsByTagName("upload");
-            int size = nodes.getLength();
-            Element e = null;
-            int shareId;
-            UploadDO upload = null;
-            int id;
-            int os;
-            String versionsNr = null;
-            Version version = null;
-            int prioritaet;
-            String nick = null;
-            String status = null;
-            long uploadFrom;
-            long uploadTo;
-            long actualUploadPos;
-            int speed;
-            int directstate;
-            String idKey = null;
-            synchronized (uploadMap) {
-                ShareDO shareDO;
-                HashMap share = null;
-                for (int i = 0; i < size; i++) {
-                    e = (Element) nodes.item(i);
-                    id = Integer.parseInt(e.getAttribute("id"));
-                    idKey = Integer.toString(id);
-                    if (uploadMap.containsKey(idKey)) {
-                        upload = (UploadDO) uploadMap.get(idKey);
-                        upload.setShareFileID(Integer.parseInt(e.getAttribute(
-                            "shareid")));
-                        upload.setPrioritaet(Integer.parseInt(e.getAttribute(
-                            "priority")));
-                        upload.setNick(e.getAttribute("nick"));
-                        upload.setStatus(Integer.parseInt(e.getAttribute(
-                            "status")));
-                        upload.setDirectState(Integer.parseInt(e.getAttribute(
-                            "directstate")));
-                        upload.setUploadFrom(Long.parseLong(e.getAttribute(
-                            "uploadfrom")));
-                        upload.setUploadTo(Long.parseLong(e.getAttribute(
-                            "uploadto")));
-                        upload.setActualUploadPosition(Long.parseLong(e.
-                            getAttribute("actualuploadposition")));
-                        upload.setSpeed(Integer.parseInt(e.getAttribute("speed")));
-                    }
-                    else {
-                        shareId = Integer.parseInt(e.getAttribute("shareid"));
-                        versionsNr = e.getAttribute("version");
-                        if (versionsNr.compareToIgnoreCase("0.0.0.0") == 0) {
-                            version = null;
-                        }
-                        else {
-                            os = Integer.parseInt(e.getAttribute(
-                                "operatingsystem"));
-                            version = new Version(versionsNr, os);
-                        }
-                        prioritaet = Integer.parseInt(e.getAttribute("priority"));
-                        nick = e.getAttribute("nick");
-                        status = e.getAttribute("status");
-                        directstate = Integer.parseInt(e.getAttribute("directstate"));
-                        uploadFrom = Long.parseLong(e.getAttribute("uploadfrom"));
-                        uploadTo = Long.parseLong(e.getAttribute("uploadto"));
-                        actualUploadPos = Long.parseLong(e.getAttribute(
-                            "actualuploadposition"));
-                        speed = Integer.parseInt(e.getAttribute("speed"));
-                        upload = new UploadDO(id, shareId, version, status,
-                                              nick,
-                                              uploadFrom, uploadTo,
-                                              actualUploadPos,
-                                              speed, prioritaet, directstate);
-                        if (share == null) {
-                            share = ApplejuiceFassade.getInstance().getShare(false);
-                        }
-                        shareDO = (ShareDO) share.get(Integer.toString(
-                            shareId));
-                        if (upload != null && shareDO != null) {
-                            //wenns die passende Sharedatei aus irgendeinem Grund nicht geben sollte,
-                            //wird dieser Upload auch nicht angezeigt
-                            upload.setDateiName(shareDO.getShortfilename());
-                            uploadMap.put(idKey, upload);
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
-        }
-    }
-
-    private void updateServer() {
-        try {
-            NodeList nodes = document.getElementsByTagName("server");
-            int size = nodes.getLength();
-            Element e = null;
-            String id_key = null;
-            int id;
-            String name = null;
-            String host = null;
-            long lastseen;
-            int versuche;
-            String port = null;
-            ServerDO server = null;
-            String key;
-            ServerDO serverDO;
-            for (int i = 0; i < size; i++) {
-                e = (Element) nodes.item(i);
-                id_key = e.getAttribute("id");
-                key = id_key;
-                if (serverMap.containsKey(key)) {
-                    serverDO = (ServerDO) serverMap.get(key);
-                    serverDO.setName(e.getAttribute("name"));
-                    serverDO.setHost(e.getAttribute("host"));
-                    serverDO.setTimeLastSeen(Long.parseLong(e.getAttribute(
-                        "lastseen")));
-                    serverDO.setVersuche(Integer.parseInt(e.getAttribute(
-                        "connectiontry")));
-                    serverDO.setPort(e.getAttribute("port"));
-                }
-                else {
-                    id = Integer.parseInt(id_key);
-                    name = e.getAttribute("name");
-                    host = e.getAttribute("host");
-                    lastseen = Long.parseLong(e.getAttribute("lastseen"));
-                    port = e.getAttribute("port");
-                    versuche = Integer.parseInt(e.getAttribute("connectiontry"));
-                    server = new ServerDO(id, name, host, port, lastseen,
-                                          versuche);
-                    serverMap.put(id_key, server);
-                }
-            }
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
-        }
-    }
-
-    private void updateNetworkInfo() {
-        try {
-            NodeList nodes = document.getElementsByTagName("networkinfo");
-            if (nodes.getLength() == 0) {
-                return; //Keine Veraenderung seit dem letzten Abrufen
-            }
-            Element e = (Element) nodes.item(0); //Es gibt nur ein Netzerkinfo-Element
-            String users = e.getAttribute("users");
-            String dateien = e.getAttribute("files");
-            String dateigroesse = e.getAttribute("filesize");
-            int tryConnectToServer = Integer.parseInt(e.getAttribute(
-                "tryconnecttoserver"));
-            int connectedWithServerId = Integer.parseInt(e.getAttribute(
-                "connectedwithserverid"));
-            boolean firewalled = (e.getAttribute("firewalled").
-                                  compareToIgnoreCase(
-                "true") == 0) ? true : false;
-            String externeIP = e.getAttribute("ip");
-            if (this.tryConnectToServer != tryConnectToServer) {
-                Object alterServer = serverMap.get(Integer.toString(this.
-                    tryConnectToServer));
-                if (alterServer != null) {
-                    ( (ServerDO) alterServer).setTryConnect(false);
-                }
-                if (tryConnectToServer != -1) {
-                    ServerDO serverDO = (ServerDO) serverMap.get(Integer.
-                        toString(tryConnectToServer));
-                    serverDO.setTryConnect(true);
-                }
-                this.tryConnectToServer = tryConnectToServer;
-            }
-            //if (this.connectedWithServerId != connectedWithServerId){
-            Object alterServer = serverMap.get(Integer.toString(this.
-                connectedWithServerId));
-            if (alterServer != null) {
-                ( (ServerDO) alterServer).setConnected(false);
-            }
-            if (connectedWithServerId != -1) {
-                ServerDO serverDO = (ServerDO) serverMap.get(Integer.toString(
-                    connectedWithServerId));
-                serverDO.setConnected(true);
-            }
-            this.connectedWithServerId = connectedWithServerId;
-            //}
-            netInfo = new NetworkInfo(users, dateien, dateigroesse, firewalled,
-                                      externeIP, tryConnectToServer,
-                                      connectedWithServerId);
+            }*/
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -1051,7 +994,6 @@ public class ModifiedXMLHolder
                         ok = false;
                         interrupt();
                     }
-//                            System.out.println("session secured");
                 }
                 catch (InterruptedException ex) {
                     interrupt();
