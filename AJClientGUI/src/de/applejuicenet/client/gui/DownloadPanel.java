@@ -57,7 +57,6 @@ import de.applejuicenet.client.gui.tables.download.DownloadRootNode;
 import de.applejuicenet.client.gui.tables.download.DownloadTableCellRenderer;
 import de.applejuicenet.client.gui.tables.download.DownloadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.tables.download.DownloadTableVersionCellRenderer;
-import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.Settings;
