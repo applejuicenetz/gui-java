@@ -7,6 +7,9 @@ import de.applejuicenet.client.shared.RemoteConfiguration;
 import java.security.MessageDigest;
 import java.security.*;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
+import de.applejuicenet.client.shared.HtmlLoader;
+import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -62,5 +65,9 @@ public class OptionsManager extends XMLDecoder {
     setAttributeByTagName(new String[] {"options", "remote", "host"}, remote.getHost());
     if (remote.isRemoteUsed())
       setAttributeByTagName(new String[] {"options", "remote", "use"}, (remote.isRemoteUsed()? "1": "0"));
+  }
+
+  public boolean saveAJSettings(AJSettings ajSettings){
+    return DataManager.getInstance().saveAJSettings(ajSettings);
   }
 }

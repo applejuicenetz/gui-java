@@ -12,6 +12,7 @@ package de.applejuicenet.client.shared.exception;
 public class WebSiteNotFoundException extends Exception {
   public static final int AUTHORIZATION_REQUIRED = 407;
   public static final int UNKNOWN_HOST = 1;
+  public static final int INPUT_ERROR = 2;
 
   private int error;
 

@@ -41,6 +41,8 @@ public class NetworkInfo {
   public String getAJGesamtShare(long faktor){
     ajGesamtShare = ajGesamtShare.replace(',', '.');
     double share = Double.parseDouble(ajGesamtShare);
+    if (share==0)
+      return "0,00 MB";
     if (faktor==0){  //selbst entscheiden
       if (share /1000 < 1000)
         faktor=1000;

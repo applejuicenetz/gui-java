@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<settings>
+	<nick>aj with JAVA on linux</nick>
+	<port>6154</port>
+	<xmlport>9851</xmlport>
+	<allowbrowse>true</allowbrowse>
+	<maxupload>16384</maxupload>
+	<maxdownload>0</maxdownload>
+	<speedperslot>3</speedperslot>
+	<incomingdirectory>C:\Dokumente und Einstellungen\Torsten\appleJuice\incoming</incomingdirectory>
+	<temporarydirectory>C:\Dokumente und Einstellungen\Torsten\appleJuice\temp</temporarydirectory>#
+	<share>
+		<directory name="d:/emule" sharemode="subdirectory"/>
+	</share>
+</settings>

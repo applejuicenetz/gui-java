@@ -58,14 +58,21 @@ public abstract class HtmlLoader {
                                              UNKNOWN_HOST);
         while (inputLine.indexOf("xml version") == -1) {
           inputLine = in.readLine();
+          if (inputLine == null)
+            throw new WebSiteNotFoundException(WebSiteNotFoundException.
+                                               UNKNOWN_HOST);
         }
         urlContent += inputLine;
         while ( (inputLine = in.readLine()) != null) {
           urlContent += inputLine;
         }
       }
-      else
-        urlContent = inputLine;
+      else{
+        if (inputLine.compareToIgnoreCase("HTTP/1.1 200 OK")==0)
+          urlContent = inputLine;
+        else
+          throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR);
+      }
     }
     catch (SocketException sex) {
       throw new WebSiteNotFoundException(WebSiteNotFoundException.AUTHORIZATION_REQUIRED);

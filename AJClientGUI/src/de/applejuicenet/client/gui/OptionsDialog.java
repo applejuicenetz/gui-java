@@ -28,11 +28,13 @@ public class OptionsDialog
   private JFrame parent;
   private JButton speichern;
   private JButton abbrechen;
+  private AJSettings ajSettings;
 
   public OptionsDialog(JFrame parent) throws HeadlessException {
     super(parent, true);
     this.parent = parent;
     try {
+      ajSettings = DataManager.getInstance().getAJSettings();
       jbInit();
     }
     catch (Exception e) {
@@ -45,7 +47,7 @@ public class OptionsDialog
     setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                getFirstAttrbuteByTagName(new
         String[] {"einstform", "caption"})));
-    standardPanel = new ODStandardPanel(parent); //Standard-Reiter
+    standardPanel = new ODStandardPanel(parent, ajSettings); //Standard-Reiter
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "standardsheet",
                                   "caption"})), standardPanel);
@@ -53,7 +55,7 @@ public class OptionsDialog
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "pwsheet",
                                   "caption"})), passwortPanel);
-    verbindungPanel = new ODVerbindungPanel(); //Verbindungs-Reiter
+    verbindungPanel = new ODVerbindungPanel(ajSettings); //Verbindungs-Reiter
     jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "connectionsheet",
                                   "caption"})), verbindungPanel);
@@ -94,6 +96,9 @@ public class OptionsDialog
 
   private void speichern() {
     OptionsManager om = OptionsManager.getInstance();
+    if (standardPanel.isDirty() || verbindungPanel.isDirty()){
+      om.saveAJSettings(ajSettings);
+    }
     if (remotePanel.isDirty()) {
       try {
         om.saveRemote(remotePanel.getRemoteConfiguration());

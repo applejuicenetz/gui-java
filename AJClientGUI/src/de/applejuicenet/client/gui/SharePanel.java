@@ -11,6 +11,9 @@ import de.applejuicenet.client.gui.controller.DataManager;
 import java.util.HashMap;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import javax.swing.table.TableColumn;
+import de.applejuicenet.client.shared.AJSettings;
+import java.util.Iterator;
+import de.applejuicenet.client.shared.ShareEntry;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -28,7 +31,7 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI, D
   private JButton addFolderWithoutSubfolder = new JButton();
   private JButton removeFolder = new JButton();
   private JButton startCheck = new JButton();
-  private JList folderList = new JList();
+  private JList folderList = new JList(new DefaultListModel());
   TitledBorder titledBorder1;
   TitledBorder titledBorder2;
 
@@ -36,7 +39,8 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI, D
   private JButton neuLaden = new JButton();
   private JButton prioritaetSetzen = new JButton();
   private JButton prioritaetAufheben = new JButton();
-  JComboBox cmbPrio = new JComboBox();
+  private JComboBox cmbPrio = new JComboBox();
+  private AJSettings ajSettings;
 
   JTable shareTable;
 
@@ -49,6 +53,13 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI, D
     }
   }
   private void jbInit() throws Exception {
+    ajSettings = DataManager.getInstance().getAJSettings();
+    Iterator it = ajSettings.getShareDirs().iterator();
+    while (it.hasNext()){
+      ShareEntry entry = (ShareEntry) it.next();
+      ((DefaultListModel)folderList.getModel()).addElement(entry);
+    }
+
     shareTable = new JTable();
     titledBorder1 = new TitledBorder("Test");
     titledBorder2 = new TitledBorder("Tester");

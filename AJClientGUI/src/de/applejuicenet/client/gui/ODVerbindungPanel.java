@@ -1,23 +1,15 @@
 package de.applejuicenet.client.gui;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import java.awt.FlowLayout;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import de.applejuicenet.client.shared.IconManager;
-import java.awt.Color;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import de.applejuicenet.client.shared.AJSettings;
+import java.awt.*;
+import java.awt.event.*;
 
 
 /**
@@ -30,6 +22,7 @@ import java.awt.event.ActionEvent;
  */
 
 public class ODVerbindungPanel extends JPanel {
+  private boolean dirty = false;
   private JLabel label1;
   private JLabel label2;
   private JLabel label3;
@@ -49,9 +42,11 @@ public class ODVerbindungPanel extends JPanel {
   private JLabel btnPdlUp;
   private JLabel btnPdlDown;
   private int anzahlDownloads = 0;
+  private AJSettings ajSettings;
 
 
-  public ODVerbindungPanel() {
+  public ODVerbindungPanel(AJSettings ajSettings) {
+    this.ajSettings = ajSettings;
     try {
       jbInit();
     }
@@ -59,6 +54,11 @@ public class ODVerbindungPanel extends JPanel {
       e.printStackTrace();
     }
   }
+
+  public boolean isDirty(){
+    return dirty;
+  }
+
   private void jbInit() throws Exception {
     setLayout(new BorderLayout());
     JPanel panel1 = new JPanel(new GridBagLayout());
@@ -81,11 +81,21 @@ public class ODVerbindungPanel extends JPanel {
         anzahlDownloads= Integer.parseInt(anzahl.getText());
       }
     });
-    NumberInputVerifier niV = new NumberInputVerifier();
-    maxVerbindungen.setDocument(niV);
-    maxUpload.setDocument(niV);
-    maxDownload.setDocument(niV);
-    pinggrenze.setDocument(niV);
+    maxVerbindungen.setDocument(new NumberInputVerifier());
+    maxVerbindungen.setHorizontalAlignment(JLabel.RIGHT);
+    maxUpload.setDocument(new NumberInputVerifier());
+    maxUpload.setHorizontalAlignment(JLabel.RIGHT);
+    maxUpload.addFocusListener(new FocusAdapter() {
+      public void focusLost(FocusEvent e) {
+        int untereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()), 0.2);
+        int obereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()), 0.6);
+        kbSlider.setMinimum(untereGrenze);
+        kbSlider.setMaximum(obereGrenze);
+      }
+    });
+    maxDownload.setDocument(new NumberInputVerifier());
+    maxDownload.setHorizontalAlignment(JLabel.RIGHT);
+    pinggrenze.setDocument(new NumberInputVerifier());
 
     LanguageSelector languageSelector = LanguageSelector.getInstance();
 
@@ -110,7 +120,7 @@ public class ODVerbindungPanel extends JPanel {
     label7 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "Label18",
                                   "caption"})));
-    kbSlot = new JLabel("3 kb/s");
+    kbSlot = new JLabel();
 
     IconManager im = IconManager.getInstance();
     ImageIcon icon2 = im.getIcon("increase");
@@ -121,7 +131,10 @@ public class ODVerbindungPanel extends JPanel {
     btnPdlUp.addMouseListener(slotMA);
     btnPdlDown.addMouseListener(slotMA);
 
-    kbSlider = new JSlider(2, 5);
+    int untereGrenze = (int) Math.pow((double)ajSettings.getMaxUploadInKB(), 0.2);
+    int obereGrenze = (int) Math.pow((double)ajSettings.getMaxUploadInKB(), 0.6);
+
+    kbSlider = new JSlider(untereGrenze, obereGrenze);
     kbSlider.setMajorTickSpacing(1);
     kbSlider.setMinorTickSpacing(1);
     kbSlider.setSnapToTicks(true);
@@ -222,6 +235,11 @@ public class ODVerbindungPanel extends JPanel {
     panel1.add(panel9, constraints);
 
     add(panel1, BorderLayout.NORTH);
+
+    maxUpload.setText(Long.toString(ajSettings.getMaxUploadInKB()));
+    maxDownload.setText(Long.toString(ajSettings.getMaxDownloadInKB()));
+    kbSlider.setValue(ajSettings.getSpeedPerSlot());
+    kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
   }
 
   class SlotMouseAdapter extends MouseAdapter{

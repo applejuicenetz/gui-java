@@ -1,22 +1,14 @@
 package de.applejuicenet.client.gui.controller;
 
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.Version;
-import java.util.HashSet;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import java.util.Iterator;
-import javax.swing.JLabel;
-import de.applejuicenet.client.shared.HtmlLoader;
-import de.applejuicenet.client.shared.exception.*;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.*;
-import de.applejuicenet.client.shared.XMLDecoder;
-import java.util.HashMap;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
-import de.applejuicenet.client.shared.dac.ServerDO;
-import de.applejuicenet.client.shared.NetworkInfo;
+import java.net.*;
+import java.util.*;
+
+import javax.swing.*;
+
+import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.exception.*;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -27,71 +19,118 @@ import de.applejuicenet.client.shared.NetworkInfo;
  * @version 1.0
  */
 
-public class DataManager {   //Singleton-Implementierung
+public class DataManager { //Singleton-Implementierung
   private HashSet downloadListener;
   private HashSet shareListener;
   private HashSet uploadListener;
   private HashSet serverListener;
   private static DataManager instance = null;
-  private static int x=0;
+  private static int x = 0;
   private JLabel[] statusbar;
   private ModifiedXMLHolder modifiedXML = null;
   private InformationXMLHolder informationXML = null;
   private ShareXMLHolder shareXML = null;
+  private SettingsXMLHolder settingsXML = null;
   private Version coreVersion;
 
-  public void addDownloadListener(DataUpdateListener listener){
-    if (!(downloadListener.contains(listener)))
+  public void addDownloadListener(DataUpdateListener listener) {
+    if (! (downloadListener.contains(listener))) {
       downloadListener.add(listener);
+    }
   }
 
-  public void addUploadListener(DataUpdateListener listener){
-    if (!(uploadListener.contains(listener)))
+  public void addUploadListener(DataUpdateListener listener) {
+    if (! (uploadListener.contains(listener))) {
       uploadListener.add(listener);
+    }
   }
 
-  public void addShareListener(DataUpdateListener listener){
-    if (!(shareListener.contains(listener)))
+  public void addShareListener(DataUpdateListener listener) {
+    if (! (shareListener.contains(listener))) {
       shareListener.add(listener);
+    }
   }
 
-  public void addServerListener(DataUpdateListener listener){
-    if (!(serverListener.contains(listener)))
+  public void addServerListener(DataUpdateListener listener) {
+    if (! (serverListener.contains(listener))) {
       serverListener.add(listener);
+    }
   }
 
-  private DataManager(){
+  private DataManager() {
     downloadListener = new HashSet();
     serverListener = new HashSet();
     uploadListener = new HashSet();
     shareListener = new HashSet();
 
-   //load XMLs
-   modifiedXML = new ModifiedXMLHolder();
-   informationXML = new InformationXMLHolder();
-   shareXML = new ShareXMLHolder();
+    //load XMLs
+    modifiedXML = new ModifiedXMLHolder();
+    informationXML = new InformationXMLHolder();
+    shareXML = new ShareXMLHolder();
 
-   informationXML.reload("");
-   String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[]{"applejuice", "generalinformation", "version"}, true);
-   coreVersion = new Version(versionsTag, "Java", Version.getOSTypByOSName((String) System.getProperties().get("os.name")));
-
+    informationXML.reload("");
+    String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[] {
+        "applejuice", "generalinformation", "version"}
+        , true);
+    coreVersion = new Version(versionsTag, "Java",
+                              Version.getOSTypByOSName( (String) System.
+        getProperties().get("os.name")));
   }
 
-  public HashMap getAllServer(){
+  public AJSettings getAJSettings() {
+    if (settingsXML == null) {
+      settingsXML = new SettingsXMLHolder();
+    }
+    return settingsXML.getAJSettings();
+  }
+
+  public boolean saveAJSettings(AJSettings ajSettings) {
+    String parameters = "";
+    try {
+      parameters = "Nickname=" +
+          URLEncoder.encode(ajSettings.getNick(), "UTF-8");
+      parameters += "&XMLPort=" + Long.toString(ajSettings.getXMLPort());
+      parameters += "&AllowBrowse=" +
+          (ajSettings.isBrowseAllowed() ? "true" : "false");
+      parameters += "&MaxUpload=" + Long.toString(ajSettings.getMaxUpload());
+      parameters += "&MaxDownload=" + Long.toString(ajSettings.getMaxDownload());
+      parameters += "&Speedperslot=" +
+          Integer.toString(ajSettings.getSpeedPerSlot());
+      parameters += "&Incomingdirectory=" +
+          URLEncoder.encode(ajSettings.getIncomingDir(), "UTF-8");
+      parameters += "&Temporarydirectory=" +
+          URLEncoder.encode(ajSettings.getTempDir(), "UTF-8");
+    }
+    catch (UnsupportedEncodingException ex1) {
+      int i = 0;
+    }
+    String result;
+    try {
+      result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+                                         "/function/setsettings?" + parameters);
+    }
+    catch (WebSiteNotFoundException ex) {
+      return false;
+    }
+    return true;
+  }
+
+  public HashMap getAllServer() {
     return modifiedXML.getServer();
   }
 
-  public void updateModifiedXML(){
+  public void updateModifiedXML() {
     modifiedXML.update();
     informServerListener();
     informDownloadListener();
     informUploadListener();
   }
 
-  public static boolean connectToServer(int id){
+  public static boolean connectToServer(int id) {
     String result;
     try {
-      result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST, "/function/serverlogin?id=" + id);
+      result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+                                         "/function/serverlogin?id=" + id);
     }
     catch (WebSiteNotFoundException ex) {
       return false;
@@ -99,25 +138,27 @@ public class DataManager {   //Singleton-Implementierung
     return true;
   }
 
-  private static String getHost(){
+  private static String getHost() {
     OptionsManager om = OptionsManager.getInstance();
     String savedHost = "localhost";
-    if (om.getRemoteSettings().isRemoteUsed()){
+    if (om.getRemoteSettings().isRemoteUsed()) {
       savedHost = OptionsManager.getInstance().getRemoteSettings().getHost();
-      if (savedHost.length() == 0)
+      if (savedHost.length() == 0) {
         savedHost = "localhost";
+      }
     }
     return savedHost;
   }
 
-  public NetworkInfo getNetworkInfo(){
+  public NetworkInfo getNetworkInfo() {
     modifiedXML.update();
     return modifiedXML.getNetworkInfo();
   }
 
-  public static boolean istCoreErreichbar(){
+  public static boolean istCoreErreichbar() {
     try {
-      String testData = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET, "/xml/information.xml");
+      String testData = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
+                                                  "/xml/information.xml");
     }
     catch (WebSiteNotFoundException ex) {
       return false;
@@ -125,68 +166,88 @@ public class DataManager {   //Singleton-Implementierung
     return true;
   }
 
-  public static DataManager getInstance(){
-    if (instance==null){
+  public static DataManager getInstance() {
+    if (instance == null) {
       instance = new DataManager();
     }
     return instance;
   }
 
-  public Version getCoreVersion(){
+  public Version getCoreVersion() {
     return coreVersion;
   }
 
-  private void informDownloadListener(){
+  private void informDownloadListener() {
+    HashMap content = modifiedXML.getDownloads();
+    if (content.size() == 0) {
+      return;
+    }
     Iterator it = downloadListener.iterator();
-    while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged(DataUpdateListener.DOWNLOAD_CHANGED,  modifiedXML.getDownloads());
+    while (it.hasNext()) {
+      ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+          DOWNLOAD_CHANGED, content);
     }
   }
 
-  private void informUploadListener(){
+  private void informUploadListener() {
+    HashMap content = modifiedXML.getUploads();
+    if (content.size() == 0) {
+      return;
+    }
     Iterator it = uploadListener.iterator();
-    while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged(DataUpdateListener.UPLOAD_CHANGED, modifiedXML.getUploads());
+    while (it.hasNext()) {
+      ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+          UPLOAD_CHANGED, content);
     }
   }
 
-  private void informShareListener(){
+  private void informShareListener() {
+    HashMap content = shareXML.getShare();
+    if (content.size() == 0) {
+      return;
+    }
     Iterator it = shareListener.iterator();
-    while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged(DataUpdateListener.SHARE_CHANGED, shareXML.getShare());
+    while (it.hasNext()) {
+      ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+          SHARE_CHANGED, content);
     }
   }
 
-  private void informServerListener(){
+  private void informServerListener() {
+    HashMap content = modifiedXML.getServer();
+    if (content.size() == 0) {
+      return;
+    }
     Iterator it = serverListener.iterator();
-    while (it.hasNext()){
-      ((DataUpdateListener)it.next()).fireContentChanged(DataUpdateListener.SERVER_CHANGED, modifiedXML.getServer());
+    while (it.hasNext()) {
+      ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+          SERVER_CHANGED, content);
     }
   }
 
-  public void addStatusbarForListen(JLabel[] statusbar){
+  public void addStatusbarForListen(JLabel[] statusbar) {
     this.statusbar = statusbar;
     updateStatusbar();
   }
 
-  public void updateStatusbar(){
+  public void updateStatusbar() {
     //dummy
-    if (statusbar!=null){
+    if (statusbar != null) {
       statusbar[0].setText("Nicht verbunden");
       statusbar[3].setText("Credits: 0,00 MB");
       statusbar[4].setText("Version 0.01PreA");
     }
   }
 
-  public HashMap getDownloads(){
+  public HashMap getDownloads() {
     return modifiedXML.getDownloads();
   }
 
-  public HashMap getUploads(){
+  public HashMap getUploads() {
     return modifiedXML.getUploads();
   }
 
-  public HashMap getShare(){
+  public HashMap getShare() {
     return shareXML.getShare();
   }
 }

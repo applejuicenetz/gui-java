@@ -45,5 +45,6 @@ public class NumberInputVerifier
       return;
     }
     super.insertString(offset, str, attSet);
+    old = getText(0, getLength());
   }
 }

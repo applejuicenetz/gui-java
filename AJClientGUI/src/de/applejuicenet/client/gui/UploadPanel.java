@@ -10,6 +10,8 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import de.applejuicenet.client.gui.controller.DataManager;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import java.util.HashMap;
 
 
 /**
@@ -21,7 +23,7 @@ import de.applejuicenet.client.gui.controller.DataManager;
  * @version 1.0
  */
 
-public class UploadPanel extends JPanel implements LanguageListener, RegisterI{
+public class UploadPanel extends JPanel implements LanguageListener, RegisterI, DataUpdateListener{
   private JTable uploadDataTable;
   private int anzahlClients = 0;
   private JLabel label1 = new JLabel("0 Clients in Deiner Uploadliste");
@@ -34,6 +36,7 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI{
       e.printStackTrace();
     }
   }
+
   private void jbInit() throws Exception {
     setLayout(new BorderLayout());
     LanguageSelector.getInstance().addLanguageListener(this);
@@ -50,6 +53,7 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI{
     panel2.setLayout(new BorderLayout());
     panel2.add(panel, BorderLayout.WEST);
     add(panel2, BorderLayout.SOUTH);
+    DataManager.getInstance().addUploadListener(this);
   }
 
   public void fireLanguageChanged() {
@@ -70,8 +74,13 @@ public class UploadPanel extends JPanel implements LanguageListener, RegisterI{
     }
   }
 
+  public void fireContentChanged(int type, HashMap content){
+    if (type != DataUpdateListener.UPLOAD_CHANGED)
+      return;
+    ((UploadDataTableModel)uploadDataTable.getModel()).setTable(content);
+  }
+
   public void registerSelected(){
     DataManager.getInstance().updateModifiedXML();
   }
-
 }
