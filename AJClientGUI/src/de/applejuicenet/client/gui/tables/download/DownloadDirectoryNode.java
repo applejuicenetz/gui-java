@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.4 2004/01/08 07:47:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.5 2004/01/12 07:23:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDirectoryNode.java,v $
+ * Revision 1.5  2004/01/12 07:23:57  maj0r
+ * Wiedergabe der Tabellenwerte vom Model ins Node umgebaut.
+ *
  * Revision 1.4  2004/01/08 07:47:49  maj0r
  * Schoenheitssachen.
  *
@@ -34,7 +37,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  */
 
 public class DownloadDirectoryNode
-    implements Node, DownloadNode {
+    implements Node, DownloadNode, DownloadColumnValue {
     private static HashMap downloads;
     private String verzeichnis;
     private ArrayList children = new ArrayList();
@@ -104,5 +107,45 @@ public class DownloadDirectoryNode
 
     public Icon getConvenientIcon() {
         return IconManager.getInstance().getIcon("tree");
+    }
+
+    public String getColumn0() {
+        return getVerzeichnis();
+    }
+
+    public String getColumn1() {
+        return "";
+    }
+
+    public String getColumn2() {
+        return "";
+    }
+
+    public String getColumn3() {
+        return "";
+    }
+
+    public String getColumn4() {
+        return "";
+    }
+
+    public String getColumn5() {
+        return "";
+    }
+
+    public String getColumn6() {
+        return "";
+    }
+
+    public String getColumn7() {
+        return "";
+    }
+
+    public String getColumn8() {
+        return "";
+    }
+
+    public String getColumn9() {
+        return "";
     }
 }
