@@ -5,9 +5,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/Attic/WaitNode.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/Attic/WaitNode.java,v 1.5 2004/02/26 15:10:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +18,9 @@ import de.applejuicenet.client.shared.IconManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WaitNode.java,v $
+ * Revision 1.5  2004/02/26 15:10:55  maj0r
+ * Auf LanguageSelector umgebaut.
+ *
  * Revision 1.4  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -42,6 +47,8 @@ public class WaitNode
     }
 
     public String toString() {
-        return "bitte warten...";
+        String anzeige = ZeichenErsetzer.korrigiereUmlaute(
+            LanguageSelector.getInstance().getFirstAttrbuteByTagName(".root.javagui.downloadform.waitnodetext"));
+        return anzeige;
     }
 }
