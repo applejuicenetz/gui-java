@@ -27,15 +27,18 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.33 2004/02/22 08:36:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.34 2004/03/01 21:14:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.34  2004/03/01 21:14:45  maj0r
+ * Unter Linux ist die properties.xml nun unter ~/appleJuice zu finden.
+ *
  * Revision 1.33  2004/02/22 08:36:59  maj0r
  * Bug #235 gefixt (Danke an uselessplayer)
  * Passwortfeld im Logindialog funktioniert wieder ordentlich.
@@ -80,7 +83,7 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  *
  * Revision 1.20  2004/01/05 19:17:19  maj0r
  * Bug #56 gefixt (Danke an MeineR)
- * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
+ * Das Laden der Plugins beim Start kann \uFFFDber das Optionenmenue deaktiviert werden.
  *
  * Revision 1.19  2004/01/05 17:08:36  maj0r
  * Fehlerbehandlung korrigiert.
@@ -157,34 +160,34 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * Passworteingabe korrigiert.
  *
  * Revision 1.19  2003/08/16 17:50:06  maj0r
- * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
+ * Diverse Farben k\uFFFDnnen nun manuell eingestellt bzw. deaktiviert werden.
  * DownloaduebersichtTabelle kann deaktiviert werden.
  *
  * Revision 1.18  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
  * Revision 1.17  2003/08/11 14:10:28  maj0r
- * DownloadPartList eingefügt.
- * Diverse Änderungen.
+ * DownloadPartList eingef\uFFFDgt.
+ * Diverse Aenderungen.
  *
  * Revision 1.16  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
  * Revision 1.15  2003/07/01 14:55:06  maj0r
- * Unnütze Abfrage entfernt.
+ * Unn\uFFFDtze Abfrage entfernt.
  *
  * Revision 1.14  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingefügt.
+ * Klassen zum Sortieren von Tabellen eingef\uFFFDgt.
  * Servertabelle kann nun spaltenweise sortiert werden.
  *
  * Revision 1.13  2003/06/24 12:06:49  maj0r
- * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
+ * log4j eingef\uFFFDgt (inkl. Bedienung \uFFFDber Einstellungsdialog).
  *
  * Revision 1.12  2003/06/22 19:01:22  maj0r
  * Hostverwendung korrigiert.
  *
  * Revision 1.11  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -215,37 +218,48 @@ public class PropertiesManager
 
     private boolean legal = false;
 
-    private PropertiesManager(String path) {
-        super(path);
+    private PropertiesManager(String propertiesPath) {
+        super(propertiesPath);
+        this.path = propertiesPath;
         logger = Logger.getLogger(getClass());
         init();
     }
 
     public static OptionsManager getOptionsManager() {
         if (instance == null) {
-            path = System.getProperty("user.dir") + File.separator +
-                "properties.xml";
-            instance = new PropertiesManager(path);
+            instance = new PropertiesManager(getPropertiesPath());
         }
         return instance;
     }
 
     public static PositionManager getPositionManager() {
         if (instance == null) {
-            String path = System.getProperty("user.dir") + File.separator +
-                "properties.xml";
-            instance = new PropertiesManager(path);
+            instance = new PropertiesManager(getPropertiesPath());
         }
         return instance;
     }
 
     public static ProxyManager getProxyManager() {
         if (instance == null) {
-            String path = System.getProperty("user.dir") + File.separator +
-                "properties.xml";
-            instance = new PropertiesManager(path);
+            instance = new PropertiesManager(getPropertiesPath());
         }
         return instance;
+    }
+
+    public static String getPropertiesPath(){
+        if (System.getProperty("os.name").equals("Linux")){
+            String dir = System.getProperty("user.home") + File.separator + "appleJuice";
+            File directory = new File(dir);
+            if (!directory.isDirectory()){
+                directory.mkdir();
+            }
+            dir += File.separator + "properties.xml";
+            return dir;
+        }
+        else{
+            return System.getProperty("user.dir") + File.separator +
+                "properties.xml";
+        }
     }
 
     private void saveDom() {
@@ -665,7 +679,7 @@ public class PropertiesManager
             rootLogger.addAppender(new ConsoleAppender());
         }
         if (logger.isEnabledFor(Level.DEBUG)) {
-            logger.debug("Loglevel geändert in " + level.toString());
+            logger.debug("Loglevel geaendert in " + level.toString());
         }
     }
 

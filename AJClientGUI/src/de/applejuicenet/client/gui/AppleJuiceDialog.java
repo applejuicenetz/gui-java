@@ -75,15 +75,18 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.104 2004/02/27 15:35:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.105 2004/03/01 21:14:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.105  2004/03/01 21:14:44  maj0r
+ * Unter Linux ist die properties.xml nun unter ~/appleJuice zu finden.
+ *
  * Revision 1.104  2004/02/27 15:35:55  maj0r
  * Dialogtitel korrigiert.
  *
@@ -162,7 +165,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  *
  * Revision 1.80  2004/01/12 16:15:04  maj0r
  * Bug #91 umgesetzt (Danke an hirsch.marcel)
- * Maxupload- und Maxdownloadgeschwindigkeit kann nun über das TrayIcon eingestellt werden (Windowsversion).
+ * Maxupload- und Maxdownloadgeschwindigkeit kann nun \uFFFDber das TrayIcon eingestellt werden (Windowsversion).
  *
  * Revision 1.79  2004/01/12 07:21:54  maj0r
  * Standard-XML erweitert.
@@ -178,11 +181,11 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * TrayIcon-Verwendung korrigiert.
  *
  * Revision 1.75  2004/01/06 12:52:04  maj0r
- * TrayIcon für Windowsplattformen eingebaut.
+ * TrayIcon f\uFFFDr Windowsplattformen eingebaut.
  *
  * Revision 1.74  2004/01/05 19:17:18  maj0r
  * Bug #56 gefixt (Danke an MeineR)
- * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
+ * Das Laden der Plugins beim Start kann \uFFFDber das Optionenmenue deaktiviert werden.
  *
  * Revision 1.73  2004/01/05 07:28:58  maj0r
  * Begonnen einen Standardwebbrowser einzubauen.
@@ -327,23 +330,23 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * Refactoring.
  *
  * Revision 1.27  2003/08/12 06:12:19  maj0r
- * Version erhöht.
+ * Version erh\uFFFDht.
  *
  * Revision 1.26  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
  * Revision 1.25  2003/07/04 15:25:38  maj0r
- * Version erhöht.
+ * Version erh\uFFFDht.
  * DownloadModel erweitert.
  *
  * Revision 1.24  2003/06/24 12:06:49  maj0r
- * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
+ * log4j eingef\uFFFDgt (inkl. Bedienung \uFFFDber Einstellungsdialog).
  *
  * Revision 1.23  2003/06/22 19:54:45  maj0r
- * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
+ * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugef\uFFFDgt.
  *
  * Revision 1.22  2003/06/13 15:07:30  maj0r
- * Versionsanzeige hinzugefügt.
+ * Versionsanzeige hinzugef\uFFFDgt.
  * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
  *
  * Revision 1.21  2003/06/10 12:31:03  maj0r
@@ -413,11 +416,11 @@ public class AppleJuiceDialog
                     if (logger.isEnabledFor(Level.INFO)) {
                         logger.info(
                             "Der Ordner" +
-                                          " für die Themes zip-Dateien ist nicht vorhanden." +
+                                          " fuer die Themes zip-Dateien ist nicht vorhanden." +
                                           "\r\nappleJuice wird beendet.");
                     }
                     closeWithErrormessage("Der Ordner" +
-                                          " für die Themes zip-Dateien ist nicht vorhanden." +
+                                          " fuer die Themes zip-Dateien ist nicht vorhanden." +
                                           "\r\nappleJuice wird beendet.", false);
                 }
                 File[] themeFiles = themesPath.listFiles();
@@ -809,11 +812,11 @@ public class AppleJuiceDialog
             if (!languagePath.isDirectory()) {
                 if (logger.isEnabledFor(Level.INFO)) {
                     logger.info("Der Ordner " + path +
-                                      " für die Sprachauswahl xml-Dateien ist nicht vorhanden." +
+                                      " f\uFFFDr die Sprachauswahl xml-Dateien ist nicht vorhanden." +
                                       "\r\nappleJuice wird beendet.");
                 }
                 closeWithErrormessage("Der Ordner " + path +
-                                      " für die Sprachauswahl xml-Dateien ist nicht vorhanden." +
+                                      " f\uFFFDr die Sprachauswahl xml-Dateien ist nicht vorhanden." +
                                       "\r\nappleJuice wird beendet.", false);
             }
             String[] tempListe = languagePath.list();
@@ -826,12 +829,12 @@ public class AppleJuiceDialog
             if (sprachDateien.size() == 0) {
                 if (logger.isEnabledFor(Level.INFO)) {
                     logger.info(
-                        "Es sind keine xml-Dateien für die Sprachauswahl im Ordner " +
+                        "Es sind keine xml-Dateien fuer die Sprachauswahl im Ordner " +
                         path + " vorhanden." +
                         "\r\nappleJuice wird beendet.");
                 }
                 closeWithErrormessage(
-                    "Es sind keine xml-Dateien für die Sprachauswahl im Ordner " +
+                    "Es sind keine xml-Dateien fuer die Sprachauswahl im Ordner " +
                     path + " vorhanden." +
                     "\r\nappleJuice wird beendet.", false);
             }
@@ -914,11 +917,11 @@ public class AppleJuiceDialog
                 if (!themesPath.isDirectory()) {
                     if (logger.isEnabledFor(Level.INFO)) {
                         logger.info("Der Ordner " + path +
-                            " für die Themes zip-Dateien ist nicht vorhanden." +
+                            " fuer die Themes zip-Dateien ist nicht vorhanden." +
                             "\r\nappleJuice wird beendet.");
                     }
                     closeWithErrormessage("Der Ordner " + path +
-                                          " für die Themes zip-Dateien ist nicht vorhanden." +
+                                          " fuer die Themes zip-Dateien ist nicht vorhanden." +
                                           "\r\nappleJuice wird beendet.", false);
                 }
                 File[] themeFiles = themesPath.listFiles();
@@ -1357,8 +1360,7 @@ public class AppleJuiceDialog
     }
 
     private static void restorePropertiesXml() {
-        String dateiname = System.getProperty("user.dir") + File.separator +
-            "properties.xml";
+        String dateiname = PropertiesManager.getPropertiesPath();
         StringBuffer xmlData = new StringBuffer();
 
         xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
