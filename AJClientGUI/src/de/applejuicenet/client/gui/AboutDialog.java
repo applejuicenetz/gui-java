@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.3 2003/09/04 22:12:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.4 2003/09/05 08:24:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AboutDialog.java,v $
+ * Revision 1.4  2003/09/05 08:24:40  maj0r
+ * Threadverwendung verbessert.
+ *
  * Revision 1.3  2003/09/04 22:12:45  maj0r
  * Logger verfeinert.
  * Threadbeendigung korrigiert.
@@ -43,7 +46,7 @@ import org.apache.log4j.Level;
 
 public class AboutDialog extends JDialog {
     private Logger logger;
-    private SwingWorker worker;
+    private Thread worker;
 
     public AboutDialog(Frame parent, boolean modal) {
         super(parent, modal);
@@ -52,8 +55,6 @@ public class AboutDialog extends JDialog {
             addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent evt) {
                     if (worker!=null){
-                        if (logger.isEnabledFor(Level.DEBUG))
-                            logger.debug("About-Workerthread beendet. " + worker);
                         worker.interrupt();
                     }
                 }
@@ -94,8 +95,10 @@ public class AboutDialog extends JDialog {
                 if (logger.isEnabledFor(Level.ERROR))
                     logger.error("Unbehandelte Exception", e);
             }
-            worker = new SwingWorker() {
-                public Object construct() {
+            worker = new Thread() {
+                public void run() {
+                    if (logger.isEnabledFor(Level.DEBUG))
+                        logger.debug("About-Workerthread gestartet. " + worker);
                     Image new_img, toDraw;
                     ImageFilter filter = new ImageFilter();
                     int creditsHoehe = 60;
@@ -105,26 +108,23 @@ public class AboutDialog extends JDialog {
                     filter = new CropImageFilter(imageX, imageY, creditsBreite, creditsHoehe);
                     new_img = createImage(new FilteredImageSource(backgroundImage.getSource(), filter));
                     filter = new CropImageFilter(0, 0, creditsBreite, creditsHoehe);
-                    boolean interrupted = false;
                     int y = creditsHoehe;
                     try
                     {
-                        Thread.sleep(1000);
+                        sleep(1000);
                         Graphics g = BackPanel.this.getGraphics();
                         g.setColor(Color.BLACK);
                         CreditsEntry entry;
                         Graphics toDrawGraphics;
                         FontMetrics fm;
                         int strWidth;
-                        while (!interrupted)
+                        while (!isInterrupted())
                         {
                             try{
-                                Thread.sleep(100);
+                                sleep(100);
                             }
                             catch (InterruptedException iE){
-                                //Wenn der Dialog beendet wird, kann der Thread
-                                //grade im Sleep erwischt werden.
-                                //Das ist kein Fehler
+                                interrupt();
                             }
                             toDraw = createImage(creditsBreite, creditsHoehe);
                             toDrawGraphics = toDraw.getGraphics();
@@ -157,12 +157,11 @@ public class AboutDialog extends JDialog {
                         if (logger.isEnabledFor(Level.ERROR))
                             logger.error("Unbehandelte Exception", e);
                     }
-                    return null;
+                    if (logger.isEnabledFor(Level.DEBUG))
+                        logger.debug("About-Workerthread beendet. " + worker);
                 }
             };
             worker.start();
-            if (logger.isEnabledFor(Level.DEBUG))
-                logger.debug("About-Workerthread gestartet. " + worker);
         }
 
         private void init() {
