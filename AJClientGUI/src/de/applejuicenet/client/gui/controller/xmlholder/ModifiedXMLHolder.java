@@ -31,9 +31,10 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import org.apache.xerces.parsers.SAXParser;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.21 2004/02/18 20:44:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.22 2004/02/19 09:53:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -42,6 +43,9 @@ import org.apache.xerces.parsers.SAXParser;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.22  2004/02/19 09:53:13  maj0r
+ * Serverauswertung korrigiert.
+ *
  * Revision 1.21  2004/02/18 20:44:37  maj0r
  * Bugs #223 und #224 behoben.
  *
@@ -288,7 +292,7 @@ public class ModifiedXMLHolder
         }
         String key = Integer.toString(id);
         ServerDO serverDO;
-        if (uploadMap.containsKey(key)) {
+        if (serverMap.containsKey(key)) {
             serverDO = (ServerDO) serverMap.get(key);
         }
         else {
@@ -741,36 +745,46 @@ public class ModifiedXMLHolder
     private void parseRest(){
         int verbindungsStatus = Information.NICHT_VERBUNDEN;
         ServerDO serverDO = null;
-        if (this.tryConnectToServer != netInfo.getTryConnectToServer()) {
-            Object alterServer = serverMap.get(Integer.toString(this.
-                tryConnectToServer));
-            if (alterServer != null) {
-                ( (ServerDO) alterServer).setTryConnect(false);
+        if (tryConnectToServer != netInfo.getTryConnectToServer()) {
+            if (tryConnectToServer != -1){
+                Object alterServer = serverMap.get(Integer.toString(
+                    tryConnectToServer));
+                if (alterServer != null) {
+                    ( (ServerDO) alterServer).setTryConnect(false);
+                }
+                information.setServer(null);
             }
-            if (tryConnectToServer != -1) {
+            if (netInfo.getTryConnectToServer() != -1) {
                 serverDO = (ServerDO) serverMap.get(Integer.
                     toString(netInfo.getTryConnectToServer()));
                 serverDO.setTryConnect(true);
                 verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
             }
-            this.tryConnectToServer = netInfo.getTryConnectToServer();
-        }
-        Object alterServer = serverMap.get(Integer.toString(this.
-            connectedWithServerId));
-        if (alterServer != null) {
-            ( (ServerDO) alterServer).setConnected(false);
-        }
-        if (netInfo.getConnectedWithServerId() != -1) {
-            serverDO = (ServerDO) serverMap.get(Integer.toString(
-                netInfo.getConnectedWithServerId()));
-            serverDO.setConnected(true);
-            verbindungsStatus = Information.VERBUNDEN;
+            tryConnectToServer = netInfo.getTryConnectToServer();
             information.setServer(serverDO);
+            information.setVerbindungsStatus(verbindungsStatus);
+            information.setExterneIP(netInfo.getExterneIP());
         }
-        this.connectedWithServerId = netInfo.getConnectedWithServerId();
-        information.setServer(serverDO);
-        information.setVerbindungsStatus(verbindungsStatus);
-        information.setExterneIP(netInfo.getExterneIP());
+        if (connectedWithServerId != netInfo.getConnectedWithServerId() ){
+            if (connectedWithServerId != -1){
+                Object alterServer = serverMap.get(Integer.toString(
+                    connectedWithServerId));
+                if (alterServer != null) {
+                    ( (ServerDO) alterServer).setConnected(false);
+                }
+                information.setServer(null);
+            }
+            if (netInfo.getConnectedWithServerId() != -1) {
+                serverDO = (ServerDO) serverMap.get(Integer.toString(
+                    netInfo.getConnectedWithServerId()));
+                serverDO.setConnected(true);
+                verbindungsStatus = Information.VERBUNDEN;
+            }
+            connectedWithServerId = netInfo.getConnectedWithServerId();
+            information.setServer(serverDO);
+            information.setVerbindungsStatus(verbindungsStatus);
+            information.setExterneIP(netInfo.getExterneIP());
+        }
 
         Search aSearch;
         SearchEntry searchEntry;
@@ -794,6 +808,13 @@ public class ModifiedXMLHolder
             Securer securer = new Securer();
             securer.start();
             String xmlString = getXMLString(parameters);
+            if (xmlString.indexOf("wrong password") != -1){
+                if (!securer.isInterrupted()) {
+                    securer.interrupt();
+                }
+                AppleJuiceDialog.closeWithErrormessage(
+                    "Das Passwort wurde coreseitig geändert.\r\nDas GUI wird beendet.", true);
+            }
             xr.parse( new InputSource(
                new StringReader( xmlString )) );
             parseRest();
