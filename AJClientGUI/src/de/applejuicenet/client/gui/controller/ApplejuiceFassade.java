@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.38 2003/09/11 08:39:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.39 2003/09/11 09:41:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.39  2003/09/11 09:41:16  maj0r
+ * Nullpointer behoben.
+ *
  * Revision 1.38  2003/09/11 08:39:30  maj0r
  * Start durch Einbau von Threads beschleunigt.
  *
@@ -234,38 +237,45 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     private Logger logger;
 
     public void addDataUpdateListener(DataUpdateListener listener, int type) {
-        HashSet listenerSet = null;
-        if (type == DataUpdateListener.DOWNLOAD_CHANGED)
-        {
-            listenerSet = downloadListener;
+        try{
+            HashSet listenerSet = null;
+            if (type == DataUpdateListener.DOWNLOAD_CHANGED)
+            {
+                listenerSet = downloadListener;
+            }
+            else if (type == DataUpdateListener.NETINFO_CHANGED)
+            {
+                listenerSet = networkInfoListener;
+            }
+            else if (type == DataUpdateListener.SERVER_CHANGED)
+            {
+                listenerSet = serverListener;
+            }
+            else if (type == DataUpdateListener.SHARE_CHANGED)
+            {
+                listenerSet = shareListener;
+            }
+            else if (type == DataUpdateListener.UPLOAD_CHANGED)
+            {
+                listenerSet = uploadListener;
+            }
+            else if (type == DataUpdateListener.STATUSBAR_CHANGED)
+            {
+                listenerSet = statusbarListener;
+            }
+            else
+            {
+                return;
+            }
+            if (!(listenerSet.contains(listener)))
+            {
+                listenerSet.add(listener);
+            }
         }
-        else if (type == DataUpdateListener.NETINFO_CHANGED)
+        catch (Exception e)
         {
-            listenerSet = networkInfoListener;
-        }
-        else if (type == DataUpdateListener.SERVER_CHANGED)
-        {
-            listenerSet = serverListener;
-        }
-        else if (type == DataUpdateListener.SHARE_CHANGED)
-        {
-            listenerSet = shareListener;
-        }
-        else if (type == DataUpdateListener.UPLOAD_CHANGED)
-        {
-            listenerSet = uploadListener;
-        }
-        else if (type == DataUpdateListener.STATUSBAR_CHANGED)
-        {
-            listenerSet = statusbarListener;
-        }
-        else
-        {
-            return;
-        }
-        if (!(listenerSet.contains(listener)))
-        {
-            listenerSet.add(listener);
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
@@ -345,7 +355,16 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public void stopXMLCheck() {
-        workerThread.interrupt();
+        try{
+            if (workerThread!=null){
+                workerThread.interrupt();
+            }
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
 
     public PartListDO getDownloadPartList(DownloadDO downloadDO) {
@@ -354,49 +373,66 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public AJSettings getAJSettings() {
-        if (settingsXML == null)
+        try{
+            if (settingsXML == null)
+            {
+                settingsXML = new SettingsXMLHolder();
+            }
+        }
+        catch (Exception e)
         {
-            settingsXML = new SettingsXMLHolder();
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
         return settingsXML.getAJSettings();
     }
 
     public boolean saveAJSettings(AJSettings ajSettings) {
-        String parameters = "";
-        try
-        {
-            parameters = "Nickname=" +
-                    URLEncoder.encode(ajSettings.getNick(), "UTF-8");
-            parameters += "&XMLPort=" + Long.toString(ajSettings.getXMLPort());
-            parameters += "&MaxUpload=" + Long.toString(ajSettings.getMaxUpload());
-            parameters += "&MaxDownload=" + Long.toString(ajSettings.getMaxDownload());
-            parameters += "&Speedperslot=" +
-                    Integer.toString(ajSettings.getSpeedPerSlot());
-            parameters += "&Incomingdirectory=" +
-                    URLEncoder.encode(ajSettings.getIncomingDir(), "UTF-8");
-            parameters += "&Temporarydirectory=" +
-                    URLEncoder.encode(ajSettings.getTempDir(), "UTF-8");
-            parameters += "&maxconnections=" +
-                    URLEncoder.encode(Long.toString(ajSettings.getMaxConnections()), "UTF-8");
-            parameters += "&autoconnect=" +
-                    URLEncoder.encode(new Boolean(ajSettings.isAutoConnect()).toString(), "UTF-8");
-            parameters += "&maxnewconnectionsperturn=" +
-                    URLEncoder.encode(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()), "UTF-8");
+        try{
+            String parameters = "";
+            try
+            {
+                parameters = "Nickname=" +
+                        URLEncoder.encode(ajSettings.getNick(), "UTF-8");
+                parameters += "&XMLPort=" + Long.toString(ajSettings.getXMLPort());
+                parameters += "&MaxUpload=" + Long.toString(ajSettings.getMaxUpload());
+                parameters += "&MaxDownload=" + Long.toString(ajSettings.getMaxDownload());
+                parameters += "&Speedperslot=" +
+                        Integer.toString(ajSettings.getSpeedPerSlot());
+                parameters += "&Incomingdirectory=" +
+                        URLEncoder.encode(ajSettings.getIncomingDir(), "UTF-8");
+                parameters += "&Temporarydirectory=" +
+                        URLEncoder.encode(ajSettings.getTempDir(), "UTF-8");
+                parameters += "&maxconnections=" +
+                        URLEncoder.encode(Long.toString(ajSettings.getMaxConnections()), "UTF-8");
+                parameters += "&autoconnect=" +
+                        URLEncoder.encode(new Boolean(ajSettings.isAutoConnect()).toString(), "UTF-8");
+                parameters += "&maxnewconnectionsperturn=" +
+                        URLEncoder.encode(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()), "UTF-8");
+            }
+            catch (UnsupportedEncodingException ex1)
+            {
+                if (logger.isEnabledFor(Level.ERROR))
+                    logger.error("Unbehandelte Exception", ex1);
+            }
+            try
+            {
+                String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+                HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                      "/function/setsettings?password=" + password + "&" + parameters, false);
+            }
+            catch (WebSiteNotFoundException ex)
+            {
+                return false;
+            }
+            return true;
         }
-        catch (UnsupportedEncodingException ex1)
+        catch (Exception e)
         {
-        }
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setsettings?password=" + password + "&" + parameters, false);
-        }
-        catch (WebSiteNotFoundException ex)
-        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
             return false;
         }
-        return true;
     }
 
     public HashMap getAllServer() {
@@ -524,62 +560,86 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public boolean setPrioritaet(int id, int prioritaet) {
-        if (prioritaet < 1 || prioritaet > 250)
+        try{
+            if (prioritaet < 1 || prioritaet > 250)
+            {
+                System.out.print("Warnung: Prioritaet muss 1<= x <=250 sein!");
+                return false;
+            }
+            try
+            {
+                String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+                HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                      "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet, false);
+            }
+            catch (WebSiteNotFoundException ex)
+            {
+                return false;
+            }
+            return true;
+        }
+        catch (Exception e)
         {
-            System.out.print("Warnung: Prioritaet muss 1<= x <=250 sein!");
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
             return false;
         }
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet, false);
-        }
-        catch (WebSiteNotFoundException ex)
-        {
-            return false;
-        }
-        return true;
     }
 
     public boolean processLink(String link) {
-        if (link == null || link.length() == 0)
+        try{
+            if (link == null || link.length() == 0)
+            {
+                System.out.print("Warnung: Ungueltiger Link uebergeben!");
+                return false;
+            }
+            logger.info("Downloade '" + link + "...");
+            try
+            {
+                String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+                HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                      "/function/processlink?password=" + password + "&link=" + link, false);
+            }
+            catch (WebSiteNotFoundException ex)
+            {
+                return false;
+            }
+            return true;
+        }
+        catch (Exception e)
         {
-            System.out.print("Warnung: Ungueltiger Link uebergeben!");
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
             return false;
         }
-        logger.info("Downloade '" + link + "...");
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/processlink?password=" + password + "&link=" + link, false);
-        }
-        catch (WebSiteNotFoundException ex)
-        {
-            return false;
-        }
-        return true;
     }
 
     public boolean setPowerDownload(int id, int powerDownload) {
-        if (powerDownload < 0 || powerDownload > 490)
+        try{
+            if (powerDownload < 0 || powerDownload > 490)
+            {
+                System.out.print("Warnung: PowerDownload muss 0<= x <=490 sein!");
+                return false;
+            }
+            try
+            {
+                String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+                HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                      "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload
+                                             , false);
+            }
+            catch (WebSiteNotFoundException ex)
+            {
+                return false;
+            }
+            return true;
+        }
+        catch (Exception e)
         {
-            System.out.print("Warnung: PowerDownload muss 0<= x <=490 sein!");
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
             return false;
         }
-        try
-        {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload
-                                         , false);
-        }
-        catch (WebSiteNotFoundException ex)
-        {
-            return false;
-        }
-        return true;
     }
 
     private static String getHost() {
@@ -618,131 +678,153 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     private void informDataUpdateListener(int type) {
-        switch (type)
+        try{
+            switch (type)
+            {
+                case DataUpdateListener.DOWNLOAD_CHANGED:
+                    {
+                        HashMap content = modifiedXML.getDownloads();
+                        if (content.size() == 0)
+                        {
+                            return;
+                        }
+                        Iterator it = downloadListener.iterator();
+                        while (it.hasNext())
+                        {
+                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+                                                                                DOWNLOAD_CHANGED, content);
+                        }
+                        break;
+                    }
+                case DataUpdateListener.UPLOAD_CHANGED:
+                    {
+                        HashMap content = modifiedXML.getUploads();
+                        if (content.size() == 0)
+                        {
+                            return;
+                        }
+                        Iterator it = uploadListener.iterator();
+                        while (it.hasNext())
+                        {
+                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+                                                                                UPLOAD_CHANGED, content);
+                        }
+                        break;
+                    }
+                case DataUpdateListener.SERVER_CHANGED:
+                    {
+                        HashMap content = modifiedXML.getServer();
+                        if (content.size() == 0)
+                        {
+                            return;
+                        }
+                        Iterator it = serverListener.iterator();
+                        while (it.hasNext())
+                        {
+                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+                                                                                SERVER_CHANGED, content);
+                        }
+                        break;
+                    }
+                case DataUpdateListener.SHARE_CHANGED:
+                    {
+                        HashMap content = shareXML.getShare();
+                        if (content.size() == 0)
+                        {
+                            return;
+                        }
+                        Iterator it = shareListener.iterator();
+                        while (it.hasNext())
+                        {
+                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+                                                                                SHARE_CHANGED, content);
+                        }
+                        break;
+                    }
+                case DataUpdateListener.NETINFO_CHANGED:
+                    {
+                        NetworkInfo content = modifiedXML.getNetworkInfo();
+                        Iterator it = networkInfoListener.iterator();
+                        while (it.hasNext())
+                        {
+                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+                                                                                NETINFO_CHANGED, content);
+                        }
+                        break;
+                    }
+                case DataUpdateListener.STATUSBAR_CHANGED:
+                    {
+                        String[] content = modifiedXML.getStatusBar();
+                        Iterator it = statusbarListener.iterator();
+                        while (it.hasNext())
+                        {
+                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.STATUSBAR_CHANGED, content);
+                        }
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
+        catch (Exception e)
         {
-            case DataUpdateListener.DOWNLOAD_CHANGED:
-                {
-                    HashMap content = modifiedXML.getDownloads();
-                    if (content.size() == 0)
-                    {
-                        return;
-                    }
-                    Iterator it = downloadListener.iterator();
-                    while (it.hasNext())
-                    {
-                        ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-                                                                            DOWNLOAD_CHANGED, content);
-                    }
-                    break;
-                }
-            case DataUpdateListener.UPLOAD_CHANGED:
-                {
-                    HashMap content = modifiedXML.getUploads();
-                    if (content.size() == 0)
-                    {
-                        return;
-                    }
-                    Iterator it = uploadListener.iterator();
-                    while (it.hasNext())
-                    {
-                        ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-                                                                            UPLOAD_CHANGED, content);
-                    }
-                    break;
-                }
-            case DataUpdateListener.SERVER_CHANGED:
-                {
-                    HashMap content = modifiedXML.getServer();
-                    if (content.size() == 0)
-                    {
-                        return;
-                    }
-                    Iterator it = serverListener.iterator();
-                    while (it.hasNext())
-                    {
-                        ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-                                                                            SERVER_CHANGED, content);
-                    }
-                    break;
-                }
-            case DataUpdateListener.SHARE_CHANGED:
-                {
-                    HashMap content = shareXML.getShare();
-                    if (content.size() == 0)
-                    {
-                        return;
-                    }
-                    Iterator it = shareListener.iterator();
-                    while (it.hasNext())
-                    {
-                        ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-                                                                            SHARE_CHANGED, content);
-                    }
-                    break;
-                }
-            case DataUpdateListener.NETINFO_CHANGED:
-                {
-                    NetworkInfo content = modifiedXML.getNetworkInfo();
-                    Iterator it = networkInfoListener.iterator();
-                    while (it.hasNext())
-                    {
-                        ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-                                                                            NETINFO_CHANGED, content);
-                    }
-                    break;
-                }
-            case DataUpdateListener.STATUSBAR_CHANGED:
-                {
-                    String[] content = modifiedXML.getStatusBar();
-                    Iterator it = statusbarListener.iterator();
-                    while (it.hasNext())
-                    {
-                        ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.STATUSBAR_CHANGED, content);
-                    }
-                    break;
-                }
-            default:
-                break;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
     public HashMap getShare(boolean reinit) {
-        if (share == null || reinit)
-            share = shareXML.getShare();
+        try{
+            if (share == null || reinit)
+                share = shareXML.getShare();
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
         return share;
     }
 
     public boolean setShare(HashSet newShare){
-        int shareSize = newShare.size();
-        if (newShare==null)
-            return false;
-        String parameters = "countshares=" + shareSize;
-        ShareEntry shareEntry = null;
-        Iterator it = newShare.iterator();
-        int i = 1;
-        while (it.hasNext()){
-            shareEntry = (ShareEntry)it.next();
-            try {
-                parameters += "&sharedirectory" + i + "=" + URLEncoder.encode(shareEntry.getDir(), "UTF-8");
+        try{
+            int shareSize = newShare.size();
+            if (newShare==null)
+                return false;
+            String parameters = "countshares=" + shareSize;
+            ShareEntry shareEntry = null;
+            Iterator it = newShare.iterator();
+            int i = 1;
+            while (it.hasNext()){
+                shareEntry = (ShareEntry)it.next();
+                try {
+                    parameters += "&sharedirectory" + i + "=" + URLEncoder.encode(shareEntry.getDir(), "UTF-8");
+                }
+                catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                }
+                parameters += "&sharesub" + i + "=" +
+                        (shareEntry.getShareMode()==ShareEntry.SUBDIRECTORY ? "true" : "false");
+                i++;
             }
-            catch (UnsupportedEncodingException e) {
-                e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+            try
+            {
+                String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+                HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                      "/function/setsettings?password=" + password + "&" + parameters, false);
             }
-            parameters += "&sharesub" + i + "=" +
-                    (shareEntry.getShareMode()==ShareEntry.SUBDIRECTORY ? "true" : "false");
-            i++;
+            catch (WebSiteNotFoundException ex)
+            {
+                return false;
+            }
+            return true;
         }
-        try
+        catch (Exception e)
         {
-            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
-            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setsettings?password=" + password + "&" + parameters, false);
-        }
-        catch (WebSiteNotFoundException ex)
-        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
             return false;
         }
-        return true;
     }
 
     public void getDirectory(String directory, ApplejuiceNode directoryNode) {

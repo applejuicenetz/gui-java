@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.31 2003/09/11 06:54:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.32 2003/09/11 09:41:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.32  2003/09/11 09:41:16  maj0r
+ * Nullpointer behoben.
+ *
  * Revision 1.31  2003/09/11 06:54:15  maj0r
  * Auf neues Sessions-Prinzip umgebaut.
  * Sprachenwechsel korrigert, geht nun wieder flott.
@@ -298,9 +301,13 @@ public class ModifiedXMLHolder
                 }
                 else if (downloadMap.containsKey(toRemoveKey)) {
                     downloadDO = (DownloadDO) downloadMap.get(sourcenZuDownloads.get(toRemoveKey));
-                    DownloadSourceDO[] sourcen = downloadDO.getSources();
-                    for (int y = 0; y < sourcen.length; y++) {
-                        sourcenZuDownloads.remove(new MapSetStringKey(sourcen[y].getId()));
+                    if (downloadDO!=null){
+                        DownloadSourceDO[] sourcen = downloadDO.getSources();
+                        if (sourcen!=null){
+                            for (int y = 0; y < sourcen.length; y++) {
+                                sourcenZuDownloads.remove(new MapSetStringKey(sourcen[y].getId()));
+                            }
+                        }
                     }
                     downloadMap.remove(toRemoveKey);
                     continue;
