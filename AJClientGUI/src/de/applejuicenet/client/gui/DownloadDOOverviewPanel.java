@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.7 2003/08/16 17:49:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.8 2003/08/22 12:40:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.8  2003/08/22 12:40:19  maj0r
+ * Zeitaufwendiges Partliste holen in Thread ausgelagert.
+ *
  * Revision 1.7  2003/08/16 17:49:55  maj0r
  * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
  * DownloaduebersichtTabelle kann deaktiviert werden.
@@ -40,11 +43,13 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.Settings;
+import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -99,6 +104,83 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
         add(actualDlOverviewTable, BorderLayout.CENTER);
     }
 
+    private void setPartListDO(PartListDO partListDO){
+        final PartListDO tempPartList = partListDO;
+        SwingUtilities.invokeLater(new Runnable(){
+            public void run(){
+                actualDLDateiName.setText(downloadDO.getFilename() + " (" + downloadDO.getTemporaryFileNumber() + ".data)");
+                remove(actualDlOverviewTable);
+                actualDlOverviewTable = new JPanel(new GridBagLayout());
+                GridBagConstraints constraints = new GridBagConstraints();
+                constraints.anchor = GridBagConstraints.NORTHWEST;
+                constraints.fill = GridBagConstraints.BOTH;
+                constraints.gridx = 0;
+                constraints.gridy = 0;
+                constraints.weightx = 1;
+                JLabel label1 = null;
+                PartListDO.Part[] parts = tempPartList.getParts();
+                int anzahlParts = parts.length;
+                int anzahlGanzeZeilen;
+                int anzahlProZeile;
+                if (anzahlParts>5120){
+                    anzahlGanzeZeilen = anzahlParts / 512;
+                    anzahlProZeile = 512;
+                }
+                else if (anzahlParts<10){
+                    anzahlGanzeZeilen = 1;
+                    anzahlProZeile = anzahlParts;
+                }
+                else if (anzahlParts<100){
+                    anzahlGanzeZeilen = anzahlParts / 10;
+                    anzahlProZeile = anzahlParts / anzahlGanzeZeilen;
+                }
+                else{
+                    anzahlGanzeZeilen = 10;
+                    anzahlProZeile = anzahlParts / anzahlGanzeZeilen;
+                }
+                if (anzahlProZeile>512)
+                    anzahlProZeile = 512;
+                int count = 0;
+                constraints.gridy = 0;
+                constraints.gridx = 0;
+                constraints.gridwidth = anzahlProZeile;
+                actualDlOverviewTable.add(actualDLDateiName, constraints);
+                constraints.weighty = 1;
+                constraints.gridwidth = 1;
+                for (int i = 0; i < anzahlGanzeZeilen; i++)
+                {
+                    constraints.gridy = i+1;
+                    for (int x = 0; x < anzahlProZeile; x++)
+                    {
+                        if (count<anzahlParts){
+                            constraints.gridx = x;
+                            label1 = new JLabel();
+                            label1.setOpaque(true);
+                            label1.setBackground(getColorByType(parts[count].getType()));
+                            actualDlOverviewTable.add(label1, constraints);
+                            count++;
+                        }
+                    }
+                }
+                if (count < anzahlParts)
+                {
+                    constraints.gridy = anzahlGanzeZeilen+1;
+                    count = 0;
+                    for (int i = anzahlProZeile * anzahlGanzeZeilen; i < anzahlParts ; i++)
+                    {
+                        constraints.gridx = count;
+                        label1 = new JLabel();
+                        label1.setOpaque(true);
+                        label1.setBackground(getColorByType(parts[i].getType()));
+                        actualDlOverviewTable.add(label1, constraints);
+                        count++;
+                    }
+                }
+                add(actualDlOverviewTable, BorderLayout.CENTER);
+            }
+        });
+    }
+
     public void setDownloadDO(DownloadDO downloadDO) {
         if (!settings.isDownloadUebersicht()){
             remove(actualDlOverviewTable);
@@ -106,76 +188,17 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
         else if (this.downloadDO != downloadDO)
         {
             this.downloadDO = downloadDO;
-            PartListDO partListDO = ApplejuiceFassade.getInstance().getDownloadPartList(downloadDO);
-            actualDLDateiName.setText(downloadDO.getFilename() + " (" + downloadDO.getTemporaryFileNumber() + ".data)");
-            remove(actualDlOverviewTable);
-            actualDlOverviewTable = new JPanel(new GridBagLayout());
-            GridBagConstraints constraints = new GridBagConstraints();
-            constraints.anchor = GridBagConstraints.NORTHWEST;
-            constraints.fill = GridBagConstraints.BOTH;
-            constraints.gridx = 0;
-            constraints.gridy = 0;
-            constraints.weightx = 1;
-            JLabel label1 = null;
-            PartListDO.Part[] parts = partListDO.getParts();
-            int anzahlParts = parts.length;
-            int anzahlGanzeZeilen;
-            int anzahlProZeile;
-            if (anzahlParts>5120){
-                anzahlGanzeZeilen = anzahlParts / 512;
-                anzahlProZeile = 512;
-            }
-            else if (anzahlParts<10){
-                anzahlGanzeZeilen = 1;
-                anzahlProZeile = anzahlParts;
-            }
-            else if (anzahlParts<100){
-                anzahlGanzeZeilen = anzahlParts / 10;
-                anzahlProZeile = anzahlParts / anzahlGanzeZeilen;
-            }
-            else{
-                anzahlGanzeZeilen = 10;
-                anzahlProZeile = anzahlParts / anzahlGanzeZeilen;
-            }
-            if (anzahlProZeile>512)
-                anzahlProZeile = 512;
-            int count = 0;
-            constraints.gridy = 0;
-            constraints.gridx = 0;
-            constraints.gridwidth = anzahlProZeile;
-            actualDlOverviewTable.add(actualDLDateiName, constraints);
-            constraints.weighty = 1;
-            constraints.gridwidth = 1;
-            for (int i = 0; i < anzahlGanzeZeilen; i++)
-            {
-                constraints.gridy = i+1;
-                for (int x = 0; x < anzahlProZeile; x++)
-                {
-                    if (count<anzahlParts){
-                        constraints.gridx = x;
-                        label1 = new JLabel();
-                        label1.setOpaque(true);
-                        label1.setBackground(getColorByType(parts[count].getType()));
-                        actualDlOverviewTable.add(label1, constraints);
-                        count++;
-                    }
-                }
-            }
-            if (count < anzahlParts)
-            {
-                constraints.gridy = anzahlGanzeZeilen+1;
-                count = 0;
-                for (int i = anzahlProZeile * anzahlGanzeZeilen; i < anzahlParts ; i++)
-                {
-                    constraints.gridx = count;
-                    label1 = new JLabel();
-                    label1.setOpaque(true);
-                    label1.setBackground(getColorByType(parts[i].getType()));
-                    actualDlOverviewTable.add(label1, constraints);
-                    count++;
-                }
-            }
-            add(actualDlOverviewTable, BorderLayout.CENTER);
+            final DownloadDO tempDO = downloadDO;
+            final SwingWorker worker2 = new SwingWorker() {
+                        public Object construct() {
+                            PartListDO partListDO = ApplejuiceFassade.getInstance().getDownloadPartList(tempDO);
+                            return partListDO;
+                        }
+                        public void finished(){
+                            setPartListDO((PartListDO)getValue());
+                        }
+                    };
+            worker2.start();
         }
     }
 
