@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -49,11 +48,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
-import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -72,6 +69,7 @@ import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
@@ -565,7 +563,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	private void closeDialog(WindowEvent evt) {
 		ApplejuiceFassade.getInstance().stopXMLCheck();
 		if (rewriteProperties) {
-			restorePropertiesXml();
+			PropertiesManager.restoreProperties();
 		}
 		String nachricht = "appleJuice-Core-GUI wird beendet...";
 		if (logger.isEnabledFor(Level.INFO)) {
@@ -587,7 +585,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		JOptionPane.showMessageDialog(theApp, error, "appleJuice Client",
 				JOptionPane.OK_OPTION);
 		if (rewriteProperties) {
-			restorePropertiesXml();
+			PropertiesManager.restoreProperties();
 		} else {
 			ApplejuiceFassade.getInstance().stopXMLCheck();
 		}
@@ -1268,159 +1266,6 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 
 		.start();
 		return popup;
-	}
-
-	public static void restorePropertiesXml() {
-		String dateiname = ApplejuiceFassade.getPropertiesPath();
-		StringBuffer xmlData = new StringBuffer();
-
-		xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
-		xmlData.append("<root>\r\n");
-		xmlData
-				.append("    <options dialogzeigen=\"true\" firststart=\"true\" sound=\"true\" sprache=\"deutsch\" ");
-		xmlData
-				.append("themes=\"false\" defaulttheme=\"toxicthemepack\" loadplugins=\"true\" enableToolTip=\"true\" ");
-		xmlData.append("linklistenerport=\"8768\" versionsinfo=\"1\" >\r\n");
-		xmlData
-				.append("        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>\r\n");
-		xmlData
-				.append("        <remote0 host=\"localhost\" port=\"9851\"/>\r\n");
-		xmlData.append("        <remote1 host=\"\" port=\"0\"/>\r\n");
-		xmlData.append("        <remote2 host=\"\" port=\"0\"/>\r\n");
-		xmlData.append("        <logging level=\"INFO\"/>\r\n");
-		xmlData.append("        <download uebersicht=\"true\"/>\r\n");
-		xmlData.append("        <farben aktiv=\"true\">\r\n");
-		xmlData
-				.append("            <hintergrund downloadFertig=\"-13382656\" quelle=\"-205\"/>\r\n");
-		xmlData.append("        </farben>\r\n");
-		xmlData.append("                <lookandfeels>\r\n");
-		xmlData
-				.append("                    <laf1 name=\"JGoodies Plastic\" value=\"com.jgoodies.plaf.plastic.Plastic3DLookAndFeel\"/>\r\n");
-		int index = 2;
-		if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
-			xmlData
-					.append("                    <laf"
-							+ index
-							+ " name=\"JGoodies Windows\" value=\"com.jgoodies.plaf.windows.ExtWindowsLookAndFeel\"/>\r\n");
-			index++;
-		}
-		LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
-		LookAndFeel currentFeel = UIManager.getLookAndFeel();
-		for (int i = 0; i < feels.length; i++) {
-			try {
-				UIManager.setLookAndFeel(feels[i].getClassName());
-				xmlData.append("                    <laf" + index + " name=\""
-						+ feels[i].getName() + "\" value=\""
-						+ feels[i].getClassName() + "\"/>\r\n");
-				index++;
-			} catch (Exception e) {
-				//unsupported
-			}
-		}
-		try {
-			UIManager.setLookAndFeel(currentFeel);
-		} catch (Exception ex) {
-			//muss klappen
-			if (logger.isEnabledFor(Level.ERROR)) {
-				logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-			}
-		}
-		xmlData
-				.append("                    <default name=\"JGoodies Plastic\"/>\r\n");
-		xmlData.append("                </lookandfeels>\r\n");
-		xmlData
-				.append("        <location height=\"\" width=\"\" x=\"\" y=\"\"/>\r\n");
-		xmlData.append("        <columns>\r\n");
-		xmlData.append("                <download>\r\n");
-		xmlData
-				.append("                        <column0 width=\"80\" index=\"0\" />\r\n");
-		xmlData
-				.append("                        <column1 width=\"80\" visibility=\"true\" index=\"1\" />\r\n");
-		xmlData
-				.append("                        <column2 width=\"80\" visibility=\"true\" index=\"2\" />\r\n");
-		xmlData
-				.append("                        <column3 width=\"80\" visibility=\"true\" index=\"3\" />\r\n");
-		xmlData
-				.append("                        <column4 width=\"81\" visibility=\"true\" index=\"4\" />\r\n");
-		xmlData
-				.append("                        <column5 width=\"80\" visibility=\"true\" index=\"5\" />\r\n");
-		xmlData
-				.append("                        <column6 width=\"81\" visibility=\"true\" index=\"6\" />\r\n");
-		xmlData
-				.append("                        <column7 width=\"80\" visibility=\"true\" index=\"7\" />\r\n");
-		xmlData
-				.append("                        <column8 width=\"81\" visibility=\"true\" index=\"8\" />\r\n");
-		xmlData
-				.append("                        <column9 width=\"80\" visibility=\"true\" index=\"9\" />\r\n");
-		xmlData.append("                </download>\r\n");
-		xmlData.append("                <upload>\r\n");
-		xmlData
-				.append("                        <column0 width=\"90\" index=\"0\" />\r\n");
-		xmlData
-				.append("                        <column1 width=\"90\" visibility=\"true\" index=\"1\" />\r\n");
-		xmlData
-				.append("                        <column2 width=\"90\" visibility=\"true\" index=\"2\" />\r\n");
-		xmlData
-				.append("                        <column3 width=\"90\" visibility=\"true\" index=\"3\" />\r\n");
-		xmlData
-				.append("                        <column4 width=\"90\" visibility=\"true\" index=\"4\" />\r\n");
-		xmlData
-				.append("                        <column5 width=\"90\" visibility=\"true\" index=\"5\" />\r\n");
-		xmlData
-				.append("                        <column6 width=\"90\" visibility=\"true\" index=\"6\" />\r\n");
-		xmlData
-				.append("                        <column7 width=\"90\" visibility=\"true\" index=\"7\" />\r\n");
-		xmlData.append("                </upload>\r\n");
-		xmlData.append("                <server>\r\n");
-		xmlData
-				.append("                        <column0 width=\"175\" index=\"0\" />\r\n");
-		xmlData
-				.append("                        <column1 width=\"175\" visibility=\"true\" index=\"1\" />\r\n");
-		xmlData
-				.append("                        <column2 width=\"175\" visibility=\"true\" index=\"2\" />\r\n");
-		xmlData
-				.append("                        <column3 width=\"175\" visibility=\"true\" index=\"3\" />\r\n");
-		xmlData
-				.append("                        <column4 width=\"175\" visibility=\"true\" index=\"4\" />\r\n");
-		xmlData.append("                </server>\r\n");
-		xmlData.append("                <search>\r\n");
-		xmlData
-				.append("                        <column0 width=\"103\" index=\"0\" />\r\n");
-		xmlData
-				.append("                        <column1 width=\"103\" visibility=\"true\" index=\"1\" />\r\n");
-		xmlData
-				.append("                        <column2 width=\"103\" visibility=\"true\" index=\"2\" />\r\n");
-		xmlData
-				.append("                        <column3 width=\"103\" visibility=\"true\" index=\"3\" />\r\n");
-		xmlData
-				.append("                        <column4 width=\"103\" visibility=\"true\" index=\"4\" />\r\n");
-		xmlData
-				.append("                        <column5 width=\"103\" visibility=\"true\" index=\"5\" />\r\n");
-		xmlData.append("                </search>\r\n");
-		xmlData.append("                <share>\r\n");
-		xmlData
-				.append("                        <column0 width=\"194\" index=\"0\" />\r\n");
-		xmlData
-				.append("                        <column1 width=\"195\" visibility=\"true\" index=\"1\" />\r\n");
-		xmlData
-				.append("                        <column2 width=\"194\" visibility=\"true\" index=\"2\" />\r\n");
-		xmlData.append("                </share>\r\n");
-		xmlData.append("        </columns>\r\n");
-		xmlData.append("        <browser file=\"\"/>\r\n");
-		xmlData.append("        <program file=\"-1\"/>\r\n");
-		xmlData
-				.append("        <proxy host=\"\" port=\"\" use=\"false\" userpass=\"=\"/>\r\n");
-		xmlData.append("    </options>\r\n");
-		xmlData.append("</root>");
-
-		FileWriter fileWriter = null;
-		try {
-			fileWriter = new FileWriter(dateiname);
-			fileWriter.write(xmlData.toString());
-			fileWriter.close();
-		} catch (IOException ioE) {
-			logger.error(ioE);
-		}
 	}
 
 	public static void showInformation(String information) {

@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.159 2004/10/11 18:03:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.160 2004/10/13 13:09:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -331,12 +331,12 @@ public class ApplejuiceFassade {
             if (!directory.isDirectory()) {
                 directory.mkdir();
             }
-            dir += File.separator + "properties.xml";
+            dir += File.separator + "ajgui.properties";
             return dir;
         }
         else{
             return System.getProperty("user.dir") + File.separator +
-                "properties.xml";
+                "ajgui.properties";
         }
     }
 

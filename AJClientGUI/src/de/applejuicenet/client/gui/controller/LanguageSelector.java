@@ -23,7 +23,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.22 2004/04/27 13:39:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.23 2004/10/13 13:09:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -102,11 +102,11 @@ public class LanguageSelector
             if (!sprachDatei.isFile()) {
                 if (logger.isEnabledFor(Level.INFO)) {
                     logger.info(
-                        "Die in der properties.xml hinterlegte Sprachdatei wurde nicht gefunden." +
+                        "Die in der ajgui.properties hinterlegte Sprachdatei wurde nicht gefunden." +
                         "\r\nappleJuice wird beendet.");
                 }
                 AppleJuiceDialog.closeWithErrormessage
-                    ("Die in der properties.xml hinterlegte Sprachdatei wurde nicht gefunden." +
+                    ("Die in der ajgui.properties hinterlegte Sprachdatei wurde nicht gefunden." +
                      "\r\nappleJuice wird beendet.", false);
             }
             instance.init(sprachDatei);
