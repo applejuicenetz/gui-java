@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.26 2003/10/14 15:43:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.27 2003/10/31 11:31:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.27  2003/10/31 11:31:45  maj0r
+ * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
+ *
  * Revision 1.26  2003/10/14 15:43:40  maj0r
  * An pflegbaren Xml-Port angepasst.
  *
@@ -41,6 +44,10 @@ public interface OptionsManager {
     public boolean isErsterStart();
 
     public void setErsterStart(boolean ersterStart);
+
+    public boolean isSoundEnabled();
+
+    public void enableSound(boolean enable);
 
     public void setSprache(String sprache);
 

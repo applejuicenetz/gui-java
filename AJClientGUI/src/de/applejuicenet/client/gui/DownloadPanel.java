@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.55 2003/10/21 14:50:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.56 2003/10/31 11:31:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.56  2003/10/31 11:31:45  maj0r
+ * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
+ *
  * Revision 1.55  2003/10/21 14:50:11  maj0r
  * Fixe Sprachverwendung entfernt.
  *
@@ -233,6 +236,7 @@ public class DownloadPanel
                                 abbrechen[i] = ((Integer) indizesAbbrechen.get(i)).intValue();
                             }
                             ApplejuiceFassade.getInstance().cancelDownload(abbrechen);
+                            SoundPlayer.getInstance().playSound(SoundPlayer.ABGEBROCHEN);
                         }
                     }
                 }

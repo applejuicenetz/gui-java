@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.34 2003/10/18 19:19:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.35 2003/10/31 11:31:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.35  2003/10/31 11:31:45  maj0r
+ * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
+ *
  * Revision 1.34  2003/10/18 19:19:26  maj0r
  * Mehrfachselektion in der Servertabelle nun moeglich.
  *
@@ -151,6 +154,7 @@ public class ServerPanel
                 ServerDO server = (ServerDO) ((ServerTableModel) serverTable.getModel()).
                         getRow(selected);
                 ApplejuiceFassade.getInstance().connectToServer(server.getID());
+                SoundPlayer.getInstance().playSound(SoundPlayer.VERBINDEN);
             }
         });
         ActionListener loescheServerListener = new ActionListener() {

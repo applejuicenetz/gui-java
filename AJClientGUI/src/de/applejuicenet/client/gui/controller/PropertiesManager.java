@@ -16,7 +16,7 @@ import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.9 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.10 2003/10/31 11:31:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.xml.serialize.XMLSerializer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.10  2003/10/31 11:31:45  maj0r
+ * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
+ *
  * Revision 1.9  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -249,6 +252,28 @@ public class PropertiesManager
 
     public void setErsterStart(boolean ersterStart) {
         setAttributeByTagName(new String[]{"options", "firststart"}, Boolean.toString(ersterStart));
+    }
+
+    public boolean isSoundEnabled() {
+        try{
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "sound"});;
+            if (temp==null || temp.length()==0)
+                return true;
+            return new Boolean(temp).booleanValue();
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return false;
+        }
+    }
+
+    public void enableSound(boolean enable) {
+        setAttributeByTagName(new String[]{"options", "sound"}, Boolean.toString(enable));
     }
 
     public void setSprache(String sprache) {

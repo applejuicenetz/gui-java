@@ -16,15 +16,18 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.14 2003/10/01 16:52:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.15 2003/10/31 11:31:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.15  2003/10/31 11:31:45  maj0r
+ * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
+ *
  * Revision 1.14  2003/10/01 16:52:53  maj0r
  * Suche weiter gefuehrt.
  * Version 0.32
@@ -126,6 +129,7 @@ public class SearchPanel
                     ApplejuiceFassade.getInstance().startSearch(suchText);
                     suchbegriff.setSelectionStart(0);
                     suchbegriff.setSelectionEnd(suchText.length());
+                    SoundPlayer.getInstance().playSound(SoundPlayer.SUCHEN);
                 }
             }
         });

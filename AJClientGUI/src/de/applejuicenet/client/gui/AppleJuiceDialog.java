@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.53 2003/10/27 14:46:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.54 2003/10/31 11:31:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.54  2003/10/31 11:31:45  maj0r
+ * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
+ *
  * Revision 1.53  2003/10/27 14:46:08  maj0r
  * Detailliertere Fehlermeldung eingebaut.
  *
@@ -144,8 +147,7 @@ public class AppleJuiceDialog
     private JMenuItem menuItemOptionen = new JMenuItem();
     private JMenuItem menuItemUeber = new JMenuItem();
     private JFrame _this;
-    private JButton pause = new JButton();
-    private boolean paused = false;
+    private JButton sound = new JButton();
     private String keinServer = "";
     private static Logger logger;
     public static boolean rewriteProperties = false;
@@ -182,9 +184,6 @@ public class AppleJuiceDialog
     }
 
     private void init() throws Exception {
-        //todo
-        pause.setEnabled(false);
-
         setTitle("AppleJuice Client");
         plugins = new HashSet();
         IconManager im = IconManager.getInstance();
@@ -222,7 +221,28 @@ public class AppleJuiceDialog
             statusbar[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
             statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
         }
-        pause.setFont(new java.awt.Font("SansSerif", 0, 11));
+//        pause.setFont(new java.awt.Font("SansSerif", 0, 11));
+        sound.addActionListener(new ActionListener(){
+            {
+                if (PropertiesManager.getOptionsManager().isSoundEnabled()){
+                    sound.setIcon(IconManager.getInstance().getIcon("soundon"));
+                }
+                else{
+                    sound.setIcon(IconManager.getInstance().getIcon("soundoff"));
+                }
+            }
+
+            public void actionPerformed(ActionEvent ae){
+                OptionsManager om = PropertiesManager.getOptionsManager();
+                om.enableSound(!om.isSoundEnabled());
+                if (om.isSoundEnabled()){
+                    sound.setIcon(IconManager.getInstance().getIcon("soundon"));
+                }
+                else{
+                    sound.setIcon(IconManager.getInstance().getIcon("soundoff"));
+                }
+            }
+        });
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
@@ -242,7 +262,7 @@ public class AppleJuiceDialog
         constraints.gridx = 5;
         panel.add(statusbar[5], constraints);
         constraints.gridx = 6;
-        panel.add(pause, constraints);
+        panel.add(sound, constraints);
         getContentPane().add(panel, BorderLayout.SOUTH);
 
         //Tooltipps einstellen
@@ -433,7 +453,7 @@ public class AppleJuiceDialog
                                                                getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "hint"})));
             optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                    getFirstAttrbuteByTagName(new String[]{"javagui", "menu", "extras"})));
-            if (paused)
+/*            if (paused)
             {
                 pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                 getFirstAttrbuteByTagName(new String[]{"javagui", "mainform",
@@ -444,7 +464,7 @@ public class AppleJuiceDialog
                 pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                 getFirstAttrbuteByTagName(new String[]{"javagui", "mainform",
                                                                                                        "pause"})));
-            }
+            }*/
         }
         catch (Exception e){
             if (logger.isEnabledFor(Level.ERROR))
