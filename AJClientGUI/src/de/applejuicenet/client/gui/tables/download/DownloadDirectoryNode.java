@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.6 2004/01/12 14:37:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.7 2004/01/12 14:53:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDirectoryNode.java,v $
+ * Revision 1.7  2004/01/12 14:53:23  maj0r
+ * Muell entfernt.
+ *
  * Revision 1.6  2004/01/12 14:37:26  maj0r
  * Bug #82 gefixt (Danke an hirsch.marcel)
  * Sortierung von Downloads innerhalb von Unterverzeichnissen der Downloadtabelle korrigiert.
@@ -222,35 +225,8 @@ public class DownloadDirectoryNode
 
     private int compare(Object[] childNodes, int row1, int row2,
                         boolean isAscent) {
-        Object o1 = childNodes[row1];
-        Object o2 = childNodes[row2];
-        if (o1.getClass() == DownloadDirectoryNode.class
-            && o2.getClass() == DownloadMainNode.class) {
-            if (isAscent) {
-                return -1;
-            }
-            else {
-                return 1;
-            }
-        }
-        else if (o1.getClass() == DownloadMainNode.class
-                 && o2.getClass() == DownloadDirectoryNode.class) {
-            if (isAscent) {
-                return 1;
-            }
-            else {
-                return -1;
-            }
-        }
-        else if (o1.getClass() == DownloadDirectoryNode.class
-                 && o2.getClass() == DownloadDirectoryNode.class) {
-            return ( (DownloadDirectoryNode) o1).getVerzeichnis().
-                compareToIgnoreCase( ( (DownloadDirectoryNode) o2).
-                                    getVerzeichnis());
-        }
-        o1 = null;
-        o2 = null;
-
+        Object o1 = null;
+        Object o2 = null;
         if (sort == SORT_DOWNLOADNAME) {
             o1 = ( (DownloadMainNode) childNodes[row1]).getDownloadDO().
                 getFilename();
