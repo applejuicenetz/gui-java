@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.7 2004/12/06 14:49:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.8 2004/12/06 16:34:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -193,7 +193,7 @@ public class DownloadDOOverviewPanel
         	while(true && !interrupted()){
         		if (paused){
         			try{
-	        			sleep(2000);
+	        			sleep(1000);
 	        			continue;
 	                }
 	                catch (InterruptedException iE) {
@@ -214,7 +214,7 @@ public class DownloadDOOverviewPanel
             	}
             	if (shortPause){
         			try{
-	        			sleep(2000);
+	        			sleep(10000);
 	        			continue;
 	                }
 	                catch (InterruptedException iE) {
