@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.DirectoryDO;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserNode.java,v 1.5 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserNode.java,v 1.6 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,29 +22,13 @@ import java.util.List;
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
- * $Log: DirectoryChooserNode.java,v $
- * Revision 1.5  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.4  2004/02/09 20:12:28  maj0r
- * Sortierung verbessert bzw. eingebaut.
- *
- * Revision 1.3  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.2  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.1  2003/08/24 19:37:25  maj0r
- * no message
- *
- *
  */
 
 public class DirectoryChooserNode
     extends DefaultMutableTreeNode
     implements Node, ApplejuiceNode {
-    private DirectoryDO directoryDO;
+    private static final long serialVersionUID = 2238640592930643652L;
+	private DirectoryDO directoryDO;
     private List children = null;
     private DirectoryChooserNode parent;
 

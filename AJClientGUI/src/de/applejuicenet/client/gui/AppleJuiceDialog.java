@@ -108,6 +108,8 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		DataUpdateListener {
 
+	private static final long serialVersionUID = 1289973507051627566L;
+
 	private static Logger logger = Logger.getLogger(AppleJuiceDialog.class);
 
 	private RegisterPanel registerPane;
@@ -1416,6 +1418,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	}
 
 	private class JCheckBoxLookAndFeelMenuItem extends JCheckBoxMenuItem {
+		private static final long serialVersionUID = 7758063510335825418L;
 		private final LookAFeel lookAFeel;
 
 		public JCheckBoxLookAndFeelMenuItem(LookAFeel lookAFeelToUse) {

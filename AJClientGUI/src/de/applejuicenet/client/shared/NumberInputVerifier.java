@@ -5,7 +5,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/NumberInputVerifier.java,v 1.8 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/NumberInputVerifier.java,v 1.9 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,26 +13,13 @@ import javax.swing.text.PlainDocument;
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
- * $Log: NumberInputVerifier.java,v $
- * Revision 1.8  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.7  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.6  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.5  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
- *
  */
 
 public class NumberInputVerifier
     extends PlainDocument {
 
-    private boolean limits;
+    private static final long serialVersionUID = -5119488077963020043L;
+	private boolean limits;
     private int max = 0;
     private int min = 0;
 

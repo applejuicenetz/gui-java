@@ -59,7 +59,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.72 2004/07/23 17:37:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.73 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -73,7 +73,9 @@ public class SharePanel
     extends JPanel
     implements LanguageListener, RegisterI {
 
-    private static SharePanel instance;
+    private static final long serialVersionUID = 2359016777104153892L;
+
+	private static SharePanel instance;
 
     private JPanel panelCenter;
     private DirectoryTree folderTree = new DirectoryTree();

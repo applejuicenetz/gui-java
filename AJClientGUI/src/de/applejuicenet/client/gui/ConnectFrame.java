@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ConnectFrame.java,v 1.3 2004/03/05 15:49:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ConnectFrame.java,v 1.4 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ConnectFrame.java,v $
+ * Revision 1.4  2004/10/06 12:29:14  maj0r
+ * serialVersionUIDs eingebaut.
+ *
  * Revision 1.3  2004/03/05 15:49:38  maj0r
  * PMD-Optimierung
  *
@@ -35,7 +38,8 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 public class ConnectFrame
     extends JFrame {
 
-    private Logger logger;
+    private static final long serialVersionUID = 1852329673424603919L;
+	private Logger logger;
 
     public ConnectFrame() {
         super();

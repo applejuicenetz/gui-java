@@ -10,7 +10,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/SortButtonRenderer.java,v 1.5 2004/03/01 15:10:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/SortButtonRenderer.java,v 1.6 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,33 +18,14 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
- * $Log: SortButtonRenderer.java,v $
- * Revision 1.5  2004/03/01 15:10:09  maj0r
- * TableHeader werden in allen Tabellen gleich dargestellt.
- *
- * Revision 1.4  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.3  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.2  2003/10/12 15:57:55  maj0r
- * Kleinere Bugs behoben.
- * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
- *
- * Revision 1.1  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingefuegt.
- * Servertabelle kann nun spaltenweise sortiert werden.
- *
- *
- *
  */
 
 public class SortButtonRenderer
     extends JButton
     implements TableCellRenderer {
 
-    public static final int NONE = 0;
+    private static final long serialVersionUID = -5640127463811785503L;
+	public static final int NONE = 0;
     public static final int DOWN = 1;
     public static final int UP = 2;
 

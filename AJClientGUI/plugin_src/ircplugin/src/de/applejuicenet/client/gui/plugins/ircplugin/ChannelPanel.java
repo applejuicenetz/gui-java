@@ -44,7 +44,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.8 2004/07/02 15:22:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.9 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -57,7 +57,8 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 public class ChannelPanel
     extends JPanel
     implements ActionListener {
-    private String name;
+    private static final long serialVersionUID = 8959243631777156378L;
+	private String name;
     private SortedListModel usernameList = new SortedListModel();
     private JList userList = new JList(usernameList);
     private JTextPane textArea = new JTextPane();

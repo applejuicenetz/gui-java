@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.24 2004/07/22 14:13:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.25 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,7 +47,8 @@ import de.applejuicenet.client.shared.MultiLineToolTip;
 public class ODAnsichtPanel
     extends JPanel
     implements OptionsRegister {
-    private JLabel farbeFertigerDownload = new JLabel("      ");
+    private static final long serialVersionUID = 5364146567148505385L;
+	private JLabel farbeFertigerDownload = new JLabel("      ");
     private JLabel farbeQuelle = new JLabel("      ");
     private Settings settings;
     JCheckBox cmbAktiv = new JCheckBox();
@@ -121,14 +122,18 @@ public class ODAnsichtPanel
         });
         ImageIcon icon = im.getIcon("hint");
         JLabel hint1 = new JLabel(icon) {
-            public JToolTip createToolTip() {
+            private static final long serialVersionUID = 9035169935990993642L;
+
+			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
         JLabel hint2 = new JLabel(icon) {
-            public JToolTip createToolTip() {
+            private static final long serialVersionUID = 8976960646119463862L;
+
+			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;

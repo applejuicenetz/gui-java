@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.AJSettings;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.7 2004/07/09 14:31:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.8 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,7 +26,8 @@ import de.applejuicenet.client.shared.AJSettings;
 
 public class Schritt3Panel
     extends WizardPanel {
-    private JTextArea label1 = new JTextArea();
+    private static final long serialVersionUID = 2214827920311775563L;
+	private JTextArea label1 = new JTextArea();
     private JTextField nickname = new JTextField();
     private WizardDialog parent;
 

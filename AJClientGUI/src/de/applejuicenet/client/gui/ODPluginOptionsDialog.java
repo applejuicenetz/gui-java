@@ -18,7 +18,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginOptionsDialog.java,v 1.6 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginOptionsDialog.java,v 1.7 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,32 +26,12 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
- * $Log: ODPluginOptionsDialog.java,v $
- * Revision 1.6  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.5  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.4  2004/02/05 23:11:26  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.3  2004/01/05 13:21:32  maj0r
- * Logger eingebaut.
- *
- * Revision 1.2  2004/01/04 10:31:43  maj0r
- * PluginOptionenDialog ueberarbeitet.
- *
- * Revision 1.1  2004/01/01 15:30:21  maj0r
- * Plugins koennen nun ein JPanel zB fuer Optionen implementieren.
- * Dieses wird dann im Optionendialog angezeigt.
- *
- *
  */
 
 public class ODPluginOptionsDialog
     extends JDialog {
-    private PluginConnector pluginConnector;
+    private static final long serialVersionUID = 7346643095645974177L;
+	private PluginConnector pluginConnector;
     private JButton schliessen = new JButton();
     private Logger logger;
 

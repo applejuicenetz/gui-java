@@ -54,6 +54,8 @@ import javax.swing.SwingUtilities;
 
 public class StartPanel extends JPanel implements LanguageListener, RegisterI,
 		DataUpdateListener {
+	private static final long serialVersionUID = 3456825404472175660L;
+
 	private static final Color APFEL_ROT = new Color(146, 36, 60);
 
 	private static StartPanel instance = null;
@@ -599,6 +601,8 @@ public class StartPanel extends JPanel implements LanguageListener, RegisterI,
 	}
 
 	private class NorthPanel extends JPanel {
+		private static final long serialVersionUID = 8611614870757239667L;
+
 		public NorthPanel(LayoutManager layoutManager) {
 			super(layoutManager);
 		}

@@ -7,7 +7,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserListCellRenderer.java,v 1.5 2004/05/31 16:22:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserListCellRenderer.java,v 1.6 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,7 +22,9 @@ public class UserListCellRenderer
     extends JLabel
     implements ListCellRenderer {
 
-    public UserListCellRenderer(){
+    private static final long serialVersionUID = 8321977154324047272L;
+
+	public UserListCellRenderer(){
         setOpaque(true);
     }
 

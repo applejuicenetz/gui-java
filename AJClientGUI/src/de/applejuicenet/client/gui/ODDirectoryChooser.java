@@ -24,39 +24,20 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODDirectoryChooser.java,v 1.6 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODDirectoryChooser.java,v 1.7 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: ODDirectoryChooser.java,v $
- * Revision 1.6  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.5  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.4  2004/02/05 23:11:26  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.3  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.2  2003/09/04 10:13:28  maj0r
- * Logger eingebaut.
- *
- * Revision 1.1  2003/08/24 19:36:23  maj0r
- * no message
- *
  *
  */
 
 public class ODDirectoryChooser
     extends JDialog {
-    private JTree folderTree = new JTree();
+    private static final long serialVersionUID = 6193113845377232917L;
+	private JTree folderTree = new JTree();
     private JButton uebernehmen = new JButton();
     private JButton abbrechen = new JButton();
 

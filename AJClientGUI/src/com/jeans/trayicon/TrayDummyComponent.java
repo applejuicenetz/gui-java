@@ -7,7 +7,9 @@ import java.awt.Window;
 public class TrayDummyComponent
     extends Window {
 
-    public TrayDummyComponent(Frame parentFrame) {
+    private static final long serialVersionUID = -368072341691032372L;
+
+	public TrayDummyComponent(Frame parentFrame) {
         super(parentFrame);
     }
 

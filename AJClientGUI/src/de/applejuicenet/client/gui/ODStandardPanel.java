@@ -41,7 +41,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.34 2004/07/27 07:23:30 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.35 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -54,7 +54,8 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 public class ODStandardPanel
     extends JPanel
     implements OptionsRegister {
-    private boolean dirty = false;
+    private static final long serialVersionUID = 565406484667301350L;
+	private boolean dirty = false;
     private boolean xmlPortDirty = false;
     private JLabel label1 = new JLabel();
     private JLabel label2 = new JLabel();
@@ -289,42 +290,54 @@ public class ODStandardPanel
 
         ImageIcon icon = im.getIcon("hint");
         hint1 = new JLabel(icon) {
-            public JToolTip createToolTip() {
+            private static final long serialVersionUID = -2622145586136954136L;
+
+			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
         hint2 = new JLabel(icon) {
-            public JToolTip createToolTip() {
+            private static final long serialVersionUID = -3253769321269579030L;
+
+			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
         hint3 = new JLabel(icon) {
-            public JToolTip createToolTip() {
+            private static final long serialVersionUID = -2048500163182191117L;
+
+			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
         hint4 = new JLabel(icon) {
-            public JToolTip createToolTip() {
+            private static final long serialVersionUID = -3799359788295967464L;
+
+			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
         hint5 = new JLabel(icon) {
-            public JToolTip createToolTip() {
+            private static final long serialVersionUID = 8709140576027778947L;
+
+			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
         hint6 = new JLabel(icon) {
-            public JToolTip createToolTip() {
+            private static final long serialVersionUID = 7619548238121352978L;
+
+			public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;

@@ -35,7 +35,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.45 2004/07/15 06:22:36 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.46 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,7 +47,8 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 public class OptionsDialog
     extends JDialog {
-    private JFrame parent;
+    private static final long serialVersionUID = -8587060066946542993L;
+	private JFrame parent;
     private JButton speichern;
     private JButton abbrechen;
     private AJSettings ajSettings;
@@ -201,7 +202,9 @@ public class OptionsDialog
         extends JLabel
         implements ListCellRenderer {
 
-        public Component getListCellRendererComponent(
+        private static final long serialVersionUID = 7184847128584053245L;
+
+		public Component getListCellRendererComponent(
             JList list,
             Object value,
             int index,

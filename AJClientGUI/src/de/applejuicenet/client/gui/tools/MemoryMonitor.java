@@ -54,7 +54,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.6 2004/06/23 12:38:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.7 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -63,33 +63,14 @@ import javax.swing.JPanel;
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
- * $Log: MemoryMonitor.java,v $
- * Revision 1.6  2004/06/23 12:38:00  maj0r
- * PMD-Checks
- *
- * Revision 1.5  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.4  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.3  2003/11/05 15:46:48  maj0r
- * Klammerung korrigiert.
- *
- * Revision 1.2  2003/11/05 10:20:29  maj0r
- * Max.RAM-Anzeige eingebaut.
- *
- * Revision 1.1  2003/11/04 13:14:50  maj0r
- * Memory-Monitor eingebaut.
- *
- *
  */
 
 public class MemoryMonitor
     extends JPanel
     implements Runnable {
 
-    private Thread thread;
+    private static final long serialVersionUID = 5443875237558506269L;
+	private Thread thread;
     private long sleepAmount = 1000;
     private int w, h;
     private BufferedImage bimg;

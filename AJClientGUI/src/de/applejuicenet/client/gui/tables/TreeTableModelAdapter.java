@@ -24,7 +24,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.tree.TreePath;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/TreeTableModelAdapter.java,v 1.7 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/TreeTableModelAdapter.java,v 1.8 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,28 +32,12 @@ import javax.swing.tree.TreePath;
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
- * $Log: TreeTableModelAdapter.java,v $
- * Revision 1.7  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.6  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.5  2003/12/16 14:51:16  maj0r
- * Tabellenspaltenroothandles werden nun in der Downloadtabelle angezeigt (Danke an muhviestarr).
- *
- * Revision 1.4  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.3  2003/07/02 13:54:34  maj0r
- * JTreeTable komplett überarbeitet.
- *
- *
  */
 
 public class TreeTableModelAdapter
     extends AbstractTableModel {
-    JTree tree;
+    private static final long serialVersionUID = -1790872037393046597L;
+	JTree tree;
     TreeTableModel treeTableModel;
 
     public TreeTableModelAdapter(TreeTableModel treeTableModel, JTree tree) {

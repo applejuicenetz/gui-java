@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.plaf.metal.MetalToolTipUI;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.8 2004/06/17 09:57:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.9 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,32 +21,14 @@ import javax.swing.plaf.metal.MetalToolTipUI;
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
- * $Log: MultiLineToolTip.java,v $
- * Revision 1.8  2004/06/17 09:57:53  maj0r
- * Unnoetige Imports entfernt.
- *
- * Revision 1.7  2004/04/16 14:30:57  maj0r
- * ToolTipp der Downloadtabelle geaendert.
- *
- * Revision 1.6  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.5  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.4  2003/11/03 15:04:03  maj0r
- * MultiLineToolTipUI als InnerClass umgesetzt.
- *
- * Revision 1.3  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
- *
  */
 
 public class MultiLineToolTip
     extends JToolTip {
 
-    public MultiLineToolTip() {
+    private static final long serialVersionUID = -6749799030338402248L;
+
+	public MultiLineToolTip() {
         setUI(new MultiLineToolTipUI());
     }
 

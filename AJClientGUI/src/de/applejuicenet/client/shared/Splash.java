@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Splash.java,v 1.6 2004/04/27 13:37:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Splash.java,v 1.7 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,7 +26,8 @@ import javax.swing.JProgressBar;
 
 public class Splash
     extends JDialog {
-    private Image image;
+    private static final long serialVersionUID = -919746311487300858L;
+	private Image image;
     private JProgressBar progress;
     private JLayeredPane panel;
 

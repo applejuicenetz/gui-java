@@ -9,7 +9,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 
 public class UploadTablePercentCellRenderer
     extends DefaultTableCellRenderer {
-    public Component getTableCellRendererComponent(JTable table,
+    private static final long serialVersionUID = 6198195270765417315L;
+
+	public Component getTableCellRendererComponent(JTable table,
         Object value,
         boolean isSelected,
         boolean hasFocus,

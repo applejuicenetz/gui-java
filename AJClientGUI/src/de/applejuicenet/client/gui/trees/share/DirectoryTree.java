@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import javax.swing.JTree;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryTree.java,v 1.4 2004/04/14 09:36:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/DirectoryTree.java,v 1.5 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,7 +17,9 @@ import javax.swing.JTree;
 public class DirectoryTree
     extends JTree {
 
-    public Dimension getPreferredScrollableViewportSize() {
+    private static final long serialVersionUID = 5052034838786568947L;
+
+	public Dimension getPreferredScrollableViewportSize() {
         Dimension result = super.getPreferredScrollableViewportSize();
         result = new Dimension(200, result.height);
         return result;

@@ -9,7 +9,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitorDialog.java,v 1.4 2004/07/23 17:37:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitorDialog.java,v 1.5 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,7 +21,8 @@ import javax.swing.JDialog;
 
 public class MemoryMonitorDialog
     extends JDialog {
-    private MemoryMonitor memoryMonitorPanel;
+    private static final long serialVersionUID = -6067451756047283278L;
+	private MemoryMonitor memoryMonitorPanel;
 
     public MemoryMonitorDialog(Dialog parent) {
         super(parent, false);

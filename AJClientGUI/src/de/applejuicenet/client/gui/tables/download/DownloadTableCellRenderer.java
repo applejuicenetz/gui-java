@@ -15,7 +15,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.21 2004/05/24 08:31:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.22 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,7 +29,8 @@ public class DownloadTableCellRenderer
     extends JLabel
     implements TableCellRenderer, DataUpdateListener {
 
-    private Settings settings;
+    private static final long serialVersionUID = -2153392896360289641L;
+	private Settings settings;
     private static Font font;
     private static Color background;
     private static Color foreground;

@@ -23,7 +23,7 @@ import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.40 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.41 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,7 +36,8 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 public class RegisterPanel
     extends JTabbedPane
     implements LanguageListener {
-    private StartPanel startPanel;
+    private static final long serialVersionUID = -8677504466512253432L;
+	private StartPanel startPanel;
     private DownloadPanel downloadPanel;
     private SearchPanel searchPanel;
     private UploadPanel uploadPanel;
@@ -68,7 +69,9 @@ public class RegisterPanel
     private void init() {
         LanguageSelector.getInstance().addLanguageListener(this);
         setModel(new DefaultSingleSelectionModel() {
-            public void setSelectedIndex(int index) {
+            private static final long serialVersionUID = -687725119224964868L;
+
+			public void setSelectedIndex(int index) {
                 int oldIndex = getSelectedIndex();
                 if (oldIndex != -1) {
                     tabFocusLost(oldIndex);

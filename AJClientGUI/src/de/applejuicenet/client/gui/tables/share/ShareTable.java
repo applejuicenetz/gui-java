@@ -12,7 +12,8 @@ import de.applejuicenet.client.shared.dnd.DndSourceAdapter;
 
 public class ShareTable
     extends JTreeTable {
-    private static DragSource dragSource = DragSource.getDefaultDragSource();
+    private static final long serialVersionUID = 2076999402327913095L;
+	private static DragSource dragSource = DragSource.getDefaultDragSource();
     private boolean dragEnabled = false;
 
     public ShareTable(ShareModel treeTableModel) {

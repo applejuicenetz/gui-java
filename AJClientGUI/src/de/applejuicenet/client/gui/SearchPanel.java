@@ -30,7 +30,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.29 2004/06/28 08:17:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.30 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,7 +44,8 @@ public class SearchPanel
     extends JPanel
     implements LanguageListener, RegisterI, DataUpdateListener {
 
-    private static SearchPanel instance;
+    private static final long serialVersionUID = 3168683715237771552L;
+	private static SearchPanel instance;
     private SearchResultTabbedPane resultPanel = new SearchResultTabbedPane();
     private JButton btnStartStopSearch = new JButton("Suche starten");
     private JTextField suchbegriff = new JTextField();

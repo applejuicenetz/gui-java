@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.15 2004/08/16 15:22:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.16 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,7 +47,8 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 public class WizardDialog
     extends JDialog
     implements LanguageListener {
-    private Logger logger;
+    private static final long serialVersionUID = 57452478728366202L;
+	private Logger logger;
     private WizardPanel aktuellesPanel;
     private WizardPanel schritt1 = new Schritt1Panel();
     private WizardPanel schritt2 = new Schritt2Panel();

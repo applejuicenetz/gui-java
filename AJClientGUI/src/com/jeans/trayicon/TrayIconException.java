@@ -44,7 +44,9 @@ package com.jeans.trayicon;
 public class TrayIconException
     extends Exception {
 
-    public TrayIconException(String message) {
+    private static final long serialVersionUID = 3112689510399990093L;
+
+	public TrayIconException(String message) {
         super(message);
     }
 

@@ -27,7 +27,7 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/UpdateInformationDialog.java,v 1.6 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/UpdateInformationDialog.java,v 1.7 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,7 +39,8 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 public class UpdateInformationDialog
     extends JDialog {
-    private String aktuellsteVersion;
+    private static final long serialVersionUID = 3839096697235279634L;
+	private String aktuellsteVersion;
     private JButton schliessen = new JButton();
     private String windowsLink = "";
     private String sonstigeLink = "";

@@ -26,7 +26,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.11 2004/05/12 16:58:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.12 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,7 +37,8 @@ import javax.swing.event.ChangeEvent;
  */
 
 public class IrcPlugin extends PluginConnector {
-    private XdccIrc xdccIrc;
+    private static final long serialVersionUID = -4880551541496115520L;
+	private XdccIrc xdccIrc;
     private String savePath;
     private Properties properties;
     private XMLValueHolder pluginsPropertiesXMLHolder;

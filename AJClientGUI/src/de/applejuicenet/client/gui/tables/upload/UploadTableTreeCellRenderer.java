@@ -15,7 +15,9 @@ import de.applejuicenet.client.gui.tables.download.IconGetter;
 
 public class UploadTableTreeCellRenderer
     extends DefaultTableCellRenderer {
-    public Component getTableCellRendererComponent(JTable table,
+    private static final long serialVersionUID = -7964351436902318837L;
+
+	public Component getTableCellRendererComponent(JTable table,
         Object value,
         boolean isSelected,
         boolean hasFocus,

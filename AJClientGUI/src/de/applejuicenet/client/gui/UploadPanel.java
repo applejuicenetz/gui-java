@@ -72,6 +72,8 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 public class UploadPanel extends JPanel implements LanguageListener, RegisterI,
 		DataUpdateListener {
 
+	private static final long serialVersionUID = -636534546650240286L;
+
 	private static UploadPanel instance;
 
 	private JTreeTable uploadDataTable;

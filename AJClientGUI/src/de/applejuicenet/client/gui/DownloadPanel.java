@@ -90,6 +90,8 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 public class DownloadPanel extends JPanel implements LanguageListener,
 		RegisterI, DataUpdateListener {
 
+	private static final long serialVersionUID = 3086254831787190128L;
+
 	private static DownloadPanel instance = null;
 
 	private DownloadDOOverviewPanel downloadDOOverviewPanel;

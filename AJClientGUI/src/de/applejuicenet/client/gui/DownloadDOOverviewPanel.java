@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.34 2004/04/14 10:25:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.35 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.35  2004/10/06 12:29:14  maj0r
+ * serialVersionUIDs eingebaut.
+ *
  * Revision 1.34  2004/04/14 10:25:22  maj0r
  * [Maj0r] Bug #293 gefixt (Danke an dsp2004)
  * Bei Partlistanfragen an einen ueberlasteten Core kam es zu Fehlern.
@@ -149,7 +152,8 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 public class DownloadDOOverviewPanel
     extends JPanel
     implements LanguageListener{
-    private DownloadPartListPanel actualDlOverviewTable;
+    private static final long serialVersionUID = 6888218356284268994L;
+	private DownloadPartListPanel actualDlOverviewTable;
     private JLabel actualDLDateiName = new JLabel();
     private JLabel label5 = new JLabel("aktive Übertragung");
     private JLabel label4 = new JLabel("Vorhanden");

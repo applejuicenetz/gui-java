@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
 import javax.swing.JToggleButton;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.21 2004/07/23 13:04:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.22 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -42,84 +42,12 @@ import javax.swing.JToggleButton;
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
- * $Log: SearchResultPanel.java,v $
- * Revision 1.21  2004/07/23 13:04:05  maj0r
- * [Maj0r] Featurerequest #472 (Danke an clickweg)
- * Downloads werden nun mit passenden Icons dargestellt (vgl. Suche).
- *
- * Revision 1.20  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.19  2004/02/28 15:01:42  maj0r
- * Suche um Filter erweitert
- * Die Filter in der Suchergebnistabelle wirken sich NICHT auf die Suche aus, lediglich die Treffer werden gefiltert.
- *
- * Revision 1.18  2004/02/21 20:52:43  maj0r
- * Bug #234 gefixt (Danke an hirsch.marcel)
- * Tabellen werden beim Aendern von Spaltengroessen nicht mehr sortiert.
- *
- * Revision 1.17  2004/02/21 18:25:54  maj0r
- * Bug beim Klicken neben den TableHeader behoben.
- *
- * Revision 1.16  2004/02/13 14:50:56  maj0r
- * Bug #129 gefixt (Danke an dsp2004)
- * WebsiteException durch Ueberlastung des Servers sollte nun weitgehend unterbunden sein.
- *
- * Revision 1.15  2004/02/12 21:16:51  maj0r
- * Bug #23 gefixt (Danke an computer.ist.org)
- * Suche abbrechen korrigiert.
- *
- * Revision 1.14  2004/02/10 16:03:42  maj0r
- * Suchdarstellung verschoenert.
- *
- * Revision 1.13  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.12  2004/01/25 08:31:11  maj0r
- * Icons eingebaut.
- *
- * Revision 1.11  2004/01/12 14:20:31  maj0r
- * Sortierung eingebaut.
- *
- * Revision 1.10  2004/01/08 07:47:11  maj0r
- * 98%-CPU-Last Bug durch Suche gefixt.
- *
- * Revision 1.9  2004/01/07 14:51:39  maj0r
- * Bug #23 gefixt (Danke an computer.ist.org)
- * Suche laesst sich nun korrekt abrechen.
- *
- * Revision 1.8  2003/12/30 13:08:32  maj0r
- * Suchanzeige korrigiert
- * Es kann passieren, dass nicht alle gefundenen Suchergebnisse beim Core ankommen, die Ausgabe wurde entsprechend korrigiert.
- *
- * Revision 1.7  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.6  2003/12/16 14:51:46  maj0r
- * Suche kann nun GUI-seitig abgebrochen werden.
- *
- * Revision 1.5  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.4  2003/10/01 16:52:53  maj0r
- * Suche weiter gefuehrt.
- * Version 0.32
- *
- * Revision 1.3  2003/10/01 14:45:40  maj0r
- * Suche fortgesetzt.
- *
- * Revision 1.2  2003/10/01 07:25:44  maj0r
- * Suche weiter gefuehrt.
- *
- * Revision 1.1  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- *
  */
 
 public class SearchResultPanel
     extends JPanel {
-    private Logger logger;
+    private static final long serialVersionUID = 2902934143188576678L;
+	private Logger logger;
     private JTreeTable searchResultTable;
     private SearchResultTableModel tableModel;
     private Search search;

@@ -8,7 +8,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/NormalHeaderRenderer.java,v 1.1 2004/03/01 15:10:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/NormalHeaderRenderer.java,v 1.2 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,18 +16,14 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
- * $Log: NormalHeaderRenderer.java,v $
- * Revision 1.1  2004/03/01 15:10:09  maj0r
- * TableHeader werden in allen Tabellen gleich dargestellt.
- *
- *
  */
 
 public class NormalHeaderRenderer
         extends JButton
         implements TableCellRenderer {
 
-        private static Font textFont = new JTable().getFont();
+        private static final long serialVersionUID = 5947008673356832365L;
+		private static Font textFont = new JTable().getFont();
 
         public NormalHeaderRenderer(){
             setMargin(new Insets(0, 0, 0, 0));

@@ -46,7 +46,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.29 2004/07/09 12:42:01 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.30 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -58,7 +58,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 
 public class JTreeTable
     extends JTable {
-    protected TreeTableCellRenderer tree;
+    private static final long serialVersionUID = -2358030317266014942L;
+
+	protected TreeTableCellRenderer tree;
 
     protected JTable thisTable;
 
@@ -204,7 +206,8 @@ public class JTreeTable
         implements
         TableCellRenderer, DataUpdateListener {
 
-        protected int visibleRow;
+        private static final long serialVersionUID = -461045856373187978L;
+		protected int visibleRow;
         private Settings settings;
 
         public TreeTableCellRenderer(TreeModel model) {
@@ -322,7 +325,8 @@ public class JTreeTable
     class ListToTreeSelectionModelWrapper
         extends DefaultTreeSelectionModel {
 
-        protected boolean updatingListSelectionModel;
+        private static final long serialVersionUID = 3201094989681091040L;
+		protected boolean updatingListSelectionModel;
 
         public ListToTreeSelectionModelWrapper() {
             super();
@@ -389,7 +393,8 @@ public class JTreeTable
         extends DefaultTreeCellRenderer
         implements DataUpdateListener {
 
-        private Settings settings;
+        private static final long serialVersionUID = 4819527202533954019L;
+		private Settings settings;
 
         public IconNodeRenderer() {
             super();

@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/IncomingDirSelectionDialog.java,v 1.5 2004/06/17 09:57:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/IncomingDirSelectionDialog.java,v 1.6 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: IncomingDirSelectionDialog.java,v $
+ * Revision 1.6  2004/10/06 12:29:14  maj0r
+ * serialVersionUIDs eingebaut.
+ *
  * Revision 1.5  2004/06/17 09:57:53  maj0r
  * Unnoetige Imports entfernt.
  *
@@ -47,7 +50,8 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 public class IncomingDirSelectionDialog
     extends JDialog {
-    private String[] selectionValues;
+    private static final long serialVersionUID = -5334471942691884492L;
+	private String[] selectionValues;
     private JButton schliessen = new JButton();
     private JComboBox incomingDirs = new JComboBox();
     private boolean somethingSelected = false;

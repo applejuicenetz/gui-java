@@ -27,7 +27,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.18 2004/07/23 17:37:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.19 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,58 +35,13 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
- * $Log: ODPluginPanel.java,v $
- * Revision 1.18  2004/07/23 17:37:32  maj0r
- * JDK 1.5 Deprecations behoben.
- * CVS-Versionsanzeige eingebaut.
- *
- * Revision 1.17  2004/07/15 06:22:36  loevenwong
- * Anzeige nach erneutem Wizardstart aktualisiert (Danke UP^).
- *
- * Revision 1.16  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.15  2004/03/03 11:57:08  maj0r
- * Kontaktadresse eingebaut.
- *
- * Revision 1.14  2004/03/02 20:47:18  maj0r
- * Beschreibungsfeld in eine JTextArea geaendert.
- *
- * Revision 1.13  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.12  2004/02/05 23:11:26  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.11  2004/01/25 10:16:42  maj0r
- * Optionenmenue ueberarbeitet.
- *
- * Revision 1.10  2004/01/01 15:30:21  maj0r
- * Plugins koennen nun ein JPanel zB fuer Optionen implementieren.
- * Dieses wird dann im Optionendialog angezeigt.
- *
- * Revision 1.9  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.8  2003/09/04 10:13:28  maj0r
- * Logger eingebaut.
- *
- * Revision 1.7  2003/09/04 06:27:53  maj0r
- * Muell entfernt.
- *
- * Revision 1.6  2003/06/30 19:46:11  maj0r
- * Sourcestil verbessert.
- *
- * Revision 1.5  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
- *
  */
 
 public class ODPluginPanel
     extends JPanel
     implements OptionsRegister {
-    private JList pluginList;
+    private static final long serialVersionUID = -2694086541312417833L;
+	private JList pluginList;
     private JTextArea beschreibung = new JTextArea();
     private JLabel label1 = new JLabel();
     private AppleJuiceDialog theApp;

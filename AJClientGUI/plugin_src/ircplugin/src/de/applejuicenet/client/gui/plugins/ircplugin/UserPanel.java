@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.7 2004/07/02 15:22:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.8 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,7 +37,8 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 public class UserPanel
     extends JPanel
     implements ActionListener {
-    private String name;
+    private static final long serialVersionUID = 1166478338793324626L;
+	private String name;
     private final JTextPane textArea = new JTextPane();
     private final JTextField textField = new JTextField();
     private JTextField titleArea = new JTextField();

@@ -14,7 +14,7 @@ import javax.swing.tree.TreeCellRenderer;
 import de.applejuicenet.client.gui.tables.Node;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/ShareSelectionTreeCellRenderer.java,v 1.8 2004/04/14 09:36:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/share/Attic/ShareSelectionTreeCellRenderer.java,v 1.9 2004/10/06 12:29:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,7 +27,8 @@ import de.applejuicenet.client.gui.tables.Node;
 public class ShareSelectionTreeCellRenderer
     extends JPanel
     implements TreeCellRenderer {
-    private JLabel iconLabel1 = new JLabel();
+    private static final long serialVersionUID = -4457414372324613269L;
+	private JLabel iconLabel1 = new JLabel();
     private JLabel iconLabel2 = new JLabel();
     private JLabel text = new JLabel();
 
