@@ -10,7 +10,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/GraphPanel.java,v 1.2 2003/09/15 07:28:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/GraphPanel.java,v 1.3 2003/12/22 16:25:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import java.text.SimpleDateFormat;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: GraphPanel.java,v $
+ * Revision 1.3  2003/12/22 16:25:02  maj0r
+ * Bug behoben, der auftratt, wenn das Plugin aktualisiert wurde, obwohl es noch nicht angezeigt wird (Danke an Luke).
+ *
  * Revision 1.2  2003/09/15 07:28:45  maj0r
  * Plugin zeigt nun ein Raster und die Zeit auf der x-Achse.
  *
@@ -88,18 +91,28 @@ public class GraphPanel extends JPanel{
             }
             g.drawImage(image, 0, 0, null);
         }
-        else
+        else{
             super.paintComponent(g);
+        }
     }
 
     public void update(HashMap speeds){
         if (image==null){
             time = System.currentTimeMillis();
             width = getWidth();
-            if (getHeight()<minImageHeight)
+            if (getHeight()<minImageHeight){
                 imageHeight = minImageHeight;
-            else
-                imageHeight=getHeight();
+            }
+            else{
+                imageHeight = getHeight();
+            }
+            if (width==0 || imageHeight==0){
+                /*
+                 Da kamen schneller Daten rein, als das Plugin angezeigt werden konnte.
+                 Wir nehmen folglich erst den naechsten Durchgang.
+                  */
+                return;
+            }
             image = new BufferedImage(width, imageHeight, BufferedImage.TYPE_INT_ARGB);
             Graphics g = image.getGraphics();
             g.setColor(Color.BLACK);
