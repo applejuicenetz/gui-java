@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.9 2003/08/22 12:52:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.10 2003/08/22 14:16:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.10  2003/08/22 14:16:00  maj0r
+ * Threadverwendung korrigiert.
+ *
  * Revision 1.9  2003/08/22 12:52:12  maj0r
  * Version auf 0.13 Beta erhoeht.
  *
@@ -303,11 +306,15 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 return;
             checkInProgress++;
             modifiedXML.update();
-            informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
-            informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
-            informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
-            informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
-            informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
+            SwingUtilities.invokeLater(new Runnable(){
+                public void run(){
+                    informDataUpdateListener(DataUpdateListener.SERVER_CHANGED);
+                    informDataUpdateListener(DataUpdateListener.DOWNLOAD_CHANGED);
+                    informDataUpdateListener(DataUpdateListener.UPLOAD_CHANGED);
+                    informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
+                    informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
+                }
+            });
             checkInProgress--;
             wait(2000);
         }
