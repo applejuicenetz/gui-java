@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.85 2004/01/25 08:30:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.86 2004/01/26 16:21:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.86  2004/01/26 16:21:05  maj0r
+ * Optionendialog besser positioniert und kann nun ueber das TrayIcon aufgerufen werden.
+ *
  * Revision 1.85  2004/01/25 08:30:39  maj0r
  * NullPointer behoben.
  *
@@ -757,13 +760,7 @@ public class AppleJuiceDialog
             optionenMenu = new JMenu("Extras");
             menuItemOptionen.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    OptionsDialog od = new OptionsDialog(_this);
-                    Dimension appDimension = od.getSize();
-                    Dimension screenSize = getApp().getSize();
-                    od.setLocation( (screenSize.width - appDimension.width) / 4,
-                                   (screenSize.height - appDimension.height) /
-                                   4);
-                    od.show();
+                    showOptionsDialog();
                 }
             });
             menuItemDateiliste.addActionListener(new ActionListener() {
@@ -911,8 +908,20 @@ public class AppleJuiceDialog
         }
     }
 
+    private void showOptionsDialog(){
+        OptionsDialog od = new OptionsDialog(getApp());
+        Dimension optDimension = od.getSize();
+        Dimension screenSize = Toolkit.getDefaultToolkit().
+            getScreenSize();
+        od.setLocation( (screenSize.width -
+                         optDimension.width) / 2,
+                       (screenSize.height -
+                        optDimension.height) / 2);
+        od.show();
+    }
+
     private void showAboutDialog() {
-        AboutDialog aboutDialog = new AboutDialog(_this, true);
+        AboutDialog aboutDialog = new AboutDialog(getApp(), true);
         Dimension appDimension = aboutDialog.getSize();
         Dimension screenSize = Toolkit.getDefaultToolkit().
             getScreenSize();
@@ -1147,6 +1156,7 @@ public class AppleJuiceDialog
             }
         });
         popup.add(popupShowHideMenuItem);
+        popup.add(menuItemOptionen);
         IconManager im = IconManager.getInstance();
         versteckenIcon = im.getIcon("hide");
         zeigenIcon = im.getIcon("applejuice");
