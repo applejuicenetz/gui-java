@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import javax.swing.Icon;
+
+import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
-import javax.swing.Icon;
-import de.applejuicenet.client.gui.tables.Node;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.12 2004/02/28 15:01:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.13 2004/02/28 15:05:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,9 +20,8 @@ import de.applejuicenet.client.gui.tables.Node;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
- * Revision 1.12  2004/02/28 15:01:42  maj0r
- * Suche um Filter erweitert
- * Die Filter in der Suchergebnistabelle wirken sich NICHT auf die Suche aus, lediglich die Treffer werden gefiltert.
+ * Revision 1.13  2004/02/28 15:05:54  maj0r
+ * Da hatte ich in der vorherigen Version Mist eingecheckt.
  *
  * Revision 1.11  2004/02/27 20:39:24  maj0r
  * Icons weiter ausgebaut.
@@ -368,7 +368,8 @@ public class Search {
                 }
                 else if (lower.endsWith(".bmp") || lower.endsWith(".jpg")
                          || lower.endsWith(".tif") || lower.endsWith(".png")
-                         || lower.endsWith(".pcx")){
+                         || lower.endsWith(".pcx") || lower.endsWith(".jpeg")
+                         || lower.endsWith(".jpe")){
                     fileType = TYPE_IMAGE;
                 }
                 else if (lower.endsWith(".mpg") || lower.endsWith(".avi")
