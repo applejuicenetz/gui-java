@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.83 2004/01/20 11:18:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.84 2004/01/23 20:22:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.84  2004/01/23 20:22:49  maj0r
+ * Formataenderung.
+ *
  * Revision 1.83  2004/01/20 11:18:03  maj0r
  * Format der properties.xml geaendert.
  *
@@ -1279,10 +1282,11 @@ public class AppleJuiceDialog
         xmlData.append("                </upload>\r\n");
         xmlData.append("                <server>\r\n");
         xmlData.append(
-            "                        <column0 width=\"201\" index=\"0\" />\r\n");
-        xmlData.append("                        <column1 width=\"201\" visibility=\"true\" index=\"1\" />\r\n");
-        xmlData.append("                        <column2 width=\"201\" visibility=\"true\" index=\"2\" />\r\n");
-        xmlData.append("                        <column3 width=\"200\" visibility=\"true\" index=\"3\" />\r\n");
+            "                        <column0 width=\"175\" index=\"0\" />\r\n");
+        xmlData.append("                        <column1 width=\"175\" visibility=\"true\" index=\"1\" />\r\n");
+        xmlData.append("                        <column2 width=\"175\" visibility=\"true\" index=\"2\" />\r\n");
+        xmlData.append("                        <column3 width=\"175\" visibility=\"true\" index=\"3\" />\r\n");
+        xmlData.append("                        <column4 width=\"175\" visibility=\"true\" index=\"4\" />\r\n");
         xmlData.append("                </server>\r\n");
         xmlData.append("                <search>\r\n");
         xmlData.append(
