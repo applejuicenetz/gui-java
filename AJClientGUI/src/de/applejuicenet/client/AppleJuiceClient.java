@@ -43,7 +43,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.73 2004/06/14 20:12:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.74 2004/06/15 09:43:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -58,7 +58,6 @@ public class AppleJuiceClient {
     private static String fileAppenderPath;
     private static HTMLLayout layout;
     public static Splash splash = null;
-    private static LinkListener linkListener;
 
     public static HTMLLayout getLoggerHtmlLayout() {
         return layout;
@@ -112,7 +111,7 @@ public class AppleJuiceClient {
         String link = "";
         boolean doubleInstance = false;
         try {
-            linkListener = new LinkListener();
+            new LinkListener();
         }
         catch (IOException ex) {
             //bereits ein GUI vorhanden, also GUI schliessen
