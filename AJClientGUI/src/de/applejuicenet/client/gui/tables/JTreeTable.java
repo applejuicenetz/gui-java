@@ -25,7 +25,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.16 2003/10/01 07:25:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.17 2003/10/02 11:14:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +34,9 @@ import java.util.EventObject;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.17  2003/10/02 11:14:39  maj0r
+ * Kleinen Anzeigefehler korrigiert und unnoetige Casts entfernt.
+ *
  * Revision 1.16  2003/10/01 07:25:44  maj0r
  * Suche weiter gefuehrt.
  *
@@ -193,8 +196,9 @@ public class JTreeTable extends JTable{
                 if (node.getClass()==DownloadSourceDO.class){
                     setBackground(settings.getQuelleHintergrundColor());
                 }
-                else if (node.getClass()==DownloadDO.class &&
-                    ((DownloadDO)node).getStatus()==DownloadDO.FERTIG){
+                else if (node.getClass()==DownloadMainNode.class &&
+                        ((DownloadMainNode)node).getType()==DownloadMainNode.ROOT_NODE &&
+                    ((DownloadMainNode)node).getDownloadDO().getStatus()==DownloadDO.FERTIG){
                       setBackground(settings.getDownloadFertigHintergrundColor());
                 }
                 else{
@@ -351,20 +355,21 @@ public class JTreeTable extends JTable{
       if (c instanceof JLabel){
           ((JLabel)c).setOpaque(true);
           if (sel){
-              ((JLabel)c).setBackground(thisTable.getSelectionBackground());
-              ((JLabel)c).setForeground(thisTable.getSelectionForeground());
+              c.setBackground(thisTable.getSelectionBackground());
+              c.setForeground(thisTable.getSelectionForeground());
           }
           else{
               if (settings.isFarbenAktiv()){
                   if (value.getClass()==DownloadSourceDO.class){
-                      ((JLabel)c).setBackground(settings.getQuelleHintergrundColor());
+                      c.setBackground(settings.getQuelleHintergrundColor());
                   }
                   else if (value.getClass()==DownloadMainNode.class &&
+                          ((DownloadMainNode)value).getType()==DownloadMainNode.ROOT_NODE &&
                       ((DownloadMainNode)value).getDownloadDO().getStatus()==DownloadDO.FERTIG){
-                        ((JLabel)c).setBackground(settings.getDownloadFertigHintergrundColor());
+                        c.setBackground(settings.getDownloadFertigHintergrundColor());
                   }
                   else{
-                      ((JLabel)c).setBackground(tree.getBackground());
+                      c.setBackground(tree.getBackground());
                   }
               }
           }
