@@ -21,7 +21,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.9 2003/08/16 17:50:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.10 2003/08/22 12:39:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,9 @@ import java.util.EventObject;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.10  2003/08/22 12:39:54  maj0r
+ * Bug ID 798
+ *
  * Revision 1.9  2003/08/16 17:50:31  maj0r
  * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
  * DownloaduebersichtTabelle kann deaktiviert werden.
@@ -56,8 +59,6 @@ import java.util.EventObject;
  */
 
 public class JTreeTable extends JTable{
-    //todo
-    //wenn Spalten vergroessert werden, sollte ein ScrollBar erscheinen
     protected TreeTableCellRenderer tree;
 
     protected JTable thisTable;

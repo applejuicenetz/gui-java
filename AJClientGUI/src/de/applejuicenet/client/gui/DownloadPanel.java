@@ -22,7 +22,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.36 2003/08/22 10:03:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.37 2003/08/22 12:39:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.37  2003/08/22 12:39:46  maj0r
+ * Bug ID 798
+ *
  * Revision 1.36  2003/08/22 10:03:11  maj0r
  * Threadverwendung korrigiert.
  *
@@ -96,6 +99,8 @@ public class DownloadPanel
     private JLabel linkLabel = new JLabel("ajfsp-Link hinzufügen");
     private DownloadModel downloadModel;
     private JPopupMenu popup = new JPopupMenu();
+    private boolean initizialiced = false;
+    private JScrollPane aScrollPane;
     JMenuItem item1;
     JMenuItem item2;
     JMenuItem item3;
@@ -200,12 +205,12 @@ public class DownloadPanel
 
         downloadModel = new DownloadModel();
         downloadTable = new JTreeTable(downloadModel);
+        downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         DownloadTableCellRenderer renderer = new DownloadTableCellRenderer();
         for (int i = 1; i < downloadTable.getColumnModel().getColumnCount(); i++) {
             downloadTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
-
         btnStartDownload.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 String link = downloadLink.getText();
@@ -252,7 +257,7 @@ public class DownloadPanel
             }
         });
 
-        JScrollPane aScrollPane = new JScrollPane();
+        aScrollPane = new JScrollPane();
         aScrollPane.getViewport().add(downloadTable);
         topPanel.add(aScrollPane, constraints);
 
@@ -282,7 +287,16 @@ public class DownloadPanel
     }
 
     public void registerSelected() {
-        //    nix zu tun
+        if (!initizialiced){
+            initizialiced = true;
+            int width = aScrollPane.getWidth() - 18;
+            TableColumnModel headerModel = downloadTable.getTableHeader().getColumnModel();
+            int columnCount = headerModel.getColumnCount();
+            for (int i=0; i<columnCount; i++){
+                headerModel.getColumn(i).setPreferredWidth(width/columnCount);
+            }
+
+        }
     }
 
     public void fireLanguageChanged() {
