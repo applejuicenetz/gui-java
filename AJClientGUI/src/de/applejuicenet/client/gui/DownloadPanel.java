@@ -22,7 +22,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.38 2003/08/22 14:16:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.39 2003/08/27 11:18:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.39  2003/08/27 11:18:34  maj0r
+ * Kleinen Fehler korrigiert.
+ *
  * Revision 1.38  2003/08/22 14:16:00  maj0r
  * Threadverwendung korrigiert.
  *
@@ -283,7 +286,7 @@ public class DownloadPanel
             result = new Object[count];
             int[] indizes = downloadTable.getSelectedRows();
             for (int i = 0; i < indizes.length; i++) {
-                result[i] = ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(i);
+                result[i] = ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(indizes[i]);
             }
         }
         return result;
