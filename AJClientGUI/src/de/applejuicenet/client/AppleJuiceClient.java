@@ -35,7 +35,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.38 2003/11/25 14:22:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.39 2003/11/25 14:32:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,6 +44,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.39  2003/11/25 14:32:46  maj0r
+ * -help Parameter eingebaut.
+ *
  * Revision 1.38  2003/11/25 14:22:37  maj0r
  * Parameteruebergabe an das GUI geaendert.
  *
@@ -150,7 +153,20 @@ public class AppleJuiceClient {
                         break;
                     }
                 }
+                boolean hilfeAusgegeben = false;
                 for (int i=0; i<args.length; i++){
+                    if (args[i].compareTo("-help")==0){
+                        if (hilfeAusgegeben){
+                            continue;
+                        }
+                        System.out.println();
+                        System.out.println(" -help                       Diese Uebersicht.");
+                        System.out.println(" -path=<pfad>                Ausfuehrpfad setzen. Alles im GUI ist relativ zu diesem.");
+                        System.out.println(" -link=<md5Passwort|link>    ajfsp-Link ans GUI uebergeben. " +
+                                           " Das GUI wird ggf gestartet.");
+                        System.out.println();
+                        hilfeAusgegeben = true;
+                    }
                     if (args[i].indexOf("-link=")!=-1){
                         link = args[i].substring(6);
                         int PORT = PropertiesManager.getOptionsManager().getLinkListenerPort();
