@@ -39,7 +39,7 @@ import java.util.HashSet;
 import de.applejuicenet.client.shared.NetworkInfo;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.141 2004/06/15 16:19:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.142 2004/06/15 16:22:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -50,7 +50,7 @@ import de.applejuicenet.client.shared.NetworkInfo;
  */
 
 public class ApplejuiceFassade {
-    public static final String GUI_VERSION = "0.59.2";
+    public static final String GUI_VERSION = "0.59.3";
     public static final String MIN_NEEDED_CORE_VERSION = "0.30.145.610";
 
     public static final String ERROR_MESSAGE = "Unbehandelte Exception";
