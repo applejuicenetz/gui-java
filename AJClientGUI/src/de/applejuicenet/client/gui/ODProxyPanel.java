@@ -10,6 +10,7 @@ import javax.swing.Icon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -25,7 +26,7 @@ import de.applejuicenet.client.shared.ProxySettings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.12 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.13 2004/03/10 17:12:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,7 +47,7 @@ public class ODProxyPanel
     private JTextField host = new JTextField();
     private JTextField port = new JTextField();
     private JTextField user = new JTextField();
-    private JTextField passwort = new JTextField();
+    private JPasswordField passwort = new JPasswordField();
     private JCheckBox use = new JCheckBox();
     private ProxySettings proxySettings;
     private Logger logger;
@@ -180,7 +181,7 @@ public class ODProxyPanel
             else {
                 proxySettings.setPort(Integer.parseInt(tmpPort));
             }
-            proxySettings.setUserpass(user.getText(), passwort.getText());
+            proxySettings.setUserpass(user.getText(), new String(passwort.getPassword()));
         }
         return proxySettings;
     }
