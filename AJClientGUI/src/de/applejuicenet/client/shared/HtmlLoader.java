@@ -17,7 +17,7 @@ import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.28 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.29 2004/05/10 16:14:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -232,8 +232,7 @@ public abstract class HtmlLoader {
                 }
                 logger.debug(
                     "WebSiteNotFound: " + host + ":" + ajPort +
-                    commandBuffer.toString(),
-                    wnfE);
+                    commandBuffer.toString());
             }
             if (withResult){
                 throw wnfE;
