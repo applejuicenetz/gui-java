@@ -85,6 +85,12 @@ public class AppleJuiceDialog
     constraints.gridx = 4;
     panel.add(statusbar[4], constraints);
     getContentPane().add(panel, BorderLayout.SOUTH);
+
+    String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
+    String datei = OptionsManager.getInstance().getSprache();
+    path += datei + ".xml";
+    LanguageSelector.getInstance(path);
+    fireLanguageChanged();
   }
 
   public Dimension getPreferredSize() {
@@ -120,6 +126,8 @@ public class AppleJuiceDialog
     while (it.hasNext()) {
       String sprachText = LanguageSelector.getInstance(path + (String)it.next()).getFirstAttrbuteByTagName("Languageinfo", "name");
       JRadioButtonMenuItem rb = new JRadioButtonMenuItem(sprachText);
+      if (OptionsManager.getInstance().getSprache().equalsIgnoreCase(sprachText))
+        rb.setSelected(true);
       sprachMenu.add(rb);
       rb.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent ae) {
@@ -140,6 +148,8 @@ public class AppleJuiceDialog
   public void fireLanguageChanged() {
     try {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
+      setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+          getFirstAttrbuteByTagName("mainform", "caption")));
       sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
           getFirstAttrbuteByTagName("einstform", "languagesheet", "caption")));
       optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
