@@ -58,7 +58,8 @@
    </target>
 
    <target name="create-jar" depends="gui-compile" description="builds appleJuice-jar">
-	<pack classes="de.applejuicenet.client.AppleJuiceClient"
+	<pack classes="de.applejuicenet.client.AppleJuiceClient,org.apache.xerces.parsers.XML11Configuration,
+			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl"
 	      targetJar="${basedir}/AJCoreGUI.jar"
 	      excludePkg="java,javax,sun,com.l2fprod,com.sixlegs"
 	      manifestClassPath="./needed_jars/skinlf.jar"
@@ -67,11 +68,12 @@
            	<pathelement path="${gui.compiledir}"/>
            	<path refid="lib.path"/>
            </classpath>
+	   <additionalclass name="org.apache.xerces.parsers.SAXParser"/>
            <additionalfileset dir="${gui.compiledir}" excludes="**/*.txt **/*.class **/*.dep2"/>
 	</pack>
    </target>
 
-   <target name="build-archive" description="builds archive-zip">
+   <target name="build-archive" depends="create-jar" description="builds archive-zip">
 	<jar destfile="${basedir}/AJCoreGUI_vX_XX.zip">
 		<fileset dir="${basedir}" includes="AJCoreGUI.jar"/>
 		<fileset dir="${basedir}" includes="wizard.xml"/>

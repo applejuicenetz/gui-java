@@ -47,6 +47,7 @@
   <property category="sys" name="WorkingDirectory" value="."/>
   <node name="AJCoreGUI" type="Archive">
     <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ExecutableArchiver"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
     <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
     <property category="archiving" name="executableEnabled.1" value="1"/>
     <property category="archiving" name="executableEnabled.2" value="0"/>
