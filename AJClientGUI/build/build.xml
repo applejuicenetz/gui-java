@@ -2,13 +2,15 @@
 <!DOCTYPE project []>
 <project name="aj_java_gui" default="help" basedir=".."> 
 
+   <taskdef name="pack" classname="org.sadun.util.ant.Pack" classpath="${basedir}/tools/pack.jar"/>
+
    <!-- component directories ... -->
    <property name="gui.srcdir"      location="${basedir}/src"/>
    <property name="gui.compiledir"  location="${basedir}/classes"/>
 
    <!-- other path settings, some items to be customized locally ...  -->
-   <property name="xercesImpl.jar"            location="${basedir}/../tools/xercesImpl.jar"/>
-   <property name="xmlParserAPIs.jar"            location="${basedir}/../tools/xmlParserAPIs.jar"/>
+   <property name="xercesImpl.jar"            location="${basedir}/tools/xercesImpl.jar"/>
+   <property name="xmlParserAPIs.jar"            location="${basedir}/tools/xmlParserAPIs.jar"/>
 
    <!-- classpath for compilation ... -->
    <path id="lib.path">
@@ -50,13 +52,13 @@
    </target>
 
    <target name="create-jar" depends="gui-rebuild" description="builds appleJuice-jar">
-	<jar destfile="${basedir}/ajcoregui.jar">
-		<fileset dir="${gui.compiledir}" excludes="**/*.txt **/*.dep2"/>
-		<manifest>              
-			<attribute name="Main-Class" value="de.applejuicenet.client.AppleJuiceClient"/>              
-			<attribute name="Class-Path" value="${basedir}/../tools/xercesImpl.jar ${basedir}/../tools/xmlParserAPIs.jar" /> 
-		</manifest>
-	</jar>
+	<pack classes="de.applejuicenet.client.AppleJuiceClient"
+	      targetJar="${basedir}/AJCoreGUI.jar" 
+	      classpath="${gui.compiledir}"
+	      manifestMainClass="de.applejuicenet.client.AppleJuiceClient">
+           <additionalfileset dir="${gui.compiledir}" excludes="**/*.txt **/*.class **/*.dep2">
+           </additionalfileset>
+	</pack>
    </target>
 
    <target name="complete" depends="create-jar" description="builds complete appleJuice">
