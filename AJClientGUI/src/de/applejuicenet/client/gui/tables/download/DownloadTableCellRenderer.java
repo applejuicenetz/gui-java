@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.9 2003/08/11 14:42:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.10 2003/08/11 19:42:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.10  2003/08/11 19:42:51  maj0r
+ * Fertig-Status-Farbe korrigiert.
+ *
  * Revision 1.9  2003/08/11 14:42:13  maj0r
  * Versions-Icon-Beschaffung in die Klasse Version verschoben.
  *
@@ -116,7 +119,7 @@ public class DownloadTableCellRenderer
         label1.setForeground(table.getSelectionForeground());
       }
       else {
-          if (downloadDO.getStatus()==DownloadDO.FERTIGSTELLEN)
+          if (downloadDO.getStatus()==DownloadDO.FERTIG)
             label1.setBackground(DownloadNode.DOWNLOAD_FERTIG_COLOR);
           else
             label1.setBackground(table.getBackground());
