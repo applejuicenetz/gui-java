@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.8 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.9 2004/01/03 17:29:01 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODConnectionPanel.java,v $
+ * Revision 1.9  2004/01/03 17:29:01  maj0r
+ * Dialog bei fehlgeschlagenem Verbindungsversuch überarbeitet.
+ *
  * Revision 1.8  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -218,6 +221,12 @@ public class ODConnectionPanel
         panel1.add(panel2, constraints);
 
         add(panel1, BorderLayout.NORTH);
+        if (quickConnectionSettingsDialog != null){
+            label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[]{"einstform", "pwsheet", "caption"})));
+            passwortAlt.setVisible(false);
+            label2.setVisible(false);
+        }
     }
 
     public boolean isDirty() {
