@@ -28,6 +28,13 @@ public class TreeTableModelAdapter extends AbstractTableModel
 	});
     }
 
+    public void expandOrCollapseRow(int row){
+      if (tree.isExpanded(row))
+        tree.collapseRow(row);
+      else
+        tree.expandRow(row);
+    }
+
     public int getColumnCount() {
 	return treeTableModel.getColumnCount();
     }

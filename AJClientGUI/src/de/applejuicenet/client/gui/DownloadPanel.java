@@ -26,6 +26,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import de.applejuicenet.client.gui.tablerenderer.DownloadTableCellRenderer;
 import javax.swing.SwingUtilities;
+import de.applejuicenet.client.gui.tablerenderer.TreeTableModelAdapter;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -114,6 +115,15 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
 
 
     downloadTable.addMouseListener(new MouseAdapter() {
+      public void mouseClicked(MouseEvent e){
+        Point p = e.getPoint();
+        if (e.getClickCount()==2 && downloadTable.columnAtPoint(p)!=0){
+          TreeTableModelAdapter model = (TreeTableModelAdapter)downloadTable.getModel();
+          int selectedRow = downloadTable.getSelectedRow();
+          ((TreeTableModelAdapter)downloadTable.getModel()).expandOrCollapseRow(selectedRow);
+        }
+      }
+
       public void mousePressed(MouseEvent me){
         Point p = me.getPoint();
         int iRow = downloadTable.rowAtPoint(p);
