@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.27 2003/09/07 09:29:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.28 2003/09/08 06:26:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.28  2003/09/08 06:26:31  maj0r
+ * Ein Panel entfernt. War ohne Funktion.
+ *
  * Revision 1.27  2003/09/07 09:29:55  maj0r
  * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
@@ -78,8 +81,8 @@ public class ServerPanel
     public static ServerPanel _this;
 
     private JTable serverTable;
-    private JLabel sucheServer = new JLabel(
-            "<html><font><u>mehr Server gibt es hier</u></font></html>");
+/*    private JLabel sucheServer = new JLabel(
+            "<html><font><u>mehr Server gibt es hier</u></font></html>");*/
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem item1;
     private JMenuItem item2;
@@ -133,7 +136,7 @@ public class ServerPanel
         constraints.gridx = 0;
         constraints.gridy = 0;
 
-        sucheServer.setForeground(Color.blue);
+/*        sucheServer.setForeground(Color.blue);
         sucheServer.addMouseListener(new MouseAdapter() {
             public void mouseExited(MouseEvent e) {
                 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -147,7 +150,7 @@ public class ServerPanel
                 //to do
             }
         });
-        panel1.add(sucheServer, constraints);
+        panel1.add(sucheServer, constraints);   */
         constraints.gridx = 1;
         constraints.weightx = 1;
         panel1.add(new JLabel(), constraints);
@@ -253,11 +256,11 @@ public class ServerPanel
     public void fireLanguageChanged() {
         try{
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            sucheServer.setText("<html><font><u>" +
+/*            sucheServer.setText("<html><font><u>" +
                                 ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                   getFirstAttrbuteByTagName(new String[]{"mainform", "Label11",
                                                                                                          "caption"})) +
-                                "</u></font></html>");
+                                "</u></font></html>");*/
             String[] columns = new String[4];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
