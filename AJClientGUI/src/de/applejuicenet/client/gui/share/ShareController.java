@@ -40,7 +40,7 @@ import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.15 2005/03/04 13:48:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.16 2005/03/09 10:03:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -345,38 +345,32 @@ public class ShareController extends GuiController {
 	}
 	
 	private void prioritaetAufheben(){
-		sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
-		sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
-		sharePanel.getBtnNeuLaden().setEnabled(false);
         new Thread() {
             public void run() {
                 try {
                     Object[] values = sharePanel.getShareTable().getSelectedItems();
-                    synchronized (values) {
-                        if (values == null) {
-                            return;
+                    if (values != null) {
+                        sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
+                        sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
+                        sharePanel.getBtnNeuLaden().setEnabled(false);
+                        synchronized (values) {
+                            ShareNode shareNode = null;
+                            for (int i = 0; i < values.length; i++) {
+                                shareNode = (ShareNode) values[i];
+                                shareNode.setPriority(1);
+                            }
                         }
-                        ShareNode shareNode = null;
-                        for (int i = 0; i < values.length; i++) {
-                            shareNode = (ShareNode) values[i];
-                            shareNode.setPriority(1);
-                        }
+                        shareNeuLaden(false);
                     }
-                    shareNeuLaden(false);
                 }
                 catch (Exception e) {
-                    if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                    }
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                 }
             }
         }.start();
 	}
 	
 	private void prioritaetSetzen(){
-		sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
-		sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
-        sharePanel.getBtnNeuLaden().setEnabled(false);
         new Thread() {
             public void run() {
                 try {
@@ -384,10 +378,10 @@ public class ShareController extends GuiController {
                         intValue();
                     Object[] values = sharePanel.getShareTable().getSelectedItems();
                     if (values != null){
+                        sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
+                        sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
+                        sharePanel.getBtnNeuLaden().setEnabled(false);
                         synchronized (values) {
-                            if (values == null) {
-                                return;
-                            }
                             ShareNode shareNode = null;
                             for (int i = 0; i < values.length; i++) {
                                 shareNode = (ShareNode) values[i];
@@ -398,9 +392,7 @@ public class ShareController extends GuiController {
                     }
                 }
                 catch (Exception e) {
-                    if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                    }
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                 }
             }
         }
