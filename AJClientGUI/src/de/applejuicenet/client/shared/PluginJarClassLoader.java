@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.18 2004/03/03 15:33:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.19 2004/05/13 14:32:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,10 @@ import java.util.Map;
  * @author: Maj0r aj@tkl-soft.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.19  2004/05/13 14:32:30  maj0r
+ * [Maj0r] Bugfix (Danke an mich ;) )
+ * Beim Laden von Plugins konnten Fehler beim Classloading auftreten.
+ *
  * Revision 1.18  2004/03/03 15:33:31  maj0r
  * PMD-Optimierung
  *
@@ -156,8 +160,13 @@ public class PluginJarClassLoader
             else{
                 String name = entryName.replace('/', '.');
                 name = name.replaceAll(".class", "");
-                defineClass(name, buf, 0, buf.length);
-                classes.add(name);
+                try{
+                    defineClass(name, buf, 0, buf.length);
+                    classes.add(name);
+                }
+                catch(LinkageError lE){
+                    //Klasse wurde aus irgendeinem Grund bereits geladen
+                }
             }
         }
     }
