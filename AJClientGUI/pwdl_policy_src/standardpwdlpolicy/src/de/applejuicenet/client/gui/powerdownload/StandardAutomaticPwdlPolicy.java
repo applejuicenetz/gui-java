@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.powerdownload;
 
-import java.awt.GridLayout;
+import java.awt.Frame;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -8,19 +8,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.shared.NumberAndSpecialCharsInputVerifier;
-import de.applejuicenet.client.shared.NumberInputVerifier;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.14 2005/02/16 14:49:12 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.15 2005/02/17 09:55:50 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,14 +25,16 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
  */
 
 public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
-    private int pwdlValue;
-    private int anzahlDownloads;
+    private int pwdlValue = 12;
+    private int anzahlDownloads = 2;
     private List<Download> resumedDownloads = new Vector();
     private List<Download> pausedDownloads = new Vector();
+		private int sleeptime = 30000;
+    private EinstellungenDialog settingsDialog = null;
+    private int informedPowerdownload = pwdlValue;
 
     public StandardAutomaticPwdlPolicy(ApplejuiceFassade applejuiceFassade) {
     	super(applejuiceFassade);
-    	anzahlDownloads = 2;
     }
 
     public StandardAutomaticPwdlPolicy(ApplejuiceFassade applejuiceFassade, int anzahlDownloads, int pwdlValue) {
@@ -49,39 +45,8 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
 
     public boolean initAction() {
         shouldPause = false;
-        double wert = 0;
-        JTextField pwdlWert = new JTextField();
-        JTextField pwdlCount = new JTextField();
-        NumberAndSpecialCharsInputVerifier verifier = new NumberAndSpecialCharsInputVerifier(",.");
-        verifier.setSpecialPattern("^([1-4]?[0-9]|50$)([,.][0-9]{0,2})?$");
-        pwdlWert.setDocument(verifier);
-        pwdlCount.setDocument(new NumberInputVerifier(1, 99));
-
-        JPanel abfrage = new JPanel(new GridLayout(2, 2));
-        abfrage.add(new JLabel("Pwdl-Wert:"));
-        abfrage.add(pwdlWert);
-        abfrage.add(new JLabel("Anzahl Downloads:"));
-        abfrage.add(pwdlCount);
-        int versuche = 3;
-        while (--versuche >= 0) {
-            JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), abfrage, "Powerdownload konfigurieren", JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE);
-            try {
-            	String result = pwdlWert.getText();
-            	result = result.replace(',', '.');
-            	wert = Double.parseDouble(result) - 1;
-            	wert = ((double) Math.round(wert * 100.0))/100.0;
-            	pwdlValue = (int)((wert) * 10);
-            	if (pwdlValue<12 || pwdlValue>490){
-            		continue;
-            	}
-              anzahlDownloads = new Integer(pwdlCount.getText());
-            }
-            catch (Exception e) {
-            	continue;
-            }
-          	return true;
-        }
-        return false;
+        showPropertiesDialog(AppleJuiceDialog.getApp());
+        return true;
     }
 
     public void doAction() throws Exception {
@@ -96,7 +61,7 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         	if (downloadSize <= anzahlDownloads) {
         		// alle auf pd setzen und resuemen...
         		List power = new Vector(downloads.values());
-        		applejuiceFassade.setPowerDownload(power, new Integer(pwdlValue));
+        		setPowerDownload(power);
         		applejuiceFassade.resumeDownload(power);
         	}
         	else {
@@ -120,14 +85,23 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
       				pos++;
         		}
         		if (changed(downloads2Start, downloads2Stop)) {
-        			applejuiceFassade.setPowerDownload(downloads2Start, pwdlValue);
+        			setPowerDownload(downloads2Start);
         			applejuiceFassade.resumeDownload(downloads2Start);
         			applejuiceFassade.pauseDownload(downloads2Stop);
+        		}
+        		else if (informedPowerdownload != pwdlValue) {
+        			setPowerDownload(downloads2Start);
         		}
         	}
         }
     }
 
+    private void setPowerDownload(List<Download> downloads2Start) throws IllegalArgumentException
+		{
+			applejuiceFassade.setPowerDownload(downloads2Start, pwdlValue);
+    	informedPowerdownload = pwdlValue;
+    }
+    
 		private boolean changed(List<Download> downloads2Start, List<Download> downloads2Stop)
 		{
 			boolean changed = false;
@@ -196,7 +170,29 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         return "StandardPwdlPolicy Vers. " + getVersion();
     }
     
-    private class Sortierkriterium {
+  	protected int getSleeptime()
+  	{
+  		return this.sleeptime;
+  	}
+
+  	public boolean hasPropertiesDialog()
+  	{
+  		return true;
+  	}
+  	
+  	public void showPropertiesDialog(Frame parent)
+  	{
+      double wert = 0;
+      if (settingsDialog == null) {
+      	settingsDialog = new EinstellungenDialog(parent);
+      }
+      settingsDialog.setVisible(true);
+      anzahlDownloads = settingsDialog.getAnzahlDownloads();
+      pwdlValue = settingsDialog.getPowerDownload();
+      sleeptime = settingsDialog.getSleeptime();
+  	}
+
+  	private class Sortierkriterium {
     	private Double prozentGeladen;
     	private Long groesse;
     	private Integer id;
