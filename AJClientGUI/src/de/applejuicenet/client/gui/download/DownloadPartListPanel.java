@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -93,6 +94,14 @@ public class DownloadPartListPanel extends JPanel implements
 		}
 	}
 	
+	private void updatePanel(){
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run() {
+				updateUI();
+			}
+		});				
+	}
+	
 	public synchronized void setPartList(PartListDO newPartListDO, Integer newId) {
 		try {
 			if (newPartListDO == null || newId == null){
@@ -100,7 +109,7 @@ public class DownloadPartListPanel extends JPanel implements
 				lineImage = null;
 				image = null;
 				savedMouseEvent = null;
-				updateUI();
+				updatePanel();
 				return;
 			}
 			boolean idChanged = false;
@@ -130,7 +139,7 @@ public class DownloadPartListPanel extends JPanel implements
 					}
 					if(sameParts){
 						insertSources(partListDO, lineImage);
-						updateUI();
+						updatePanel();
 						return;
 					}
 				}
@@ -188,7 +197,7 @@ public class DownloadPartListPanel extends JPanel implements
 				logger.debug(ApplejuiceFassade.ERROR_MESSAGE, e);
 			}
 		}
-		updateUI();
+		updatePanel();
 	}
 	
 	private BufferedImage insertSources(PartListDO partListDO, BufferedImage sourceImage){
