@@ -62,9 +62,13 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.DataFlavor;
+import java.io.*;
+import java.awt.datatransfer.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.100 2004/03/13 20:15:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.101 2004/04/01 09:08:21 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -73,6 +77,9 @@ import de.applejuicenet.client.gui.controller.PositionManagerImpl;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.101  2004/04/01 09:08:21  loevenwong
+ * Rechte Maustaste im Download-Textfeld eingebaut.
+ *
  * Revision 1.100  2004/03/13 20:15:32  maj0r
  * Featurerequest #274 gefixt (Danke an johannes8)
  * Downloads koennen per F2 umbenannt werden.
@@ -368,6 +375,8 @@ public class DownloadPanel
     private TableColumn[] columns = new TableColumn[10];
     private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[
         columns.length];
+    private JPopupMenu menu;
+    private JMenuItem einfuegen;
 
     private DownloadPartListWatcher downloadPartListWatcher = new
         DownloadPartListWatcher();
@@ -431,6 +440,15 @@ public class DownloadPanel
         popup.add(itemCopyToClipboardWithSources);
         popup.add(item7);
         item7.setVisible(false);
+
+        menu = new JPopupMenu();
+        einfuegen = new JMenuItem("Einfügen");
+        einfuegen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                linkMenuActionPerformed(e);
+            }
+        });
+        menu.add(einfuegen);
 
         itemCopyToClipboard.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -740,6 +758,14 @@ public class DownloadPanel
             public void keyPressed(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
                     btnStartDownload.doClick();
+                }
+            }
+        });
+        downloadLink.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getButton() == e.BUTTON3) {
+                    showLinkMenu(e.getX(), e.getY());
                 }
             }
         });
@@ -1206,6 +1232,8 @@ public class DownloadPanel
                 languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.getlinkwithsources")));
             neuerDateiname = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.downloadform.neuerdateiname"));
+            einfuegen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.javagui.downloadform.einfuegen")));
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -1245,6 +1273,30 @@ public class DownloadPanel
         panelSelected = false;
         downloadPartListWatcher.setDownloadNode(null);
         downloadDOOverviewPanel.setDownloadDO(null);
+    }
+
+    private void showLinkMenu(int x, int y)
+    {
+        menu.show(this, x, y);
+    }
+
+    private void linkMenuActionPerformed(ActionEvent e)
+    {
+        if ("Einfügen".equals(e.getActionCommand())) {
+            Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Transferable transferable = cb.getContents(this);
+            if (transferable != null) {
+                String data = null;
+                try {
+                    data = (String) transferable.getTransferData(DataFlavor.
+                        stringFlavor);
+                }
+                catch (Exception ex) {
+                    this.downloadLink.setText("Error");
+                }
+                this.downloadLink.setText(data);
+            }
+        }
     }
 
     class SortMouseAdapter
