@@ -124,6 +124,7 @@ public class ODVerbindungPanel extends JPanel {
     kbSlider = new JSlider(2, 5);
     kbSlider.setMajorTickSpacing(1);
     kbSlider.setMinorTickSpacing(1);
+    kbSlider.setSnapToTicks(true);
     kbSlider.addChangeListener(new ChangeListener(){
       public void stateChanged(ChangeEvent e){
         JSlider slider = (JSlider)e.getSource();

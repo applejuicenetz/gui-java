@@ -59,6 +59,10 @@ public class DownloadSourceDO {
     this.groesse=groesse;
   }
 
+  public boolean isRoot(){
+    return root;
+  }
+
   public String getDateiname() {
     if (root) {
       return dateiname;

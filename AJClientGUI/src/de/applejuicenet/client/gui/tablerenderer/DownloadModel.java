@@ -100,13 +100,13 @@ public class DownloadModel
         case 3:
           return download.getBereitsGeladen();
         case 4:
-          return download.getProzentGeladen();
-        case 5:
-          return download.getNochZuLaden();
-        case 6:
           return download.getGeschwindigkeit();
-        case 7:
+        case 5:
           return download.getRestlicheZeit();
+        case 6:
+          return download.getProzentGeladen();
+        case 7:
+          return download.getNochZuLaden();
         case 8:
           return download.getPowerdownload();
         case 9:

@@ -111,7 +111,10 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
     downloadTable = new JTreeTable(downloadModel);
 
     TableColumn tc = downloadTable.getColumnModel().getColumn(9);
-    tc.setCellRenderer(new DownloadTableCellRenderer());
+    TableColumn tc2 = downloadTable.getColumnModel().getColumn(6);
+    DownloadTableCellRenderer renderer = new DownloadTableCellRenderer();
+    tc.setCellRenderer(renderer);
+    tc2.setCellRenderer(renderer);
 
 
     downloadTable.addMouseListener(new MouseAdapter() {

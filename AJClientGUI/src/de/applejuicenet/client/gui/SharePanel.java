@@ -62,6 +62,7 @@ public class SharePanel extends JPanel implements LanguageListener, RegisterI{
     constraints.gridx = 0;
     constraints.gridy = 0;
 
+    cmbPrio.setEditable(true);
     panelWest.add(addFolderWithSubfolder, constraints);
 
     constraints.gridy = 1;
