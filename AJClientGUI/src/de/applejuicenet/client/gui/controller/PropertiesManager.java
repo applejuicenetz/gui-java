@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.27 2004/01/24 08:17:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.28 2004/01/24 09:52:01 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.28  2004/01/24 09:52:01  maj0r
+ * Spalte Verbindungsversuche eingebaut.
+ *
  * Revision 1.27  2004/01/24 08:17:21  maj0r
  * Formataenderung wird nun korrekt erkannt.
  *
@@ -711,7 +714,7 @@ public class PropertiesManager
             uploadWidths[6] = Integer.parseInt(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "upload", "column6", "width"}));
 
-            serverWidths = new int[4];
+            serverWidths = new int[5];
             serverWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new
                 String[] {"options", "columns", "server", "column0", "width"}));
             serverWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new
@@ -888,6 +891,7 @@ public class PropertiesManager
             setAttributeByTagName(new String[]{"options", "columns", "server", "column1", "width"}, serverWidths[1]);
             setAttributeByTagName(new String[]{"options", "columns", "server", "column2", "width"}, serverWidths[2]);
             setAttributeByTagName(new String[]{"options", "columns", "server", "column3", "width"}, serverWidths[3]);
+            setAttributeByTagName(new String[]{"options", "columns", "server", "column4", "width"}, serverWidths[4]);
 
             setAttributeByTagName(new String[]{"options", "columns", "share", "column0", "width"}, shareWidths[0]);
             setAttributeByTagName(new String[]{"options", "columns", "share", "column1", "width"}, shareWidths[1]);
