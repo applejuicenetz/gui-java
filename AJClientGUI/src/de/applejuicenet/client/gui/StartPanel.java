@@ -1,9 +1,13 @@
 package de.applejuicenet.client.gui;
 
+import java.util.Map;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.LayoutManager;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -26,12 +30,9 @@ import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
-import java.awt.LayoutManager;
-import java.awt.Dimension;
-import javax.swing.text.Document;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.54 2004/05/29 13:58:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.55 2004/06/11 14:01:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -329,10 +330,17 @@ public class StartPanel
             }
             pos = temp.indexOf("%d");
             if (pos != -1) {
-                temp.replace(pos, pos + 2, Integer.toString(ApplejuiceFassade.
+                Map servers = ApplejuiceFassade.
                     getInstance().
-                    getAllServer().
-                    size()));
+                    getAllServer();
+                int count;
+                if (servers != null){
+                    count = servers.size();
+                }
+                else{
+                    count = 0;
+                }
+                temp.replace(pos, pos + 2, Integer.toString(count));
             }
             label9.setText(temp.toString());
             label10Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
