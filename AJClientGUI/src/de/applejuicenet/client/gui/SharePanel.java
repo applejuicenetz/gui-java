@@ -59,7 +59,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.68 2004/07/05 09:18:22 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.69 2004/07/08 14:48:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -147,7 +147,7 @@ public class SharePanel
         popup2.add(itemCopyToClipboardWithSources);
         popup2.add(itemCopyToClipboardAsUBBCode);
     	popup2.add(itemOpenWithProgram);
-        itemOpenWithProgram.setIcon(im.getIcon("folderopen"));
+        itemOpenWithProgram.setIcon(im.getIcon("vlc"));
         if (ApplejuiceFassade.getInstance().isLocalhost()){
             itemOpenWithProgram.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {

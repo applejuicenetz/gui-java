@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.17 2004/07/05 09:18:22 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.18 2004/07/08 14:48:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -136,6 +136,8 @@ public class ODAnsichtPanel
         openProgram.setBackground(Color.WHITE);
         openProgram.setText(om.getOpenProgram());
         Icon icon2 = im.getIcon("folderopen");
+        Icon icon3 = im.getIcon("vlc");
+        program.setIcon(icon3);
         JLabel selectProgram = new JLabel(icon2);
         selectProgram.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
