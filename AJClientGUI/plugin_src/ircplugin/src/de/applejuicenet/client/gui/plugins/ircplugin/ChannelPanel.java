@@ -1,5 +1,17 @@
 package de.applejuicenet.client.gui.plugins.ircplugin;
 
+import java.awt.AWTKeyStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,19 +19,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import java.awt.AWTKeyStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -34,15 +37,14 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import de.applejuicenet.client.gui.AppleJuiceDialog;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.AdjustmentEvent;
-import javax.swing.JLabel;
+import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.6 2004/06/07 20:16:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.7 2004/06/28 15:49:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -73,6 +75,8 @@ public class ChannelPanel
     private boolean marked = false;
     private JTabbedPane tabbedPane;
     private Logger logger;
+	private long lastStatsPrinted = 0;
+	private long lastVersionPrinted = 0;
 
     public ChannelPanel(XdccIrc parentPanel, String name, JTabbedPane tabbedPane) {
         logger = Logger.getLogger(getClass());
@@ -262,7 +266,31 @@ public class ChannelPanel
             if (message.startsWith("/")) {
                 // commands that start with "/"
                 // message = message.substring(1);
-                parentPanel.analyzeCommand(message);
+                if (message.toLowerCase().compareTo("/ajstats") == 0 
+                		|| message.toLowerCase().compareTo("/ajversinfo") == 0) {
+            		long currentTime = System.currentTimeMillis();
+                	if (message.toLowerCase().compareTo("/ajstats") == 0){
+                		if (currentTime > lastStatsPrinted + 60000){
+                			lastStatsPrinted = currentTime; 
+	                		String text = ApplejuiceFassade.getInstance().getStats().substring(3);
+		                	parentPanel.parseSendToCommand("PRIVMSG " + name + " :" + text);
+		                    updateTextArea(parentPanel.formatNickname("<" + parentPanel.getNickname() + "> ") +
+		                            text);
+                		}
+	                }
+	                else if (message.toLowerCase().compareTo("/ajversinfo") == 0) {
+                		if (currentTime > lastVersionPrinted + 60000){
+                			lastVersionPrinted = currentTime; 
+		                	String text = ApplejuiceFassade.getInstance().getVersionInformation().substring(3);
+		                	parentPanel.parseSendToCommand("PRIVMSG " + name + " :" + text);
+		                    updateTextArea(parentPanel.formatNickname("<" + parentPanel.getNickname() + "> ") +
+		                            text);
+                		}
+	                }
+                }
+                else{
+                	parentPanel.analyzeCommand(message);
+                }
                 textField.setText("");
             }
             else {

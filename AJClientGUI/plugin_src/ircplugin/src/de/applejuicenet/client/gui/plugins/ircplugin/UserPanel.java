@@ -21,8 +21,10 @@ import javax.swing.text.BadLocationException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.4 2004/05/14 19:48:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.5 2004/06/28 15:49:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -111,7 +113,31 @@ public class UserPanel
             // let's send to the server
             if (message.startsWith("/")) {
                 // A command
-                parentPanel.analyzeCommand(message);
+                if (message.toLowerCase().compareTo("/ajstats") == 0 || message.toLowerCase().compareTo("/ajversinfo") == 0
+                		|| message.toLowerCase().compareTo("/optionsinfo") == 0) {
+            		long currentTime = System.currentTimeMillis();
+                	if (message.toLowerCase().compareTo("/ajstats") == 0){
+                		String text = ApplejuiceFassade.getInstance().getStats().substring(3);
+	                	parentPanel.parseSendToCommand("PRIVMSG " + name + " :" + text);
+	                    updateTextArea(parentPanel.formatNickname("<" + parentPanel.getNickname() + "> ") +
+	                            text);
+	                }
+	                else if (message.toLowerCase().compareTo("/ajversinfo") == 0) {
+	                	String text = ApplejuiceFassade.getInstance().getVersionInformation().substring(3);
+	                	parentPanel.parseSendToCommand("PRIVMSG " + name + " :" + text);
+	                    updateTextArea(parentPanel.formatNickname("<" + parentPanel.getNickname() + "> ") +
+	                            text);
+	                }
+	                else if (message.toLowerCase().compareTo("/ajoptionsinfo") == 0) {
+	                	String text = ApplejuiceFassade.getInstance().getOptionsInformation().substring(3);
+	                	parentPanel.parseSendToCommand("PRIVMSG " + name + " :" + text);
+	                    updateTextArea(parentPanel.formatNickname("<" + parentPanel.getNickname() + "> ") +
+	                            text);
+	                }
+                }
+                else{
+                	parentPanel.analyzeCommand(message);
+                }
                 textField.setText("");
             }
             else {
