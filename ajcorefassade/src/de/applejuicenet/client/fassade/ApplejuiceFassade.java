@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -721,6 +722,13 @@ public class ApplejuiceFassade {
 				encodedLink + "&subdir=" + subdir, true);
 	}
 
+	public void setPowerDownload(List<Download> downloads, Integer powerDownload)
+		throws IllegalArgumentException {
+		if (downloads == null || downloads.size() == 0) {
+			throw new IllegalArgumentException("invalid download-array");
+		}
+		setPowerDownload(downloads.toArray(new Download[]{}), powerDownload);
+	}
 	public void setPowerDownload(Download[] downloads, Integer powerDownload)
 			throws IllegalArgumentException {
 		if (downloads == null) {
