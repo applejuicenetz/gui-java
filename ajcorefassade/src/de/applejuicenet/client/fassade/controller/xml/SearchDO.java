@@ -169,7 +169,7 @@ class SearchDO extends Search {
 		return running;
 	}
 
-	class SearchEntryDO implements SearchEntry{
+	class SearchEntryDO implements de.applejuicenet.client.fassade.entity.SearchEntry {
 		private int id;
 		private int searchId;
 		private String checksumme;
