@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.18 2003/08/25 13:18:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.19 2003/08/28 10:57:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.19  2003/08/28 10:57:04  maj0r
+ * Versionierung geaendert und erhoeht.
+ * Version 0.16 Beta.
+ *
  * Revision 1.18  2003/08/25 13:18:35  maj0r
  * Farbe in ein geiles Rot geaendert,
  *
@@ -138,7 +142,7 @@ public class StartPanel
         constraints.gridy = 1;
         constraints.insets.left = 15;
         String coreVersion = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
-        panel3.add(new JLabel("GUI: " + parent.GUI_VERSION + " Controller: " + ApplejuiceFassade.DATAMANAGER_VERSION + " Core: " +
+        panel3.add(new JLabel("GUI: " + ApplejuiceFassade.GUI_VERSION + " Core: " +
                               coreVersion),
                    constraints);
 

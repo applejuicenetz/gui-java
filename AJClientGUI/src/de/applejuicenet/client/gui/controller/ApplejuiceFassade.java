@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import java.awt.event.*;
 import javax.swing.*;
 
 import de.applejuicenet.client.gui.listener.*;
@@ -16,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.14 2003/08/28 06:56:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.15 2003/08/28 10:57:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +24,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.15  2003/08/28 10:57:04  maj0r
+ * Versionierung geaendert und erhoeht.
+ * Version 0.16 Beta.
+ *
  * Revision 1.14  2003/08/28 06:56:48  maj0r
  * Methode setShares korrigiert.
  *
@@ -133,7 +136,7 @@ import org.apache.log4j.Level;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String DATAMANAGER_VERSION = "0.15 Beta";
+    public static final String GUI_VERSION = "0.16 Beta";
 
     private HashSet downloadListener;
     private HashSet shareListener;
