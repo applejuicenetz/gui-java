@@ -2,10 +2,14 @@ package de.applejuicenet.client.gui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,10 +17,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -33,14 +39,20 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.NormalHeaderRenderer;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
 import de.applejuicenet.client.gui.tables.upload.UploadDataTableModel;
 import de.applejuicenet.client.gui.tables.upload.UploadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.gui.tables.upload.UploadTableWholeLoadedPercentCellRenderer;
+import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.shared.dac.ShareDO;
+import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.46 2004/06/11 09:24:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.47 2004/06/23 13:24:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,6 +77,8 @@ public class UploadPanel
     private boolean initizialiced = false;
     private Logger logger;
     private boolean panelSelected = false;
+    private JPopupMenu popupMenu = new JPopupMenu();
+    private JMenuItem itemCopyToClipboard;
 
     private JPopupMenu columnPopup = new JPopupMenu();
     private TableColumn[] columns = new TableColumn[8];
@@ -108,6 +122,7 @@ public class UploadPanel
                 }
             }
         });
+        uploadDataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         uploadDataTable.getColumnModel().getColumn(4).setCellRenderer(new
             UploadTablePercentCellRenderer());
         uploadDataTable.getColumnModel().getColumn(5).setCellRenderer(new
@@ -196,8 +211,68 @@ public class UploadPanel
         panel2.setLayout(new BorderLayout());
         panel2.add(panel, BorderLayout.WEST);
         add(panel2, BorderLayout.SOUTH);
+        itemCopyToClipboard = new JMenuItem();
+        itemCopyToClipboard.setIcon(IconManager.getInstance().getIcon("clipboard"));
+        itemCopyToClipboard.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+            	copyLinkToClipboard();
+            }
+        });
+        popupMenu.add(itemCopyToClipboard);
+        uploadDataTable.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                super.mousePressed(me);
+                maybeShowPopup(me);
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                maybeShowPopup(e);
+            }
+
+            private void maybeShowPopup(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    Point p = e.getPoint();
+                    int selectedRow = uploadDataTable.rowAtPoint(p);
+                    if (selectedRow != -1) {
+                    	uploadDataTable.setRowSelectionInterval(selectedRow,
+                                selectedRow);
+                        Object selectedItem = ((TreeTableModelAdapter) uploadDataTable.getModel()).
+						nodeForRow(selectedRow);
+                        if (selectedItem.getClass() == UploadDO.class){
+                            popupMenu.show(uploadDataTable, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
+
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
             DataUpdateListener.UPLOAD_CHANGED);
+    }
+    
+    private void copyLinkToClipboard(){
+        Object selectedItem = ((TreeTableModelAdapter) uploadDataTable.getModel()).
+			nodeForRow(uploadDataTable.getSelectedRow());
+        if (selectedItem.getClass() == UploadDO.class){
+        	String shareFileId = ((UploadDO)selectedItem).getShareFileIDAsString();
+            Map share = ApplejuiceFassade.getInstance().getShare(false);
+            if (share.containsKey(shareFileId)){
+            	ShareDO shareDO = (ShareDO) share.get(shareFileId);
+            	if (shareDO != null){
+                    Clipboard cb = Toolkit.getDefaultToolkit().
+	                getSystemClipboard();
+		            StringBuffer toCopy = new StringBuffer();
+		            toCopy.append("ajfsp://file|");
+	                toCopy.append(shareDO.getShortfilename() + "|" +
+	                		shareDO.getCheckSum() + "|" +
+	                		shareDO.getSize() + "/");
+	                StringSelection contents = new StringSelection(toCopy.
+	                    toString());
+                    cb.setContents(contents, null);
+            	}
+            }
+        }
     }
 
     public void fireLanguageChanged() {
@@ -228,6 +303,8 @@ public class UploadPanel
         columns[0].setPreferredWidth(100);
         warteschlangeVoll = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.downloadform.warteschlangevoll"));
+        itemCopyToClipboard.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.getlink1.caption")));
     }
 
     public void fireContentChanged(int type, Object content) {
