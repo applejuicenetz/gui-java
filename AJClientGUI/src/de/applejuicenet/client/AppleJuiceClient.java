@@ -1,22 +1,54 @@
 package de.applejuicenet.client;
 
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.HeadlessException;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.StringTokenizer;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
-import org.apache.log4j.*;
-import de.applejuicenet.client.gui.*;
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.shared.*;
-import de.applejuicenet.client.shared.*;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.HTMLLayout;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.ConnectFrame;
+import de.applejuicenet.client.gui.QuickConnectionSettingsDialog;
+import de.applejuicenet.client.gui.UpdateInformationDialog;
+import de.applejuicenet.client.gui.WizardDialog;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.LinkListener;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.shared.KeyStates;
+import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.Splash;
+import de.applejuicenet.client.shared.WebsiteContentLoader;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.78 2004/07/23 17:37:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.79 2004/08/16 15:22:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -449,7 +481,8 @@ public class AppleJuiceClient {
                                   appDimension.height) / 2);
         wizardDialog.setVisible(true);
     }
-    public static void showConnectionWizard(JDialog dialog, AJSettings ajSettings) throws
+    
+    public static boolean showConnectionWizard(JDialog dialog, AJSettings ajSettings) throws
         HeadlessException {
         WizardDialog wizardDialog = new WizardDialog(dialog, true, ajSettings);
         Dimension appDimension = wizardDialog.getSize();
@@ -460,5 +493,6 @@ public class AppleJuiceClient {
                                  (screenSize.height -
                                   appDimension.height) / 2);
         wizardDialog.setVisible(true);
+        return wizardDialog.isRegularClosed();
     }
 }

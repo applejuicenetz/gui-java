@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -32,7 +34,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.14 2004/07/09 14:31:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.15 2004/08/16 15:22:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -57,6 +59,7 @@ public class WizardDialog
     private JButton weiter = new JButton();
     private JButton ende = new JButton();
     private AJSettings ajSettings;
+    private boolean regularClosed = false;
 
     public WizardDialog(Frame parent, boolean modal) {
         super(parent, modal);
@@ -72,6 +75,7 @@ public class WizardDialog
             }
         }
     }
+
     public WizardDialog(JDialog parent, boolean modal, AJSettings ajSettings) {
         super(parent, modal);
         logger = Logger.getLogger(getClass());
@@ -183,6 +187,7 @@ public class WizardDialog
         });
         ende.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
+            	regularClosed = true;
                 close();
             }
         });
@@ -203,6 +208,10 @@ public class WizardDialog
         fireLanguageChanged();
     }
 
+	public boolean isRegularClosed() {
+		return regularClosed;
+	}
+	
     private void close() {
         LanguageSelector.getInstance().removeLanguageListener(this);
         if ( ( (Schritt3Panel) schritt3).isValidNickname()) {
