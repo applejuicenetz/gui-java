@@ -15,56 +15,13 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.13 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.14 2004/06/09 11:41:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: DownloadDirectoryNode.java,v $
- * Revision 1.13  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.12  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.11  2004/02/28 14:15:02  maj0r
- * Featurerequest #254 gefixt (Danke an te_real_ZeroBANG)
- * Downloadtabelle wird jetzt beim Start standarmaessig nach Dateiname sortiert.
- *
- * Revision 1.10  2004/02/24 18:21:51  maj0r
- * Schrift korrigiert.
- *
- * Revision 1.9  2004/02/24 15:38:11  maj0r
- * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
- *
- * Revision 1.8  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.7  2004/01/12 14:53:23  maj0r
- * Muell entfernt.
- *
- * Revision 1.6  2004/01/12 14:37:26  maj0r
- * Bug #82 gefixt (Danke an hirsch.marcel)
- * Sortierung von Downloads innerhalb von Unterverzeichnissen der Downloadtabelle korrigiert.
- *
- * Revision 1.5  2004/01/12 07:23:57  maj0r
- * Wiedergabe der Tabellenwerte vom Model ins Node umgebaut.
- *
- * Revision 1.4  2004/01/08 07:47:49  maj0r
- * Schoenheitssachen.
- *
- * Revision 1.3  2003/12/30 20:52:19  maj0r
- * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
- *
- * Revision 1.2  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.1  2003/09/02 16:06:26  maj0r
- * Downloadbaum komplett umgebaut.
- *
  *
  */
 
@@ -112,8 +69,7 @@ public class DownloadDirectoryNode
     }
 
     private boolean shouldSort(DownloadDO downloadDO, List oldNodes){
-        if (downloadDO.getTargetDirectory().compareToIgnoreCase(
-            verzeichnis) == 0) {
+        if (downloadDO.getTargetDirectory().compareTo(verzeichnis) == 0) {
             boolean found = false;
             for (int i = 0; i < children.size(); i++) {
                 if ( ( (DownloadMainNode) children.get(i)).
