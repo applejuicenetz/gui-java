@@ -75,7 +75,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.103 2004/02/27 13:19:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.104 2004/02/27 15:35:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -84,6 +84,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.104  2004/02/27 15:35:55  maj0r
+ * Dialogtitel korrigiert.
+ *
  * Revision 1.103  2004/02/27 13:19:38  maj0r
  * Pruefung auf gueltigen Core eingebaut.
  * Um das zu pruefen, duerfen die Nachrichten im Startbereich erst spaeter geladen werden.
@@ -494,7 +497,7 @@ public class AppleJuiceDialog
     }
 
     private void init() throws Exception {
-        String titel = "appleJuice Client";
+        titel = "appleJuice Client (GUI " + ApplejuiceFassade.GUI_VERSION + ")";
         IconManager im = IconManager.getInstance();
         Image image = im.getIcon("applejuice").getImage();
         setTitle(titel);
@@ -1043,13 +1046,14 @@ public class AppleJuiceDialog
         }
     }
 
-    public void setTitle(String title) {
+    public void setTitle(String newTitle) {
         if (!automaticPwdlEnabled) {
-            super.setTitle(titel);
+            super.setTitle(newTitle);
         }
         else {
-            super.setTitle(titel + " - Autopilot");
+            super.setTitle(newTitle + " - Autopilot");
         }
+        titel = newTitle;
     }
 
     private void dateiListeImportieren() {
