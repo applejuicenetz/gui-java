@@ -22,7 +22,7 @@ import de.applejuicenet.client.gui.tools.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.110 2004/03/15 13:46:11 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.111 2004/03/15 18:55:01 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.111  2004/03/15 18:55:01  maj0r
+ * Windowstheme darf nur auf Windowssystemen verwendet werden.
+ *
  * Revision 1.110  2004/03/15 13:46:11  loevenwong
  * GUI neustart aufgrund fehlender property-datei verhindert.
  *
@@ -1352,7 +1355,9 @@ public class AppleJuiceDialog
         xmlData.append("        </farben>\r\n");
         xmlData.append("                <lookandfeels>\r\n");
         xmlData.append("                    <laf1 name=\"JGoodies Plastic\" value=\"com.jgoodies.plaf.plastic.Plastic3DLookAndFeel\"/>\r\n");
-        xmlData.append("                    <laf2 name=\"JGoodies Windows\" value=\"com.jgoodies.plaf.windows.ExtWindowsLookAndFeel\"/>\r\n");
+        if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
+            xmlData.append("                    <laf2 name=\"JGoodies Windows\" value=\"com.jgoodies.plaf.windows.ExtWindowsLookAndFeel\"/>\r\n");
+        }
         xmlData.append("                </lookandfeels>\r\n");
         xmlData.append(
             "        <location height=\"\" width=\"\" x=\"\" y=\"\"/>\r\n");
