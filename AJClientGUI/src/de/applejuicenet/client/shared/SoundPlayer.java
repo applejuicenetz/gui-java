@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import javax.sound.sampled.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.4 2003/11/05 11:01:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.5 2003/12/18 12:50:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,10 @@ import javax.sound.sampled.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SoundPlayer.java,v $
+ * Revision 1.5  2003/12/18 12:50:53  maj0r
+ * Bug bei der Wiedergabe von Sounds korrigiert (Danke an mrbond).
+ * Sounddevice wird nun nach Ausgabe eines Sounds wieder freigegeben.
+ *
  * Revision 1.4  2003/11/05 11:01:35  maj0r
  * Fehler bei der Soundausgabe bei fehlerhaften Sounddateien (z.B. falsches Format) oder fehlendem Sounddevice behoben.
  *
@@ -121,10 +125,24 @@ public class SoundPlayer {
                     logger.error("SoundPlayer::playSound() ungueltiger Parameter: " + sound);
                 }
             }
-            Clip soundToPlay = loadSound(soundFile);
-            if (soundToPlay!=null){
-                soundToPlay.start();
-            }
+            final Clip soundToPlay = loadSound(soundFile);
+            new Thread(){
+                public void run(){
+                    if (soundToPlay!=null){
+                        soundToPlay.start();
+                        while (soundToPlay.isRunning()){
+                            try {
+                                sleep(50);
+                            }
+                            catch (InterruptedException ex) {
+                                soundToPlay.stop();
+                                interrupt();
+                            }
+                        }
+                        soundToPlay.stop();
+                    }
+                }
+            }.start();
         }
         catch(Exception e)
         {
