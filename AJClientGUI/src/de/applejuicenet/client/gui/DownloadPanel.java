@@ -61,7 +61,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.JCheckBoxMenuItem;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.83 2004/01/12 07:26:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.84 2004/01/12 13:09:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -70,6 +70,10 @@ import javax.swing.JCheckBoxMenuItem;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.84  2004/01/12 13:09:11  maj0r
+ * Bug #77 gefixt (Danke an spam_blocker)
+ * Selektionsproblem der Downloadtabelle beim Entfernen von fertigen Downloads behoben.
+ *
  * Revision 1.83  2004/01/12 07:26:32  maj0r
  * Tabellenspalte nun ueber Headerkontextmenue ein/ausblendbar.
  * Auf JSplitPane umgebaut.
@@ -577,6 +581,10 @@ public class DownloadPanel
         item6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 ApplejuiceFassade.getInstance().cleanDownloadList();
+                downloadDOOverviewPanel.enableHoleListButton(false);
+                powerDownloadPanel.btnPdl.setEnabled(false);
+                powerDownloadPanel.setPwdlValue(0);
+                downloadTable.getSelectionModel().clearSelection();
             }
         });
 
