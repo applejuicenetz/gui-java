@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.38 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.39 2004/02/12 18:32:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -61,6 +61,10 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.39  2004/02/12 18:32:40  maj0r
+ * Bug #195 gefixt (Danke an supermuhkuh)
+ * Bug bei Pwdl-Einstellung korrigiert.
+ *
  * Revision 1.38  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -427,11 +431,13 @@ public class PowerDownloadPanel
     public void setPwdlValue(int pwdlValue) {
         if (pwdlValue < 12) {
             ratio.setText("2.2");
+            ratioWert = 2.2f;
             btnInaktiv.setSelected(true);
         }
         else {
             float wert = (float) ( (float) (pwdlValue + 10) / 10);
             ratio.setText(Float.toString(wert));
+            ratioWert = wert;
             btnAktiv.setSelected(true);
         }
     }
