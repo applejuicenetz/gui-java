@@ -32,7 +32,7 @@ import java.net.URLEncoder;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.48 2003/12/18 14:24:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.49 2003/12/19 09:54:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.49  2003/12/19 09:54:14  maj0r
+ * Bug der Tableheader der Share- und der Uploadtabelle behoben (Danke an muhviestarr).
+ *
  * Revision 1.48  2003/12/18 14:24:24  maj0r
  * Leerzeichen bekommen bei UBB-Code nun eine Sonderbehandlung.
  *
@@ -514,7 +517,6 @@ public class SharePanel
         panelCenter.add(panel1, BorderLayout.NORTH);
         JScrollPane scrollPane = new JScrollPane(shareTable);
         scrollPane.setBackground(shareTable.getBackground());
-        shareTable.getTableHeader().setBackground(shareTable.getBackground());
         scrollPane.getViewport().setOpaque(false);
 
         panelCenter.add(scrollPane, BorderLayout.CENTER);
