@@ -1,19 +1,23 @@
 package de.applejuicenet.client.gui.plugins;
 
-import javax.swing.ImageIcon;
-import java.util.HashMap;
 import java.awt.BorderLayout;
-import java.io.File;
 
 import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
 
 /**
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: ajIRC-Plugin</p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author Maj0r
- * @version 1.0
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.4 2003/10/27 14:10:07 maj0r Exp $
+ *
+ * <p>Titel: AppleJuice Client-GUI</p>
+ * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: open-source</p>
+ *
+ * @author: Maj0r <aj@tkl-soft.de>
+ *
+ * $Log: IrcPlugin.java,v $
+ * Revision 1.4  2003/10/27 14:10:07  maj0r
+ * Header eingefuegt.
+ *
+ *
  */
 
 public class IrcPlugin extends PluginConnector {
