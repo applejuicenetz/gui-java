@@ -84,7 +84,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import java.util.StringTokenizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.116 2004/05/03 14:16:39 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.117 2004/05/03 14:40:02 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -1341,9 +1341,9 @@ public class AppleJuiceDialog
                             versionInternet[i] = token1.nextToken();
                             aktuelleVersion[i] = token2.nextToken();
                         }
-                        if (!versionInternet[0].equals(aktuelleVersion[0]) ||
-                            !versionInternet[1].equals(aktuelleVersion[1]) ||
-                            !versionInternet[2].equals(aktuelleVersion[2])) {
+                        if ((versionInternet[0].compareTo(aktuelleVersion[0]) > 0) ||
+                            (versionInternet[1].compareTo(aktuelleVersion[1]) > 0) ||
+                            (versionInternet[2].compareTo(aktuelleVersion[2]) > 0)) {
                             int pos2 = downloadData.lastIndexOf("|");
                             String winLink = downloadData.substring(pos1 +
                                 1, pos2);
