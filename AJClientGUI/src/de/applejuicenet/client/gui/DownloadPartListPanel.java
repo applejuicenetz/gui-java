@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.15 2004/02/12 16:36:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.16 2004/02/12 18:18:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.16  2004/02/12 18:18:32  maj0r
+ * Zeichnen des letzten Parts korrigiert.
+ *
  * Revision 1.15  2004/02/12 16:36:58  maj0r
  * Anzeige der Teile, die zurzeit uebertragen werden (weiss bis dunkelgelb).
  *
@@ -113,10 +116,11 @@ public class DownloadPartListPanel
                 int breite = 0;
                 Part[] parts = partListDO.getParts();
                 for (int i=0; i<parts.length-1; i++){
-                    drawPart((partListDO.getPartListType()==PartListDO.MAIN_PARTLIST), graphics, pixelSize, parts[i].getType(), zeilenHoehe,
+                    drawPart(false, (partListDO.getPartListType()==PartListDO.MAIN_PARTLIST),
+                             graphics, pixelSize, parts[i].getType(), zeilenHoehe,
                                          parts[i].getFromPosition(), parts[i+1].getFromPosition());
                 }
-                drawPart( (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST), graphics, pixelSize,
+                drawPart(true, (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST), graphics, pixelSize,
                          parts[parts.length - 1].getType(), zeilenHoehe, parts[parts.length - 1].getFromPosition(),
                          partListDO.getGroesse());
                 if (partListDO.getPartListType()==PartListDO.MAIN_PARTLIST){
@@ -130,7 +134,7 @@ public class DownloadPartListPanel
                                     pixelSize;
                                 breite = (sources[i].getDownloadTo() /
                                     pixelSize) - obenLinks;
-                                graphics.setColor(getColorByProcent(sources[i].getReadyPercent()));
+                                graphics.setColor(getColorByPercent(sources[i].getReadyPercent()));
                                 graphics.fillRect(obenLinks, 0,
                                                   breite, zeilenHoehe);
                             }
@@ -144,7 +148,7 @@ public class DownloadPartListPanel
                             pixelSize;
                         breite = (downloadSourceDO.getDownloadTo() /
                             pixelSize) - obenLinks;
-                        graphics.setColor(getColorByProcent(downloadSourceDO.getReadyPercent()));
+                        graphics.setColor(getColorByPercent(downloadSourceDO.getReadyPercent()));
                         graphics.fillRect(obenLinks, 0,
                                           breite, zeilenHoehe);
                     }
@@ -167,11 +171,12 @@ public class DownloadPartListPanel
         }
     }
 
-    private void drawPart(boolean isMainList, Graphics graphics, int pixelSize, int partType, int zeilenHoehe, long currentFrom, long nextFrom){
+    private void drawPart(boolean forceDraw, boolean isMainList, Graphics graphics, int pixelSize, int partType,
+                          int zeilenHoehe, long currentFrom, long nextFrom){
         int obenLinks = 0;
         int breite = 0;
         if (isMainList){
-            if (partType == -1) {
+            if (partType == -1 && !forceDraw) {
                 if (fertigSeit != -1) {
                     return;
                 }
@@ -190,7 +195,12 @@ public class DownloadPartListPanel
                     obenLinks += breite;
                     breite = (int) (currentFrom / pixelSize) -
                         obenLinks;
-                    graphics.setColor(PartListDO.COLOR_TYPE_OK);
+                    if (partType == -1){
+                        graphics.setColor(PartListDO.COLOR_TYPE_UEBERPRUEFT);
+                    }
+                    else{
+                        graphics.setColor(PartListDO.COLOR_TYPE_OK);
+                    }
                     graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
                     obenLinks = (int) currentFrom / pixelSize;
                     breite = (int) (nextFrom / pixelSize) -
@@ -247,7 +257,7 @@ public class DownloadPartListPanel
         }
     }
 
-    private Color getColorByProcent(double percent){
+    private Color getColorByPercent(double percent){
         if (percent<10){
             return PartListDO.COLOR_READY_10;
         }
