@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.24 2003/08/21 15:13:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.25 2003/08/22 10:03:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.25  2003/08/22 10:03:11  maj0r
+ * Threadverwendung korrigiert.
+ *
  * Revision 1.24  2003/08/21 15:13:29  maj0r
  * Auf Thread umgebaut.
  *
@@ -104,22 +107,18 @@ public class ModifiedXMLHolder
     }
 
     public HashMap getServer() {
-        //updateServer();
         return serverMap;
     }
 
     public HashMap getUploads() {
-        updateUploads();
         return uploadMap;
     }
 
     public HashMap getDownloads() {
-        updateDownloads();
         return downloadMap;
     }
 
     public NetworkInfo getNetworkInfo() {
-        updateNetworkInfo();
         return netInfo;
     }
 

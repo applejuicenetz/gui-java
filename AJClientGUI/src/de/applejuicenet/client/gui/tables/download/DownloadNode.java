@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.9 2003/08/16 17:50:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.10 2003/08/22 10:03:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadNode.java,v $
+ * Revision 1.10  2003/08/22 10:03:11  maj0r
+ * Threadverwendung korrigiert.
+ *
  * Revision 1.9  2003/08/16 17:50:42  maj0r
  * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
  * DownloaduebersichtTabelle kann deaktiviert werden.
@@ -123,12 +126,11 @@ public class DownloadNode implements Node {
                 //Werte werden per Referenz automatisch aktualisiert
             }
         }
-
     }
   }
 
   public static void clearOldNodes(){
-      ArrayList toRemove = new ArrayList();
+/*      ArrayList toRemove = new ArrayList();
       Iterator it = directoryNodes.values().iterator();
       MapSetStringKey key = null;
       HashMap downloads = ApplejuiceFassade.getInstance().getDownloads();
@@ -146,7 +148,7 @@ public class DownloadNode implements Node {
       for (int i=0; i<size; i++){
           directoryNodes.remove(toRemove.get(i));
       }
-
+              */
       //(DownloadNode)directoryNodes.get(new MapSetStringKey(downloadDO.getId()));
   }
 

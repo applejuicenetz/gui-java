@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.7 2003/08/21 15:13:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.8 2003/08/22 10:03:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.8  2003/08/22 10:03:11  maj0r
+ * Threadverwendung korrigiert.
+ *
  * Revision 1.7  2003/08/21 15:13:29  maj0r
  * Auf Thread umgebaut.
  *
@@ -273,11 +276,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         catch (UnsupportedEncodingException ex1)
         {
         }
-        String result;
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-            result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                   "/function/setsettings?password=" + password + "&" + parameters);
         }
         catch (WebSiteNotFoundException ex)
@@ -311,16 +313,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public boolean resumeDownload(String id) {
-        HashMap downloads = getDownloads();
-        String result;
-        DownloadDO downloadDO = (DownloadDO) downloads.get(new MapSetStringKey(id));
-        if (downloadDO == null)
-            return false;
-        logger.info("Resume '" + downloadDO.getFilename() + "'...");
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-            result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/resumedownload?password=" + password + "&id=" + id);
         }
         catch (WebSiteNotFoundException ex)
@@ -346,16 +342,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public boolean cancelDownload(String id) {
-        HashMap downloads = getDownloads();
-        String result;
-        DownloadDO downloadDO = (DownloadDO) downloads.get(new MapSetStringKey(id));
-        if (downloadDO == null)
-            return false;
-        logger.info("Cancel '" + downloadDO.getFilename() + "'...");
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-            result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/canceldownload?password=" + password + "&id=" + id);
         }
         catch (WebSiteNotFoundException ex)
@@ -367,11 +357,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
 
     public boolean cleanDownloadList() {
         logger.info("Clear list...");
-        String result;
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-            result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/cleandownloadlist?password=" + password);
         }
         catch (WebSiteNotFoundException ex)
@@ -382,16 +371,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public boolean pauseDownload(String id) {
-        HashMap downloads = getDownloads();
-        String result;
-        DownloadDO downloadDO = (DownloadDO) downloads.get(new MapSetStringKey(id));
-        if (downloadDO == null)
-            return false;
-        logger.info("Pause '" + downloadDO.getFilename() + "'...");
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-            result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                   "/function/pausedownload?password=" + password + "&id=" + id);
         }
         catch (WebSiteNotFoundException ex)
@@ -402,57 +385,31 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public boolean connectToServer(int id) {
-        HashMap server = getAllServer();
-        String id_key = Integer.toString(id);
-        ServerDO serverDO = (ServerDO) server.get(new MapSetStringKey(id_key));
-        if (serverDO == null)
+        try
         {
-            System.out.print("Warnung: Server mit ID: " + id_key + " nicht gefunden!");
+            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+                                                  "/function/serverlogin?password=" + password + "&id=" + id);
+        }
+        catch (WebSiteNotFoundException ex)
+        {
             return false;
         }
-        else
-        {
-            String result;
-            logger.info("Verbinde mit '" + serverDO.getName() + "'...");
-            try
-            {
-                String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-                result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                      "/function/serverlogin?password=" + password + "&id=" + id);
-            }
-            catch (WebSiteNotFoundException ex)
-            {
-                return false;
-            }
-            return true;
-        }
+        return true;
     }
 
     public boolean entferneServer(int id) {
-        HashMap server = getAllServer();
-        String id_key = Integer.toString(id);
-        ServerDO serverDO = (ServerDO) server.get(new MapSetStringKey(id_key));
-        if (serverDO == null)
+        try
         {
-            System.out.print("Warnung: Server mit ID: " + id_key + " nicht gefunden!");
+            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+                                                  "/function/removeserver?password=" + password + "&id=" + id);
+        }
+        catch (WebSiteNotFoundException ex)
+        {
             return false;
         }
-        else
-        {
-            String result;
-            logger.info("Entferne '" + serverDO.getName() + "'...");
-            try
-            {
-                String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-                result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                      "/function/removeserver?password=" + password + "&id=" + id);
-            }
-            catch (WebSiteNotFoundException ex)
-            {
-                return false;
-            }
-            return true;
-        }
+        return true;
     }
 
     public boolean setPrioritaet(int id, int prioritaet) {
@@ -461,29 +418,17 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             System.out.print("Warnung: Prioritaet muss 1<= x <=250 sein!");
             return false;
         }
-        String id_key = Integer.toString(id);
-        ShareDO shareDO = (ShareDO) share.get(new MapSetStringKey(id_key));
-        if (shareDO == null)
+        try
         {
-            System.out.print("Warnung: Share mit ID: " + id_key + " nicht gefunden!");
+            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                  "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet);
+        }
+        catch (WebSiteNotFoundException ex)
+        {
             return false;
         }
-        else
-        {
-            String result;
-            logger.info("Setze '" + shareDO.getShortfilename() + "' auf Prioritaet " + prioritaet + "...");
-            try
-            {
-                String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-                result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                      "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet);
-            }
-            catch (WebSiteNotFoundException ex)
-            {
-                return false;
-            }
-            return true;
-        }
+        return true;
     }
 
     public boolean processLink(String link) {
@@ -492,12 +437,11 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             System.out.print("Warnung: Ungueltiger Link uebergeben!");
             return false;
         }
-        String result;
         logger.info("Downloade '" + link + "...");
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-            result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                   "/function/processlink?password=" + password + "&link=" + link);
         }
         catch (WebSiteNotFoundException ex)
@@ -513,30 +457,17 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             System.out.print("Warnung: PowerDownload muss 0<= x <=490 sein!");
             return false;
         }
-        HashMap download = getDownloads();
-        String id_key = Integer.toString(id);
-        DownloadDO downloadDO = (DownloadDO) download.get(new MapSetStringKey(id_key));
-        if (downloadDO == null)
+        try
         {
-            System.out.print("Warnung: Download mit ID: " + id_key + " nicht gefunden!");
+            String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                                  "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload);
+        }
+        catch (WebSiteNotFoundException ex)
+        {
             return false;
         }
-        else
-        {
-            String result;
-            logger.info("Setze '" + downloadDO.getFilename() + "' auf PowerDownload " + powerDownload + "...");
-            try
-            {
-                String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-                result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                      "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload);
-            }
-            catch (WebSiteNotFoundException ex)
-            {
-                return false;
-            }
-            return true;
-        }
+        return true;
     }
 
     private static String getHost() {
@@ -552,7 +483,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-            String testData = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                                            "/xml/information.xml?password=" + password);
         }
         catch (WebSiteNotFoundException ex)
@@ -661,14 +592,6 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             default:
                 break;
         }
-    }
-
-    public HashMap getDownloads() {
-        return modifiedXML.getDownloads();
-    }
-
-    public HashMap getUploads() {
-        return modifiedXML.getUploads();
     }
 
     public HashMap getShare(boolean reinit) {
