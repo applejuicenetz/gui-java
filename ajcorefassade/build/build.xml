@@ -6,6 +6,14 @@
    <property name="srcdir"      location="${basedir}/src"/>
    <property name="compiledir"  location="${basedir}/classes"/>
 
+   <property name="xercesImpl.jar"            location="${basedir}/../AJClientGUI/tools/xercesImpl.jar"/>
+   <property name="xml-apis.jar"            location="${basedir}/../AJClientGUI/tools/xml-apis.jar"/>
+   
+   <path id="lib.path">
+      <pathelement location="${xercesImpl.jar}"/>
+      <pathelement location="${xml-apis.jar}"/>
+   </path>
+   
    <!-- remove class files, DavaDoc files and test results ... -->
    <target name="clean" description="deletes class files">
       <delete includeEmptyDirs="true">
@@ -21,6 +29,9 @@
       <javac srcdir="${srcdir}" 
       		destdir="${compiledir}" 
       		debug="true">      	
+         <classpath>
+          <path refid="lib.path"/>
+         </classpath>
       </javac>
    </target>
 
