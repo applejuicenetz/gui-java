@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Splash.java,v 1.10 2004/11/22 16:25:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Splash.java,v 1.11 2004/12/08 21:14:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.util.Properties;
+
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -63,7 +65,21 @@ public class Splash
         g.drawImage(image, 0, 0, this);
         JLabel label = new JLabel(new ImageIcon(back));
         label.setBounds(0, 0, w, h);
-        progress.setBounds(160, 61, 180, 15);
+        try{
+            Properties props = IconManager.getInstance().getIconProperties("splashscreen");
+        	int x = Integer.parseInt(props.getProperty("x"));
+            int y = Integer.parseInt(props.getProperty("y"));
+            int width = Integer.parseInt(props.getProperty("width"));
+            int height = Integer.parseInt(props.getProperty("height"));
+            if (x <= 0  || y <= 0 || width <=1 || height <= 1
+                    || x+width >= w || y+height >= h){
+                throw new Exception();
+            }
+            progress.setBounds(x, y, width, height);
+        }
+        catch(Exception e){
+            progress.setBounds(160, 61, 180, 15);
+        }
         JLayeredPane panel = new JLayeredPane();
         panel.add(progress, JLayeredPane.DEFAULT_LAYER);
         panel.add(label, JLayeredPane.DEFAULT_LAYER);

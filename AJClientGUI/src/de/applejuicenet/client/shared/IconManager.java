@@ -3,8 +3,10 @@ package de.applejuicenet.client.shared;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 
@@ -12,7 +14,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.14 2004/12/06 08:05:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.15 2004/12/08 21:14:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,11 +26,12 @@ import org.apache.log4j.Logger;
 
 public class IconManager {
     private static IconManager instance = null;
+    private final Logger logger;
     private Map icons;
-    private static Logger logger;
     private String pluginPath;
     
     private IconManager() {
+        logger = Logger.getLogger(getClass());
         icons = new HashMap();
         if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1) {
             pluginPath = System.getProperty("user.home") + File.separator +
@@ -44,7 +47,6 @@ public class IconManager {
     public static IconManager getInstance() {
         if (instance == null) {
             instance = new IconManager();
-            logger = Logger.getLogger(instance.getClass());
         }
         return instance;
     }
@@ -95,5 +97,23 @@ public class IconManager {
             }
         }
         return result;
+    }
+    
+    public Properties getIconProperties(String identifier){
+        String path = System.getProperty("user.dir") + File.separator +
+        "icons" + File.separator + identifier + ".properties";
+        File aFile = new File(path);
+        if (aFile.isFile()){
+            Properties props = new Properties();
+            try {
+                props.load(new FileInputStream(aFile));
+            } catch (Exception e) {
+                return null;
+            }
+            return props;
+        }
+        else{
+            return null;
+        }
     }
 }
