@@ -27,7 +27,7 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.32 2004/02/20 14:55:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.33 2004/02/22 08:36:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +36,10 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.33  2004/02/22 08:36:59  maj0r
+ * Bug #235 gefixt (Danke an uselessplayer)
+ * Passwortfeld im Logindialog funktioniert wieder ordentlich.
+ *
  * Revision 1.32  2004/02/20 14:55:02  maj0r
  * Speicheroptimierungen.
  *
@@ -754,7 +758,12 @@ public class PropertiesManager
                 "options", "remote",
                 "port"}));
             connectionSettings.setHost(host);
-            connectionSettings.setOldMD5Password(passwort);
+            if (passwort.length()==0){
+                connectionSettings.setOldPassword("");
+            }
+            else{
+                connectionSettings.setOldMD5Password(passwort);
+            }
             connectionSettings.setXmlPort(xmlPort);
             return connectionSettings;
         }
