@@ -28,9 +28,11 @@ import java.awt.event.*;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import java.net.URLEncoder;
+import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.46 2003/12/17 11:39:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.47 2003/12/18 13:26:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +41,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.47  2003/12/18 13:26:51  maj0r
+ * Es kann nun der Link einer gesharten Datei über das Popupmenue der Sharetabelle als UBB-Code in die Ablage kopiert werden.
+ *
  * Revision 1.46  2003/12/17 11:39:45  maj0r
  * Initialen Aufruf des Sharetabs durch einen Initialisierungsthread beschleunigt.
  * Muell entfernt.
@@ -93,7 +98,7 @@ import org.apache.log4j.Level;
  *
  * Revision 1.29  2003/08/27 11:19:30  maj0r
  * Prioritaet setzen und aufheben vollstaendig implementiert.
- * Button fï¿½r 'Share erneuern' eingefuehrt.
+ * Button fuer 'Share erneuern' eingefuehrt.
  *
  * Revision 1.28  2003/08/26 19:46:34  maj0r
  * Sharebereich weiter vervollstaendigt.
@@ -139,22 +144,22 @@ import org.apache.log4j.Level;
  * An neue Schnittstelle angepasst.
  *
  * Revision 1.14  2003/07/04 11:32:18  maj0r
- * Anzeige der Anzahl der Dateien und Gesamtgï¿½ï¿½e des Shares hinzugefï¿½gt.
+ * Anzeige der Anzahl der Dateien und Gesamtgroessee des Shares hinzugefuegt.
  *
  * Revision 1.13  2003/07/02 13:54:34  maj0r
- * JTreeTable komplett ï¿½berarbeitet.
+ * JTreeTable komplett ueberarbeitet.
  *
  * Revision 1.12  2003/07/01 18:41:39  maj0r
- * Struktur verï¿½ndert.
+ * Struktur veraendert.
  *
  * Revision 1.11  2003/07/01 18:33:53  maj0r
  * Sprachauswahl eingearbeitet.
  *
  * Revision 1.10  2003/06/22 19:01:55  maj0r
- * Laden des Shares nun erst nach Betï¿½tigen des Buttons "Erneut laden".
+ * Laden des Shares nun erst nach Betaetigen des Buttons "Erneut laden".
  *
  * Revision 1.9  2003/06/10 12:31:03  maj0r
- * Historie eingefï¿½gt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -195,6 +200,7 @@ public class SharePanel
 
     private JPopupMenu popup2 = new JPopupMenu();
     private JMenuItem itemCopyToClipboard = new JMenuItem();
+    private JMenuItem itemCopyToClipboardAsUBBCode = new JMenuItem();
 
     private int anzahlDateien = 0;
     private String dateiGroesse = "0 MB";
@@ -220,6 +226,7 @@ public class SharePanel
 
     private void init() throws Exception {
         popup2.add(itemCopyToClipboard);
+        popup2.add(itemCopyToClipboardAsUBBCode);
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));
         folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
         itemCopyToClipboard.addActionListener(new ActionListener() {
@@ -231,6 +238,29 @@ public class SharePanel
                     StringBuffer toCopy = new StringBuffer();
                     toCopy.append("ajfsp://file|");
                     toCopy.append(shareDO.getShortfilename() + "|" + shareDO.getCheckSum() + "|" + shareDO.getSize() + "/");
+                    StringSelection contents = new StringSelection(toCopy.toString());
+                    cb.setContents(contents, null);
+                }
+            }
+        });
+        itemCopyToClipboardAsUBBCode.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                Object[] obj = shareTable.getSelectedItems();
+                if (((ShareNode)obj[0]).isLeaf()){
+                    ShareDO shareDO = ((ShareNode)obj[0]).getDO();
+                    Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    StringBuffer toCopy = new StringBuffer();
+                    String encodedFilename = "";
+                    try {
+                        encodedFilename = URLEncoder.encode(shareDO.
+                            getShortfilename(), "ISO-8859-1");
+                    }
+                    catch (UnsupportedEncodingException ex) {
+                        //gibbet, also nix zu behandeln...
+                    }
+                    toCopy.append("[URL=ajfsp://file|");
+                    toCopy.append(encodedFilename + "|" + shareDO.getCheckSum() + "|" + shareDO.getSize());
+                    toCopy.append("/]" + shareDO.getShortfilename() + "[/URL]");
                     StringSelection contents = new StringSelection(toCopy.toString());
                     cb.setContents(contents, null);
                 }
@@ -634,6 +664,9 @@ public class SharePanel
             itemCopyToClipboard.setText(ZeichenErsetzer.korrigiereUmlaute(
                     languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
                                                                             "getlink1", "caption"})));
+            itemCopyToClipboardAsUBBCode.setText(ZeichenErsetzer.korrigiereUmlaute(
+                    languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui",
+                                                                            "shareform", "linkalsubbcode"})));
             refresh.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "startsharecheck",
                                                                                                      "caption"})));
