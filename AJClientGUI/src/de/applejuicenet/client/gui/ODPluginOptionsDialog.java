@@ -13,9 +13,11 @@ import java.awt.FlowLayout;
 import javax.swing.JPanel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginOptionsDialog.java,v 1.2 2004/01/04 10:31:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginOptionsDialog.java,v 1.3 2004/01/05 13:21:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +26,9 @@ import java.awt.event.ActionEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginOptionsDialog.java,v $
+ * Revision 1.3  2004/01/05 13:21:32  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.2  2004/01/04 10:31:43  maj0r
  * PluginOptionenDialog ueberarbeitet.
  *
@@ -37,11 +42,20 @@ import java.awt.event.ActionEvent;
 public class ODPluginOptionsDialog extends JDialog{
     private PluginConnector pluginConnector;
     private JButton schliessen = new JButton();
+    private Logger logger;
 
     public ODPluginOptionsDialog(JDialog parent, PluginConnector pluginConnector) {
         super(parent, true);
         this.pluginConnector = pluginConnector;
-        init();
+        logger = Logger.getLogger(getClass());
+        try{
+            init();
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
+            }
+        }
     }
 
     private void init(){
