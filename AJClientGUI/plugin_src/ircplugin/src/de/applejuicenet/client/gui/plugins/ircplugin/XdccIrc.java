@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.2 2003/10/27 14:08:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.3 2003/10/27 14:48:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import de.applejuicenet.client.shared.SwingWorker;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: XdccIrc.java,v $
+ * Revision 1.3  2003/10/27 14:48:36  maj0r
+ * Bug #833 fixed (Danke an plutoman2):
+ * Threadverwendung korrigiert.
+ *
  * Revision 1.2  2003/10/27 14:08:39  maj0r
  * Bug #1030 fixed (Danke an plutoman2):
  * Nullpointer behoben.
@@ -50,7 +54,7 @@ public class XdccIrc
     private JButton editButton;
     private JButton removeButton;
 
-    boolean interrupted;
+    private Thread ircWorker;
 
     String host = "localhost";
     int port = 6667;
@@ -426,57 +430,51 @@ public class XdccIrc
     }
 
     public void start() { //synchronized void start()
-        interrupted = false;
-        final SwingWorker worker = new SwingWorker() {
-                    public Object construct() {
-                        try
+        ircWorker = new Thread() {
+            public void run() {
+                try
+                {
+                    while (!isInterrupted())
+                    {
+                        String line = fromServer.readLine();
+                        if (line != null)
                         {
-                            while (!interrupted)
+                            parseFromServer(line);
+                        }
+                        else
+                        {
+                            // a null line indicates that our server has
+                            // closed the connection, right?
+                            tabUpdate("Init Window",
+                                      "READ a null line, server closed the connection or network is fucked.");
+                            closeAll();
+
+                            try
                             {
-                                String line = fromServer.readLine();
-                                if (line != null)
-                                {
-                                    parseFromServer(line);
-                                }
-                                else
-                                {
-                                    interrupted = true;
-                                    // a null line indicates that our server has
-                                    // closed the connection, right?
-                                    tabUpdate("Init Window",
-                                              "READ a null line, server closed the connection or network is fucked.");
-                                    closeAll();
-
-                                    try
-                                    {
-                                        wait(5000);
-                                    }
-                                    catch (InterruptedException e)
-                                    {
-                                        e.printStackTrace();  //To change body of catch statement use Options | File Templates.
-                                    }
-                                }
+                                sleep(5000);
+                            }
+                            catch (InterruptedException e)
+                            {
+                                interrupt();
                             }
                         }
-
-                        catch (IOException e)
-                        {
-                            System.out.println(
-                                    "Read Exception from Server. Exception is something like:");
-                            System.out.println(e);
-                        }
-                        return null;
                     }
+                }
 
-                    public void finished() {
-                        SwingUtilities.invokeLater(new Runnable(){
-                            public void run(){
-                                connectStartRegister();
-                            }
-                        });
+                catch (IOException e)
+                {
+                    System.out.println(
+                            "Read Exception from Server. Exception is something like:");
+                    System.out.println(e);
+                }
+                SwingUtilities.invokeLater(new Runnable(){
+                    public void run(){
+                        connectStartRegister();
                     }
-                };
-        worker.start();
+                });
+            }
+        };
+        ircWorker.start();
     }
 
     // Close everything and sleeps for few seconds
@@ -1019,7 +1017,7 @@ public class XdccIrc
 
         else if (command.equals("333"))
         { // RPL_UNAWAY
-            System.out.println(lineFromServer + " --> Channel SYNCH time ??????");
+            System.out.println(lineFromServer);
         }
 
 // used or not ???????
