@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.17 2003/06/24 14:32:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.18 2003/07/01 14:53:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.18  2003/07/01 14:53:12  maj0r
+ * Unnützen Krimskram entfernt.
+ *
  * Revision 1.17  2003/06/24 14:32:27  maj0r
  * Klassen zum Sortieren von Tabellen eingefügt.
  * Servertabelle kann nun spaltenweise sortiert werden.
@@ -82,9 +85,7 @@ public class RegisterPanel
     ImageIcon icon5 = im.getIcon("server");
     addTab("Server", icon5, serverPanel);
 
-    System.out.println("langsam 1,1");
     loadPlugins();
-    System.out.println("langsam 1,2");
   }
 
   private void loadPlugins() {
@@ -96,17 +97,13 @@ public class RegisterPanel
       return;
     }
     String[] tempListe = pluginPath.list();
+    PluginJarClassLoader jarLoader = null;
     for (int i = 0; i < tempListe.length; i++) {
       if (tempListe[i].indexOf(".jar") != -1) {
         URL url = null;
         try {
           url = new URL("file://" + path + tempListe[i]);
-        }
-        catch (MalformedURLException ex) {
-          continue;
-        }
-        try {
-          PluginJarClassLoader jarLoader = new PluginJarClassLoader(url);
+          jarLoader = new PluginJarClassLoader(url);
           PluginConnector aPlugin = jarLoader.getPlugin();
           if (aPlugin != null) {
             if (aPlugin.istReiter()) {
@@ -119,6 +116,7 @@ public class RegisterPanel
         catch (Exception e) {
           //Von einem Plugin lassen wir uns nicht beirren! ;-)
           e.printStackTrace();
+          continue;
         }
       }
     }
