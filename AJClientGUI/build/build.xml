@@ -60,13 +60,14 @@
    <target name="create-jar" depends="gui-compile" description="builds appleJuice-jar">
 	<pack classes="de.applejuicenet.client.AppleJuiceClient"
 	      targetJar="${basedir}/AJCoreGUI.jar" 
+	      excludePkg="java,javax,sun,com.l2fprod,com.sixlegs" 
+	      manifestClassPath="./needed_jars/skinlf.jar"
 	      manifestMainClass="de.applejuicenet.client.AppleJuiceClient">
            <classpath>
            	<pathelement path="${gui.compiledir}"/>
            	<path refid="lib.path"/>
            </classpath>
-           <additionalfileset dir="${gui.compiledir}" excludes="**/*.txt **/*.class **/*.dep2">
-           </additionalfileset>
+           <additionalfileset dir="${gui.compiledir}" excludes="**/*.txt **/*.class **/*.dep2"/>
 	</pack>
    </target>
 
@@ -80,6 +81,7 @@
 		<fileset dir="${basedir}" includes="**/plugins/*.jar **/plugins/*.txt"/>
 		<fileset dir="${basedir}" includes="**/themes/*.zip **/themes/*.first"/>
 		<fileset dir="${basedir}" includes="**/sounds/*.wav **/sounds/*.first"/>
+		<fileset dir="${basedir}" includes="**/needed_jars/*.jar"/>
          </jar>
    </target>
 
@@ -87,11 +89,11 @@
       <delete includeEmptyDirs="true">
          <fileset dir="${basedir}/plugins" casesensitive="false">
             <include name="**/SpeedGraphPlugin.jar"/>
-            </fileset>
+         </fileset>
       </delete>
 	<jar destfile="${basedir}/plugins/SpeedGraphPlugin.jar">
 		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*" 
-							  excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+							  		excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
          </jar>
    </target>
 
