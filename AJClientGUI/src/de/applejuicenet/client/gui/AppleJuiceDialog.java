@@ -80,6 +80,7 @@ import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.LookAFeel;
+import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
@@ -195,6 +196,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	private Icon versteckenIcon = null;
 
 	private Icon zeigenIcon = null;
+	
+	private boolean firewalled = false;
 
 	private static AppleJuiceDialog theApp;
 
@@ -503,6 +506,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		fireLanguageChanged();
 		ApplejuiceFassade dm = ApplejuiceFassade.getInstance();
 		dm.addDataUpdateListener(this, DataUpdateListener.INFORMATION_CHANGED);
+		dm.addDataUpdateListener(this, DataUpdateListener.NETINFO_CHANGED);
 		dm.startXMLCheck();
 	}
 
@@ -1053,7 +1057,29 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	}
 
 	public void fireContentChanged(int type, final Object content) {
-		if (type == DataUpdateListener.INFORMATION_CHANGED) {
+		if (type == DataUpdateListener.NETINFO_CHANGED) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						NetworkInfo netInfo = (NetworkInfo) content;
+						if (netInfo.isFirewalled() != firewalled) {
+							firewalled = !firewalled;
+							if (firewalled){
+								statusbar[0].setIcon(IconManager.getInstance().getIcon("firewall"));
+							}
+							else{
+								statusbar[0].setIcon(null);
+							}
+						}
+					} catch (Exception e) {
+						if (logger.isEnabledFor(Level.ERROR)) {
+							logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+						}
+					}
+				}
+			});
+		}
+		else if (type == DataUpdateListener.INFORMATION_CHANGED) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {
