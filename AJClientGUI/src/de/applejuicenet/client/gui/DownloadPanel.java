@@ -105,8 +105,7 @@ public class DownloadPanel extends JPanel {
     tempPanel2.add(actualDlOverviewTable, BorderLayout.CENTER);
     bottomPanel.add(tempPanel2, BorderLayout.CENTER);
 
-    JSplitPane splitpane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel,
-                                          bottomPanel);
-    add(splitpane, BorderLayout.CENTER);
+    add(topPanel, BorderLayout.CENTER);
+    add(bottomPanel, BorderLayout.SOUTH);
   }
 }
