@@ -4,7 +4,7 @@ import java.text.*;
 import java.util.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.9 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.10 2004/01/24 09:46:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.util.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerDO.java,v $
+ * Revision 1.10  2004/01/24 09:46:40  maj0r
+ * An neue Doku angepasst.
+ *
  * Revision 1.9  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -37,14 +40,16 @@ public class ServerDO {
     private String name;
     private String port;
     private long timeLastSeen;
+    private int versuche;
     private boolean connected = false;
     private boolean tryConnect = false;
 
-    public ServerDO(int id, String name, String host, String port, long lastSeen) {
+    public ServerDO(int id, String name, String host, String port, long lastSeen, int versuche) {
         this.id = id;
         this.name = name;
         this.host = host;
         this.port = port;
+        this.versuche = versuche;
         timeLastSeen = lastSeen;
     }
 
@@ -74,6 +79,14 @@ public class ServerDO {
 
     public long getTimeLastSeen() {
         return timeLastSeen;
+    }
+
+    public int getVersuche() {
+        return versuche;
+    }
+
+    public void setVersuche(int versuche) {
+        this.versuche = versuche;
     }
 
     public void setTimeLastSeen(long timeLastSeen) {

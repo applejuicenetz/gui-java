@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.2 2004/01/06 17:32:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.3 2004/01/24 09:46:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: GetObjectXMLHolder.java,v $
+ * Revision 1.3  2004/01/24 09:46:40  maj0r
+ * An neue Doku angepasst.
+ *
  * Revision 1.2  2004/01/06 17:32:50  maj0r
  * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
  *
@@ -211,7 +214,8 @@ public class GetObjectXMLHolder
         host = e.getAttribute("host");
         lastseen = Long.parseLong(e.getAttribute("lastseen"));
         port = e.getAttribute("port");
-        ServerDO server = new ServerDO(id, name, host, port, lastseen);
+        int versuche = Integer.parseInt(e.getAttribute("connectiontry"));
+        ServerDO server = new ServerDO(id, name, host, port, lastseen, versuche);
         return server;
     }
 
