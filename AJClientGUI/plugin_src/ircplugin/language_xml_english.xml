@@ -2,7 +2,7 @@
 <root>
 	<language value="english">
 		<description value="This irc-client supports multiple rooms, queries and much more. GUI 0.56.1 or higer is needed."/>
-		<buttons connect="Connect" private="Talk Private" join="Join a channel" nick="Change nick" info="Nick Info" cancel="Cancel"/>
+		<buttons connect="Connect" disconnect="Disconnect" private="Talk Private" join="Join a channel" nick="Change nick" info="Nick Info" cancel="Cancel"/>
 		<channel newchannel="Enter channel name" />
 		<nick newnick="Nickname" />
 		<title newconnection="Connection Info"/>

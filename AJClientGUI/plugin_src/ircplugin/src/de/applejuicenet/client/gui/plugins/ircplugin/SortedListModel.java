@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.util.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.4 2004/03/03 15:35:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.5 2004/05/12 12:31:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.util.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SortedListModel.java,v $
+ * Revision 1.5  2004/05/12 12:31:39  maj0r
+ * Weitere Arbeiten zum Standardplugin.
+ *
  * Revision 1.4  2004/03/03 15:35:45  maj0r
  * PMD-Optimierung
  *
@@ -88,7 +91,13 @@ public class SortedListModel extends AbstractListModel {
     private class StringComparator implements Comparator{
         public int compare(Object o1, Object o2) {
             if (o1.getClass()==String.class && o2.getClass()==String.class){
-                return ((String)o1).compareToIgnoreCase((String)o2);
+                int mods = compareMods(o1.toString().charAt(0), o2.toString().charAt(0));
+                if (mods != 0){
+                    return mods;
+                }
+                else{
+                    return ( (String) o1).compareToIgnoreCase( (String) o2);
+                }
             }
             else{
                 if (o1.hashCode()==o2.hashCode()){
@@ -100,6 +109,55 @@ public class SortedListModel extends AbstractListModel {
                 else{
                     return 1;
                 }
+            }
+        }
+    }
+
+    private int compareMods(char mod1, char mod2){
+        switch (mod1){
+            case '!':{
+                if (mod2=='!'){
+                    return 0;
+                }
+                else{
+                    return 1;
+                }
+            }
+            case '@':{
+                if (mod2=='!'){
+                    return 1;
+                }
+                else if (mod2=='@'){
+                    return 0;
+                }
+                else {
+                    return -1;
+                }
+            }
+            case '%':{
+                if (mod2=='!' || mod2=='@'){
+                    return 1;
+                }
+                else if (mod2=='%'){
+                    return 0;
+                }
+                else {
+                    return -1;
+                }
+            }
+            case '+':{
+                if (mod2=='!' || mod2=='@' || mod2=='%'){
+                    return 1;
+                }
+                else if (mod2=='+'){
+                    return 0;
+                }
+                else {
+                    return -1;
+                }
+            }
+            default:{
+                return 0;
             }
         }
     }

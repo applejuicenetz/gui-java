@@ -13,16 +13,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -37,15 +34,15 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -53,7 +50,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.9 2004/05/11 06:53:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.10 2004/05/12 12:31:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -71,10 +68,9 @@ public class XdccIrc
 
     private Thread ircWorker;
 
-    private final String host = "irc.p2pchat.net";
-    private final int port = 6667;
+    private String host = "irc.p2pchat.net";
+    private int port = 6667;
     private JTabbedPane tabbedPane;
-    private int numDcc = 0;
     private String nickname;
     private String realname;
 
@@ -87,17 +83,14 @@ public class XdccIrc
     private String connectionInfo = "Connection Info";
     private String nicknameString = "Enter nickname";
     private String channelNameString = "Enter nickname";
+    private String verbinden;
+    private String trennen;
 
     private IrcPlugin parent;
 
     private JDialog dialog;
     private JTextField nickJTextField1;
 
-    // For communicating purposes. You write to 'toServer' to
-    // send something to the IRC server. For example:
-    //       toServer.print("A dummy message")
-    // should send a message to IRC server
-    // 'fromServer' reads something from the IRC server.
     private Socket chatSocket;
     private BufferedReader fromServer;
     private PrintWriter toServer;
@@ -111,6 +104,20 @@ public class XdccIrc
         logger = Logger.getLogger(getClass());
         try {
             setLayout(new BorderLayout());
+            String propHost = parent.getProperties().getProperty("host");
+            if (propHost != null && propHost.length()>0){
+                host = propHost;
+            }
+            String propPort = parent.getProperties().getProperty("port");
+            if (propPort != null && propPort.length()>0){
+                try{
+                    int tmpPort = Integer.parseInt(propPort);
+                    port = tmpPort;
+                }
+                catch(NumberFormatException nfE){
+                    //ungueltiger Port
+                }
+            }
 
             createConnection = new JButton("Connect");
             createConnection.addActionListener(connectActionListener);
@@ -147,17 +154,6 @@ public class XdccIrc
 
             add(panel1, BorderLayout.NORTH);
             add(tabbedPane, BorderLayout.CENTER);
-
-            // mandatory things to do!
-            //setBounds(50, 50, 600, 400);
-            Toolkit theKit = java.awt.Toolkit.getDefaultToolkit();
-            Dimension dm = theKit.getScreenSize();
-            setBounds(dm.width / 6, dm.height / 6,
-                      (dm.width * 5) / 8, // width
-                      (dm.height * 2) / 3 // height
-                      );
-
-            setVisible(true);
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -167,8 +163,23 @@ public class XdccIrc
     }
 
     public void fireLanguageChanged() {
-        createConnection.setText(parent.getLanguageString(
-            ".root.language.buttons.connect"));
+        verbinden = parent.getLanguageString(
+            ".root.language.buttons.connect");
+        trennen = parent.getLanguageString(
+            ".root.language.buttons.disconnect");
+        createConnection.removeActionListener(disconnectActionListener);
+        ActionListener[] listener = createConnection.getActionListeners();
+        boolean found = false;
+        for (int i=0; i<listener.length; i++){
+            if (listener[i]==connectActionListener){
+                found = true;
+                createConnection.setText(verbinden);
+                break;
+            }
+        }
+        if (!found){
+            createConnection.setText(trennen);
+        }
         newUserAction.setText(parent.getLanguageString(
             ".root.language.buttons.private"));
         joinChannelAction.setText(parent.getLanguageString(
@@ -184,18 +195,6 @@ public class XdccIrc
         nicknameString = parent.getLanguageString(".root.language.nick.newnick");
         channelNameString = parent.getLanguageString(
             ".root.language.channel.newchannel");
-    }
-
-    class WindowCloser
-        extends WindowAdapter {
-        public void windowClosing(WindowEvent e) {
-            Window win = e.getWindow();
-            win.setVisible(false);
-            if (toServer != null) {
-                parseSendToCommand("QUIT ConnectionClosed.");
-            }
-            System.exit(0);
-        }
     }
 
     public void connectStartRegister() {
@@ -214,8 +213,7 @@ public class XdccIrc
         Container dialogContentPane = dialog.getContentPane();
 
         // Ok, let's make the UserInfo
-        JPanel userInfo = new JPanel();
-        userInfo.setBorder(makeBorder(" User Info "));
+        JPanel userInfo = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel label1 = new JLabel("Nickname: ");
 
         nickJTextField1 = new JTextField(25);
@@ -233,31 +231,23 @@ public class XdccIrc
                 }
             }
         });
-        Box box1 = Box.createHorizontalBox();
-        box1.add(label1);
-        box1.add(nickJTextField1);
+        userInfo.add(label1);
+        userInfo.add(nickJTextField1);
+        String nick = parent.getProperties().getProperty("nick");
+        if (nick != null){
+            nickname = nick;
+        }
 
-        Box box4 = Box.createVerticalBox();
-        box4.add(box1);
         if (nickname != null && nickname.length()>0) {
             nickJTextField1.setText(nickname);
         }
         else {
             Random random = new Random();
             nickJTextField1.setText("ajPluginUser" + Integer.toString(random.nextInt(99999)));
-            connectButton.setEnabled(true);
         }
+        connectButton.setEnabled(true);
 
-        userInfo.add("Center", box4);
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.black, 1),
-            BorderFactory.createRaisedBevelBorder()
-            ));
-
-        connectButton.setBorder(makeButtonBorder());
-        cancelButton.setBorder(makeButtonBorder());
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         // Action Listener
         connectButton.addActionListener(new ActionListener() {
@@ -278,15 +268,22 @@ public class XdccIrc
                                 Integer.toString(random.nextInt(99999)));
                 }
                 connectButton.setEnabled(false);
+                createConnection.setEnabled(false);
                 tabUpdate("Init Window", " Connecting to: " + host);
                 connectStartRegister();
+                createConnection.setText(trennen);
+                createConnection.removeActionListener(connectActionListener);
+                createConnection.addActionListener(disconnectActionListener);
+                createConnection.setEnabled(true);
                 dialog.dispose();
             }
         });
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dialog.dispose();
-                dialog = null;
+                if (dialog != null){
+                    dialog.dispose();
+                    dialog = null;
+                }
             }
         });
 
@@ -303,46 +300,22 @@ public class XdccIrc
 
     private class ConnectActionListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            createConnection.setEnabled(false);
             makeConnectionInfo();
-            createConnection.setText("Trennen");
-            createConnection.removeActionListener(connectActionListener);
-            createConnection.addActionListener(disconnectActionListener);
-            createConnection.setEnabled(true);
         }
     }
 
     private class DisconnectActionListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             createConnection.setEnabled(false);
-            closeAll();
-            createConnection.setText("Verbinden");
+            createConnection.setText(verbinden);
             createConnection.removeActionListener(disconnectActionListener);
             createConnection.addActionListener(connectActionListener);
+            closeAll();
             createConnection.setEnabled(true);
+            tabUpdate("Init Window", "Disconnected from: " + host + ":" + port);
         }
     }
 
-    private Border makeButtonBorder() {
-        return BorderFactory.createCompoundBorder(
-            BorderFactory.createRaisedBevelBorder(),
-            BorderFactory.createEmptyBorder(2, 4, 2, 4)
-            );
-    }
-
-    private Border makeBorder(String title) {
-        Border etched = BorderFactory.createEtchedBorder();
-        Border border = BorderFactory.createTitledBorder
-            (
-            etched, title, TitledBorder.CENTER,
-            TitledBorder.TOP
-            );
-        return border;
-    }
-
-    /**
-     * Connect tries to establish a connection to host in port
-     */
     private void connect() throws IOException{
         chatSocket = new Socket(host, port);
         fromServer = new BufferedReader(new InputStreamReader(
@@ -354,6 +327,8 @@ public class XdccIrc
                                                host + ":" + port);
     }
 
+    private boolean pong = false;
+
     private void register() {
 
         realname = nickname;
@@ -361,6 +336,46 @@ public class XdccIrc
         parseSendToCommand("PASS test");
         parseSendToCommand("NICK " + nickname);
         parseSendToCommand("USER " + nickname + " 0 * :" + realname);
+
+        new Thread(){
+            public void run(){
+                int count = 0;
+                while (!isInterrupted() && count <60){
+                    try {
+                        sleep(500);
+                    }
+                    catch (InterruptedException ex) {
+                        interrupt();
+                    }
+                    if (pong){
+                        if (toServer != null) {
+                            joinChannel("test");
+                            String onJoin = parent.getProperties().getProperty("onjoin");
+                            if (onJoin != null && onJoin.length()>0){
+                                if (onJoin.charAt(0) == '/'){
+                                    onJoin = onJoin.substring(1);
+                                }
+                                parseSendToCommand(onJoin);
+                            }
+                            String onJoinChannels = parent.getProperties().getProperty("channels");
+                            if (onJoinChannels != null && onJoinChannels.length()>0){
+                                onJoinChannels(onJoinChannels);
+                            }
+                        }
+                        pong = false;
+                        break;
+                    }
+                    count++;
+                }
+            }
+        }.start();
+    }
+
+    private void onJoinChannels(String onJoinChannels){
+        String[] channels = onJoinChannels.split(",");
+        for (int i=0; i<channels.length; i++){
+            parseSendToCommand("JOIN " + channels[i]);
+        }
     }
 
     // sends back your current nickname
@@ -447,15 +462,13 @@ public class XdccIrc
                             // a null line indicates that our server has
                             // closed the connection, right?
                             tabUpdate("Init Window",
-                                      "READ a null line, server closed the connection or network is fucked.");
+                                      "Server closed the connection or network is fucked.");
                             closeAll();
-
-                            try {
-                                sleep(5000);
-                            }
-                            catch (InterruptedException e) {
-                                interrupt();
-                            }
+                            createConnection.setText(verbinden);
+                            createConnection.removeActionListener(disconnectActionListener);
+                            createConnection.addActionListener(connectActionListener);
+                            createConnection.setEnabled(true);
+                            break;
                         }
                     }
                 }
@@ -465,11 +478,6 @@ public class XdccIrc
                         logger.error("Unbehandelte Exception", e);
                     }
                 }
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        connectStartRegister();
-                    }
-                });
             }
         };
         ircWorker.start();
@@ -489,6 +497,7 @@ public class XdccIrc
         chatSocket = null;
         fromServer = null;
         toServer = null;
+        closeAllChannels();
     }
 
     public void parseFromServer(String lineFromServer) throws IOException {
@@ -496,6 +505,7 @@ public class XdccIrc
         String command = parser.getCommand();
         if (command.equals("PING")) {
             parseSendToCommand("PONG :" + parser.getTrailing());
+            pong = true;
         }
         else if (command.equals("JOIN")) {
             String channelName = parser.getTrailing();
@@ -557,12 +567,6 @@ public class XdccIrc
                                 trailing.length() - 1);
                             ( (ChannelPanel) aComponent).updateTextArea(
                                 formatNickname("[" + nick + "] ") + trailing);
-                        }
-                        String bracketFermeture = "a";
-                        if (trailing.indexOf("[") != -1) {
-                            bracketFermeture = String.valueOf(trailing.charAt(
-                                trailing.
-                                indexOf("[") + 5));
                         }
                         if (nick.equals(nickname)) {
                             //((ChannelPanel)aComponent).textArea.setDisabledTextColor(new Color(255,0,0));
@@ -1313,10 +1317,11 @@ public class XdccIrc
         if (newNickname != null) {
             if (toServer != null) {
                 Component aComponent = tabbedPane.getComponentAt(0);
-                ( (InitPanel) aComponent).setTitleArea(nickname +
+                ( (InitPanel) aComponent).setTitleArea(newNickname +
                     " connected to: " +
                     host + ":" + port);
                 parseSendToCommand("NICK " + newNickname);
+                nickname = newNickname;
             }
         }
         else {
@@ -1371,6 +1376,15 @@ public class XdccIrc
         return tabbedPane;
     }
 
+    public JTabbedPane closeAllChannels() {
+        int count = tabbedPane.getTabCount();
+        for (int i=count-1; i>0; i--){
+            tabbedPane.removeTabAt(i);
+        }
+        tabbedPane.revalidate();
+        return tabbedPane;
+    }
+
     public class ConnectionAction
         extends AbstractAction {
         ConnectionAction(String name) {
@@ -1408,6 +1422,8 @@ public class XdccIrc
             textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
+            textArea.setEditable(false);
+            textArea.setBackground(Color.WHITE);
             textField.addActionListener(this);
 
             JScrollPane sp1 = new JScrollPane(textArea);
@@ -1437,8 +1453,10 @@ public class XdccIrc
 
                 if (message.startsWith("/")) {
                     // commands that start with "/"
+                    if (message.toLowerCase().indexOf("nickserv identify ")==-1){
+                        textArea.append(message + "\n");
+                    }
                     message = message.substring(1);
-                    textArea.append(message + "\n");
                     textField.setText("");
 
                     parseSendToCommand(message);
@@ -1530,14 +1548,14 @@ public class XdccIrc
 
     public class ChannelPanel
         extends JPanel
-        implements ActionListener, ListSelectionListener {
-        final String name;
-        final SortedListModel usernameList = new SortedListModel();
-        final JList userList = new JList(usernameList);
-        final JTextArea textArea = new JTextArea();
-        final JTextField textField = new JTextField();
+        implements ActionListener {
+        private String name;
+        private SortedListModel usernameList = new SortedListModel();
+        private JList userList = new JList(usernameList);
+        private JTextArea textArea = new JTextArea();
+        private JTextField textField = new JTextField();
 
-        private JTextField titleArea = new JTextField();
+        private JTextPane titleArea = new JTextPane();
 
         private JButton closeButton = new JButton("X");
 
@@ -1550,16 +1568,35 @@ public class XdccIrc
         private void makePanel() {
             setLayout(new BorderLayout());
 
-            // let's add actionListener
             textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
-            //textArea.setEditable(false);
+            textArea.setEditable(false);
+            textArea.setBackground(Color.WHITE);
             textField.addActionListener(this);
 
             userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            //userList.setSelectedIndex(0);
-            userList.addListSelectionListener(this);
+            userList.addMouseListener(new MouseAdapter(){
+                public void mouseClicked(MouseEvent me){
+                    if (me.getClickCount()==2){
+                        String name = (String)userList.getSelectedValue();
+                        if (name.charAt(0)=='!' || name.charAt(0)=='%' || name.charAt(0)=='@' || name.charAt(0)=='+'){
+                            name = name.substring(1);
+                        }
+                        if (name.compareToIgnoreCase(nickname) != 0){
+                            for (int i = 1; i < tabbedPane.getTabCount(); i++) {
+                                if (tabbedPane.getTitleAt(i).
+                                    compareToIgnoreCase(name) == 0) {
+                                    return;
+                                }
+                            }
+                            addUser(tabbedPane, name);
+                            tabbedPane.setSelectedIndex(tabbedPane.getTabCount() -
+                                1);
+                        }
+                    }
+                }
+            });
             userList.setCellRenderer(new UserListCellRenderer());
 
             JScrollPane sp1 = new JScrollPane(textArea);
@@ -1573,8 +1610,8 @@ public class XdccIrc
             JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                                   sp1,
                                                   sp2);
-            splitPane.setOneTouchExpandable(true);
-            splitPane.setDividerLocation(600);
+//            splitPane.setOneTouchExpandable(true);
+            splitPane.setDividerLocation(theApp.getSize().width - 200);
             add(splitPane, BorderLayout.CENTER);
             add(textField, BorderLayout.SOUTH);
             add(makeNorth(), BorderLayout.NORTH);
@@ -1599,7 +1636,9 @@ public class XdccIrc
             // let's take care of textField
             if (source == textField) {
                 String message = textField.getText();
-
+                if (message.length()>450){
+                    message = message.substring(0, 450);
+                }
                 // let's send to server
                 if (message.startsWith("/")) {
                     // commands that start with "/"
@@ -1615,7 +1654,7 @@ public class XdccIrc
                     // textArea.append(textField.getText() + "\n");
                     updateTextArea(formatNickname("<" + getNickname() + "> ") +
                                    textField.getText());
-                    resetTextField();
+                    textField.setText("");
                 }
             }
             else if (source == closeButton) {
@@ -1626,24 +1665,121 @@ public class XdccIrc
             }
         }
 
-        public void valueChanged(ListSelectionEvent e) {
-            if (!e.getValueIsAdjusting()) {
-                Object obj = userList.getSelectedValue();
-                if (obj != null) {
-/*                    tabUpdate("Init Window",
-                              "Nickname: " + obj.toString() +
-                              " was selected.");*/
+        public void setTitleArea(String title) {
+            StyledDocument doc = titleArea.getStyledDocument();
+            SimpleAttributeSet attributes = new SimpleAttributeSet();
+            StyleConstants.setBackground(attributes, Color.WHITE);
+            try {
+                doc.remove(0, doc.getLength());
+                int startIndex = 0;
+                for (int i=0; i<title.length(); i++){
+                    if (title.charAt(i) == 3 || i==title.length()-1){
+                        if (title.charAt(i) == 3){
+                            String toWrite = title.substring(startIndex, i);
+                            if (toWrite.length()>0){
+                                attributes = writeString(doc, attributes,
+                                    toWrite);
+                            }
+                            startIndex = i+1;
+                            i++;
+                        }
+                        else{
+                            String toWrite = title.substring(startIndex);
+                            if (toWrite.length()>0){
+                                attributes = writeString(doc, attributes,
+                                    toWrite);
+                            }
+                        }
+                    }
                 }
+            }
+            catch (BadLocationException ex) {
+                ex.printStackTrace();
             }
         }
 
-        public void resetTextField() {
-            textField.setText("");
+        private SimpleAttributeSet writeString(StyledDocument doc, SimpleAttributeSet attributes, String toWrite){
+            boolean istNachkomma = false;
+            boolean parsEnde = false;
+            int index = 0;
+            if (toWrite.length()>1){
+                while (!parsEnde) {
+                    if (toWrite.charAt(index) == ',') {
+                        istNachkomma = true;
+                        index++;
+                        continue;
+                    }
+                    try {
+                        int colorCode = Integer.parseInt(toWrite.substring(
+                            index, index+2));
+                        index += 2;
+                        Color color = getColor(colorCode);
+                        if (!istNachkomma) {
+                            StyleConstants.setForeground(attributes, color);
+                        }
+                    }
+                    catch (NumberFormatException nfE) {
+                        if (toWrite.charAt(index + 1) != ',') {
+                            parsEnde = true;
+                        }
+                        try {
+                            int colorCode = Integer.parseInt(toWrite.substring(
+                                index, index+1));
+                            index++;
+                            Color color = getColor(colorCode);
+                            if (!istNachkomma) {
+                                StyleConstants.setForeground(attributes, color);
+                            }
+                        }
+                        catch (NumberFormatException nfE2) {
+                            parsEnde = true;
+                            StyleConstants.setForeground(attributes,
+                                Color.BLACK);
+                        }
+                    }
+                    catch(StringIndexOutOfBoundsException sioobE){
+                        parsEnde = true;
+                        int colorCode = Integer.parseInt(toWrite.substring(
+                            index, index+1));
+                        Color color = getColor(colorCode);
+                        if (!istNachkomma) {
+                            StyleConstants.setForeground(attributes, color);
+                        }
+                        return attributes;
+                    }
+                }
+            }
+            try {
+                doc.insertString(doc.getLength(),
+                                 toWrite.substring(index),
+                                 attributes);
+            }
+            catch (BadLocationException ex) {
+                ex.printStackTrace();
+            }
+            return attributes;
         }
 
-        public void setTitleArea(String title) {
-            titleArea.setText("");
-            titleArea.setText(title);
+        private Color getColor(int code){
+            switch (code){
+                case 0: return Color.BLACK;
+                case 1: return Color.BLACK;
+                case 2: return Color.BLUE;
+                case 3: return Color.GREEN;
+                case 4: return Color.RED;
+                case 5: return Color.BLACK;
+                case 6: return Color.PINK;
+                case 7: return Color.ORANGE;
+                case 8: return Color.YELLOW;
+                case 9: return Color.GREEN;
+                case 10: return Color.GREEN;
+                case 11: return Color.CYAN;
+                case 12: return Color.BLUE;
+                case 13: return Color.PINK;
+                case 14: return Color.GRAY;
+                case 15: return Color.LIGHT_GRAY;
+                default: return null;
+            }
         }
 
         public void updateTextArea(String message) {
@@ -1671,12 +1807,12 @@ public class XdccIrc
     public class UserPanel
         extends JPanel
         implements ActionListener {
-        String name;
-        final JTextArea textArea = new JTextArea();
-        final JTextField textField = new JTextField();
-        JTextField titleArea = new JTextField("Title goes over here");
+        private String name;
+        private final JTextArea textArea = new JTextArea();
+        private final JTextField textField = new JTextField();
+        private JTextField titleArea = new JTextField();
 
-        JButton closeButton = new JButton("X");
+        private JButton closeButton = new JButton("X");
 
         public UserPanel(String name) {
             this.name = name;
@@ -1688,7 +1824,7 @@ public class XdccIrc
             this.name = name;
         }
 
-        public void setTitleArea(String title) { // Actually, it's user@host
+        public void setTitleArea(String title) {
             titleArea.setText("");
             titleArea.setText(title);
         }
@@ -1702,6 +1838,7 @@ public class XdccIrc
             textArea.setWrapStyleWord(true);
             textField.addActionListener(this);
             textArea.setEditable(false);
+            titleArea.setEditable(false);
 
             JScrollPane sp1 = new JScrollPane(textArea);
 

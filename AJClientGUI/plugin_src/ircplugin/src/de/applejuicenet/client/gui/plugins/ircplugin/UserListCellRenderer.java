@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import java.awt.Color;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserListCellRenderer.java,v 1.2 2004/03/03 15:35:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserListCellRenderer.java,v 1.3 2004/05/12 12:31:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import java.awt.Color;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UserListCellRenderer.java,v $
+ * Revision 1.3  2004/05/12 12:31:39  maj0r
+ * Weitere Arbeiten zum Standardplugin.
+ *
  * Revision 1.2  2004/03/03 15:35:45  maj0r
  * PMD-Optimierung
  *
@@ -61,10 +64,10 @@ public class UserListCellRenderer implements ListCellRenderer {
                 aLabel.setBackground(Color.GREEN);
             }
             else if (inhalt.substring(0, 1).compareTo("+") == 0){
-                aLabel.setBackground(list.getBackground());
+                aLabel.setBackground(Color.LIGHT_GRAY);
             }
             else{
-                aLabel.setBackground(Color.LIGHT_GRAY);
+                aLabel.setBackground(list.getBackground());
             }
         }
         return aLabel;
