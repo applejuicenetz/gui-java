@@ -11,7 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/ConnectionXML.java,v 1.1 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/ConnectionXML.java,v 1.2 2003/09/10 13:28:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.w3c.dom.Node;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ConnectionXML.java,v $
+ * Revision 1.2  2003/09/10 13:28:22  maj0r
+ * Wizard um neue Option MaxNewConnectionsPerTurn erweitert.
+ *
  * Revision 1.1  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -46,6 +49,7 @@ public class ConnectionXML
             String bezeichnung;
             int maxUpload;
             int maxDownload;
+            int maxNewConnectionsPro10Sek;
             NodeList nodes = connectionXML.document.getElementsByTagName("wizard");
             nodes = nodes.item(0).getChildNodes();
             int nodesSize = nodes.getLength();
@@ -55,7 +59,8 @@ public class ConnectionXML
                     bezeichnung = e.getAttribute("bezeichnung");
                     maxUpload = Integer.parseInt(e.getAttribute("maxupload"));
                     maxDownload = Integer.parseInt(e.getAttribute("maxdownload"));
-                    connectionKinds.add(new ConnectionKind(bezeichnung, maxUpload, maxDownload));
+                    maxNewConnectionsPro10Sek = Integer.parseInt(e.getAttribute("maxnewconnections10"));
+                    connectionKinds.add(new ConnectionKind(bezeichnung, maxUpload, maxDownload, maxNewConnectionsPro10Sek));
                 }
             }
             return (ConnectionKind[]) connectionKinds.toArray(new ConnectionKind[connectionKinds.size()]);
