@@ -8,9 +8,11 @@ import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.tables.TreeTableModel;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.UploadDO;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.14 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.15 2004/05/24 08:04:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +21,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadDataTableModel.java,v $
+ * Revision 1.15  2004/05/24 08:04:09  maj0r
+ * In der Statusspalte eines nicht aktiven Uploads wird nun die Corezeit der letzen Aktivitaet angezeigt.
+ *
  * Revision 1.14  2004/05/23 17:58:29  maj0r
  * Anpassungen an neue Schnittstelle.
  *
@@ -79,6 +84,9 @@ public class UploadDataTableModel
         TreeTableModel.class, String.class, String.class, String.class, String.class,
         Integer.class, String.class};
 
+    private SimpleDateFormat formatter = new SimpleDateFormat(
+        "HH:mm:ss");
+
     private String uebertragung;
     private String keineVerbindungMoeglich;
     private String versucheIndirekteVerbindung;
@@ -131,7 +139,7 @@ public class UploadDataTableModel
                         case UploadDO.AKTIVE_UEBERTRAGUNG:
                             return uebertragung;
                         case UploadDO.WARTESCHLANGE:
-                            return warteschlange;
+                            return warteschlange + " (" +formatter.format(new Date(upload.getLastConnection())) + ")";
                         default:
                             return "";
                     }
