@@ -12,19 +12,24 @@ import javax.swing.JTextField;
 import javax.swing.JTabbedPane;
 import java.awt.Color;
 import java.util.Date;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import javax.swing.JTextPane;
 import javax.swing.text.Document;
+import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.start.HyperlinkAdapter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.11 2004/11/22 16:25:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.12 2004/12/07 14:53:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +44,9 @@ public class UserPanel
     implements ActionListener {
 	private String name;
     private final JTextPane textArea = new JTextPane();
+	private StyledDocument document = (StyledDocument) textArea
+	.getStyledDocument();
+    
     private final JTextField textField = new JTextField();
     private JTextField titleArea = new JTextField();
     private JButton closeButton = new JButton("X");
@@ -78,10 +86,13 @@ public class UserPanel
     private void makePanel() {
         setLayout(new BorderLayout());
 
-        // let's add actionListener
         textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         textField.addActionListener(this);
-        textArea.setEditable(false);
+		textArea.setEditorKit(new LinkEditorKit());
+		textArea.setDocument(document);
+		textArea.setEditable(false);
+		textArea.addHyperlinkListener(new HyperlinkAdapter(textArea));
+        
         titleArea.setEditable(false);
 
         JScrollPane sp1 = new JScrollPane(textArea);
@@ -94,6 +105,22 @@ public class UserPanel
         add(makeNorth(), BorderLayout.NORTH);
     }
 
+	private MutableAttributeSet setLink(String sUrl, SimpleAttributeSet attributes) {
+		MutableAttributeSet a = new SimpleAttributeSet(attributes);
+		try {
+			if (!sUrl.toLowerCase().startsWith(ChannelPanel.HTTP_IDENTIFIER)){
+				sUrl = ChannelPanel.HTTP_IDENTIFIER + sUrl;
+			}
+			URL url = new URL(sUrl);
+			a.addAttribute(LinkEditorKit.LINK, new URL(sUrl));
+		} catch (Exception e) {
+			// nothing to do
+		}
+		a.addAttribute(StyleConstants.Bold, Boolean.TRUE);
+		a.addAttribute(StyleConstants.Underline, Boolean.TRUE);
+		return a;
+	}
+    
     private Box makeNorth() {
         Box northBox = Box.createHorizontalBox();
         // let's add actions
@@ -174,9 +201,60 @@ public class UserPanel
         StyleConstants.setForeground(attributes, Color.BLACK);
         Document doc = textArea.getDocument();
         try {
-            doc.insertString(doc.getLength(),
-                             "[" + zeit + "]\t" + message + "\n",
-                             attributes);
+			doc.insertString(doc.getLength(), "[" + zeit + "]\t", attributes);
+			while (message.toLowerCase().indexOf(ChannelPanel.HTTP_IDENTIFIER) != -1 || 
+					message.toLowerCase().indexOf(ChannelPanel.WWW_IDENTIFIER) != -1){
+				String httpIdentifier;
+				int indexHttp = message.toLowerCase().indexOf(ChannelPanel.HTTP_IDENTIFIER);
+				int indexWww = message.toLowerCase().indexOf(ChannelPanel.WWW_IDENTIFIER);
+				if (indexHttp == -1){
+					httpIdentifier = ChannelPanel.WWW_IDENTIFIER;
+				}
+				else if (indexWww == -1){
+					httpIdentifier = ChannelPanel.HTTP_IDENTIFIER;
+				}
+				else{
+					if (indexWww == indexHttp + ChannelPanel.HTTP_IDENTIFIER.length()){
+						httpIdentifier = ChannelPanel.HTTP_IDENTIFIER;
+					}
+					else{
+						httpIdentifier = ChannelPanel.WWW_IDENTIFIER;
+					}
+				}
+			
+				doc.insertString(doc.getLength(), 
+						message.substring(0, 
+								message.toLowerCase().indexOf(httpIdentifier)), 
+						attributes);
+				message = message.substring(message.toLowerCase().indexOf(httpIdentifier));
+				int index = message.indexOf(" ");
+				int index2 = message.indexOf(">");
+				if (index2 != -1 && index2 < index){
+					index = index2;
+				}
+				index2 = message.indexOf(")");
+				if (index2 != -1 && index2 < index){
+					index = index2;
+				}
+				index2 = message.indexOf("]");
+				if (index2 != -1 && index2 < index){
+					index = index2;
+				}
+				index2 = message.indexOf("}");
+				if (index2 != -1 && index2 < index){
+					index = index2;
+				}
+				if (index != -1){
+					doc.insertString(doc.getLength(), message.substring(0, index), 
+							setLink(message.substring(0, index), attributes));
+					message = message.substring(index);
+				}
+				else{
+					doc.insertString(doc.getLength(), message, setLink(message, attributes));
+					message = "";
+				}
+			}
+			doc.insertString(doc.getLength(), message + "\n", attributes);
         }
         catch (BadLocationException ex) {
             if (logger.isEnabledFor(Level.ERROR)){
