@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.24 2004/01/20 11:18:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.25 2004/01/20 12:45:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.25  2004/01/20 12:45:13  maj0r
+ * Spaltenindizes werden jetzt gespeichert.
+ *
  * Revision 1.24  2004/01/20 11:18:03  maj0r
  * Format der properties.xml geaendert.
  *
@@ -167,6 +170,8 @@ public class PropertiesManager
     private int[] shareWidths;
     private boolean[] downloadVisibilities;
     private boolean[] uploadVisibilities;
+    private int[] downloadIndex;
+    private int[] uploadIndex;
 
     private static String path;
 
@@ -714,6 +719,32 @@ public class PropertiesManager
                 uploadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column4", "visibility"})).booleanValue();
                 uploadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column5", "visibility"})).booleanValue();
                 uploadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column6", "visibility"})).booleanValue();
+
+                downloadIndex = new int[10];
+                xmlTest = getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column0", "index"});
+                if (xmlTest.length() == 0) {
+                    throw new Exception(
+                        "Properties.xml hat altes Format. Wird neu erstellt.");
+                }
+                downloadIndex[0] = Integer.parseInt(xmlTest);
+                downloadIndex[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column1", "index"}));
+                downloadIndex[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column2", "index"}));
+                downloadIndex[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column3", "index"}));
+                downloadIndex[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column4", "index"}));
+                downloadIndex[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column5", "index"}));
+                downloadIndex[6] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column6", "index"}));
+                downloadIndex[7] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column7", "index"}));
+                downloadIndex[8] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column8", "index"}));
+                downloadIndex[9] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column9", "index"}));
+
+                uploadIndex = new int[7];
+                uploadIndex[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column0", "index"}));
+                uploadIndex[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column1", "index"}));
+                uploadIndex[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column2", "index"}));
+                uploadIndex[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column3", "index"}));
+                uploadIndex[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column4", "index"}));
+                uploadIndex[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column5", "index"}));
+                uploadIndex[6] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column6", "index"}));
             }
             else{
                 downloadVisibilities = new boolean[10];
@@ -723,6 +754,14 @@ public class PropertiesManager
                 uploadVisibilities = new boolean[7];
                 for (int i=0; i<uploadVisibilities.length; i++){
                     uploadVisibilities[i] = true;
+                }
+                uploadIndex = new int[7];
+                for (int i=0; i<uploadIndex.length; i++){
+                    uploadIndex[i] = i;
+                }
+                downloadIndex = new int[7];
+                for (int i=0; i<downloadIndex.length; i++){
+                    downloadIndex[i] = i;
                 }
             }
             boolean use = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "use"})).booleanValue();
@@ -799,6 +838,25 @@ public class PropertiesManager
             setAttributeByTagName(new String[]{"options", "columns", "upload", "column5", "visibility"}, Boolean.toString(uploadVisibilities[5]));
             setAttributeByTagName(new String[]{"options", "columns", "upload", "column6", "visibility"}, Boolean.toString(uploadVisibilities[6]));
 
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column0", "index"}, Integer.toString(downloadIndex[0]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column1", "index"}, Integer.toString(downloadIndex[1]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column2", "index"}, Integer.toString(downloadIndex[2]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column3", "index"}, Integer.toString(downloadIndex[3]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column4", "index"}, Integer.toString(downloadIndex[4]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column5", "index"}, Integer.toString(downloadIndex[5]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column6", "index"}, Integer.toString(downloadIndex[6]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column7", "index"}, Integer.toString(downloadIndex[7]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column8", "index"}, Integer.toString(downloadIndex[8]));
+            setAttributeByTagName(new String[]{"options", "columns", "download", "column9", "index"}, Integer.toString(downloadIndex[9]));
+
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column0", "index"}, Integer.toString(uploadIndex[0]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column1", "index"}, Integer.toString(uploadIndex[1]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column2", "index"}, Integer.toString(uploadIndex[2]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column3", "index"}, Integer.toString(uploadIndex[3]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column4", "index"}, Integer.toString(uploadIndex[4]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column5", "index"}, Integer.toString(uploadIndex[5]));
+            setAttributeByTagName(new String[]{"options", "columns", "upload", "column6", "index"}, Integer.toString(uploadIndex[6]));
+
             saveDom();
         }
         catch (Exception e)
@@ -868,6 +926,22 @@ public class PropertiesManager
 
     public boolean[] getDownloadColumnVisibilities() {
         return downloadVisibilities;
+    }
+
+    public void setDownloadColumnIndex(int column, int index) {
+        downloadIndex[column] = index;
+    }
+
+    public int[] getDownloadColumnIndizes() {
+        return downloadIndex;
+    }
+
+    public void setUploadColumnIndex(int column, int index) {
+        uploadIndex[column] = index;
+    }
+
+    public int[] getUploadColumnIndizes() {
+        return uploadIndex;
     }
 
     public void setUploadColumnVisible(int column, boolean visible) {
