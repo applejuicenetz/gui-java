@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.16 2003/06/24 14:32:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.17 2003/07/01 14:52:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.17  2003/07/01 14:52:45  maj0r
+ * Wenn kein Core gefunden wird, können nun die entsprechenden Einstellungen beim Start der GUI angepasst werden.
+ *
  * Revision 1.16  2003/06/24 14:32:27  maj0r
  * Klassen zum Sortieren von Tabellen eingefügt.
  * Servertabelle kann nun spaltenweise sortiert werden.
@@ -81,22 +84,36 @@ public class AppleJuiceClient {
         logger.info(nachricht);
       System.out.println(nachricht);
 
-      if (!DataManager.istCoreErreichbar()) {
-        LanguageSelector languageSelector = LanguageSelector.getInstance();
-        String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+      Frame dummyFrame = new Frame();
+      Image img = IconManager.getInstance().getIcon("applejuice").getImage();
+      dummyFrame.setIconImage(img);
+      String titel = null;
+      LanguageSelector languageSelector = LanguageSelector.getInstance();
+      QuickRemoteEinstellungDialog remoteDialog = null;
+      while (!DataManager.istCoreErreichbar()) {
+        titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
         nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
-                                      "verbindungsfehler"}));
-        nachricht = nachricht.replaceFirst("%s",
-                                           OptionsManager.getInstance().
-                                           getRemoteSettings().
-                                           getHost());
-        JOptionPane.showMessageDialog(new Frame(), nachricht, titel,
-                                      JOptionPane.OK_OPTION);
-        logger.fatal(nachricht);
-        System.out.println("Fehler: " + nachricht);
-        System.exit( -1);
+              getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
+                                        "fehlversuch"}));
+        JOptionPane.showMessageDialog(dummyFrame, nachricht, titel,
+                                      JOptionPane.ERROR_MESSAGE);
+        remoteDialog = new QuickRemoteEinstellungDialog(dummyFrame);
+        remoteDialog.show();
+        if (remoteDialog.getResult()==QuickRemoteEinstellungDialog.ABGEBROCHEN){
+            nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
+                                          "verbindungsfehler"}));
+            nachricht = nachricht.replaceFirst("%s",
+                                               OptionsManager.getInstance().
+                                               getRemoteSettings().
+                                               getHost());
+            JOptionPane.showMessageDialog(dummyFrame, nachricht, titel,
+                                          JOptionPane.OK_OPTION);
+            logger.fatal(nachricht);
+            System.out.println("Fehler: " + nachricht);
+            System.exit( -1);
+        }
       }
       AppleJuiceDialog theApp = new AppleJuiceDialog();
       Dimension appDimension = theApp.getSize();
