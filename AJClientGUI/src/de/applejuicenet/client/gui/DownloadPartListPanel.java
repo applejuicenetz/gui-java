@@ -12,7 +12,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.13 2004/02/09 17:46:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.14 2004/02/12 10:54:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.14  2004/02/12 10:54:03  maj0r
+ * Darstellungsfehler in der Partliste behoben.
+ *
  * Revision 1.13  2004/02/09 17:46:11  maj0r
  * Partliste ueberarbeitet.
  *
@@ -76,12 +79,12 @@ public class DownloadPartListPanel
 
     public void paintComponent(Graphics g) {
         if (partListDO != null && image != null) {
-            if (height != (int) getVisibleRect().getHeight() ||
-                width != (int) getVisibleRect().getWidth()) {
+            if (height != (int) getSize().getHeight() ||
+                width != (int) getSize().getWidth()) {
                 setPartList(partListDO);
             }
             g.setColor(Color.WHITE);
-            g.drawRect(0, 0, width, height);
+            g.fillRect(0, 0, width, height);
             g.drawImage(image, 0, 0, null);
         }
         else {
@@ -92,8 +95,8 @@ public class DownloadPartListPanel
     public void setPartList(PartListDO partListDO) {
         try {
             this.partListDO = partListDO;
-            height = (int) getVisibleRect().getHeight();
-            width = (int) getVisibleRect().getWidth();
+            height = (int) getSize().getHeight();
+            width = (int) getSize().getWidth();
             if (partListDO != null) {
                 int zeilenHoehe = 15;
                 int zeilen = height / zeilenHoehe;
@@ -132,8 +135,6 @@ public class DownloadPartListPanel
                 image = new BufferedImage(width, height,
                                           BufferedImage.TYPE_INT_ARGB);
                 Graphics g = image.getGraphics();
-                g.setColor(Color.WHITE);
-                g.drawRect(0, 0, width, height);
                 int x = 0;
                 for (int i=0; i<zeilen; i++){
                     g.drawImage(tempImage.getSubimage(x, 0, width, zeilenHoehe), 0, i*zeilenHoehe, null);
