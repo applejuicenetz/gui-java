@@ -11,15 +11,18 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.15 2003/10/15 09:06:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.16 2003/10/16 12:06:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.16  2003/10/16 12:06:51  maj0r
+ * Diverse Schoenheitskorrekturen.
+ *
  * Revision 1.15  2003/10/15 09:06:10  maj0r
  * Prozentanzeige nur bei aktiven Uebertragungen anzeigen.
  *
@@ -107,7 +110,9 @@ public class DownloadTableCellRenderer
                                              int row,
                                              int column) {
         DownloadDO downloadDO = downloadMainNode.getDownloadDO();
-        if (column == 6 && downloadMainNode.getType() == DownloadMainNode.ROOT_NODE)
+        if (column == 6 && downloadMainNode.getType() == DownloadMainNode.ROOT_NODE
+            && (downloadDO.getStatus()==DownloadDO.SUCHEN_LADEN
+                || downloadDO.getStatus()==DownloadDO.PAUSIERT))
         {
             String prozent = downloadDO.getProzentGeladenAsString();
             String wert = null;

@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.24 2003/10/14 15:43:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.25 2003/10/16 12:06:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.25  2003/10/16 12:06:51  maj0r
+ * Diverse Schoenheitskorrekturen.
+ *
  * Revision 1.24  2003/10/14 15:43:24  maj0r
  * Logger eingebaut.
  * Powerdownloads werden nun innerhalb einer Connection gesetzt,
@@ -134,6 +137,17 @@ public class PowerDownloadPanel
         ratio.setMinimumSize(new Dimension(50, 21));
         ratio.setPreferredSize(new Dimension(50, 21));
         ratio.setHorizontalAlignment(SwingConstants.RIGHT);
+        KeyAdapter ratioKlicker = new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnPdl.doClick();
+                }
+            }
+        };
+        btnInaktiv.addKeyListener(ratioKlicker);
+        btnAktiv.addKeyListener(ratioKlicker);
+        ratio.addKeyListener(ratioKlicker);
+
         btnPdl.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 btnPdl_actionPerformed(e);

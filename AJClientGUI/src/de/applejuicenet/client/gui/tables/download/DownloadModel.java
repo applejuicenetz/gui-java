@@ -8,15 +8,18 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.15 2003/10/06 12:08:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.16 2003/10/16 12:06:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.16  2003/10/16 12:06:51  maj0r
+ * Diverse Schoenheitskorrekturen.
+ *
  * Revision 1.15  2003/10/06 12:08:18  maj0r
  * Tabellenausgabe korrigiert.
  *
@@ -150,25 +153,55 @@ public class DownloadModel
     if (node.getClass()==DownloadMainNode.class){
         if (((DownloadMainNode)node).getType()==DownloadMainNode.ROOT_NODE){
             DownloadDO downloadDO = ((DownloadMainNode)node).getDownloadDO();
-            switch (column) {
-              case 0:
-                    return downloadDO.getFilename();
-              case 1:
-                    return getStatus(downloadDO);
-              case 2:
-                    return parseGroesse(downloadDO.getGroesse());
-              case 3:
-                    return parseGroesse(downloadDO.getBereitsGeladen());
-              case 4:
-                    return getSpeedAsString(downloadDO.getSpeedInBytes());
-              case 5:
-                    return downloadDO.getRestZeitAsString();
-              case 7:
-                    return parseGroesse(downloadDO.getGroesse()-downloadDO.getBereitsGeladen());
-              case 8:
-                    return powerdownload(downloadDO.getPowerDownload());
-              default:
-                return "";
+            if (downloadDO.getStatus()==DownloadDO.SUCHEN_LADEN){
+                switch (column) {
+                  case 0:
+                        return downloadDO.getFilename();
+                  case 1:
+                        return getStatus(downloadDO);
+                  case 2:
+                        return parseGroesse(downloadDO.getGroesse());
+                  case 3:
+                        return parseGroesse(downloadDO.getBereitsGeladen());
+                  case 4:
+                        return getSpeedAsString(downloadDO.getSpeedInBytes());
+                  case 5:
+                        return downloadDO.getRestZeitAsString();
+                  case 7:
+                        return parseGroesse(downloadDO.getGroesse()-downloadDO.getBereitsGeladen());
+                  case 8:
+                        return powerdownload(downloadDO.getPowerDownload());
+                  default:
+                    return "";
+                }
+            }
+            else{
+                switch (column) {
+                  case 0:
+                        return downloadDO.getFilename();
+                  case 1:
+                        return getStatus(downloadDO);
+                  case 2:
+                        return parseGroesse(downloadDO.getGroesse());
+                  case 3:
+                        return parseGroesse(downloadDO.getBereitsGeladen());
+                  case 7:
+                        if (downloadDO.getStatus()==DownloadDO.PAUSIERT){
+                            return parseGroesse(downloadDO.getGroesse()-downloadDO.getBereitsGeladen());
+                        }
+                        else{
+                            return "";
+                        }
+                  case 8:
+                        if (downloadDO.getStatus()==DownloadDO.PAUSIERT){
+                            return powerdownload(downloadDO.getPowerDownload());
+                        }
+                        else{
+                            return "";
+                        }
+                  default:
+                    return "";
+                }
             }
         }
         else{
