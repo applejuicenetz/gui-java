@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginOptionsDialog.java,v 1.4 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginOptionsDialog.java,v 1.5 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginOptionsDialog.java,v $
+ * Revision 1.5  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.4  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -73,14 +76,10 @@ public class ODPluginOptionsDialog
         String title = pluginConnector.getTitle() + " - ";
         title += ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
-            getFirstAttrbuteByTagName(new
-                                      String[] {"javagui", "options", "plugins",
-                                      "einstellungen"}));
+            getFirstAttrbuteByTagName(".root.javagui.options.plugins.einstellungen"));
         schliessen.setText(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
-            getFirstAttrbuteByTagName(new
-                                      String[] {"javagui", "options", "plugins",
-                                      "schliessen"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.plugins.schliessen")));
         setTitle(title);
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(pluginConnector.getOptionPanel(),

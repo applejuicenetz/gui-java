@@ -43,7 +43,7 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dnd.DndTargetAdapter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.8 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.9 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -52,6 +52,9 @@ import de.applejuicenet.client.shared.dnd.DndTargetAdapter;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DateiListeDialog.java,v $
+ * Revision 1.9  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.8  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -205,18 +208,14 @@ public class DateiListeDialog
     public void initLanguage() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"linklist",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.linklist.caption")));
         text.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"linklist", "Label1",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.linklist.Label1.caption")));
         String[] tableColumns = new String[2];
         tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"linklist", "files",
-                                      "col0caption"}));
+            getFirstAttrbuteByTagName(".root.linklist.files.col0caption"));
         tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"linklist", "files",
-                                      "col1caption"}));
+            getFirstAttrbuteByTagName(".root.linklist.files.col1caption"));
         TableColumnModel tcm = table.getColumnModel();
         for (int i = 0; i < tableColumns.length; i++) {
             tcm.getColumn(i).setHeaderValue(tableColumns[i]);

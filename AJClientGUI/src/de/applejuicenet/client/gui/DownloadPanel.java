@@ -67,7 +67,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.93 2004/02/19 20:28:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.94 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -76,6 +76,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.94  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.93  2004/02/19 20:28:20  maj0r
  * - Links werden nun bei Uebernahme in eine verwertbare Schreibweise geparst.
  *
@@ -1101,65 +1104,49 @@ public class DownloadPanel
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            String text = languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "mainform", "Label14", "caption"});
+            String text = languageSelector.getFirstAttrbuteByTagName(".root.mainform.Label14.caption");
             dialogTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.caption"));
             downloadAbbrechen = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "msgdlgtext5"}));
+                getFirstAttrbuteByTagName(".root.mainform.msgdlgtext5"));
             linkLabel.setText(ZeichenErsetzer.korrigiereUmlaute(text));
             btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "downlajfsp",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.downlajfsp.caption")));
             btnStartDownload.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "mainform",
-                "downlajfsp", "hint"})));
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.downlajfsp.hint")));
             String[] tableColumns = new String[10];
             tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                          "col0caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.queue.col0caption"));
             tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                          "col1caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.queue.col1caption"));
             tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                          "col2caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.queue.col2caption"));
             tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                          "col3caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.queue.col3caption"));
             tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                          "col4caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.queue.col4caption"));
             tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                          "col5caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.queue.col5caption"));
             tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                          "col6caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.queue.col6caption"));
             tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                          "col7caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.queue.col7caption"));
             tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                          "col8caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.queue.col8caption"));
             tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                          "col9caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.queue.col9caption"));
 
             for (int i = 0; i < columns.length; i++) {
                 columns[i].setHeaderValue(tableColumns[i]);
@@ -1167,44 +1154,28 @@ public class DownloadPanel
             }
 
             item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "canceldown",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.canceldown.caption")));
             String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "pausedown",
-                                          "caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.pausedown.caption"));
             temp += "/" +
                 ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                  getFirstAttrbuteByTagName(new
-                String[] {
-                "mainform", "resumedown", "caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.resumedown.caption"));
             item2.setText(temp);
             item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "renamefile",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.renamefile.caption")));
             item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "changetarget",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.changetarget.caption")));
             item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "Clearfinishedentries1", "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.Clearfinishedentries1.caption")));
             item7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui",
-                                          "downloadform", "partlisteanzeigen"})));
+                getFirstAttrbuteByTagName(".root.javagui.downloadform.partlisteanzeigen")));
             itemCopyToClipboard.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "mainform",
-                "getlink1", "caption"})));
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.getlink1.caption")));
             itemCopyToClipboardWithSources.setText(ZeichenErsetzer.
                 korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "javagui",
-                "downloadform", "getlinkwithsources"})));
+                languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.getlinkwithsources")));
             neuerDateiname = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui",
-                                          "downloadform", "neuerdateiname"}));
+                getFirstAttrbuteByTagName(".root.javagui.downloadform.neuerdateiname"));
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {

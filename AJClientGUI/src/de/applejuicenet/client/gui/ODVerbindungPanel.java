@@ -24,7 +24,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.15 2004/02/09 07:28:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.16 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +33,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODVerbindungPanel.java,v $
+ * Revision 1.16  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.15  2004/02/09 07:28:24  maj0r
  * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
  *
@@ -58,7 +61,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * Diverse Änderungen.
  *
  * Revision 1.7  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -206,26 +209,19 @@ public class ODVerbindungPanel
         LanguageSelector languageSelector = LanguageSelector.getInstance();
 
         label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Label4",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.Label4.caption")));
         label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Label5",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.Label5.caption")));
         label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "verbindung", "label3"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.verbindung.label3")));
         label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Label13",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.Label13.caption")));
         label5 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "verbindung", "label5"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.verbindung.label5")));
         label6 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "verbindung", "label6"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.verbindung.label6")));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform",
-                                      "connectionsheet", "caption"}));
+            getFirstAttrbuteByTagName(".root.einstform.connectionsheet.caption"));
         kbSlot = new JLabel();
 
         int untereGrenze = (int) Math.pow( (double) ajSettings.getMaxUploadInKB(),
@@ -247,8 +243,7 @@ public class ODVerbindungPanel
         });
         automaticConnect = new JCheckBox(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "autoconn",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.autoconn.caption")));
         automaticConnect.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 dirty = true;

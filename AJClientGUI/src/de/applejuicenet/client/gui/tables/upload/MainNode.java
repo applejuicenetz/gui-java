@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/MainNode.java,v 1.5 2004/02/09 14:21:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/MainNode.java,v 1.6 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MainNode.java,v $
+ * Revision 1.6  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.5  2004/02/09 14:21:32  maj0r
  * Icons für Upload-DirectStates eingebaut.
  *
@@ -189,18 +192,15 @@ public class MainNode
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         if (type == LOADING_UPLOADS) {
             text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(
-                new String[] {"javagui", "uploadform", "ladendeuploads"}));
+                getFirstAttrbuteByTagName(".root.javagui.uploadform.ladendeuploads"));
         }
         else if (type == WAITING_UPLOADS) {
             text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(
-                new String[] {"javagui", "uploadform", "wartendeuploads"}));
+                getFirstAttrbuteByTagName(".root.javagui.uploadform.wartendeuploads"));
         }
         else if (type == REST_UPLOADS) {
             text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(
-                new String[] {"javagui", "uploadform", "dreckigerrest"}));
+                getFirstAttrbuteByTagName(".root.javagui.uploadform.dreckigerrest"));
         }
     }
 }

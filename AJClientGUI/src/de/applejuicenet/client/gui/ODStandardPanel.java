@@ -40,7 +40,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.24 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.25 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -49,6 +49,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.25  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.24  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -111,7 +114,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
  *
  * Revision 1.5  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -260,20 +263,15 @@ public class ODStandardPanel
         LevelItem[] levelItems = new LevelItem[3]; //{ "Info", "Debug", "keins"};
         levelItems[0] = new LevelItem(Level.INFO,
                                       ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "options", "logging", "info"})));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.info")));
         levelItems[1] = new LevelItem(Level.DEBUG,
                                       ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "options", "logging", "debug"})));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.debug")));
         levelItems[2] = new LevelItem(Level.OFF,
                                       ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "options", "logging", "off"})));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.off")));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform",
-                                      "standardsheet",
-                                      "caption"}));
+            getFirstAttrbuteByTagName(".root.einstform.standardsheet.caption"));
         cmbLog = new JComboBox(levelItems);
         cmbLog.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -299,18 +297,15 @@ public class ODStandardPanel
         UpdateInfoItem item0 = new UpdateInfoItem(0,
                                                   ZeichenErsetzer.
                                                   korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "options", "standard", "updateinfo0"})));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.updateinfo0")));
         UpdateInfoItem item1 = new UpdateInfoItem(1,
                                                   ZeichenErsetzer.
                                                   korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "options", "standard", "updateinfo1"})));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.updateinfo1")));
         UpdateInfoItem item2 = new UpdateInfoItem(2,
                                                   ZeichenErsetzer.
                                                   korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "options", "standard", "updateinfo2"})));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.updateinfo2")));
         updateInfoModus.addItem(item0);
         updateInfoModus.addItem(item1);
         updateInfoModus.addItem(item2);
@@ -339,8 +334,7 @@ public class ODStandardPanel
         });
         JPanel panel9 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel label10 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "options", "standard", "updateinfotext"})));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.updateinfotext")));
         panel9.add(label10);
         panel9.add(updateInfoModus);
 
@@ -349,26 +343,19 @@ public class ODStandardPanel
         xmlPort.setHorizontalAlignment(JLabel.RIGHT);
         JPanel panel6 = new JPanel(new GridBagLayout());
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Label2",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.Label2.caption")));
         label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Label7",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.Label7.caption")));
         label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Label3",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.Label3.caption")));
         label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Label8",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.Label8.caption")));
         label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "standard", "xmlport"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.standard.xmlport")));
         label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "standard", "standardbrowser"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.standard.standardbrowser")));
         loadPlugins.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "standard", "ladeplugins"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.standard.ladeplugins")));
 
         loadPlugins.setSelected(optionsManager.shouldLoadPluginsOnStartup());
 
@@ -416,23 +403,17 @@ public class ODStandardPanel
             }
         };
         hint1.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "standard", "ttipp_temp"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.standard.ttipp_temp")));
         hint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "standard", "ttipp_port"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.standard.ttipp_port")));
         hint3.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "standard", "ttipp_nick"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.standard.ttipp_nick")));
         hint4.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Label1",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.Label1.caption")));
         hint5.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "logging", "ttip"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.logging.ttip")));
         hint6.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "standard", "ttipp_xmlport"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.standard.ttipp_xmlport")));
 
         Icon icon2 = im.getIcon("folderopen");
         DirectoryChooserMouseAdapter dcMouseAdapter = new

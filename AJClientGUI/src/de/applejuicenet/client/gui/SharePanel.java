@@ -56,7 +56,7 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.58 2004/02/10 14:58:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.59 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,6 +65,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.59  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.58  2004/02/10 14:58:23  maj0r
  * Link mit Quellen kann nun auch im Sharebereich erzeugt werden.
  *
@@ -668,12 +671,7 @@ public class SharePanel
                     Iterator iterator = shares.values().iterator();
                     int anzahlDateien = 0;
                     double size = 0;
-                    int anzahlArray;
                     ShareDO shareDO;
-                    String filename;
-                    String path;
-                    ShareNode superParentNode;
-                    ShareNode parentNode;
                     while (iterator.hasNext()) {
                         shareDO = (ShareDO) iterator.next();
                         rootNode.addChild(shareDO);
@@ -776,97 +774,53 @@ public class SharePanel
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             titledBorder1.setTitle(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "dirssheet",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.dirssheet.caption")));
             titledBorder2.setTitle(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "filessheet",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.filessheet.caption")));
             item1.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "mainform",
-                "addwsubdirsbtn", "caption"})));
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.addwsubdirsbtn.caption")));
             item2.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "mainform",
-                "addosubdirsbtn", "caption"})));
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.addosubdirsbtn.caption")));
             item3.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "mainform",
-                "deldirbtn", "caption"})));
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.deldirbtn.caption")));
             itemCopyToClipboard.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "mainform",
-                "getlink1", "caption"})));
-            itemCopyToClipboardAsUBBCode.setText(ZeichenErsetzer.
-                                                 korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "javagui",
-                "shareform", "linkalsubbcode"})));
-            itemCopyToClipboardWithSources.setText(ZeichenErsetzer.
-                korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "javagui",
-                "downloadform", "getlinkwithsources"})));
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.getlink1.caption")));
+            itemCopyToClipboardAsUBBCode.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.linkalsubbcode")));
+            itemCopyToClipboardWithSources.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.getlinkwithsources")));
             refresh.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "startsharecheck",
-                                          "caption"})));
-            refresh.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "startsharecheck",
-                                          "hint"})));
-            neueListe.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "newfilelist",
-                                          "caption"})));
-            neueListe.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "newfilelist",
-                                          "hint"})));
+                getFirstAttrbuteByTagName(".root.mainform.startsharecheck.caption")));
+            refresh.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.startsharecheck.hint")));
+            neueListe.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.newfilelist.caption")));
+            neueListe.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.newfilelist.hint")));
             neuLaden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "sharereload",
-                                          "caption"})));
-            neuLaden.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "sharereload",
-                                          "hint"})));
-            prioritaetSetzen.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "setprio",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.sharereload.caption")));
+            neuLaden.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.sharereload.hint")));
+            prioritaetSetzen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.setprio.caption")));
             prioritaetSetzen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "mainform",
-                "setprio", "hint"})));
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.setprio.hint")));
             prioritaetAufheben.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "mainform",
-                "clearprio", "caption"})));
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.clearprio.caption")));
             prioritaetAufheben.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "mainform",
-                "clearprio", "hint"})));
+                languageSelector.getFirstAttrbuteByTagName(".root.mainform.clearprio.hint")));
 
             String[] tableColumns = new String[3];
             tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "sfiles",
-                                          "col0caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.sfiles.col0caption"));
             tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "sfiles",
-                                          "col1caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.sfiles.col1caption"));
             tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "sfiles",
-                                          "col2caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.sfiles.col2caption"));
 
             TableColumnModel tcm = shareTable.getColumnModel();
             for (int i = 0; i < 3; i++) {
@@ -874,8 +828,7 @@ public class SharePanel
             }
 
             eintraege = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "shareform",
-                                          "anzahlShare"}));
+                getFirstAttrbuteByTagName(".root.javagui.shareform.anzahlShare"));
             if (anzahlDateien > 0) {
                 String temp = eintraege;
                 temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));

@@ -23,7 +23,7 @@ import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODDirectoryChooser.java,v 1.4 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODDirectoryChooser.java,v 1.5 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODDirectoryChooser.java,v $
+ * Revision 1.5  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.4  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -94,16 +97,14 @@ public class ODDirectoryChooser
         aPanel.add(uebernehmen);
         aPanel.add(abbrechen);
         uebernehmen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Button1",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.Button1.caption")));
         uebernehmen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 uebernehmen();
             }
         });
         abbrechen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Button2",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.einstform.Button2.caption")));
         abbrechen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();

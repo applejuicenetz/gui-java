@@ -23,7 +23,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.11 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.12 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODConnectionPanel.java,v $
+ * Revision 1.12  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.11  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -138,20 +141,13 @@ public class ODConnectionPanel
 
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "remote",
-                                      "host"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.remote.host")));
         label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "remote",
-                                      "passwortAlt"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.remote.passwortAlt")));
         label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "remote",
-                                      "passwortNeu"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.remote.passwortNeu")));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "pwsheet",
-                                      "caption"}));
+            getFirstAttrbuteByTagName(".root.einstform.pwsheet.caption"));
         label4 = new JLabel("Port");
 
         host.setText(remote.getHost());
@@ -254,8 +250,7 @@ public class ODConnectionPanel
         add(panel1, BorderLayout.NORTH);
         if (quickConnectionSettingsDialog != null) {
             label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"einstform", "pwsheet",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.einstform.pwsheet.caption")));
             passwortAlt.setVisible(false);
             label2.setVisible(false);
         }

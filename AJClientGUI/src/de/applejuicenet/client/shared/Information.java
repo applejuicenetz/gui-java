@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.8 2004/02/20 14:55:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.9 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Information.java,v $
+ * Revision 1.9  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.8  2004/02/20 14:55:02  maj0r
  * Speicheroptimierungen.
  *
@@ -262,12 +265,12 @@ public class Information
     }
 
     public void fireLanguageChanged() {
-        verbunden = languageSelector.getFirstAttrbuteByTagName(new String[] {
-            "javagui", "mainform", "verbunden"});
-        verbinden = languageSelector.getFirstAttrbuteByTagName(new String[] {
-            "javagui", "mainform", "verbinden"});
-        nichtVerbunden = languageSelector.getFirstAttrbuteByTagName(new String[] {
-            "javagui", "mainform", "nichtverbunden"});
+        verbunden = languageSelector.getFirstAttrbuteByTagName(
+            ".root.javagui.mainform.verbunden");
+        verbinden = languageSelector.getFirstAttrbuteByTagName(
+            ".root.javagui.mainform.verbinden");
+        nichtVerbunden = languageSelector.getFirstAttrbuteByTagName(
+            ".root.javagui.mainform.nichtverbunden");
     }
 
 }

@@ -24,7 +24,7 @@ import de.applejuicenet.client.shared.ProxySettings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.8 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.9 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +33,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODProxyPanel.java,v $
+ * Revision 1.9  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.8  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -95,28 +98,17 @@ public class ODProxyPanel
         proxySettings = PropertiesManager.getProxyManager().getProxySettings();
 
         label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "proxy",
-                                      "host"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.proxy.host")));
         label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "proxy",
-                                      "port"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.proxy.port")));
         label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "proxy",
-                                      "benutzername"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.proxy.benutzername")));
         label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "proxy",
-                                      "passwort"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.proxy.passwort")));
         use.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "proxy",
-                                      "verwenden"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.proxy.verwenden")));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "proxy", "caption"}));
+            getFirstAttrbuteByTagName(".root.javagui.options.proxy.caption"));
         host.setText(proxySettings.getHost());
         host.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {

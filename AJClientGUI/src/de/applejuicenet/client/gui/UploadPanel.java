@@ -33,12 +33,11 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.upload.UploadDataTableModel;
 import de.applejuicenet.client.gui.tables.upload.UploadTablePercentCellRenderer;
-import de.applejuicenet.client.gui.tables.upload.UploadTableTreeCellRenderer;
 import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.39 2004/02/09 14:21:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.40 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,6 +46,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.40  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.39  2004/02/09 14:21:32  maj0r
  * Icons für Upload-DirectStates eingebaut.
  *
@@ -282,31 +284,23 @@ public class UploadPanel
     public void fireLanguageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         clientText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "uplcounttext"}));
-        label1.setText(clientText.replaceAll("%d",
-                                             Integer.toString(anzahlClients)));
+            getFirstAttrbuteByTagName(".root.mainform.uplcounttext"));
+        label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
         String[] columnsText = new String[7];
         columnsText[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
-                                      "col0caption"}));
+            getFirstAttrbuteByTagName(".root.mainform.uploads.col0caption"));
         columnsText[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
-                                      "col3caption"}));
+            getFirstAttrbuteByTagName(".root.mainform.uploads.col3caption"));
         columnsText[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
-                                      "col1caption"}));
+            getFirstAttrbuteByTagName(".root.mainform.uploads.col1caption"));
         columnsText[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
-                                      "col2caption"}));
+            getFirstAttrbuteByTagName(".root.mainform.uploads.col2caption"));
         columnsText[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "col6caption"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.col6caption"));
         columnsText[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
-                                      "col4caption"}));
+            getFirstAttrbuteByTagName(".root.mainform.uploads.col4caption"));
         columnsText[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
-                                      "col5caption"}));
+            getFirstAttrbuteByTagName(".root.mainform.uploads.col5caption"));
         for (int i = 0; i < columns.length; i++) {
             columns[i].setHeaderValue(columnsText[i]);
         }

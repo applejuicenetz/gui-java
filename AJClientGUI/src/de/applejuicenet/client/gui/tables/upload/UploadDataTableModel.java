@@ -11,7 +11,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.11 2004/02/09 14:21:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.12 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadDataTableModel.java,v $
+ * Revision 1.12  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.11  2004/02/09 14:21:32  maj0r
  * Icons für Upload-DirectStates eingebaut.
  *
@@ -203,20 +206,15 @@ public class UploadDataTableModel
     public void fireLanguageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         uebertragung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
-                                      "uplstat1"}));
+            getFirstAttrbuteByTagName(".root.mainform.uploads.uplstat1"));
         keineVerbindungMoeglich = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
-            "uploads", "uplstat8"}));
+            languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploads.uplstat8"));
         versucheIndirekteVerbindung = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
-            "uploads", "uplstat7"}));
+            languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploads.uplstat7"));
         versucheZuVerbinden = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
-            "uploads", "uplstat6"}));
+            languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploads.uplstat6"));
         warteschlange = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
-                                      "uplstat3"}));
+            getFirstAttrbuteByTagName(".root.mainform.uploads.uplstat3"));
     }
 
     public Object getChild(Object parent, int index) {

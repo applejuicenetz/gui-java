@@ -28,7 +28,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import javax.swing.JScrollPane;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.43 2004/02/09 14:49:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.44 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +37,9 @@ import javax.swing.JScrollPane;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.44  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.43  2004/02/09 14:49:44  maj0r
  * Startbereich scrollbar gemacht, wenn die Darstellung zu klein ist.
  *
@@ -404,15 +407,11 @@ public class StartPanel
                 LanguageSelector ls = LanguageSelector.
                     getInstance();
                 String nachricht = ZeichenErsetzer.korrigiereUmlaute(ls.
-                    getFirstAttrbuteByTagName(new
-                                              String[] {"javagui", "startup",
-                                              "updatefehlernachricht"}));
+                    getFirstAttrbuteByTagName(".root.javagui.startup.updatefehlernachricht"));
                 String titel = ZeichenErsetzer.korrigiereUmlaute(ls.
-                    getFirstAttrbuteByTagName(new
-                                              String[] {"mainform", "caption"}));
+                    getFirstAttrbuteByTagName(".root.mainform.caption"));
                 JOptionPane.showMessageDialog(this, nachricht,
-                                              titel,
-                                              JOptionPane.INFORMATION_MESSAGE);
+                                              titel, JOptionPane.INFORMATION_MESSAGE);
             }
         }
         catch (Exception e) {
@@ -427,26 +426,23 @@ public class StartPanel
 
     public void fireLanguageChanged() {
         try {
-            keinServer = languageSelector.getFirstAttrbuteByTagName(new String[] {
-                "javagui", "mainform", "keinserver"});
+            keinServer = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.keinserver");
             netzwerk.setText("<html><font><h2>" +
                              ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "html7"})) +
+                getFirstAttrbuteByTagName(".root.mainform.html7")) +
                              "</h2></font></html>");
             label8.setText("<html><font><h2>" +
                            ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "html13"})) +
+                getFirstAttrbuteByTagName(".root.mainform.html13")) +
                            "</h2></font></html>");
             deinClient.setText("<html><font><h2>" +
                                ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "html1"})) +
+                getFirstAttrbuteByTagName(".root.mainform.html1")) +
                                "</h2></font></html>");
             firewallWarning = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "firewallwarning",
-                                          "caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.firewallwarning.caption"));
             if (netInfo != null && netInfo.isFirewalled()) {
                 warnungen.setVisible(true);
                 warnungIcon.setVisible(true);
@@ -458,7 +454,7 @@ public class StartPanel
                 label7.setText("");
             }
             label9Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "html10"}));
+                getFirstAttrbuteByTagName(".root.mainform.html10"));
             StringBuffer temp = new StringBuffer(label9Text);
             int pos = temp.indexOf("%s");
             if (pos != -1) {
@@ -473,8 +469,7 @@ public class StartPanel
             }
             label9.setText(temp.toString());
             label10Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "status",
-                                          "status0"}));
+                getFirstAttrbuteByTagName(".root.mainform.status.status0"));
             temp = new StringBuffer(label10Text);
             pos = temp.indexOf("%d");
             if (pos != -1) {
@@ -490,9 +485,7 @@ public class StartPanel
             label10.setText(temp.toString());
 
             label6Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new
-                                          String[] {"mainform", "status",
-                                          "status2"}));
+                getFirstAttrbuteByTagName(".root.mainform.status.status2"));
             temp = new StringBuffer(label6Text);
             if (netInfo != null) {
                 pos = temp.indexOf("%d");
@@ -532,7 +525,7 @@ public class StartPanel
             warnungen.setText("<html><font><h2>" +
                               ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "html15"})) +
+                getFirstAttrbuteByTagName(".root.mainform.html15")) +
                               "</h2></font></html>");
         }
         catch (Exception e) {

@@ -25,7 +25,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.6 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.7 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +34,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: NewServerDialog.java,v $
+ * Revision 1.7  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.6  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -86,10 +89,9 @@ public class NewServerDialog
         });
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"addserverform", "caption"})));
+            getFirstAttrbuteByTagName(".root.addserverform.caption")));
         ok.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"addserverform", "okbtn",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.addserverform.okbtn.caption")));
         dyn.setColumns(15);
         port.setColumns(5);
         port.setDocument(new NumberInputVerifier());
@@ -103,14 +105,11 @@ public class NewServerDialog
         constraints.insets.left = 5;
         panel2.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"addserverform",
-                                      "serverlbl",
-                                      "caption"})) + ": "), constraints);
+            getFirstAttrbuteByTagName(".root.addserverform.serverlbl.caption")) + ": "), constraints);
         constraints.gridy = 1;
         panel2.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"addserverform", "portlbl",
-                                      "caption"})) + ": "), constraints);
+            getFirstAttrbuteByTagName(".root.addserverform.portlbl.caption")) + ": "), constraints);
         constraints.insets.left = 0;
         constraints.gridx = 1;
         constraints.gridy = 0;

@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.28 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.29 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.29  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.28  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -322,80 +325,54 @@ public class DownloadModel
     public void fireLanguageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         ungefragt = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "userstat1"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.userstat1"));
         versucheZuVerbinden = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
-            "queue", "userstat2"}));
+            languageSelector.getFirstAttrbuteByTagName(".root.mainform.queue.userstat2"));
         ggstZuAlteVersion = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "userstat3"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.userstat3"));
         kannDateiNichtOeffnen = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
-            "queue", "userstat4"}));
+            languageSelector.getFirstAttrbuteByTagName(".root.mainform.queue.userstat4"));
         warteschlange = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "userstat5"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.userstat5"));
         keineBrauchbarenParts = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
-            "queue", "userstat6"}));
+            languageSelector.getFirstAttrbuteByTagName(".root.mainform.queue.userstat6"));
         uebertragung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "userstat7"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.userstat7"));
         nichtGenugPlatz = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "userstat8"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.userstat8"));
         fertiggestellt = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "queuestat14"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.queuestat14"));
         keineVerbindungMoeglich = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
-            "queue", ""}));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.verbindungunmoeglich"));
         pausiert = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "userstat13"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.userstat13"));
         position = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "userstat51"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.userstat51"));
         versucheIndirekt = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "userstat10"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.userstat10"));
         eigenesLimitErreicht = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "downloadform", "eigeneslimiterreicht"}));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.eigeneslimiterreicht"));
         indirekteVerbindungAbgelehnt = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "downloadform", "indverbindungabgelehnt"}));
-
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.indverbindungabgelehnt"));
         suchen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "queuestatlook"}));
-        laden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                  getFirstAttrbuteByTagName(new
-            String[] {"mainform", "queue", "queuestattransfer"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.queuestatlook"));
+        laden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+            ".root.mainform.queue.queuestattransfer"));
         keinPlatz = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "queuestat1"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.queuestat1"));
         fertigstellen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "queuestat12"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.queuestat12"));
         fertig = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "queuestat14"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.queuestat14"));
         abbrechen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "queuestat15"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.queuestat15"));
         abgebrochen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "queuestat17"}));
+            getFirstAttrbuteByTagName(".root.mainform.queue.queuestat17"));
         warteschlangeVoll = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "downloadform",
-                                      "warteschlangevoll"}));
+            getFirstAttrbuteByTagName(".root.javagui.downloadform.warteschlangevoll"));
         fehlerBeimFertigstellen = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "downloadform", "fehlerbeimfertigstellen"}));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.fehlerbeimfertigstellen"));
         dataWirdErstellt = ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
-            "downloadform", "datawirderstellt"}));
+            languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.datawirderstellt"));
     }
 }

@@ -18,7 +18,7 @@ import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.30 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.31 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.31  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.30  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -210,36 +213,18 @@ public class RegisterPanel
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            setTitleAt(0,
-                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new
-                                          String[] {
-                                          "mainform", "homesheet", "caption"})));
-            setTitleAt(1,
-                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new
-                                          String[] {
-                                          "mainform", "sharesheet", "caption"})));
-            setTitleAt(2,
-                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new
-                                          String[] {
-                                          "mainform", "seachsheet", "caption"})));
-            setTitleAt(3,
-                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new
-                                          String[] {
-                                          "mainform", "queuesheet", "caption"})));
-            setTitleAt(4,
-                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new
-                                          String[] {
-                                          "mainform", "uploadsheet", "caption"})));
-            setTitleAt(5,
-                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new
-                                          String[] {
-                                          "mainform", "serversheet", "caption"})));
+            setTitleAt(0, ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.homesheet.caption")));
+            setTitleAt(1, ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.sharesheet.caption")));
+            setTitleAt(2, ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.seachsheet.caption")));
+            setTitleAt(3, ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.queuesheet.caption")));
+            setTitleAt(4, ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.uploadsheet.caption")));
+            setTitleAt(5, ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.serversheet.caption")));
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {

@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.53 2004/02/13 14:50:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.54 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -57,6 +57,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.54  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.53  2004/02/13 14:50:56  maj0r
  * Bug #129 gefixt (Danke an dsp2004)
  * WebsiteException durch Ueberlastung des Servers sollte nun weitgehend unterbunden sein.
@@ -178,7 +181,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * Konsolenausgaben hinzugefügt.
  *
  * Revision 1.15  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -524,74 +527,50 @@ public class ServerPanel
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             sucheServer.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "Label11",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.Label11.caption")));
             String[] columns = new String[5];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "serverlist",
-                                          "col0caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.serverlist.col0caption"));
             columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "serverlist",
-                                          "col1caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.serverlist.col1caption"));
             columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "serverlist",
-                                          "col3caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.serverlist.col3caption"));
             columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui",
-                                          "serverform",
-                                          "col4caption"}));
+                getFirstAttrbuteByTagName(".root.javagui.serverform.col4caption"));
             columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "serverlist",
-                                          "col5caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.serverlist.col5caption"));
             item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "connserv",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.connserv.caption")));
             item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "delserv",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.delserv.caption")));
             item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "addserv",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.addserv.caption")));
             item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "addserv",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.addserv.caption")));
             item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "addserv",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.addserv.caption")));
             item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "delserv",
-                                          "caption"})));
-            verbunden.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
-                                          "verbunden"})));
+                getFirstAttrbuteByTagName(".root.mainform.delserv.caption")));
+            verbunden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(".root.javagui.serverform.verbunden")));
             versucheZuVerbinden.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
-                                          "verbinden"})));
+                getFirstAttrbuteByTagName(".root.javagui.serverform.verbinden")));
             aelter24h.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
-                                          "aelter24h"})));
+                getFirstAttrbuteByTagName(".root.javagui.serverform.aelter24h")));
             juenger24h.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
-                                          "juenger24h"})));
+                getFirstAttrbuteByTagName(".root.javagui.serverform.juenger24h")));
             warnungTitel = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.caption"));
             warnungNachricht = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
-                                          "warnungnachricht"}));
+                getFirstAttrbuteByTagName(".root.javagui.serverform.warnungnachricht"));
             itemCopyToClipboard.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "getlink1", "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.getlink1.caption")));
 
             TableColumnModel tcm = serverTable.getColumnModel();
             for (int i = 0; i < tcm.getColumnCount(); i++) {

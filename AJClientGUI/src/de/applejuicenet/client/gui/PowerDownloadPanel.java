@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.40 2004/02/20 11:03:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.41 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -61,6 +61,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.41  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.40  2004/02/20 11:03:38  maj0r
  * Featurerequest #228 realisiert (Danke an Major-Tom)
  * Im Pwdl-Eingabefeld funktionieren nun auch die Hoch/Runter-Pfeiltasten.
@@ -683,63 +686,40 @@ public class PowerDownloadPanel
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             powerdownload.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "powerdownload",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.powerdownload.caption")));
             label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "Label6",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.Label6.caption")));
             btnInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "powerinactive",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.powerinactive.caption")));
             btnAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "poweractive",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.poweractive.caption")));
             label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "Label7",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.Label7.caption")));
             label8.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "Label8",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.Label8.caption")));
             label9.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui",
-                                          "downloadtab",
-                                          "label1"})));
+                getFirstAttrbuteByTagName(".root.javagui.downloadtab.label1")));
             btnAutoInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui",
-                                          "downloadtab",
-                                          "rbInaktiv"})));
+                getFirstAttrbuteByTagName(".root.javagui.downloadtab.rbInaktiv")));
             btnAutoAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui",
-                                          "downloadtab",
-                                          "rbAktiv"})));
+                getFirstAttrbuteByTagName(".root.javagui.downloadtab.rbAktiv")));
             label10.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui",
-                                          "downloadtab",
-                                          "pdlAb"})));
+                getFirstAttrbuteByTagName(".root.javagui.downloadtab.pdlAb")));
             label11.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui",
-                                          "downloadtab",
-                                          "pdlBis"})));
+                getFirstAttrbuteByTagName(".root.javagui.downloadtab.pdlBis")));
             String ok = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new
-                                          String[] {"javagui", "downloadtab",
-                                          "btnOK"}));
+                getFirstAttrbuteByTagName(".root.javagui.downloadtab.btnOK"));
             btnAutoPdl.setText(ok);
             btnPdl.setText(ok);
             btnHint.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "tooltipps",
-                                          "powerdownload"})));
+                getFirstAttrbuteByTagName(".root.javagui.tooltipps.powerdownload")));
             btnHint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "tooltipps",
-                                          "autopowerdownload"})));
+                getFirstAttrbuteByTagName(".root.javagui.tooltipps.autopowerdownload")));
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {

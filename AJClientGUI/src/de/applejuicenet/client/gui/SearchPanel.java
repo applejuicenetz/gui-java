@@ -28,7 +28,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.25 2004/02/12 21:16:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.26 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +37,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.26  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.25  2004/02/12 21:16:51  maj0r
  * Bug #23 gefixt (Danke an computer.ist.org)
  * Suche abbrechen korrigiert.
@@ -203,53 +206,37 @@ public class SearchPanel
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "searchlbl",
-                                          "caption"})) + ": ");
+                getFirstAttrbuteByTagName(".root.mainform.searchlbl.caption")) + ": ");
             btnStartStopSearch.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "searchbtn",
-                                          "searchcaption"})));
+                getFirstAttrbuteByTagName(".root.mainform.searchbtn.searchcaption")));
 
             bearbeitung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "opensearches",
-                                          "caption"}));
-            label2.setText(bearbeitung.replaceAll("%d",
-                                                  Integer.toString(Search.currentSearchCount)));
-
+                getFirstAttrbuteByTagName(".root.mainform.opensearches.caption"));
+            label2.setText(bearbeitung.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
             String[] resultTexte = new String[5];
             resultTexte[0] = (ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "searchform",
-                                          "offenesuchen"})));
+                getFirstAttrbuteByTagName(".root.javagui.searchform.offenesuchen")));
             resultTexte[1] = (ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "searchform",
-                                          "gefundenedateien"})));
+                getFirstAttrbuteByTagName(".root.javagui.searchform.gefundenedateien")));
             resultTexte[2] = (ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "searchform",
-                                          "durchsuchteclients"})));
+                getFirstAttrbuteByTagName(".root.javagui.searchform.durchsuchteclients")));
             resultTexte[3] = (ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "Getlink3",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.Getlink3.caption")));
             resultTexte[4] = (ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform",
-                                          "cancelsearch",
-                                          "caption"})));
-
+                getFirstAttrbuteByTagName(".root.mainform.cancelsearch.caption")));
             String[] columns = new String[3];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "searchs",
-                                          "col0caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.searchs.col0caption"));
             columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "searchs",
-                                          "col1caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.searchs.col1caption"));
             columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "searchs",
-                                          "col2caption"}));
+                getFirstAttrbuteByTagName(".root.mainform.searchs.col2caption"));
 
             SearchResultPanel.setTexte(resultTexte, columns);
 

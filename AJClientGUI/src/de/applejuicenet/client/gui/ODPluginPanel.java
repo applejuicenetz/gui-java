@@ -26,7 +26,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.12 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.13 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,6 +35,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginPanel.java,v $
+ * Revision 1.13  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.12  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -124,30 +127,20 @@ public class ODPluginPanel
         setLayout(new BorderLayout());
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "Label11",
-                                      "caption"})) + ":");
+            getFirstAttrbuteByTagName(".root.einstform.Label11.caption")) + ":");
         name = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new
-            String[] {"javagui", "options", "plugins", "name"}));
+                                                 getFirstAttrbuteByTagName(".root.javagui.options.plugins.name"));
         version = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new
-                                      String[] {"javagui", "options", "plugins",
-                                      "version"}));
+            getFirstAttrbuteByTagName(".root.javagui.options.plugins.version"));
         erlaeuterung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "plugins",
-                                      "beschreibung"}));
+            getFirstAttrbuteByTagName(".root.javagui.options.plugins.beschreibung"));
         autor = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                  getFirstAttrbuteByTagName(new
-            String[] {"javagui", "options", "plugins", "autor"}));
+                                                  getFirstAttrbuteByTagName(".root.javagui.options.plugins.autor"));
         einstellungen.setText(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
-            getFirstAttrbuteByTagName(new
-                                      String[] {"javagui", "options", "plugins",
-                                      "einstellungen"})));
+            getFirstAttrbuteByTagName(".root.javagui.options.plugins.einstellungen")));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"einstform", "TabSheet1",
-                                      "caption"}));
+            getFirstAttrbuteByTagName(".root.einstform.TabSheet1.caption"));
 
         add(label1, BorderLayout.NORTH);
         add(pluginList, BorderLayout.WEST);

@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.8 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.9 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WizardDialog.java,v $
+ * Revision 1.9  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.8  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -239,16 +242,13 @@ public class WizardDialog
     public void fireLanguageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
-                                      "titel"})));
+            getFirstAttrbuteByTagName(".root.javagui.wizard.titel")));
         zurueck.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
-                                      "zurueck"})));
+            getFirstAttrbuteByTagName(".root.javagui.wizard.zurueck")));
         weiter.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
-                                      "weiter"})));
+            getFirstAttrbuteByTagName(".root.javagui.wizard.weiter")));
         ende.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard", "ende"})));
+            getFirstAttrbuteByTagName(".root.javagui.wizard.ende")));
         schritt1.fireLanguageChanged();
         schritt2.fireLanguageChanged();
         schritt3.fireLanguageChanged();

@@ -29,7 +29,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.14 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.15 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -38,6 +38,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AboutDialog.java,v $
+ * Revision 1.15  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.14  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -123,8 +126,7 @@ public class AboutDialog
         setResizable(false);
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.mainform.aboutbtn.caption")));
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(backPanel, BorderLayout.CENTER);
         pack();

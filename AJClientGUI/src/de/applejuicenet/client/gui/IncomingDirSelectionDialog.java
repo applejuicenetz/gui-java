@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/IncomingDirSelectionDialog.java,v 1.2 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/IncomingDirSelectionDialog.java,v 1.3 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: IncomingDirSelectionDialog.java,v $
+ * Revision 1.3  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.2  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -53,12 +56,9 @@ public class IncomingDirSelectionDialog
     private void init() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform",
-                                      "changetarget",
-                                      "caption"})));
+            getFirstAttrbuteByTagName(".root.mainform.changetarget.caption")));
         schliessen.setText(ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.getFirstAttrbuteByTagName(
-            new String[] {"einstform", "Button1", "caption"})));
+            languageSelector.getFirstAttrbuteByTagName(".root.einstform.Button1.caption")));
         schliessen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 somethingSelected = true;
@@ -67,8 +67,7 @@ public class IncomingDirSelectionDialog
         });
         JLabel label1 = new JLabel();
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui",
-                                      "downloadform", "neuesverzeichnis"})));
+            getFirstAttrbuteByTagName(".root.javagui.downloadform.neuesverzeichnis")));
         for (int i = 0; i < selectionValues.length; i++) {
             incomingDirs.addItem(selectionValues[i]);
             if (selectionValues[i].compareTo("") == 0) {

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.28 2004/02/18 18:43:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.29 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.29  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.28  2004/02/18 18:43:04  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -131,7 +134,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 
 public class DownloadDOOverviewPanel
     extends JPanel
-    implements LanguageListener, DataUpdateListener {
+    implements LanguageListener{
     private DownloadPartListPanel actualDlOverviewTable = new
         DownloadPartListPanel();
     private JLabel actualDLDateiName = new JLabel();
@@ -139,7 +142,6 @@ public class DownloadDOOverviewPanel
     private JLabel label3 = new JLabel("Nicht vorhanden");
     private JLabel label2 = new JLabel("In Ordnung");
     private JLabel label1 = new JLabel("Überprüft");
-    private Settings settings;
     private Logger logger;
     private JButton holeListe = new JButton("Hole Partliste");
     private Thread partListWorkerThread = new Thread();
@@ -150,9 +152,7 @@ public class DownloadDOOverviewPanel
         try {
             downloadPanel = parent;
             init();
-            settings = Settings.getSettings();
             LanguageSelector.getInstance().addLanguageListener(this);
-            PropertiesManager.getOptionsManager().addSettingsListener(this);
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -306,32 +306,21 @@ public class DownloadDOOverviewPanel
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "Label4",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.Label4.caption")));
             label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "Label3",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.Label3.caption")));
             label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "Label2",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.Label2.caption")));
             label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"mainform", "Label1",
-                                          "caption"})));
+                getFirstAttrbuteByTagName(".root.mainform.Label1.caption")));
             holeListe.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui",
-                                          "downloadform", "partlisteanzeigen"})));
+                getFirstAttrbuteByTagName(".root.javagui.downloadform.partlisteanzeigen")));
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
             }
-        }
-    }
-
-    public void fireContentChanged(int type, Object content) {
-        if (type == DataUpdateListener.SETTINGS_CHANGED) {
-            settings = (Settings) content;
         }
     }
 }

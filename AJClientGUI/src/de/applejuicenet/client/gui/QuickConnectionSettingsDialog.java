@@ -31,7 +31,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.12 2004/02/17 15:26:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.13 2004/02/21 18:20:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,6 +40,9 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.13  2004/02/21 18:20:30  maj0r
+ * LanguageSelector auf SAX umgebaut.
+ *
  * Revision 1.12  2004/02/17 15:26:38  maj0r
  * Bug #219 gefixt (Danke an uselessplayer)
  * 100%-CPU bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt.
@@ -119,12 +122,10 @@ public class QuickConnectionSettingsDialog
 
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
-                                      "ueberpruefeEinst"}));
+            getFirstAttrbuteByTagName(".root.javagui.startup.ueberpruefeEinst"));
         cmbNieWiederZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
-                                      "showdialog"})));
+            getFirstAttrbuteByTagName(".root.javagui.startup.showdialog")));
         cmbNieWiederZeigen.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
                 dirty = true;
