@@ -42,6 +42,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
@@ -56,6 +57,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadRootNode;
 import de.applejuicenet.client.gui.tables.download.DownloadTableCellRenderer;
 import de.applejuicenet.client.gui.tables.download.DownloadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.tables.download.DownloadTableVersionCellRenderer;
+import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.Settings;
@@ -64,6 +66,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
  * $Header:
@@ -126,6 +129,8 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 
 	private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
 
+    private JMenuItem itemOpenWithProgram = new JMenuItem();
+	
 	private JSplitPane splitPane;
 
 	private String downloadAbbrechen;
@@ -223,6 +228,48 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 		popup.add(itemCopyToClipboardWithSources);
 		popup.add(item7);
 		item7.setVisible(false);
+    	popup.add(itemOpenWithProgram);
+        itemOpenWithProgram.setIcon(im.getIcon("vlc"));
+        if (ApplejuiceFassade.getInstance().isLocalhost()){
+            itemOpenWithProgram.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+    				Object[] selectedItems = getSelectedDownloadItems();
+    				if (selectedItems != null && selectedItems.length == 1) {
+    					DownloadDO downloadDO = null;
+    					if (selectedItems[0].getClass() == DownloadMainNode.class
+    							&& ((DownloadMainNode) selectedItems[0]).getType() == DownloadMainNode.ROOT_NODE) {
+    						downloadDO = ((DownloadMainNode) selectedItems[0])
+    								.getDownloadDO();
+    					} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
+    						DownloadSourceDO downloadSourceDO = (DownloadSourceDO) selectedItems[0];
+    						Map downloads = ApplejuiceFassade.getInstance()
+    								.getDownloadsSnapshot();
+    						String key = Integer.toString(downloadSourceDO
+    								.getDownloadId());
+    						downloadDO = (DownloadDO) downloads.get(key);
+    					}
+						if (downloadDO != null) {
+	                        String programToExecute = OptionsManagerImpl.getInstance().getOpenProgram();
+	                        if (programToExecute.length() != 0){
+		    					int shareId = downloadDO.getShareId();
+		    					ShareDO shareDO = (ShareDO)ApplejuiceFassade.getInstance().getObjectById(shareId);
+		    					if (shareDO != null){
+			                        String filename = shareDO.getFilename();
+			            			try {
+			            				Runtime.getRuntime().exec(new String[] { programToExecute, filename });
+			            			} catch (Exception ex) {
+			            				//nix zu tun
+			            			}
+		    					}
+	    					}
+						}
+                    }
+                }
+            });
+        }
+        else{
+        	itemOpenWithProgram.setEnabled(false);
+        }
 
 		einfuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1049,6 +1096,7 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 					.setText(ZeichenErsetzer
 							.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.javagui.downloadform.einfuegen")));
+            itemOpenWithProgram.setText("VLC");
 		} catch (Exception e) {
 			if (logger.isEnabledFor(Level.ERROR)) {
 				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
