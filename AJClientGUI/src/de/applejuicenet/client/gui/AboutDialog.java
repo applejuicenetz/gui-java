@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.8 2003/11/16 12:34:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.9 2003/12/18 11:27:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AboutDialog.java,v $
+ * Revision 1.9  2003/12/18 11:27:46  maj0r
+ * Creditsanzeige korrigiert.
+ *
  * Revision 1.8  2003/11/16 12:34:23  maj0r
  * Themes einngebaut (Danke an LinuxDoc)
  *
@@ -169,7 +172,7 @@ public class AboutDialog extends JDialog {
                                 strWidth = fm.stringWidth ( entry.getAusgabetext() );
                                 toDrawGraphics.drawString(entry.getAusgabetext(), (creditsBreite - strWidth) / 2, y + abstand);
                             }
-                            g.drawImage(toDraw, imageX, imageY, BackPanel.this);
+                            g.drawImage(toDraw, imageX+1, imageY-11, BackPanel.this);
                             if (y==-5 - credits.size() * 15){
                                 y = creditsHoehe;
                             }
@@ -244,8 +247,8 @@ public class AboutDialog extends JDialog {
         public Dimension getPreferredSize() {
             if (backgroundImage != null)
             {
-                int width = backgroundImage.getWidth(this) + 1;
-                int height = backgroundImage.getHeight(this) + 1;
+                int width = backgroundImage.getWidth(this) + 3;
+                int height = backgroundImage.getHeight(this) + 3;
                 return new Dimension(width, height);
             }
             else{
