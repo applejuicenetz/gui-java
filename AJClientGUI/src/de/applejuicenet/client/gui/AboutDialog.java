@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.18 2004/04/14 15:14:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.19 2004/05/11 05:41:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -131,7 +131,7 @@ public class AboutDialog
             credits.add(new CreditsEntry(false, "BlueTiger"));
             credits.add(new CreditsEntry(false, "nurseppel"));
             credits.add(new CreditsEntry(true, "Kontakt"));
-            credits.add(new CreditsEntry(false, "irc.bongster.de"));
+            credits.add(new CreditsEntry(false, "irc.p2pchat.net"));
             credits.add(new CreditsEntry(false, "#applejuice"));
             credits.add(new CreditsEntry(false, "www.applejuicenet.de"));
 
