@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.25 2004/02/20 14:59:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.26 2004/03/06 19:08:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.26  2004/03/06 19:08:59  maj0r
+ * Zusaetzliche Pruefung eingebaut, die greift, wenn man auf einen entfernten Core ohne gesetztes Passwort zugreift.
+ *
  * Revision 1.25  2004/02/20 14:59:13  maj0r
  * Loglevel bei nicht gefundener Webseite geaendert.
  *
@@ -203,7 +206,7 @@ public abstract class HtmlLoader {
                 DataInputStream in = new DataInputStream(socket.getInputStream());
                 String inputLine = readLn(in);
                 if (method == HtmlLoader.GET) {
-                    if (inputLine == null) {
+                    if (inputLine == null || inputLine.length()==0) {
                         throw new WebSiteNotFoundException(
                             WebSiteNotFoundException.
                             UNKNOWN_HOST);
