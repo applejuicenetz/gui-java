@@ -796,6 +796,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 			coreMenu = new JMenu();
 			coreMenu.add(menuItemCoreBeenden);
 			menuBar.add(coreMenu);
+			coreMenu.setText("Core");
 			return menuBar;
 		} catch (Exception e) {
 			if (logger.isEnabledFor(Level.ERROR)) {
