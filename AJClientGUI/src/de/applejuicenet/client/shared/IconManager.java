@@ -7,9 +7,11 @@ import java.awt.*;
 import javax.swing.*;
 
 import de.applejuicenet.client.shared.icons.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.5 2003/07/01 14:50:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.6 2003/09/03 12:31:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +20,9 @@ import de.applejuicenet.client.shared.icons.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: IconManager.java,v $
+ * Revision 1.6  2003/09/03 12:31:07  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.5  2003/07/01 14:50:37  maj0r
  * Inner-Class Key ausgelagert und umbenannt.
  *
@@ -31,33 +36,45 @@ import de.applejuicenet.client.shared.icons.*;
  */
 
 public class IconManager {
-  private static IconManager instance = null;
-  private HashMap icons;
+    private static IconManager instance = null;
+    private HashMap icons;
+    private static Logger logger;
 
-  private IconManager() {
-    icons = new HashMap();
-  }
+    private IconManager() {
+        icons = new HashMap();
+    }
 
-  public static IconManager getInstance() {
-    if (instance == null) {
-      instance = new IconManager();
+    public static IconManager getInstance() {
+        if (instance == null)
+        {
+            instance = new IconManager();
+            logger = Logger.getLogger(instance.getClass());
+        }
+        return instance;
     }
-    return instance;
-  }
 
-  public ImageIcon getIcon(String key) {
-    ImageIcon result;
-    MapSetStringKey hashtableKey = new MapSetStringKey(key);
-    if (icons.containsKey(hashtableKey)) {
-      result = (ImageIcon) icons.get(hashtableKey);
+    public ImageIcon getIcon(String key) {
+        ImageIcon result = null;
+        try
+        {
+            MapSetStringKey hashtableKey = new MapSetStringKey(key);
+            if (icons.containsKey(hashtableKey))
+            {
+                result = (ImageIcon) icons.get(hashtableKey);
+            }
+            else
+            {
+                URL url = new DummyClass().getClass().getResource(key + ".gif");
+                Image img = Toolkit.getDefaultToolkit().getImage(url);
+                result = new ImageIcon();
+                result.setImage(img);
+                icons.put(hashtableKey, result);
+            }
+        }
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.INFO))
+                logger.info("Icon "+ key + ".gif nicht gefunden", e);
+        }
+        return result;
     }
-    else {
-      URL url = new DummyClass().getClass().getResource(key + ".gif");
-      Image img = Toolkit.getDefaultToolkit().getImage(url);
-      result = new ImageIcon();
-      result.setImage(img);
-      icons.put(hashtableKey, result);
-    }
-    return result;
-  }
 }
