@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.3 2003/07/03 19:11:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.4 2003/07/04 06:43:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import java.util.HashMap;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadNode.java,v $
+ * Revision 1.4  2003/07/04 06:43:51  maj0r
+ * Diverse Änderungen am DownloadTableModel.
+ *
  * Revision 1.3  2003/07/03 19:11:16  maj0r
  * DownloadTable überarbeitet.
  *
@@ -34,8 +37,13 @@ import java.util.HashMap;
  */
 
 public class DownloadNode implements Node {
-  private static ImageIcon leafIcon;
-  private static ImageIcon uebertrageIcon;
+  private static ImageIcon downloadIcon;
+  private static ImageIcon directoryIcon;
+
+  private static ImageIcon direktVerbundenIcon;
+  private static ImageIcon verbindungUnbekanntIcon;
+  private static ImageIcon indirektVerbundenIcon;
+
   private static HashMap directoryNodes = new HashMap();
 
   public static final int ROOT_NODE = 0;
@@ -54,27 +62,47 @@ public class DownloadNode implements Node {
     if (downloadDO==null){
         return;
     }
-    nodetype = DOWNLOAD_NODE;
-    initIcons();
-    this.downloadDO = downloadDO;
-    children = new HashMap();
-    String pfad = downloadDO.getTargetDirectory();
-    DownloadNode parent = null;
-    if (pfad==null || pfad.length()==0){
-        parent = (DownloadNode)directoryNodes.get(new MapSetStringKey("rootPfad"));
-        parent.addChild(this);
+    DownloadNode existent = (DownloadNode)directoryNodes.get(new MapSetStringKey(downloadDO.getId()));
+    if (existent==null){
+        nodetype = DOWNLOAD_NODE;
+        this.downloadDO = downloadDO;
+        children = new HashMap();
+        String pfad = downloadDO.getTargetDirectory();
+        DownloadNode parent = null;
+        if (pfad==null || pfad.length()==0){
+            parent = (DownloadNode)directoryNodes.get(new MapSetStringKey("rootPfad"));
+            parent.addChild(this);
+        }
+        else{
+            parent = (DownloadNode)directoryNodes.get(new MapSetStringKey("pfad"));
+            if (parent==null){      //Verzeichnis noch nicht vorhanden
+                parent = new DownloadNode(pfad);
+            }
+            parent.addChild(this);
+        }
+        DownloadSourceDO[] sources = downloadDO.getSources();
+        DownloadNode child = null;
+        for (int i=0; i<sources.length; i++){
+            child = new DownloadNode(sources[i]);
+            addChild(child);
+        }
     }
     else{
-        parent = (DownloadNode)directoryNodes.get(new MapSetStringKey("pfad"));
-        if (parent==null){      //Verzeichnis noch nicht vorhanden
-            parent = new DownloadNode(pfad);
+        //Werte werden per Referenz automatisch aktualisiert
+        DownloadDO altesDO = existent.getDownloadDO();
+        DownloadSourceDO[] sources = downloadDO.getSources();
+        DownloadNode child = null;
+        for (int i=0; i<sources.length; i++){
+            if (!existent.containsChild(new MapSetStringKey(sources[i].getId()))){
+                //neue Source
+                child = new DownloadNode(sources[i]);
+                existent.addChild(child);
+            }
+            else{
+                //Werte werden per Referenz automatisch aktualisiert
+            }
         }
-        parent.addChild(this);
-    }
-    DownloadSourceDO[] sources = downloadDO.getSources();
-    for (int i=0; i<sources.length; i++){
-        DownloadNode child = new DownloadNode(sources[i]);
-        addChild(child);
+
     }
   }
 
@@ -84,8 +112,13 @@ public class DownloadNode implements Node {
       this.downloadDO = null;
   }
 
-  public int getNodeType(){
-      return nodetype;
+  public boolean containsChild(MapSetStringKey key){
+      if (children.containsKey(key)){
+          return true;
+      }
+      else{
+          return false;
+      }
   }
 
   private DownloadNode(String pfad){
@@ -99,8 +132,8 @@ public class DownloadNode implements Node {
   }
 
   public DownloadNode() {       // nur zum Erstellen des Root-Nodes
-      nodetype = ROOT_NODE;
       initIcons();
+      nodetype = ROOT_NODE;
       this.pfad = "rootPfad";
       directoryNodes.put(new MapSetStringKey(pfad), this);
       children = new HashMap();
@@ -108,15 +141,26 @@ public class DownloadNode implements Node {
   }
 
   private void initIcons() {
-    if (leafIcon == null) {
+    if (downloadIcon == null) {
       IconManager im = IconManager.getInstance();
-      leafIcon = im.getIcon("treeRoot");
-      uebertrageIcon = im.getIcon("treeUebertrage");
+      downloadIcon = im.getIcon("treeRoot");
+      directoryIcon = im.getIcon("tree");
+      direktVerbundenIcon = im.getIcon("treeUebertrage");
+      verbindungUnbekanntIcon = im.getIcon("treeIndirekt");
+      indirektVerbundenIcon = im.getIcon("treeWarteschlange");
     }
   }
 
+  public int getNodeType(){
+      return nodetype;
+  }
+
   private void addChild(DownloadNode child){
-      children.put(new MapSetStringKey(child.getId()), child);
+      MapSetStringKey key = new MapSetStringKey(child.getId());
+      children.put(key, child);
+      if (child.getNodeType()==DOWNLOAD_NODE || child.getNodeType()==SOURCE_NODE){
+          directoryNodes.put(key, child);
+      }
   }
 
   public boolean isLeaf(){
@@ -130,10 +174,26 @@ public class DownloadNode implements Node {
 
   public Icon getConvenientIcon() {
       if (isLeaf()){
-          return uebertrageIcon;
+          switch(downloadSourceDO.getDirectstate()){
+              case DownloadSourceDO.UNBEKANNT:
+                  return verbindungUnbekanntIcon;
+              case DownloadSourceDO.DIREKTE_VERBINDUNG:
+                  return direktVerbundenIcon;
+              case DownloadSourceDO.INDIREKTE_VERBINDUNG:
+                  return indirektVerbundenIcon;
+              default:
+                  return verbindungUnbekanntIcon;
+              }
       }
       else{
-        return leafIcon;
+          switch (nodetype){
+              case DIRECTORY_NODE:
+                  return directoryIcon;
+              case DOWNLOAD_NODE:
+                  return downloadIcon;
+              default:
+                  return downloadIcon;
+          }
       }
   }
 
@@ -164,7 +224,7 @@ public class DownloadNode implements Node {
         return downloadDO.getFilename();
     }
     if (nodetype==SOURCE_NODE){
-        return downloadSourceDO.getFilename() + "(" + downloadSourceDO.getNickname() + ")";
+        return downloadSourceDO.getNickname() + " (" + downloadSourceDO.getFilename() + ")";
     }
     return pfad;
   }

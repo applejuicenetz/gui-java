@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.4 2003/07/03 19:11:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.5 2003/07/04 06:43:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.5  2003/07/04 06:43:51  maj0r
+ * Diverse Änderungen am DownloadTableModel.
+ *
  * Revision 1.4  2003/07/03 19:11:16  maj0r
  * DownloadTable überarbeitet.
  *
@@ -183,7 +186,17 @@ public class DownloadTableCellRenderer
                                                    boolean hasFocus,
                                                    int row,
                                                    int column){
-        return new JLabel();
+        JLabel label1 = new JLabel();
+        label1.setOpaque(true);
+        if (isSelected) {
+          label1.setBackground(table.getSelectionBackground());
+          label1.setForeground(table.getSelectionForeground());
+        }
+        else {
+          label1.setBackground(table.getBackground());
+          label1.setForeground(table.getForeground());
+        }
+        return label1;
     }
 
 }
