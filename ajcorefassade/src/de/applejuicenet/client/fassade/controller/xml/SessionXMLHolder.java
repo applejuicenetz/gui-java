@@ -11,6 +11,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
+import de.applejuicenet.client.fassade.exception.CoreLostException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 
 /**
@@ -86,7 +87,7 @@ public class SessionXMLHolder extends DefaultHandler {
 			xr.parse(new InputSource(new StringReader(xmlString)));
 			return sessionId;
 		} catch (Exception ex) {
-			throw new RuntimeException(ex);
+			throw new CoreLostException(ex);
 		}
 	}
 }

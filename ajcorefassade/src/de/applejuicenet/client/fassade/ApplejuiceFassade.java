@@ -31,6 +31,7 @@ import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.entity.ShareEntry;
 import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.fassade.entity.ShareEntry.SHAREMODE;
+import de.applejuicenet.client.fassade.exception.CoreLostException;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.exception.WrongPasswordException;
@@ -205,7 +206,7 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 		} else {
 			anzahl++;
 			if (anzahl == 3) {
-				throw new RuntimeException("core-connection lost");
+				throw new CoreLostException();
 			}
 		}
 		return anzahl;

@@ -29,6 +29,7 @@ import de.applejuicenet.client.fassade.entity.Search;
 import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
+import de.applejuicenet.client.fassade.exception.CoreLostException;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
@@ -860,11 +861,16 @@ public class ModifiedXMLHolder extends DefaultHandler {
 			throw new RuntimeException(ex);
 		}
 		if (reloadSession) {
-			SessionXMLHolder sessionHolder = new SessionXMLHolder(coreHolder);
-			String sessionId = sessionHolder.getNewSessionId();
-			reloadInProgress = false;
-			sessionKontext = "&session=" + sessionId;
-			throw new RuntimeException();
+			try{
+				SessionXMLHolder sessionHolder = new SessionXMLHolder(coreHolder);
+				String sessionId = sessionHolder.getNewSessionId();
+				reloadInProgress = false;
+				sessionKontext = "&session=" + sessionId;
+			}
+			catch (CoreLostException clE){
+				reloadInProgress = false;
+				throw clE;
+			}
 		}
 	}
 
