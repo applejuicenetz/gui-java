@@ -28,6 +28,7 @@
       <echo>  gui-rebuild           cleans and compiles the appleJuice-gui</echo>
       <echo>  create-jar            builds appleJuice-jar</echo>
       <echo>  complete             builds complete appleJuice</echo>
+      <echo>  build-archive        builds releasable archive-zip</echo>
       <fail message="You have to specifiy a target" />
    </target>
 
@@ -64,6 +65,14 @@
            <additionalfileset dir="${gui.compiledir}" excludes="**/*.txt **/*.class **/*.dep2">
            </additionalfileset>
 	</pack>
+   </target>
+
+   <target name="build-archive" depends="create-jar" description="builds archive-zip">
+	<jar destfile="${basedir}/AJCoreGUI_vX_XX.zip">
+		<fileset dir="${basedir}" includes="**/AJCoreGUI.jar"/>
+		<fileset dir="${basedir}" includes="**/language/*.xml **/language/*.gif"/>
+		<fileset dir="${basedir}" includes="**/plugins/*.jar **/plugins/*.txt"/>
+         </jar>
    </target>
 
    <target name="complete" depends="create-jar" description="builds complete appleJuice">
