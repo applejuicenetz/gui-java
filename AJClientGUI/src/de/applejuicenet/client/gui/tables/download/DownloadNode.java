@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.11 2003/08/24 14:59:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.12 2003/08/25 09:28:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadNode.java,v $
+ * Revision 1.12  2003/08/25 09:28:13  maj0r
+ * getChildCount() eingefuehrt.
+ *
  * Revision 1.11  2003/08/24 14:59:59  maj0r
  * Version 0.14
  * Diverse Aenderungen.
@@ -160,6 +163,18 @@ public class DownloadNode implements Node {
       nodetype = SOURCE_NODE;
       downloadSourceDO = downloadSource;
       this.downloadDO = null;
+  }
+
+  public int getChildCount(){
+      if (nodetype==SOURCE_NODE){
+          return 0;
+      }
+      else if (nodetype==DOWNLOAD_NODE){
+          return downloadDO.getSources().length;
+      }
+      else{
+          return children.size();
+      }
   }
 
   public boolean containsChild(MapSetStringKey key){

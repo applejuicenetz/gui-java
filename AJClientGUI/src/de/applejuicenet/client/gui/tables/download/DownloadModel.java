@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.9 2003/08/18 18:19:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.10 2003/08/25 09:28:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.10  2003/08/25 09:28:13  maj0r
+ * getChildCount() eingefuehrt.
+ *
  * Revision 1.9  2003/08/18 18:19:18  maj0r
  * DownloadStatus in der Anzeige verfeinert.
  *
@@ -100,8 +103,7 @@ public class DownloadModel
   }
 
   public int getChildCount(Object node) {
-    Object[] children = getChildren(node);
-    return (children == null) ? 0 : children.length;
+    return ((DownloadNode)node).getChildCount();
   }
 
   public Object getChild(Object node, int i) {
