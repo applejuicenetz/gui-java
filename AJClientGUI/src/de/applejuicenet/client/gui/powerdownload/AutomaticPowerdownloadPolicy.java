@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.PowerDownloadPanel;
 import java.awt.Frame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.11 2004/06/17 09:57:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.12 2004/06/18 11:37:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -212,7 +212,7 @@ public abstract class AutomaticPowerdownloadPolicy
      *  fuer Einstellungen eingeblendet werden soll
      */
     public boolean hasPropertiesDialog(){
-        return true;
+        return false;
     }
 
     /**
