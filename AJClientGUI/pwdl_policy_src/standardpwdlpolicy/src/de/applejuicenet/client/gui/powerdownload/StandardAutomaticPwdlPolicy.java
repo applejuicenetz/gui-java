@@ -8,14 +8,17 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.10 2005/02/15 16:31:11 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.11 2005/02/15 16:39:33 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,30 +49,41 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         shouldPause = false;
         double wert = 0;
         boolean correctInput = false;
+        JPanel abfrage = new JPanel();
+        JTextField pwdlWert = new JTextField("2,6");
+        JTextField pwdlCount = new JTextField("2");
+        abfrage.add(new JLabel("Pwdl-Wert:"));
+        abfrage.add(pwdlWert);
+        abfrage.add(new JLabel("# DL:"));
+        abfrage.add(pwdlCount);
         while (!correctInput){
-            String result = JOptionPane.showInputDialog(AppleJuiceDialog.getApp(), "Pwdl-Wert:", "2,6");
-            if (result==null){
-                return false;
+            JOptionPane.showInputDialog(AppleJuiceDialog.getApp(), abfrage);
+            try {
+            	String result = pwdlWert.getText();
+            	result = result.replace(',', '.');
+            	if (result.length()>result.lastIndexOf('.')+2){
+            		result = result.substring(0, result.lastIndexOf('.')+2);
+            	}
+            	wert = Double.parseDouble(result) - 1;
+            	wert = ((double) Math.round(wert * 100.0))/100.0;
+            	pwdlValue = (int)((wert) * 10);
+            	if (pwdlValue<12 || pwdlValue>490){
+            		continue;
+            	}
+            	Integer counter = null;
+            	try {
+            		counter = new Integer(pwdlCount.getText());
+            	}
+            	catch (NumberFormatException ex) {
+            		continue;
+            	}
+              anzahlDownloads = counter;
+            	
+            	correctInput = true;
             }
-            else{
-                try {
-                    result = result.replace(',', '.');
-                    if (result.length()>result.lastIndexOf('.')+2){
-                        result = result.substring(0, result.lastIndexOf('.')+2);
-                    }
-                    wert = Double.parseDouble(result) - 1;
-                    wert = ((double) Math.round(wert * 100.0))/100.0;
-                    pwdlValue = (int)((wert) * 10);
-                    if (pwdlValue<12 || pwdlValue>490){
-                        continue;
-                    }
-                    correctInput = true;
-                }
-                catch (Exception e) {
-                    continue;
-                }
+            catch (Exception e) {
+            	continue;
             }
-            anzahlDownloads = getAnzahlDownloads(AppleJuiceDialog.getApp());
         }
         return true;
     }
@@ -184,21 +198,6 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
 
     public String toString() {
         return "StandardPwdlPolicy Vers. " + getVersion();
-    }
-    
-    public int getAnzahlDownloads(Frame parent){ 
-        String result = JOptionPane.showInputDialog(AppleJuiceDialog.getApp(), "Anzahl gleichzeitiger Downloads:", new Integer(anzahlDownloads));
-        if (result != null) {
-        	try {
-        		Integer ret = new Integer(result);
-        		return ret.intValue();
-        	}
-        	catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), "Fehlerhafte Zahl. Eingabe wird verworfen!");
-        	}
-        	
-        }
-        return 2;
     }
     
     private class Sortierkriterium {
