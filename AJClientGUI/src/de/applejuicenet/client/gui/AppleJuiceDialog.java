@@ -66,7 +66,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.78 2004/01/09 13:07:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.79 2004/01/12 07:21:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -75,6 +75,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.79  2004/01/12 07:21:54  maj0r
+ * Standard-XML erweitert.
+ *
  * Revision 1.78  2004/01/09 13:07:19  maj0r
  * Bug #33 gefixt (Danke an oz_2k)
  * Obwohl ich denke, dass es sich um ein Feature der Themes handelt, wurde der Vollbildmodus auf Wunsch vieler Benutzer an Windowsstandard angepasst.
@@ -1110,6 +1113,13 @@ public class AppleJuiceDialog
         xmlData.append(
             "            <share column0=\"194\" column1=\"195\" column2=\"194\"/>");
         xmlData.append("        </location>");
+        xmlData.append("        <visibility>");
+        xmlData.append("            <download column1=\"true\" column2=\"true\" column3=\"true\"");
+        xmlData.append("                column4=\"true\" column5=\"true\" column6=\"true\"");
+        xmlData.append("                column7=\"true\" column8=\"true\" column9=\"true\"/>");
+        xmlData.append("            <upload column1=\"true\" column2=\"true\" column3=\"true\"");
+        xmlData.append("                column4=\"true\" column5=\"true\" column6=\"true\"/>");
+        xmlData.append("        </visibility>");
         xmlData.append("        <browser file=\"\"/>");
         xmlData.append(
             "        <proxy host=\"\" port=\"\" use=\"false\" userpass=\"=\"/>");
