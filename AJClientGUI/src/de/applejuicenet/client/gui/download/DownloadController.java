@@ -483,16 +483,8 @@ public class DownloadController extends GuiController {
 				}
 			}
 		}
-		if (laufend) {
-			downloadPanel.getMnuPause().setEnabled(true);
-		} else {
-			downloadPanel.getMnuPause().setEnabled(false);
-		}
-		if (pausiert) {
-			downloadPanel.getMnuFortsetzen().setEnabled(true);
-		} else {
-			downloadPanel.getMnuFortsetzen().setEnabled(false);
-		}
+		downloadPanel.getMnuPause().setEnabled(laufend);
+		downloadPanel.getMnuFortsetzen().setEnabled(pausiert);
 		downloadPanel.getPopup().show(downloadPanel.getDownloadTable(), e.getX(), e.getY());
 	}
 	
