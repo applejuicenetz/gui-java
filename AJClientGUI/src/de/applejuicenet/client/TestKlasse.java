@@ -7,4 +7,5 @@ public class TestKlasse {
     int z=3;
     int x=3;
     int h=2;
+    String test = "test";
 }
