@@ -2,14 +2,22 @@ package de.applejuicenet.client.gui;
 
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.CropImageFilter;
+import java.awt.image.ImageFilter;
+import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.1 2003/08/29 14:24:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.2 2003/09/04 13:57:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +26,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AboutDialog.java,v $
+ * Revision 1.2  2003/09/04 13:57:04  maj0r
+ * Credits eingebaut.
+ *
  * Revision 1.1  2003/08/29 14:24:15  maj0r
  * About-Dialog mit entsprechendem Menuepunkt eingefuehrt.
  *
@@ -25,9 +36,18 @@ import java.awt.*;
  */
 
 public class AboutDialog extends JDialog {
+    private Logger logger;
+
     public AboutDialog(Frame parent, boolean modal) {
         super(parent, modal);
-        init();
+        logger = Logger.getLogger(getClass());
+        try{
+            init();
+        }
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
 
     private void init() {
@@ -43,15 +63,96 @@ public class AboutDialog extends JDialog {
 
     class BackPanel extends JPanel {
         private Image backgroundImage;
+        private Image flagge;
         private JLabel version = new JLabel();
+        private ArrayList credits = new ArrayList();
+        private Logger logger;
 
         public BackPanel() {
             super();
-            init();
+            logger = Logger.getLogger(getClass());
+            try{
+                init();
+            }
+            catch (Exception e){
+                if (logger.isEnabledFor(Level.ERROR))
+                    logger.error("Unbehandelte Exception", e);
+            }
+            final SwingWorker worker = new SwingWorker() {
+                public Object construct() {
+                    Image new_img, toDraw;
+                    ImageFilter filter = new ImageFilter();
+                    int creditsHoehe = 60;
+                    int creditsBreite = 135;
+                    int imageX = backgroundImage.getWidth(BackPanel.this) / 2 + 20;
+                    int imageY = backgroundImage.getHeight(BackPanel.this) / 2 - 15;
+                    filter = new CropImageFilter(imageX, imageY, creditsBreite, creditsHoehe);
+                    new_img = createImage(new FilteredImageSource(backgroundImage.getSource(), filter));
+                    filter = new CropImageFilter(0, 0, creditsBreite, creditsHoehe);
+                    boolean interrupted = false;
+                    int y = creditsHoehe;
+                    try
+                    {
+                        Thread.sleep(1000);
+                        Graphics g = BackPanel.this.getGraphics();
+                        g.setColor(Color.BLACK);
+                        CreditsEntry entry;
+                        Graphics toDrawGraphics;
+                        FontMetrics fm;
+                        int strWidth;
+                        while (!interrupted)
+                        {
+                            Thread.sleep(100);
+                            toDraw = createImage(creditsBreite, creditsHoehe);
+                            toDrawGraphics = toDraw.getGraphics();
+                            toDrawGraphics.drawImage(new_img, 0, 0, BackPanel.this);
+                            y--;
+                            int abstand = -15;
+                            for (int i=0; i<credits.size(); i++){
+                                entry = (CreditsEntry)credits.get(i);
+                                if (entry.isUeberschrift()){
+                                    abstand += 20;
+                                    toDrawGraphics.setFont(new Font("Arial", Font.BOLD, 12));
+                                    toDrawGraphics.setColor(Color.BLUE);
+                                }
+                                else{
+                                    abstand += 15;
+                                    toDrawGraphics.setFont(new Font("Arial", Font.PLAIN, 12));
+                                    toDrawGraphics.setColor(Color.BLACK);
+                                }
+                                fm = toDrawGraphics.getFontMetrics();
+                                strWidth = fm.stringWidth ( entry.getAusgabetext() );
+                                toDrawGraphics.drawString(entry.getAusgabetext(), (creditsBreite - strWidth) / 2, y + abstand);
+                            }
+                            g.drawImage(toDraw, imageX, imageY, BackPanel.this);
+                            if (y==-5 - credits.size() * 15){
+                                y = creditsHoehe;
+                            }
+                        }
+                    }
+                    catch (Exception e){
+                        if (logger.isEnabledFor(Level.ERROR))
+                            logger.error("Unbehandelte Exception", e);
+                    }
+                    return null;
+                }
+            };
+            worker.start();
         }
 
-        private void init(){
+        private void init() {
+            credits.add(new CreditsEntry(true, "Programmierung"));
+            credits.add(new CreditsEntry(false, "Maj0r"));
+            credits.add(new CreditsEntry(false, "(aj@tkl-soft.de)"));
+            credits.add(new CreditsEntry(true, "Besonderen Dank an"));
+            credits.add(new CreditsEntry(false, "muhviehstarr"));
+            credits.add(new CreditsEntry(true, "Kontakt"));
+            credits.add(new CreditsEntry(false, "irc.bongster.de"));
+            credits.add(new CreditsEntry(false, "#applejuice"));
+            credits.add(new CreditsEntry(false, "www.applejuicenet.de"));
+
             backgroundImage = IconManager.getInstance().getIcon("applejuiceinfobanner").getImage();
+            flagge = IconManager.getInstance().getIcon("deutsch").getImage();
             MediaTracker mt = new MediaTracker(this);
             mt.addImage(backgroundImage, 0);
             try
@@ -86,6 +187,9 @@ public class AboutDialog extends JDialog {
                 int imageX = (getWidth() - backgroundImage.getWidth(this)) / 2;
                 int imageY = (getHeight() - backgroundImage.getHeight(this)) / 2;
                 g.drawImage(backgroundImage, imageX, imageY, this);
+                if (flagge!=null){
+                    g.drawImage(flagge, backgroundImage.getWidth(this) - flagge.getWidth(this), 0, this);
+                }
             }
         }
 
@@ -116,6 +220,32 @@ public class AboutDialog extends JDialog {
                 returnSize.width = newSize.width;
             }
             return (returnSize);
+        }
+    }
+
+    class CreditsEntry{
+        private boolean ueberschrift;
+        private String ausgabetext;
+
+        public CreditsEntry(boolean ueberschrift, String ausgabetext) {
+            this.ueberschrift = ueberschrift;
+            this.ausgabetext = ausgabetext;
+        }
+
+        public boolean isUeberschrift() {
+            return ueberschrift;
+        }
+
+        public void setUeberschrift(boolean ueberschrift) {
+            this.ueberschrift = ueberschrift;
+        }
+
+        public String getAusgabetext() {
+            return ausgabetext;
+        }
+
+        public void setAusgabetext(String ausgabetext) {
+            this.ausgabetext = ausgabetext;
         }
     }
 }
