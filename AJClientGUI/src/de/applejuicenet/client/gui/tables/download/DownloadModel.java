@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.26 2004/01/12 07:24:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.27 2004/01/26 11:01:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.27  2004/01/26 11:01:14  maj0r
+ * Neuen Downloadstatus eingebaut.
+ *
  * Revision 1.26  2004/01/12 07:24:49  maj0r
  * Wiedergabe der Tabellenwerte vom Model ins Node umgebaut.
  *
@@ -120,6 +123,7 @@ public class DownloadModel
     public static String fertig = "";
     public static String abbrechen = "";
     public static String abgebrochen = "";
+    public static String dataWirdErstellt = "";
 
     //Source-Stati
     public static String ungefragt = "";
@@ -386,5 +390,8 @@ public class DownloadModel
         fehlerBeimFertigstellen = ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
             "downloadform", "fehlerbeimfertigstellen"}));
+        dataWirdErstellt = ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
+            "downloadform", "datawirderstellt"}));
     }
 }

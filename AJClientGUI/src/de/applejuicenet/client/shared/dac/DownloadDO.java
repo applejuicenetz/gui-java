@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.MapSetStringKey;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.17 2004/01/12 19:31:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.18 2004/01/26 11:01:14 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.MapSetStringKey;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.18  2004/01/26 11:01:14  maj0r
+ * Neuen Downloadstatus eingebaut.
+ *
  * Revision 1.17  2004/01/12 19:31:52  maj0r
  * Bug #98 gefixt
  *
@@ -91,7 +94,8 @@ public class DownloadDO
     public static final int FEHLER_BEIM_FERTIGSTELLEN = 13;
     public static final int FERTIG = 14;
     public static final int ABBRECHEN = 15;
-    public static final int AGBEGROCHEN = 17;
+    public static final int DATA_WIRD_ERSTELLT = 16;
+    public static final int ABGEGROCHEN = 17;
     public static final int PAUSIERT = 18;
 
     private final int id;
@@ -419,7 +423,7 @@ public class DownloadDO
                     return DownloadModel.pausiert;
                 case DownloadDO.ABBRECHEN:
                     return DownloadModel.abbrechen;
-                case DownloadDO.AGBEGROCHEN:
+                case DownloadDO.ABGEGROCHEN:
                     return DownloadModel.abgebrochen;
                 case DownloadDO.FERTIG:
                     return DownloadModel.fertig;
@@ -427,6 +431,8 @@ public class DownloadDO
                     return DownloadModel.fehlerBeimFertigstellen;
                 case DownloadDO.NICHT_GENUG_PLATZ_FEHLER:
                     return DownloadModel.keinPlatz;
+                case DownloadDO.DATA_WIRD_ERSTELLT:
+                    return DownloadModel.dataWirdErstellt;
                 case DownloadDO.SUCHEN_LADEN: {
                     DownloadSourceDO[] sources = getSources();
                     String result = "";
