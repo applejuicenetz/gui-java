@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.HashSet;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.3 2003/10/02 15:01:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.4 2003/10/04 15:31:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import java.util.HashSet;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.4  2003/10/04 15:31:07  maj0r
+ * Erste Version des Versteckens.
+ *
  * Revision 1.3  2003/10/02 15:01:00  maj0r
  * Erste Version den Versteckens eingebaut.
  *
@@ -42,16 +45,18 @@ public class DownloadRootNode implements Node, DownloadNode {
     private HashMap versteckteNodes = new HashMap();
     private boolean versteckt = false;
 
-    public void verstecke(DownloadMainNode downloadMainNode, boolean hide){
+    public void alterVerstecke(DownloadMainNode downloadMainNode){
         if (downloadMainNode.getType()==DownloadMainNode.ROOT_NODE){
             MapSetStringKey key = new MapSetStringKey(downloadMainNode.getDownloadDO().getId());
-            if (hide){
+            if (!versteckteNodes.containsKey(key)){
                 versteckteNodes.put(key, downloadMainNode);
             }
             else{
                 Object node = versteckteNodes.get(key);
                 versteckteNodes.remove(key);
-                children.add(node);
+                if (!children.contains(node)){
+                    children.add(node);
+                }
             }
         }
     }
@@ -60,8 +65,12 @@ public class DownloadRootNode implements Node, DownloadNode {
         versteckt = verstecke;
         if (!versteckt){
             Iterator it = versteckteNodes.values().iterator();
+            Object node = null;
             while (it.hasNext()){
-                children.add(it.next());
+                node = it.next();
+                if (!children.contains(node)){
+                    children.add(node);
+                }
             }
         }
     }
