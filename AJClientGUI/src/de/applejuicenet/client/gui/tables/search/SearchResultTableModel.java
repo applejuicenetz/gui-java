@@ -5,11 +5,12 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.tables.TreeTableModel;
 import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
+import de.applejuicenet.client.gui.trees.WaitNode;
 
 import javax.swing.table.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchResultTableModel.java,v 1.3 2003/10/01 07:25:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchResultTableModel.java,v 1.4 2003/10/01 14:45:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,9 @@ import javax.swing.table.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SearchResultTableModel.java,v $
+ * Revision 1.4  2003/10/01 14:45:40  maj0r
+ * Suche fortgesetzt.
+ *
  * Revision 1.3  2003/10/01 07:25:44  maj0r
  * Suche weiter gefuehrt.
  *
@@ -79,7 +83,10 @@ public class SearchResultTableModel
     }
 
     public Object getValueAt(Object node, int column) {
-      if (node.getClass()==SearchNode.class){
+      if (node.getClass()==WaitNode.class){
+          return "";
+      }
+      else if (node.getClass()==SearchNode.class){
           Object o = ((SearchNode)node).getValueObject();
           if (((SearchNode)node).getNodeType()==SearchNode.ROOT_NODE){
               return "";
@@ -87,12 +94,30 @@ public class SearchResultTableModel
           else{
               Search.SearchEntry entry = (Search.SearchEntry) o;
               switch (column) {
-                case 0:
-                      return entry.getFileNames()[0].getDateiName();
+                case 0:{
+                    Search.SearchEntry.FileName[] filenames = entry.getFileNames();
+                    int haeufigkeit = 0;
+                    String dateiname = "";
+                    for (int i=0; i<filenames.length; i++){
+                        if (filenames[i].getHaeufigkeit()>haeufigkeit){
+                            haeufigkeit = filenames[i].getHaeufigkeit();
+                            dateiname = filenames[i].getDateiName();
+                        }
+                    }
+                    return dateiname;
+                }
                 case 1:
-                      return Long.toString(entry.getGroesse());
-                case 2:
-                      return entry.getChecksumme();
+                      return parseGroesse(entry.getGroesse());
+                case 2:{
+                    Search.SearchEntry.FileName[] filenames = entry.getFileNames();
+                    int haeufigkeit = 0;
+                    for (int i=0; i<filenames.length; i++){
+                        if (filenames[i].getHaeufigkeit()>haeufigkeit){
+                            haeufigkeit = filenames[i].getHaeufigkeit();
+                        }
+                    }
+                    return Integer.toString(haeufigkeit);
+                }
                 default:
                   return "";
               }
@@ -112,5 +137,48 @@ public class SearchResultTableModel
           }
       }
       return null;
+    }
+
+    private String parseGroesse(long groesse){
+        double share = Double.parseDouble(new Long(groesse).toString());
+        int faktor;
+        if (share == 0) {
+          return "";
+        }
+        if (share < 1024) {
+          return groesse + " Bytes";
+        }
+        else if (share / 1024 < 1024) {
+          faktor = 1024;
+        }
+        else if (share / 1048576 < 1024) {
+          faktor = 1048576;
+        }
+        else if (share / 1073741824 < 1024) {
+          faktor = 1073741824;
+        }
+        else {
+          faktor = 1;
+        }
+        share = share / faktor;
+        String result = Double.toString(share);
+        if (result.indexOf(".") + 3 < result.length())
+        {
+            result = result.substring(0, result.indexOf(".") + 3);
+        }
+        result = result.replace('.', ',');
+        if (faktor == 1024) {
+          result += " KB";
+        }
+        else if (faktor == 1048576) {
+          result += " MB";
+        }
+        else if (faktor == 1073741824) {
+          result += " GB";
+        }
+        else {
+          result += " ??";
+        }
+        return result;
     }
 }

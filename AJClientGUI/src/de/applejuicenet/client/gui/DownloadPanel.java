@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.46 2003/09/30 16:35:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.47 2003/10/01 14:45:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.47  2003/10/01 14:45:40  maj0r
+ * Suche fortgesetzt.
+ *
  * Revision 1.46  2003/09/30 16:35:11  maj0r
  * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
  *
@@ -259,6 +262,14 @@ public class DownloadPanel
         constraints.weighty = 1;
         constraints.weightx = 1;
 
+        downloadLink.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke){
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER){
+                    btnStartDownload.doClick();
+                }
+            }
+        });
+
         downloadModel = new DownloadModel();
         downloadTable = new JTreeTable(downloadModel);
 
@@ -268,11 +279,7 @@ public class DownloadPanel
         }
         btnStartDownload.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                String link = downloadLink.getText();
-                if (link.length() != 0) {
-                    ApplejuiceFassade.getInstance().processLink(link);
-                    downloadLink.setText("");
-                }
+                startDownload();
             }
         });
         downloadTable.addMouseListener(new MouseAdapter() {
@@ -322,6 +329,14 @@ public class DownloadPanel
         add(topPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
+    }
+
+    private void startDownload(){
+        String link = downloadLink.getText();
+        if (link.length() != 0) {
+            ApplejuiceFassade.getInstance().processLink(link);
+            downloadLink.setText("");
+        }
     }
 
     public Object[] getSelectedDownloadItems() {

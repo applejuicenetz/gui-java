@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.30 2003/09/30 16:35:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.31 2003/10/01 14:45:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.31  2003/10/01 14:45:40  maj0r
+ * Suche fortgesetzt.
+ *
  * Revision 1.30  2003/09/30 16:35:11  maj0r
  * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
  *
@@ -90,8 +93,11 @@ public class ServerPanel
 /*    private JLabel sucheServer = new JLabel(
             "<html><font><u>mehr Server gibt es hier</u></font></html>");*/
     private JPopupMenu popup = new JPopupMenu();
+    private JPopupMenu popup2 = new JPopupMenu();
     private JMenuItem item1;
     private JMenuItem item2;
+    private JMenuItem item3;
+    private JMenuItem item4;
     private Logger logger;
     private boolean initizialiced = false;
 
@@ -115,8 +121,12 @@ public class ServerPanel
 
         item1 = new JMenuItem("Verbinden");
         item2 = new JMenuItem("Löschen");
+        item3 = new JMenuItem("Hinzufügen");
+        item4 = new JMenuItem("Hinzufügen");
         popup.add(item1);
+        popup.add(item4);
         popup.add(item2);
+        popup2.add(item3);
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int selected = serverTable.getSelectedRow();
@@ -133,6 +143,21 @@ public class ServerPanel
                 ApplejuiceFassade.getInstance().entferneServer(server.getID());
             }
         });
+        ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                NewServerDialog newServerDialog = new NewServerDialog(AppleJuiceDialog.getApp(), true);
+                Dimension appDimension = newServerDialog.getSize();
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                newServerDialog.setLocation((screenSize.width - appDimension.width)/2,
+                               (screenSize.height - appDimension.height)/2);
+                newServerDialog.show();
+                if (newServerDialog.isLegal()){
+                    ApplejuiceFassade.getInstance().processLink(newServerDialog.getLink());
+                }
+            }
+        };
+        item3.addActionListener(actionListener);
+        item4.addActionListener(actionListener);
 
         JPanel panel1 = new JPanel();
         panel1.setLayout(new GridBagLayout());
@@ -187,15 +212,18 @@ public class ServerPanel
 
         TableColumn tc = serverTable.getColumnModel().getColumn(0);
         tc.setCellRenderer(new ServerTableCellRenderer());
-        serverTable.addMouseListener(new MouseAdapter() {
+        final JScrollPane aScrollPane = new JScrollPane(serverTable);
+        MouseAdapter popupMouseAdapter = new MouseAdapter(){
             public void mousePressed(MouseEvent me) {
                 if (SwingUtilities.isRightMouseButton(me))
                 {
                     Point p = me.getPoint();
                     int iRow = serverTable.rowAtPoint(p);
                     int iCol = serverTable.columnAtPoint(p);
-                    serverTable.setRowSelectionInterval(iRow, iRow);
-                    serverTable.setColumnSelectionInterval(iCol, iCol);
+                    if (iRow!=-1 && iCol!=-1){
+                        serverTable.setRowSelectionInterval(iRow, iRow);
+                        serverTable.setColumnSelectionInterval(iCol, iCol);
+                    }
                 }
                 maybeShowPopup(me);
             }
@@ -208,11 +236,17 @@ public class ServerPanel
             private void maybeShowPopup(MouseEvent e) {
                 if (e.isPopupTrigger())
                 {
-                    popup.show(serverTable, e.getX(), e.getY());
+                    if (serverTable.getSelectedRowCount()>0){
+                        popup.show(aScrollPane, e.getX(), e.getY());
+                    }
+                    else{
+                        popup2.show(aScrollPane, e.getX(), e.getY());
+                    }
                 }
             }
-        });
-        JScrollPane aScrollPane = new JScrollPane(serverTable);
+        };
+        aScrollPane.addMouseListener(popupMouseAdapter);
+        serverTable.addMouseListener(popupMouseAdapter);
         add(aScrollPane, BorderLayout.CENTER);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
                                                               DataUpdateListener.SERVER_CHANGED);
@@ -284,6 +318,12 @@ public class ServerPanel
                                                                                                    "caption"})));
             item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                             getFirstAttrbuteByTagName(new String[]{"mainform", "delserv",
+                                                                                                   "caption"})));
+            item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "addserv",
+                                                                                                   "caption"})));
+            item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "addserv",
                                                                                                    "caption"})));
             TableColumnModel tcm = serverTable.getColumnModel();
             for (int i = 0; i < tcm.getColumnCount(); i++)

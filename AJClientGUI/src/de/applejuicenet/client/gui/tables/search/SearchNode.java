@@ -5,6 +5,7 @@ import de.applejuicenet.client.gui.tables.upload.MainNode;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.Search;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.1 2003/10/01 07:25:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.2 2003/10/01 14:45:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +27,9 @@ import java.util.HashMap;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SearchNode.java,v $
+ * Revision 1.2  2003/10/01 14:45:40  maj0r
+ * Suche fortgesetzt.
+ *
  * Revision 1.1  2003/10/01 07:25:44  maj0r
  * Suche weiter gefuehrt.
  *
@@ -51,7 +55,7 @@ public class SearchNode implements Node{
     }
 
     public Icon getConvenientIcon() {
-        return IconManager.getInstance().getIcon("upload");
+        return IconManager.getInstance().getIcon("treeRoot");
     }
 
     public String toString() {
@@ -64,18 +68,22 @@ public class SearchNode implements Node{
     }
 
     public int getChildCount(){
-        if (type==ROOT_NODE){
-            return ((Search)valueObject).getSearchEntries().length;
+        Object o = getChildren();
+        if (o==null){
+            return 0;
         }
-        else if (type==ENTRY_NODE){
-            return ((Search.SearchEntry)valueObject).getFileNames().length;
-        }
-        else return 0;
+        return getChildren().length;
     }
 
     public Object[] getChildren() {
         if (type==ROOT_NODE){
+            if (children==null && ((Search)valueObject).getSearchEntries().length==0){
+                WaitNode[] waitNode = new WaitNode[1];
+                waitNode[0] = new WaitNode();
+                return waitNode;
+            }
             if (children==null){
+                children = new HashMap();
                 Search.SearchEntry[] entries = ((Search)valueObject).getSearchEntries();
                 for (int i=0; i<entries.length; i++){
                     children.put(new MapSetStringKey(entries[i].getId()), new SearchNode(entries[i]));
@@ -91,9 +99,7 @@ public class SearchNode implements Node{
                     }
                 }
             }
-            SearchNode[] result =(SearchNode[]) children.values().toArray(new SearchNode[children.size()]);
-            System.out.println("test");
-            return result;
+            return (SearchNode[]) children.values().toArray(new SearchNode[children.size()]);
         }
         else if (type==ENTRY_NODE){
             return ((Search.SearchEntry)valueObject).getFileNames();
