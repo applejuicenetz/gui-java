@@ -16,7 +16,7 @@ import de.tklsoft.gui.controls.TKLTextArea;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.15 2005/03/07 14:25:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.16 2005/03/07 14:30:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -94,6 +94,8 @@ public class Schritt3Panel
         constraints.gridy = 2;
         constraints.weighty = 1;
         add(new JLabel(), constraints);
+        
+        nickname.confirmNewValue();
     }
 
     public boolean isValidNickname() {
