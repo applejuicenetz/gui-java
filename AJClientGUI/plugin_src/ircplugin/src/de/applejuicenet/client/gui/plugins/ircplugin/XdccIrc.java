@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
 import java.util.StringTokenizer;
 
@@ -21,44 +18,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
-import java.util.Set;
-import java.util.Iterator;
-import java.awt.KeyboardFocusManager;
-import java.awt.AWTKeyStroke;
-import java.util.HashSet;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.13 2004/05/13 10:55:41 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.14 2004/05/13 13:55:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -78,6 +54,7 @@ public class XdccIrc
 
     private String host = "irc.p2pchat.net";
     private int port = 6667;
+    private final String STANDARD_CHANNEL = "test";
     private JTabbedPane tabbedPane;
     private String nickname;
     private String realname;
@@ -168,6 +145,10 @@ public class XdccIrc
                 logger.error("Unbehandelte Exception", e);
             }
         }
+    }
+
+    public JTabbedPane getTabbedPane(){
+        return tabbedPane;
     }
 
     public void fireLanguageChanged() {
@@ -357,7 +338,7 @@ public class XdccIrc
                     }
                     if (pong){
                         if (toServer != null) {
-                            joinChannel("test");
+                            joinChannel(STANDARD_CHANNEL);
                             String onJoin = parent.getProperties().getProperty("onjoin");
                             if (onJoin != null && onJoin.length()>0){
                                 if (onJoin.charAt(0) == '/'){
@@ -422,10 +403,6 @@ public class XdccIrc
         }
     }
 
-    // A ad-hoc method to format all the nicknames!
-    // I wanted to format this as 'printf' in C. However,
-    // it fails miserably when output to 'TextArea' ---
-    // console output is OK, though.
     public String formatNickname(String nickname) {
         int formatlen = 12;
         String blank = "";
@@ -443,12 +420,11 @@ public class XdccIrc
         return nickname + blank;
     }
 
-    // send back realname. Did I need it really?
     public String getRealname() {
         return realname;
     }
 
-    public void start() { //synchronized void start()
+    public void start() {
         if (ircWorker != null){
             ircWorker.interrupt();
             ircWorker = null;
@@ -496,7 +472,6 @@ public class XdccIrc
     }
 
     public void closeAll() {
-        // So, let's shutdown everything
         try {
             chatSocket.close();
             fromServer.close();
@@ -1145,22 +1120,23 @@ public class XdccIrc
                             if (tmp.compareToIgnoreCase("-") == 0
                                 || tmp.compareToIgnoreCase("+") == 0) {
                                 String name = modeReceived.substring(3);
-                                if (channel.usernameList.contains("!" + name)) {
+                                SortedListModel model = channel.getUserNameList();
+                                if (model.contains("!" + name)) {
                                     channel.updateUserArea("!" + name, "remove");
                                 }
-                                else if (channel.usernameList.contains("@" +
+                                else if (model.contains("@" +
                                     name)) {
                                     channel.updateUserArea("@" + name, "remove");
                                 }
-                                else if (channel.usernameList.contains("%" +
+                                else if (model.contains("%" +
                                     name)) {
                                     channel.updateUserArea("%" + name, "remove");
                                 }
-                                else if (channel.usernameList.contains("+" +
+                                else if (model.contains("+" +
                                     name)) {
                                     channel.updateUserArea("+" + name, "remove");
                                 }
-                                else if (channel.usernameList.contains(name)) {
+                                else if (model.contains(name)) {
                                     channel.updateUserArea(name, "remove");
                                 }
                                 if (tmp.compareToIgnoreCase("+") == 0) {
@@ -1252,7 +1228,7 @@ public class XdccIrc
         if (toServer != null) {
             toServer.print(lineToServer + "\r\n");
             toServer.flush();
-            if (lineToServer.toLowerCase().indexOf("join #test") != -1){
+            if (lineToServer.toLowerCase().indexOf("join #" + STANDARD_CHANNEL) != -1){
                 String norules = parent.getProperties().getProperty("norules");
                 if (norules == null || norules.compareToIgnoreCase("true")!=0){
                     RulesDialog rulesDialog = new RulesDialog(AppleJuiceDialog.getApp(), true);
@@ -1266,7 +1242,7 @@ public class XdccIrc
         JTabbedPane tabbedPane = new JTabbedPane();
 
         // Adding the init window
-        tabbedPane.add(new InitPanel(), "Init Window");
+        tabbedPane.add(new InitPanel(this), "Init Window");
 
         tabbedPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -1358,8 +1334,8 @@ public class XdccIrc
         }
     }
 
-    private UserPanel addUser(final JTabbedPane tabbedPane, String name) {
-        UserPanel userPanel = new UserPanel(name);
+    public UserPanel addUser(final JTabbedPane tabbedPane, String name) {
+        UserPanel userPanel = new UserPanel(this, name);
         tabbedPane.add(userPanel, name);
         tabbedPane.revalidate();
 
@@ -1370,11 +1346,11 @@ public class XdccIrc
         ChannelPanel channel;
 
         if (name.startsWith("#")) {
-            channel = new ChannelPanel(name);
+            channel = new ChannelPanel(this, name);
             tabbedPane.add(channel, name);
         }
         else {
-            channel = new ChannelPanel("#" + name);
+            channel = new ChannelPanel(this, "#" + name);
             tabbedPane.add(channel, "#" + name);
         }
         tabbedPane.revalidate();
@@ -1404,113 +1380,7 @@ public class XdccIrc
         return tabbedPane;
     }
 
-    public class ConnectionAction
-        extends AbstractAction {
-        ConnectionAction(String name) {
-            super(name);
-        }
-
-        ConnectionAction(String name, KeyStroke keystroke) {
-            this(name);
-            if (keystroke != null) {
-                putValue(ACCELERATOR_KEY, keystroke);
-            }
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            ;
-        }
-    }
-
-    public class InitPanel
-        extends JPanel
-        implements ActionListener {
-        final String name = "Init Window";
-        final JTextArea textArea = new JTextArea();
-        final JTextField textField = new JTextField();
-        private JTextField titleArea;
-
-        public InitPanel() {
-            makePanel();
-        }
-
-        private void makePanel() {
-            setLayout(new BorderLayout());
-
-            // let's add actionListener
-            textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            textArea.setLineWrap(true);
-            textArea.setWrapStyleWord(true);
-            textArea.setEditable(false);
-            textArea.setBackground(Color.WHITE);
-            textField.addActionListener(this);
-
-            JScrollPane sp1 = new JScrollPane(textArea);
-
-            sp1.setVerticalScrollBarPolicy(JScrollPane.
-                                           VERTICAL_SCROLLBAR_ALWAYS);
-
-            add(sp1, BorderLayout.CENTER);
-            add(textField, BorderLayout.SOUTH);
-            add(makeNorth(), BorderLayout.NORTH);
-        }
-
-        private Box makeNorth() {
-            Box northBox = Box.createHorizontalBox();
-            titleArea = new JTextField("Not connected yet");
-            titleArea.setEditable(false);
-            northBox.add(titleArea);
-            return northBox;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            Object source = e.getSource();
-
-            // let's take care of textField
-            if (source == textField) {
-                String message = textField.getText();
-
-                if (message.startsWith("/")) {
-                    // commands that start with "/"
-                    if (message.toLowerCase().indexOf("nickserv identify ")==-1){
-                        textArea.append(message + "\n");
-                    }
-                    message = message.substring(1);
-                    textField.setText("");
-
-                    parseSendToCommand(message);
-                }
-                else {
-                    // update textArea
-                    textArea.append(message + "\n");
-                    textField.setText("");
-
-                    parseSendToCommand(message);
-                }
-            }
-        }
-
-        public void resetTextField() {
-            textField.setText("");
-        }
-
-        public void setTitleArea(String message) {
-            titleArea.setText(message);
-        }
-
-        public void updateTextArea(String message) {
-            int oldCaretPosition = textArea.getCaretPosition();
-            textArea.append(message + "\n");
-
-            int newCaretPosition = textArea.getCaretPosition();
-            if (newCaretPosition == oldCaretPosition) {
-                textArea.setCaretPosition(oldCaretPosition +
-                                          (message + "\n").length());
-            }
-        }
-    }
-
-    private void analyzeCommand(String message) {
+    public void analyzeCommand(String message) {
         CommandInterpreter cmdI = new CommandInterpreter(message);
 
         if (cmdI.getCommand().equals("JOIN")) {
@@ -1562,459 +1432,6 @@ public class XdccIrc
             parseSendToCommand(cmdI.getCommand() + " :" +
                                cmdI.getParam1() + " " +
                                cmdI.getMessage());
-        }
-    }
-
-    public class ChannelPanel
-        extends JPanel
-        implements ActionListener {
-        private String name;
-        private SortedListModel usernameList = new SortedListModel();
-        private JList userList = new JList(usernameList);
-        private JTextArea textArea = new JTextArea();
-        private JTextField textField;
-        private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
-        private ArrayList befehle = new ArrayList();
-        private int befehlPos = -1;
-
-        private JTextPane titleArea = new JTextPane();
-
-        private JButton closeButton = new JButton("X");
-
-        public ChannelPanel(String name) {
-            this.name = name;
-
-            makePanel();
-        }
-
-        private void makePanel() {
-            setLayout(new BorderLayout());
-
-            textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            textArea.setLineWrap(true);
-            textArea.setWrapStyleWord(true);
-            textArea.setEditable(false);
-            textArea.setBackground(Color.WHITE);
-            textField = new JTextField();
-            Set set = new HashSet(1);
-            set.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_JAPANESE_HIRAGANA, 0));
-            textField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, set);
-            textField.addActionListener(this);
-            textField.addKeyListener(new KeyAdapter(){
-                public void keyReleased(KeyEvent ke){
-                    super.keyReleased(ke);
-                    if (ke.getKeyCode() == KeyEvent.VK_TAB) {
-                        String text = textField.getText();
-                        if (text.length()>0){
-                            int index = text.lastIndexOf(' ');
-                            int index2 = text.lastIndexOf(',');
-                            if (index2>index){
-                                index = index2;
-                            }
-                            String searchString;
-                            if (index != -1){
-                                searchString = text.substring(index+1).toLowerCase();
-                            }
-                            else{
-                                searchString = text.toLowerCase();
-                            }
-                            Set values = usernameList.getValues();
-                            String treffer = "";
-                            int count = 0;
-                            synchronized (values) {
-                                Iterator it = values.iterator();
-                                String value;
-                                while (it.hasNext()) {
-                                    value = (String) it.next();
-                                    if (value.indexOf('!') == 0 || value.indexOf('@') == 0 || value.indexOf('%') == 0 || value.indexOf('+') == 0){
-                                        value = value.substring(1);
-                                    }
-                                    if (value.toLowerCase().indexOf(searchString)==0){
-                                        treffer += value + " ";
-                                        count ++;
-                                    }
-                                }
-                            }
-                            if (treffer.length()>0){
-                                treffer = treffer.substring(0,
-                                    treffer.length() - 1);
-                                if (count == 1) {
-                                    if (index != -1) {
-                                        String newText = text.subSequence(0,
-                                            index + 1) + treffer;
-                                        textField.setText(newText);
-                                    }
-                                    else {
-                                        textField.setText(treffer);
-                                    }
-                                }
-                                else if (count > 1) {
-                                    updateTextArea("\t" + treffer, false);
-                                }
-                            }
-                        }
-                    }
-                    else if (befehlPos != -1){
-                        if (ke.getKeyCode() == KeyEvent.VK_UP) {
-                            textField.setText((String)befehle.get(befehlPos));
-                            if (befehlPos>0){
-                                befehlPos--;
-                            }
-                        }
-                        else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
-                            if (befehlPos<befehle.size()-1){
-                                befehlPos++;
-                            }
-                            textField.setText( (String) befehle.get(
-                                befehlPos));
-                        }
-                    }
-                }
-            });
-
-            userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            userList.addMouseListener(new MouseAdapter(){
-                public void mouseClicked(MouseEvent me){
-                    if (me.getClickCount()==2){
-                        String name = (String)userList.getSelectedValue();
-                        if (name.charAt(0)=='!' || name.charAt(0)=='%' || name.charAt(0)=='@' || name.charAt(0)=='+'){
-                            name = name.substring(1);
-                        }
-                        if (name.compareToIgnoreCase(nickname) != 0){
-                            for (int i = 1; i < tabbedPane.getTabCount(); i++) {
-                                if (tabbedPane.getTitleAt(i).
-                                    compareToIgnoreCase(name) == 0) {
-                                    return;
-                                }
-                            }
-                            addUser(tabbedPane, name);
-                            tabbedPane.setSelectedIndex(tabbedPane.getTabCount() -
-                                1);
-                        }
-                    }
-                }
-            });
-            userList.setCellRenderer(new UserListCellRenderer());
-
-            JScrollPane sp1 = new JScrollPane(textArea);
-            JScrollPane sp2 = new JScrollPane(userList);
-
-            sp1.setVerticalScrollBarPolicy(JScrollPane.
-                                           VERTICAL_SCROLLBAR_ALWAYS);
-            sp2.setVerticalScrollBarPolicy(JScrollPane.
-                                           VERTICAL_SCROLLBAR_ALWAYS);
-
-            JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                                                  sp1,
-                                                  sp2);
-            splitPane.setDividerLocation(theApp.getSize().width - 200);
-            add(splitPane, BorderLayout.CENTER);
-            add(textField, BorderLayout.SOUTH);
-            add(makeNorth(), BorderLayout.NORTH);
-        }
-
-        private Box makeNorth() {
-            Box northBox = Box.createHorizontalBox();
-
-            // let's add actions
-            closeButton.addActionListener(this);
-
-            northBox.add(closeButton);
-            titleArea.setEditable(false);
-            northBox.add(titleArea);
-
-            return northBox;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            Object source = e.getSource();
-
-            // let's take care of textField
-            if (source == textField) {
-                String message = textField.getText();
-                if (message.length()>450){
-                    message = message.substring(0, 450);
-                }
-                // let's send to server
-                if (message.startsWith("/")) {
-                    // commands that start with "/"
-                    // message = message.substring(1);
-                    analyzeCommand(message);
-                    textField.setText("");
-                }
-                else {
-                    // A private message to channel!
-                    parseSendToCommand("PRIVMSG " + name + " :" + message);
-
-                    // let's update textArea
-                    // textArea.append(textField.getText() + "\n");
-                    updateTextArea(formatNickname("<" + getNickname() + "> ") +
-                                   textField.getText());
-                    textField.setText("");
-                }
-                if (message != null && message.length() > 0){
-                    befehle.add(message);
-                    if (befehle.size() > 40) {
-                        befehle.remove(0);
-                    }
-                    befehlPos = befehle.size() - 1;
-                }
-            }
-            else if (source == closeButton) {
-                closeChannel(tabbedPane, name);
-
-                // Let's send a sensible message
-                parseSendToCommand("PART " + name);
-            }
-        }
-
-        public void setTitleArea(String title) {
-            StyledDocument doc = titleArea.getStyledDocument();
-            SimpleAttributeSet attributes = new SimpleAttributeSet();
-            StyleConstants.setBackground(attributes, Color.WHITE);
-            try {
-                doc.remove(0, doc.getLength());
-                int startIndex = 0;
-                for (int i=0; i<title.length(); i++){
-                    if (title.charAt(i) == 3 || i==title.length()-1){
-                        if (title.charAt(i) == 3){
-                            String toWrite = title.substring(startIndex, i);
-                            if (toWrite.length()>0){
-                                attributes = writeString(doc, attributes,
-                                    toWrite);
-                            }
-                            startIndex = i+1;
-                            i++;
-                        }
-                        else{
-                            String toWrite = title.substring(startIndex);
-                            if (toWrite.length()>0){
-                                attributes = writeString(doc, attributes,
-                                    toWrite);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (BadLocationException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        private SimpleAttributeSet writeString(StyledDocument doc, SimpleAttributeSet attributes, String toWrite){
-            boolean istNachkomma = false;
-            boolean parsEnde = false;
-            int index = 0;
-            if (toWrite.length()>1){
-                while (!parsEnde) {
-                    if (toWrite.charAt(index) == ',') {
-                        istNachkomma = true;
-                        index++;
-                        continue;
-                    }
-                    try {
-                        int colorCode = Integer.parseInt(toWrite.substring(
-                            index, index+2));
-                        index += 2;
-                        Color color = getColor(colorCode);
-                        if (!istNachkomma) {
-                            StyleConstants.setForeground(attributes, color);
-                        }
-                    }
-                    catch (NumberFormatException nfE) {
-                        if (toWrite.charAt(index + 1) != ',') {
-                            parsEnde = true;
-                        }
-                        try {
-                            int colorCode = Integer.parseInt(toWrite.substring(
-                                index, index+1));
-                            index++;
-                            Color color = getColor(colorCode);
-                            if (!istNachkomma) {
-                                StyleConstants.setForeground(attributes, color);
-                            }
-                        }
-                        catch (NumberFormatException nfE2) {
-                            parsEnde = true;
-                            StyleConstants.setForeground(attributes,
-                                Color.BLACK);
-                        }
-                    }
-                    catch(StringIndexOutOfBoundsException sioobE){
-                        parsEnde = true;
-                        int colorCode = Integer.parseInt(toWrite.substring(
-                            index, index+1));
-                        Color color = getColor(colorCode);
-                        if (!istNachkomma) {
-                            StyleConstants.setForeground(attributes, color);
-                        }
-                        return attributes;
-                    }
-                }
-            }
-            try {
-                doc.insertString(doc.getLength(),
-                                 toWrite.substring(index),
-                                 attributes);
-            }
-            catch (BadLocationException ex) {
-                ex.printStackTrace();
-            }
-            return attributes;
-        }
-
-        private Color getColor(int code){
-            switch (code){
-                case 0: return Color.BLACK;
-                case 1: return Color.BLACK;
-                case 2: return Color.BLUE;
-                case 3: return Color.GREEN;
-                case 4: return Color.RED;
-                case 5: return Color.BLACK;
-                case 6: return Color.PINK;
-                case 7: return Color.ORANGE;
-                case 8: return Color.YELLOW;
-                case 9: return Color.GREEN;
-                case 10: return Color.GREEN;
-                case 11: return Color.CYAN;
-                case 12: return Color.BLUE;
-                case 13: return Color.PINK;
-                case 14: return Color.GRAY;
-                case 15: return Color.LIGHT_GRAY;
-                default: return null;
-            }
-        }
-
-        public void updateTextArea(String message, boolean withTimeStamp) {
-            int oldCaretPosition = textArea.getCaretPosition();
-            if (withTimeStamp) {
-                String zeit = dateFormatter.format(new Date(System.
-                    currentTimeMillis()));
-                textArea.append("[" + zeit + "]\t" + message + "\n");
-
-            }
-            else {
-                textArea.append(message + "\n");
-            }
-            int newCaretPosition = textArea.getCaretPosition();
-            if (newCaretPosition == oldCaretPosition) {
-                textArea.setCaretPosition(oldCaretPosition +
-                                          (message + "\n").length());
-            }
-        }
-
-
-        public void updateTextArea(String message) {
-            updateTextArea(message, true);
-        }
-
-        public void updateUserArea(String username, String command) {
-            if (command.equals("add")) {
-                usernameList.add(username);
-            }
-
-            else if (command.equals("remove")) {
-                usernameList.remove(username);
-            }
-        }
-    }
-
-    public class UserPanel
-        extends JPanel
-        implements ActionListener {
-        private String name;
-        private final JTextArea textArea = new JTextArea();
-        private final JTextField textField = new JTextField();
-        private JTextField titleArea = new JTextField();
-
-        private JButton closeButton = new JButton("X");
-
-        public UserPanel(String name) {
-            this.name = name;
-
-            makePanel();
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void setTitleArea(String title) {
-            titleArea.setText("");
-            titleArea.setText(title);
-        }
-
-        private void makePanel() {
-            setLayout(new BorderLayout());
-
-            // let's add actionListener
-            textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            textArea.setLineWrap(true);
-            textArea.setWrapStyleWord(true);
-            textField.addActionListener(this);
-            textArea.setEditable(false);
-            titleArea.setEditable(false);
-
-            JScrollPane sp1 = new JScrollPane(textArea);
-
-            sp1.setVerticalScrollBarPolicy(JScrollPane.
-                                           VERTICAL_SCROLLBAR_ALWAYS);
-
-            add(sp1, BorderLayout.CENTER);
-            add(textField, BorderLayout.SOUTH);
-            add(makeNorth(), BorderLayout.NORTH);
-        }
-
-        private Box makeNorth() {
-            Box northBox = Box.createHorizontalBox();
-            // let's add actions
-            closeButton.addActionListener(this);
-            northBox.add(closeButton);
-            northBox.add(titleArea);
-            return northBox;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            Object source = e.getSource();
-
-            // let's take care of textField
-            if (source == textField) {
-                String message = textField.getText();
-
-                // let's send to the server
-                if (message.startsWith("/")) {
-                    // A command
-                    analyzeCommand(message);
-                    textField.setText("");
-                }
-                else {
-                    // A normal private message to send to the user
-                    parseSendToCommand("PRIVMSG " + name + " :" + message);
-
-                    // let's update textArea
-                    updateTextArea(formatNickname("<" + getNickname() + "> ") +
-                                   textField.getText());
-                    resetTextField();
-                }
-            }
-            else if (source == closeButton) {
-                closeChannel(tabbedPane, name);
-            }
-        }
-
-        public void resetTextField() {
-            textField.setText("");
-        }
-
-        public void updateTextArea(String message) {
-            int oldCaretPosition = textArea.getCaretPosition();
-            textArea.append(message + "\n");
-
-            int newCaretPosition = textArea.getCaretPosition();
-            if (newCaretPosition == oldCaretPosition) {
-                textArea.setCaretPosition(oldCaretPosition +
-                                          (message + "\n").length());
-            }
         }
     }
 }
