@@ -60,7 +60,7 @@
 
    <target name="create-jar" depends="gui-compile" description="builds appleJuice-jar">
 	<pack classes="de.applejuicenet.client.AppleJuiceClient,org.apache.xerces.parsers.XML11Configuration,
-			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl"
+			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl,org.apache.xerces.parsers.IntegratedParserConfiguration"
 	      targetJar="${basedir}/AJCoreGUI.jar"
 	      excludePkg="java,javax,sun,com.l2fprod,com.sixlegs,org.apache.log4j"
 	      manifestMainClass="de.applejuicenet.client.AppleJuiceClient">
