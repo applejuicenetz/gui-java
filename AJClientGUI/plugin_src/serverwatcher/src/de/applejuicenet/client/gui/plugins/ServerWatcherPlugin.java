@@ -15,7 +15,7 @@ import de.applejuicenet.client.gui.plugins.serverwatcher.NewServerDialog;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.3 2003/09/12 11:15:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.4 2003/09/13 18:35:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerWatcherPlugin.java,v $
+ * Revision 1.4  2003/09/13 18:35:19  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.3  2003/09/12 11:15:49  maj0r
  * Server lassen sich nun speichern und entfernen.
  * Version 1.1
@@ -78,10 +81,7 @@ public class ServerWatcherPlugin extends PluginConnector {
             constraints.weightx = 1;
             topPanel.add(new JLabel(), constraints);
 
-            String classname = getClass().toString();
-            String path = System.getProperty("user.dir") + File.separator + "plugins" +
-                    File.separator + classname.substring(classname.lastIndexOf('.') + 1) + ".jar";
-            initIcon(path);
+            initIcon();
 
             status.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent ae){
@@ -214,7 +214,7 @@ public class ServerWatcherPlugin extends PluginConnector {
     }
 
     public String getVersion() {
-        return "1.1";
+        return "1.11";
     }
 
     public boolean istReiter() {

@@ -21,10 +21,7 @@ public class IrcPlugin extends PluginConnector {
     public IrcPlugin() {
         setLayout(new BorderLayout());
         add(new XdccIrc(), BorderLayout.CENTER);
-        String classname = getClass().toString();
-        String path = System.getProperty("user.dir") + File.separator + "plugins" +
-                        File.separator + classname.substring(classname.lastIndexOf('.')+1) + ".jar";
-        initIcon(path);
+        initIcon();
     }
 
     public void fireLanguageChanged() {
@@ -52,7 +49,7 @@ public class IrcPlugin extends PluginConnector {
     }
 
     public String getVersion() {
-        return "1.21";
+        return "1.22";
     }
 
     public boolean istReiter() {
