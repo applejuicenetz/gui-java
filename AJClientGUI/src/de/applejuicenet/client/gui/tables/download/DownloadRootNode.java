@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.8 2003/10/12 16:34:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.9 2003/10/16 09:57:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.9  2003/10/16 09:57:21  maj0r
+ * Sortierung korrigiert, Nichtbeachtung von Gross/Kleinschreibung.
+ *
  * Revision 1.8  2003/10/12 16:34:59  maj0r
  * NullPointer behoben.
  *
@@ -263,9 +266,6 @@ public class DownloadRootNode implements Node, DownloadNode {
         else {
             if (o1.getClass().getSuperclass() == Number.class) {
                 return compare((Number) o1, (Number) o2);
-            }
-            else if (o1.getClass() == String.class) {
-                return ((String) o1).compareTo((String) o2);
             }
             else if (o1.getClass() == Boolean.class) {
                 return compare((Boolean) o1, (Boolean) o2);
