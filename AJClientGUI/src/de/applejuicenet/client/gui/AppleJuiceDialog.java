@@ -19,7 +19,7 @@ import de.applejuicenet.client.gui.tools.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.70 2003/12/30 15:13:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.71 2004/01/02 16:47:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.71  2004/01/02 16:47:18  maj0r
+ * Standard-XML-Datei angepasst.
+ *
  * Revision 1.70  2003/12/30 15:13:54  maj0r
  * Der Core kann nun uebers GUI beendet werden.
  *
@@ -853,8 +856,6 @@ public class AppleJuiceDialog
         xmlData.append("        </location>");
         xmlData.append(
             "        <proxy host=\"\" port=\"\" use=\"false\" userpass=\"=\"/>");
-        xmlData.append(
-            "        <server pfad=\"/?t=1592\" url=\"http://www.applejuicenet.org\"/>");
         xmlData.append("    </options>");
         xmlData.append("</root>");
 
