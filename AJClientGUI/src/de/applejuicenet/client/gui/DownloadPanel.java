@@ -73,7 +73,7 @@ public class DownloadPanel extends JPanel {
     DownloadDO[] downloads = new DownloadDO[2];
     downloads[0] = new DownloadDO(true, "datei1.jpg", DownloadDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
     downloads[1] = new DownloadDO(true, "Film.avi", DownloadDO.WARTESCHLANGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
-    downloadTable = new JTreeTable(new DownloadModel(downloads));
+    downloadTable = new JTreeTable(new DownloadModel());
 
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(downloadTable);

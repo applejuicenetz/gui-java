@@ -22,16 +22,18 @@ public class DownloadModel
       TreeTableModel.class, String.class, String.class, String.class, String.class,
       String.class, String.class, String.class, String.class, String.class};
 
-  public DownloadModel(DownloadDO[] downloads) {
+  public DownloadModel() {
     super(new DownloadNode());
+    DataManager.getInstance().addDownloadListener(this);
+    DownloadDO[] downloads = DataManager.getInstance().getDownloads();
     for (int i = 0; i < downloads.length; i++) {
       ( (DownloadNode) getRoot()).addChild(downloads[i]);
     }
-    DataManager.getInstance().addDownloadListener(this);
   }
 
   public void fireContentChanged(){
     //toDo
+      this.nodeChanged((TreeNode)getRoot());
   }
 
   protected DownloadDO getDO(Object node) {
