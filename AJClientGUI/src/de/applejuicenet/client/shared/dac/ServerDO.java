@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.12 2004/02/18 17:24:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.13 2004/05/24 08:03:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.util.Date;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerDO.java,v $
+ * Revision 1.13  2004/05/24 08:03:50  maj0r
+ * Unnoetige mehrfache Objektinstanziierung entfernt.
+ *
  * Revision 1.12  2004/02/18 17:24:21  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -49,6 +52,8 @@ public class ServerDO {
     private int versuche;
     private boolean connected = false;
     private boolean tryConnect = false;
+    private static SimpleDateFormat formatter = new SimpleDateFormat(
+        "dd.MM.yyyy HH:mm:ss");
 
     public ServerDO(int id){
         this.id = id;
@@ -117,8 +122,6 @@ public class ServerDO {
             return "";
         }
         else {
-            SimpleDateFormat formatter = new SimpleDateFormat(
-                "dd.MM.yyyy HH:mm:ss");
             return formatter.format(new Date(timeLastSeen));
         }
     }
