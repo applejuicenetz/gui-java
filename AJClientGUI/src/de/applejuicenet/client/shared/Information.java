@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.12 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.13 2004/06/14 17:15:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -168,6 +168,14 @@ public class Information
             getBytesSpeed(uploadSpeed);
     }
 
+    public String getUpAsString() {
+        return getBytesSpeed(uploadSpeed);
+    }
+
+    public String getDownAsString() {
+        return getBytesSpeed(downloadSpeed);
+    }
+
     public String getVerbindungsStatusAsString() {
         switch (verbindungsStatus) {
             case VERBUNDEN:
@@ -189,7 +197,7 @@ public class Information
         return result;
     }
 
-    private String bytesUmrechnen(long bytes) {
+    public static String bytesUmrechnen(long bytes) {
         boolean minus = false;
         if (bytes < 0) {
             minus = true;

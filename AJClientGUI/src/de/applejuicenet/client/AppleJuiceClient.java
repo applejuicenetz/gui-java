@@ -38,9 +38,12 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import java.io.DataInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.71 2004/05/30 08:37:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.72 2004/06/14 17:15:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -139,8 +142,7 @@ public class AppleJuiceClient {
                         System.out.println();
                         hilfeAusgegeben = true;
                     }
-                    if (args[i].indexOf("-link=") != -1) {
-                        link = args[i].substring(6);
+                    else if (args[i].indexOf("-command=") != -1) {
                         if (doubleInstance){
                             int PORT = OptionsManagerImpl.getInstance().
                                 getLinkListenerPort();
@@ -149,7 +151,31 @@ public class AppleJuiceClient {
                             Socket socket = new Socket("localhost", PORT);
                             PrintStream out = new PrintStream(socket.
                                 getOutputStream());
-                            out.println(passwort + "|" + link);
+                            DataInputStream in = new DataInputStream(socket.
+                                getInputStream());
+                            out.println(passwort + "|" + args[i]);
+                            BufferedReader reader = new BufferedReader(new
+                                InputStreamReader(in));
+                            String line = reader.readLine();
+                            System.out.println(line);
+                            socket.close();
+                            //war nur Linkprocessing, also GUI schliessen
+                            System.exit(1);
+                        }
+                        else{
+//                            erstmal nix zu tun
+                        }
+                    }
+                    else if (args[i].indexOf("-link=") != -1) {
+                        if (doubleInstance){
+                            int PORT = OptionsManagerImpl.getInstance().
+                                getLinkListenerPort();
+                            String passwort = OptionsManagerImpl.getInstance().
+                                getRemoteSettings().getOldPassword();
+                            Socket socket = new Socket("localhost", PORT);
+                            PrintStream out = new PrintStream(socket.
+                                getOutputStream());
+                            out.println(passwort + "|" + args[i]);
                             socket.close();
                             //war nur Linkprocessing, also GUI schliessen
                             System.exit(1);

@@ -39,7 +39,7 @@ import java.util.HashSet;
 import de.applejuicenet.client.shared.NetworkInfo;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.138 2004/06/11 14:01:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.139 2004/06/14 17:15:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -151,6 +151,37 @@ public class ApplejuiceFassade {
         else{
             return -1;
         }
+    }
+
+    public String getStats() {
+        /* ** JavaCore(0.30.145.610) * Down: 4.22KB/s * Up: 6.66KB/s * Credits: 370.26MB * Download(s): 3 *
+                    Connections: 20 * Firewalled: NO * IN: 1.44GB * OUT: 1.57GB * connected: 42mins ***        */
+        StringBuffer stats = new StringBuffer();
+        stats.append("*** Core(" + getCoreVersion().getVersion() + ")");
+        stats.append(" * Down: " + getInformation().getDownAsString());
+        stats.append(" * Up: " + getInformation().getUpAsString());
+        stats.append(" * Credits: " + getInformation().getCreditsAsString());
+        stats.append(" * Downloads: " + getDownloadsSnapshot().size());
+        stats.append(" * Connections: " + getInformation().getOpenConnections());
+        stats.append(" * Firewalled: " + (getNetworkInfo().isFirewalled() ? "Ja" : "Nein") );
+        stats.append(" * IN: " + Information.bytesUmrechnen(getInformation().getSessionDownload()));
+        stats.append(" * OUT: " + Information.bytesUmrechnen(getInformation().getSessionUpload()));
+        NetworkInfo netInfo = getNetworkInfo();
+        long timestamp = getLastCoreTimestamp();
+        if (timestamp == 0){
+            /*
+                Es wurden noch keine Referenzdaten geholt.
+                Wir nehmen die eigene Zeit, in der Hoffnung, dass die uebereinstimmen.
+             */
+            timestamp = System.currentTimeMillis();
+        }
+        long timeDiff = timestamp - netInfo.getConnectionTime();
+        int minuten = (int) (timeDiff / 60000);
+        if (minuten < 0 ){
+            minuten = 0;
+        }
+        stats.append(" * connected: " + minuten + " Mins. ***");
+        return stats.toString();
     }
 
     public void addDataUpdateListener(DataUpdateListener listener, int type) {

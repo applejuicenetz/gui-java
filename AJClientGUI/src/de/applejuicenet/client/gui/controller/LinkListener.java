@@ -2,45 +2,23 @@ package de.applejuicenet.client.gui.controller;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import java.io.IOException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.7 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.8 2004/06/14 17:15:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: LinkListener.java,v $
- * Revision 1.7  2004/05/23 17:58:29  maj0r
- * Anpassungen an neue Schnittstelle.
- *
- * Revision 1.6  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.5  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.4  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.3  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.2  2003/11/19 12:57:19  maj0r
- * Deprecated behoben.
- *
- * Revision 1.1  2003/11/18 16:41:59  maj0r
- * Erste Version des LinkListener eingebaut.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -81,9 +59,18 @@ public class LinkListener
                     BufferedReader reader = new BufferedReader(new
                         InputStreamReader(in));
                     String line = reader.readLine();
-                    String link = getLinkFromReadLine(line);
-                    if (link != null) {
-                        ApplejuiceFassade.getInstance().processLink(link);
+                    if (line.indexOf("-link=") != -1){
+                        String link = getLinkFromReadLine(line);
+                        if (link != null) {
+                            ApplejuiceFassade.getInstance().processLink(link);
+                        }
+                    }
+                    else if (line.indexOf("-command=") != -1){
+                        String command = line.substring(line.indexOf("-command=") + 9).toLowerCase();
+                        if (command.startsWith("getajstats")){
+                            PrintStream out = new PrintStream(client.getOutputStream());
+                            out.println(ApplejuiceFassade.getInstance().getStats());
+                        }
                     }
                 }
                 catch (Exception e) {
