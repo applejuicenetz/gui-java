@@ -23,7 +23,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import com.l2fprod.gui.plaf.skin.Skin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.59 2003/11/16 12:34:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.60 2003/11/18 16:41:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,10 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.60  2003/11/18 16:41:50  maj0r
+ * Erste Version des LinkListener eingebaut.
+ * Themes koennen nun ueber die properties.xml komplett deaktiviert werden.
+ *
  * Revision 1.59  2003/11/16 12:34:23  maj0r
  * Themes einngebaut (Danke an LinuxDoc)
  *
@@ -218,8 +222,10 @@ public class AppleJuiceDialog
         menuItemUeber.setIcon(im.getIcon("info"));
 
         setJMenuBar(createMenuBar());
-        SkinLookAndFeel.enable();
-        SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
+        if (PropertiesManager.getOptionsManager().isThemesSupported()){
+            SkinLookAndFeel.enable();
+            SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
+        }
 
         String path = System.getProperty("user.dir") + File.separator + "language" +
                 File.separator;
@@ -408,20 +414,6 @@ public class AppleJuiceDialog
                 closeWithErrormessage("Es sind keine xml-Dateien für die Sprachauswahl im Ordner " + path + " vorhanden." +
                                       "\r\nappleJuice wird beendet.", false);
             }
-            HashSet themesDateien = new HashSet();
-            File themesPath = new File(System.getProperty("user.dir") + File.separator + "themes");
-            if (!themesPath.isDirectory())
-            {
-                closeWithErrormessage("Der Ordner " + path + " für die Themes zip-Dateien ist nicht vorhanden." +
-                                      "\r\nappleJuice wird beendet.", false);
-            }
-            File[] themeFiles = themesPath.listFiles();
-            for (int i = 0; i < themeFiles.length; i++)
-            {
-                if (themeFiles[i].isFile() && themeFiles[i].getName().indexOf(".zip")!=-1){
-                    themesDateien.add(themeFiles[i].toURL());
-                }
-            }
 
             JMenuBar menuBar = new JMenuBar();
             optionenMenu = new JMenu("Extras");
@@ -484,45 +476,63 @@ public class AppleJuiceDialog
                 });
                 lafGroup.add(rb);
             }
-            themesMenu = new JMenu("Themes");
-            it = themesDateien.iterator();
-            ButtonGroup lafGroup2 = new ButtonGroup();
-            Skin standardSkin = null;
-            Skin aSkin = null;
-            String temp;
-            String shortName = "";
-            String defaultTheme = PropertiesManager.getOptionsManager().getDefaultTheme();
-            while (it.hasNext()){
-                URL skinUrl = (URL)it.next();
-                temp = skinUrl.getFile();
-                int index1 = temp.lastIndexOf('/');
-                int index2 = temp.lastIndexOf(".zip");
-                if (index1==-1 || index2==-1){
-                    continue;
+            if (PropertiesManager.getOptionsManager().isThemesSupported()){
+                HashSet themesDateien = new HashSet();
+                File themesPath = new File(System.getProperty("user.dir") + File.separator + "themes");
+                if (!themesPath.isDirectory())
+                {
+                    closeWithErrormessage("Der Ordner " + path + " für die Themes zip-Dateien ist nicht vorhanden." +
+                                          "\r\nappleJuice wird beendet.", false);
                 }
-                shortName = temp.substring(index1 + 1, index2);
-                aSkin = SkinLookAndFeel.loadThemePack(skinUrl);
-                final JCheckBoxMenuItem rb = new JCheckBoxMenuItem(shortName);
-                if (shortName.compareToIgnoreCase(defaultTheme)==0){
-                    standardSkin = aSkin;
-                    rb.setSelected(true);
-                }
-                rb.addChangeListener(new ChangeListener(){
-                    public void stateChanged(ChangeEvent ce){
-                        if (rb.isSelected()){
-                            activateLaF(rb.getText());
-                        }
+                File[] themeFiles = themesPath.listFiles();
+                for (int i = 0; i < themeFiles.length; i++)
+                {
+                    if (themeFiles[i].isFile() && themeFiles[i].getName().indexOf(".zip")!=-1){
+                        themesDateien.add(themeFiles[i].toURL());
                     }
-                });
-                themes.put(shortName, aSkin);
-                lafGroup2.add(rb);
-                themesMenu.add(rb);
+                }
+                themesMenu = new JMenu("Themes");
+                it = themesDateien.iterator();
+                ButtonGroup lafGroup2 = new ButtonGroup();
+                Skin standardSkin = null;
+                Skin aSkin = null;
+                String temp;
+                String shortName = "";
+                String defaultTheme = PropertiesManager.getOptionsManager().
+                    getDefaultTheme();
+                while (it.hasNext()) {
+                    URL skinUrl = (URL) it.next();
+                    temp = skinUrl.getFile();
+                    int index1 = temp.lastIndexOf('/');
+                    int index2 = temp.lastIndexOf(".zip");
+                    if (index1 == -1 || index2 == -1) {
+                        continue;
+                    }
+                    shortName = temp.substring(index1 + 1, index2);
+                    aSkin = SkinLookAndFeel.loadThemePack(skinUrl);
+                    final JCheckBoxMenuItem rb = new JCheckBoxMenuItem(
+                        shortName);
+                    if (shortName.compareToIgnoreCase(defaultTheme) == 0) {
+                        standardSkin = aSkin;
+                        rb.setSelected(true);
+                    }
+                    rb.addChangeListener(new ChangeListener() {
+                        public void stateChanged(ChangeEvent ce) {
+                            if (rb.isSelected()) {
+                                activateLaF(rb.getText());
+                            }
+                        }
+                    });
+                    themes.put(shortName, aSkin);
+                    lafGroup2.add(rb);
+                    themesMenu.add(rb);
+                }
+                if (standardSkin == null) {
+                    standardSkin = aSkin;
+                }
+                menuBar.add(themesMenu);
+                SkinLookAndFeel.setSkin(standardSkin);
             }
-            if (standardSkin==null){
-                standardSkin = aSkin;
-            }
-            menuBar.add(themesMenu);
-            SkinLookAndFeel.setSkin(standardSkin);
             return menuBar;
         }
         catch (Exception e){
@@ -627,7 +637,8 @@ public class AppleJuiceDialog
 
         xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xmlData.append("<root>");
-        xmlData.append("    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\" defaulttheme=\"aquathemepack\">");
+        xmlData.append("    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\" themes=\"true\" defaulttheme=\"aquathemepack\"");
+        xmlData.append("             linklistenerport=\"8768\">");
         xmlData.append("        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>");
         xmlData.append("        <logging level=\"INFO\"/>");
         xmlData.append("        <download uebersicht=\"true\"/>");

@@ -16,7 +16,7 @@ import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.11 2003/11/16 12:34:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.12 2003/11/18 16:41:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,10 @@ import org.apache.xml.serialize.XMLSerializer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.12  2003/11/18 16:41:50  maj0r
+ * Erste Version des LinkListener eingebaut.
+ * Themes koennen nun ueber die properties.xml komplett deaktiviert werden.
+ *
  * Revision 1.11  2003/11/16 12:34:23  maj0r
  * Themes einngebaut (Danke an LinuxDoc)
  *
@@ -278,6 +282,50 @@ public class PropertiesManager
 
     public void setErsterStart(boolean ersterStart) {
         setAttributeByTagName(new String[]{"options", "firststart"}, Boolean.toString(ersterStart));
+    }
+
+    public boolean isThemesSupported() {
+        try{
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "themes"});;
+            if (temp==null || temp.length()==0)
+                return true;
+            return new Boolean(temp).booleanValue();
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return false;
+        }
+    }
+
+    public void enableThemeSupport(boolean enable) {
+        setAttributeByTagName(new String[]{"options", "themes"}, Boolean.toString(enable));
+    }
+
+    public int getLinkListenerPort() {
+        try{
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "linklistenerport"});;
+            if (temp==null || temp.length()==0)
+                throw new Exception("Kein linklistenerport angegeben");
+            return new Integer(temp).intValue();
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return -1;
+        }
+    }
+
+    public void setLinkListenerPort(int port) {
+        setAttributeByTagName(new String[]{"options", "linklistenerport"}, Integer.toString(port));
     }
 
     public boolean isSoundEnabled() {

@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.28 2003/11/16 12:34:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.29 2003/11/18 16:41:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.29  2003/11/18 16:41:50  maj0r
+ * Erste Version des LinkListener eingebaut.
+ * Themes koennen nun ueber die properties.xml komplett deaktiviert werden.
+ *
  * Revision 1.28  2003/11/16 12:34:23  maj0r
  * Themes einngebaut (Danke an LinuxDoc)
  *
@@ -74,4 +78,12 @@ public interface OptionsManager {
     public String getDefaultTheme();
 
     public void setDefaultTheme(String themeShortName);
+
+    public boolean isThemesSupported();
+
+    public void enableThemeSupport(boolean enable);
+
+    public int getLinkListenerPort();
+
+    public void setLinkListenerPort(int port);
 }
