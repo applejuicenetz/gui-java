@@ -2,6 +2,7 @@ package de.applejuicenet.client.gui;
 
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dnd.DndTargetAdapter;
 import de.applejuicenet.client.gui.tables.dateiliste.DateiListeTableModel;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
@@ -13,15 +14,19 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DnDConstants;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.2 2003/08/28 06:11:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.3 2003/08/28 10:39:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +35,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DateiListeDialog.java,v $
+ * Revision 1.3  2003/08/28 10:39:05  maj0r
+ * Sharelisten koennen jetzt gespeichert werden.
+ *
  * Revision 1.2  2003/08/28 06:11:02  maj0r
  * DragNDrop vervollstaendigt.
  *
@@ -44,6 +52,7 @@ public class DateiListeDialog extends JDialog {
     private JLabel speicherHtml = new JLabel();
     private JTable table = new JTable();
     private JLabel text = new JLabel();
+    private JPopupMenu popup = new JPopupMenu();
 
     public DateiListeDialog(Frame parent, boolean modal) {
         super(parent, modal);
@@ -51,7 +60,21 @@ public class DateiListeDialog extends JDialog {
     }
 
     private void init() {
+        JMenuItem item1 = new JMenuItem("Entfernen");
+        item1.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                int[] selected = table.getSelectedRows();
+                if (selected.length>0){
+                    DateiListeTableModel model = (DateiListeTableModel)table.getModel();
+                    for (int i=0; i<selected.length; i++){
+                        model.removeRow(selected[i]);
+                    }
+                }
+            }
+        });
+        popup.add(item1);
         table.setModel(new DateiListeTableModel());
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         getContentPane().setLayout(new GridBagLayout());
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         IconManager im = IconManager.getInstance();
@@ -101,6 +124,31 @@ public class DateiListeDialog extends JDialog {
                 event.getDropTargetContext().dropComplete(true);
             }
         }));
+        table.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                if (SwingUtilities.isRightMouseButton(me))
+                {
+                    Point p = me.getPoint();
+                    int iRow = table.rowAtPoint(p);
+                    int iCol = table.columnAtPoint(p);
+                    table.setRowSelectionInterval(iRow, iRow);
+                    table.setColumnSelectionInterval(iCol, iCol);
+                }
+                maybeShowPopup(me);
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                maybeShowPopup(e);
+            }
+
+            private void maybeShowPopup(MouseEvent e) {
+                if (e.isPopupTrigger() && table.getSelectedRowCount()>0)
+                {
+                    popup.show(table, e.getX(), e.getY());
+                }
+            }
+        });
         getContentPane().add(scroll, constraints);
         constraints.weighty = 0;
         initLanguage();
@@ -147,7 +195,39 @@ public class DateiListeDialog extends JDialog {
             int i = fileChooser.showSaveDialog(DateiListeDialog.this);
             if (i==JFileChooser.APPROVE_OPTION){
                 File file = fileChooser.getSelectedFile();
-                //todo
+                StringBuffer text = new StringBuffer();
+                ShareDO[] shareDO = ((DateiListeTableModel)table.getModel()).getShareDOs();
+                if (source!=speicherTxt){
+                    text.append("<html><head><title>appleJuice Linklist</title></head><body bgcolor=#000080 text=#ffffff "
+                        + "link=#ffffff vlink=#ffffff><table align=center border=0><tr><td><b>appleJuice Dateien</b></td></tr><br>" + "\r\n");
+                    for (int x=0; x<shareDO.length; x++){
+                        text.append("<tr><td><a href=\"ajfsp://file|");
+                        text.append(shareDO[x].getShortfilename() + "|" + shareDO[x].getCheckSum() + "|" + shareDO[x].getSize() + "/\">");
+                        text.append(shareDO[x].getShortfilename());
+                        text.append("</a></td></tr>" + "\r\n");
+                    }
+                    text.append("</table></body></html>");
+                }
+                else{
+                    text.append("\r\n" + "Du benoetigst ein appleJuice-GUI, um diese Datei zu oeffnen. Das gibts z.B. hier "
+                        + "http://developer.berlios.de/projects/applejuicejava/" + "\r\n\r\n");
+                    text.append("Diese Datei darf nicht modifiziert werden!" + "\r\n" + "-----\r\n100\r\n");
+                    for (int x=0; x<shareDO.length; x++){
+                        text.append(shareDO[x].getShortfilename() + "\r\n");
+                        text.append(shareDO[x].getCheckSum() + "\r\n");
+                        text.append(shareDO[x].getSize() + "\r\n");
+                    }
+                }
+                try
+                {
+                    FileWriter fileWriter = new FileWriter(file);
+                    fileWriter.write(text.toString());
+                    fileWriter.close();
+                }
+                catch (IOException e1)
+                {
+                    e1.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                }
             }
         }
 
@@ -163,7 +243,7 @@ public class DateiListeDialog extends JDialog {
                 return true;
             else{
                 String name = file.getName();
-                if(name.toLowerCase().endsWith(".txt"))
+                if(name.toLowerCase().endsWith(".ajl"))
                     return true;
                 else
                     return false;
@@ -171,7 +251,7 @@ public class DateiListeDialog extends JDialog {
         }
 
         public String getDescription() {
-            return "*.txt";
+            return "AJL-Dateien";
         }
     }
 
@@ -189,7 +269,7 @@ public class DateiListeDialog extends JDialog {
         }
 
         public String getDescription() {
-            return "*.htm | *.html";
+            return "HTML-Dateien";
         }
     }
 }

@@ -6,12 +6,10 @@ import javax.swing.table.*;
 
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.shared.MapSetStringKey;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.1 2003/08/27 16:44:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.2 2003/08/28 10:39:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +18,9 @@ import de.applejuicenet.client.gui.tables.share.ShareNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DateiListeTableModel.java,v $
+ * Revision 1.2  2003/08/28 10:39:05  maj0r
+ * Sharelisten koennen jetzt gespeichert werden.
+ *
  * Revision 1.1  2003/08/27 16:44:42  maj0r
  * Unterstuetzung fuer DragNDrop teilweise eingebaut.
  *
@@ -27,7 +28,7 @@ import de.applejuicenet.client.gui.tables.share.ShareNode;
  */
 
 public class DateiListeTableModel
-        extends AbstractTableModel implements LanguageListener {
+        extends AbstractTableModel {
     final static String[] COL_NAMES = {
         "Name", "Größe" };
 
@@ -35,7 +36,6 @@ public class DateiListeTableModel
 
     public DateiListeTableModel() {
         super();
-        LanguageSelector.getInstance().addLanguageListener(this);
     }
 
     public Object getRow(int row) {
@@ -98,7 +98,15 @@ public class DateiListeTableModel
         fireTableDataChanged();
     }
 
-    public void fireLanguageChanged() {
-//        LanguageSelector languageSelector = LanguageSelector.getInstance();
+    public void removeRow(int row){
+        Object toRemove = getRow(row);
+        if (toRemove!=null){
+            dateien.remove(new MapSetStringKey(((ShareDO)toRemove).getId()));
+            fireTableDataChanged();
+        }
+    }
+
+    public ShareDO[] getShareDOs(){
+        return (ShareDO[]) dateien.values().toArray(new ShareDO[dateien.values().size()]);
     }
 }
