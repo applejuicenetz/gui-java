@@ -16,7 +16,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.util.DownloadCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.7 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.8 2005/03/23 06:59:58 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -50,7 +50,7 @@ public class DownloadDirectoryNode
 
     private static Map downloads;
     private String verzeichnis;
-    private List children = new ArrayList();
+    private List<DownloadMainNode> children = new ArrayList<DownloadMainNode>();
 
     private JLabel progressbarLabel;
     private JLabel versionLabel;

@@ -58,7 +58,7 @@ public class DownloadToolTipUI extends MetalToolTipUI {
         }
         StringTokenizer st = new StringTokenizer(tipText, "|");
         int maxWidth = 0;
-        Vector v = new Vector();
+        Vector<String> v = new Vector<String>();
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
             int width = SwingUtilities.computeStringWidth(metrics, token);

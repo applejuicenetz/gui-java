@@ -29,7 +29,7 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginPanel.java,v 1.3 2005/01/18 17:35:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginPanel.java,v 1.4 2005/03/23 06:59:58 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -77,7 +77,7 @@ public class ODPluginPanel
         menuIcon = im.getIcon("opt_plugins");
         PluginConnector[] plugins = theApp.getPlugins();
         einstellungen.setVisible(false);
-        Vector v = new Vector();
+        Vector<PluginContainer> v = new Vector<PluginContainer>();
         if (plugins.length != 0) {
             for (int i = 0; i < plugins.length; i++) {
                 v.add(new PluginContainer(plugins[i]));

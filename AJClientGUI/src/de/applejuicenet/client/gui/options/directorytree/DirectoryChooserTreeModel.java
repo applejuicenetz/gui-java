@@ -11,7 +11,7 @@ import javax.swing.tree.TreePath;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/directorytree/DirectoryChooserTreeModel.java,v 1.1 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/directorytree/DirectoryChooserTreeModel.java,v 1.2 2005/03/23 06:59:58 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,7 +24,7 @@ import java.util.List;
 public class DirectoryChooserTreeModel
     implements TreeModel {
     private DirectoryChooserNode root;
-    private List listener = new Vector();
+    private List<TreeModelListener> listener = new Vector<TreeModelListener>();
 
     public DirectoryChooserTreeModel() {
         root = new DirectoryChooserNode();
