@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.20 2003/09/04 10:13:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.21 2003/09/06 14:50:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.21  2003/09/06 14:50:50  maj0r
+ * Fehlerbehandlung verbessert.
+ *
  * Revision 1.20  2003/09/04 10:13:28  maj0r
  * Logger eingebaut.
  *
@@ -283,7 +286,7 @@ public class StartPanel
                                                                 getFirstAttrbuteByTagName(new String[]{"mainform", "html15"})) +
                               "</h2></font></html>");
             try{
-                String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.de", 80, HtmlLoader.GET,
+                String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.org", 80, HtmlLoader.GET,
                                                             "/inprog/news.php?version=" + ApplejuiceFassade.getInstance().getCoreVersion().getVersion());
                 htmlText = "<html>" + htmlText + "</html>";
                 nachrichten.setText(htmlText);
@@ -291,6 +294,10 @@ public class StartPanel
             catch (WebSiteNotFoundException e){
                 if (logger.isEnabledFor(Level.INFO))
                     logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Proxy?");
+            }
+            catch (Exception e){
+                if (logger.isEnabledFor(Level.INFO))
+                    logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Server down?");
             }
         }
         catch (Exception e){
