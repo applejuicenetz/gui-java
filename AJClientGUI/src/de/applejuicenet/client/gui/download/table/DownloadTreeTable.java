@@ -36,7 +36,10 @@ public class DownloadTreeTable extends JTreeTable {
             int row = rowAtPoint(p);
             Object value = ( (TreeTableModelAdapter) getModel()).
                 nodeForRow(row);
-            if (value.getClass() == DownloadSourceDO.class) {
+            if (value == null){
+            	return null;
+            }
+            else if (value.getClass() == DownloadSourceDO.class) {
                 return getToolTipForDownloadSourceDO( (DownloadSourceDO) value);
             }
             else if (value.getClass() == DownloadMainNode.class

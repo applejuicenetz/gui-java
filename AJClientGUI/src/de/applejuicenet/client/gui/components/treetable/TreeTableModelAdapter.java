@@ -25,7 +25,7 @@ import javax.swing.tree.TreePath;
 
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/treetable/TreeTableModelAdapter.java,v 1.2 2004/11/22 16:25:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/treetable/TreeTableModelAdapter.java,v 1.3 2004/12/08 12:15:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -92,8 +92,16 @@ public class TreeTableModelAdapter
     }
 
     public Object nodeForRow(int row) {
+    	if (row == -1){
+    		return null;
+    	}
         TreePath treePath = tree.getPathForRow(row);
-        return treePath.getLastPathComponent();
+        if (treePath != null){
+        	return treePath.getLastPathComponent();
+        }
+        else{
+        	return null;
+        }
     }
 
     public Object getValueAt(int row, int column) {
