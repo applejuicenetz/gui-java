@@ -11,28 +11,41 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import de.applejuicenet.client.shared.exception.IllegalArgumentException;
 
 public class PropertyHandler {
+	private Logger logger;
+	
 	private HashSet listener = null;
 	private String path;
 	private Properties props;
 	private String beschreibung;
 	private boolean inform = true;
 	
-	public PropertyHandler(String propertiesLocation, String beschreibung, boolean load) throws IllegalArgumentException{
-		path = propertiesLocation;
-		if (beschreibung == null){
-			this.beschreibung = "";
-		}
-		else{
-			this.beschreibung = beschreibung;
-		}
-		if (load){
-			reload();
-		}
-		else{
-			props = new Properties();
+	public PropertyHandler(String propertiesLocation, String beschreibung, boolean load) 
+		throws IllegalArgumentException{
+		logger = Logger.getLogger(getClass());
+		try{
+			path = propertiesLocation;
+			if (beschreibung == null){
+				this.beschreibung = "";
+			}
+			else{
+				this.beschreibung = beschreibung;
+			}
+			if (load){
+				reload();
+			}
+			else{
+				props = new Properties();
+			}
+		} catch (Exception e) {
+			if (logger.isEnabledFor(Level.ERROR)) {
+				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+			}
 		}
 	}
 	
@@ -52,9 +65,15 @@ public class PropertyHandler {
 	}
 	
 	public void put(String identifier, String value){
-		String oldValue = get(identifier);
-		props.put(identifier, value);
-		informListener(identifier, oldValue, value);
+		try{
+			String oldValue = get(identifier);
+			props.put(identifier, value);
+			informListener(identifier, oldValue, value);
+		} catch (Exception e) {
+			if (logger.isEnabledFor(Level.ERROR)) {
+				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+			}
+		}
 	}
 
 	public void put(String identifier, int value){
@@ -94,38 +113,50 @@ public class PropertyHandler {
 	}
 
 	public void reload() throws IllegalArgumentException{
-		props = new Properties();
-		FileInputStream inputStream = null;
-		try {
-			inputStream = new FileInputStream(path);
-		} catch (FileNotFoundException e) {
-			throw new IllegalArgumentException("PropertyDatei konnte nicht gefunden werden.");
-/*			File aFile = new File(path);
+		try{
+			props = new Properties();
+			FileInputStream inputStream = null;
 			try {
-				aFile.createNewFile();
 				inputStream = new FileInputStream(path);
-			} catch (IOException e1) {*(
-				throw new RuntimeException("PropertyDatei konnte nicht angelegt werden.");
-			}*/
-		}
-		props = new Properties();
-		try {
-			props.load(inputStream);
-			inputStream.close();
-		} catch (IOException e2) {
-			throw new IllegalArgumentException("Ungueltige PropertyDatei.");
+			} catch (FileNotFoundException e) {
+				throw new IllegalArgumentException("PropertyDatei konnte nicht gefunden werden.");
+	/*			File aFile = new File(path);
+				try {
+					aFile.createNewFile();
+					inputStream = new FileInputStream(path);
+				} catch (IOException e1) {*(
+					throw new RuntimeException("PropertyDatei konnte nicht angelegt werden.");
+				}*/
+			}
+			props = new Properties();
+			try {
+				props.load(inputStream);
+				inputStream.close();
+			} catch (IOException e2) {
+				throw new IllegalArgumentException("Ungueltige PropertyDatei.");
+			}
+		} catch (Exception e) {
+			if (logger.isEnabledFor(Level.ERROR)) {
+				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+			}
 		}
 	}
 	
 	public void save() throws IllegalArgumentException{
-		File aFile = new File(path);
-		try {
-			aFile.createNewFile();
-			FileOutputStream outputStream = new FileOutputStream(aFile);
-			props.store(outputStream, beschreibung);
-			outputStream.close();
-		} catch (IOException e) {
-			throw new IllegalArgumentException("PropertyDatei konnte nicht gespeichert werden.");
+		try{
+			File aFile = new File(path);
+			try {
+				aFile.createNewFile();
+				FileOutputStream outputStream = new FileOutputStream(aFile);
+				props.store(outputStream, beschreibung);
+				outputStream.close();
+			} catch (IOException e) {
+				throw new IllegalArgumentException("PropertyDatei konnte nicht gespeichert werden.");
+			}
+		} catch (Exception e) {
+			if (logger.isEnabledFor(Level.ERROR)) {
+				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+			}
 		}
 	}
 
