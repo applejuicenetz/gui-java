@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/Attic/StandardAutomaticPwdlPolicy.java,v 1.5 2003/11/24 12:47:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/Attic/StandardAutomaticPwdlPolicy.java,v 1.6 2003/12/16 09:28:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StandardAutomaticPwdlPolicy.java,v $
+ * Revision 1.6  2003/12/16 09:28:15  maj0r
+ * Rundungsfehler beim automatischen Powerdownload behoben (Danke an garnichda).
+ *
  * Revision 1.5  2003/11/24 12:47:08  maj0r
  * Bug beim autom. Pwdl behoben, der auftrat, wenn nur eine Datei im Download war.
  *
@@ -59,8 +62,9 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
                     if (result.length()>result.lastIndexOf('.')+2){
                         result = result.substring(0, result.lastIndexOf('.')+2);
                     }
-                    wert = Double.parseDouble(result);
-                    pwdlValue = (int)((wert -1) * 10);
+                    wert = Double.parseDouble(result) - 1;
+                    wert = ((double) Math.round(wert * 100.0))/100.0;
+                    pwdlValue = (int)((wert) * 10);
                     if (pwdlValue<12 || pwdlValue>490){
                         continue;
                     }
