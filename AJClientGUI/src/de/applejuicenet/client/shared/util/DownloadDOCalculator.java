@@ -3,32 +3,32 @@ package de.applejuicenet.client.shared.util;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.download.table.DownloadModel;
 
 public abstract class DownloadDOCalculator {
 	private static Logger logger = Logger.getLogger(DownloadDOCalculator.class); 
 
-	public static String getStatusAsString(DownloadDO downloadDO) {
+	public static String getStatusAsString(Download download) {
         try {
-            switch (downloadDO.getStatus()) {
-                case DownloadDO.PAUSIERT:
+            switch (download.getStatus()) {
+                case Download.PAUSIERT:
                     return DownloadModel.pausiert;
-                case DownloadDO.ABBRECHEN:
+                case Download.ABBRECHEN:
                     return DownloadModel.abbrechen;
-                case DownloadDO.ABGEGROCHEN:
+                case Download.ABGEGROCHEN:
                     return DownloadModel.abgebrochen;
-                case DownloadDO.FERTIG:
+                case Download.FERTIG:
                     return DownloadModel.fertig;
-                case DownloadDO.FEHLER_BEIM_FERTIGSTELLEN:
+                case Download.FEHLER_BEIM_FERTIGSTELLEN:
                     return DownloadModel.fehlerBeimFertigstellen;
-                case DownloadDO.NICHT_GENUG_PLATZ_FEHLER:
+                case Download.NICHT_GENUG_PLATZ_FEHLER:
                     return DownloadModel.keinPlatz;
-                case DownloadDO.DATA_WIRD_ERSTELLT:
+                case Download.DATA_WIRD_ERSTELLT:
                     return DownloadModel.dataWirdErstellt;
-                case DownloadDO.SUCHEN_LADEN: {
-                    DownloadSourceDO[] sources = downloadDO.getSources();
+                case Download.SUCHEN_LADEN: {
+                    DownloadSourceDO[] sources = download.getSources();
                     String result = "";
                     int uebertragung = 0;
                     int warteschlange = 0;
@@ -50,7 +50,7 @@ public abstract class DownloadDOCalculator {
                     return result + " " + (warteschlange + uebertragung) + "/" +
                         sources.length + " (" + uebertragung + ")";
                 }
-                case DownloadDO.FERTIGSTELLEN:
+                case Download.FERTIGSTELLEN:
                     return DownloadModel.fertigstellen;
                 default:
                     return "";

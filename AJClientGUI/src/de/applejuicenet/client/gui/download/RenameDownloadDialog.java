@@ -20,13 +20,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/RenameDownloadDialog.java,v 1.3 2005/01/18 17:35:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/RenameDownloadDialog.java,v 1.4 2005/01/18 20:49:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,15 +39,15 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 public class RenameDownloadDialog
     extends JDialog {
 	
-	private DownloadDO downloadDO;
+	private Download download;
     private JButton schliessen = new JButton();
     private JComboBox possibleNames = new JComboBox();
     private boolean somethingSelected = false;
 
     public RenameDownloadDialog(JFrame parentDialog,
-                                      DownloadDO selectedDownloadDO) {
+                                      Download selectedDownload) {
         super(parentDialog, true);
-        downloadDO = selectedDownloadDO;
+        download = selectedDownload;
         init();
     }
 
@@ -66,9 +66,9 @@ public class RenameDownloadDialog
         JLabel label1 = new JLabel();
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.downloadform.neuerdateiname")));
-        DownloadSourceDO[] sources = downloadDO.getSources();
+        DownloadSourceDO[] sources = download.getSources();
         HashSet set = new HashSet();
-        set.add(downloadDO.getFilename());
+        set.add(download.getFilename());
         for (int i = 0; i < sources.length; i++) {
             set.add(sources[i].getFilename());
         }
@@ -77,7 +77,7 @@ public class RenameDownloadDialog
         while (it.hasNext()){
             name = (String) it.next();
             possibleNames.addItem(name);
-            if (name.compareTo(downloadDO.getFilename()) == 0) {
+            if (name.compareTo(download.getFilename()) == 0) {
                 possibleNames.setSelectedItem(name);
             }
         }

@@ -5,8 +5,8 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.tree.TreeModel;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.components.treetable.DefaultIconNodeRenderer;
 import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRenderer;
@@ -44,8 +44,8 @@ public class DownloadTreeTableCellRenderer extends DefaultTreeTableCellRenderer
 					setBackground(settings.getQuelleHintergrundColor());
 				} else if (node.getClass() == DownloadMainNode.class
 						&& ((DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE
-						&& ((DownloadMainNode) node).getDownloadDO()
-								.getStatus() == DownloadDO.FERTIG) {
+						&& ((DownloadMainNode) node).getDownload()
+								.getStatus() == Download.FERTIG) {
 					setBackground(settings.getDownloadFertigHintergrundColor());
 				} else {
 					setBackground(table.getBackground());

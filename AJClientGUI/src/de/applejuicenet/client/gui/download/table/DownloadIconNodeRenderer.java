@@ -5,8 +5,8 @@ import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.JTree;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.components.treetable.DefaultIconNodeRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
@@ -59,8 +59,8 @@ public class DownloadIconNodeRenderer extends DefaultIconNodeRenderer
 					c.setBackground(settings.getQuelleHintergrundColor());
 				} else if (value.getClass() == DownloadMainNode.class
 						&& ((DownloadMainNode) value).getType() == DownloadMainNode.ROOT_NODE
-						&& ((DownloadMainNode) value).getDownloadDO()
-								.getStatus() == DownloadDO.FERTIG) {
+						&& ((DownloadMainNode) value).getDownload()
+								.getStatus() == Download.FERTIG) {
 					c.setBackground(settings
 							.getDownloadFertigHintergrundColor());
 				} else {

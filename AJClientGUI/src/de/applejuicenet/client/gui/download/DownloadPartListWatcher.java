@@ -25,7 +25,7 @@ public class DownloadPartListWatcher {
 			((DownloadPanel)downloadController.getComponent())
 				.getDownloadDOOverviewPanel()
 					.setDownloadDO(((DownloadMainNode) nodeObject)
-							.getDownloadDO());
+							.getDownload());
 		} else if (nodeObject.getClass() == DownloadSourceDO.class) {
 			if (((DownloadSourceDO) nodeObject).getStatus() == DownloadSourceDO.IN_WARTESCHLANGE
 					&& ((DownloadSourceDO) nodeObject)

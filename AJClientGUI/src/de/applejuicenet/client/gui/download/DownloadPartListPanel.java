@@ -15,10 +15,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.controller.dac.PartListDO;
 import de.applejuicenet.client.fassade.controller.dac.PartListDO.Part;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
@@ -210,10 +210,10 @@ public class DownloadPartListPanel extends JPanel implements
 		int obenLinks;
 		int breite;
 		if (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST) {
-			DownloadDO downloadDO = (DownloadDO) partListDO
+			Download download = (Download) partListDO
 					.getValueDO();
-			if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
-				DownloadSourceDO[] sources = downloadDO
+			if (download.getStatus() == Download.SUCHEN_LADEN) {
+				DownloadSourceDO[] sources = download
 						.getSources();
 				for (int i = 0; i < sources.length; i++) {
 					if (sources[i].getStatus() == DownloadSourceDO.UEBERTRAGUNG) {

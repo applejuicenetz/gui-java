@@ -12,9 +12,9 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.controller.dac.PartListDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 
@@ -127,7 +127,7 @@ public class PartListXMLHolder extends DefaultHandler {
 			} else {
 				xmlCommand = "/xml/downloadpartlist.xml?";
 				xmlString = getXMLString("&id=" + ((DownloadDO) object).getId());
-				partListDO = new PartListDO((DownloadDO) object);
+				partListDO = new PartListDO((Download) object);
 			}
 			xr.parse(new InputSource(new StringReader(xmlString)));
 			PartListDO resultPartList = partListDO;

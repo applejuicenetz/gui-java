@@ -1,7 +1,7 @@
 package de.applejuicenet.client.fassade.controller.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/Attic/PartListDO.java,v 1.3 2005/01/18 12:46:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/Attic/PartListDO.java,v 1.4 2005/01/18 20:49:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,8 @@ package de.applejuicenet.client.fassade.controller.dac;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.applejuicenet.client.fassade.entity.Download;
 
 public class PartListDO {
 	public static final Color COLOR_TYPE_UEBERPRUEFT = Color.GREEN;
@@ -66,8 +68,8 @@ public class PartListDO {
 
 	private int type;
 
-	public PartListDO(DownloadDO downloadDO) {
-		valueHolderDO = downloadDO;
+	public PartListDO(Download download) {
+		valueHolderDO = download;
 		type = MAIN_PARTLIST;
 	}
 

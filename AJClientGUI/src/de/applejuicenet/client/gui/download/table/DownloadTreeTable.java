@@ -5,8 +5,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JToolTip;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
@@ -46,7 +46,7 @@ public class DownloadTreeTable extends JTreeTable {
                 &&
                 ( (DownloadMainNode) value).getType() ==
                 DownloadMainNode.ROOT_NODE) {
-                return getToolTipForDownloadDO(( (DownloadMainNode) value).getDownloadDO());
+                return getToolTipForDownloadDO(( (DownloadMainNode) value).getDownload());
             }
             else{
                 return null;
@@ -57,30 +57,30 @@ public class DownloadTreeTable extends JTreeTable {
         }
     }
 
-    private String getToolTipForDownloadDO(DownloadDO downloadDO){
+    private String getToolTipForDownloadDO(Download download){
         String[] columns = DownloadMainNode.getColumnTitles();
         StringBuffer toolTip = new StringBuffer();
-        toolTip.append(DownloadColumnValue.getColumn0(downloadDO));
+        toolTip.append(DownloadColumnValue.getColumn0(download));
         toolTip.append("| |" + columns[1] + ": ");
-        toolTip.append(DownloadColumnValue.getColumn1(downloadDO));
-        if (downloadDO.getStatus()==DownloadDO.SUCHEN_LADEN ||
-            downloadDO.getStatus()==DownloadDO.PAUSIERT){
+        toolTip.append(DownloadColumnValue.getColumn1(download));
+        if (download.getStatus()==Download.SUCHEN_LADEN ||
+            download.getStatus()==Download.PAUSIERT){
             toolTip.append("|" + columns[2] + ": ");
-            toolTip.append(DownloadColumnValue.getColumn2(downloadDO));
+            toolTip.append(DownloadColumnValue.getColumn2(download));
             toolTip.append("|" + columns[3] + ": ");
-            toolTip.append(DownloadColumnValue.getColumn3(downloadDO));
-            if (downloadDO.getStatus()==DownloadDO.SUCHEN_LADEN ){
+            toolTip.append(DownloadColumnValue.getColumn3(download));
+            if (download.getStatus()==Download.SUCHEN_LADEN ){
                 toolTip.append("|" + columns[4] + ": ");
-                toolTip.append(DownloadColumnValue.getColumn4(downloadDO));
+                toolTip.append(DownloadColumnValue.getColumn4(download));
                 toolTip.append("|" + columns[5] + ": ");
-                toolTip.append(DownloadColumnValue.getColumn5(downloadDO));
+                toolTip.append(DownloadColumnValue.getColumn5(download));
             }
             toolTip.append("|" + columns[6] + ": ");
-            toolTip.append(downloadDO.getProzentGeladenAsString());
+            toolTip.append(download.getProzentGeladenAsString());
             toolTip.append("|" + columns[7] + ": ");
-            toolTip.append(DownloadColumnValue.getColumn7(downloadDO));
+            toolTip.append(DownloadColumnValue.getColumn7(download));
             toolTip.append("|" + columns[8] + ": ");
-            toolTip.append(DownloadColumnValue.getColumn8(downloadDO));
+            toolTip.append(DownloadColumnValue.getColumn8(download));
         }
         return toolTip.toString();
     }

@@ -1,8 +1,11 @@
-package de.applejuicenet.client.fassade.controller.dac;
+package de.applejuicenet.client.fassade.controller.xml;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.entity.Download;
 
 /**
  * $Header:
@@ -24,18 +27,7 @@ import java.util.Map;
  * 
  */
 
-public class DownloadDO {
-
-	// Status - IDs
-	public static final int SUCHEN_LADEN = 0;
-	public static final int NICHT_GENUG_PLATZ_FEHLER = 1;
-	public static final int FERTIGSTELLEN = 12;
-	public static final int FEHLER_BEIM_FERTIGSTELLEN = 13;
-	public static final int FERTIG = 14;
-	public static final int ABBRECHEN = 15;
-	public static final int DATA_WIRD_ERSTELLT = 16;
-	public static final int ABGEGROCHEN = 17;
-	public static final int PAUSIERT = 18;
+class DownloadDO implements Download, DownloadInternal {
 
 	private final int id;
 

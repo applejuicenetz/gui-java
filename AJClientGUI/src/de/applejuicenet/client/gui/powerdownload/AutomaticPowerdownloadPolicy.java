@@ -11,11 +11,11 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.download.PowerDownloadPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.16 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.17 2005/01/18 20:49:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -124,9 +124,9 @@ public abstract class AutomaticPowerdownloadPolicy
             synchronized (downloads) {
                 Iterator it = downloads.values().iterator();
                 int temp = 0;
-                DownloadDO[] dos = new DownloadDO[downloads.size()];
+                Download[] dos = new Download[downloads.size()];
                 while (it.hasNext()) {
-                    dos[temp] = (DownloadDO) it.next();
+                    dos[temp] = (Download) it.next();
                     temp++;
                 }
                 applejuiceFassade.pauseDownload(dos);

@@ -10,13 +10,13 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.util.DownloadDOCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.5 2005/01/18 17:35:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadDirectoryNode.java,v 1.6 2005/01/18 20:49:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -69,20 +69,20 @@ public class DownloadDirectoryNode
         }
     }
 
-    private boolean shouldSort(DownloadDO downloadDO, List oldNodes){
-        if (downloadDO.getTargetDirectory().compareTo(verzeichnis) == 0) {
+    private boolean shouldSort(Download download, List oldNodes){
+        if (download.getTargetDirectory().compareTo(verzeichnis) == 0) {
             boolean found = false;
             for (int i = 0; i < children.size(); i++) {
                 if ( ( (DownloadMainNode) children.get(i)).
-                    getDownloadDO().getId()
-                    == downloadDO.getId()) {
+                    getDownload().getId()
+                    == download.getId()) {
                     oldNodes.remove(children.get(i));
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                children.add(new DownloadMainNode(downloadDO));
+                children.add(new DownloadMainNode(download));
                 return true;
             }
         }
@@ -102,7 +102,7 @@ public class DownloadDirectoryNode
         if (downloads == null) {
             return null;
         }
-        DownloadDO downloadDO;
+        Download download;
         boolean newSort = false;
         synchronized (this) {
             Iterator it = downloads.values().iterator();
@@ -111,8 +111,8 @@ public class DownloadDirectoryNode
                 oldNodes.add(children.get(i));
             }
             while (it.hasNext()) {
-                downloadDO = (DownloadDO) it.next();
-                if (shouldSort(downloadDO, oldNodes)) {
+                download = (Download) it.next();
+                if (shouldSort(download, oldNodes)) {
                     newSort = true;
                 }
             }
@@ -198,62 +198,62 @@ public class DownloadDirectoryNode
         Object o1 = null;
         Object o2 = null;
         if (sort == SORT_DOWNLOADNAME) {
-            o1 = ( (DownloadMainNode) childNodes[row1]).getDownloadDO().
+            o1 = ( (DownloadMainNode) childNodes[row1]).getDownload().
                 getFilename();
-            o2 = ( (DownloadMainNode) childNodes[row2]).getDownloadDO().
+            o2 = ( (DownloadMainNode) childNodes[row2]).getDownload().
                 getFilename();
         }
         else if (sort == SORT_GROESSE) {
-            o1 = new Long( ( (DownloadMainNode) childNodes[row1]).getDownloadDO().
+            o1 = new Long( ( (DownloadMainNode) childNodes[row1]).getDownload().
                           getGroesse());
-            o2 = new Long( ( (DownloadMainNode) childNodes[row2]).getDownloadDO().
+            o2 = new Long( ( (DownloadMainNode) childNodes[row2]).getDownload().
                           getGroesse());
         }
         else if (sort == SORT_BEREITS_GELADEN) {
-            o1 = new Long( ( (DownloadMainNode) childNodes[row1]).getDownloadDO().
+            o1 = new Long( ( (DownloadMainNode) childNodes[row1]).getDownload().
                           getBereitsGeladen());
-            o2 = new Long( ( (DownloadMainNode) childNodes[row2]).getDownloadDO().
+            o2 = new Long( ( (DownloadMainNode) childNodes[row2]).getDownload().
                           getBereitsGeladen());
         }
         else if (sort == SORT_RESTZEIT) {
-            o1 = new Long( ( (DownloadMainNode) childNodes[row1]).getDownloadDO().
+            o1 = new Long( ( (DownloadMainNode) childNodes[row1]).getDownload().
                           getRestZeit());
-            o2 = new Long( ( (DownloadMainNode) childNodes[row2]).getDownloadDO().
+            o2 = new Long( ( (DownloadMainNode) childNodes[row2]).getDownload().
                           getRestZeit());
         }
         else if (sort == SORT_PROZENT) {
             o1 = new Double( ( (DownloadMainNode) childNodes[row1]).
-                            getDownloadDO().getProzentGeladen());
+                            getDownload().getProzentGeladen());
             o2 = new Double( ( (DownloadMainNode) childNodes[row2]).
-                            getDownloadDO().getProzentGeladen());
+                            getDownload().getProzentGeladen());
         }
         else if (sort == SORT_PWDL) {
             o1 = new Integer( ( (DownloadMainNode) childNodes[row1]).
-                             getDownloadDO().getPowerDownload());
+                             getDownload().getPowerDownload());
             o2 = new Integer( ( (DownloadMainNode) childNodes[row2]).
-                             getDownloadDO().getPowerDownload());
+                             getDownload().getPowerDownload());
         }
         else if (sort == SORT_REST_ZU_LADEN) {
-            o1 = new Long( ( (DownloadMainNode) childNodes[row1]).getDownloadDO().
+            o1 = new Long( ( (DownloadMainNode) childNodes[row1]).getDownload().
                           getGroesse() -
-                          ( (DownloadMainNode) childNodes[row1]).getDownloadDO().
+                          ( (DownloadMainNode) childNodes[row1]).getDownload().
                           getBereitsGeladen());
-            o2 = new Long( ( (DownloadMainNode) childNodes[row2]).getDownloadDO().
+            o2 = new Long( ( (DownloadMainNode) childNodes[row2]).getDownload().
                           getGroesse() -
-                          ( (DownloadMainNode) childNodes[row2]).getDownloadDO().
+                          ( (DownloadMainNode) childNodes[row2]).getDownload().
                           getBereitsGeladen());
         }
         else if (sort == SORT_GESCHWINDIGKEIT) {
-            o1 = new Long( ( (DownloadMainNode) childNodes[row1]).getDownloadDO().
+            o1 = new Long( ( (DownloadMainNode) childNodes[row1]).getDownload().
                           getSpeedInBytes());
-            o2 = new Long( ( (DownloadMainNode) childNodes[row2]).getDownloadDO().
+            o2 = new Long( ( (DownloadMainNode) childNodes[row2]).getDownload().
                           getSpeedInBytes());
         }
         else if (sort == SORT_STATUS) {
             o1 = ( DownloadDOCalculator.getStatusAsString(((DownloadMainNode)
-                  childNodes[row1]).getDownloadDO()));
+                  childNodes[row1]).getDownload()));
             o2 = ( DownloadDOCalculator.getStatusAsString(((DownloadMainNode)
-                    childNodes[row2]).getDownloadDO()));
+                    childNodes[row2]).getDownload()));
         }
 
         if (o1 == null && o2 == null) {

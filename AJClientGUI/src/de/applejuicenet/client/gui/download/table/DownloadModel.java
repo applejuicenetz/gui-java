@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download.table;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.5 2005/01/18 17:35:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.6 2005/01/18 20:49:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -68,13 +68,13 @@ public class DownloadModel
     }
 
     protected Object[] getChildren(Object node) {
-        if (node.getClass() != DownloadDO.class &&
+        if (!(node instanceof Download) &&
             node.getClass() != DownloadSourceDO.class
             && node.getClass() != WaitNode.class) {
             return ( (DownloadNode) node).getChildren();
         }
-        else if (node.getClass() == DownloadDO.class) {
-            return ( (DownloadDO) node).getSources();
+        else if (node instanceof Download) {
+            return ( (Download) node).getSources();
         }
         return null;
     }
@@ -84,13 +84,13 @@ public class DownloadModel
     }
 
     public int getChildCount(Object node) {
-        if (node.getClass() != DownloadDO.class &&
+        if (!(node instanceof Download) &&
             node.getClass() != DownloadSourceDO.class
             && node.getClass() != WaitNode.class) {
             return ( (DownloadNode) node).getChildCount(sort);
         }
-        else if (node.getClass() == DownloadDO.class) {
-            return ( (DownloadDO) node).getSources().length;
+        else if (node instanceof Download) {
+            return ( (Download) node).getSources().length;
         }
         return 0;
     }
@@ -119,7 +119,7 @@ public class DownloadModel
         Object columnValue = null;
         if (node.getClass() == DownloadMainNode.class &&
             ( (DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
-            columnValue = ( (DownloadMainNode) node).getDownloadDO();
+            columnValue = ( (DownloadMainNode) node).getDownload();
         }
         else if (node instanceof DownloadSourceDO) {
             columnValue = node;

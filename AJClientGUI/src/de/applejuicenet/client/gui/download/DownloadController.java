@@ -22,10 +22,10 @@ import org.apache.log4j.Level;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.controller.dac.ServerDO;
 import de.applejuicenet.client.fassade.controller.dac.ShareDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.event.DataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
@@ -309,8 +309,8 @@ public class DownloadController extends GuiController {
 			if (event.getName().equals(DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED) 
 					|| event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_ADDED)){
 				String directory;
-				if (event.getNewValue().getClass() == DownloadDO.class){
-					directory = ((DownloadDO)event.getNewValue()).getTargetDirectory();
+				if (event.getNewValue() instanceof Download){
+					directory = ((Download)event.getNewValue()).getTargetDirectory();
 				}
 				else{
 					directory = (String)event.getNewValue();
@@ -348,14 +348,14 @@ public class DownloadController extends GuiController {
 	private void nodeItemClicked(Object node){
 		if (node.getClass() == DownloadMainNode.class
 				&& ((DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
-			DownloadDO downloadDO = ((DownloadMainNode) node)
-					.getDownloadDO();
+			Download download = ((DownloadMainNode) node)
+					.getDownload();
 			if (Settings.getSettings().isDownloadUebersicht()) {
 				downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
 				tryGetPartList(false);
 			} else {
-				if ((downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN || downloadDO
-						.getStatus() == DownloadDO.PAUSIERT)) {
+				if ((download.getStatus() == Download.SUCHEN_LADEN || download
+						.getStatus() == Download.PAUSIERT)) {
 					downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(true);
 				} else {
 					downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
@@ -363,9 +363,9 @@ public class DownloadController extends GuiController {
 			}
 			if (!downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
 				downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(true);
-				if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
-						|| downloadDO.getStatus() == DownloadDO.PAUSIERT) {
-					downloadPanel.getPowerDownloadPanel().setPwdlValue(downloadDO
+				if (download.getStatus() == Download.SUCHEN_LADEN
+						|| download.getStatus() == Download.PAUSIERT) {
+					downloadPanel.getPowerDownloadPanel().setPwdlValue(download
 							.getPowerDownload());
 				} else {
 					downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
@@ -416,10 +416,10 @@ public class DownloadController extends GuiController {
                 ArrayList temp = new ArrayList();
                 for (int i = 0; i < selectedItems.length; i++) {
                     if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                        temp.add(( (DownloadMainNode) selectedItems[i]).getDownloadDO());
+                        temp.add(( (DownloadMainNode) selectedItems[i]).getDownload());
                     }
                 }
-                DownloadDO[] toChange = (DownloadDO[])temp.toArray(new DownloadDO[temp.size()]);
+                Download[] toChange = (Download[])temp.toArray(new Download[temp.size()]);
                 AppleJuiceClient.getAjFassade().setPowerDownload(toChange,
                     new Integer(powerDownload));
                 if (downloadPanel.getBtnPowerDownloadAktiv().isSelected()) {
@@ -453,11 +453,11 @@ public class DownloadController extends GuiController {
 					downloadPanel.getMnuZielordner().setVisible(true);
 				}
 				if (selectedItems[0].getClass() == DownloadMainNode.class) {
-					DownloadDO downloadDO = ((DownloadMainNode) selectedItems[0])
-							.getDownloadDO();
-					if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
+					Download downloadDO = ((DownloadMainNode) selectedItems[0])
+							.getDownload();
+					if (downloadDO.getStatus() == Download.SUCHEN_LADEN) {
 						laufend = true;
-					} else if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
+					} else if (downloadDO.getStatus() == Download.PAUSIERT) {
 						pausiert = true;
 					}
 				}
@@ -467,13 +467,13 @@ public class DownloadController extends GuiController {
 							.getType() == DownloadMainNode.ROOT_NODE)) {
 						downloadPanel.getMnuZielordner().setVisible(true);
 					}
-					DownloadDO downloadDO;
+					Download downloadDO;
 					if (selectedItems[i].getClass() == DownloadMainNode.class) {
 						downloadDO = ((DownloadMainNode) selectedItems[i])
-								.getDownloadDO();
-						if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
+								.getDownload();
+						if (downloadDO.getStatus() == Download.SUCHEN_LADEN) {
 							laufend = true;
-						} else if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
+						} else if (downloadDO.getStatus() == Download.PAUSIERT) {
 							pausiert = true;
 						}
 					}
@@ -539,20 +539,20 @@ public class DownloadController extends GuiController {
 			if (selectedItems[0].getClass() == DownloadMainNode.class
 					&& ((DownloadMainNode) selectedItems[0]).getType() == DownloadMainNode.ROOT_NODE) {
 
-				DownloadDO downloadDO = ((DownloadMainNode) selectedItems[0])
-						.getDownloadDO();
+				Download download = ((DownloadMainNode) selectedItems[0])
+						.getDownload();
 				RenameDownloadDialog renameDownloadDialog = new RenameDownloadDialog(
-						AppleJuiceDialog.getApp(), downloadDO);
+						AppleJuiceDialog.getApp(), download);
 				renameDownloadDialog.setVisible(true);
 				String neuerName = renameDownloadDialog.getNewName();
 
 				if (neuerName == null) {
 					return;
 				} else {
-					if (downloadDO.getFilename().compareTo(neuerName) != 0) {
+					if (download.getFilename().compareTo(neuerName) != 0) {
 						try {
 							AppleJuiceClient.getAjFassade().renameDownload(
-									downloadDO, neuerName);
+									download, neuerName);
 						} catch (IllegalArgumentException e) {
 							logger.error(e);
 						}
@@ -569,18 +569,18 @@ public class DownloadController extends GuiController {
 			final ArrayList pausieren = new ArrayList();
 			for (int i = 0; i < selectedItems.length; i++) {
 				if (selectedItems[i].getClass() == DownloadMainNode.class) {
-					DownloadDO downloadDO = ((DownloadMainNode) selectedItems[i])
-							.getDownloadDO();
-					if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
-						pausieren.add(downloadDO);
+					Download download = ((DownloadMainNode) selectedItems[i])
+							.getDownload();
+					if (download.getStatus() == Download.SUCHEN_LADEN) {
+						pausieren.add(download);
 					}
 				}
 			}
 			if (pausieren.size() > 0) {
 				new Thread() {
 					public void run() {
-						DownloadDO[] toPause = 
-							(DownloadDO[]) pausieren.toArray(new DownloadDO[pausieren.size()]);
+						Download[] toPause = 
+							(Download[]) pausieren.toArray(new Download[pausieren.size()]);
 						try {
 							AppleJuiceClient.getAjFassade().pauseDownload(toPause);
 						} catch (IllegalArgumentException e) {
@@ -599,18 +599,18 @@ public class DownloadController extends GuiController {
 			final ArrayList fortsetzen = new ArrayList();
 			for (int i = 0; i < selectedItems.length; i++) {
 				if (selectedItems[i].getClass() == DownloadMainNode.class) {
-					DownloadDO downloadDO = ((DownloadMainNode) selectedItems[i])
-							.getDownloadDO();
-					if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
-						fortsetzen.add(downloadDO);
+					Download download = ((DownloadMainNode) selectedItems[i])
+							.getDownload();
+					if (download.getStatus() == Download.PAUSIERT) {
+						fortsetzen.add(download);
 					}
 				}
 			}
 			if (fortsetzen.size() > 0) {
 				new Thread() {
 					public void run() {
-						DownloadDO[] toContinue = 
-							(DownloadDO[]) fortsetzen.toArray(new DownloadDO[fortsetzen.size()]);
+						Download[] toContinue = 
+							(Download[]) fortsetzen.toArray(new Download[fortsetzen.size()]);
 						try {
 							AppleJuiceClient.getAjFassade().resumeDownload(toContinue);
 						} catch (IllegalArgumentException e) {
@@ -691,16 +691,16 @@ public class DownloadController extends GuiController {
 				neuerName = neuerName.substring(1);
 			}
 		}
-		DownloadDO downloadDO;
+		Download download;
 		for (int i = 0; i < selectedItems.length; i++) {
 			if (selectedItems[i].getClass() == DownloadMainNode.class
 					&& ((DownloadMainNode) selectedItems[i]).getType() == DownloadMainNode.ROOT_NODE) {
-				downloadDO = ((DownloadMainNode) selectedItems[i])
-						.getDownloadDO();
-				if (downloadDO.getTargetDirectory().compareTo(neuerName) != 0) {
+				download = ((DownloadMainNode) selectedItems[i])
+						.getDownload();
+				if (download.getTargetDirectory().compareTo(neuerName) != 0) {
 					try {
 						AppleJuiceClient.getAjFassade().setTargetDir(
-								downloadDO, neuerName);
+								download, neuerName);
 					} catch (IllegalArgumentException e) {
 						logger.error(e);
 					}
@@ -712,23 +712,23 @@ public class DownloadController extends GuiController {
 	private void openWithProgram(){
 		Object[] selectedItems = getSelectedDownloadItems();
 		if (selectedItems != null && selectedItems.length == 1) {
-			DownloadDO downloadDO = null;
+			Download download = null;
 			if (selectedItems[0].getClass() == DownloadMainNode.class
 					&& ((DownloadMainNode) selectedItems[0]).getType() == DownloadMainNode.ROOT_NODE) {
-				downloadDO = ((DownloadMainNode) selectedItems[0])
-						.getDownloadDO();
+				download = ((DownloadMainNode) selectedItems[0])
+						.getDownload();
 			} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
 				DownloadSourceDO downloadSourceDO = (DownloadSourceDO) selectedItems[0];
 				Map downloads = AppleJuiceClient.getAjFassade()
 						.getDownloadsSnapshot();
 				String key = Integer.toString(downloadSourceDO
 						.getDownloadId());
-				downloadDO = (DownloadDO) downloads.get(key);
+				download = (Download) downloads.get(key);
 			}
-			if (downloadDO != null) {
+			if (download != null) {
                 String programToExecute = OptionsManagerImpl.getInstance().getOpenProgram();
                 if (programToExecute.length() != 0){
-					Integer shareId = new Integer(downloadDO.getShareId());
+					Integer shareId = new Integer(download.getShareId());
 					try {
 						ShareDO shareDO = (ShareDO)AppleJuiceClient.getAjFassade().getObjectById(shareId);
 						if (shareDO != null){
@@ -757,23 +757,23 @@ public class DownloadController extends GuiController {
 			boolean copyToClipboard = false;
 			if (selectedItems[0].getClass() == DownloadMainNode.class
 					&& ((DownloadMainNode) selectedItems[0]).getType() == DownloadMainNode.ROOT_NODE) {
-				DownloadDO downloadDO = ((DownloadMainNode) selectedItems[0])
-						.getDownloadDO();
+				Download downloadDO = ((DownloadMainNode) selectedItems[0])
+						.getDownload();
 				toCopy.append(downloadDO.getFilename() + "|"
 						+ downloadDO.getHash() + "|"
 						+ downloadDO.getGroesse());
 				copyToClipboard = true;
 			} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
 				DownloadSourceDO downloadSourceDO = (DownloadSourceDO) selectedItems[0];
-				Map downloads = AppleJuiceClient.getAjFassade()
+				Map<String, Download> downloads = AppleJuiceClient.getAjFassade()
 						.getDownloadsSnapshot();
 				String key = Integer.toString(downloadSourceDO
 						.getDownloadId());
-				DownloadDO downloadDO = (DownloadDO) downloads.get(key);
-				if (downloadDO != null) {
+				Download download = downloads.get(key);
+				if (download != null) {
 					toCopy.append(downloadSourceDO.getFilename() + "|"
-							+ downloadDO.getHash() + "|"
-							+ downloadDO.getGroesse());
+							+ download.getHash() + "|"
+							+ download.getGroesse());
 					copyToClipboard = true;
 				}
 			}
@@ -811,24 +811,24 @@ public class DownloadController extends GuiController {
 			toCopy.append("ajfsp://file|");
 			if (selectedItems[0].getClass() == DownloadMainNode.class
 					&& ((DownloadMainNode) selectedItems[0]).getType() == DownloadMainNode.ROOT_NODE) {
-				DownloadDO downloadDO = ((DownloadMainNode) selectedItems[0])
-						.getDownloadDO();
-				toCopy.append(downloadDO.getFilename() + "|"
-						+ downloadDO.getHash() + "|"
-						+ downloadDO.getGroesse() + "/");
+				Download download = ((DownloadMainNode) selectedItems[0])
+						.getDownload();
+				toCopy.append(download.getFilename() + "|"
+						+ download.getHash() + "|"
+						+ download.getGroesse() + "/");
 				StringSelection contents = new StringSelection(toCopy
 						.toString());
 				cb.setContents(contents, null);
 			} else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
 				DownloadSourceDO downloadSourceDO = (DownloadSourceDO) selectedItems[0];
-				Map downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+				Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
 				String key = Integer.toString(downloadSourceDO
 						.getDownloadId());
-				DownloadDO downloadDO = (DownloadDO) downloads.get(key);
-				if (downloadDO != null) {
+				Download download = downloads.get(key);
+				if (download != null) {
 					toCopy.append(downloadSourceDO.getFilename() + "|"
-							+ downloadDO.getHash() + "|"
-							+ downloadDO.getGroesse() + "/");
+							+ download.getHash() + "|"
+							+ download.getGroesse() + "/");
 					StringSelection contents = new StringSelection(
 							toCopy.toString());
 					cb.setContents(contents, null);
@@ -847,16 +847,16 @@ public class DownloadController extends GuiController {
 				final ArrayList abbrechen = new ArrayList();
 				for (int i = 0; i < selectedItems.length; i++) {
 					if (selectedItems[i].getClass() == DownloadMainNode.class) {
-						DownloadDO downloadDO = ((DownloadMainNode) selectedItems[i])
-								.getDownloadDO();
-						abbrechen.add(downloadDO);
+						Download download = ((DownloadMainNode) selectedItems[i])
+								.getDownload();
+						abbrechen.add(download);
 					}
 				}
 				if (abbrechen.size() > 0) {
 					new Thread() {
 						public void run() {
-							DownloadDO[] toCancel = 
-								(DownloadDO[])abbrechen.toArray(new DownloadDO[abbrechen.size()]);
+							Download[] toCancel = 
+								(Download[])abbrechen.toArray(new Download[abbrechen.size()]);
 							try {
 								AppleJuiceClient.getAjFassade()
 										.cancelDownload(toCancel);

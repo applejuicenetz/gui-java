@@ -2,13 +2,13 @@ package de.applejuicenet.client.gui.components.util;
 
 import javax.swing.ImageIcon;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.controller.dac.UploadDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/util/IconGetter.java,v 1.2 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/util/IconGetter.java,v 1.3 2005/01/18 20:49:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,7 +31,7 @@ public abstract class IconGetter {
         getIcon("treeIndirekt");
 
     public static ImageIcon getConvenientIcon(Object node) {
-        if (node.getClass() == DownloadDO.class) {
+        if (node instanceof Download) {
             return downloadIcon;
         }
         else if (node.getClass() == DownloadSourceDO.class) {

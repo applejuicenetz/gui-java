@@ -8,8 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
 
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.shared.FileTypeHelper;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.treetable.Node;
@@ -18,7 +18,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.5 2005/01/18 17:35:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.6 2005/01/18 20:49:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,7 +41,7 @@ public class DownloadMainNode
     private String text = "";
 
     private DownloadMainNode[] children;
-    private DownloadDO downloadDO;
+    private Download download;
     private JProgressBar progress;
     private JLabel progressbarLabel;
     private JLabel versionLabel;
@@ -52,20 +52,20 @@ public class DownloadMainNode
     private static Icon restIcon = IconManager.getInstance().getIcon("eek");
     private Icon rootIcon = null;
 
-    public DownloadMainNode(DownloadDO downloadDO) {
+    public DownloadMainNode(Download download) {
         type = ROOT_NODE;
-        this.downloadDO = downloadDO;
+        this.download = download;
         children = new DownloadMainNode[3];
-        children[0] = new DownloadMainNode(downloadDO, LOADING_DOWNLOADS);
-        children[1] = new DownloadMainNode(downloadDO, WAITING_DOWNLOADS);
-        children[2] = new DownloadMainNode(downloadDO, REST_DOWNLOADS);
+        children[0] = new DownloadMainNode(download, LOADING_DOWNLOADS);
+        children[1] = new DownloadMainNode(download, WAITING_DOWNLOADS);
+        children[2] = new DownloadMainNode(download, REST_DOWNLOADS);
         init();
     }
 
-    public DownloadMainNode(DownloadDO downloadDO, int type) {
+    public DownloadMainNode(Download download, int type) {
         super();
         this.type = type;
-        this.downloadDO = downloadDO;
+        this.download = download;
         if (type == LOADING_DOWNLOADS) {
             LanguageSelector.getInstance().addLanguageListener(this);
             fireLanguageChanged();
@@ -111,7 +111,7 @@ public class DownloadMainNode
         }
         else if (type == ROOT_NODE) {
         	if (rootIcon == null){
-        		String fileType = FileTypeHelper.calculatePossibleFileType(downloadDO.getFilename());
+        		String fileType = FileTypeHelper.calculatePossibleFileType(download.getFilename());
         		rootIcon = IconManager.getInstance().getIcon(fileType);
         	}
         	return rootIcon;
@@ -138,7 +138,7 @@ public class DownloadMainNode
     public Object[] getChildren() {
         switch (type) {
             case ROOT_NODE: {
-                if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
+                if (download.getStatus() == Download.SUCHEN_LADEN) {
                     return children;
                 }
                 else {
@@ -159,7 +159,7 @@ public class DownloadMainNode
             }
             case LOADING_DOWNLOADS: {
                 ArrayList kinder = new ArrayList();
-                DownloadSourceDO[] downloadSourceDO = downloadDO.getSources();
+                DownloadSourceDO[] downloadSourceDO = download.getSources();
                 for (int i = 0; i < downloadSourceDO.length; i++) {
                     if (downloadSourceDO[i].getStatus() ==
                         DownloadSourceDO.UEBERTRAGUNG) {
@@ -171,7 +171,7 @@ public class DownloadMainNode
             }
             case WAITING_DOWNLOADS: {
                 ArrayList kinder = new ArrayList();
-                DownloadSourceDO[] downloadSourceDO = downloadDO.getSources();
+                DownloadSourceDO[] downloadSourceDO = download.getSources();
                 for (int i = 0; i < downloadSourceDO.length; i++) {
                     if (downloadSourceDO[i].getStatus() == DownloadSourceDO.IN_WARTESCHLANGE
                         || downloadSourceDO[i].getStatus() == DownloadSourceDO.WARTESCHLANGE_VOLL) {
@@ -183,7 +183,7 @@ public class DownloadMainNode
             }
             case REST_DOWNLOADS: {
                 ArrayList kinder = new ArrayList();
-                DownloadSourceDO[] downloadSourceDO = downloadDO.getSources();
+                DownloadSourceDO[] downloadSourceDO = download.getSources();
                 for (int i = 0; i < downloadSourceDO.length; i++) {
                     if (downloadSourceDO[i].getStatus() !=
                         DownloadSourceDO.UEBERTRAGUNG
@@ -202,13 +202,13 @@ public class DownloadMainNode
         }
     }
 
-    public DownloadDO getDownloadDO() {
-        return downloadDO;
+    public Download getDownload() {
+        return download;
     }
 
     public String toString() {
         if (type == ROOT_NODE) {
-            return downloadDO.getFilename();
+            return download.getFilename();
         }
         else {
             return text + " (" + getChildCount(false) + ")";
@@ -237,9 +237,9 @@ public class DownloadMainNode
 
     public Component getProgressbarComponent(JTable table, Object value) {
         if (type == DownloadMainNode.ROOT_NODE
-            && (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
-                || downloadDO.getStatus() == DownloadDO.PAUSIERT)) {
-            String prozent = downloadDO.getProzentGeladenAsString();
+            && (download.getStatus() == Download.SUCHEN_LADEN
+                || download.getStatus() == Download.PAUSIERT)) {
+            String prozent = download.getProzentGeladenAsString();
             String wert = null;
             int i;
             if ( (i = prozent.indexOf(".")) != -1) {

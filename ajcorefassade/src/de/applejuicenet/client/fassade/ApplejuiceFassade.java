@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +12,6 @@ import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.controller.DataPropertyChangeInformer;
 import de.applejuicenet.client.fassade.controller.DataUpdateInformer;
 import de.applejuicenet.client.fassade.controller.dac.DirectoryDO;
-import de.applejuicenet.client.fassade.controller.dac.DownloadDO;
 import de.applejuicenet.client.fassade.controller.dac.DownloadSourceDO;
 import de.applejuicenet.client.fassade.controller.dac.PartListDO;
 import de.applejuicenet.client.fassade.controller.dac.ServerDO;
@@ -26,6 +24,7 @@ import de.applejuicenet.client.fassade.controller.xml.NetworkServerXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.PartListXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.SettingsXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.ShareXMLHolder;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
@@ -252,28 +251,25 @@ public class ApplejuiceFassade {
 	}
 
 	public String[] getCurrentIncomingDirs() {
-		Map download = getDownloadsSnapshot();
-		DownloadDO downloadDO = null;
+		Map<String, Download> download = getDownloadsSnapshot();
 		ArrayList<String> incomingDirs = new ArrayList<String>();
 		boolean found;
 		synchronized (download) {
-			Iterator it = download.values().iterator();
-			while (it.hasNext()) {
-				downloadDO = (DownloadDO) it.next();
-				if (downloadDO.getTargetDirectory().length() == 0) {
+			for (Download curDownload : download.values()) {
+				if (curDownload.getTargetDirectory().length() == 0) {
 					continue;
 				}
 				found = false;
 				for (int i = 0; i < incomingDirs.size(); i++) {
 					if (((String) incomingDirs.get(i))
-							.compareToIgnoreCase(downloadDO
+							.compareToIgnoreCase(curDownload
 									.getTargetDirectory()) == 0) {
 						found = true;
 						break;
 					}
 				}
 				if (!found) {
-					incomingDirs.add(downloadDO.getTargetDirectory());
+					incomingDirs.add(curDownload.getTargetDirectory());
 				}
 			}
 		}
@@ -293,12 +289,12 @@ public class ApplejuiceFassade {
 		return partlistXML.getPartList(downloadSourceDO);
 	}
 
-	public PartListDO getPartList(DownloadDO downloadDO)
+	public PartListDO getPartList(Download download)
 			throws WebSiteNotFoundException {
 		if (partlistXML == null) {
 			partlistXML = new PartListXMLHolder(coreHolder);
 		}
-		return partlistXML.getPartList(downloadDO);
+		return partlistXML.getPartList(download);
 	}
 
 	public String[] getNetworkKnownServers() {
@@ -411,20 +407,20 @@ public class ApplejuiceFassade {
 		}
 	}
 
-	public void resumeDownload(DownloadDO[] downloadDOs)
+	public void resumeDownload(Download[] downloads)
 			throws IllegalArgumentException {
-		if (downloadDOs == null) {
+		if (downloads == null) {
 			throw new IllegalArgumentException("invalid download-array");
 		}
-		for (int i = 0; i < downloadDOs.length; i++) {
-			if (downloadDOs[i] == null) {
+		for (int i = 0; i < downloads.length; i++) {
+			if (downloads[i] == null) {
 				throw new IllegalArgumentException("invalid download-array");
 			}
 		}
-		String parameters = "&id=" + downloadDOs[0].getId();
-		if (downloadDOs.length > 1) {
-			for (int i = 1; i < downloadDOs.length; i++) {
-				parameters += "&id" + i + "=" + downloadDOs[i].getId();
+		String parameters = "&id=" + downloads[0].getId();
+		if (downloads.length > 1) {
+			for (int i = 1; i < downloads.length; i++) {
+				parameters += "&id" + i + "=" + downloads[i].getId();
 			}
 		}
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
@@ -495,10 +491,10 @@ public class ApplejuiceFassade {
 		}
 	}
 
-	public void renameDownload(DownloadDO downloadDO, String newFilename)
+	public void renameDownload(Download download, String newFilename)
 			throws IllegalArgumentException {
-		if (downloadDO == null) {
-			throw new IllegalArgumentException("invalid downloadDO");
+		if (download == null) {
+			throw new IllegalArgumentException("invalid download");
 		}
 		if (newFilename == null || newFilename.length() == 0
 				|| newFilename.trim().length() == 0) {
@@ -521,13 +517,13 @@ public class ApplejuiceFassade {
 				.getCorePort(), HtmlLoader.POST,
 				"/function/renamedownload?password="
 						+ coreHolder.getCorePassword() + "&id="
-						+ downloadDO.getId() + "&name=" + encodedName, false);
+						+ download.getId() + "&name=" + encodedName, false);
 	}
 
-	public void setTargetDir(DownloadDO downloadDO, String newDirectoryName)
+	public void setTargetDir(Download download, String newDirectoryName)
 			throws IllegalArgumentException {
-		if (downloadDO == null) {
-			throw new IllegalArgumentException("invalid downloadDO");
+		if (download == null) {
+			throw new IllegalArgumentException("invalid download");
 		}
 		if (newDirectoryName == null || newDirectoryName.length() == 0
 				|| newDirectoryName.trim().length() == 0) {
@@ -537,7 +533,7 @@ public class ApplejuiceFassade {
 				.getCorePort(), HtmlLoader.POST,
 				"/function/settargetdir?password="
 						+ coreHolder.getCorePassword() + "&id="
-						+ downloadDO.getId() + "&dir=" + newDirectoryName,
+						+ download.getId() + "&dir=" + newDirectoryName,
 				false);
 	}
 
@@ -563,20 +559,20 @@ public class ApplejuiceFassade {
 						+ newPassword, false);
 	}
 
-	public void cancelDownload(DownloadDO[] downloadDOs)
+	public void cancelDownload(Download[] downloads)
 			throws IllegalArgumentException {
-		if (downloadDOs == null) {
+		if (downloads == null) {
 			throw new IllegalArgumentException("invalid download-array");
 		}
-		for (int i = 0; i < downloadDOs.length; i++) {
-			if (downloadDOs[i] == null) {
+		for (int i = 0; i < downloads.length; i++) {
+			if (downloads[i] == null) {
 				throw new IllegalArgumentException("invalid download-array");
 			}
 		}
-		String parameters = "&id=" + downloadDOs[0].getId();
-		if (downloadDOs.length > 1) {
-			for (int i = 1; i < downloadDOs.length; i++) {
-				parameters += "&id" + i + "=" + downloadDOs[0].getId();
+		String parameters = "&id=" + downloads[0].getId();
+		if (downloads.length > 1) {
+			for (int i = 1; i < downloads.length; i++) {
+				parameters += "&id" + i + "=" + downloads[i].getId();
 			}
 		}
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
@@ -592,20 +588,20 @@ public class ApplejuiceFassade {
 						+ coreHolder.getCorePassword(), false);
 	}
 
-	public void pauseDownload(DownloadDO[] downloadDOs)
+	public void pauseDownload(Download[] downloads)
 			throws IllegalArgumentException {
-		if (downloadDOs == null) {
+		if (downloads == null) {
 			throw new IllegalArgumentException("invalid download-array");
 		}
-		for (int i = 0; i < downloadDOs.length; i++) {
-			if (downloadDOs[i] == null) {
+		for (int i = 0; i < downloads.length; i++) {
+			if (downloads[i] == null) {
 				throw new IllegalArgumentException("invalid download-array");
 			}
 		}
-		String parameters = "&id=" + downloadDOs[0].getId();
-		if (downloadDOs.length > 1) {
-			for (int i = 1; i < downloadDOs.length; i++) {
-				parameters += "&id" + i + "=" + downloadDOs[0].getId();
+		String parameters = "&id=" + downloads[0].getId();
+		if (downloads.length > 1) {
+			for (int i = 1; i < downloads.length; i++) {
+				parameters += "&id" + i + "=" + downloads[i].getId();
 			}
 		}
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
@@ -656,12 +652,12 @@ public class ApplejuiceFassade {
 	}
 	
 	
-	public void setPrioritaet(DownloadDO downloadDO, Integer priority)
+	public void setPrioritaet(Download download, Integer priority)
 			throws IllegalArgumentException {
-		if (downloadDO == null) {
-			throw new IllegalArgumentException("invalid downloadDO");
+		if (download == null) {
+			throw new IllegalArgumentException("invalid download");
 		}
-		setPrioritaet(downloadDO.getId(), priority);
+		setPrioritaet(download.getId(), priority);
 	}
 	
 	private void setPrioritaet(int id, Integer priority)
@@ -725,13 +721,13 @@ public class ApplejuiceFassade {
 				encodedLink + "&subdir=" + subdir, true);
 	}
 
-	public void setPowerDownload(DownloadDO[] downloadDOs, Integer powerDownload)
+	public void setPowerDownload(Download[] downloads, Integer powerDownload)
 			throws IllegalArgumentException {
-		if (downloadDOs == null) {
+		if (downloads == null) {
 			throw new IllegalArgumentException("invalid download-array");
 		}
-		for (int i = 0; i < downloadDOs.length; i++) {
-			if (downloadDOs[i] == null) {
+		for (int i = 0; i < downloads.length; i++) {
+			if (downloads[i] == null) {
 				throw new IllegalArgumentException("invalid download-array");
 			}
 		}
@@ -740,10 +736,10 @@ public class ApplejuiceFassade {
 					"invalid priority: has to be 1<= x <=490");
 		}
 		String parameters = "&powerdownload=" + powerDownload + "&id="
-				+ downloadDOs[0].getId();
-		if (downloadDOs.length > 1) {
-			for (int i = 1; i < downloadDOs.length; i++) {
-				parameters += "&id" + i + "=" + downloadDOs[i].getId();
+				+ downloads[0].getId();
+		if (downloads.length > 1) {
+			for (int i = 1; i < downloads.length; i++) {
+				parameters += "&id" + i + "=" + downloads[i].getId();
 			}
 		}
 		HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
@@ -779,7 +775,7 @@ public class ApplejuiceFassade {
 		return coreVersion;
 	}
 
-	public Map<String, DownloadDO> getDownloadsSnapshot() {
+	public Map<String, Download> getDownloadsSnapshot() {
 		return modifiedXML.getDownloads();
 	}
 
