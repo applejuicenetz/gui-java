@@ -1,12 +1,5 @@
 package de.applejuicenet.client.gui.plugins;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.Properties;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -14,19 +7,26 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
+
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
-import javax.swing.JCheckBox;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.16 2004/12/07 16:03:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.17 2005/01/21 16:19:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -49,7 +49,7 @@ public class IrcPlugin extends PluginConnector {
     }
 
     private void init(){
-        savePath = ApplejuiceFassade.getPropertiesPath();
+        savePath = AppleJuiceClient.getPropertiesPath();
         int index = savePath.lastIndexOf(File.separator);
         savePath = savePath.substring(0, index) + File.separator +
             "ircplugin.properties";
@@ -88,7 +88,7 @@ public class IrcPlugin extends PluginConnector {
 
     /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
       Über den DataManger können diese abgerufen werden.*/
-    public void fireContentChanged(int type, Object content) {
+    public void fireContentChanged(DATALISTENER_TYPE type, Object content) {
     }
 
     public void registerSelected() {

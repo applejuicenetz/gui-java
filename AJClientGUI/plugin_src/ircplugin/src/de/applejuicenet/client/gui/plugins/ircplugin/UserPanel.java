@@ -1,35 +1,35 @@
 package de.applejuicenet.client.gui.plugins.ircplugin;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JTabbedPane;
-import java.awt.Color;
-import java.util.Date;
-import java.net.URL;
-import java.text.SimpleDateFormat;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.start.HyperlinkAdapter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.12 2004/12/07 14:53:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.13 2005/01/21 16:19:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -142,9 +142,11 @@ public class UserPanel
                 // A command
                 if (message.toLowerCase().compareTo("/ajstats") == 0 || message.toLowerCase().compareTo("/ajversinfo") == 0
                 		|| message.toLowerCase().compareTo("/ajoptionsinfo") == 0) {
+            		// todo
+            		/*
             		long currentTime = System.currentTimeMillis();
                 	if (message.toLowerCase().compareTo("/ajstats") == 0){
-                		String text = ApplejuiceFassade.getInstance().getStats().substring(3);
+                		String text = AppleJuiceClient.getAjFassade().getInstance().getStats().substring(3);
 	                	parentPanel.parseSendToCommand("PRIVMSG " + name + " :" + text);
 	                    updateTextArea(parentPanel.formatNickname("<" + parentPanel.getNickname() + "> ") +
 	                            text);
@@ -161,12 +163,16 @@ public class UserPanel
 	                    updateTextArea(parentPanel.formatNickname("<" + parentPanel.getNickname() + "> ") +
 	                            text);
 	                }
+	                */
                 }
                 else if(message.toLowerCase().startsWith("/ajform=")){
+            		// todo
+            		/*
                 	String text = ApplejuiceFassade.getInstance().getFormatedStats(message.substring(8)).substring(3);
                 	parentPanel.parseSendToCommand("PRIVMSG " + name + " :" + text);
                     updateTextArea(parentPanel.formatNickname("<" + parentPanel.getNickname() + "> ") +
                             text);
+                            */
                 }
                 else{
                 	parentPanel.analyzeCommand(message);

@@ -161,5 +161,5 @@ public abstract class PluginConnector
      *   angesprochenen Listener
      * @see DataUpdateListener.class
      */
-    public abstract void fireContentChanged(int type, Object content);
+    public abstract void fireContentChanged(DATALISTENER_TYPE type, Object content);
 }

@@ -40,7 +40,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.start.HyperlinkAdapter;
 
 /**
@@ -286,7 +285,8 @@ public class ChannelPanel extends JPanel implements ActionListener {
 						|| message.toLowerCase().compareTo("/ajversinfo") == 0) {
 					long currentTime = System.currentTimeMillis();
 					if (message.toLowerCase().compareTo("/ajstats") == 0) {
-						if (currentTime > lastStatsPrinted + 60000) {
+						// todo
+/*						if (currentTime > lastStatsPrinted + 60000) {
 							lastStatsPrinted = currentTime;
 							String text = ApplejuiceFassade.getInstance()
 									.getStats().substring(3);
@@ -306,9 +306,11 @@ public class ChannelPanel extends JPanel implements ActionListener {
 							updateTextArea(parentPanel.formatNickname("<"
 									+ parentPanel.getNickname() + "> ")
 									+ text);
-						}
+						}*/
 					}
 				} else if (message.toLowerCase().startsWith("/ajform=")) {
+					// todo
+					/*
 					String text = ApplejuiceFassade.getInstance()
 							.getFormatedStats(message.substring(8))
 							.substring(3);
@@ -317,6 +319,7 @@ public class ChannelPanel extends JPanel implements ActionListener {
 					updateTextArea(parentPanel.formatNickname("<"
 							+ parentPanel.getNickname() + "> ")
 							+ text);
+							*/
 				} else {
 					parentPanel.analyzeCommand(message);
 				}

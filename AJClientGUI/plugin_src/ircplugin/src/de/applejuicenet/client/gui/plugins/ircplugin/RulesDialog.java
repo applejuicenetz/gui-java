@@ -6,6 +6,7 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -16,10 +17,11 @@ import javax.swing.event.HyperlinkListener;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 public class RulesDialog extends JDialog{
 	private Logger logger;
