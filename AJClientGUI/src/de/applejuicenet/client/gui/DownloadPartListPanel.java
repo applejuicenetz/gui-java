@@ -20,7 +20,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.23 2004/02/25 11:08:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.24 2004/02/26 10:38:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.24  2004/02/26 10:38:26  maj0r
+ * Partlistverwendung auf Singleton geaendert.
+ *
  * Revision 1.23  2004/02/25 11:08:08  maj0r
  * Partliste zeigt nun per MausOver-Effekt den Tooltipp zum ausgewaehlten Partstueck an.
  *
@@ -112,11 +115,20 @@ public class DownloadPartListPanel
 
     private MouseEvent savedMouseEvent = null;
 
-    public DownloadPartListPanel() {
+    private static DownloadPartListPanel instance = null;
+
+    private DownloadPartListPanel() {
         super(new BorderLayout());
         logger = Logger.getLogger(getClass());
         addMouseMotionListener(this);
         LanguageSelector.getInstance().addLanguageListener(this);
+    }
+
+    public static synchronized DownloadPartListPanel getInstance(){
+        if (instance == null){
+            instance = new DownloadPartListPanel();
+        }
+        return instance;
     }
 
     public void paintComponent(Graphics g) {

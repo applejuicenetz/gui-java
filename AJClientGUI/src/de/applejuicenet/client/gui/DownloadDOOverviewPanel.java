@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.30 2004/02/24 14:22:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.31 2004/02/26 10:38:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.31  2004/02/26 10:38:26  maj0r
+ * Partlistverwendung auf Singleton geaendert.
+ *
  * Revision 1.30  2004/02/24 14:22:34  maj0r
  * Bug #242 gefixt (Danke an Kossi-Jaki)
  * Legende für Partliste um "aktive Uebertragung" erweitert.
@@ -139,8 +142,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 public class DownloadDOOverviewPanel
     extends JPanel
     implements LanguageListener{
-    private DownloadPartListPanel actualDlOverviewTable = new
-        DownloadPartListPanel();
+    private DownloadPartListPanel actualDlOverviewTable;
     private JLabel actualDLDateiName = new JLabel();
     private JLabel label5 = new JLabel("aktive Übertragung");
     private JLabel label4 = new JLabel("Vorhanden");
@@ -149,13 +151,14 @@ public class DownloadDOOverviewPanel
     private JLabel label1 = new JLabel("Überprüft");
     private Logger logger;
     private JButton holeListe = new JButton("Hole Partliste");
-    private Thread partListWorkerThread = new Thread();
+    private Thread partListWorkerThread = null;
     private DownloadPanel downloadPanel;
 
     public DownloadDOOverviewPanel(DownloadPanel parent) {
         logger = Logger.getLogger(getClass());
         try {
             downloadPanel = parent;
+            actualDlOverviewTable = DownloadPartListPanel.getInstance();
             init();
             LanguageSelector.getInstance().addLanguageListener(this);
         }
@@ -228,14 +231,19 @@ public class DownloadDOOverviewPanel
     public void setDownloadDO(DownloadDO downloadDO) {
         try {
             if (downloadDO == null) {
-                partListWorkerThread.interrupt();
+                if (partListWorkerThread != null){
+                    partListWorkerThread.interrupt();
+                    partListWorkerThread = null;
+                }
                 actualDLDateiName.setText("");
                 actualDlOverviewTable.setPartList(null);
             }
             else if (downloadDO.getStatus() != DownloadDO.FERTIGSTELLEN &&
                      downloadDO.getStatus() != DownloadDO.FERTIG) {
                 final DownloadDO tempDO = downloadDO;
-                partListWorkerThread.interrupt();
+                if (partListWorkerThread != null){
+                    partListWorkerThread.interrupt();
+                }
                 partListWorkerThread = new Thread() {
                     public void run() {
                         actualDLDateiName.setText(" " + tempDO.getFilename() +
@@ -243,8 +251,9 @@ public class DownloadDOOverviewPanel
                                                   tempDO.getTemporaryFileNumber() +
                                                   ".data)");
                         actualDlOverviewTable.setPartList(null);
+                        PartListDO partList;
                         while (!isInterrupted()) {
-                            PartListDO partList = ApplejuiceFassade.getInstance().
+                            partList = ApplejuiceFassade.getInstance().
                                 getPartList(tempDO);
                             if (isInterrupted()){
                                 break;
@@ -270,7 +279,10 @@ public class DownloadDOOverviewPanel
             }
         }
         catch (Exception e) {
-            partListWorkerThread.interrupt();
+            if (partListWorkerThread != null){
+                partListWorkerThread.interrupt();
+                partListWorkerThread = null;
+            }
             actualDLDateiName.setText("");
             actualDlOverviewTable.setPartList(null);
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -281,30 +293,37 @@ public class DownloadDOOverviewPanel
 
     public void setDownloadSourceDO(DownloadSourceDO downloadSourceDO) {
         try {
-            partListWorkerThread.interrupt();
             if (downloadSourceDO == null) {
+                if (partListWorkerThread != null){
+                    partListWorkerThread.interrupt();
+                    partListWorkerThread = null;
+                }
                 actualDLDateiName.setText("");
                 actualDlOverviewTable.setPartList(null);
             }
             else {
                 final DownloadSourceDO tempDO = downloadSourceDO;
-                final SwingWorker worker2 = new SwingWorker() {
-                    public Object construct() {
+                if (partListWorkerThread != null){
+                    partListWorkerThread.interrupt();
+                }
+                partListWorkerThread = new Thread() {
+                    public void run() {
                         actualDLDateiName.setText(tempDO.getFilename() + " (" +
                                                   tempDO.getNickname() + ")");
                         actualDlOverviewTable.setPartList(null);
-                        return ApplejuiceFassade.getInstance().getPartList(
-                            tempDO);
-                    }
-
-                    public void finished() {
-                        actualDLDateiName.setText(tempDO.getFilename() + " (" +
-                                                  tempDO.getNickname() + ")");
-                        actualDlOverviewTable.setPartList( (PartListDO)
-                            getValue());
+                        PartListDO partList = ApplejuiceFassade.getInstance().
+                            getPartList(tempDO);
+                        if (partList == null) {
+                            interrupt();
+                            actualDLDateiName.setText("");
+                            actualDlOverviewTable.setPartList(null);
+                        }
+                        else {
+                            actualDlOverviewTable.setPartList(partList);
+                        }
                     }
                 };
-                worker2.start();
+                partListWorkerThread.start();
             }
         }
         catch (Exception e) {
