@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<language value="deutsch">
+		<description value="Der IRC-Client unterstützt das Besuchen mehrerer Räume, Queries, usw. Benötigt wird ein GUI ab 0.56.1"/>
+		<buttons connect="Verbinden" private="Privat sprechen" join="Raum besuchen" nick="Nick ändern" info="Nick Info" cancel="Abbrechen"/>
+		<channel newchannel="Raumnamen eingeben" />
+		<nick newnick="Nickname" />
+		<title newconnection="Verbindungsinfo"/>
+	</language>
+</root>

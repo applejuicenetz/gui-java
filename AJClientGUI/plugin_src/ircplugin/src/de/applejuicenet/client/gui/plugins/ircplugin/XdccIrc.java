@@ -1,20 +1,62 @@
 package de.applejuicenet.client.gui.plugins.ircplugin;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Random;
+import java.util.StringTokenizer;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.shared.SwingWorker;
+import de.applejuicenet.client.gui.plugins.IrcPlugin;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.6 2003/10/27 18:26:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.7 2004/03/03 14:22:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +65,9 @@ import de.applejuicenet.client.shared.SwingWorker;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: XdccIrc.java,v $
+ * Revision 1.7  2004/03/03 14:22:23  maj0r
+ * Es wird nun Deutsch und Englisch unterstuetzt.
+ *
  * Revision 1.6  2003/10/27 18:26:58  maj0r
  * Bugs behoben...
  *
@@ -60,25 +105,24 @@ public class XdccIrc
         extends JPanel {
     private JButton connectButton;
     private JButton cancelButton;
-    private JButton editButton;
-    private JButton removeButton;
+    private Logger logger;
 
     private Thread ircWorker;
 
-    String host = "localhost";
+    private String host = "localhost";
     int port = 6667;
-    JTabbedPane tabbedPane;
+    private JTabbedPane tabbedPane;
     //XdccTree xdccTree;
     // 5 = # of DCC arguments and 128 = max number of DCCs
-    String[][] xdccInfos = new String[128][5];
+    private String[][] xdccInfos = new String[128][5];
     //0 = port
     //1 = address
     //2 = Filename
     //3 = File Size
     //4 = Resume Position
     int numDcc = 0;
-    String nickname;
-    String realname;
+    private String nickname;
+    private String realname;
 
     // Action to join a Channel
     private JButton joinChannelAction;
@@ -87,12 +131,18 @@ public class XdccIrc
     private JButton whoisAction;
     private JButton newUserAction;
 
-    private JDialog dialog;
-    JTextField nickJTextField1;
-    JTextField nickJTextField2;
-    JTextField nickJTextField3;
+    private String connectionInfo = "Connection Info";
+    private String nicknameString = "Enter nickname";
+    private String channelNameString = "Enter nickname";
 
-    String nickname1, nickname2, nickname3;
+    private IrcPlugin parent;
+
+    private JDialog dialog;
+    private JTextField nickJTextField1;
+    private JTextField nickJTextField2;
+    private JTextField nickJTextField3;
+
+    private String nickname1, nickname2, nickname3;
 
     // For communicating purposes. You write to 'toServer' to
     // send something to the IRC server. For example:
@@ -100,11 +150,13 @@ public class XdccIrc
     // should send a message to IRC server
     // 'fromServer' reads something from the IRC server.
     private Socket chatSocket;
-    BufferedReader fromServer;
-    PrintWriter toServer;
+    private BufferedReader fromServer;
+    private PrintWriter toServer;
 
     // For debugging purpose only
-    PrintWriter debugOut;
+    private PrintWriter debugOut;
+
+    private AppleJuiceDialog theApp = AppleJuiceDialog.getApp();
 
     /**
      * Main Constructor. Here,
@@ -112,63 +164,88 @@ public class XdccIrc
      *   port: the port where IRC server is listening
      *         generally this is port 6667
      */
-    public XdccIrc() {
-        setLayout(new BorderLayout());
+    public XdccIrc(IrcPlugin parent) {
+        this.parent = parent;
+        logger = Logger.getLogger(getClass());
+        try{
+            setLayout(new BorderLayout());
 
-        createConnection = new JButton("Connect");
-        createConnection.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                makeConnectionInfo();
+            createConnection = new JButton("Connect");
+            createConnection.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    makeConnectionInfo();
+                }
+            });
+            newUserAction = new JButton("Talk Private");
+            newUserAction.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    newUser();
+                }
+            });
+            joinChannelAction = new JButton("Join a Channel");
+            joinChannelAction.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    joinChan();
+                }
+            });
+            changeNickAction = new JButton("Change nick");
+            changeNickAction.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    changeNick();
+                }
+            });
+            whoisAction = new JButton("Nick Info");
+            whoisAction.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    whois();
+                }
+            });
+
+            connectButton = new JButton("Connect");
+            cancelButton = new JButton("Cancel");
+
+            tabbedPane = createTabbedPane();
+
+            JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            // Let's create a ToolBar
+            panel1.add(createConnection);
+            panel1.add(newUserAction);
+            panel1.add(joinChannelAction);
+            panel1.add(changeNickAction);
+            panel1.add(whoisAction);
+
+            add(panel1, BorderLayout.NORTH);
+            add(tabbedPane, BorderLayout.CENTER);
+
+            // mandatory things to do!
+            //setBounds(50, 50, 600, 400);
+            Toolkit theKit = java.awt.Toolkit.getDefaultToolkit();
+            Dimension dm = theKit.getScreenSize();
+            setBounds(dm.width / 6, dm.height / 6,
+                      (dm.width * 5) / 8, // width
+                      (dm.height * 2) / 3 // height
+                      );
+
+            setVisible(true);
+        }
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", e);
             }
-        });
-        newUserAction = new JButton("Talk Private");
-        newUserAction.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                newUser();
-            }
-        });
-        joinChannelAction = new JButton("Join a Channel");
-        joinChannelAction.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                joinChan();
-            }
-        });
-        changeNickAction = new JButton("Change nick");
-        changeNickAction.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                changeNick();
-            }
-        });
-        whoisAction = new JButton("Nick Info");
-        whoisAction.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                whois();
-            }
-        });
+        }
+    }
 
-        tabbedPane = createTabbedPane();
-
-        JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        // Let's create a ToolBar
-        panel1.add(createConnection);
-        panel1.add(newUserAction);
-        panel1.add(joinChannelAction);
-        panel1.add(changeNickAction);
-        panel1.add(whoisAction);
-
-        add(panel1, BorderLayout.NORTH);
-        add(tabbedPane, BorderLayout.CENTER);
-
-        // mandatory things to do!
-        //setBounds(50, 50, 600, 400);
-        Toolkit theKit = java.awt.Toolkit.getDefaultToolkit();
-        Dimension dm = theKit.getScreenSize();
-        setBounds(dm.width / 6, dm.height / 6,
-                  (dm.width * 5) / 8, // width
-                  (dm.height * 2) / 3 // height
-        );
-
-        setVisible(true);
+    public void fireLanguageChanged() {
+        createConnection.setText(parent.getLanguageString(".root.language.buttons.connect"));
+        newUserAction.setText(parent.getLanguageString(".root.language.buttons.private"));
+        joinChannelAction.setText(parent.getLanguageString(".root.language.buttons.join"));
+        changeNickAction.setText(parent.getLanguageString(".root.language.buttons.nick"));
+        whoisAction.setText(parent.getLanguageString(".root.language.buttons.info"));
+        connectButton.setText(parent.getLanguageString(".root.language.buttons.connect"));
+        cancelButton.setText(parent.getLanguageString(".root.language.buttons.cancel"));
+        connectionInfo = parent.getLanguageString(".root.language.title.newconnection");
+        nicknameString = parent.getLanguageString(".root.language.nick.newnick");
+        channelNameString = parent.getLanguageString(".root.language.channel.newchannel");
     }
 
     class WindowCloser
@@ -191,7 +268,7 @@ public class XdccIrc
     }
 
     private void makeConnectionInfo() {
-        dialog = new JDialog(AppleJuiceDialog.getApp(), " Connection Info ", true);
+        dialog = new JDialog(AppleJuiceDialog.getApp(), connectionInfo, true);
         Border etched = BorderFactory.createEtchedBorder();
 
         Container dialogContentPane = dialog.getContentPane();
@@ -257,16 +334,9 @@ public class XdccIrc
                 BorderFactory.createRaisedBevelBorder()
         ));
 
-        connectButton = new JButton("Connect");
-        cancelButton = new JButton("Cancel");
-        editButton = new JButton("Edit");
-        removeButton = new JButton("Remove");
-
         connectButton.setBorder(makeButtonBorder());
         connectButton.setEnabled(false);
         cancelButton.setBorder(makeButtonBorder());
-        editButton.setBorder(makeButtonBorder());
-        removeButton.setBorder(makeButtonBorder());
 
         // Action Listener
         connectButton.addActionListener(new ActionListener() {
@@ -299,7 +369,6 @@ public class XdccIrc
 
                 host = "irc.bongster.de";
                 tabUpdate("Init Window", " Connecting to: irc.bongster.de");
-                System.out.println("Connecting to: irc.bongster.de");
                 connectStartRegister();
                 dialog.dispose();
             }
@@ -313,8 +382,6 @@ public class XdccIrc
 
         buttonPanel.add(connectButton);
         buttonPanel.add(cancelButton);
-        buttonPanel.add(removeButton);
-        buttonPanel.add(editButton);
 
         dialogContentPane.add("North", userInfo);
         dialogContentPane.add("South", buttonPanel);
@@ -475,9 +542,9 @@ public class XdccIrc
 
                 catch (IOException e)
                 {
-                    System.out.println(
-                            "Read Exception from Server. Exception is something like:");
-                    System.out.println(e);
+                    if (logger.isEnabledFor(Level.ERROR)){
+                        logger.error("Unbehandelte Exception", e);
+                    }
                 }
                 SwingUtilities.invokeLater(new Runnable(){
                     public void run(){
@@ -500,9 +567,9 @@ public class XdccIrc
         }
         catch (IOException e)
         {
-            System.out.println("chatSocket.close() thrown an IOException or");
-            System.out.println("fromServer.close() thrown an IOException or");
-            System.out.println("toServer.close() thrown an IOException");
+            if (logger.isEnabledFor(Level.ERROR)){
+                logger.error("Unbehandelte Exception", e);
+            }
         }
 
         chatSocket = null;
@@ -592,18 +659,15 @@ public class XdccIrc
                         {
                             bracketFermeture = String.valueOf(trailing.charAt(trailing.
                                                                               indexOf("[") + 5));
-                            //System.out.println("bracketFermeture = " + bracketFermeture + " trailing = " + trailing);
                         }
                         if (nick.equals(nickname))
                         {
-                            //System.out.println("Color ReD!");
                             //((ChannelPanel)aComponent).textArea.setDisabledTextColor(new Color(255,0,0));
                             ((ChannelPanel) aComponent).updateTextArea(
                                     formatNickname("<" + nick + "> ") + trailing);
                         }
                         else
                         {
-                            //System.out.println("Color GreeN!");
                             //((ChannelPanel)aComponent).textArea.setDisabledTextColor(new Color(0,0,255));
                             ((ChannelPanel) aComponent).updateTextArea(
                                     formatNickname("<" + nick + "> ") + trailing);
@@ -827,13 +891,6 @@ public class XdccIrc
             // successful registration
             tabUpdate("Init Window", parser.getTrailing());
         }
-/*        else if (command.equals("005"))
-        {
-            // RPL_BOUNCE (Server settings)
-            tabUpdate("Init Window", "005 " + lineFromServer);
-            tabUpdate("Init Window", "005 " + parser.getTrailing());
-            System.out.println(parser.getTrailing());
-        }*/
         else if (command.equals("250") ||
                 command.equals("251") ||
                 command.equals("253") ||
@@ -1024,12 +1081,12 @@ public class XdccIrc
         }
         else if (command.equals("305"))
         { // RPL_UNAWAY
-            System.out.println("305: " + lineFromServer);
+            ;
         }
 
         else if (command.equals("333"))
         { // RPL_UNAWAY
-            System.out.println(lineFromServer);
+            ;
         }
 
 // used or not ???????
@@ -1166,8 +1223,7 @@ public class XdccIrc
                       nickname + " already in use " + parser.getTrailing());
 
             String newNickname;
-            newNickname = JOptionPane.showInputDialog(" Change current nickname: " +
-                                                      getNickname() + " to: ",
+            newNickname = JOptionPane.showInputDialog(nicknameString,
                                                       nickname);
 
             if (newNickname != null)
@@ -1266,7 +1322,6 @@ public class XdccIrc
             {
                 ;
             }
-            //System.out.println("END of Channel name list.");
             else
             {
                 tabUpdate("Init Window", lineFromServer);
@@ -1384,24 +1439,19 @@ public class XdccIrc
     private void newUser() {
         String userName;
 
-        userName = JOptionPane.showInputDialog(
-                " Input a nickname to talk privately ");
+        userName = JOptionPane.showInputDialog(theApp,
+                nicknameString);
 
         if (userName != null)
         {
             addUser(tabbedPane, userName);
-        }
-        else
-        {
-            System.out.println("You can do /msg nickname your message");
-            System.out.println("to send a private message to nickname");
         }
     }
 
     private void joinChan() {
         String channelName;
 
-        channelName = JOptionPane.showInputDialog(" Please Enter a Channel Name ");
+        channelName = JOptionPane.showInputDialog(theApp, channelNameString);
 
         if (channelName != null)
         {
@@ -1431,8 +1481,7 @@ public class XdccIrc
     private void changeNick() {
         String newNickname;
 
-        newNickname = JOptionPane.showInputDialog(" Change current nickname: " +
-                                                  getNickname() + " to: ");
+        newNickname = JOptionPane.showInputDialog(theApp, nicknameString);
 
         if (newNickname != null)
         {
@@ -1453,8 +1502,7 @@ public class XdccIrc
     private void whois() {
         String whoisNickname;
 
-        whoisNickname = JOptionPane.showInputDialog(
-                " Check Info of(Input nickname): ");
+        whoisNickname = JOptionPane.showInputDialog(theApp, nicknameString);
 
         if (whoisNickname != null && toServer!=null)
         {
@@ -1659,8 +1707,6 @@ public class XdccIrc
             }
             else
             {
-                System.out.println("Sending a message: " + cmdI.getCommand() + " " +
-                                   cmdI.getParam1() + " :" + cmdI.getMessage());
                 parseSendToCommand(cmdI.getCommand() + " " +
                                    cmdI.getParam1() + " :" +
                                    cmdI.getMessage());
