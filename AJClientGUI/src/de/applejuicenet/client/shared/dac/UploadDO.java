@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.upload.table.UploadColumnComponent;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.26 2004/10/28 15:02:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.27 2004/12/09 10:04:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -221,12 +221,18 @@ public class UploadDO implements UploadColumnComponent{
         if (temp == 0.0) {
             return "0";
         }
-        temp = temp * 100 / getSize();
-        String result = Double.toString(temp);
-        if (result.indexOf(".") + 3 < result.length()) {
-            result = result.substring(0, result.indexOf(".") + 3);
+        long size = getSize();
+        if (size != 0){
+	        temp = temp * 100 / size;
+	        String result = Double.toString(temp);
+	        if (result.indexOf('.') != -1 && (result.indexOf('.') + 3 < result.length())) {
+	            result = result.substring(0, result.indexOf('.') + 3);
+	        }
+	        return result;
         }
-        return result;
+        else{
+        	return "0";
+        }
     }
 
     public long getSize() {

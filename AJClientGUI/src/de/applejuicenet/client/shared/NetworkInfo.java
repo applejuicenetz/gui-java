@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.15 2004/10/15 13:34:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.16 2004/12/09 10:04:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -123,8 +123,8 @@ public class NetworkInfo {
         }
         share = share / faktor;
         String result = Double.toString(share);
-        if (result.indexOf(".") + 3 < result.length()) {
-            result = result.substring(0, result.indexOf(".") + 3);
+        if (result.indexOf('.') != -1 && (result.indexOf('.') + 3 < result.length())) {
+            result = result.substring(0, result.indexOf('.') + 3);
         }
         result = result.replace('.', ',');
         if (faktor == 1) {

@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.3 2004/11/30 18:03:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.4 2004/12/09 10:04:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -189,8 +189,8 @@ public class DownloadModel
         }
         share = share / faktor;
         String result = Double.toString(share);
-        if (result.indexOf(".") + 3 < result.length()) {
-            result = result.substring(0, result.indexOf(".") + 3);
+        if (result.indexOf('.') != -1 && (result.indexOf('.') + 3 < result.length())) {
+            result = result.substring(0, result.indexOf('.') + 3);
         }
         result = result.replace('.', ',');
         if (faktor == 1024) {

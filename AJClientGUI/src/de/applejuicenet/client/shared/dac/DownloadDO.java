@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.31 2004/11/30 18:03:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.32 2004/12/09 10:04:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -86,8 +86,8 @@ public class DownloadDO
         try {
             double temp = getProzentGeladen();
             String result = Double.toString(temp);
-            if (result.indexOf(".") + 3 < result.length()) {
-                result = result.substring(0, result.indexOf(".") + 3);
+            if (result.indexOf('.') != -1 && (result.indexOf('.') + 3 < result.length())) {
+                result = result.substring(0, result.indexOf('.') + 3);
             }
             return result;
         }
@@ -100,7 +100,12 @@ public class DownloadDO
     }
 
     public double getProzentGeladen() {
-        return (double) ready * 100 / groesse;
+    	if (groesse != 0){
+    		return (double) ready * 100 / groesse;
+    	}
+    	else{
+    		return 0;
+    	}
     }
 
     public DownloadSourceDO getSourceById(int sourceId) {

@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.30 2004/12/03 17:31:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.31 2004/12/09 10:04:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -150,12 +150,18 @@ public class DownloadSourceDO
                 return "0";
             }
             double temp = actualDownloadPosition - downloadFrom;
-            temp = temp * 100 / getSize();
-            String result = Double.toString(temp);
-            if (result.indexOf(".") + 3 < result.length()) {
-                result = result.substring(0, result.indexOf(".") + 3);
+            int size = getSize();
+            if (size != 0){
+                temp = temp * 100 / size;
+                String result = Double.toString(temp);
+                if (result.indexOf('.') != -1 && (result.indexOf('.') + 3 < result.length())) {
+                    result = result.substring(0, result.indexOf('.') + 3);
+                }
+                return result;
             }
-            return result;
+            else{
+            	return "0";
+            }
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
