@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.13 2003/08/26 19:46:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.14 2003/08/28 06:56:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.14  2003/08/28 06:56:48  maj0r
+ * Methode setShares korrigiert.
+ *
  * Revision 1.13  2003/08/26 19:46:34  maj0r
  * Sharebereich weiter vervollstaendigt.
  *
@@ -66,20 +69,20 @@ import org.apache.log4j.Level;
  * Refactoring.
  *
  * Revision 1.38  2003/08/12 06:12:19  maj0r
- * Version erhöht.
+ * Version erhï¿½ht.
  *
  * Revision 1.37  2003/08/11 14:10:28  maj0r
- * DownloadPartList eingefügt.
- * Diverse Änderungen.
+ * DownloadPartList eingefï¿½gt.
+ * Diverse ï¿½nderungen.
  *
  * Revision 1.36  2003/08/10 21:08:18  maj0r
- * Diverse Änderungen.
+ * Diverse ï¿½nderungen.
  *
  * Revision 1.35  2003/08/09 16:47:42  maj0r
- * Diverse Änderungen.
+ * Diverse ï¿½nderungen.
  *
  * Revision 1.34  2003/08/09 10:57:54  maj0r
- * Upload- und DownloadTabelle weitergeführt.
+ * Upload- und DownloadTabelle weitergefï¿½hrt.
  *
  * Revision 1.33  2003/08/05 20:47:06  maj0r
  * An neue Schnittstelle angepasst.
@@ -97,11 +100,11 @@ import org.apache.log4j.Level;
  * An neue Schnittstelle angepasst.
  *
  * Revision 1.28  2003/07/04 15:25:38  maj0r
- * Version erhöht.
+ * Version erhï¿½ht.
  * DownloadModel erweitert.
  *
  * Revision 1.27  2003/07/03 19:11:16  maj0r
- * DownloadTable überarbeitet.
+ * DownloadTable ï¿½berarbeitet.
  *
  * Revision 1.26  2003/07/01 15:00:00  maj0r
  * Keyverwendung bei HashSets und HashMaps korrigiert.
@@ -636,7 +639,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                  "/function/setsettings?password=" + password + "&" + parameters);
+                                                  "/function/setsettings?password=" + password + "&" + parameters, false);
         }
         catch (WebSiteNotFoundException ex)
         {
