@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.13 2003/10/14 15:43:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.14 2003/10/27 13:00:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,10 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.14  2003/10/27 13:00:17  maj0r
+ * Bug #1039 fixed (Danke an xcalibur):
+ * Ist im Core noch nicht implementiert und deshalb erstmal wieder aus dem GUI geflogen.
+ *
  * Revision 1.13  2003/10/14 15:43:52  maj0r
  * An pflegbaren Xml-Port angepasst.
  *
@@ -59,7 +63,6 @@ public class ODStandardPanel
     private JLabel label2 = new JLabel();
     private JLabel label3 = new JLabel();
     private JLabel label4 = new JLabel();
-    private JLabel label5 = new JLabel();
     private JLabel label6 = new JLabel();
     private JLabel openTemp;
     private JLabel openIncoming;
@@ -68,7 +71,6 @@ public class ODStandardPanel
     private JTextField port = new JTextField();
     private JTextField xmlPort = new JTextField();
     private JTextField nick = new JTextField();
-    private JComboBox cmbUploadPrio = new JComboBox();
     private JLabel hint1;
     private JLabel hint2;
     private JLabel hint3;
@@ -190,9 +192,6 @@ public class ODStandardPanel
         label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                          getFirstAttrbuteByTagName(new String[]{"einstform", "Label8",
                                                                                                 "caption"})));
-        label5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new String[]{"einstform", "Label14",
-                                                                                                "caption"})));
         label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                          getFirstAttrbuteByTagName(new String[]{"javagui", "options",
                                                                                                 "standard", "xmlport"})));
@@ -260,10 +259,6 @@ public class ODStandardPanel
                                                                getFirstAttrbuteByTagName(new String[]{"javagui", "options",
                                                                                                       "standard", "ttipp_xmlport"})));
 
-        for (int i = 1; i < 11; i++)
-        {
-            cmbUploadPrio.addItem(new Integer(i));
-        }
         Icon icon2 = im.getIcon("folderopen");
         DirectoryChooserMouseAdapter dcMouseAdapter = new DirectoryChooserMouseAdapter();
         openTemp = new JLabel(icon2);
@@ -282,7 +277,6 @@ public class ODStandardPanel
         JPanel panel2 = new JPanel(new GridBagLayout());
         JPanel panel3 = new JPanel(new GridBagLayout());
         JPanel panel4 = new JPanel(new GridBagLayout());
-        JPanel panel5 = new JPanel(new GridBagLayout());
         JPanel panel7 = new JPanel(new GridBagLayout());
 
         constraints.insets.right = 5;
@@ -291,7 +285,6 @@ public class ODStandardPanel
         panel2.add(label2, constraints);
         panel3.add(label3, constraints);
         panel4.add(label4, constraints);
-        panel5.add(label5, constraints);
         panel7.add(label6, constraints);
 
         constraints.insets.left = 0;
@@ -303,7 +296,6 @@ public class ODStandardPanel
         panel3.add(port, constraints);
         panel7.add(xmlPort, constraints);
         panel4.add(nick, constraints);
-        panel5.add(cmbUploadPrio, constraints);
         constraints.gridx = 2;
         constraints.weightx = 0;
         panel1.add(openTemp, constraints);
@@ -321,8 +313,6 @@ public class ODStandardPanel
         panel6.add(panel7, constraints);
         constraints.gridy = 4;
         panel6.add(panel4, constraints);
-        constraints.gridy = 5;
-        panel6.add(panel5, constraints);
 
         constraints.insets.top = 10;
         constraints.gridx = 1;
@@ -336,7 +326,7 @@ public class ODStandardPanel
         constraints.gridy = 4;
         panel6.add(hint3, constraints);
 
-        constraints.gridy = 6;
+        constraints.gridy = 5;
         constraints.gridx = 0;
         constraints.gridwidth = 1;
         panel6.add(panel8, constraints);
