@@ -30,9 +30,10 @@ import de.applejuicenet.client.gui.tables.search.SearchResultTableModel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.Search.SearchEntry;
+import javax.swing.JToggleButton;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.18 2004/02/21 20:52:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.19 2004/02/28 15:01:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +42,10 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.19  2004/02/28 15:01:42  maj0r
+ * Suche um Filter erweitert
+ * Die Filter in der Suchergebnistabelle wirken sich NICHT auf die Suche aus, lediglich die Treffer werden gefiltert.
+ *
  * Revision 1.18  2004/02/21 20:52:43  maj0r
  * Bug #234 gefixt (Danke an hirsch.marcel)
  * Tabellen werden beim Aendern von Spaltengroessen nicht mehr sortiert.
@@ -123,6 +128,7 @@ public class SearchResultPanel
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem item1 = new JMenuItem();
     private int searchHitsCount;
+    private JToggleButton[] filterButtons;
 
     private TableColumn[] tableColumns = new TableColumn[3];
 
@@ -160,6 +166,30 @@ public class SearchResultPanel
         tableModel = new SearchResultTableModel(search);
         searchResultTable = new JTreeTable(tableModel);
         searchResultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JButton all = new JButton(IconManager.getInstance().getIcon("abbrechen"));
+        buttonPanel.add(all);
+
+        filterButtons = new JToggleButton[Search.allTypes.length];
+        for (int i=0; i<Search.allTypes.length; i++){
+            filterButtons[i] = new JToggleButton(
+                IconManager.getInstance().getIcon(Search.allTypes[i]));
+            filterButtons[i].addActionListener(new FilterAdapter(Search.allTypes[i]));
+            buttonPanel.add(filterButtons[i]);
+        }
+
+        all.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                for (int i=0; i<filterButtons.length; i++){
+                    filterButtons[i].setSelected(false);
+                }
+                search.clearFilter();
+                ( (SearchNode) tableModel.getRoot()).forceSort();
+                searchResultTable.updateUI();
+            }
+        });
+
+        add(buttonPanel, BorderLayout.NORTH);
         add(new JScrollPane(searchResultTable), BorderLayout.CENTER);
         JPanel southPanel = new JPanel(new BorderLayout());
         JPanel textPanel = new JPanel(new FlowLayout());
@@ -294,7 +324,7 @@ public class SearchResultPanel
     }
 
     private void updateZahlen() {
-        SearchEntry[] searchEntries = search.getSearchEntries();
+        SearchEntry[] searchEntries = search.getAllSearchEntries();
         searchHitsCount = 0;
         for (int i = 0; i < searchEntries.length; i++) {
             searchHitsCount += searchEntries[i].getFileNames().length;
@@ -384,6 +414,26 @@ public class SearchResultPanel
             searchResultTable.updateUI();
             renderer.setPressedColumn( -1);
             header.repaint();
+        }
+    }
+
+    private class FilterAdapter implements ActionListener{
+        private String filter;
+
+        public FilterAdapter(String newFilter){
+            filter = newFilter;
+        }
+
+        public void actionPerformed(ActionEvent ae){
+            JToggleButton source = (JToggleButton)ae.getSource();
+            if (source.isSelected()){
+                search.removeFilter(filter);
+            }
+            else{
+                search.addFilter(filter);
+            }
+            ((SearchNode)tableModel.getRoot()).forceSort();
+            searchResultTable.updateUI();
         }
     }
 }

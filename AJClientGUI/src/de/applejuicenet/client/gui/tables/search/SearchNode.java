@@ -11,7 +11,7 @@ import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.Search.SearchEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.10 2004/02/27 16:48:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.11 2004/02/28 15:01:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchNode.java,v $
+ * Revision 1.11  2004/02/28 15:01:42  maj0r
+ * Suche um Filter erweitert
+ * Die Filter in der Suchergebnistabelle wirken sich NICHT auf die Suche aus, lediglich die Treffer werden gefiltert.
+ *
  * Revision 1.10  2004/02/27 16:48:27  maj0r
  * Suchergebnisse werden nun, wenn moeglich mit einem sprechenden Icon angezeigt.
  *
@@ -70,6 +74,7 @@ public class SearchNode
     private int type;
     private HashMap children;
     private Object[] sortedChildNodes;
+    private boolean forceSort = false;
 
     public SearchNode(Search aSearch) {
         valueObject = aSearch;
@@ -111,6 +116,10 @@ public class SearchNode
         return getChildren().length;
     }
 
+    public void forceSort(){
+        forceSort = true;
+    }
+
     public Object[] getChildren() {
         if (type == ROOT_NODE) {
             if (children == null &&
@@ -120,8 +129,15 @@ public class SearchNode
                 return waitNode;
             }
             boolean sort = false;
-            if (children == null) {
-                children = new HashMap();
+            if (forceSort || children == null){
+                forceSort = false;
+                if (children == null){
+                    children = new HashMap();
+                }
+                else{
+                    children.clear();
+                    sortedChildNodes = null;
+                }
                 Search.SearchEntry[] entries = ( (Search) valueObject).
                     getSearchEntries();
                 for (int i = 0; i < entries.length; i++) {
@@ -145,7 +161,7 @@ public class SearchNode
                     }
                 }
             }
-            if (sort || sortedChildNodes == null) {
+            if (sort || (sortedChildNodes == null)) {
                 return sort( (Object[]) children.values().toArray(new
                     SearchNode[children.size()]));
             }

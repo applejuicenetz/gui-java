@@ -10,7 +10,7 @@ import javax.swing.Icon;
 import de.applejuicenet.client.gui.tables.Node;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.11 2004/02/27 20:39:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.12 2004/02/28 15:01:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,10 @@ import de.applejuicenet.client.gui.tables.Node;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
+ * Revision 1.12  2004/02/28 15:01:42  maj0r
+ * Suche um Filter erweitert
+ * Die Filter in der Suchergebnistabelle wirken sich NICHT auf die Suche aus, lediglich die Treffer werden gefiltert.
+ *
  * Revision 1.11  2004/02/27 20:39:24  maj0r
  * Icons weiter ausgebaut.
  *
@@ -69,6 +73,19 @@ public class Search {
     private long creationTime;
 
     public static int currentSearchCount = 0;
+
+    private HashSet filter = new HashSet();
+
+    public static final String TYPE_PDF = "pdf";
+    public static final String TYPE_IMAGE = "image";
+    public static final String TYPE_MOVIE = "movie";
+    public static final String TYPE_ISO = "iso";
+    public static final String TYPE_TEXT = "text";
+    public static final String TYPE_SOUND = "sound";
+    public static final String TYPE_UNKNOWN = "treeRoot";
+
+    public static final String[] allTypes = new String[]
+        {TYPE_PDF, TYPE_IMAGE, TYPE_MOVIE, TYPE_ISO, TYPE_TEXT, TYPE_SOUND, TYPE_UNKNOWN};
 
     public Search(int id) {
         this.id = id;
@@ -123,6 +140,26 @@ public class Search {
         return id;
     }
 
+    public void addFilter(String newFilter){
+        filter.add(newFilter);
+        if (filter.size()==allTypes.length){
+            clearFilter();
+        }
+    }
+
+    public void removeFilter(String newFilter){
+        if (filter.size()==0){
+            for (int i=0; i<allTypes.length; i++){
+                filter.add(allTypes[i]);
+            }
+        }
+        filter.remove(newFilter);
+    }
+
+    public void clearFilter(){
+        filter.clear();
+    }
+
     public void addSearchEntry(SearchEntry searchEntry) {
         String key = Integer.toString(searchEntry.getId());
         if (!mapping.containsKey(key)) {
@@ -139,8 +176,21 @@ public class Search {
         }
     }
 
-    public SearchEntry[] getSearchEntries() {
+    public SearchEntry[] getAllSearchEntries() {
         return (SearchEntry[]) entries.toArray(new SearchEntry[entries.size()]);
+    }
+
+    public SearchEntry[] getSearchEntries() {
+        if (filter.size() == 0){
+            return (SearchEntry[]) entries.toArray(new SearchEntry[entries.size()]);
+        }
+        ArrayList neededEntries = new ArrayList();
+        for (int i=0; i<entries.size(); i++){
+            if (!filter.contains(((SearchEntry)entries.get(i)).getFileType())){
+                neededEntries.add(entries.get(i));
+            }
+        }
+        return (SearchEntry[]) neededEntries.toArray(new SearchEntry[neededEntries.size()]);
     }
 
     public class SearchEntry {
@@ -151,14 +201,6 @@ public class Search {
         private String groesseAsString = null;
         private ArrayList fileNames = new ArrayList();
         private HashSet keys = new HashSet();
-
-        public static final String TYPE_PDF = "pdf";
-        public static final String TYPE_IMAGE = "image";
-        public static final String TYPE_MOVIE = "movie";
-        public static final String TYPE_ISO = "iso";
-        public static final String TYPE_TEXT = "text";
-        public static final String TYPE_SOUND = "sound";
-        public static final String TYPE_UNKNOWN = "treeRoot";
 
         private String type = TYPE_UNKNOWN;
 
@@ -175,6 +217,10 @@ public class Search {
 
         public Icon getTypeIcon(){
             return IconManager.getInstance().getIcon(type);
+        }
+
+        public String getFileType() {
+            return type;
         }
 
         public int getSearchId(){
@@ -254,7 +300,7 @@ public class Search {
                 }
             }
             if (pdf == image && movie == iso && image == movie
-                && movie == text & text == sound){
+                && movie == text && text == sound){
                     type = TYPE_UNKNOWN;
             }
         }
@@ -328,7 +374,8 @@ public class Search {
                 else if (lower.endsWith(".mpg") || lower.endsWith(".avi")
                          || lower.endsWith(".mov") || lower.endsWith(".mpeg")
                          || lower.endsWith(".dat") || lower.endsWith(".ra")
-                         || lower.endsWith(".vob") || lower.endsWith(".rm")){
+                         || lower.endsWith(".vob") || lower.endsWith(".rm")
+                         || lower.endsWith(".divx")){
                     fileType = TYPE_MOVIE;
                 }
                 else if (lower.endsWith(".iso") || lower.endsWith(".bin")
