@@ -55,7 +55,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.75 2004/01/04 12:37:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.76 2004/01/05 14:34:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,6 +64,10 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.76  2004/01/05 14:34:59  maj0r
+ * Bug #42 umgesetzt (Danke an dsp2004)
+ * Partlisten werden nun durch eine Option wahlweise bei Mausklick auf den Download / Quelle oder ueber den Button "Partliste anzeigen" geholt.
+ *
  * Revision 1.75  2004/01/04 12:37:27  maj0r
  * Bug #40 umgesetzt (Danke an hirsch.marcel)
  * Incoming-Verzeichnis kann nun für mehrere Downloads gleichzeitig geaendert werden.
@@ -625,13 +629,25 @@ public class DownloadPanel
                     if (!powerDownloadPanel.isAutomaticPwdlActive()) {
                         powerDownloadPanel.btnPdl.setEnabled(true);
                     }
-                    downloadDOOverviewPanel.enableHoleListButton(true);
+                    if (Settings.getSettings().isDownloadUebersicht()){
+                        downloadDOOverviewPanel.enableHoleListButton(false);
+                        tryGetPartList();
+                    }
+                    else{
+                        downloadDOOverviewPanel.enableHoleListButton(true);
+                    }
                 }
                 else if (node.getClass() == DownloadSourceDO.class) {
                     if (!powerDownloadPanel.isAutomaticPwdlActive()) {
                         powerDownloadPanel.btnPdl.setEnabled(true);
                     }
-                    downloadDOOverviewPanel.enableHoleListButton(true);
+                    if (Settings.getSettings().isDownloadUebersicht()){
+                        downloadDOOverviewPanel.enableHoleListButton(false);
+                        tryGetPartList();
+                    }
+                    else{
+                        downloadDOOverviewPanel.enableHoleListButton(true);
+                    }
                 }
                 else {
                     powerDownloadPanel.btnPdl.setEnabled(false);
