@@ -3,17 +3,22 @@ package de.applejuicenet.client.gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.*;
 
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
+import de.applejuicenet.client.gui.tables.download.DownloadRootNode;
+import de.applejuicenet.client.gui.tables.download.DownloadDirectoryNode;
+import de.applejuicenet.client.gui.powerdownload.StandardAutomaticPwdlPolicy;
+import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
 import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.28 2003/11/03 21:17:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.29 2003/11/17 07:32:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.29  2003/11/17 07:32:30  maj0r
+ * Automatischen Pwdl begonnen.
+ *
  * Revision 1.28  2003/11/03 21:17:16  maj0r
  * Kleinen Fehler im Pwdl-Textfeld behoben.
  *
@@ -78,7 +86,7 @@ import org.apache.log4j.Level;
 
 public class PowerDownloadPanel
         extends JPanel
-        implements LanguageListener {
+        implements LanguageListener, DataUpdateListener {
     private final Color BLUE_BACKGROUND = new Color(118, 112, 148);
     private GridBagLayout gridBagLayout1 = new GridBagLayout();
     private JRadioButton btnInaktiv = new JRadioButton();
@@ -105,8 +113,14 @@ public class PowerDownloadPanel
     private JLabel label11 = new JLabel("bis ");
     private Logger logger;
     private RatioFocusAdapter ratioFocusAdapter;
+    private JComboBox pwdlPolicies = new JComboBox();
+
+    private int standardAutomaticPwdlAb = 200;
+    private int standardAutomaticPwdlBis = 30;
 
     private DownloadPanel parentPanel;
+
+    private Thread autoPwdlThread;
 
     public PowerDownloadPanel(DownloadPanel parentPanel) {
         logger = Logger.getLogger(getClass());
@@ -124,9 +138,6 @@ public class PowerDownloadPanel
     }
 
     private void jbInit() throws Exception {
-        //todo
-        btnAutoPdl.setEnabled(false);
-
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
         JPanel backPanel = new JPanel();
@@ -269,30 +280,101 @@ public class PowerDownloadPanel
         buttonGroup2.add(btnAutoInaktiv);
         buttonGroup2.add(btnAutoAktiv);
         btnAutoInaktiv.setText("inaktiv");
-        btnAutoInaktiv.setSelected(true);
         btnAutoAktiv.setText("aktiv");
-        backPanel.add(btnAutoInaktiv, constraints);
+        btnAutoAktiv.setSelected(true);
+        fillPwdlPolicies();
+        backPanel.add(pwdlPolicies, constraints);
         constraints.gridy = 9;
-        backPanel.add(btnAutoAktiv, constraints);
+        backPanel.add(btnAutoInaktiv, constraints);
         constraints.gridy = 10;
+        backPanel.add(btnAutoAktiv, constraints);
+        constraints.gridy = 11;
         JPanel panel = new JPanel(new FlowLayout());
         panel.add(label10);
         autoAb.setDocument(new NumberInputVerifier());
         autoAb.setPreferredSize(new Dimension(40, 21));
-        autoAb.setText("200");
+        autoAb.setText(Integer.toString(standardAutomaticPwdlAb));
         autoBis.setDocument(new NumberInputVerifier());
         autoBis.setPreferredSize(new Dimension(40, 21));
-        autoBis.setText("50");
+        autoBis.setText(Integer.toString(standardAutomaticPwdlBis));
+        autoAb.addFocusListener(new FocusAdapter(){
+            public void focusLost(FocusEvent fe){
+                int eingegeben = Integer.parseInt(autoAb.getText());
+                if (eingegeben<Integer.parseInt(autoBis.getText())){
+                    autoAb.setText(Integer.toString(standardAutomaticPwdlAb));
+                }
+            }
+        });
+        autoBis.addFocusListener(new FocusAdapter(){
+            public void focusLost(FocusEvent fe){
+                int eingegeben = Integer.parseInt(autoBis.getText());
+                if (eingegeben<standardAutomaticPwdlBis || eingegeben>Integer.parseInt(autoAb.getText())){
+                    autoBis.setText(Integer.toString(standardAutomaticPwdlBis));
+                }
+            }
+        });
         panel.add(autoAb);
         panel.add(new JLabel("MB "));
         panel.add(label11);
         panel.add(autoBis);
         panel.add(new JLabel("MB "));
         backPanel.add(panel, constraints);
-        constraints.gridy = 11;
+        constraints.gridy = 12;
         constraints.gridwidth = 3;
         backPanel.add(btnAutoPdl, constraints);
+        btnAutoPdl.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                alterAutoPwdl();
+            }
+        });
         add(backPanel, BorderLayout.NORTH);
+    }
+
+    private void alterAutoPwdl(){
+        if (btnAutoAktiv.isSelected()){
+            if (pwdlPolicies.isEnabled()){
+                pwdlPolicies.setEnabled(false);
+                autoAb.setEnabled(false);
+                autoBis.setEnabled(false);
+                AutomaticPowerdownloadPolicy selectedPolicy = (AutomaticPowerdownloadPolicy) pwdlPolicies.getSelectedItem();
+                manageAutoPwdl(selectedPolicy);
+            }
+        }
+        else{
+            if (!pwdlPolicies.isEnabled()){
+                pwdlPolicies.setEnabled(true);
+                autoAb.setEnabled(true);
+                autoBis.setEnabled(true);
+                if (autoPwdlThread!=null){
+                    autoPwdlThread.interrupt();
+                    autoPwdlThread = null;
+                }
+            }
+        }
+
+    }
+
+    private void manageAutoPwdl(final AutomaticPowerdownloadPolicy selectedPolicy){
+        if (autoPwdlThread!=null){
+            autoPwdlThread.interrupt();
+            autoPwdlThread = null;
+        }
+        AutomaticPowerdownloadPolicy policy = null;
+        try {
+            policy = (AutomaticPowerdownloadPolicy)selectedPolicy.getClass().newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        autoPwdlThread = policy;
+        autoPwdlThread.start();
+    }
+
+    private void fillPwdlPolicies(){
+        AutomaticPowerdownloadPolicy standardAutomaticPwdlPolicy = new StandardAutomaticPwdlPolicy();
+        pwdlPolicies.addItem(standardAutomaticPwdlPolicy);
+        pwdlPolicies.setSelectedItem(standardAutomaticPwdlPolicy);
     }
 
     private void alterRatio(boolean increase) {
@@ -448,6 +530,21 @@ public class PowerDownloadPanel
         {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", ex);
+        }
+    }
+
+    public void fireContentChanged(int type, Object content) {
+        try {
+            if (!pwdlPolicies.isEnabled() && type == DataUpdateListener.INFORMATION_CHANGED){
+                Information information = (Information) content;
+                long eingegebenBis = Integer.parseInt(autoBis.getText()) * 1048576l;
+                long eingegebenAb = Integer.parseInt(autoAb.getText()) * 1048576l;
+
+            }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
