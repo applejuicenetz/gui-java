@@ -13,20 +13,22 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.49 2003/09/30 16:35:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.50 2003/10/17 13:33:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.50  2003/10/17 13:33:02  maj0r
+ * properties.xml wird nun im Fehlerfall automatisch generiert.
+ *
  * Revision 1.49  2003/09/30 16:35:11  maj0r
  * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
  *
@@ -125,8 +127,8 @@ public class AppleJuiceDialog
         extends JFrame
         implements LanguageListener, DataUpdateListener {
 
-    RegisterPanel registerPane;
-    JLabel[] statusbar = new JLabel[6];
+    private RegisterPanel registerPane;
+    private JLabel[] statusbar = new JLabel[6];
     private JMenu sprachMenu;
     private JMenu optionenMenu;
     private HashSet plugins;
@@ -136,6 +138,7 @@ public class AppleJuiceDialog
     private JButton pause = new JButton();
     private boolean paused = false;
     private static Logger logger;
+    public static boolean rewriteProperties = false;
 
     private static AppleJuiceDialog theApp;
 
@@ -263,32 +266,42 @@ public class AppleJuiceDialog
         Point p = getLocationOnScreen();
         setVisible(false);
         ApplejuiceFassade.getInstance().stopXMLCheck();
+        if (rewriteProperties){
+            restorePropertiesXml();
+        }
         String nachricht = "appleJuice-Core-GUI wird beendet...";
         if (logger.isEnabledFor(Level.INFO))
             logger.info(nachricht);
         System.out.println(nachricht);
-        einstellungenSpeichern();
-        PositionManager pm = PropertiesManager.getPositionManager();
-        pm.setMainXY(p);
-        pm.setMainDimension(dim);
-        pm.setDownloadWidths(downloadWidths);
-        pm.setUploadWidths(uploadWidths);
-        pm.setServerWidths(serverWidths);
-        pm.setShareWidths(shareWidths);
-        pm.save();
+        if (!rewriteProperties){
+            einstellungenSpeichern();
+            PositionManager pm = PropertiesManager.getPositionManager();
+            pm.setMainXY(p);
+            pm.setMainDimension(dim);
+            pm.setDownloadWidths(downloadWidths);
+            pm.setUploadWidths(uploadWidths);
+            pm.setServerWidths(serverWidths);
+            pm.setShareWidths(shareWidths);
+            pm.save();
+        }
         System.exit(0);
     }
 
     public static void closeWithErrormessage(String error, boolean speichereEinstellungen) {
         JOptionPane.showMessageDialog(theApp, error, "Fehler!",
                                       JOptionPane.OK_OPTION);
-        ApplejuiceFassade.getInstance().stopXMLCheck();
+        if (rewriteProperties){
+            restorePropertiesXml();
+        }
+        else{
+            ApplejuiceFassade.getInstance().stopXMLCheck();
+        }
         String nachricht = "appleJuice-Core-GUI wird beendet...";
         Logger aLogger = Logger.getLogger(AppleJuiceDialog.class.getName());
         if (aLogger.isEnabledFor(Level.INFO))
             aLogger.info(nachricht);
         System.out.println(nachricht);
-        if (speichereEinstellungen)
+        if (speichereEinstellungen && !rewriteProperties)
             einstellungenSpeichern();
         System.out.println("Fehler: " + error);
         System.exit(-1);
@@ -441,6 +454,48 @@ public class AppleJuiceDialog
         catch (Exception e){
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    private static void restorePropertiesXml(){
+        String dateiname = System.getProperty("user.dir") + File.separator +
+                "properties.xml";
+        StringBuffer xmlData = new StringBuffer();
+
+        xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        xmlData.append("<root>");
+        xmlData.append("    <options firststart=\"true\" sprache=\"deutsch\">");
+        xmlData.append("        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>");
+        xmlData.append("        <logging level=\"INFO\"/>");
+        xmlData.append("        <download uebersicht=\"true\"/>");
+        xmlData.append("        <farben aktiv=\"true\">");
+        xmlData.append("            <hintergrund downloadFertig=\"-13382656\" quelle=\"-205\"/>");
+        xmlData.append("        </farben>");
+        xmlData.append("        <location>");
+        xmlData.append("            <main height=\"\" width=\"\" x=\"\" y=\"\"/>");
+        xmlData.append("            <download column0=\"80\" column1=\"80\" column2=\"80\"");
+        xmlData.append("                column3=\"80\" column4=\"81\" column5=\"80\" column6=\"81\"");
+        xmlData.append("                column7=\"80\" column8=\"81\" column9=\"80\"/>");
+        xmlData.append("            <upload column0=\"136\" column1=\"111\" column2=\"111\"");
+        xmlData.append("                column3=\"111\" column4=\"111\" column5=\"112\" column6=\"111\"/>");
+        xmlData.append("            <server column0=\"201\" column1=\"201\" column2=\"201\" column3=\"200\"/>");
+        xmlData.append("            <search column0=\"103\" column1=\"103\" column2=\"103\"");
+        xmlData.append("                column3=\"103\" column4=\"103\" column5=\"103\"/>");
+        xmlData.append("            <share column0=\"194\" column1=\"195\" column2=\"194\"/>");
+        xmlData.append("        </location>");
+        xmlData.append("        <proxy host=\"\" port=\"\" use=\"false\" userpass=\"=\"/>");
+        xmlData.append("        <server pfad=\"/?t=1592\" url=\"http://www.applejuicenet.org\"/>");
+        xmlData.append("    </options>");
+        xmlData.append("</root>");
+
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(dateiname);
+            fileWriter.write(xmlData.toString());
+            fileWriter.close();
+        }
+        catch (IOException ioE) {
+            logger.error(ioE);
         }
     }
 }

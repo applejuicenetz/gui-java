@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.7 2003/10/14 15:42:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.8 2003/10/17 13:33:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +25,9 @@ import org.apache.xml.serialize.XMLSerializer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.8  2003/10/17 13:33:02  maj0r
+ * properties.xml wird nun im Fehlerfall automatisch generiert.
+ *
  * Revision 1.7  2003/10/14 15:42:05  maj0r
  * An pflegbaren Xml-Port angepasst.
  *
@@ -156,8 +160,11 @@ public class PropertiesManager
         }
         catch (Exception e)
         {
+            AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Unbehandelte Exception", e);
+                logger.error("xml-Serialisierung fehlgeschlagen. properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
         }
     }
 
@@ -205,14 +212,36 @@ public class PropertiesManager
     }
 
     public String getSprache() {
-        return getFirstAttrbuteByTagName(new String[]{"options", "sprache"});
+        try{
+            return getFirstAttrbuteByTagName(new String[]{"options", "sprache"});
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return null;
+        }
     }
 
     public boolean isErsterStart() {
-        String temp = getFirstAttrbuteByTagName(new String[]{"options", "firststart"});;
-        if (temp==null || temp.length()==0)
-            return true;
-        return new Boolean(temp).booleanValue();
+        try{
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "firststart"});;
+            if (temp==null || temp.length()==0)
+                return true;
+            return new Boolean(temp).booleanValue();
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return false;
+        }
     }
 
     public void setErsterStart(boolean ersterStart) {
@@ -225,22 +254,33 @@ public class PropertiesManager
     }
 
     public Level getLogLevel() {
-        String temp = getFirstAttrbuteByTagName(new String[]{"options", "logging", "level"});
-        Level result = Level.OFF;
-        if (temp.compareToIgnoreCase("INFO") == 0)
-            return Level.INFO;
-        else if (temp.compareToIgnoreCase("DEBUG") == 0)
-            return Level.DEBUG;
-        else if (temp.compareToIgnoreCase("WARN") == 0)
-            return Level.WARN;
-        else if (temp.compareToIgnoreCase("FATAL") == 0)
-            return Level.FATAL;
-        else if (temp.compareToIgnoreCase("ALL") == 0)
-            return Level.ALL;
+        try{
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "logging", "level"});
+            Level result = Level.OFF;
+            if (temp.compareToIgnoreCase("INFO") == 0)
+                return Level.INFO;
+            else if (temp.compareToIgnoreCase("DEBUG") == 0)
+                return Level.DEBUG;
+            else if (temp.compareToIgnoreCase("WARN") == 0)
+                return Level.WARN;
+            else if (temp.compareToIgnoreCase("FATAL") == 0)
+                return Level.FATAL;
+            else if (temp.compareToIgnoreCase("ALL") == 0)
+                return Level.ALL;
 
-        if (logger.isEnabledFor(Level.DEBUG))
-            logger.debug("Aktueller Loglevel: " + result.toString());
-        return result;
+            if (logger.isEnabledFor(Level.DEBUG))
+                logger.debug("Aktueller Loglevel: " + result.toString());
+            return result;
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return null;
+        }
     }
 
     public void setLogLevel(Level level) {
@@ -264,32 +304,43 @@ public class PropertiesManager
     }
 
     public Settings getSettings() {
-        Color downloadFertigHintergrundColor = null;
-        Color quelleHintergrundColor = null;
-        Boolean farbenAktiv = null;
-        Boolean downloadUebersicht = null;
-        String temp;
-        temp = getFirstAttrbuteByTagName(new String[]{"options", "farben",
-                                                      "aktiv"});
-        if (temp.length() != 0) {
-            farbenAktiv = new Boolean(temp);
+        try{
+            Color downloadFertigHintergrundColor = null;
+            Color quelleHintergrundColor = null;
+            Boolean farbenAktiv = null;
+            Boolean downloadUebersicht = null;
+            String temp;
+            temp = getFirstAttrbuteByTagName(new String[]{"options", "farben",
+                                                          "aktiv"});
+            if (temp.length() != 0) {
+                farbenAktiv = new Boolean(temp);
+            }
+            temp = getFirstAttrbuteByTagName(new String[]{"options", "farben",
+                                                          "hintergrund", "downloadFertig"});
+            if (temp.length() != 0) {
+                downloadFertigHintergrundColor = new Color(Integer.parseInt(temp));
+            }
+            temp = getFirstAttrbuteByTagName(new String[]{"options", "farben",
+                                                          "hintergrund", "quelle"});
+            if (temp.length() != 0) {
+                quelleHintergrundColor = new Color(Integer.parseInt(temp));
+            }
+            temp = getFirstAttrbuteByTagName(new String[]{"options", "download",
+                                                          "uebersicht"});
+            if (temp.length() != 0) {
+                downloadUebersicht = new Boolean(temp);
+            }
+            return new Settings(farbenAktiv, downloadFertigHintergrundColor, quelleHintergrundColor, downloadUebersicht);
         }
-        temp = getFirstAttrbuteByTagName(new String[]{"options", "farben",
-                                                      "hintergrund", "downloadFertig"});
-        if (temp.length() != 0) {
-            downloadFertigHintergrundColor = new Color(Integer.parseInt(temp));
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return null;
         }
-        temp = getFirstAttrbuteByTagName(new String[]{"options", "farben",
-                                                      "hintergrund", "quelle"});
-        if (temp.length() != 0) {
-            quelleHintergrundColor = new Color(Integer.parseInt(temp));
-        }
-        temp = getFirstAttrbuteByTagName(new String[]{"options", "download",
-                                                      "uebersicht"});
-        if (temp.length() != 0) {
-            downloadUebersicht = new Boolean(temp);
-        }
-        return new Settings(farbenAktiv, downloadFertigHintergrundColor, quelleHintergrundColor, downloadUebersicht);
     }
 
 
@@ -306,16 +357,27 @@ public class PropertiesManager
     }
 
     public ConnectionSettings getRemoteSettings() {
-        String host = "localhost";
-        String passwort = "";
-        int xmlPort = 9851;
-        host = getFirstAttrbuteByTagName(new String[]{"options", "remote",
-                                                      "host"});
-        passwort = getFirstAttrbuteByTagName(new String[]{"options",
-                                                          "remote", "passwort"});
-        xmlPort = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "remote",
-                                                      "port"}));
-        return new ConnectionSettings(host, passwort, xmlPort);
+        try{
+            String host = "localhost";
+            String passwort = "";
+            int xmlPort = 9851;
+            host = getFirstAttrbuteByTagName(new String[]{"options", "remote",
+                                                          "host"});
+            passwort = getFirstAttrbuteByTagName(new String[]{"options",
+                                                              "remote", "passwort"});
+            xmlPort = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "remote",
+                                                          "port"}));
+            return new ConnectionSettings(host, passwort, xmlPort);
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return null;
+        }
     }
 
     public void saveRemote(ConnectionSettings remote) throws
@@ -335,24 +397,35 @@ public class PropertiesManager
     }
 
     public String[] getActualServers() {
-        String serverUrl;
-        String serverPfad;
-        serverUrl = getFirstAttrbuteByTagName(new String[]{"options", "server",
-                                                      "url"});
-        serverPfad = getFirstAttrbuteByTagName(new String[]{"options",
-                                                          "server", "pfad"});
-        String webContent = WebsiteContentLoader.getWebsiteContent(serverUrl, 80, serverPfad);
-        StringBuffer temp = new StringBuffer(webContent);
-        int pos = 0;
-        int endIndex;
-        ArrayList servers = new ArrayList();
-        while ((pos = temp.indexOf("ajfsp", pos))!=-1){
-            endIndex = temp.indexOf("\"", pos);
-            String test = temp.substring(pos, endIndex);
-            servers.add(test);
-            pos = endIndex;
+        try{
+            String serverUrl;
+            String serverPfad;
+            serverUrl = getFirstAttrbuteByTagName(new String[]{"options", "server",
+                                                          "url"});
+            serverPfad = getFirstAttrbuteByTagName(new String[]{"options",
+                                                              "server", "pfad"});
+            String webContent = WebsiteContentLoader.getWebsiteContent(serverUrl, 80, serverPfad);
+            StringBuffer temp = new StringBuffer(webContent);
+            int pos = 0;
+            int endIndex;
+            ArrayList servers = new ArrayList();
+            while ((pos = temp.indexOf("ajfsp", pos))!=-1){
+                endIndex = temp.indexOf("\"", pos);
+                String test = temp.substring(pos, endIndex);
+                servers.add(test);
+                pos = endIndex;
+            }
+            return (String[]) servers.toArray(new String[servers.size()]);
         }
-        return (String[]) servers.toArray(new String[servers.size()]);
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return null;
+        }
     }
 
     //PositionManager-Interface
@@ -413,8 +486,11 @@ public class PropertiesManager
         }
         catch (Exception e)
         {
+            AppleJuiceDialog.rewriteProperties = true;
             if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Unbehandelte Exception", e);
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
         }
     }
 
