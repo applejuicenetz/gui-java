@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <options sprache="deutsch">
+    <options firststart="true" sprache="deutsch">
         <remote host="localhost" passwort=""/>
         <logging level="INFO"/>
         <download uebersicht="true"/>
@@ -9,15 +9,15 @@
         </farben>
         <location>
             <main height="" width="" x="" y=""/>
-            <download column0="208" column1="121" column2="64"
-                column3="71" column4="97" column5="79" column6="97"
-                column7="74" column8="35" column9="96"/>
-            <upload column0="375" column1="134" column2="67"
-                column3="97" column4="134" column5="33" column6="106"/>
-            <server column0="563" column1="180" column2="56" column3="149"/>
+            <download column0="96" column1="73" column2="96"
+                column3="96" column4="97" column5="96" column6="97"
+                column7="96" column8="97" column9="96"/>
+            <upload column0="159" column1="134" column2="134"
+                column3="134" column4="134" column5="134" column6="134"/>
+            <server column0="241" column1="241" column2="241" column3="240"/>
             <search column0="130" column1="130" column2="130"
                 column3="129" column4="130" column5="129"/>
-            <share column0="599" column1="69" column2="61"/>
+            <share column0="248" column1="248" column2="247"/>
         </location>
     </options>
 </root>
