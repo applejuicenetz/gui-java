@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.13 2004/07/09 13:44:57 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.14 2004/07/09 14:31:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -49,7 +49,7 @@ public class WizardDialog
     private WizardPanel aktuellesPanel;
     private WizardPanel schritt1 = new Schritt1Panel();
     private WizardPanel schritt2 = new Schritt2Panel();
-    private WizardPanel schritt3 = new Schritt3Panel(this);
+    private WizardPanel schritt3;
     private WizardPanel schritt4 = new Schritt4Panel();
     private WizardPanel schritt5 = new Schritt5Panel();
     private JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -72,10 +72,11 @@ public class WizardDialog
             }
         }
     }
-    public WizardDialog(JDialog parent, boolean modal) {
+    public WizardDialog(JDialog parent, boolean modal, AJSettings ajSettings) {
         super(parent, modal);
         logger = Logger.getLogger(getClass());
         try {
+            this.ajSettings = ajSettings;
             init();
             LanguageSelector ls = LanguageSelector.getInstance();
             ls.addLanguageListener(this);
@@ -88,7 +89,10 @@ public class WizardDialog
     }
 
     private void init() {
-        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
+    	if (ajSettings == null){
+    		ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
+    	}
+        schritt3 = new Schritt3Panel(this, ajSettings);
         getContentPane().setLayout(new BorderLayout());
         ImageIcon icon1 = IconManager.getInstance().getIcon("wizardbanner");
         JLabel label1 = new JLabel(icon1);

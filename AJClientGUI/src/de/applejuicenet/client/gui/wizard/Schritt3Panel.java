@@ -11,48 +11,35 @@ import javax.swing.JTextField;
 
 import de.applejuicenet.client.gui.WizardDialog;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.AJSettings;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.6 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.7 2004/07/09 14:31:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: Schritt3Panel.java,v $
- * Revision 1.6  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.5  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.4  2004/02/04 15:38:18  maj0r
- * Wizarddialog korrigiert
- * Nickname wird nun auf Richtigkeit geprueft und gespeichert wird erst nach Durchlaufen des gesamten Wizards.
- *
- * Revision 1.3  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.2  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.1  2003/09/08 14:55:09  maj0r
- * Wizarddialog weitergefuehrt.
- *
+ * @author: Maj0r [maj0r@applejuicenet.de]
  *
  */
 
 public class Schritt3Panel
     extends WizardPanel {
     private JTextArea label1 = new JTextArea();
-    private JTextField nickname = new JTextField("nonick");
+    private JTextField nickname = new JTextField();
     private WizardDialog parent;
 
-    public Schritt3Panel(WizardDialog parent) {
+    public Schritt3Panel(WizardDialog parent, AJSettings settings) {
         super();
         this.parent = parent;
+        if (settings != null){
+	        String nick = settings.getNick();
+	        nickname.setText(nick);
+	        if (!isValidNickname()){
+	        	nickname.setText("nonick");
+	        }
+        }
         init();
     }
 

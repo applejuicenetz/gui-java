@@ -30,7 +30,7 @@ import de.applejuicenet.client.AppleJuiceClient;
 import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.20 2004/07/09 14:16:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.21 2004/07/09 14:31:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -337,6 +337,6 @@ public class ODVerbindungPanel
     }
 
     public void displayConnectionWizard() {
-        AppleJuiceClient.showConnectionWizard(parent);
+        AppleJuiceClient.showConnectionWizard(parent, ajSettings);
     }
 }

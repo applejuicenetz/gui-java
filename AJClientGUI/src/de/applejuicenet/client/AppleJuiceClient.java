@@ -16,7 +16,7 @@ import de.applejuicenet.client.gui.shared.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.76 2004/07/09 13:44:57 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.77 2004/07/09 14:31:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -446,9 +446,9 @@ public class AppleJuiceClient {
                                   appDimension.height) / 2);
         wizardDialog.show();
     }
-    public static void showConnectionWizard(JDialog dialog) throws
+    public static void showConnectionWizard(JDialog dialog, AJSettings ajSettings) throws
         HeadlessException {
-        WizardDialog wizardDialog = new WizardDialog(dialog, true);
+        WizardDialog wizardDialog = new WizardDialog(dialog, true, ajSettings);
         Dimension appDimension = wizardDialog.getSize();
         Dimension screenSize = Toolkit.getDefaultToolkit().
             getScreenSize();
