@@ -34,9 +34,10 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import de.applejuicenet.client.gui.ConnectFrame;
+import de.applejuicenet.client.gui.UpdateInformationDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.52 2003/12/30 21:09:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.53 2004/01/05 13:22:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,6 +46,9 @@ import de.applejuicenet.client.gui.ConnectFrame;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.53  2004/01/05 13:22:43  maj0r
+ * Wenn eine neue Version gefunden wird, kann diese nun direkt mit dem Standardbrowser herunter geladen werden.
+ *
  * Revision 1.52  2003/12/30 21:09:54  maj0r
  * Versionskontrolle geaendert.
  *
@@ -434,13 +438,15 @@ public class AppleJuiceClient {
                         logger.debug("VersionWorkerThread gestartet. " + this);
                     }
                     try {
-                        //http://download.berlios.de/applejuicejava/version.txt
-                        String strAktuellsteVersion = WebsiteContentLoader.
+                        String downloadData = WebsiteContentLoader.
                             getWebsiteContent("http://download.berlios.de", 80,
-                            "/applejuicejava/versionsinfo.txt");
-                        if (strAktuellsteVersion.length() > 0) {
+                            "/applejuicejava/version.txt");
+
+                        if (downloadData.length() > 0) {
+                            int pos1 = downloadData.indexOf("|");
+                            String aktuellsteVersion = downloadData.substring(0, pos1);
                             StringTokenizer token1 = new StringTokenizer(
-                                strAktuellsteVersion, ".");
+                                aktuellsteVersion, ".");
                             StringTokenizer token2 = new StringTokenizer(
                                 ApplejuiceFassade.GUI_VERSION, ".");
                             if (token1.countTokens() != 3 ||
@@ -484,20 +490,12 @@ public class AppleJuiceClient {
                                 showInfo = true;
                             }
                             if (showInfo) {
-                                LanguageSelector ls = LanguageSelector.
-                                    getInstance();
-                                String titel = ls.getFirstAttrbuteByTagName(new
-                                    String[] {"javagui", "startup",
-                                    "newversiontitel"});
-                                String nachricht = ls.getFirstAttrbuteByTagName(new
-                                    String[] {"javagui", "startup",
-                                    "newversionnachricht"});
-                                nachricht = nachricht.replaceFirst("%s",
-                                    strAktuellsteVersion);
-                                JOptionPane.showMessageDialog(theApp, nachricht,
-                                    titel,
-                                    JOptionPane.OK_OPTION |
-                                    JOptionPane.INFORMATION_MESSAGE);
+                                int pos2 = downloadData.lastIndexOf("|");
+                                String winLink = downloadData.substring(pos1 + 1, pos2);
+                                String sonstigeLink = downloadData.substring(pos2 + 1);
+                                UpdateInformationDialog updateInformationDialog =
+                                    new UpdateInformationDialog(theApp, aktuellsteVersion, winLink, sonstigeLink);
+                                updateInformationDialog.show();
                             }
                         }
                     }
