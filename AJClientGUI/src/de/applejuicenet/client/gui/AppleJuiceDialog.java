@@ -39,12 +39,15 @@ public class AppleJuiceDialog
   private JButton pause;
   private boolean paused = false;
 
+  private static AppleJuiceDialog theApp;
+
   public AppleJuiceDialog() {
     super();
     try {
       jbInit();
       pack();
       _this = this;
+      theApp = this;
       LanguageSelector.getInstance().addLanguageListener(this);
     }
     catch (Exception ex) {
@@ -140,7 +143,12 @@ public class AppleJuiceDialog
   private void closeDialog(WindowEvent evt) {
     setVisible(false);
     einstellungenSpeichern();
-    System.exit(1);
+    System.exit(0);
+  }
+
+  private static void closeWithErrormessage(String error){
+    JOptionPane.showMessageDialog(theApp, error, "Fehler!", JOptionPane.OK_OPTION);
+    System.exit(-1);
   }
 
   protected JMenuBar createMenuBar() {
@@ -148,12 +156,17 @@ public class AppleJuiceDialog
         File.separator;
     File languagePath = new File(path);
     String[] tempListe = languagePath.list();
+    if (tempListe==null)
+      closeWithErrormessage("Der Ordner 'language' für die Sprachauswahl xml-Dateien ist nicht vorhanden.\r\nappleJuice wird beendet.");
     HashSet sprachDateien = new HashSet();
     for (int i = 0; i < tempListe.length; i++) {
       if (tempListe[i].indexOf(".xml") != -1) {
         sprachDateien.add(tempListe[i]);
       }
     }
+    if (sprachDateien.size()==0)
+      closeWithErrormessage("Es sind keine xml-Dateien für die Sprachauswahl im Ordner 'language' vorhanden.\r\nappleJuice wird beendet.");
+
     JMenuBar menuBar = new JMenuBar();
     optionenMenu = new JMenu("Extras");
     menuItem = new JMenuItem("Optionen");
