@@ -42,7 +42,7 @@ public class OptionsManager extends XMLDecoder {
 
   public RemoteConfiguration getRemoteSettings(){
     String host = getFirstAttrbuteByTagName(new String[] {"options", "remote", "host"});
-    String passwort = Base64.decode(getFirstAttrbuteByTagName(new String[] {"options", "remote", "passwort"}));
+    String passwort = new String(Base64.decode(getFirstAttrbuteByTagName(new String[] {"options", "remote", "passwort"})));
     boolean use = getFirstAttrbuteByTagName(new String[] {"options", "remote", "use"}).equals("1");
     return new RemoteConfiguration(host, passwort, use);
   }
@@ -53,7 +53,7 @@ public class OptionsManager extends XMLDecoder {
       return;
     }
     if (!remote.getNewPassword().equalsIgnoreCase("")){
-      String altPasswortBase64FromXML = Base64.decode(getFirstAttrbuteByTagName(new String[] {"options", "remote", "passwort"}));
+      String altPasswortBase64FromXML = new String(Base64.decode(getFirstAttrbuteByTagName(new String[] {"options", "remote", "passwort"})));
       if (altPasswortBase64FromXML.compareTo(remote.getOldPassword())==0)
         setAttributeByTagName(new String[] {"options", "remote", "passwort"}, new String(Base64.encode(remote.getNewPassword().getBytes())));
       else
