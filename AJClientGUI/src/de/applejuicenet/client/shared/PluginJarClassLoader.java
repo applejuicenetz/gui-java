@@ -9,9 +9,11 @@ import java.util.zip.ZipEntry;
 
 import de.applejuicenet.client.gui.plugins.*;
 import java.util.Vector;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.11 2004/01/14 15:19:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.12 2004/01/14 15:25:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +22,9 @@ import java.util.Vector;
  * @author: Maj0r aj@tkl-soft.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.12  2004/01/14 15:25:25  maj0r
+ * Loggerausgabe eingebaut.
+ *
  * Revision 1.11  2004/01/14 15:19:59  maj0r
  * Laden von Plugins verbessert.
  * Muell oder nicht standardkonforme Plugins im Plugin-Ordner werden nun korrekt behandelt.
@@ -52,10 +57,12 @@ import java.util.Vector;
 public class PluginJarClassLoader
         extends URLClassLoader {
     private URL url;
+    private Logger logger;
 
     public PluginJarClassLoader(URL url) {
         super(new URL[]{url});
         this.url = url;
+        logger = Logger.getLogger(getClass());
     }
 
     public PluginConnector getPlugin(String jar) throws Exception {
@@ -70,6 +77,8 @@ public class PluginJarClassLoader
             return (PluginConnector) aPlugin;
         }
         catch(Exception e){
+            if (logger.isEnabledFor(Level.INFO))
+                logger.info("Plugin " + jar + " entspricht nicht dem Standard und wurde nicht geladen.");
             return null;
         }
     }
