@@ -12,7 +12,7 @@ import de.applejuicenet.client.gui.*;
 import de.applejuicenet.client.gui.listener.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.13 2003/12/17 11:06:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.14 2003/12/29 12:54:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import de.applejuicenet.client.gui.listener.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PluginConnector.java,v $
+ * Revision 1.14  2003/12/29 12:54:33  maj0r
+ * Ein Plugin kann nun ein JPanel fuer den Optionsdialog durchreichen.
+ *
  * Revision 1.13  2003/12/17 11:06:29  maj0r
  * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
  *
@@ -70,6 +73,11 @@ public abstract class PluginConnector
 
     //Liefert eine Kurzbeschreibung des Plugins zurück.
     public abstract String getBeschreibung();
+
+    //Liefert eine JPanel fuer den Optionsdialog oder NULL, wenn keine Optionen noetig sind
+    public JPanel getOptionPanel(){
+        return null;
+    }
 
     protected void initIcon(){
         if (!initialized) {
