@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.14 2003/09/04 06:26:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.15 2003/09/04 10:13:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.15  2003/09/04 10:13:49  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.14  2003/09/04 06:26:49  maj0r
  * Partlist korrigiert. Wird momentan beim Resize nicht neugezeichnet.
  *
@@ -86,12 +89,21 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
     private JLabel label2 = new JLabel("In Ordnung");
     private JLabel label1 = new JLabel("Überprüft");
     private Settings settings;
+    private Logger logger;
 
     public DownloadDOOverviewPanel() {
-        init();
-        settings = Settings.getSettings();
-        LanguageSelector.getInstance().addLanguageListener(this);
-        OptionsManager.getInstance().addSettingsListener(this);
+        logger = Logger.getLogger(getClass());
+        try{
+            init();
+            settings = Settings.getSettings();
+            LanguageSelector.getInstance().addLanguageListener(this);
+            OptionsManager.getInstance().addSettingsListener(this);
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
 
     private void init() {
@@ -131,38 +143,52 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
     }
 
     public void setDownloadDO(DownloadDO downloadDO) {
-        if (!settings.isDownloadUebersicht() || downloadDO==null){
-            actualDLDateiName.setText("");
-            actualDlOverviewTable.setPartList(null);
+        try{
+            if (!settings.isDownloadUebersicht() || downloadDO==null){
+                actualDLDateiName.setText("");
+                actualDlOverviewTable.setPartList(null);
+            }
+            else if (this.downloadDO != downloadDO && downloadDO.getStatus()!=DownloadDO.FERTIGSTELLEN &&
+                    downloadDO.getStatus()!=DownloadDO.FERTIG)
+            {
+                this.downloadDO = downloadDO;
+                final DownloadDO tempDO = downloadDO;
+                final SwingWorker worker2 = new SwingWorker() {
+                            public Object construct() {
+                                return ApplejuiceFassade.getInstance().getDownloadPartList(tempDO);
+                            }
+                            public void finished(){
+                                actualDLDateiName.setText(tempDO.getFilename() + " (" + tempDO.getTemporaryFileNumber() + ".data)");
+                                actualDlOverviewTable.setPartList((PartListDO) getValue());
+                            }
+                        };
+                worker2.start();
+            }
         }
-        else if (this.downloadDO != downloadDO && downloadDO.getStatus()!=DownloadDO.FERTIGSTELLEN &&
-                downloadDO.getStatus()!=DownloadDO.FERTIG)
+        catch (Exception e)
         {
-            this.downloadDO = downloadDO;
-            final DownloadDO tempDO = downloadDO;
-            final SwingWorker worker2 = new SwingWorker() {
-                        public Object construct() {
-                            return ApplejuiceFassade.getInstance().getDownloadPartList(tempDO);
-                        }
-                        public void finished(){
-                            actualDLDateiName.setText(tempDO.getFilename() + " (" + tempDO.getTemporaryFileNumber() + ".data)");
-                            actualDlOverviewTable.setPartList((PartListDO) getValue());
-                        }
-                    };
-            worker2.start();
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
     public void fireLanguageChanged() {
-        LanguageSelector languageSelector = LanguageSelector.getInstance();
-        label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "Label4", "caption"})));
-        label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "Label3", "caption"})));
-        label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "Label2", "caption"})));
-        label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "Label1", "caption"})));
+        try{
+            LanguageSelector languageSelector = LanguageSelector.getInstance();
+            label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "Label4", "caption"})));
+            label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "Label3", "caption"})));
+            label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "Label2", "caption"})));
+            label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "Label1", "caption"})));
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
 
     public void fireContentChanged(int type, Object content) {

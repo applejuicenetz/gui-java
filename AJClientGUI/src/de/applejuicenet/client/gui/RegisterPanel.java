@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.22 2003/08/27 16:44:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.23 2003/09/04 10:13:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.23  2003/09/04 10:13:28  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.22  2003/08/27 16:44:42  maj0r
  * Unterstuetzung fuer DragNDrop teilweise eingebaut.
  *
@@ -56,128 +59,149 @@ import org.apache.log4j.Level;
  */
 
 public class RegisterPanel
-    extends JTabbedPane
-    implements LanguageListener {
-  private StartPanel startPanel;
-  private DownloadPanel downloadPanel;
-  private SearchPanel searchPanel;
-  private UploadPanel uploadPanel;
-  private ServerPanel serverPanel;
-  private SharePanel sharePanel;
-  private AppleJuiceDialog parent;
-  private Logger logger;
+        extends JTabbedPane
+        implements LanguageListener {
+    private StartPanel startPanel;
+    private DownloadPanel downloadPanel;
+    private SearchPanel searchPanel;
+    private UploadPanel uploadPanel;
+    private ServerPanel serverPanel;
+    private SharePanel sharePanel;
+    private AppleJuiceDialog parent;
+    private Logger logger;
 
-  public RegisterPanel(AppleJuiceDialog parent) {
-    this.parent = parent;
-    init();
-  }
-
-  private void init() {
-    logger = Logger.getLogger(getClass());
-    LanguageSelector.getInstance().addLanguageListener(this);
-    startPanel = new StartPanel(parent);
-    sharePanel = new SharePanel(parent);
-    downloadPanel = new DownloadPanel();
-    uploadPanel = new UploadPanel();
-    searchPanel = new SearchPanel();
-    serverPanel = new ServerPanel();
-
-    IconManager im = IconManager.getInstance();
-
-    ImageIcon icon = im.getIcon("start");
-    addTab("Start", icon, startPanel);
-
-    ImageIcon icon6 = im.getIcon("meinshare");
-    addTab("Share", icon6, sharePanel);
-
-    ImageIcon icon2 = im.getIcon("suchen");
-    addTab("Suchen", icon2, searchPanel);
-
-    ImageIcon icon3 = im.getIcon("download");
-    addTab("Download", icon3, downloadPanel);
-
-    ImageIcon icon4 = im.getIcon("upload");
-    addTab("Upload", icon4, uploadPanel);
-
-    ImageIcon icon5 = im.getIcon("server");
-    addTab("Server", icon5, serverPanel);
-
-    loadPlugins();
-  }
-
-  private void loadPlugins() {
-    String path = System.getProperty("user.dir") + File.separator + "plugins" +
-        File.separator;
-    File pluginPath = new File(path);
-    if (!pluginPath.isDirectory()){
-      System.out.println("Warnung: Kein Verzeichnis 'plugins' vorhanden!");
-      return;
+    public RegisterPanel(AppleJuiceDialog parent) {
+        logger = Logger.getLogger(getClass());
+        try
+        {
+            this.parent = parent;
+            init();
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
-    String[] tempListe = pluginPath.list();
-    PluginJarClassLoader jarLoader = null;
-    for (int i = 0; i < tempListe.length; i++) {
-      int pos = tempListe[i].indexOf(".jar");
-      if (pos != -1) {
-        URL url = null;
-        try {
-          url = new URL("file://" + path + tempListe[i]);
-          String className = tempListe[i].substring(0, pos);
-          jarLoader = new PluginJarClassLoader(url);
-          PluginConnector aPlugin = jarLoader.getPlugin(path + tempListe[i]);
-          if (aPlugin != null) {
-            if (aPlugin.istReiter()) {
-              ImageIcon icon = aPlugin.getIcon();
-              addTab(aPlugin.getTitle(), icon, aPlugin);
+
+    private void init() {
+        LanguageSelector.getInstance().addLanguageListener(this);
+        startPanel = new StartPanel(parent);
+        sharePanel = new SharePanel(parent);
+        downloadPanel = new DownloadPanel();
+        uploadPanel = new UploadPanel();
+        searchPanel = new SearchPanel();
+        serverPanel = new ServerPanel();
+
+        IconManager im = IconManager.getInstance();
+
+        ImageIcon icon = im.getIcon("start");
+        addTab("Start", icon, startPanel);
+
+        ImageIcon icon6 = im.getIcon("meinshare");
+        addTab("Share", icon6, sharePanel);
+
+        ImageIcon icon2 = im.getIcon("suchen");
+        addTab("Suchen", icon2, searchPanel);
+
+        ImageIcon icon3 = im.getIcon("download");
+        addTab("Download", icon3, downloadPanel);
+
+        ImageIcon icon4 = im.getIcon("upload");
+        addTab("Upload", icon4, uploadPanel);
+
+        ImageIcon icon5 = im.getIcon("server");
+        addTab("Server", icon5, serverPanel);
+
+        loadPlugins();
+    }
+
+    private void loadPlugins() {
+        String path = System.getProperty("user.dir") + File.separator + "plugins" +
+                File.separator;
+        File pluginPath = new File(path);
+        if (!pluginPath.isDirectory())
+        {
+            System.out.println("Warnung: Kein Verzeichnis 'plugins' vorhanden!");
+            return;
+        }
+        String[] tempListe = pluginPath.list();
+        PluginJarClassLoader jarLoader = null;
+        for (int i = 0; i < tempListe.length; i++)
+        {
+            int pos = tempListe[i].indexOf(".jar");
+            if (pos != -1)
+            {
+                URL url = null;
+                try
+                {
+                    url = new URL("file://" + path + tempListe[i]);
+                    String className = tempListe[i].substring(0, pos);
+                    jarLoader = new PluginJarClassLoader(url);
+                    PluginConnector aPlugin = jarLoader.getPlugin(path + tempListe[i]);
+                    if (aPlugin != null)
+                    {
+                        if (aPlugin.istReiter())
+                        {
+                            ImageIcon icon = aPlugin.getIcon();
+                            addTab(aPlugin.getTitle(), icon, aPlugin);
+                        }
+                        parent.addPluginToHashSet(aPlugin);
+                    }
+                    String nachricht = "Plugin " + aPlugin.getTitle() + " geladen...";
+                    if (logger.isEnabledFor(Level.INFO))
+                        logger.info(nachricht);
+                    System.out.println(nachricht);
+                }
+                catch (Exception e)
+                {
+                    //Von einem Plugin lassen wir uns nicht beirren! ;-)
+                    if (logger.isEnabledFor(Level.ERROR))
+                        logger.error("Ein Plugin konnte nicht instanziert werden", e);
+                    continue;
+                }
             }
-            parent.addPluginToHashSet(aPlugin);
-          }
-          String nachricht = "Plugin " + aPlugin.getTitle() + " geladen...";
-          if (logger.isEnabledFor(Level.INFO))
-              logger.info(nachricht);
-          System.out.println(nachricht);
         }
-        catch (Exception e) {
-          //Von einem Plugin lassen wir uns nicht beirren! ;-)
-          if (logger.isEnabledFor(Level.ERROR))
-              logger.error("Ein Plugin konnte nicht instanziert werden", e);
-          e.printStackTrace();
-          continue;
-        }
-      }
     }
-  }
 
-  public void fireLanguageChanged() {
-    LanguageSelector languageSelector = LanguageSelector.getInstance();
-    setTitleAt(0,
-               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new
-        String[] {
-        "mainform", "homesheet", "caption"})));
-    setTitleAt(1,
-               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new
-        String[] {
-        "mainform", "sharesheet", "caption"})));
-    setTitleAt(2,
-               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new
-        String[] {
-        "mainform", "seachsheet", "caption"})));
-    setTitleAt(3,
-               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new
-        String[] {
-        "mainform", "queuesheet", "caption"})));
-    setTitleAt(4,
-               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new
-        String[] {
-        "mainform", "uploadsheet", "caption"})));
-    setTitleAt(5,
-               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                 getFirstAttrbuteByTagName(new
-        String[] {
-        "mainform", "serversheet", "caption"})));
-  }
+    public void fireLanguageChanged() {
+        try{
+            LanguageSelector languageSelector = LanguageSelector.getInstance();
+            setTitleAt(0,
+                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                         getFirstAttrbuteByTagName(new
+                                                                 String[]{
+                                                                     "mainform", "homesheet", "caption"})));
+            setTitleAt(1,
+                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                         getFirstAttrbuteByTagName(new
+                                                                 String[]{
+                                                                     "mainform", "sharesheet", "caption"})));
+            setTitleAt(2,
+                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                         getFirstAttrbuteByTagName(new
+                                                                 String[]{
+                                                                     "mainform", "seachsheet", "caption"})));
+            setTitleAt(3,
+                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                         getFirstAttrbuteByTagName(new
+                                                                 String[]{
+                                                                     "mainform", "queuesheet", "caption"})));
+            setTitleAt(4,
+                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                         getFirstAttrbuteByTagName(new
+                                                                 String[]{
+                                                                     "mainform", "uploadsheet", "caption"})));
+            setTitleAt(5,
+                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                         getFirstAttrbuteByTagName(new
+                                                                 String[]{
+                                                                     "mainform", "serversheet", "caption"})));
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
 }

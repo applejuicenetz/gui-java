@@ -3,10 +3,7 @@ package de.applejuicenet.client.gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
-import java.util.Iterator;
 import javax.swing.*;
-import javax.swing.tree.TreeSelectionModel;
-import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.table.*;
 
 import de.applejuicenet.client.gui.controller.*;
@@ -14,13 +11,13 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.tables.download.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.42 2003/09/04 09:27:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.43 2003/09/04 10:14:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +26,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.43  2003/09/04 10:14:08  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.42  2003/09/04 09:27:25  maj0r
  * DownloadPartListe fertiggestellt.
  *
@@ -119,19 +119,23 @@ public class DownloadPanel
     JMenuItem item4;
     JMenuItem item5;
     JMenuItem item6;
+    private Logger logger;
 
     public DownloadPanel() {
+        logger = Logger.getLogger(getClass());
         powerDownloadPanel = new PowerDownloadPanel(this);
         try {
-            jbInit();
+            init();
             LanguageSelector.getInstance().addLanguageListener(this);
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
-    private void jbInit() throws Exception {
+    private void init() throws Exception {
         setLayout(new BorderLayout());
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new GridBagLayout());
@@ -281,111 +285,140 @@ public class DownloadPanel
     }
 
     public Object[] getSelectedDownloadItems() {
-        int count = downloadTable.getSelectedRowCount();
-        Object[] result = null;
-        if (count == 1) {
-            result = new Object[count];
-            result[0] = ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(downloadTable.getSelectedRow());
-        }
-        else if (count > 1) {
-            result = new Object[count];
-            int[] indizes = downloadTable.getSelectedRows();
-            for (int i = 0; i < indizes.length; i++) {
-                result[i] = ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(indizes[i]);
+        try{
+            int count = downloadTable.getSelectedRowCount();
+            Object[] result = null;
+            if (count == 1) {
+                result = new Object[count];
+                result[0] = ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(downloadTable.getSelectedRow());
             }
+            else if (count > 1) {
+                result = new Object[count];
+                int[] indizes = downloadTable.getSelectedRows();
+                for (int i = 0; i < indizes.length; i++) {
+                    result[i] = ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(indizes[i]);
+                }
+            }
+            return result;
         }
-        return result;
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+            return null;
+        }
     }
 
     public void registerSelected() {
         if (!initizialiced){
-            initizialiced = true;
-            int width = aScrollPane.getWidth() - 18;
-            TableColumnModel headerModel = downloadTable.getTableHeader().getColumnModel();
-            int columnCount = headerModel.getColumnCount();
-            for (int i=0; i<columnCount; i++){
-                headerModel.getColumn(i).setPreferredWidth(width/columnCount);
+            try{
+                initizialiced = true;
+                int width = aScrollPane.getWidth() - 18;
+                TableColumnModel headerModel = downloadTable.getTableHeader().getColumnModel();
+                int columnCount = headerModel.getColumnCount();
+                for (int i=0; i<columnCount; i++){
+                    headerModel.getColumn(i).setPreferredWidth(width/columnCount);
+                }
+                downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             }
-            downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            catch (Exception e)
+            {
+                if (logger.isEnabledFor(Level.ERROR))
+                    logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void fireLanguageChanged() {
-        LanguageSelector languageSelector = LanguageSelector.getInstance();
-        String text = languageSelector.getFirstAttrbuteByTagName(new String[]{
-            "mainform", "Label14", "caption"});
-        linkLabel.setText(ZeichenErsetzer.korrigiereUmlaute(text));
-        btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "downlajfsp",
-                                                       "caption"})));
-        btnStartDownload.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                        "downlajfsp", "hint"})));
-        String[] tableColumns = new String[10];
-        tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                       "col0caption"}));
-        tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                       "col1caption"}));
-        tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                       "col2caption"}));
-        tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                       "col3caption"}));
-        tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                       "col4caption"}));
-        tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                       "col5caption"}));
-        tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                       "col6caption"}));
-        tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                       "col7caption"}));
-        tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                       "col8caption"}));
-        tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                       "col9caption"}));
+        try{
+            LanguageSelector languageSelector = LanguageSelector.getInstance();
+            String text = languageSelector.getFirstAttrbuteByTagName(new String[]{
+                "mainform", "Label14", "caption"});
+            linkLabel.setText(ZeichenErsetzer.korrigiereUmlaute(text));
+            btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "downlajfsp",
+                                                           "caption"})));
+            btnStartDownload.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+                    languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
+                                                                            "downlajfsp", "hint"})));
+            String[] tableColumns = new String[10];
+            tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                           "col0caption"}));
+            tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                           "col1caption"}));
+            tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                           "col2caption"}));
+            tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                           "col3caption"}));
+            tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                           "col4caption"}));
+            tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                           "col5caption"}));
+            tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                           "col6caption"}));
+            tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                           "col7caption"}));
+            tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                           "col8caption"}));
+            tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                           "col9caption"}));
 
-        TableColumnModel tcm = downloadTable.getColumnModel();
-        for (int i = 0; i < tcm.getColumnCount(); i++) {
-            tcm.getColumn(i).setHeaderValue(tableColumns[i]);
+            TableColumnModel tcm = downloadTable.getColumnModel();
+            for (int i = 0; i < tcm.getColumnCount(); i++) {
+                tcm.getColumn(i).setHeaderValue(tableColumns[i]);
+            }
+
+            item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "canceldown",
+                                                           "caption"})));
+            String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "pausedown",
+                                                           "caption"}));
+            temp += "/" +
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{
+                        "mainform", "resumedown", "caption"}));
+            item2.setText(temp);
+            item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "renamefile",
+                                                           "caption"})));
+            item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform", "changetarget",
+                                                           "caption"})));
+            item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(new String[]{"mainform",
+                                                           "Clearfinishedentries1", "caption"})));
         }
-
-        item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "canceldown",
-                                                       "caption"})));
-        String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "pausedown",
-                                                       "caption"}));
-        temp += "/" +
-                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{
-                    "mainform", "resumedown", "caption"}));
-        item2.setText(temp);
-        item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "renamefile",
-                                                       "caption"})));
-        item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "changetarget",
-                                                       "caption"})));
-        item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                       "Clearfinishedentries1", "caption"})));
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
 
     public void fireContentChanged(int type, Object content) {
-        if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
-            HashMap downloads = (HashMap) content;
-            ((DownloadRootNode)downloadModel.getRoot()).setDownloadMap(downloads);
-            DownloadDirectoryNode.setDownloads(downloads);
-            downloadTable.updateUI();
+        try{
+            if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
+                    HashMap downloads = (HashMap) content;
+                    ((DownloadRootNode)downloadModel.getRoot()).setDownloadMap(downloads);
+                    DownloadDirectoryNode.setDownloads(downloads);
+                    downloadTable.updateUI();
+            }
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 }

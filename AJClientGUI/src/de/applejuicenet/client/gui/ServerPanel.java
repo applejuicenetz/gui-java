@@ -15,9 +15,11 @@ import de.applejuicenet.client.gui.shared.SortButtonRenderer;
 import de.applejuicenet.client.gui.shared.HeaderListener;
 import de.applejuicenet.client.gui.tables.server.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.tables.server.ServerTableModel;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.25 2003/08/26 19:46:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.26 2003/09/04 10:13:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +28,9 @@ import de.applejuicenet.client.gui.tables.server.ServerTableModel;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.26  2003/09/04 10:13:28  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.25  2003/08/26 19:46:34  maj0r
  * Sharebereich weiter vervollstaendigt.
  *
@@ -72,19 +77,22 @@ public class ServerPanel
     private JPopupMenu popup = new JPopupMenu();
     JMenuItem item1;
     JMenuItem item2;
+    private Logger logger;
 
     public ServerPanel() {
+        logger = Logger.getLogger(getClass());
         try
         {
-            jbInit();
+            init();
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
-    private void jbInit() throws Exception {
+    private void init() throws Exception {
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
 
@@ -198,48 +206,62 @@ public class ServerPanel
     }
 
     public void fireContentChanged(int type, Object content) {
-        if (type == DataUpdateListener.SERVER_CHANGED &&
-                (content instanceof HashMap))
-        {
-            int selected = serverTable.getSelectedRow();
-            ((ServerTableModel) serverTable.getModel()).setTable((HashMap) content);
-            if (selected != -1 && selected < serverTable.getRowCount())
+        try{
+            if (type == DataUpdateListener.SERVER_CHANGED &&
+                    (content instanceof HashMap))
             {
-                serverTable.setRowSelectionInterval(selected, selected);
+                int selected = serverTable.getSelectedRow();
+                ((ServerTableModel) serverTable.getModel()).setTable((HashMap) content);
+                if (selected != -1 && selected < serverTable.getRowCount())
+                {
+                    serverTable.setRowSelectionInterval(selected, selected);
+                }
             }
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
     public void fireLanguageChanged() {
-        LanguageSelector languageSelector = LanguageSelector.getInstance();
-        sucheServer.setText("<html><font><u>" +
-                            ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"mainform", "Label11",
-                                                                                                     "caption"})) +
-                            "</u></font></html>");
-        String[] columns = new String[4];
-        columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
-                                                                                              "col0caption"}));
-        columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
-                                                                                              "col1caption"}));
-        columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
-                                                                                              "col3caption"}));
-        columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
-                                                                                              "col5caption"}));
-        item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                        getFirstAttrbuteByTagName(new String[]{"mainform", "connserv",
-                                                                                               "caption"})));
-        item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                        getFirstAttrbuteByTagName(new String[]{"mainform", "delserv",
-                                                                                               "caption"})));
-        TableColumnModel tcm = serverTable.getColumnModel();
-        for (int i = 0; i < tcm.getColumnCount(); i++)
+        try{
+            LanguageSelector languageSelector = LanguageSelector.getInstance();
+            sucheServer.setText("<html><font><u>" +
+                                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                  getFirstAttrbuteByTagName(new String[]{"mainform", "Label11",
+                                                                                                         "caption"})) +
+                                "</u></font></html>");
+            String[] columns = new String[4];
+            columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
+                                                                                                  "col0caption"}));
+            columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
+                                                                                                  "col1caption"}));
+            columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
+                                                                                                  "col3caption"}));
+            columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "serverlist",
+                                                                                                  "col5caption"}));
+            item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "connserv",
+                                                                                                   "caption"})));
+            item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "delserv",
+                                                                                                   "caption"})));
+            TableColumnModel tcm = serverTable.getColumnModel();
+            for (int i = 0; i < tcm.getColumnCount(); i++)
+            {
+                tcm.getColumn(i).setHeaderValue(columns[i]);
+            }
+        }
+        catch (Exception e)
         {
-            tcm.getColumn(i).setHeaderValue(columns[i]);
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 }

@@ -5,7 +5,6 @@ import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URL;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -14,12 +13,11 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.icons.DummyClass;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.39 2003/09/03 12:10:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.40 2003/09/04 10:13:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.40  2003/09/04 10:13:28  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.39  2003/09/03 12:10:17  maj0r
  * Icons fuer die Sprachauswahl eingefuegt.
  *
@@ -105,7 +106,7 @@ public class AppleJuiceDialog
     private JFrame _this;
     private JButton pause = new JButton();
     private boolean paused = false;
-    private Logger logger;
+    private static Logger logger;
     private JLabel memory = new JLabel();
 
     private static AppleJuiceDialog theApp;
@@ -115,15 +116,15 @@ public class AppleJuiceDialog
         logger = Logger.getLogger(getClass());
         try
         {
-            jbInit();
+            init();
             pack();
             _this = this;
             theApp = this;
             LanguageSelector.getInstance().addLanguageListener(this);
         }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
@@ -139,9 +140,10 @@ public class AppleJuiceDialog
         return theApp;
     }
 
-    private void jbInit() throws Exception {
+    private void init() throws Exception {
         //todo
         pause.setEnabled(false);
+
         setTitle("AppleJuice Client");
         plugins = new HashSet();
         IconManager im = IconManager.getInstance();
@@ -262,9 +264,15 @@ public class AppleJuiceDialog
     }
 
     private static void einstellungenSpeichern() {
-        String sprachText = LanguageSelector.getInstance().
-                getFirstAttrbuteByTagName(new String[]{"Languageinfo", "name"});
-        OptionsManager.getInstance().setSprache(sprachText);
+        try{
+            String sprachText = LanguageSelector.getInstance().
+                    getFirstAttrbuteByTagName(new String[]{"Languageinfo", "name"});
+            OptionsManager.getInstance().setSprache(sprachText);
+        }
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
 
     private void closeDialog(WindowEvent evt) {
@@ -293,88 +301,95 @@ public class AppleJuiceDialog
     }
 
     protected JMenuBar createMenuBar() {
-        String path = System.getProperty("user.dir") + File.separator + "language" +
-                File.separator;
-        File languagePath = new File(path);
-        if (!languagePath.isDirectory())
-        {
-            closeWithErrormessage("Der Ordner 'language' für die Sprachauswahl xml-Dateien ist nicht vorhanden.\r\nappleJuice wird beendet.", false);
-        }
-        String[] tempListe = languagePath.list();
-        HashSet sprachDateien = new HashSet();
-        for (int i = 0; i < tempListe.length; i++)
-        {
-            if (tempListe[i].indexOf(".xml") != -1)
+        try{
+            String path = System.getProperty("user.dir") + File.separator + "language" +
+                    File.separator;
+            File languagePath = new File(path);
+            if (!languagePath.isDirectory())
             {
-                sprachDateien.add(tempListe[i]);
+                closeWithErrormessage("Der Ordner 'language' für die Sprachauswahl xml-Dateien ist nicht vorhanden.\r\nappleJuice wird beendet.", false);
             }
-        }
-        if (sprachDateien.size() == 0)
-        {
-            closeWithErrormessage("Es sind keine xml-Dateien für die Sprachauswahl im Ordner 'language' vorhanden.\r\nappleJuice wird beendet.", false);
-        }
-        JMenuBar menuBar = new JMenuBar();
-        optionenMenu = new JMenu("Extras");
-        menuItemOptionen.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                OptionsDialog od = new OptionsDialog(_this);
-                Dimension appDimension = od.getSize();
-                Dimension screenSize = _this.getSize();
-                od.setLocation((screenSize.width - appDimension.width) / 4,
-                               (screenSize.height - appDimension.height) / 4);
-                od.show();
-            }
-        });
-        menuItemUeber.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                AboutDialog aboutDialog = new AboutDialog(_this, true);
-                Dimension appDimension = aboutDialog.getSize();
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                aboutDialog.setLocation((screenSize.width - appDimension.width)/2,
-                               (screenSize.height - appDimension.height)/2);
-                aboutDialog.show();
-            }
-        });
-        optionenMenu.add(menuItemOptionen);
-        optionenMenu.add(menuItemUeber);
-        menuBar.add(optionenMenu);
-
-        sprachMenu = new JMenu("Sprache");
-        menuBar.add(sprachMenu);
-        ButtonGroup lafGroup = new ButtonGroup();
-
-        Iterator it = sprachDateien.iterator();
-        while (it.hasNext())
-        {
-            String sprachText = LanguageSelector.getInstance(path + (String) it.next()).
-                    getFirstAttrbuteByTagName(new String[]{"Languageinfo", "name"});
-            JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
-            if (OptionsManager.getInstance().getSprache().equalsIgnoreCase(sprachText))
+            String[] tempListe = languagePath.list();
+            HashSet sprachDateien = new HashSet();
+            for (int i = 0; i < tempListe.length; i++)
             {
-                rb.setSelected(true);
+                if (tempListe[i].indexOf(".xml") != -1)
+                {
+                    sprachDateien.add(tempListe[i]);
+                }
             }
-            Image img = Toolkit.getDefaultToolkit().getImage(path + sprachText.toLowerCase() + ".gif");
-            ImageIcon result = new ImageIcon();
-            result.setImage(img);
-            rb.setIcon(result);
-
-            sprachMenu.add(rb);
-            rb.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent ae) {
-                    JCheckBoxMenuItem rb2 = (JCheckBoxMenuItem) ae.
-                            getSource();
-                    if (rb2.isSelected())
-                    {
-                        String path = System.getProperty("user.dir") + File.separator +
-                                "language" + File.separator;
-                        String dateiName = path + rb2.getText().toLowerCase() + ".xml";
-                        LanguageSelector.getInstance(dateiName);
-                    }
+            if (sprachDateien.size() == 0)
+            {
+                closeWithErrormessage("Es sind keine xml-Dateien für die Sprachauswahl im Ordner 'language' vorhanden.\r\nappleJuice wird beendet.", false);
+            }
+            JMenuBar menuBar = new JMenuBar();
+            optionenMenu = new JMenu("Extras");
+            menuItemOptionen.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    OptionsDialog od = new OptionsDialog(_this);
+                    Dimension appDimension = od.getSize();
+                    Dimension screenSize = _this.getSize();
+                    od.setLocation((screenSize.width - appDimension.width) / 4,
+                                   (screenSize.height - appDimension.height) / 4);
+                    od.show();
                 }
             });
-            lafGroup.add(rb);
+            menuItemUeber.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    AboutDialog aboutDialog = new AboutDialog(_this, true);
+                    Dimension appDimension = aboutDialog.getSize();
+                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                    aboutDialog.setLocation((screenSize.width - appDimension.width)/2,
+                                   (screenSize.height - appDimension.height)/2);
+                    aboutDialog.show();
+                }
+            });
+            optionenMenu.add(menuItemOptionen);
+            optionenMenu.add(menuItemUeber);
+            menuBar.add(optionenMenu);
+
+            sprachMenu = new JMenu("Sprache");
+            menuBar.add(sprachMenu);
+            ButtonGroup lafGroup = new ButtonGroup();
+
+            Iterator it = sprachDateien.iterator();
+            while (it.hasNext())
+            {
+                String sprachText = LanguageSelector.getInstance(path + (String) it.next()).
+                        getFirstAttrbuteByTagName(new String[]{"Languageinfo", "name"});
+                JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
+                if (OptionsManager.getInstance().getSprache().equalsIgnoreCase(sprachText))
+                {
+                    rb.setSelected(true);
+                }
+                Image img = Toolkit.getDefaultToolkit().getImage(path + sprachText.toLowerCase() + ".gif");
+                ImageIcon result = new ImageIcon();
+                result.setImage(img);
+                rb.setIcon(result);
+
+                sprachMenu.add(rb);
+                rb.addItemListener(new ItemListener() {
+                    public void itemStateChanged(ItemEvent ae) {
+                        JCheckBoxMenuItem rb2 = (JCheckBoxMenuItem) ae.
+                                getSource();
+                        if (rb2.isSelected())
+                        {
+                            String path = System.getProperty("user.dir") + File.separator +
+                                    "language" + File.separator;
+                            String dateiName = path + rb2.getText().toLowerCase() + ".xml";
+                            LanguageSelector.getInstance(dateiName);
+                        }
+                    }
+                });
+                lafGroup.add(rb);
+            }
+            return menuBar;
         }
-        return menuBar;
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+            return null;
+        }
     }
 
     public void fireLanguageChanged() {

@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.19 2003/08/28 10:57:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.20 2003/09/04 10:13:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.20  2003/09/04 10:13:28  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.19  2003/08/28 10:57:04  maj0r
  * Versionierung geaendert und erhoeht.
  * Version 0.16 Beta.
@@ -95,17 +98,16 @@ public class StartPanel
     public StartPanel(AppleJuiceDialog parent) {
         logger = Logger.getLogger(getClass());
         this.parent = parent;
-        try
-        {
-            jbInit();
+        try{
+            init();
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
-    private void jbInit() throws Exception {
+    private void init() throws Exception {
         setLayout(new BorderLayout());
         JPanel panel3 = new JPanel(new GridBagLayout());
         panel3.setBackground(Color.WHITE);
@@ -224,88 +226,23 @@ public class StartPanel
     }
 
     public void fireLanguageChanged() {
-        netzwerk.setText("<html><font><h2>" +
-                         ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "html7"})) +
-                         "</h2></font></html>");
-        label8.setText("<html><font><h2>" +
-                       ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new String[]{"mainform", "html13"})) +
-                       "</h2></font></html>");
-        deinClient.setText("<html><font><h2>" +
+        try{
+            netzwerk.setText("<html><font><h2>" +
+                             ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "html7"})) +
+                             "</h2></font></html>");
+            label8.setText("<html><font><h2>" +
                            ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                             getFirstAttrbuteByTagName(new String[]{"mainform", "html1"})) +
+                                                             getFirstAttrbuteByTagName(new String[]{"mainform", "html13"})) +
                            "</h2></font></html>");
-        firewallWarning = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "firewallwarning",
-                                                                                                   "caption"}));
-        if (netInfo != null && netInfo.isFirewalled())
-        {
-            label7.setText(firewallWarning);
-        }
-        else
-        {
-            label7.setText("");
-        }
-        label9Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "html10"}));
-        String temp = label9Text;
-        temp = temp.replaceFirst("%s", "<Kein Server>");
-        temp = temp.replaceFirst("%d",
-                                 Integer.toString(ApplejuiceFassade.getInstance().
-                                                  getAllServer().
-                                                  size()));
-        temp = temp.replaceAll("%s", "-");
-        label9.setText(temp);
-        label6Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                       getFirstAttrbuteByTagName(new
-                                                               String[]{"mainform", "status", "status2"}));
-        temp = label6Text;
-        if (netInfo != null)
-        {
-            temp = temp.replaceFirst("%d", netInfo.getAJUserGesamtAsStringWithPoints());
-            temp = temp.replaceFirst("%d", netInfo.getAJAnzahlDateienAsStringWithPoints());
-            temp = temp.replaceFirst("%s", netInfo.getAJGesamtShareWithPoints(0));
-        }
-        else
-        {
-            temp = temp.replaceFirst("%d", "0");
-            temp = temp.replaceFirst("%d", "0");
-            temp = temp.replaceFirst("%s", "0 MB");
-
-        }
-        label6.setText(temp);
-        warnungen.setText("<html><font><h2>" +
-                          ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"mainform", "html15"})) +
-                          "</h2></font></html>");
-        try
-        {
-            String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.de", 80, HtmlLoader.GET,
-                                                        "/inprog/news.php?version=" + ApplejuiceFassade.getInstance().getCoreVersion().getVersion());
-            htmlText = "<html>" + htmlText + "</html>";
-            nachrichten.setText(htmlText);
-        }
-        catch (WebSiteNotFoundException e)
-        {
-            if (logger.isEnabledFor(Level.INFO))
-                logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Proxy?");
-        }
-    }
-
-    public void fireContentChanged(int type, Object content) {
-        if (type == DataUpdateListener.NETINFO_CHANGED)
-        {
-            netInfo = (NetworkInfo) content;
-            StringBuffer temp = new StringBuffer(label6Text);
-            int pos = temp.indexOf("%d");
-            temp.replace(pos, pos + 2, netInfo.getAJUserGesamtAsStringWithPoints());
-            pos = temp.indexOf("%d");
-            temp.replace(pos, pos + 2, netInfo.getAJAnzahlDateienAsStringWithPoints());
-            pos = temp.indexOf("%s");
-            temp.replace(pos, pos + 2, netInfo.getAJGesamtShareWithPoints(0));
-            label6.setText(temp.toString());
-            if (netInfo.isFirewalled())
+            deinClient.setText("<html><font><h2>" +
+                               ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                 getFirstAttrbuteByTagName(new String[]{"mainform", "html1"})) +
+                               "</h2></font></html>");
+            firewallWarning = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                getFirstAttrbuteByTagName(new String[]{"mainform", "firewallwarning",
+                                                                                                       "caption"}));
+            if (netInfo != null && netInfo.isFirewalled())
             {
                 label7.setText(firewallWarning);
             }
@@ -313,22 +250,98 @@ public class StartPanel
             {
                 label7.setText("");
             }
+            label9Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "html10"}));
+            String temp = label9Text;
+            temp = temp.replaceFirst("%s", "<Kein Server>");
+            temp = temp.replaceFirst("%d",
+                                     Integer.toString(ApplejuiceFassade.getInstance().
+                                                      getAllServer().
+                                                      size()));
+            temp = temp.replaceAll("%s", "-");
+            label9.setText(temp);
+            label6Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new
+                                                                   String[]{"mainform", "status", "status2"}));
+            temp = label6Text;
+            if (netInfo != null)
+            {
+                temp = temp.replaceFirst("%d", netInfo.getAJUserGesamtAsStringWithPoints());
+                temp = temp.replaceFirst("%d", netInfo.getAJAnzahlDateienAsStringWithPoints());
+                temp = temp.replaceFirst("%s", netInfo.getAJGesamtShareWithPoints(0));
+            }
+            else
+            {
+                temp = temp.replaceFirst("%d", "0");
+                temp = temp.replaceFirst("%d", "0");
+                temp = temp.replaceFirst("%s", "0 MB");
+
+            }
+            label6.setText(temp);
+            warnungen.setText("<html><font><h2>" +
+                              ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                getFirstAttrbuteByTagName(new String[]{"mainform", "html15"})) +
+                              "</h2></font></html>");
+            try{
+                String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.de", 80, HtmlLoader.GET,
+                                                            "/inprog/news.php?version=" + ApplejuiceFassade.getInstance().getCoreVersion().getVersion());
+                htmlText = "<html>" + htmlText + "</html>";
+                nachrichten.setText(htmlText);
+            }
+            catch (WebSiteNotFoundException e){
+                if (logger.isEnabledFor(Level.INFO))
+                    logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Proxy?");
+            }
         }
-        else if (type == DataUpdateListener.STATUSBAR_CHANGED)
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    public void fireContentChanged(int type, Object content) {
+        try{
+            if (type == DataUpdateListener.NETINFO_CHANGED)
+            {
+                netInfo = (NetworkInfo) content;
+                StringBuffer temp = new StringBuffer(label6Text);
+                int pos = temp.indexOf("%d");
+                temp.replace(pos, pos + 2, netInfo.getAJUserGesamtAsStringWithPoints());
+                pos = temp.indexOf("%d");
+                temp.replace(pos, pos + 2, netInfo.getAJAnzahlDateienAsStringWithPoints());
+                pos = temp.indexOf("%s");
+                temp.replace(pos, pos + 2, netInfo.getAJGesamtShareWithPoints(0));
+                label6.setText(temp.toString());
+                if (netInfo.isFirewalled())
+                {
+                    label7.setText(firewallWarning);
+                }
+                else
+                {
+                    label7.setText("");
+                }
+            }
+            else if (type == DataUpdateListener.STATUSBAR_CHANGED)
+            {
+                String[] status = (String[]) content;
+                StringBuffer temp = new StringBuffer(label9Text);
+                int pos = temp.indexOf("%s");
+                temp.replace(pos, pos + 2, status[1]);
+                pos = temp.indexOf("%d");
+                temp.replace(pos, pos + 2, Integer.toString(ApplejuiceFassade.getInstance().
+                                                            getAllServer().
+                                                            size()));
+                pos = temp.indexOf("%s");
+                temp.replace(pos, pos + 2, "-");
+                pos = temp.indexOf("%s");
+                temp.replace(pos, pos + 2, "-");
+                label9.setText(temp.toString());
+            }
+        }
+        catch (Exception e)
         {
-            String[] status = (String[]) content;
-            StringBuffer temp = new StringBuffer(label9Text);
-            int pos = temp.indexOf("%s");
-            temp.replace(pos, pos + 2, status[1]);
-            pos = temp.indexOf("%d");
-            temp.replace(pos, pos + 2, Integer.toString(ApplejuiceFassade.getInstance().
-                                                        getAllServer().
-                                                        size()));
-            pos = temp.indexOf("%s");
-            temp.replace(pos, pos + 2, "-");
-            pos = temp.indexOf("%s");
-            temp.replace(pos, pos + 2, "-");
-            label9.setText(temp.toString());
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 }

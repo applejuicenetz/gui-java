@@ -12,8 +12,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.*;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.2 2003/08/24 14:59:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.3 2003/09/04 10:13:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +25,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.3  2003/09/04 10:13:28  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.2  2003/08/24 14:59:59  maj0r
  * Version 0.14
  * Diverse Aenderungen.
@@ -38,12 +44,21 @@ import java.awt.*;
 public class QuickConnectionSettingsDialog extends JDialog {
     private ODConnectionPanel remotePanel;
     public static final int ABGEBROCHEN = 1;
+    private Logger logger;
 
     private int result = 0;
 
     public QuickConnectionSettingsDialog(Frame parent){
         super(parent, true);
-        init();
+        logger = Logger.getLogger(getClass());
+        try{
+            init();
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
 
     private void init(){
@@ -130,6 +145,18 @@ public class QuickConnectionSettingsDialog extends JDialog {
     }
 
     private void speichereEinstellungen() throws InvalidPasswordException {
-        OptionsManager.getInstance().saveRemote(remotePanel.getRemoteConfiguration());
+        try{
+            OptionsManager.getInstance().saveRemote(remotePanel.getRemoteConfiguration());
+        }
+        catch (Exception e)
+        {
+            if (e.getClass()==InvalidPasswordException.class){
+                throw (InvalidPasswordException)e;
+            }
+            else{
+                if (logger.isEnabledFor(Level.ERROR))
+                    logger.error("Unbehandelte Exception", e);
+            }
+        }
     }
 }

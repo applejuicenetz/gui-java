@@ -7,9 +7,11 @@ import javax.swing.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.18 2003/08/25 18:02:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.19 2003/09/04 10:13:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +20,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.19  2003/09/04 10:13:28  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.18  2003/08/25 18:02:10  maj0r
  * Sprachberuecksichtigung und Tooltipps eingebaut.
  *
@@ -52,105 +57,121 @@ import de.applejuicenet.client.shared.exception.*;
  */
 
 public class OptionsDialog
-    extends JDialog {
-  private JTabbedPane jTabbedPane1 = new JTabbedPane();
-  private ODPluginPanel pluginPanel;
-  private ODStandardPanel standardPanel;
-  private ODVerbindungPanel verbindungPanel;
-  private ODConnectionPanel remotePanel;
-  private ODAnsichtPanel ansichtPanel;
-  private JFrame parent;
-  private JButton speichern;
-  private JButton abbrechen;
-  private AJSettings ajSettings;
+        extends JDialog {
+    private JTabbedPane jTabbedPane1 = new JTabbedPane();
+    private ODPluginPanel pluginPanel;
+    private ODStandardPanel standardPanel;
+    private ODVerbindungPanel verbindungPanel;
+    private ODConnectionPanel remotePanel;
+    private ODAnsichtPanel ansichtPanel;
+    private JFrame parent;
+    private JButton speichern;
+    private JButton abbrechen;
+    private AJSettings ajSettings;
+    private Logger logger;
 
-  public OptionsDialog(JFrame parent) throws HeadlessException {
-    super(parent, true);
-    this.parent = parent;
-    try {
-      ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
-      jbInit();
+    public OptionsDialog(JFrame parent) throws HeadlessException {
+        super(parent, true);
+        logger = Logger.getLogger(getClass());
+        try
+        {
+            this.parent = parent;
+            ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
+            init();
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
 
-  private void jbInit() throws Exception {
-    LanguageSelector languageSelector = LanguageSelector.getInstance();
-    setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                               getFirstAttrbuteByTagName(new
-        String[] {"einstform", "caption"})));
-    standardPanel = new ODStandardPanel(this, ajSettings); //Standard-Reiter
-    jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"einstform", "standardsheet",
-                                  "caption"})), standardPanel);
-    verbindungPanel = new ODVerbindungPanel(ajSettings); //Verbindungs-Reiter
-    jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"einstform", "connectionsheet",
-                                  "caption"})), verbindungPanel);
-    remotePanel = new ODConnectionPanel(); //Fernzugriff-Reiter
-    jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"einstform", "pwsheet",
-                                  "caption"})), remotePanel);
-    ansichtPanel = new ODAnsichtPanel();
-    jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"javagui", "options", "ansicht",
-                                  "caption"})), ansichtPanel);
-    pluginPanel = new ODPluginPanel(parent); //Plugin-Reiter
-    jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"einstform", "TabSheet1",
-                                  "caption"})), pluginPanel);
-    getContentPane().add(jTabbedPane1, BorderLayout.CENTER);
-    speichern = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"einstform", "Button1",
-                                  "caption"})));
-    abbrechen = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"einstform", "Button2",
-                                  "caption"})));
-    abbrechen.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        dispose();
-      }
-    });
-    speichern.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        speichern();
-      }
-    });
-    JPanel panel = new JPanel();
-    FlowLayout flowL = new FlowLayout();
-    flowL.setAlignment(FlowLayout.RIGHT);
-    panel.setLayout(flowL);
-    panel.add(speichern);
-    panel.add(abbrechen);
-    getContentPane().add(panel, BorderLayout.SOUTH);
-    pack();
-  }
-
-  private void speichern() {
-    OptionsManager om = OptionsManager.getInstance();
-    ansichtPanel.save();
-    if (standardPanel.isDirty() || verbindungPanel.isDirty()) {
-      om.saveAJSettings(ajSettings);
-      if (standardPanel.isDirty())
-        om.setLogLevel(standardPanel.getLogLevel());
-    }
-    if (remotePanel.isDirty()) {
-      try {
-        om.saveRemote(remotePanel.getRemoteConfiguration());
-      }
-      catch (InvalidPasswordException ex) {
+    private void init() throws Exception {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "eingabefehler"}));
-        String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
-                                      "remote", "fehlertext"}));
-        JOptionPane.showMessageDialog(parent, nachricht, titel,
-                                      JOptionPane.OK_OPTION);
-      }
+        setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                   getFirstAttrbuteByTagName(new
+                                                           String[]{"einstform", "caption"})));
+        standardPanel = new ODStandardPanel(this, ajSettings); //Standard-Reiter
+        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"einstform", "standardsheet",
+                                                                                                  "caption"})), standardPanel);
+        verbindungPanel = new ODVerbindungPanel(ajSettings); //Verbindungs-Reiter
+        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"einstform", "connectionsheet",
+                                                                                                  "caption"})), verbindungPanel);
+        remotePanel = new ODConnectionPanel(); //Fernzugriff-Reiter
+        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"einstform", "pwsheet",
+                                                                                                  "caption"})), remotePanel);
+        ansichtPanel = new ODAnsichtPanel();
+        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
+                                                                                                  "caption"})), ansichtPanel);
+        pluginPanel = new ODPluginPanel(parent); //Plugin-Reiter
+        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"einstform", "TabSheet1",
+                                                                                                  "caption"})), pluginPanel);
+        getContentPane().add(jTabbedPane1, BorderLayout.CENTER);
+        speichern = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                  getFirstAttrbuteByTagName(new String[]{"einstform", "Button1",
+                                                                                                         "caption"})));
+        abbrechen = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                  getFirstAttrbuteByTagName(new String[]{"einstform", "Button2",
+                                                                                                         "caption"})));
+        abbrechen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+        speichern.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                speichern();
+            }
+        });
+        JPanel panel = new JPanel();
+        FlowLayout flowL = new FlowLayout();
+        flowL.setAlignment(FlowLayout.RIGHT);
+        panel.setLayout(flowL);
+        panel.add(speichern);
+        panel.add(abbrechen);
+        getContentPane().add(panel, BorderLayout.SOUTH);
+        pack();
     }
-    dispose();
-  }
+
+    private void speichern() {
+        try{
+            OptionsManager om = OptionsManager.getInstance();
+            ansichtPanel.save();
+            if (standardPanel.isDirty() || verbindungPanel.isDirty())
+            {
+                om.saveAJSettings(ajSettings);
+                if (standardPanel.isDirty())
+                    om.setLogLevel(standardPanel.getLogLevel());
+            }
+            if (remotePanel.isDirty())
+            {
+                try
+                {
+                    om.saveRemote(remotePanel.getRemoteConfiguration());
+                }
+                catch (InvalidPasswordException ex)
+                {
+                    LanguageSelector languageSelector = LanguageSelector.getInstance();
+                    String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                     getFirstAttrbuteByTagName(new String[]{"javagui", "eingabefehler"}));
+                    String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                         getFirstAttrbuteByTagName(new String[]{"javagui", "options",
+                                                                                                                "remote", "fehlertext"}));
+                    JOptionPane.showMessageDialog(parent, nachricht, titel,
+                                                  JOptionPane.OK_OPTION);
+                }
+            }
+            dispose();
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
 }
