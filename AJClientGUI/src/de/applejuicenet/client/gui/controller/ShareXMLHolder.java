@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.LoggerUtils;
 import de.applejuicenet.client.shared.MapSetStringKey;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.11 2003/08/04 14:28:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.12 2003/09/01 15:50:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.shared.MapSetStringKey;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.12  2003/09/01 15:50:51  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.11  2003/08/04 14:28:55  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -77,19 +80,19 @@ public class ShareXMLHolder
     NodeList nodes = document.getElementsByTagName("share");
     int nodesSize = nodes.getLength();
     Element e = null;
-    String id_key = null;
+    int id_key;
     String filename = null;
     String shortfilename = null;
-    String size = null;
+    long size;
     String checksum = null;
     ShareDO share = null;
     int prioritaet;
     for (int i = 0; i < nodesSize; i++) {
       e = (Element) nodes.item(i);
-      id_key = e.getAttribute("id");
+      id_key = Integer.parseInt(e.getAttribute("id"));
       filename = e.getAttribute("filename");
       shortfilename = e.getAttribute("shortfilename");
-      size = e.getAttribute("size");
+      size = Long.parseLong(e.getAttribute("size"));
       checksum = e.getAttribute("checksum");
       prioritaet = Integer.parseInt(e.getAttribute("priority"));
       share = new ShareDO(id_key, filename, shortfilename, size, checksum, prioritaet);

@@ -28,7 +28,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.33 2003/08/29 11:32:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.34 2003/09/01 15:50:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +37,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.34  2003/09/01 15:50:51  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.33  2003/08/29 11:32:49  maj0r
  * Link in Ablage kopieren eingefuegt.
  *
@@ -423,7 +426,7 @@ public class SharePanel
                                     }
                                 }
                             }
-                            size += Long.parseLong(shareDO.getSize());
+                            size += shareDO.getSize();
                             anzahlDateien++;
                         }
                         size = size / 1048576;

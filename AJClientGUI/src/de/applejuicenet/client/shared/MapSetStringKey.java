@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/MapSetStringKey.java,v 1.3 2003/08/25 07:22:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/MapSetStringKey.java,v 1.4 2003/09/01 15:50:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: MapSetStringKey.java,v $
+ * Revision 1.4  2003/09/01 15:50:51  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.3  2003/08/25 07:22:47  maj0r
  * Grosﬂ-/Kleinschreibung ignorieren.
  *
@@ -28,6 +31,10 @@ public class MapSetStringKey {
 
     public MapSetStringKey(String value){
         this.value = value;
+    }
+
+    public MapSetStringKey(int value){
+        this.value = Integer.toString(value);
     }
 
     public String getValue(){

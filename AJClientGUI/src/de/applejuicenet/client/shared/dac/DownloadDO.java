@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.5 2003/08/10 21:08:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.6 2003/09/01 15:50:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.6  2003/09/01 15:50:51  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.5  2003/08/10 21:08:18  maj0r
  * Diverse Änderungen.
  *
@@ -45,12 +48,12 @@ public class DownloadDO {
     public static final int AGBEGROCHEN = 17;
     public static final int PAUSIERT = 18;
 
-    private String id;
-    private String shareId;
+    private final int id;
+    private int shareId;
 
     private String hash;
-    private Long groesse;
-    private Long ready;
+    private long groesse;
+    private long ready;
     private int status;
     private String filename;
     private String targetDirectory;
@@ -59,7 +62,7 @@ public class DownloadDO {
 
     private HashMap sourcen = new HashMap();
 
-    public DownloadDO(String id, String shareId, String hash, Long groesse, Long ready,
+    public DownloadDO(int id, int shareId, String hash, long groesse, long ready,
                       int status, String filename, String targetDirectory,
                       int powerDownload, int temporaryFileNumber) {
         this.id = id;
@@ -74,22 +77,8 @@ public class DownloadDO {
         this.temporaryFileNumber = temporaryFileNumber;
     }
 
-    public void alterDownload(String shareId, String hash, Long groesse, Long ready,
-                      int status, String filename, String targetDirectory,
-                      int powerDownload, int temporaryFileNumber){
-        this.shareId = shareId;
-        this.hash = hash;
-        this.groesse = groesse;
-        this.ready = ready;
-        this.status = status;
-        this.filename = filename;
-        this.targetDirectory = targetDirectory;
-        this.powerDownload = powerDownload;
-        this.temporaryFileNumber = temporaryFileNumber;
-    }
-
     public String getProzentGeladenAsString(){
-        double temp = ready.longValue() * 100 / groesse.longValue();
+        double temp = ready * 100 / groesse;
         String result = Double.toString(temp);
         if (result.indexOf(".") + 3 < result.length())
         {
@@ -128,11 +117,11 @@ public class DownloadDO {
         sourcen.remove(key);
     }
 
-    public String getShareId() {
+    public int getShareId() {
         return shareId;
     }
 
-    public void setShareId(String shareId) {
+    public void setShareId(int shareId) {
         this.shareId = shareId;
     }
 
@@ -144,11 +133,11 @@ public class DownloadDO {
         this.hash = hash;
     }
 
-    public Long getGroesse() {
+    public long getGroesse() {
         return groesse;
     }
 
-    public void setGroesse(Long groesse) {
+    public void setGroesse(long groesse) {
         this.groesse = groesse;
     }
 
@@ -184,7 +173,7 @@ public class DownloadDO {
         this.powerDownload = powerDownload;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -196,11 +185,11 @@ public class DownloadDO {
         this.temporaryFileNumber = temporaryFileNumber;
     }
 
-    public Long getReady() {
+    public long getReady() {
         return ready;
     }
 
-    public void setReady(Long ready) {
+    public void setReady(long ready) {
         this.ready = ready;
     }
 
@@ -208,7 +197,7 @@ public class DownloadDO {
         long speed = getSpeedInBytes();
         if (speed == 0)
             return "";
-        int restZeit =(int)((groesse.longValue()-ready.longValue()) / speed);
+        int restZeit =(int)((groesse-ready) / speed);
         int tage = restZeit / 86400;
         restZeit -= tage * 86400;
         int stunden = restZeit / 3600;
@@ -239,17 +228,17 @@ public class DownloadDO {
         long speed = 0;
         Iterator it = sourcen.values().iterator();
         while (it.hasNext()){
-            speed += (long)((DownloadSourceDO)it.next()).getSpeed().intValue();
+            speed += ((DownloadSourceDO)it.next()).getSpeed();
         }
         return speed;
     }
 
-    public Long getBereitsGeladen(){
-        long geladen = ready.longValue();
+    public long getBereitsGeladen(){
+        long geladen = ready;
         Iterator it = sourcen.values().iterator();
         while (it.hasNext()){
-            geladen += (long)((DownloadSourceDO)it.next()).getBereitsGeladen();
+            geladen += ((DownloadSourceDO)it.next()).getBereitsGeladen();
         }
-        return new Long(geladen);
+        return geladen;
     }
 }

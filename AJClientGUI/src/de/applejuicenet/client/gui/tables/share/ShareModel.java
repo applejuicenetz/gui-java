@@ -6,7 +6,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModel;
 import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareModel.java,v 1.2 2003/08/04 14:28:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareModel.java,v 1.3 2003/09/01 15:50:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import java.util.HashMap;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareModel.java,v $
+ * Revision 1.3  2003/09/01 15:50:52  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.2  2003/08/04 14:28:55  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -81,7 +84,7 @@ public class ShareModel extends AbstractTreeTableModel {
                     }
                 case 1:{
                         if (shareNode.isLeaf() && shareNode!=getRoot()){
-                            double size = Long.parseLong(shareNode.getDO().getSize());
+                            double size = shareNode.getDO().getSize();
                             size = size / 1048576;
                             String s = Double.toString(size);
                             if (s.indexOf(".") + 3 < s.length()){

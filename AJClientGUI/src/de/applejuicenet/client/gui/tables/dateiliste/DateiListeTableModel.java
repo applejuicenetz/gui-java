@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.2 2003/08/28 10:39:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/dateiliste/Attic/DateiListeTableModel.java,v 1.3 2003/09/01 15:50:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.gui.tables.share.ShareNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DateiListeTableModel.java,v $
+ * Revision 1.3  2003/09/01 15:50:51  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.2  2003/08/28 10:39:05  maj0r
  * Sharelisten koennen jetzt gespeichert werden.
  *
@@ -63,7 +66,7 @@ public class DateiListeTableModel
             case 0:
                 return shareDO.getShortfilename();
             case 1:
-                return shareDO.getSize();
+                return Long.toString(shareDO.getSize());
             default:
                 return "Fehler";
         }

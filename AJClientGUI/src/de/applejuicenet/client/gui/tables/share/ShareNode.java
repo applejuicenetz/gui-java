@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.8 2003/08/27 11:19:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.9 2003/09/01 15:50:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.9  2003/09/01 15:50:52  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.8  2003/08/27 11:19:30  maj0r
  * Prioritaet setzen und aufheben vollstaendig implementiert.
  * Button für 'Share erneuern' eingefuehrt.
@@ -171,7 +174,7 @@ public class ShareNode implements Node {
     public void setPriority(int prio){
         if (isLeaf()){
             shareDO.setPrioritaet(prio);
-            ApplejuiceFassade.getInstance().setPrioritaet(Integer.parseInt(shareDO.getId()), prio);
+            ApplejuiceFassade.getInstance().setPrioritaet(shareDO.getId(), prio);
         }
         else{
             Iterator it = children.values().iterator();

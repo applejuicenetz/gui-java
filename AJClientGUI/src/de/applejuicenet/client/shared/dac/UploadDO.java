@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared.dac;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.8 2003/08/09 10:57:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.9 2003/09/01 15:50:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.9  2003/09/01 15:50:51  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.8  2003/08/09 10:57:54  maj0r
  * Upload- und DownloadTabelle weitergeführt.
  *
@@ -37,21 +40,21 @@ public class UploadDO {
   public static final int VERSUCHE_INDIREKTE_VERBINDUNG = 6;
   public static final int KEINE_VERBINDUNG_MOEGLICH = 7;
 
-  private int uploadID;
+  private final int uploadID;
   private String dateiName;
   private int shareFileID;
   private Version version;
   private int status;
   private String nick;
-  private Long uploadFrom;
-  private Long uploadTo;
-  private Long actualUploadPosition;
-  private Integer speed;
-  private Integer prioritaet;
+  private long uploadFrom;
+  private long uploadTo;
+  private long actualUploadPosition;
+  private int speed;
+  private int prioritaet;
 
   public UploadDO(int uploadID, int shareFileID, Version version, int status,
-                  String nick, Long uploadFrom, Long uploadTo,
-                  Long actualUploadPosition, Integer speed, Integer prioritaet) {
+                  String nick, long uploadFrom, long uploadTo,
+                  long actualUploadPosition, int speed, int prioritaet) {
     this.uploadID = uploadID;
     this.shareFileID = shareFileID;
     this.version = version;
@@ -64,12 +67,12 @@ public class UploadDO {
     this.prioritaet = prioritaet;
   }
 
-  public UploadDO(String uploadID, String shareFileID, Version version,
+  public UploadDO(int uploadID, int shareFileID, Version version,
                   String status,
-                  String nick, Long uploadFrom, Long uploadTo,
-                  Long actualUploadPosition, Integer speed, Integer prioritaet) {
-    this.uploadID = Integer.parseInt(uploadID);
-    this.shareFileID = Integer.parseInt(shareFileID);
+                  String nick, long uploadFrom, long uploadTo,
+                  long actualUploadPosition, int speed, int prioritaet) {
+    this.uploadID = uploadID;
+    this.shareFileID = shareFileID;
     this.version = version;
     this.status = Integer.parseInt(status);
     this.nick = nick;
@@ -86,10 +89,6 @@ public class UploadDO {
 
   public String getUploadIDAsString() {
     return Integer.toString(uploadID);
-  }
-
-  public void setUploadID(int uploadID) {
-    this.uploadID = uploadID;
   }
 
   public int getShareFileID() {
@@ -132,43 +131,43 @@ public class UploadDO {
     this.nick = nick;
   }
 
-  public Long getUploadFrom() {
+  public long getUploadFrom() {
     return uploadFrom;
   }
 
-  public void setUploadFrom(Long uploadFrom) {
+  public void setUploadFrom(long uploadFrom) {
     this.uploadFrom = uploadFrom;
   }
 
-  public Long getUploadTo() {
+  public long getUploadTo() {
     return uploadTo;
   }
 
-  public void setUploadTo(Long uploadTo) {
+  public void setUploadTo(long uploadTo) {
     this.uploadTo = uploadTo;
   }
 
-  public Long getActualUploadPosition() {
+  public long getActualUploadPosition() {
     return actualUploadPosition;
   }
 
-  public void setActualUploadPosition(Long actualUploadPosition) {
+  public void setActualUploadPosition(long actualUploadPosition) {
     this.actualUploadPosition = actualUploadPosition;
   }
 
-  public Integer getSpeed() {
+  public int getSpeed() {
     return speed;
   }
 
-  public void setPrioritaet(Integer prioritaet) {
+  public void setPrioritaet(int prioritaet) {
     this.prioritaet = prioritaet;
   }
 
-  public Integer getPrioritaet() {
+  public int getPrioritaet() {
     return prioritaet;
   }
 
-  public void setSpeed(Integer speed) {
+  public void setSpeed(int speed) {
     this.speed = speed;
   }
 
@@ -181,9 +180,9 @@ public class UploadDO {
     }
 
     public String getDownloadPercentAsString(){
-        if (actualUploadPosition==null || uploadFrom==null)
+        if (actualUploadPosition==-1 || uploadFrom==-1)
             return "0";
-        double temp = actualUploadPosition.intValue() - uploadFrom.intValue();
+        double temp = actualUploadPosition - uploadFrom;
         if (temp==0.0){
             return "0";
         }
@@ -196,10 +195,10 @@ public class UploadDO {
         return result;
     }
 
-    public int getSize(){
-        if (uploadTo==null || uploadFrom==null)
+    public long getSize(){
+        if (uploadTo==-1 || uploadFrom==-1)
             return 0;
-        return uploadTo.intValue() - uploadFrom.intValue();
+        return uploadTo - uploadFrom;
     }
 
 }

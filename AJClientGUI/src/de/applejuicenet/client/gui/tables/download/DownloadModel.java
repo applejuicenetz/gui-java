@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.11 2003/08/30 19:44:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.12 2003/09/01 15:50:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.12  2003/09/01 15:50:51  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.11  2003/08/30 19:44:04  maj0r
  * Ausgabe geaendert.
  *
@@ -143,7 +146,7 @@ public class DownloadModel
           case 5:
                 return downloadDO.getRestZeitAsString();
           case 7:
-                return parseGroesse(new Long(downloadDO.getGroesse().longValue()-downloadDO.getBereitsGeladen().longValue()));
+                return parseGroesse(downloadDO.getGroesse()-downloadDO.getBereitsGeladen());
           case 8:
                 return powerdownload(downloadDO.getPowerDownload());
           default:
@@ -173,22 +176,22 @@ public class DownloadModel
             case 1:
                 return getStatus(downloadSourceDO);
             case 2:
-                return parseGroesse(new Long(downloadSourceDO.getSize()));
+                return parseGroesse(downloadSourceDO.getSize());
             case 3:
-                return parseGroesse(new Long(downloadSourceDO.getBereitsGeladen()));
+                return parseGroesse(downloadSourceDO.getBereitsGeladen());
             case 4:
                   {
                       if (downloadSourceDO.getStatus()!=DownloadSourceDO.UEBERTRAGUNG)
                           return "";
                       else
-                          return getSpeedAsString((long)downloadSourceDO.getSpeed().intValue());
+                          return getSpeedAsString((long)downloadSourceDO.getSpeed());
                   }
             case 5:
                   return downloadSourceDO.getRestZeitAsString();
             case 6:
                   break;
             case 7:
-                  return parseGroesse(new Long(downloadSourceDO.getNochZuLaden()));
+                  return parseGroesse(downloadSourceDO.getNochZuLaden());
             case 8:
                   return powerdownload(downloadSourceDO.getPowerDownload());
             case 9:
@@ -304,8 +307,8 @@ public class DownloadModel
         return "1:" + temp;
     }
 
-    private String parseGroesse(Long groesse){
-        double share = Double.parseDouble(groesse.toString());
+    private String parseGroesse(long groesse){
+        double share = Double.parseDouble(new Long(groesse).toString());
         int faktor;
         if (share == 0) {
           return "";

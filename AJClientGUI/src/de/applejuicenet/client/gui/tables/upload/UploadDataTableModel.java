@@ -15,7 +15,7 @@ import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.tables.TreeTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.6 2003/08/30 19:44:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.7 2003/09/01 15:50:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import de.applejuicenet.client.gui.tables.TreeTableModel;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDataTableModel.java,v $
+ * Revision 1.7  2003/09/01 15:50:52  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.6  2003/08/30 19:44:32  maj0r
  * Auf JTreeTable umgebaut.
  *
@@ -121,7 +124,7 @@ public class UploadDataTableModel
                     {
                         if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG)
                         {
-                            return getSpeedAsString(upload.getSpeed().intValue());
+                            return getSpeedAsString(upload.getSpeed());
                         }
                         else
                         {
@@ -132,7 +135,7 @@ public class UploadDataTableModel
                     {
                         if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG)
                         {
-                            return getSpeedAsString(upload.getSpeed().intValue());
+                            return getSpeedAsString(upload.getSpeed());
                         }
                         else
                         {
@@ -140,7 +143,7 @@ public class UploadDataTableModel
                         }
                     }
                 case 5:
-                    return upload.getPrioritaet();
+                    return new Integer(upload.getPrioritaet());
                 case 6:
                     return upload.getVersion().getVersion();
                 default:

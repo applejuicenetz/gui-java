@@ -5,7 +5,7 @@ import java.util.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.10 2003/08/04 14:28:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.11 2003/09/01 15:50:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.11  2003/09/01 15:50:51  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.10  2003/08/04 14:28:55  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -53,21 +56,21 @@ public class DownloadSourceDO {
     public static final int INDIREKTE_VERBINDUNG_UNBESTAETIGT = 2;
     public static final int INDIREKTE_VERBINDUNG = 3;
 
-    private String id;
+    private final int id;
     private int status;
     private int directstate;
-    private Integer downloadFrom;
-    private Integer downloadTo;
-    private Integer actualDownloadPosition;
-    private Integer speed;
+    private int downloadFrom;
+    private int downloadTo;
+    private int actualDownloadPosition;
+    private int speed;
     private Version version;
     private int queuePosition;
     private int powerDownload;
     private String filename;
     private String nickname;
 
-    public DownloadSourceDO(String id, int status, int directstate, Integer downloadFrom, Integer downloadTo,
-                            Integer actualDownloadPosition, Integer speed, Version version, int queuePosition,
+    public DownloadSourceDO(int id, int status, int directstate, int downloadFrom, int downloadTo,
+                            int actualDownloadPosition, int speed, Version version, int queuePosition,
                             int powerDownload, String filename, String nickname) {
         this.id = id;
         this.status = status;
@@ -88,9 +91,9 @@ public class DownloadSourceDO {
     }
 
     public int getSize(){
-        if (downloadTo==null || downloadFrom==null)
+        if (downloadTo==-1 || downloadFrom==-1)
             return 0;
-        return downloadTo.intValue() - downloadFrom.intValue();
+        return downloadTo - downloadFrom;
     }
 
     public void setStatus(int status) {
@@ -98,9 +101,9 @@ public class DownloadSourceDO {
     }
 
     public String getDownloadPercentAsString(){
-        if (actualDownloadPosition==null || downloadFrom==null)
+        if (actualDownloadPosition==-1 || downloadFrom==-1)
             return "0";
-        double temp = actualDownloadPosition.intValue() - downloadFrom.intValue();
+        double temp = actualDownloadPosition - downloadFrom;
         temp =  temp * 100 / getSize();
         String result = Double.toString(temp);
         if (result.indexOf(".") + 3 < result.length())
@@ -111,9 +114,9 @@ public class DownloadSourceDO {
     }
 
     public String getRestZeitAsString(){
-        if (speed==null || speed.intValue()==0)
+        if (speed==0 || speed==-1)
             return "";
-        int restZeit = getNochZuLaden() / speed.intValue();
+        int restZeit = getNochZuLaden() / speed;
         int tage = restZeit / 86400;
         restZeit -= tage * 86400;
         int stunden = restZeit / 3600;
@@ -141,15 +144,15 @@ public class DownloadSourceDO {
     }
 
     public int getBereitsGeladen(){
-        if (actualDownloadPosition==null || downloadFrom==null)
+        if (actualDownloadPosition==-1 || downloadFrom==-1)
             return 0;
-        return actualDownloadPosition.intValue() - downloadFrom.intValue();
+        return actualDownloadPosition - downloadFrom;
     }
 
     public int getNochZuLaden(){
-        if (downloadTo==null || actualDownloadPosition==null)
+        if (downloadTo==-1 || actualDownloadPosition==-1)
             return 0;
-        return downloadTo.intValue() - actualDownloadPosition.intValue();
+        return downloadTo - actualDownloadPosition;
     }
 
     public int getDirectstate() {
@@ -160,35 +163,35 @@ public class DownloadSourceDO {
         this.directstate = directstate;
     }
 
-    public Integer getDownloadFrom() {
+    public int getDownloadFrom() {
         return downloadFrom;
     }
 
-    public void setDownloadFrom(Integer downloadFrom) {
+    public void setDownloadFrom(int downloadFrom) {
         this.downloadFrom = downloadFrom;
     }
 
-    public Integer getDownloadTo() {
+    public int getDownloadTo() {
         return downloadTo;
     }
 
-    public void setDownloadTo(Integer downloadTo) {
+    public void setDownloadTo(int downloadTo) {
         this.downloadTo = downloadTo;
     }
 
-    public Integer getActualDownloadPosition() {
+    public int getActualDownloadPosition() {
         return actualDownloadPosition;
     }
 
-    public void setActualDownloadPosition(Integer actualDownloadPosition) {
+    public void setActualDownloadPosition(int actualDownloadPosition) {
         this.actualDownloadPosition = actualDownloadPosition;
     }
 
-    public Integer getSpeed() {
+    public int getSpeed() {
         return speed;
     }
 
-    public void setSpeed(Integer speed) {
+    public void setSpeed(int speed) {
         this.speed = speed;
     }
 
@@ -232,7 +235,7 @@ public class DownloadSourceDO {
         this.nickname = nickname;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 }

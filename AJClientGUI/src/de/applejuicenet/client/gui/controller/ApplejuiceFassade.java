@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.19 2003/08/31 11:06:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.20 2003/09/01 15:50:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.20  2003/09/01 15:50:51  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.19  2003/08/31 11:06:22  maj0r
  * CheckInProgress geaendert.
  *
@@ -337,7 +340,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         {}
     }
 
-    public boolean resumeDownload(String id) {
+    public boolean resumeDownload(int id) {
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
@@ -365,7 +368,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return true;
     }
 
-    public boolean cancelDownload(String id) {
+    public boolean cancelDownload(int id) {
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
@@ -394,7 +397,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return true;
     }
 
-    public boolean pauseDownload(String id) {
+    public boolean pauseDownload(int id) {
         try
         {
             String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();

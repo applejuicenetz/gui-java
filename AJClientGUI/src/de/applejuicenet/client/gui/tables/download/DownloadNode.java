@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.12 2003/08/25 09:28:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.13 2003/09/01 15:50:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadNode.java,v $
+ * Revision 1.13  2003/09/01 15:50:51  maj0r
+ * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
+ *
  * Revision 1.12  2003/08/25 09:28:13  maj0r
  * getChildCount() eingefuehrt.
  *
@@ -265,14 +268,14 @@ public class DownloadNode implements Node {
       }
   }
 
-  public String getId(){
+  public int getId(){
       if (nodetype==SOURCE_NODE){
           return downloadSourceDO.getId();
       }
       else if (nodetype==DOWNLOAD_NODE){
           return downloadDO.getId();
       }
-      return "";
+      return -1;
   }
 
   public DownloadDO getDownloadDO() {
