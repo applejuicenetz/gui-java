@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.93 2004/01/09 13:07:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.94 2004/01/12 16:15:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -508,6 +508,31 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             }
         }
         return settingsXML.getAJSettings();
+    }
+
+    public synchronized void setMaxUpAndDown(final long maxUp,
+                                             final long maxDown) {
+        new Thread() {
+            public void run() {
+                try {
+                    String parameters = "";
+                    parameters += "MaxUpload=" +
+                        Long.toString(maxUp);
+                    parameters += "&MaxDownload=" +
+                        Long.toString(maxDown);
+                    String password = PropertiesManager.getOptionsManager().
+                        getRemoteSettings().getOldPassword();
+                    HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                        "/function/setsettings?password=" +
+                        password + "&" + parameters, false);
+                }
+                catch (Exception e) {
+                    if (logger.isEnabledFor(Level.ERROR)) {
+                        logger.error("Unbehandelte Exception", e);
+                    }
+                }
+            }
+        }.start();
     }
 
     public void saveAJSettings(AJSettings ajSettings) {

@@ -64,9 +64,11 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import javax.swing.JSlider;
+import de.applejuicenet.client.shared.AJSettings;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.79 2004/01/12 07:21:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.80 2004/01/12 16:15:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -75,6 +77,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.80  2004/01/12 16:15:04  maj0r
+ * Bug #91 umgesetzt (Danke an hirsch.marcel)
+ * Maxupload- und Maxdownloadgeschwindigkeit kann nun über das TrayIcon eingestellt werden (Windowsversion).
+ *
  * Revision 1.79  2004/01/12 07:21:54  maj0r
  * Standard-XML erweitert.
  *
@@ -1043,7 +1049,7 @@ public class AppleJuiceDialog
     }
 
     public SwingTrayPopup makeSwingPopup() {
-        SwingTrayPopup popup = new SwingTrayPopup();
+        final SwingTrayPopup popup = new SwingTrayPopup();
         popupShowHideMenuItem = new JMenuItem("%Show");
         popupShowHideMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -1069,6 +1075,68 @@ public class AppleJuiceDialog
             }
         });
         popup.add(popupAboutMenuItem);
+        new Thread(){
+          public void run(){
+              final AJSettings ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
+              final JSlider uploadSlider = new JSlider(JSlider.VERTICAL, 0, 50, (int) ajSettings.getMaxUploadInKB());
+              final JSlider downloadSlider = new JSlider(JSlider.VERTICAL, 0, 300, (int) ajSettings.getMaxDownloadInKB());
+              uploadSlider.setPaintLabels(true);
+              uploadSlider.setPaintTicks(true);
+              uploadSlider.setPaintTrack(true);
+              uploadSlider.setSnapToTicks(true);
+              downloadSlider.setPaintLabels(true);
+              downloadSlider.setPaintTicks(true);
+              downloadSlider.setPaintTrack(true);
+              downloadSlider.setSnapToTicks(true);
+              final JMenu uploadMenu = new JMenu("Upload");
+              final JMenu downloadMenu = new JMenu("Download");
+              JPanel uploadPanel = new JPanel(new BorderLayout());
+              JPanel downloadPanel = new JPanel(new BorderLayout());
+              final JLabel label1 = new JLabel("50 kb/s");
+              final JLabel label2 = new JLabel("50 kb/s");
+              label1.setText(Long.toString(ajSettings.getMaxUploadInKB()) + " kb/s");
+              label2.setText(Long.toString(ajSettings.getMaxDownloadInKB()) + " kb/s");
+              uploadPanel.add(label1, BorderLayout.NORTH);
+              uploadPanel.add(uploadSlider, BorderLayout.SOUTH);
+              uploadMenu.add(uploadPanel);
+              downloadPanel.add(label2, BorderLayout.NORTH);
+              downloadPanel.add(downloadSlider, BorderLayout.SOUTH);
+              downloadMenu.add(downloadPanel);
+              uploadSlider.addChangeListener(new ChangeListener() {
+                  public void stateChanged(ChangeEvent e) {
+                      JSlider slider = (JSlider) e.getSource();
+                      label1.setText(Integer.toString(slider.getValue()) + " kb/s");
+                      ajSettings.setMaxUpload(slider.getValue() * 1024);
+                  }
+              });
+              downloadSlider.addChangeListener(new ChangeListener() {
+                  public void stateChanged(ChangeEvent e) {
+                      JSlider slider = (JSlider) e.getSource();
+                      label2.setText(Integer.toString(slider.getValue()) + " kb/s");
+                  }
+              });
+              uploadSlider.addMouseListener(new MouseAdapter(){
+                  public void mouseReleased(MouseEvent e){
+                      long down = downloadSlider.getValue() * 1024;
+                      long up = uploadSlider.getValue() * 1024;
+                      ApplejuiceFassade.getInstance().setMaxUpAndDown(up, down);
+                  }
+              });
+              downloadSlider.addMouseListener(new MouseAdapter(){
+                  public void mouseReleased(MouseEvent e){
+                      long down = downloadSlider.getValue() * 1024;
+                      long up = uploadSlider.getValue() * 1024;
+                      ApplejuiceFassade.getInstance().setMaxUpAndDown(up, down);
+                  }
+              });
+              SwingUtilities.invokeLater(new Runnable(){
+                  public void run(){
+                      popup.add(uploadMenu);
+                      popup.add(downloadMenu);
+                  }
+              });
+          }
+        }.start();
         return popup;
     }
 
