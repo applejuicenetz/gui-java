@@ -17,9 +17,7 @@ import java.util.HashMap;
  * <p><b>Copyright: General Public License</b></p>
  *
  * <p>Diese Klasse darf nicht veraendert werden!
- * Um ein Plugin zu erstellen, muss diese Klasse überschrieben werden.
- * Die Pluginklasse muss zwingend wie das jar-File heissen.
- * Beim Pluginstart wird automatisch der Standardkonstruktor aufgerufen, alle anderen werden ignoriert.</p>
+ * Um ein Plugin zu erstellen, muss diese Klasse überschrieben werden.</p>
  *
  * @author: Maj0r [maj0r@applejuicenet.de]
  */
