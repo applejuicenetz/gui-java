@@ -1,6 +1,13 @@
 package de.applejuicenet.client.gui;
 
 import java.awt.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.MalformedURLException;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import javax.swing.*;
 
 import de.applejuicenet.client.gui.controller.*;
@@ -11,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.24 2003/09/11 08:39:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.25 2003/09/12 13:19:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +27,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.25  2003/09/12 13:19:26  maj0r
+ * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
+ * Version 0.30
+ *
  * Revision 1.24  2003/09/11 08:39:30  maj0r
  * Start durch Einbau von Threads beschleunigt.
  *
@@ -237,9 +248,10 @@ public class StartPanel
                     String coreVersion = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
                     version.setText("GUI: " + ApplejuiceFassade.GUI_VERSION + " Core: " +
                               coreVersion);
-                    String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.org", 80, HtmlLoader.GET,
-                                "/inprog/news.php?version=" + ApplejuiceFassade.getInstance().
-                                getCoreVersion().getVersion());
+
+                    String htmlText = WebsiteContentLoader.getWebsiteContent("http://www.applejuicenet.org", 80, "/inprog/news.php?version=" +
+                                ApplejuiceFassade.getInstance().getCoreVersion().getVersion());
+
                     int pos = htmlText.toLowerCase().indexOf("<html>");
                     if (pos!=-1){
                         htmlText = htmlText.substring(pos);
@@ -248,10 +260,6 @@ public class StartPanel
                         htmlText = "<html>" + htmlText + "</html>";
                     }
                     nachrichten.setText(htmlText);
-                }
-                catch (WebSiteNotFoundException e){
-                    if (logger.isEnabledFor(Level.INFO))
-                        logger.info("Versionsabhaengige Nachrichten konnten nicht geladen werden. Proxy?");
                 }
                 catch (Exception e){
                     if (logger.isEnabledFor(Level.INFO))

@@ -15,15 +15,19 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.39 2003/09/11 09:41:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.40 2003/09/12 13:19:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.40  2003/09/12 13:19:26  maj0r
+ * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
+ * Version 0.30
+ *
  * Revision 1.39  2003/09/11 09:41:16  maj0r
  * Nullpointer behoben.
  *
@@ -213,7 +217,7 @@ import org.apache.log4j.Level;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String GUI_VERSION = "0.29 Beta";
+    public static final String GUI_VERSION = "0.30 Beta";
 
     private HashSet downloadListener;
     private HashSet shareListener;

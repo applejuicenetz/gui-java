@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.28 2003/09/11 08:39:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.29 2003/09/12 13:19:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.29  2003/09/12 13:19:26  maj0r
+ * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
+ * Version 0.30
+ *
  * Revision 1.28  2003/09/11 08:39:29  maj0r
  * Start durch Einbau von Threads beschleunigt.
  *
@@ -195,8 +199,8 @@ public class AppleJuiceClient {
                     try
                     {
                         //http://download.berlios.de/applejuicejava/version.txt
-                        String strAktuellsteVersion = HtmlLoader.getHtmlContent("download.berlios.de", 80, HtmlLoader.GET,
-                                                                                "/applejuicejava/version.txt");
+                        String strAktuellsteVersion = WebsiteContentLoader.getWebsiteContent("http://download.berlios.de", 80,
+                                                                                             "/applejuicejava/version.txt");
                         if (strAktuellsteVersion.length() > 0)
                         {
                             int pos = ApplejuiceFassade.GUI_VERSION.indexOf(' ');
@@ -220,11 +224,6 @@ public class AppleJuiceClient {
                                                               JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
-                    }
-                    catch (WebSiteNotFoundException e)
-                    {
-                        if (logger.isEnabledFor(Level.INFO))
-                            logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Proxy?");
                     }
                     catch (Exception e)
                     {

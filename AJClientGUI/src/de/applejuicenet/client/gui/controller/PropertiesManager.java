@@ -10,17 +10,23 @@ import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.1 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.2 2003/09/12 13:19:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.2  2003/09/12 13:19:26  maj0r
+ * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
+ * Version 0.30
+ *
  * Revision 1.1  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -71,19 +77,22 @@ import org.apache.log4j.Logger;
  */
 
 public class PropertiesManager
-        extends XMLDecoder implements OptionsManager, PositionManager{
+        extends XMLDecoder implements OptionsManager, PositionManager, ProxyManager{
     private static PropertiesManager instance = null;
     private Logger logger;
     private HashSet settingsListener = new HashSet();
     private HashSet connectionSettingsListener = new HashSet();
     private Point mainXY;
     private Dimension mainDimension;
+    private ProxySettings proxySettings;
 
     private int[] downloadWidths;
     private int[] uploadWidths;
     private int[] serverWidths;
     private int[] searchWidths;
     private int[] shareWidths;
+
+    private static String path;
 
     private boolean legal = false;
 
@@ -95,7 +104,7 @@ public class PropertiesManager
 
     public static OptionsManager getOptionsManager() {
         if (instance == null) {
-            String path = System.getProperty("user.dir") + File.separator +
+            path = System.getProperty("user.dir") + File.separator +
                     "properties.xml";
             instance = new PropertiesManager(path);
         }
@@ -109,6 +118,45 @@ public class PropertiesManager
             instance = new PropertiesManager(path);
         }
         return instance;
+    }
+
+    public static ProxyManager getProxyManager() {
+        if (instance == null) {
+            String path = System.getProperty("user.dir") + File.separator +
+                    "properties.xml";
+            instance = new PropertiesManager(path);
+        }
+        return instance;
+    }
+
+   private void saveDom() {
+        try
+        {
+            XMLSerializer xs = new XMLSerializer(new FileWriter(path),
+                                                 new OutputFormat(document,
+                                                                  "UTF-8", true));
+            xs.serialize(document);
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    //ProxyManager-Interface
+
+    public ProxySettings getProxySettings(){
+        return proxySettings;
+    }
+
+    public void saveProxySettings(ProxySettings proxySettings){
+        this.proxySettings = proxySettings;
+        setAttributeByTagName(new String[]{"options", "proxy", "use"}, new Boolean(proxySettings.isUse()).toString());
+        setAttributeByTagName(new String[]{"options", "proxy", "host"}, proxySettings.getHost());
+        setAttributeByTagName(new String[]{"options", "proxy", "port"}, Integer.toString(proxySettings.getPort()));
+        setAttributeByTagName(new String[]{"options", "proxy", "userpass"}, proxySettings.getUserpass());
+        saveDom();
     }
 
     //OptionsManager-Interface
@@ -317,6 +365,12 @@ public class PropertiesManager
                 shareWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column0"}));
                 shareWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column1"}));
                 shareWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column2"}));
+
+                boolean use = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "use"})).booleanValue();
+                String host = getFirstAttrbuteByTagName(new String[]{"options", "proxy", "host"});
+                int port = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "port"}));
+                String userpass = getFirstAttrbuteByTagName(new String[]{"options", "proxy", "userpass"});
+                proxySettings = new ProxySettings(use, host, port, userpass);
             }
         }
         catch (Exception e)
@@ -367,6 +421,7 @@ public class PropertiesManager
             setAttributeByTagName(new String[]{"options", "location", "share", "column0"}, shareWidths[0]);
             setAttributeByTagName(new String[]{"options", "location", "share", "column1"}, shareWidths[1]);
             setAttributeByTagName(new String[]{"options", "location", "share", "column2"}, shareWidths[2]);
+            saveDom();
         }
         catch (Exception e)
         {

@@ -11,15 +11,19 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.20 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.21 2003/09/12 13:19:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.21  2003/09/12 13:19:26  maj0r
+ * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
+ * Version 0.30
+ *
  * Revision 1.20  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -67,6 +71,7 @@ public class OptionsDialog
     private ODVerbindungPanel verbindungPanel;
     private ODConnectionPanel remotePanel;
     private ODAnsichtPanel ansichtPanel;
+    private ODProxyPanel proxyPanel;
     private JFrame parent;
     private JButton speichern;
     private JButton abbrechen;
@@ -106,6 +111,10 @@ public class OptionsDialog
         jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"einstform", "pwsheet",
                                                                                                   "caption"})), remotePanel);
+        proxyPanel = new ODProxyPanel(); //Proxy-Reiter
+        jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"javagui", "options", "proxy",
+                                                                                                  "caption"})), proxyPanel);
         ansichtPanel = new ODAnsichtPanel();
         jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
@@ -168,6 +177,10 @@ public class OptionsDialog
                     JOptionPane.showMessageDialog(parent, nachricht, titel,
                                                   JOptionPane.OK_OPTION);
                 }
+            }
+            if (proxyPanel.isDirty())
+            {
+                PropertiesManager.getProxyManager().saveProxySettings(proxyPanel.getProxySettings());
             }
             dispose();
         }
