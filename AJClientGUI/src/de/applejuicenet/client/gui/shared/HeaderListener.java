@@ -4,7 +4,7 @@ import java.awt.event.*;
 import javax.swing.table.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/HeaderListener.java,v 1.1 2003/06/24 14:32:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/HeaderListener.java,v 1.2 2003/10/10 15:12:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import javax.swing.table.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: HeaderListener.java,v $
+ * Revision 1.2  2003/10/10 15:12:26  maj0r
+ * Sortieren im Downloadbereich eingefuegt.
+ *
  * Revision 1.1  2003/06/24 14:32:27  maj0r
  * Klassen zum Sortieren von Tabellen eingefügt.
  * Servertabelle kann nun spaltenweise sortiert werden.
@@ -44,7 +47,7 @@ public class HeaderListener
     }
 
     boolean isAscent;
-    if (SortButtonRenderer.DOWN == renderer.getState(col)) {
+    if (SortButtonRenderer.UP == renderer.getState(col)) {
       isAscent = true;
     }
     else {

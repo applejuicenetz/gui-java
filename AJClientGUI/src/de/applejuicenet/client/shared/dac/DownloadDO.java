@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.8 2003/09/11 06:54:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.9 2003/10/10 15:12:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.9  2003/10/10 15:12:26  maj0r
+ * Sortieren im Downloadbereich eingefuegt.
+ *
  * Revision 1.8  2003/09/11 06:54:15  maj0r
  * Auf neues Sessions-Prinzip umgebaut.
  * Sprachenwechsel korrigert, geht nun wieder flott.
@@ -92,6 +95,10 @@ public class DownloadDO {
             result = result.substring(0, result.indexOf(".") + 3);
         }
         return result;
+    }
+
+    public double getProzentGeladen(){
+        return ready * 100 / groesse;
     }
 
     public void addOrAlterSource(DownloadSourceDO downloadSourceDO){
@@ -201,6 +208,13 @@ public class DownloadDO {
 
     public void setReady(long ready) {
         this.ready = ready;
+    }
+
+    public long getRestZeit(){
+        long speed = getSpeedInBytes();
+        if (speed == 0)
+            return Long.MAX_VALUE;
+        return ((groesse-ready) / speed);
     }
 
     public String getRestZeitAsString(){

@@ -15,11 +15,12 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
+import de.applejuicenet.client.gui.shared.SortButtonRenderer;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.50 2003/10/05 11:48:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.51 2003/10/10 15:12:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +29,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.51  2003/10/10 15:12:26  maj0r
+ * Sortieren im Downloadbereich eingefuegt.
+ *
  * Revision 1.50  2003/10/05 11:48:36  maj0r
  * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
  * Userpartlisten werden angezeigt.
@@ -379,6 +383,17 @@ public class DownloadPanel
         bottomPanel.add(downloadDOOverviewPanel, BorderLayout.CENTER);
         add(topPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
+
+        SortButtonRenderer renderer2 = new SortButtonRenderer();
+        TableColumnModel model = downloadTable.getColumnModel();
+        int n = model.getColumnCount();
+        for (int i = 0; i < n; i++)
+        {
+            model.getColumn(i).setHeaderRenderer(renderer2);
+        }
+        JTableHeader header = downloadTable.getTableHeader();
+        header.addMouseListener(new SortMouseAdapter(header, renderer2));
+
         ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
     }
 
@@ -545,4 +560,77 @@ public class DownloadPanel
                 logger.error("Unbehandelte Exception", e);
         }
     }
+
+    class SortMouseAdapter extends MouseAdapter{
+            private JTableHeader header;
+            private SortButtonRenderer renderer;
+
+            public SortMouseAdapter(JTableHeader header, SortButtonRenderer renderer) {
+              this.header = header;
+              this.renderer = renderer;
+            }
+
+            public void mousePressed(MouseEvent e) {
+              int col = header.columnAtPoint(e.getPoint());
+              renderer.setPressedColumn(col);
+              renderer.setSelectedColumn(col);
+              header.repaint();
+
+              if (header.getTable().isEditing()) {
+                header.getTable().getCellEditor().stopCellEditing();
+              }
+
+              boolean isAscent;
+              if (SortButtonRenderer.UP == renderer.getState(col)) {
+                isAscent = true;
+              }
+              else {
+                isAscent = false;
+              }
+              DownloadRootNode rootNode = ((DownloadRootNode)downloadModel.getRoot());
+              switch(col){
+                  case 0:{
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_DOWNLOADNAME, isAscent);
+                      break;
+                  }
+                  case 2:{
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_GROESSE, isAscent);
+                      break;
+                  }
+                  case 3:{
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_BEREITS_GELADEN, isAscent);
+                      break;
+                  }
+                  case 4:{
+                         rootNode.setSortCriteria(DownloadRootNode.SORT_GESCHWINDIGKEIT, isAscent);
+                       break;
+                   }
+                   case 5:{
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_RESTZEIT, isAscent);
+                      break;
+                  }
+                  case 6:{
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_PROZENT, isAscent);
+                      break;
+                  }
+                  case 7:{
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_REST_ZU_LADEN, isAscent);
+                      break;
+                  }
+                  case 8:{
+                        rootNode.setSortCriteria(DownloadRootNode.SORT_PWDL, isAscent);
+                      break;
+                  }
+                  default:
+                      break;
+              }
+              downloadTable.updateUI();
+            }
+
+            public void mouseReleased(MouseEvent e) {
+              renderer.setPressedColumn( -1);
+              header.repaint();
+            }
+
+        }
 }
