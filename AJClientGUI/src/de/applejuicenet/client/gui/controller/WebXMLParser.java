@@ -12,7 +12,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.17 2003/10/14 15:39:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.18 2003/11/03 15:45:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.18  2003/11/03 15:45:26  maj0r
+ * Optimierungen.
+ *
  * Revision 1.17  2003/10/14 15:39:48  maj0r
  * Stacktraces ausgebaut.
  *
@@ -168,7 +171,7 @@ public abstract class WebXMLParser
         catch (Exception e)
         {
             Exception x = e;
-            if (e instanceof SAXException){
+            if (e.getClass()==SAXException.class){
                 if (((SAXException)e).getException() != null)
                 {
                     x = ((SAXException)e).getException();

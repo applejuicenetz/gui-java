@@ -22,7 +22,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.18 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.19 2003/11/03 15:45:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import java.util.EventObject;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.19  2003/11/03 15:45:26  maj0r
+ * Optimierungen.
+ *
  * Revision 1.18  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -352,8 +355,8 @@ public class JTreeTable extends JTable{
         c = super.getTreeCellRendererComponent(tree, value,
                                      sel, expanded, leaf, row, hasFocus);
       }
-      if (c instanceof JLabel){
-          ((JLabel)c).setOpaque(true);
+      if (c.getClass()==IconNodeRenderer.class){
+          ((IconNodeRenderer)c).setOpaque(true);
           if (sel){
               c.setBackground(thisTable.getSelectionBackground());
               c.setForeground(thisTable.getSelectionForeground());
