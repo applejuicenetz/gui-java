@@ -46,9 +46,14 @@ public class SwingTrayPopup
         //    setAlwaysOnTop and updateUI() hint
 
         WindowsTrayIcon.setMouseClickHook(new ClickListener());
-//        WindowsTrayIcon.setAlwaysOnTop(parent, true);
+        //WindowsTrayIcon.setAlwaysOnTop(parent, true);
         Dimension d = getPreferredSize();
-        show(parent, xp - d.width, yp - d.height);
+        if (parent.isVisible()){
+        	show(parent, xp - d.width, yp - d.height);
+        }
+        else{
+        	show(WindowsTrayIcon.getDummyComponent(), xp - d.width, yp - d.height);
+        }
         updateUI();
     }
 
