@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.21 2004/07/09 12:46:38 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.20 2004/07/09 12:42:01 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -52,7 +52,7 @@ public class ODAnsichtPanel
     private Settings settings;
     JCheckBox cmbAktiv = new JCheckBox();
     JCheckBox cmbDownloadUebersicht = new JCheckBox();
-    private JCheckBox enableToolTip = new JCheckBox();
+    private JCheckBox enableToolTip = new JCheckBox("Tooltipp anzeigen (Neustart erforderlich)");
     private JCheckBox cmbStartscreenZeigen = new JCheckBox();
     private Logger logger;
     private Icon menuIcon;
@@ -86,9 +86,6 @@ public class ODAnsichtPanel
         cmbStartscreenZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.options.ansicht.zeigestartscreen")));
-        enableToolTip.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.ansicht.zeigetooltipps")));
-
         setLayout(new BorderLayout());
         farbeFertigerDownload.setOpaque(true);
         farbeFertigerDownload.setBackground(settings.
