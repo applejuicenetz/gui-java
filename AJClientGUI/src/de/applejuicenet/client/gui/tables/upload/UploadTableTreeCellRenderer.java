@@ -8,10 +8,10 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import de.applejuicenet.client.gui.download.table.IconGetter;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.dac.UploadDO;
 import javax.swing.Icon;
-import de.applejuicenet.client.gui.tables.download.IconGetter;
 
 public class UploadTableTreeCellRenderer
     extends DefaultTableCellRenderer {

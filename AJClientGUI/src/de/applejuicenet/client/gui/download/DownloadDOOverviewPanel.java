@@ -1,7 +1,7 @@
-package de.applejuicenet.client.gui;
+package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.39 2004/10/14 14:55:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.1 2004/10/15 15:54:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,8 +15,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
 import javax.swing.JButton;
@@ -70,6 +68,10 @@ public class DownloadDOOverviewPanel
     public void enableHoleListButton(boolean enable) {
         holeListe.setEnabled(enable);
     }
+    
+    public JButton getBtnHoleListe(){
+    	return holeListe;
+    }
 
     private void init() {
         holeListe.setEnabled(false);
@@ -118,12 +120,6 @@ public class DownloadDOOverviewPanel
         panel1.add(actualDLDateiName, BorderLayout.NORTH);
         panel1.add(actualDlOverviewTable, BorderLayout.CENTER);
         add(panel1, BorderLayout.CENTER);
-        holeListe.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                holeListe.setEnabled(false);
-                downloadPanel.tryGetPartList();
-            }
-        });
     }
 
     public void setDownloadDO(DownloadDO downloadDO) {

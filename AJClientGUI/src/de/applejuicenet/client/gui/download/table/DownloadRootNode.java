@@ -1,21 +1,20 @@
-package de.applejuicenet.client.gui.tables.download;
+package de.applejuicenet.client.gui.download.table;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
-import java.awt.Component;
 import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.JTable;
 
 import de.applejuicenet.client.gui.tables.Node;
+import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
+import java.util.Map;
+import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.15 2004/10/15 13:34:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadRootNode.java,v 1.1 2004/10/15 15:54:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,9 +24,8 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  *
  */
 
-public class DownloadDirectoryNode
-    implements Node, DownloadNode, DownloadColumnValue, DownloadColumnComponent {
-
+public class DownloadRootNode
+    implements Node, DownloadNode {
     public static int SORT_NO_SORT = -1;
     public static int SORT_DOWNLOADNAME = 0;
     public static int SORT_GROESSE = 1;
@@ -37,82 +35,98 @@ public class DownloadDirectoryNode
     public static int SORT_PWDL = 5;
     public static int SORT_REST_ZU_LADEN = 6;
     public static int SORT_GESCHWINDIGKEIT = 7;
-    public static int SORT_STATUS = 7;
+    public static int SORT_STATUS = 8;
 
-    private static int sort = SORT_DOWNLOADNAME;
-    private static boolean isAscent = true;
+    private Map downloads;
 
-    private int speziellSort = sort;
-    private boolean speziellIsAscent = isAscent;
+    private static boolean initialized = false;
 
-    private Object[] sortedChildNodes;
-
-    private static Map downloads;
-    private String verzeichnis;
+    private Map childrenPath = new HashMap();
     private List children = new ArrayList();
 
-    private JLabel progressbarLabel;
-    private JLabel versionLabel;
+    private int sort = SORT_DOWNLOADNAME;
+    private boolean isAscent = true;
 
-    public DownloadDirectoryNode(String targetDir) {
-        verzeichnis = targetDir;
-        progressbarLabel = new JLabel();
-        progressbarLabel.setOpaque(true);
-        versionLabel = new JLabel();
-        versionLabel.setOpaque(true);
-    }
+    private Object[] sortedChildNodes;
+    private Map targetDirs = new HashMap();
 
-    public static void setDownloads(Map downloadsMap) {
-        if (downloads == null) {
-            downloads = downloadsMap;
-        }
-    }
-
-    private boolean shouldSort(DownloadDO downloadDO, List oldNodes){
-        if (downloadDO.getTargetDirectory().compareTo(verzeichnis) == 0) {
-            boolean found = false;
-            for (int i = 0; i < children.size(); i++) {
-                if ( ( (DownloadMainNode) children.get(i)).
-                    getDownloadDO().getId()
-                    == downloadDO.getId()) {
-                    oldNodes.remove(children.get(i));
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                children.add(new DownloadMainNode(downloadDO));
-                return true;
-            }
-        }
-        return false;
+    public static boolean isInitialized() {
+        return initialized;
     }
 
     public Object[] getChildren() {
+        if (!initialized) {
+            return new Object[] {
+                new WaitNode()};
+        }
         if (downloads == null) {
             return null;
         }
         DownloadDO downloadDO;
-        boolean newSort = false;
+        String key;
+        DownloadDirectoryNode newNode;
+        boolean sort = false;
         synchronized (this) {
-            Iterator it = downloads.values().iterator();
-            ArrayList oldNodes = new ArrayList();
-            for (int i = 0; i < children.size(); i++) {
-                oldNodes.add(children.get(i));
-            }
-            while (it.hasNext()) {
-                downloadDO = (DownloadDO) it.next();
-                if (shouldSort(downloadDO, oldNodes)) {
-                    newSort = true;
+            int childCount = children.size(); //alte Downloads entfernen
+            Object obj;
+            for (int i = childCount - 1; i >= 0; i--) {
+                obj = children.get(i);
+                if (obj.getClass() == DownloadMainNode.class) {
+                    downloadDO = ( (DownloadMainNode) obj).getDownloadDO();
+                    key = Integer.toString(downloadDO.getId());
+                    if (!downloads.containsKey(key) ||
+                        downloadDO.getTargetDirectory().length() > 0) {
+                        children.remove(i);
+                        sort = true;
+                    }
+                }
+                else if (obj.getClass() == DownloadDirectoryNode.class) {
+                    if ( ( (DownloadDirectoryNode) obj).getChildCount() == 0) {
+                        children.remove(i);
+                        sort = true;
+                    }
                 }
             }
-            for (int i = 0; i < oldNodes.size(); i++) {
-                children.remove(oldNodes.get(i));
-                newSort = true;
+            Iterator it = downloads.values().iterator();
+            String pfad;
+            PathEntry pathEntry;
+            String mapKey;
+            while (it.hasNext()) {
+                downloadDO = (DownloadDO) it.next();
+                mapKey = Integer.toString(downloadDO.getId());
+                pfad = downloadDO.getTargetDirectory();
+                pathEntry = (PathEntry) childrenPath.get(mapKey);
+                if (pathEntry != null) {
+                    if (pathEntry.getPfad().compareToIgnoreCase(pfad) != 0) { //geaenderter Download
+                        childrenPath.remove(mapKey);
+                    }
+                    else {
+                        continue;
+                    }
+                }
+                if (pathEntry == null) { //neuer Download
+                    sort = true;
+                    if (pfad == null || pfad.length() == 0) {
+                        childrenPath.put(mapKey, new PathEntry("", downloadDO));
+                        children.add(new DownloadMainNode(downloadDO));
+                    }
+                    else {
+                        key = downloadDO.getTargetDirectory();
+                        if (!targetDirs.containsKey(key)) {
+                            newNode = new DownloadDirectoryNode(downloadDO.
+                                getTargetDirectory());
+                            childrenPath.put(mapKey,
+                                             new PathEntry(downloadDO.
+                                getTargetDirectory(),
+                                newNode));
+                            targetDirs.put(key, newNode);
+                            children.add(newNode);
+                        }
+                    }
+                }
             }
         }
-        if (newSort || sortedChildNodes == null || speziellSort != sort
-            || speziellIsAscent != isAscent) {
+        if (sort || sortedChildNodes == null) {
             return sort( (Object[]) children.toArray(new Object[children.size()]));
         }
         else {
@@ -120,107 +134,77 @@ public class DownloadDirectoryNode
         }
     }
 
-    public static void setSortCriteria(int sortCriteria, boolean ascent) {
+    public void setSortCriteria(int sortCriteria, boolean isAscent) {
         sort = sortCriteria;
-        isAscent = ascent;
-    }
-
-    public int getChildCount() {
-        Object[] obj = getChildren();
-        if (obj == null) {
-            return 0;
+        this.isAscent = isAscent;
+        DownloadDirectoryNode.setSortCriteria(sortCriteria, isAscent);
+        if (sortedChildNodes != null) {
+            sort(sortedChildNodes);
         }
-        return getChildren().length;
-    }
-
-    public String getVerzeichnis() {
-        return verzeichnis;
-    }
-
-    public boolean isLeaf() {
-        return false;
-    }
-
-    public Icon getConvenientIcon() {
-        return IconManager.getInstance().getIcon("tree");
-    }
-
-    public String getColumn0() {
-        return getVerzeichnis();
-    }
-
-    public String getColumn1() {
-        return "";
-    }
-
-    public String getColumn2() {
-        return "";
-    }
-
-    public String getColumn3() {
-        return "";
-    }
-
-    public String getColumn4() {
-        return "";
-    }
-
-    public String getColumn5() {
-        return "";
-    }
-
-    public String getColumn6() {
-        return "";
-    }
-
-    public String getColumn7() {
-        return "";
-    }
-
-    public String getColumn8() {
-        return "";
-    }
-
-    public String getColumn9() {
-        return "";
     }
 
     private Object[] sort(Object[] childNodes) {
-        speziellIsAscent = isAscent;
-        speziellSort = sort;
         if (sort == SORT_NO_SORT) {
             sortedChildNodes = childNodes;
             return childNodes;
         }
         else {
-            sortedChildNodes = childNodes;
-            int n = sortedChildNodes.length;
+            int n = childNodes.length;
             Object tmp;
             for (int i = 0; i < n - 1; i++) {
                 int k = i;
                 for (int j = i + 1; j < n; j++) {
                     if (isAscent) {
-                        if (compare(sortedChildNodes, j, k) < 0) {
+                        if (compare(childNodes, j, k, isAscent) < 0) {
                             k = j;
                         }
                     }
                     else {
-                        if (compare(sortedChildNodes, j, k) > 0) {
+                        if (compare(childNodes, j, k, isAscent) > 0) {
                             k = j;
                         }
                     }
                 }
-                tmp = sortedChildNodes[i];
-                sortedChildNodes[i] = sortedChildNodes[k];
-                sortedChildNodes[k] = tmp;
+                tmp = childNodes[i];
+                childNodes[i] = childNodes[k];
+                childNodes[k] = tmp;
             }
+            sortedChildNodes = childNodes;
             return sortedChildNodes;
         }
     }
 
-    private int compare(Object[] childNodes, int row1, int row2) {
-        Object o1 = null;
-        Object o2 = null;
+    private int compare(Object[] childNodes, int row1, int row2,
+                        boolean isAscent) {
+        Object o1 = childNodes[row1];
+        Object o2 = childNodes[row2];
+        if (o1.getClass() == DownloadDirectoryNode.class
+            && o2.getClass() == DownloadMainNode.class) {
+            if (isAscent) {
+                return -1;
+            }
+            else {
+                return 1;
+            }
+        }
+        else if (o1.getClass() == DownloadMainNode.class
+                 && o2.getClass() == DownloadDirectoryNode.class) {
+            if (isAscent) {
+                return 1;
+            }
+            else {
+                return -1;
+            }
+        }
+        else if (o1.getClass() == DownloadDirectoryNode.class
+                 && o2.getClass() == DownloadDirectoryNode.class) {
+            return ( (DownloadDirectoryNode) o1).getVerzeichnis().
+                compareToIgnoreCase( ( (DownloadDirectoryNode) o2).
+                                    getVerzeichnis());
+        }
+        o1 = null;
+        o2 = null;
+
         if (sort == SORT_DOWNLOADNAME) {
             o1 = ( (DownloadMainNode) childNodes[row1]).getDownloadDO().
                 getFilename();
@@ -330,15 +314,44 @@ public class DownloadDirectoryNode
         }
     }
 
-    public Component getProgressbarComponent(JTable table, Object value) {
-        progressbarLabel.setFont(table.getFont());
-        progressbarLabel.setText( (String) value);
-        return progressbarLabel;
+    public void setDownloadMap(Map downloadMap) {
+        if (downloads == null) {
+            initialized = true;
+            downloads = downloadMap;
+        }
     }
 
-    public Component getVersionComponent(JTable table, Object value) {
-        versionLabel.setFont(table.getFont());
-        versionLabel.setText( (String) value);
-        return versionLabel;
+    public int getChildCount() {
+        Object[] obj = getChildren();
+        if (obj == null) {
+            return 0;
+        }
+        return getChildren().length;
+    }
+
+    public boolean isLeaf() {
+        return false;
+    }
+
+    public Icon getConvenientIcon() {
+        return IconManager.getInstance().getIcon("tree");
+    }
+
+    class PathEntry {
+        private String pfad;
+        private Object obj;
+
+        public PathEntry(String pfad, Object obj) {
+            this.pfad = pfad;
+            this.obj = obj;
+        }
+
+        public String getPfad() {
+            return pfad;
+        }
+
+        public Object getObj() {
+            return obj;
+        }
     }
 }

@@ -1,11 +1,11 @@
 package de.applejuicenet.client.gui.share.table;
 
+import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.tables.TreeTableModel;
-import de.applejuicenet.client.gui.tables.download.DownloadModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/Attic/ShareModel.java,v 1.1 2004/10/15 13:39:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/Attic/ShareModel.java,v 1.2 2004/10/15 15:54:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

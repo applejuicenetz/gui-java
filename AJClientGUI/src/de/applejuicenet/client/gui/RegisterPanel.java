@@ -16,6 +16,7 @@ import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.gui.download.DownloadController;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.share.ShareController;
@@ -25,7 +26,7 @@ import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.47 2004/10/15 12:59:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.48 2004/10/15 15:54:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -42,7 +43,7 @@ public class RegisterPanel
     private static final long serialVersionUID = -8677504466512253432L;
     
 	private StartController startController;
-    private DownloadPanel downloadPanel;
+    private DownloadController downloadController;
     private SearchPanel searchPanel;
     private UploadPanel uploadPanel;
     private ServerPanel serverPanel;
@@ -91,7 +92,7 @@ public class RegisterPanel
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(50, "Lade Downloadpanel...");
         }
-        downloadPanel = DownloadPanel.getInstance();
+        downloadController = DownloadController.getInstance();
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(60, "Lade Uploadpanel...");
         }
@@ -117,7 +118,7 @@ public class RegisterPanel
         addTab("Suchen", icon2, searchPanel);
 
         ImageIcon icon3 = im.getIcon("download");
-        addTab("Download", icon3, downloadPanel);
+        addTab("Download", icon3, downloadController.getComponent());
 
         ImageIcon icon4 = im.getIcon("upload");
         addTab("Upload", icon4, uploadPanel);

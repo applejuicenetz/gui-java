@@ -1,4 +1,4 @@
-package de.applejuicenet.client.gui.tables.download;
+package de.applejuicenet.client.gui.download.table;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTablePercentCellRenderer.java,v 1.8 2004/10/15 13:34:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTableVersionCellRenderer.java,v 1.1 2004/10/15 15:54:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,19 +24,24 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  *
  */
 
-public class DownloadTablePercentCellRenderer
+public class DownloadTableVersionCellRenderer
     implements TableCellRenderer, DataUpdateListener {
-    private Settings settings;
     private static Color background;
+    private static Color foreground;
     private static Color selectionBackground;
+    private static Color selectionForeground;
 
     static {
         JTable tmpTable = new JTable();
+        foreground = tmpTable.getForeground();
         background = tmpTable.getBackground();
         selectionBackground = tmpTable.getSelectionBackground();
+        selectionForeground = tmpTable.getSelectionForeground();
     }
 
-    public DownloadTablePercentCellRenderer() {
+    private Settings settings;
+
+    public DownloadTableVersionCellRenderer() {
         settings = Settings.getSettings();
         OptionsManagerImpl.getInstance().addSettingsListener(this);
     }
@@ -47,7 +52,6 @@ public class DownloadTablePercentCellRenderer
         boolean hasFocus,
         int row,
         int column) {
-
         Object node = ( (TreeTableModelAdapter) table.getModel()).nodeForRow(
             row);
         if (node.getClass() == DownloadSourceDO.class) {
@@ -76,21 +80,22 @@ public class DownloadTablePercentCellRenderer
                                              boolean hasFocus,
                                              int row,
                                              int column) {
-        Component c = downloadMainNode.getProgressbarComponent(table, value);
-        DownloadDO downloadDO = downloadMainNode.getDownloadDO();
+        Component c = downloadMainNode.getVersionComponent(table, value);
         if (isSelected) {
             c.setBackground(selectionBackground);
+            c.setForeground(selectionForeground);
         }
         else {
+            DownloadDO downloadDO = downloadMainNode.getDownloadDO();
             if (downloadMainNode.getType() == DownloadMainNode.ROOT_NODE &&
                 downloadDO.getStatus() == DownloadDO.FERTIG &&
                 settings.isFarbenAktiv()) {
-                c.setBackground(settings.
-                                     getDownloadFertigHintergrundColor());
+                c.setBackground(settings.getDownloadFertigHintergrundColor());
             }
             else {
                 c.setBackground(background);
             }
+            c.setForeground(foreground);
         }
         return c;
     }
@@ -102,11 +107,13 @@ public class DownloadTablePercentCellRenderer
                                            boolean hasFocus,
                                            int row,
                                            int column) {
-        Component c = downloadSourceDO.getProgressbarComponent(table, value);
+        Component c = downloadSourceDO.getVersionComponent(table, value);
         if (isSelected) {
             c.setBackground(selectionBackground);
+            c.setForeground(selectionForeground);
         }
         else {
+            c.setForeground(foreground);
             if (settings.isFarbenAktiv()) {
                 c.setBackground(settings.getQuelleHintergrundColor());
             }
@@ -124,12 +131,14 @@ public class DownloadTablePercentCellRenderer
                                               boolean hasFocus,
                                               int row,
                                               int column) {
-        Component c = downloadDirectoryNode.getProgressbarComponent(table, value);
+        Component c = downloadDirectoryNode.getVersionComponent(table, value);
         if (isSelected) {
             c.setBackground(selectionBackground);
+            c.setForeground(selectionForeground);
         }
         else {
             c.setBackground(background);
+            c.setForeground(foreground);
         }
         return c;
     }

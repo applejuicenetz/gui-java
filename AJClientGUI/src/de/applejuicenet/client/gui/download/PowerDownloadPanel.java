@@ -1,4 +1,4 @@
-package de.applejuicenet.client.gui;
+package de.applejuicenet.client.gui.download;
 
 import java.io.File;
 import java.net.URL;
@@ -36,23 +36,23 @@ import javax.swing.SwingConstants;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
-import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.PolicyJarClassLoader;
-import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.53 2004/10/15 13:34:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.1 2004/10/15 15:54:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -69,8 +69,8 @@ public class PowerDownloadPanel
     private static final long serialVersionUID = 6452879508173851941L;
     
 	private final Color BLUE_BACKGROUND = new Color(118, 112, 148);
-    private JRadioButton btnInaktiv = new JRadioButton();
-    private JRadioButton btnAktiv = new JRadioButton();
+	public JRadioButton btnInaktiv = new JRadioButton();
+    public JRadioButton btnAktiv = new JRadioButton();
     private JRadioButton btnAutoInaktiv = new JRadioButton();
     private JRadioButton btnAutoAktiv = new JRadioButton();
     private JLabel btnHint;
@@ -79,7 +79,7 @@ public class PowerDownloadPanel
     private JLabel btnPdlUp;
     private JLabel btnPdlDown;
     private float ratioWert = 2.2f;
-    private JTextField ratio = new JTextField("2.2");
+    public JTextField ratio = new JTextField("2.2");
     private JTextField autoAb = new JTextField();
     private JTextField autoBis = new JTextField();
     public JButton btnPdl = new JButton();
@@ -97,15 +97,15 @@ public class PowerDownloadPanel
     private JButton autoPwdlEinstellungen = new JButton();
     private int standardAutomaticPwdlAb = 200;
     private int standardAutomaticPwdlBis = 30;
-    private DownloadPanel parentPanel;
+    private DownloadController downloadController;
     private AutomaticPowerdownloadPolicy autoPwdlThread;
     private Information lastInformation;
     private JPanel backPanel = new JPanel();
 
-    public PowerDownloadPanel(DownloadPanel parentPanel) {
+    public PowerDownloadPanel(DownloadController downloadController) {
         logger = Logger.getLogger(getClass());
         try {
-            this.parentPanel = parentPanel;
+            this.downloadController = downloadController;
             btnPdl.setEnabled(false);
             init();
         }
@@ -167,11 +167,6 @@ public class PowerDownloadPanel
         btnAktiv.addKeyListener(ratioKlicker);
         ratio.addKeyListener(ratioKlicker);
 
-        btnPdl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                btnPdl_actionPerformed(e);
-            }
-        });
         tempPanel.add(powerdownload, BorderLayout.CENTER);
 
         IconManager im = IconManager.getInstance();
@@ -580,51 +575,6 @@ public class PowerDownloadPanel
             }
             ratio.setText(ganzZahl + "." + nachKomma);
             ratioWert = Float.parseFloat(ratio.getText());
-        }
-        catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            }
-        }
-    }
-
-    void btnPdl_actionPerformed(ActionEvent e) {
-        try {
-            Object[] selectedItems = parentPanel.getSelectedDownloadItems();
-            if (selectedItems != null && selectedItems.length != 0) {
-                int powerDownload = 0;
-                if (!btnInaktiv.isSelected()) {
-                    String temp = ratio.getText();
-                    double power = 2.2;
-                    try {
-                        power = Double.parseDouble(temp);
-                    }
-                    catch (NumberFormatException nfE) {
-                        if (logger.isEnabledFor(Level.ERROR)) {
-                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, nfE);
-                        }
-                        ratio.setText("2.2");
-                    }
-                    powerDownload = (int) (power * 10 - 10);
-                }
-                ArrayList temp = new ArrayList();
-                for (int i = 0; i < selectedItems.length; i++) {
-                    if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                        temp.add(new Integer( ( (DownloadMainNode)
-                                               selectedItems[i]).getDownloadDO().
-                                             getId()));
-                    }
-                }
-                int[] ids = new int[temp.size()];
-                for (int i = 0; i < temp.size(); i++) {
-                    ids[i] = ( (Integer) temp.get(i)).intValue();
-                }
-                ApplejuiceFassade.getInstance().setPowerDownload(ids,
-                    powerDownload);
-                if (btnAktiv.isSelected()) {
-                    SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
-                }
-            }
         }
         catch (Exception ex) {
             if (logger.isEnabledFor(Level.ERROR)) {

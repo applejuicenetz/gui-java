@@ -8,13 +8,13 @@ import javax.swing.JTable;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.tables.download.DownloadColumnComponent;
-import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
-import de.applejuicenet.client.gui.tables.download.DownloadModel;
+import de.applejuicenet.client.gui.download.table.DownloadColumnComponent;
+import de.applejuicenet.client.gui.download.table.DownloadColumnValue;
+import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.28 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.29 2004/10/15 15:54:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

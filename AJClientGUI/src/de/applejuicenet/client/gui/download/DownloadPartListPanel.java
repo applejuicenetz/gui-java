@@ -1,4 +1,4 @@
-package de.applejuicenet.client.gui;
+package de.applejuicenet.client.gui.download;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -70,6 +70,8 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.download.DownloadController;
+import de.applejuicenet.client.gui.download.DownloadPanel;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
@@ -490,7 +492,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 			String sprachText = LanguageSelector.getInstance()
 					.getFirstAttrbuteByTagName(".root.Languageinfo.name");
 			OptionsManagerImpl.getInstance().setSprache(sprachText);
-			int[] downloadWidths = DownloadPanel.getInstance()
+			int[] downloadWidths = ((DownloadPanel)DownloadController.getInstance().getComponent())
 					.getColumnWidths();
 			int[] uploadWidths = UploadPanel.getInstance().getColumnWidths();
 			int[] serverWidths = ServerPanel.getInstance().getColumnWidths();
