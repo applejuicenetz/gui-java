@@ -63,7 +63,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import javax.swing.Icon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.76 2004/01/06 15:05:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.77 2004/01/07 17:16:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -72,6 +72,9 @@ import javax.swing.Icon;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.77  2004/01/07 17:16:20  maj0r
+ * Button zum Themes deaktivieren an Sprachen angepasst.
+ *
  * Revision 1.76  2004/01/06 15:05:43  maj0r
  * TrayIcon-Verwendung korrigiert.
  *
@@ -264,6 +267,7 @@ public class AppleJuiceDialog
     private JMenuItem menuItemOptionen = new JMenuItem();
     private JMenuItem menuItemCoreBeenden = new JMenuItem();
     private JMenuItem menuItemUeber = new JMenuItem();
+    private JMenuItem menuItemDeaktivieren = new JMenuItem();
     private JFrame _this;
     private JButton sound = new JButton();
     private JButton memory = new JButton();
@@ -775,14 +779,13 @@ public class AppleJuiceDialog
                     themesMenu.add(rb);
                 }
                 themesMenu.add(new JSeparator());
-                JMenuItem menuItem = new JMenuItem();
-                menuItem.setText("deaktivieren");
-                menuItem.addActionListener(new ActionListener() {
+                menuItemDeaktivieren.setText("deaktivieren");
+                menuItemDeaktivieren.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ce) {
                         activateThemeSupport(false);
                     }
                 });
-                themesMenu.add(menuItem);
+                themesMenu.add(menuItemDeaktivieren);
             }
             else {
                 JMenuItem menuItem = new JMenuItem();
@@ -905,6 +908,10 @@ public class AppleJuiceDialog
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
                                           "hint"})));
+            menuItemDeaktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                          "deaktivieren"})));
             optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
