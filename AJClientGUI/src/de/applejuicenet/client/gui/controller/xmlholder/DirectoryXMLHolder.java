@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import de.applejuicenet.client.shared.dac.DirectoryDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.5 2004/02/09 20:12:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.6 2004/02/16 07:42:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import de.applejuicenet.client.shared.dac.DirectoryDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.6  2004/02/16 07:42:43  maj0r
+ * alten Timestampfehler beseitig
+ * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
+ *
  * Revision 1.5  2004/02/09 20:12:28  maj0r
  * Sortierung verbessert bzw. eingebaut.
  *
@@ -75,7 +79,7 @@ public class DirectoryXMLHolder
     private ApplejuiceNode directoryNode;
 
     public DirectoryXMLHolder() {
-        super("/xml/directory.xml", "", false);
+        super("/xml/directory.xml", "");
         logger = Logger.getLogger(getClass());
     }
 

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DownloadPartListXMLHolder.java,v 1.3 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DownloadPartListXMLHolder.java,v 1.4 2004/02/16 07:42:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListXMLHolder.java,v $
+ * Revision 1.4  2004/02/16 07:42:43  maj0r
+ * alten Timestampfehler beseitig
+ * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
+ *
  * Revision 1.3  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -69,7 +73,7 @@ public class DownloadPartListXMLHolder
     private DownloadDO downloadDO;
 
     public DownloadPartListXMLHolder(DownloadDO downloadDO) {
-        super("/xml/downloadpartlist.xml", "", false);
+        super("/xml/downloadpartlist.xml", "");
         this.downloadDO = downloadDO;
         logger = Logger.getLogger(getClass());
     }

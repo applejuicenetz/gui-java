@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.6 2004/02/09 08:52:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.7 2004/02/16 07:42:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: GetObjectXMLHolder.java,v $
+ * Revision 1.7  2004/02/16 07:42:43  maj0r
+ * alten Timestampfehler beseitig
+ * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
+ *
  * Revision 1.6  2004/02/09 08:52:24  maj0r
  * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
  *
@@ -48,7 +52,7 @@ public class GetObjectXMLHolder
     private Logger logger;
 
     public GetObjectXMLHolder() {
-        super("/xml/getobject.xml", "", false);
+        super("/xml/getobject.xml", "");
         logger = Logger.getLogger(getClass());
     }
 

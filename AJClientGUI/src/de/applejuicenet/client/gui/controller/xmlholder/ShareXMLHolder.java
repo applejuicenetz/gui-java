@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.5 2004/02/16 07:42:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,10 @@ import de.applejuicenet.client.shared.dac.ShareDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.5  2004/02/16 07:42:43  maj0r
+ * alten Timestampfehler beseitig
+ * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
+ *
  * Revision 1.4  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -82,7 +86,7 @@ public class ShareXMLHolder
     private Logger logger;
 
     public ShareXMLHolder() {
-        super("/xml/share.xml", "", false);
+        super("/xml/share.xml", "");
         logger = Logger.getLogger(getClass());
     }
 

@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.17 2004/02/15 18:44:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.18 2004/02/16 07:42:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.18  2004/02/16 07:42:43  maj0r
+ * alten Timestampfehler beseitig
+ * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
+ *
  * Revision 1.17  2004/02/15 18:44:14  maj0r
  * Bug #215 gefixt (Danke an dsp2004)
  * Partliste wird nun auch bei kleinen Dateien korrekt gezeichnet.
@@ -112,11 +116,8 @@ public class DownloadPartListPanel
             if (partListDO != null) {
                 int zeilenHoehe = 15;
                 int zeilen = height / zeilenHoehe;
-                int pixelSize;
-                if (partListDO.getGroesse() > (zeilen * width)){
-                    pixelSize = (int) (partListDO.getGroesse() / (zeilen * width));
-                }
-                else{
+                int pixelSize = (int) (partListDO.getGroesse() / (zeilen * width));
+                if (pixelSize == 0){
                     pixelSize = (int) ((zeilen * width) / partListDO.getGroesse());
                 }
                 BufferedImage tempImage = new BufferedImage(width * zeilen, 15,
@@ -130,9 +131,14 @@ public class DownloadPartListPanel
                              graphics, pixelSize, parts[i].getType(), zeilenHoehe,
                                          parts[i].getFromPosition(), parts[i+1].getFromPosition());
                 }
-                drawPart(true, (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST), graphics, pixelSize,
-                         parts[parts.length - 1].getType(), zeilenHoehe, parts[parts.length - 1].getFromPosition(),
-                         partListDO.getGroesse());
+                if (parts[parts.length - 1].getFromPosition()<partListDO.getGroesse()){
+                    drawPart(true,
+                             (partListDO.getPartListType() == PartListDO.MAIN_PARTLIST),
+                             graphics, pixelSize,
+                             parts[parts.length - 1].getType(), zeilenHoehe,
+                             parts[parts.length - 1].getFromPosition(),
+                             partListDO.getGroesse());
+                }
                 if (partListDO.getPartListType()==PartListDO.MAIN_PARTLIST){
                     DownloadDO downloadDO = (DownloadDO)partListDO.getValueDO();
                     if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {

@@ -11,7 +11,7 @@ import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.ShareEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.5 2004/02/09 07:28:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.6 2004/02/16 07:42:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import de.applejuicenet.client.shared.ShareEntry;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SettingsXMLHolder.java,v $
+ * Revision 1.6  2004/02/16 07:42:43  maj0r
+ * alten Timestampfehler beseitig
+ * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
+ *
  * Revision 1.5  2004/02/09 07:28:24  maj0r
  * Max. Anzahl von Quellen pro Datei kann begrenzt werden.
  *
@@ -69,7 +73,7 @@ public class SettingsXMLHolder
     private Logger logger;
 
     public SettingsXMLHolder() {
-        super("/xml/settings.xml", "", false);
+        super("/xml/settings.xml", "");
         logger = Logger.getLogger(getClass());
     }
 

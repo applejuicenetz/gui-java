@@ -3,7 +3,7 @@ package de.applejuicenet.client.gui.controller.xmlholder;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SessionXMLHolder.java,v 1.2 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SessionXMLHolder.java,v 1.3 2004/02/16 07:42:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,10 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SessionXMLHolder.java,v $
+ * Revision 1.3  2004/02/16 07:42:43  maj0r
+ * alten Timestampfehler beseitig
+ * Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
+ *
  * Revision 1.2  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -36,7 +40,7 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
 public class SessionXMLHolder
     extends WebXMLParser {
     public SessionXMLHolder() {
-        super("/xml/getsession.xml", "", false);
+        super("/xml/getsession.xml", "");
     }
 
     public void update() {
