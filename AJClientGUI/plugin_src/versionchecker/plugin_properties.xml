@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <general>
+    <title>VersionChecker</title>
+    <version>1.1</version>
+    <author>Maj0r</author>
+    <description>Welche Core-Versionen sind zurzeit im Einsatz?\r\nWelche Betriebssysteme werden eingesetzt?\r\nDieses Plugin beantwortet Deine Fragen.\r\n\r\nGUI ab 0.54.7 wird benötigt.</description>
+    <istab>true</istab>
+    <classname>de.applejuicenet.client.gui.plugins.VersionChecker</classname>
+  </general>
+</root>
