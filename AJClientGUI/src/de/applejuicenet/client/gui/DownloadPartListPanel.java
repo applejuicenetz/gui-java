@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.3 2003/09/04 09:29:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.4 2003/09/04 10:14:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.4  2003/09/04 10:14:44  maj0r
+ * NullPointer behoben.
+ *
  * Revision 1.3  2003/09/04 09:29:18  maj0r
  * Anpassung an die Namenskonvention.
  *
@@ -64,6 +67,8 @@ public class DownloadPartListPanel extends JPanel {
                 Graphics graphics = image.getGraphics();
                 height = getHeight();
                 width = getWidth();
+                graphics.setColor(getBackground());
+                graphics.fillRect(0, 0, width, height);
                 int anzahlRows = getHeight() / 16;
                 int anzahlZeile = getWidth() / 2;
                 int anzahl = anzahlRows * anzahlZeile;
@@ -103,7 +108,8 @@ public class DownloadPartListPanel extends JPanel {
                     {
                         partPos++;
                     }
-                    partPos--;
+                    if (partPos>0)
+                        partPos--;
                     if (parts[partPos].getType() == -1)
                     {
                         mbStart = position / 1048576 * 1048576;
