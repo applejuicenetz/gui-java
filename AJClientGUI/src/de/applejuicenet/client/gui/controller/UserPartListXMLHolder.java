@@ -2,11 +2,10 @@ package de.applejuicenet.client.gui.controller;
 
 import org.w3c.dom.*;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/UserPartListXMLHolder.java,v 1.1 2003/10/04 15:29:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/UserPartListXMLHolder.java,v 1.2 2003/10/13 19:14:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +14,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UserPartListXMLHolder.java,v $
+ * Revision 1.2  2003/10/13 19:14:04  maj0r
+ * Kleinen Bug beim Entfernen von Downloads gefixt.
+ *
  * Revision 1.1  2003/10/04 15:29:12  maj0r
  * Userpartliste hinzugefuegt.
  *
@@ -32,9 +34,7 @@ public class UserPartListXMLHolder
         logger = Logger.getLogger(getClass());
     }
 
-    public void update() {
-
-    }
+    public void update() {}
 
     public PartListDO getPartList() {
         try {
@@ -58,9 +58,6 @@ public class UserPartListXMLHolder
             return partListDO;
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
             return null;
         }
     }
