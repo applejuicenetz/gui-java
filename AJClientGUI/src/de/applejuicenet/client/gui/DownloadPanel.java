@@ -11,7 +11,9 @@ import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -41,6 +43,7 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.shared.SortButtonRenderer;
@@ -61,293 +64,15 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
-import de.applejuicenet.client.gui.controller.PositionManagerImpl;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.DataFlavor;
-import java.io.*;
-import java.awt.datatransfer.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.104 2004/04/05 15:59:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.105 2004/04/05 15:59:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: DownloadPanel.java,v $
- * Revision 1.104  2004/04/05 15:59:00  maj0r
- * Umbennendialog bietet nun eine Auswahl der gefundenen Namen an.
- *
- * Revision 1.103  2004/04/05 10:08:13  maj0r
- * [Maj0r] Kontextmenue im Downloadbereich überarbeitet
- * F-Tasten eingebaut.
- * Pausieren und Fortsetzen auf vielfachen Wunsch getrennt.
- *
- * Revision 1.102  2004/04/01 12:26:56  loevenwong
- * Popupmenü erscheint jetzt neben dem Cursor.
- *
- * Revision 1.101  2004/04/01 09:08:21  loevenwong
- * Rechte Maustaste im Download-Textfeld eingebaut.
- *
- * Revision 1.100  2004/03/13 20:15:32  maj0r
- * Featurerequest #274 gefixt (Danke an johannes8)
- * Downloads koennen per F2 umbenannt werden.
- *
- * Revision 1.99  2004/03/09 16:25:17  maj0r
- * PropertiesManager besser gekapselt.
- *
- * Revision 1.98  2004/03/05 15:49:38  maj0r
- * PMD-Optimierung
- *
- * Revision 1.97  2004/03/03 15:33:30  maj0r
- * PMD-Optimierung
- *
- * Revision 1.96  2004/02/21 20:52:43  maj0r
- * Bug #234 gefixt (Danke an hirsch.marcel)
- * Tabellen werden beim Aendern von Spaltengroessen nicht mehr sortiert.
- *
- * Revision 1.95  2004/02/21 18:25:54  maj0r
- * Bug beim Klicken neben den TableHeader behoben.
- *
- * Revision 1.94  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.93  2004/02/19 20:28:20  maj0r
- * - Links werden nun bei Uebernahme in eine verwertbare Schreibweise geparst.
- *
- * Revision 1.92  2004/02/12 18:40:35  maj0r
- * Muell entfernt.
- *
- * Revision 1.91  2004/02/09 14:10:01  maj0r
- * Rand der JSplitPane im Downloadbereich entfernt (Danke an muhviestarr).
- *
- * Revision 1.90  2004/02/05 23:11:26  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.89  2004/02/04 14:26:05  maj0r
- * Bug #185 gefixt (Danke an muhviestarr)
- * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
- *
- * Revision 1.88  2004/02/04 13:10:37  maj0r
- * Neues Linkformat zusaetzlich in den Downloadbereich eingebaut.
- *
- * Revision 1.87  2004/01/30 16:32:47  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.86  2004/01/25 08:31:11  maj0r
- * Icons eingebaut.
- *
- * Revision 1.85  2004/01/20 12:45:32  maj0r
- * Spaltenposition wird jetzt gespeichert.
- *
- * Revision 1.84  2004/01/12 13:09:11  maj0r
- * Bug #77 gefixt (Danke an spam_blocker)
- * Selektionsproblem der Downloadtabelle beim Entfernen von fertigen Downloads behoben.
- *
- * Revision 1.83  2004/01/12 07:26:32  maj0r
- * Tabellenspalte nun ueber Headerkontextmenue ein/ausblendbar.
- * Auf JSplitPane umgebaut.
- *
- * Revision 1.82  2004/01/09 19:21:17  maj0r
- * Kleine Korrekturen.
- *
- * Revision 1.81  2004/01/09 15:33:56  maj0r
- * Spalten der Downloadtabelle koennen nun ordentlich verschoben werden.
- *
- * Revision 1.80  2004/01/08 07:48:22  maj0r
- * Wenn das Panel nicht selektiert ist, wird die Tabelle nun nicht mehr aktualisiert.
- *
- * Revision 1.79  2004/01/06 20:00:22  maj0r
- * Bug #67 gefixt (Danke an dsp2004)
- * Probleme mit der Funktion automatisch Partliste anzeigen korrigiert
- *
- * Revision 1.78  2004/01/05 15:42:51  maj0r
- * Partlistenfreischaltung korrigiert.
- *
- * Revision 1.77  2004/01/05 15:11:19  maj0r
- * Bug #13 umgesetzt (Danke an HabkeineMail)
- * Powerdownload-Werte werden jetzt bei Klick auf einen Download / Quelle im Powerdownloadfeld angezeigt.
- *
- * Revision 1.76  2004/01/05 14:34:59  maj0r
- * Bug #42 umgesetzt (Danke an dsp2004)
- * Partlisten werden nun durch eine Option wahlweise bei Mausklick auf den Download / Quelle oder ueber den Button "Partliste anzeigen" geholt.
- *
- * Revision 1.75  2004/01/04 12:37:27  maj0r
- * Bug #40 umgesetzt (Danke an hirsch.marcel)
- * Incoming-Verzeichnis kann nun für mehrere Downloads gleichzeitig geaendert werden.
- *
- * Revision 1.74  2004/01/01 18:38:14  maj0r
- * Partlisten von einigen wenigen DownloadSourcen wurden bei Bedarf nicht geholt.
- *
- * Revision 1.73  2003/12/30 20:52:19  maj0r
- * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
- *
- * Revision 1.72  2003/12/30 14:52:11  maj0r
- * Das Zielverzeichnis fuer einen Download kann nun geaendert werden.
- *
- * Revision 1.71  2003/12/30 14:31:23  maj0r
- * Downloads koennen nun umbenannt werden.
- *
- * Revision 1.70  2003/12/30 10:35:00  maj0r
- * Bug #8 umgesetzt (Danke an finn)
- * Downloadlinks kann man nun auch direkt in der Downloadtabelle per Kontexmenue erzeugen.
- *
- * Revision 1.69  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.68  2003/12/29 15:29:53  maj0r
- * Downloadlinks werden jetzt in ISO-8859-1 an den Core uebertragen..
- *
- * Revision 1.67  2003/12/19 14:26:58  maj0r
- * Dau-Button zum Anzeigen der Partliste eingebaut.
- *
- * Revision 1.66  2003/12/17 17:03:37  maj0r
- * In der Downloadtabelle nun ein Warteicon angezeigt, bis erstmalig Daten geholt wurden.
- *
- * Revision 1.65  2003/12/17 14:54:06  maj0r
- * Reaktion des Popupmenues durch Threads beschleunigt.
- *
- * Revision 1.64  2003/12/17 11:24:28  maj0r
- * Frischen NullPointer behoben.
- *
- * Revision 1.63  2003/12/17 11:08:30  maj0r
- * Partliste wird nun nur noch über das PopupMenü geholt.
- * Wenn der Downloadtab verlassen wird, wird das Aktualisieren der aktuellen Partliste beendet.
- *
- * Revision 1.62  2003/12/16 09:06:40  maj0r
- * Partliste wird nun erst nach 2 Sekunden Wartezeit geholt, um ein erneutes Klicken behandeln zu können.
- *
- * Revision 1.61  2003/12/05 11:18:02  maj0r
- * Workaround fürs Setzen der Hintergrundfarben der Scrollbereiche ausgebaut.
- *
- * Revision 1.60  2003/11/30 17:01:33  maj0r
- * Hintergrundfarbe aller Scrollbereiche an ihre Tabellen angepasst.
- *
- * Revision 1.59  2003/11/17 14:44:10  maj0r
- * Erste funktionierende Version des automatischen Powerdownloads eingebaut.
- *
- * Revision 1.58  2003/11/03 20:57:03  maj0r
- * Sortieren nach Status eingebaut.
- *
- * Revision 1.57  2003/10/31 16:24:58  maj0r
- * Soundeffekte fuer diverse Ereignisse eingefuegt.
- *
- * Revision 1.56  2003/10/31 11:31:45  maj0r
- * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
- *
- * Revision 1.55  2003/10/21 14:50:11  maj0r
- * Fixe Sprachverwendung entfernt.
- *
- * Revision 1.54  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.53  2003/10/21 11:36:32  maj0r
- * Infos werden nun ueber einen Listener geholt.
- *
- * Revision 1.52  2003/10/12 15:57:55  maj0r
- * Kleinere Bugs behoben.
- * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
- *
- * Revision 1.51  2003/10/10 15:12:26  maj0r
- * Sortieren im Downloadbereich eingefuegt.
- *
- * Revision 1.50  2003/10/05 11:48:36  maj0r
- * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
- * Userpartlisten werden angezeigt.
- * Downloadpartlisten werden alle 15 Sek. aktualisiert.
- *
- * Revision 1.49  2003/10/04 15:30:54  maj0r
- * Userpartliste hinzugefuegt.
- * Erste Version des Versteckens.
- *
- * Revision 1.48  2003/10/02 15:01:00  maj0r
- * Erste Version den Versteckens eingebaut.
- *
- * Revision 1.47  2003/10/01 14:45:40  maj0r
- * Suche fortgesetzt.
- *
- * Revision 1.46  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- * Revision 1.45  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.44  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
- *
- * Revision 1.43  2003/09/04 10:14:08  maj0r
- * Logger eingebaut.
- *
- * Revision 1.42  2003/09/04 09:27:25  maj0r
- * DownloadPartListe fertiggestellt.
- *
- * Revision 1.41  2003/09/04 06:26:49  maj0r
- * Partlist korrigiert. Wird momentan beim Resize nicht neugezeichnet.
- *
- * Revision 1.40  2003/09/02 16:08:10  maj0r
- * Downloadbaum komplett umgebaut.
- *
- * Revision 1.39  2003/08/27 11:18:34  maj0r
- * Kleinen Fehler korrigiert.
- *
- * Revision 1.38  2003/08/22 14:16:00  maj0r
- * Threadverwendung korrigiert.
- *
- * Revision 1.37  2003/08/22 12:39:46  maj0r
- * Bug ID 798
- *
- * Revision 1.36  2003/08/22 10:03:11  maj0r
- * Threadverwendung korrigiert.
- *
- * Revision 1.35  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.34  2003/08/11 14:10:27  maj0r
- * DownloadPartList eingefügt.
- * Diverse Änderungen.
- *
- * Revision 1.33  2003/08/10 21:08:18  maj0r
- * Diverse Änderungen.
- *
- * Revision 1.32  2003/08/09 10:56:25  maj0r
- * DownloadTabelle weitergeführt.
- *
- * Revision 1.31  2003/08/05 20:47:06  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.30  2003/08/05 05:11:59  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.29  2003/07/06 20:00:19  maj0r
- * DownloadTable bearbeitet.
- *
- * Revision 1.28  2003/07/04 15:25:38  maj0r
- * Version erhöht.
- * DownloadModel erweitert.
- *
- * Revision 1.27  2003/07/04 06:43:51  maj0r
- * Diverse Änderungen am DownloadTableModel.
- *
- * Revision 1.26  2003/07/03 19:11:16  maj0r
- * DownloadTable überarbeitet.
- *
- * Revision 1.25  2003/07/02 13:54:34  maj0r
- * JTreeTable komplett überarbeitet.
- *
- * Revision 1.24  2003/07/01 18:49:03  maj0r
- * Struktur verändert.
- *
- * Revision 1.23  2003/07/01 18:41:39  maj0r
- * Struktur verändert.
- *
- * Revision 1.22  2003/07/01 18:34:28  maj0r
- * Struktur verändert.
- *
- * Revision 1.21  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
  *
  */
 
