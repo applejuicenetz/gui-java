@@ -13,9 +13,12 @@ import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
 import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import java.util.HashMap;
+import java.util.Iterator;
+import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.30 2003/11/17 14:44:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.31 2003/11/19 17:05:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.31  2003/11/19 17:05:20  maj0r
+ * Autom. Pwdl ueberarbeitet.
+ *
  * Revision 1.30  2003/11/17 14:44:10  maj0r
  * Erste funktionierende Version des automatischen Powerdownloads eingebaut.
  *
@@ -122,6 +128,7 @@ public class PowerDownloadPanel
     private DownloadPanel parentPanel;
 
     private AutomaticPowerdownloadPolicy autoPwdlThread;
+    private Information lastInformation;
 
     public PowerDownloadPanel(DownloadPanel parentPanel) {
         logger = Logger.getLogger(getClass());
@@ -357,6 +364,7 @@ public class PowerDownloadPanel
         });
         add(backPanel, BorderLayout.NORTH);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.INFORMATION_CHANGED);
+        ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
     }
 
     private void alterAutoPwdl(){
@@ -368,6 +376,7 @@ public class PowerDownloadPanel
                 btnPdl.setEnabled(false);
                 AutomaticPowerdownloadPolicy selectedPolicy = (AutomaticPowerdownloadPolicy) pwdlPolicies.getSelectedItem();
                 manageAutoPwdl(selectedPolicy);
+                AppleJuiceDialog.getApp().informAutomaticPwdlEnabled(true);
             }
         }
         else{
@@ -379,6 +388,7 @@ public class PowerDownloadPanel
                     autoPwdlThread.interrupt();
                     autoPwdlThread = null;
                 }
+                AppleJuiceDialog.getApp().informAutomaticPwdlEnabled(false);
             }
         }
     }
@@ -406,6 +416,7 @@ public class PowerDownloadPanel
             e.printStackTrace();
         }
         autoPwdlThread = policy;
+        autoPwdlThread.setPaused(true);
         autoPwdlThread.start();
     }
 
@@ -573,15 +584,35 @@ public class PowerDownloadPanel
 
     public void fireContentChanged(int type, Object content) {
         try {
-            if (!pwdlPolicies.isEnabled() && type == DataUpdateListener.INFORMATION_CHANGED && autoPwdlThread!=null){
-                Information information = (Information) content;
-                long eingegebenBis = Integer.parseInt(autoBis.getText()) * 1048576l;
-                long eingegebenAb = Integer.parseInt(autoAb.getText()) * 1048576l;
-                if (information.getCredits()>eingegebenAb && autoPwdlThread.isPaused()){
-                    autoPwdlThread.setPaused(false);
+            if (type == DataUpdateListener.INFORMATION_CHANGED){
+                lastInformation = (Information) content;
+                if (!pwdlPolicies.isEnabled() && autoPwdlThread != null && lastInformation!=null) {
+                    long eingegebenBis = Integer.parseInt(autoBis.getText()) *
+                        1048576l;
+                    long eingegebenAb = Integer.parseInt(autoAb.getText()) *
+                        1048576l;
+                    if (lastInformation.getCredits() > eingegebenAb &&
+                        autoPwdlThread.isPaused()) {
+                        autoPwdlThread.setPaused(false);
+                    }
+                    else if (lastInformation.getCredits() < eingegebenBis &&
+                             !autoPwdlThread.isPaused()) {
+                        autoPwdlThread.setPaused(true);
+                    }
                 }
-                else if (information.getCredits()<eingegebenBis && !autoPwdlThread.isPaused()){
-                    autoPwdlThread.setPaused(true);
+            }
+            else if (type == DataUpdateListener.DOWNLOAD_CHANGED && autoPwdlThread !=null &&
+                     !pwdlPolicies.isEnabled() && autoPwdlThread.isPaused()){
+                HashMap downloads = (HashMap) content;
+                DownloadDO downloadDO;
+                synchronized (downloads){
+                    Iterator it = downloads.values().iterator();
+                    while(it.hasNext()){
+                        downloadDO = (DownloadDO)it.next();
+                        if (downloadDO.getStatus()==DownloadDO.SUCHEN_LADEN){
+                            ApplejuiceFassade.getInstance().pauseDownload(new int[]{downloadDO.getId()});
+                        }
+                    }
                 }
             }
         }

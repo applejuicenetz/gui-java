@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.2 2003/11/17 14:44:10 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.3 2003/11/19 17:05:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AutomaticPowerdownloadPolicy.java,v $
+ * Revision 1.3  2003/11/19 17:05:20  maj0r
+ * Autom. Pwdl ueberarbeitet.
+ *
  * Revision 1.2  2003/11/17 14:44:10  maj0r
  * Erste funktionierende Version des automatischen Powerdownloads eingebaut.
  *
@@ -35,15 +38,17 @@ public abstract class AutomaticPowerdownloadPolicy extends Thread{
     protected ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.getInstance();
     private Logger logger = Logger.getLogger(getClass());
 
-    protected boolean paused = false;
+    private boolean paused = true;
 
     public final void run(){
         try{
-            while(!isInterrupted()){
-                if(!paused){
-                    doAction();
+            if (initAction()){
+                while(!isInterrupted()){
+                    if(!paused){
+                        doAction();
+                    }
+                    sleep(1000);
                 }
-                sleep(1000);
             }
         }
         catch(InterruptedException iE){
@@ -79,6 +84,13 @@ public abstract class AutomaticPowerdownloadPolicy extends Thread{
         paused = pause;
         if (pause){
             pauseAllDownloads();
+            try{
+                informPaused();
+            }
+            catch (Exception ex) {
+                if (logger.isEnabledFor(Level.ERROR))
+                    logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
@@ -120,11 +132,28 @@ public abstract class AutomaticPowerdownloadPolicy extends Thread{
     // public AutomaticPowerdownloadPolicy();
 
     /**
+     *  Initialisierung
+     *  Hier koennen Initialisierungen fuer die doAction()-Methode vorgenommen werden,
+     *  sie gehoeren nicht in den Konstruktor.
+     *
+     **/
+    public abstract boolean initAction() throws Exception;
+
+    /**
      *  Umsetzung der Powerdownloadverarbeitung
      *  Es wird nur EIN Durchlauf mit abschließender sleep(ms)-Anweisung(!!!) implementiert.
      *  Die Schleife ergibt sich durch die run()-Methode des Threads.
      **/
     public abstract void doAction() throws Exception;
+
+    /**
+     *
+     *  Wird aufgerufen um zu informieren, dass aktuell nicht mehr genug Credits
+     *  vorhanden sind.
+     *  So kann falls noetig darauf reagiert werden.
+     *
+     **/
+    public abstract void informPaused() throws Exception;
 
     /**
      *  Versions-String

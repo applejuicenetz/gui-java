@@ -23,7 +23,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import com.l2fprod.gui.plaf.skin.Skin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.61 2003/11/19 13:43:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.62 2003/11/19 17:05:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.62  2003/11/19 17:05:20  maj0r
+ * Autom. Pwdl ueberarbeitet.
+ *
  * Revision 1.61  2003/11/19 13:43:39  maj0r
  * Themes sind nun ueber das Menue deaktivierbar.
  *
@@ -186,6 +189,8 @@ public class AppleJuiceDialog
     private HashMap themes = new HashMap();
     private String themeSupportTitel;
     private String themeSupportNachricht;
+    private boolean automaticPwdlEnabled = false;
+    private String titel;
 
     private static AppleJuiceDialog theApp;
 
@@ -342,6 +347,14 @@ public class AppleJuiceDialog
         catch (Exception e){
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    public void informAutomaticPwdlEnabled(boolean enabled){
+        if (enabled!=automaticPwdlEnabled){
+            automaticPwdlEnabled = enabled;
+            setTitle(titel);
+            repaint();
         }
     }
 
@@ -591,15 +604,25 @@ public class AppleJuiceDialog
         }
     }
 
+    public void setTitle(String title){
+        if (!automaticPwdlEnabled){
+            super.setTitle(titel);
+        }
+        else{
+            super.setTitle(titel + " - Autopilot");
+        }
+    }
+
     public void fireLanguageChanged() {
         try{
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             String versionsNr = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
-            setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                        getFirstAttrbuteByTagName(new
                                                                String[]{"mainform", "caption"})) +
                                                                " (Core " + versionsNr +
-                                                               " - GUI " + ApplejuiceFassade.GUI_VERSION + ")");
+                                                               " - GUI " + ApplejuiceFassade.GUI_VERSION + ")";
+            setTitle(titel);
             keinServer = languageSelector.getFirstAttrbuteByTagName(new String[]{
                 "javagui", "mainform", "keinserver"});
             themeSupportTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
