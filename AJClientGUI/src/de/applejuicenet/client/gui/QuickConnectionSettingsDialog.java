@@ -34,7 +34,7 @@ import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.20 2004/07/23 17:37:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.21 2004/08/30 17:04:30 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -191,7 +191,7 @@ public class QuickConnectionSettingsDialog
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation( (screenSize.width - appDimension.width) / 2,
                     (screenSize.height - appDimension.height) / 2);
-
+       remotePanel.setFocusOnPassword();
     }
 
     public void pressOK() {
