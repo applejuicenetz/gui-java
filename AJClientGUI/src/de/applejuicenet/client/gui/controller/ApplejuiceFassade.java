@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.91 2004/01/07 16:15:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.92 2004/01/08 07:46:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -275,7 +275,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String GUI_VERSION = "0.53.3";
+    public static final String GUI_VERSION = "0.54.1";
 
     private HashSet downloadListener;
     private HashSet searchListener;
