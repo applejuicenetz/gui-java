@@ -8,15 +8,10 @@
 		<aboutbtn caption="About" hint=""/>
 		<sharesheet caption="My Shares"/>
 		<dirssheet caption="Directories"/>
-		<deldirbtn caption="Delete Dir" hint=""/>
-		<startsharecheck caption="Start Share-Check" hint=""/>
-		<addosubdirsbtn caption="Add Dir without Subdirs" hint=""/>
-		<dirarr caption="Vertical Arrangement" hint=""/>
-		<addwsubdirsbtn caption="Add Dir with Subdirs" hint=""/>
-		<filessheet caption="Files"/>
+		<deldirbtn caption="Delete Dir" hint="Remove directory from sharelist"/><startsharecheck caption="Start Share-Check" hint="Checks the files in your share-directories and searches for new ones"/><addosubdirsbtn caption="Add Dir without Subdirs" hint="Add this directory without adding its subdirectories"/><dirarr caption="Vertical Arrangement" hint=""/>
+		<addwsubdirsbtn caption="Add Dir with Subdirs" hint="Add this directory with all its subdirectories"/><filessheet caption="Files"/>
 		<sfiles col0caption="Name" col1caption="Size" col2caption="priority"/>
-		<newfilelist caption="New Filelist" hint=""/>
-		<sharereload caption="Refresh" hint="reload the share tree"/>
+		<newfilelist caption="New Filelist" hint="Creates a new filelist."/><sharereload caption="Refresh" hint="reload the share tree"/>
 		<seachsheet caption="Search"/>
 		<opensearches caption="%d Searches in Queue"/>
 		<searchlbl caption="Search"/>
