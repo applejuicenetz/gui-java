@@ -34,7 +34,7 @@ import org.apache.xerces.parsers.SAXParser;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.25 2004/02/21 20:37:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.26 2004/02/24 08:49:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +43,10 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.26  2004/02/24 08:49:32  maj0r
+ * Bug #240 gefixt (Danke an computer.ist.org)
+ * Bug behoben, der im VersionChecker zu einer NoSuchElementException fuehrte.
+ *
  * Revision 1.25  2004/02/21 20:37:28  maj0r
  * Beim ersten Abrufen der Userliste muss Timestamp=0 verwendet werden.
  *
@@ -390,7 +394,7 @@ public class ModifiedXMLHolder
                 continue;
             }
         }
-        if (!versionNr.equals("0.0.0.0")) {
+        if (!versionNr.equals("0.0.0.0") && os != -1) {
             Version version = new Version(versionNr, os);
             uploadDO.setVersion(version);
         }
@@ -491,7 +495,7 @@ public class ModifiedXMLHolder
             else if (attr.getLocalName(i).equals("nickname")) {
                 downloadSourceDO.setNickname(attr.getValue(i));
             }
-            if (!versionNr.equals("0.0.0.0")) {
+            if (!versionNr.equals("0.0.0.0") && os != -1) {
                 Version version = new Version(versionNr, os);
                 downloadSourceDO.setVersion(version);
             }

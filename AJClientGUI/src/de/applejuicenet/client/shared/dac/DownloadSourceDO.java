@@ -7,7 +7,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.19 2004/02/18 17:24:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.20 2004/02/24 08:49:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,10 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadSourceDO.java,v $
+ * Revision 1.20  2004/02/24 08:49:32  maj0r
+ * Bug #240 gefixt (Danke an computer.ist.org)
+ * Bug behoben, der im VersionChecker zu einer NoSuchElementException fuehrte.
+ *
  * Revision 1.19  2004/02/18 17:24:21  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -101,7 +105,7 @@ public class DownloadSourceDO
     private int downloadTo;
     private int actualDownloadPosition;
     private int speed;
-    private Version version;
+    private Version version = null;
     private int queuePosition;
     private int powerDownload;
     private String filename;

@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared.dac;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.14 2004/02/18 17:24:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.15 2004/02/24 08:49:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,10 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.15  2004/02/24 08:49:32  maj0r
+ * Bug #240 gefixt (Danke an computer.ist.org)
+ * Bug behoben, der im VersionChecker zu einer NoSuchElementException fuehrte.
+ *
  * Revision 1.14  2004/02/18 17:24:21  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -63,7 +67,7 @@ public class UploadDO {
     private final int uploadID;
     private String dateiName;
     private int shareFileID;
-    private Version version;
+    private Version version = null;
     private int status;
     private String nick;
     private long uploadFrom;
