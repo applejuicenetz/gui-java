@@ -9,9 +9,11 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.18 2003/07/01 14:53:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.19 2003/07/08 20:28:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.19  2003/07/08 20:28:23  maj0r
+ * Logger eingefügt.
+ *
  * Revision 1.18  2003/07/01 14:53:12  maj0r
  * Unnützen Krimskram entfernt.
  *
@@ -50,6 +55,7 @@ public class RegisterPanel
   private ServerPanel serverPanel;
   private SharePanel sharePanel;
   private AppleJuiceDialog parent;
+  private Logger logger;
 
   public RegisterPanel(AppleJuiceDialog parent) {
     this.parent = parent;
@@ -57,6 +63,7 @@ public class RegisterPanel
   }
 
   private void init() {
+    logger = Logger.getLogger(getClass());
     LanguageSelector.getInstance().addLanguageListener(this);
     startPanel = new StartPanel(parent);
     sharePanel = new SharePanel();
@@ -112,9 +119,15 @@ public class RegisterPanel
             }
             parent.addPluginToHashSet(aPlugin);
           }
+          String nachricht = "Plugin " + aPlugin.getTitle() + " geladen...";
+          if (logger.isEnabledFor(Level.INFO))
+              logger.info(nachricht);
+          System.out.println(nachricht);
         }
         catch (Exception e) {
           //Von einem Plugin lassen wir uns nicht beirren! ;-)
+          if (logger.isEnabledFor(Level.ERROR))
+              logger.error("Ein Plugin konnte nicht instanziert werden", e);
           e.printStackTrace();
           continue;
         }
