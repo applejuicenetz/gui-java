@@ -82,8 +82,8 @@ public class DownloadPartListPanel extends JPanel implements
 
 	public void paintComponent(Graphics g) {
 		if (partList != null && image != null) {
-			if (height != (int) getSize().getHeight()
-					|| width != (int) getSize().getWidth()) {
+			if (height != (int) getSize().height
+					|| width != (int) getSize().width) {
 				setPartList(partList, id);
 			}
 			g.setColor(getBackground());
@@ -122,31 +122,38 @@ public class DownloadPartListPanel extends JPanel implements
 			if (id.longValue() != newId.longValue()){
 				idChanged = true;
 			}
+            boolean redraw = false;
 			if (idChanged){
 				id = newId;
 				partList = null;
 			}
 			else if (partList != null && newPartList != null){
-				Part[] parts = partList.getParts();
-				Part[] newParts = newPartList.getParts();
-				if (parts.length == newParts.length){
-					boolean sameParts = true;
-					for (int i=0; i<parts.length; i++){
-						if (!parts[i].equals(newParts[i])){
-							sameParts = false;
-							break;
-						}
-					}
-					if(sameParts){
-						insertSources(partList, lineImage);
-						updatePanel();
-						return;
-					}
-				}
+                if (height != getSize().height
+                        || width != getSize().width){
+                    redraw = true;
+                }
+                if (!redraw) {
+    				Part[] parts = partList.getParts();
+    				Part[] newParts = newPartList.getParts();
+    				if (parts.length == newParts.length){
+    					boolean sameParts = true;
+    					for (int i=0; i<parts.length; i++){
+    						if (!parts[i].equals(newParts[i])){
+    							sameParts = false;
+    							break;
+    						}
+    					}
+    					if(sameParts){
+    						insertSources(partList, lineImage);
+    						updatePanel();
+    						return;
+    					}
+    				}
+                }
 			}
 			partList = newPartList;
-			height = (int) getSize().getHeight();
-			width = (int) getSize().getWidth();
+			height = getSize().height;
+			width = getSize().width;
 			if (partList != null && partList.getParts().length > 0) {
 				Part[] parts = partList.getParts();
 				zeilenHoehe = 15;
