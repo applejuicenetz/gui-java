@@ -18,6 +18,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
@@ -30,6 +31,7 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.tables.JTreeTable;
+import de.applejuicenet.client.gui.tables.NormalHeaderRenderer;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.upload.UploadDataTableModel;
 import de.applejuicenet.client.gui.tables.upload.UploadTablePercentCellRenderer;
@@ -37,7 +39,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.40 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.41 2004/03/01 15:10:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,6 +48,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.41  2004/03/01 15:10:09  maj0r
+ * TableHeader werden in allen Tabellen gleich dargestellt.
+ *
  * Revision 1.40  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -269,6 +274,12 @@ public class UploadPanel
 //        uploadDataTable.getTableHeader().setBackground(uploadDataTable.getBackground());
         aScrollPane.getViewport().setOpaque(false);
         add(aScrollPane, BorderLayout.CENTER);
+
+        int n = model.getColumnCount();
+        TableCellRenderer renderer = new NormalHeaderRenderer();
+        for (int i = 0; i < n; i++) {
+            model.getColumn(i).setHeaderRenderer(renderer);
+        }
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());

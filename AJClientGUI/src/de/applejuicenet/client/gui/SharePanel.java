@@ -23,10 +23,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -37,6 +39,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.tables.NormalHeaderRenderer;
 import de.applejuicenet.client.gui.tables.share.ShareModel;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.gui.tables.share.ShareTable;
@@ -47,16 +50,15 @@ import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeCellRenderer;
 import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeModel;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.dac.ShareDO;
-import javax.swing.JSplitPane;
-import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.60 2004/02/28 15:09:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.61 2004/03/01 15:10:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,6 +67,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.61  2004/03/01 15:10:09  maj0r
+ * TableHeader werden in allen Tabellen gleich dargestellt.
+ *
  * Revision 1.60  2004/02/28 15:09:40  maj0r
  * Platzierung "Neu laden" und "Dateilliste" getauscht.
  *
@@ -497,6 +502,12 @@ public class SharePanel
         shareTable = new ShareTable(shareModel);
         shareTable.setSelectionMode(ListSelectionModel.
                                     MULTIPLE_INTERVAL_SELECTION);
+        TableColumnModel model = shareTable.getColumnModel();
+        int n = model.getColumnCount();
+        TableCellRenderer renderer = new NormalHeaderRenderer();
+        for (int i = 0; i < n; i++) {
+            model.getColumn(i).setHeaderRenderer(renderer);
+        }
 
         shareTable.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
