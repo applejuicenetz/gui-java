@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
     <options firststart="true" sprache="deutsch">
-        <remote host="localhost" passwort=""/>
+        <remote host="localhost" passwort=""  port="9851"/>
         <logging level="INFO"/>
         <download uebersicht="true"/>
         <farben aktiv="true">

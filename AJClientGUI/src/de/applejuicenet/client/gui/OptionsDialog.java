@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.21 2003/09/12 13:19:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.22 2003/10/14 15:43:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.22  2003/10/14 15:43:52  maj0r
+ * An pflegbaren Xml-Port angepasst.
+ *
  * Revision 1.21  2003/09/12 13:19:26  maj0r
  * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
  * Version 0.30
@@ -77,6 +80,7 @@ public class OptionsDialog
     private JButton abbrechen;
     private AJSettings ajSettings;
     private Logger logger;
+    private ConnectionSettings remote;
 
     public OptionsDialog(JFrame parent) throws HeadlessException {
         super(parent, true);
@@ -96,10 +100,12 @@ public class OptionsDialog
 
     private void init() throws Exception {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
+        remote = PropertiesManager.getOptionsManager().getRemoteSettings();
+
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                    getFirstAttrbuteByTagName(new
                                                            String[]{"einstform", "caption"})));
-        standardPanel = new ODStandardPanel(this, ajSettings); //Standard-Reiter
+        standardPanel = new ODStandardPanel(this, ajSettings, remote); //Standard-Reiter
         jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"einstform", "standardsheet",
                                                                                                   "caption"})), standardPanel);
@@ -107,7 +113,7 @@ public class OptionsDialog
         jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"einstform", "connectionsheet",
                                                                                                   "caption"})), verbindungPanel);
-        remotePanel = new ODConnectionPanel(); //Fernzugriff-Reiter
+        remotePanel = new ODConnectionPanel(remote); //Fernzugriff-Reiter
         jTabbedPane1.add(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new String[]{"einstform", "pwsheet",
                                                                                                   "caption"})), remotePanel);
@@ -160,11 +166,11 @@ public class OptionsDialog
                 if (standardPanel.isDirty())
                     om.setLogLevel(standardPanel.getLogLevel());
             }
-            if (remotePanel.isDirty())
+            if (remotePanel.isDirty() || standardPanel.isXmlPortDirty())
             {
                 try
                 {
-                    om.saveRemote(remotePanel.getRemoteConfiguration());
+                    om.saveRemote(remote);
                 }
                 catch (InvalidPasswordException ex)
                 {

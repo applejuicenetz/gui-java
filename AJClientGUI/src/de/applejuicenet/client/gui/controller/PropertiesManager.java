@@ -15,7 +15,7 @@ import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.6 2003/10/05 11:48:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.7 2003/10/14 15:42:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.xml.serialize.XMLSerializer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.7  2003/10/14 15:42:05  maj0r
+ * An pflegbaren Xml-Port angepasst.
+ *
  * Revision 1.6  2003/10/05 11:48:36  maj0r
  * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
  * Userpartlisten werden angezeigt.
@@ -305,11 +308,14 @@ public class PropertiesManager
     public ConnectionSettings getRemoteSettings() {
         String host = "localhost";
         String passwort = "";
+        int xmlPort = 9851;
         host = getFirstAttrbuteByTagName(new String[]{"options", "remote",
                                                       "host"});
         passwort = getFirstAttrbuteByTagName(new String[]{"options",
                                                           "remote", "passwort"});
-        return new ConnectionSettings(host, passwort);
+        xmlPort = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "remote",
+                                                      "port"}));
+        return new ConnectionSettings(host, passwort, xmlPort);
     }
 
     public void saveRemote(ConnectionSettings remote) throws
@@ -319,11 +325,13 @@ public class PropertiesManager
         ApplejuiceFassade.setPassword(remote.getNewPassword());
         setAttributeByTagName(new String[]{"options", "remote", "passwort"},
                 remote.getNewPassword());
+        setAttributeByTagName(new String[]{"options", "remote", "port"},
+                Integer.toString(remote.getXmlPort()));
         informConnectionSettingsListener(getRemoteSettings());
     }
 
-    public boolean saveAJSettings(AJSettings ajSettings) {
-        return ApplejuiceFassade.getInstance().saveAJSettings(ajSettings);
+    public void saveAJSettings(AJSettings ajSettings) {
+        ApplejuiceFassade.getInstance().saveAJSettings(ajSettings);
     }
 
     public String[] getActualServers() {

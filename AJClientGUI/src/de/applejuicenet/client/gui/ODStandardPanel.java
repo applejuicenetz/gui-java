@@ -10,15 +10,18 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.12 2003/10/13 12:37:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.13 2003/10/14 15:43:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.13  2003/10/14 15:43:52  maj0r
+ * An pflegbaren Xml-Port angepasst.
+ *
  * Revision 1.12  2003/10/13 12:37:48  maj0r
  * Bug #1003 behoben.
  *
@@ -51,6 +54,7 @@ import org.apache.log4j.Logger;
 public class ODStandardPanel
         extends JPanel {
     private boolean dirty = false;
+    private boolean xmlPortDirty = false;
     private JLabel label1 = new JLabel();
     private JLabel label2 = new JLabel();
     private JLabel label3 = new JLabel();
@@ -75,11 +79,13 @@ public class ODStandardPanel
     private AJSettings ajSettings;
     private JComboBox cmbLog;
     private Logger logger;
+    private ConnectionSettings remote;
 
-    public ODStandardPanel(JDialog parent, AJSettings ajSettings) {
+    public ODStandardPanel(JDialog parent, AJSettings ajSettings, ConnectionSettings remote) {
         logger = Logger.getLogger(getClass());
         try
         {
+            this.remote = remote;
             this.parent = parent;
             this.ajSettings = ajSettings;
             init();
@@ -125,6 +131,8 @@ public class ODStandardPanel
                 if (ajSettings.getXMLPort() != Long.parseLong(xmlPort.getText()))
                 {
                     dirty = true;
+                    xmlPortDirty = true;
+                    remote.setXmlPort(Integer.parseInt(xmlPort.getText()));
                     ajSettings.setXMLPort(Long.parseLong(xmlPort.getText()));
                 }
             }
@@ -336,6 +344,10 @@ public class ODStandardPanel
         panel6.add(hint5, constraints);
 
         add(panel6, BorderLayout.NORTH);
+    }
+
+    public boolean isXmlPortDirty() {
+        return xmlPortDirty;
     }
 
     class DirectoryChooserMouseAdapter

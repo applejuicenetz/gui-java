@@ -4,15 +4,18 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/ConnectionSettings.java,v 1.1 2003/08/22 10:55:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/ConnectionSettings.java,v 1.2 2003/10/14 15:44:01 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ConnectionSettings.java,v $
+ * Revision 1.2  2003/10/14 15:44:01  maj0r
+ * An pflegbaren Xml-Port angepasst.
+ *
  * Revision 1.1  2003/08/22 10:55:36  maj0r
  * Klassen umbenannt.
  *
@@ -35,12 +38,14 @@ public class ConnectionSettings {
     private String host;
     private String oldPassword;
     private String newPassword;
+    private int xmlPort;
 
-    public ConnectionSettings(String host, String password) {
+    public ConnectionSettings(String host, String password, int xmlPort) {
         this.host = host;
         if (password.length() == 0)
             password = getMD5("");
         this.oldPassword = password;
+        this.xmlPort = xmlPort;
     }
 
     public ConnectionSettings() {
@@ -85,7 +90,7 @@ public class ConnectionSettings {
         }
         catch (NoSuchAlgorithmException e)
         {
-            e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+            //Gibbet nicht...
         }
         byte[] md5rslt = md5.digest(intext);
 
@@ -98,5 +103,13 @@ public class ConnectionSettings {
             verifyMsg.append(hexString);
         }
         return verifyMsg.toString();
+    }
+
+    public int getXmlPort() {
+        return xmlPort;
+    }
+
+    public void setXmlPort(int xmlPort) {
+        this.xmlPort = xmlPort;
     }
 }

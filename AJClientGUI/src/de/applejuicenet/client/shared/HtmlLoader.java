@@ -4,17 +4,21 @@ import java.io.*;
 import java.net.*;
 
 import de.applejuicenet.client.shared.exception.*;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.14 2003/09/07 09:29:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.15 2003/10/14 15:43:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.15  2003/10/14 15:43:52  maj0r
+ * An pflegbaren Xml-Port angepasst.
+ *
  * Revision 1.14  2003/09/07 09:29:55  maj0r
  * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
@@ -44,6 +48,7 @@ import de.applejuicenet.client.shared.exception.*;
 public abstract class HtmlLoader {
   public static final int POST = 0;
   public static final int GET = 1;
+  private static int ajPort = -1;
 
   public static String getHtmlContent(String host, int port, int method, String command) throws
       WebSiteNotFoundException {
@@ -100,10 +105,13 @@ public abstract class HtmlLoader {
 
     public static String getHtmlXMLContent(String host, int method, String command, boolean withResult) throws
         WebSiteNotFoundException {
+        if (ajPort == -1){
+            ajPort = PropertiesManager.getOptionsManager().getRemoteSettings().getXmlPort();
+        }
         StringBuffer urlContent = new StringBuffer();
         try {
           InetAddress addr = InetAddress.getByName(host);
-          Socket socket = new Socket(addr, 9851);
+          Socket socket = new Socket(addr, ajPort);
           PrintWriter out = new PrintWriter(
               new BufferedWriter(
               new OutputStreamWriter(

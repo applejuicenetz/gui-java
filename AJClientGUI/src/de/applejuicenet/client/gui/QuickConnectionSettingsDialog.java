@@ -4,6 +4,7 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.ConnectionSettings;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -16,15 +17,18 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.4 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.5 2003/10/14 15:41:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.5  2003/10/14 15:41:46  maj0r
+ * An pflegbaren Xml-Port angepasst.
+ *
  * Revision 1.4  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -47,6 +51,7 @@ import org.apache.log4j.Level;
 public class QuickConnectionSettingsDialog extends JDialog {
     private ODConnectionPanel remotePanel;
     public static final int ABGEBROCHEN = 1;
+    private ConnectionSettings remote;
     private Logger logger;
 
     private int result = 0;
@@ -65,7 +70,8 @@ public class QuickConnectionSettingsDialog extends JDialog {
     }
 
     private void init(){
-        remotePanel = new ODConnectionPanel();
+        remote = PropertiesManager.getOptionsManager().getRemoteSettings();
+        remotePanel = new ODConnectionPanel(remote);
         setTitle("appleJuice Client");
 
         getContentPane().setLayout(new BorderLayout());
@@ -74,7 +80,6 @@ public class QuickConnectionSettingsDialog extends JDialog {
         String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
               getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
                                         "ueberpruefeEinst"}));
-
 
         JPanel panel2 = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -93,8 +98,6 @@ public class QuickConnectionSettingsDialog extends JDialog {
         panel2.add(new JLabel("           "), constraints);
 
         getContentPane().add(panel2, BorderLayout.NORTH);
-
-
         getContentPane().add(remotePanel, BorderLayout.CENTER);
 
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -102,7 +105,6 @@ public class QuickConnectionSettingsDialog extends JDialog {
         panel1.add(ok);
         JButton abbrechen = new JButton("Abbrechen");
         panel1.add(abbrechen);
-
 
         getContentPane().add(panel1, BorderLayout.SOUTH);
 
@@ -149,7 +151,7 @@ public class QuickConnectionSettingsDialog extends JDialog {
 
     private void speichereEinstellungen() throws InvalidPasswordException {
         try{
-            PropertiesManager.getOptionsManager().saveRemote(remotePanel.getRemoteConfiguration());
+            PropertiesManager.getOptionsManager().saveRemote(remote);
         }
         catch (Exception e)
         {

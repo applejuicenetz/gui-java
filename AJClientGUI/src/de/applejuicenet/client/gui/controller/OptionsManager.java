@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.25 2003/10/05 11:48:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.26 2003/10/14 15:43:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.26  2003/10/14 15:43:40  maj0r
+ * An pflegbaren Xml-Port angepasst.
+ *
  * Revision 1.25  2003/10/05 11:48:36  maj0r
  * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
  * Userpartlisten werden angezeigt.
@@ -54,7 +57,7 @@ public interface OptionsManager {
     public void saveRemote(ConnectionSettings remote) throws
             InvalidPasswordException;
 
-    public boolean saveAJSettings(AJSettings ajSettings);
+    public void saveAJSettings(AJSettings ajSettings);
 
     public String[] getActualServers();
 }
