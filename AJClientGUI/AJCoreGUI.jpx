@@ -2,7 +2,10 @@
 <!--JBuilder XML Project-->
 <project>
   <property category="generalFormatting" name="blockIndent" value="4"/>
-  <property category="javaFormatting" name="alwaysClasses" value="1"/>
+  <property category="javaFormatting" name="packageThreshold" value="0"/>
+  <property category="optimize.0" name="OptimizableType" value="intuitive.ide.borland.jb8.ProfilerBootstrap"/>
+  <property category="optimize.0" name="oicc.FilterFile" value="C:\CrefoTeam\AJClientGUI\AJCoreGUI.oif"/>
+  <property category="optimize.0" name="oipr.FilterFile" value="C:\CrefoTeam\AJClientGUI\AJCoreGUI.oif"/>
   <property category="runtime" name="ConfigurationCount" value="1"/>
   <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.0" name="ConfigurationName" value="AJCoreGUI"/>
