@@ -17,8 +17,9 @@ public class DownloadDummy implements Download
 	private int status;
 	private int powerdwl;
 	private long groesse;
+	private DownloadSource[] quellen;
 	
-	public DownloadDummy(Integer id, String bezeichnung, double prozentGeladen, int status, int powerdwl, long groesse)
+	public DownloadDummy(Integer id, String bezeichnung, double prozentGeladen, int status, int powerdwl, long groesse, DownloadSource[] quellen)
 	{
 		super();
 		this.id = id;
@@ -27,21 +28,37 @@ public class DownloadDummy implements Download
 		this.status = status;
 		this.powerdwl = powerdwl;
 		this.groesse = groesse;
+		this.quellen = quellen;
 	}
 
 	public DownloadDummy(Integer id, String bezeichnung, double prozentGeladen, int status, int powerdwl)
 	{
-		this(id, bezeichnung, prozentGeladen, status, powerdwl, 0);
+		this(id, bezeichnung, prozentGeladen, status, powerdwl, 0, null);
 	}
 
 	public DownloadDummy(int id, String bezeichnung, double prozentGeladen, int status, int powerdwl)
 	{
-		this(new Integer(id), bezeichnung, prozentGeladen, status, powerdwl, 0);
+		this(new Integer(id), bezeichnung, prozentGeladen, status, powerdwl);
+	}
+
+	public DownloadDummy(int id, double prozentGeladen, int status, int powerdwl, int groesse, DownloadSource[] quellen)
+	{
+		this(id, "", prozentGeladen, status, powerdwl, groesse, quellen);
+	}
+
+	public DownloadDummy(int id, double prozentGeladen, int status, int powerdwl, int groesse)
+	{
+		this(id, "", prozentGeladen, status, powerdwl, groesse, null);
 	}
 
 	public DownloadDummy(int id, double prozentGeladen, int status, int powerdwl)
 	{
-		this(id, "", prozentGeladen, status, powerdwl, 0);
+		this(id, prozentGeladen, status, powerdwl, 0);
+	}
+
+	public DownloadDummy(int id, int status, int powerdwl, int groesse)
+	{
+		this(id, 1.0, status, powerdwl, groesse);
 	}
 
 	public String getProzentGeladenAsString()
@@ -62,8 +79,7 @@ public class DownloadDummy implements Download
 
 	public DownloadSource[] getSources()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return quellen;
 	}
 
 	public int getShareId()

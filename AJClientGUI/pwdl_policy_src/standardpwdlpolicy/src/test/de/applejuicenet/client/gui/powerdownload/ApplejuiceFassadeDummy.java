@@ -3,6 +3,7 @@
  */
 package test.de.applejuicenet.client.gui.powerdownload;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -24,6 +25,12 @@ public class ApplejuiceFassadeDummy extends ApplejuiceFassade
 	{
 		super("", Integer.MIN_VALUE, "", true);
 		snapshot = downloads;
+	}	
+
+	public ApplejuiceFassadeDummy() throws IllegalArgumentException
+	{
+		super("", Integer.MIN_VALUE, "", true);
+		snapshot = new HashMap();
 	}	
 
 	public Map<String, Download> getDownloadsSnapshot()
@@ -82,6 +89,7 @@ public class ApplejuiceFassadeDummy extends ApplejuiceFassade
 			Assert.assertEquals("BereitsGeladen nicht gleich", cur.getProzentGeladen(), download.getProzentGeladen());
 			Assert.assertEquals("Powerdownload nicht gleich", cur.getPowerDownload(), download.getPowerDownload());
 			Assert.assertEquals("Groesse nicht gleich", cur.getGroesse(), download.getGroesse());
+			Assert.assertEquals("quellen nicht gleich", cur.getSources(), download.getSources());
 		}
 	}
 }

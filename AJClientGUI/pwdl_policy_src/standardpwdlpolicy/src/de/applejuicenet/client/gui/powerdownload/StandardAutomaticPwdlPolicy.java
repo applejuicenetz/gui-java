@@ -10,11 +10,12 @@ import java.util.Vector;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.15 2005/02/17 09:55:50 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/pwdl_policy_src/standardpwdlpolicy/src/de/applejuicenet/client/gui/powerdownload/StandardAutomaticPwdlPolicy.java,v 1.16 2005/02/17 16:20:51 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,15 +33,19 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
 		private int sleeptime = 30000;
     private EinstellungenDialog settingsDialog = null;
     private int informedPowerdownload = pwdlValue;
+    private Reihenfolge[] reihenfolge = new Reihenfolge[]{ Reihenfolge.SOURCEN, Reihenfolge.PROZENT_GELADEN, Reihenfolge.GROESSE }; 
 
+    public static enum Reihenfolge { SOURCEN, PROZENT_GELADEN, GROESSE, ID };
+    
     public StandardAutomaticPwdlPolicy(ApplejuiceFassade applejuiceFassade) {
     	super(applejuiceFassade);
     }
 
-    public StandardAutomaticPwdlPolicy(ApplejuiceFassade applejuiceFassade, int anzahlDownloads, int pwdlValue) {
+    public StandardAutomaticPwdlPolicy(ApplejuiceFassade applejuiceFassade, int anzahlDownloads, int pwdlValue, Reihenfolge[] reihenfolge) {
     	super(applejuiceFassade);
     	this.pwdlValue = pwdlValue;
     	this.anzahlDownloads = anzahlDownloads;
+    	this.reihenfolge = reihenfolge;
     }
 
     public boolean initAction() {
@@ -57,7 +62,7 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         }
         synchronized (downloads)
         {
-          TreeMap<Sortierkriterium,Download> naechsteDownloads = new TreeMap(new ProzentGeladenComparator());
+          TreeMap<Sortierkriterium,Download> naechsteDownloads = new TreeMap(new SortierkriteriumComparator());
         	if (downloadSize <= anzahlDownloads) {
         		// alle auf pd setzen und resuemen...
         		List power = new Vector(downloads.values());
@@ -190,17 +195,20 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
       anzahlDownloads = settingsDialog.getAnzahlDownloads();
       pwdlValue = settingsDialog.getPowerDownload();
       sleeptime = settingsDialog.getSleeptime();
+      reihenfolge = settingsDialog.getReihenfolge();
   	}
 
   	private class Sortierkriterium {
     	private Double prozentGeladen;
     	private Long groesse;
     	private Integer id;
+    	private Integer quellenAnzahl = 0;
     	
-    	public Sortierkriterium(Double prozentGeladen, Long groesse, Integer id) {
+    	public Sortierkriterium(Double prozentGeladen, Long groesse, Integer id, DownloadSource[] quellen) {
     		this.prozentGeladen = prozentGeladen;
     		this.groesse = groesse;
     		this.id = id;
+    		this.quellenAnzahl = quellen.length;
     	}
 
     	public Sortierkriterium(Download current)
@@ -208,25 +216,37 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
     		this.prozentGeladen = new Double(current.getProzentGeladen());
     		this.groesse = current.getGroesse();
     		this.id = current.getId();
+    		if (current.getSources() != null) {
+    			this.quellenAnzahl = current.getSources().length;
+    		}
 			}
 
 			public int compareTo(Sortierkriterium comparable)
 			{
-				int compareResult = this.prozentGeladen.compareTo(comparable.prozentGeladen) * -1;
-				if (compareResult == 0) {
-					compareResult = this.groesse.compareTo(comparable.groesse) * -1;
-				}
-				if (compareResult == 0) {
-					compareResult = this.id.compareTo(comparable.id);
+				int compareResult = 0;
+				for (int i=0; i<reihenfolge.length && compareResult == 0; i++) {
+					if (reihenfolge[i] == Reihenfolge.SOURCEN) {
+						compareResult = this.quellenAnzahl.compareTo(comparable.quellenAnzahl) * -1;
+					}
+					else if (reihenfolge[i] == Reihenfolge.PROZENT_GELADEN) {
+						compareResult = this.prozentGeladen.compareTo(comparable.prozentGeladen) * -1;
+					}
+					else if (reihenfolge[i] == Reihenfolge.GROESSE) {
+						compareResult = this.groesse.compareTo(comparable.groesse) * -1;
+					}
+					else {
+						compareResult = this.id.compareTo(comparable.id);
+					}
 				}
 				return compareResult;
 			}
     }
     
-    private class ProzentGeladenComparator implements Comparator {
+    private class SortierkriteriumComparator implements Comparator {
 			public int compare(Object arg0, Object arg1)
 			{
-				return ((Sortierkriterium)arg0).compareTo((Sortierkriterium)arg1);
+				int ret = ((Sortierkriterium)arg0).compareTo((Sortierkriterium)arg1);
+				return ret;
 			}
     }
 }
