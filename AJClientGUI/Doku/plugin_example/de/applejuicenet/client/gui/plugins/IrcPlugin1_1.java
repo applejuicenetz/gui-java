@@ -3,6 +3,7 @@ package de.applejuicenet.client.gui.plugins;
 import javax.swing.ImageIcon;
 import java.util.HashMap;
 import java.awt.BorderLayout;
+import java.io.File;
 
 import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
 
@@ -20,6 +21,10 @@ public class IrcPlugin1_1 extends PluginConnector {
     public IrcPlugin1_1() {
         setLayout(new BorderLayout());
         add(new XdccIrc(), BorderLayout.CENTER);
+        String classname = getClass().toString();
+        String path = System.getProperty("user.dir") + File.separator + "plugins" +
+                        File.separator + classname.substring(classname.lastIndexOf('.')+1) + ".jar";
+        initIcon(path);
     }
 
     public void fireLanguageChanged() {
