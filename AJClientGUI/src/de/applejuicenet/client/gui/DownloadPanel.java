@@ -55,7 +55,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.77 2004/01/05 15:11:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.78 2004/01/05 15:42:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,6 +64,9 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.78  2004/01/05 15:42:51  maj0r
+ * Partlistenfreischaltung korrigiert.
+ *
  * Revision 1.77  2004/01/05 15:11:19  maj0r
  * Bug #13 umgesetzt (Danke an HabkeineMail)
  * Powerdownload-Werte werden jetzt bei Klick auf einen Download / Quelle im Powerdownloadfeld angezeigt.
@@ -630,9 +633,9 @@ public class DownloadPanel
                     &&
                     ( (DownloadMainNode) node).getType() ==
                     DownloadMainNode.ROOT_NODE) {
+                    DownloadDO downloadDO = ((DownloadMainNode)node).getDownloadDO();
                     if (!powerDownloadPanel.isAutomaticPwdlActive()) {
                         powerDownloadPanel.btnPdl.setEnabled(true);
-                        DownloadDO downloadDO = ((DownloadMainNode)node).getDownloadDO();
                         if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
                             || downloadDO.getStatus() == DownloadDO.PAUSIERT){
                             powerDownloadPanel.setPwdlValue(downloadDO.
@@ -649,7 +652,13 @@ public class DownloadPanel
                         tryGetPartList();
                     }
                     else{
-                        downloadDOOverviewPanel.enableHoleListButton(true);
+                        if ((downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
+                            || downloadDO.getStatus() == DownloadDO.PAUSIERT)){
+                           downloadDOOverviewPanel.enableHoleListButton(true);
+                       }
+                       else{
+                           downloadDOOverviewPanel.enableHoleListButton(false);
+                       }
                     }
                 }
                 else if (node.getClass() == DownloadSourceDO.class) {
