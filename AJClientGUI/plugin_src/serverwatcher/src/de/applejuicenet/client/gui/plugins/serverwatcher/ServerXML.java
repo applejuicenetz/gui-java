@@ -13,10 +13,11 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import de.applejuicenet.client.shared.XMLDecoder;
+
+import de.applejuicenet.client.fassade.shared.XMLDecoder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerXML.java,v 1.4 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerXML.java,v 1.5 2005/01/21 16:28:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

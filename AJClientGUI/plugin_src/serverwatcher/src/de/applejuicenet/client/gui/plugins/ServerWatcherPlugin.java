@@ -1,14 +1,5 @@
 package de.applejuicenet.client.gui.plugins;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -17,6 +8,15 @@ import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Map;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -27,16 +27,16 @@ import javax.swing.JScrollPane;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.gui.plugins.serverwatcher.NewServerDialog;
 import de.applejuicenet.client.gui.plugins.serverwatcher.ServerConfig;
 import de.applejuicenet.client.gui.plugins.serverwatcher.ServerXML;
-import de.applejuicenet.client.shared.ProxySettings;
-import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.9 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.10 2005/01/21 16:28:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -109,7 +109,7 @@ public class ServerWatcherPlugin extends PluginConnector {
                     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
                     newServerDialog.setLocation((screenSize.width - appDimension.width)/2,
                                    (screenSize.height - appDimension.height)/2);
-                    newServerDialog.show();
+                    newServerDialog.setVisible(true);
                     if (newServerDialog.isSave()){
                         ServerXML.addServer(newServerDialog.getServerConfig());
                     }
@@ -215,7 +215,7 @@ public class ServerWatcherPlugin extends PluginConnector {
 
     /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
       Über den DataManger können diese abgerufen werden.*/
-    public void fireContentChanged(int type, Object content) {
+    public void fireContentChanged(DATALISTENER_TYPE type, Object content) {
     }
 
     public void registerSelected() {

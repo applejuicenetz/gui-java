@@ -1,30 +1,30 @@
 package de.applejuicenet.client.gui.plugins.panels;
 
-import javax.swing.JPanel;
-import org.apache.log4j.Logger;
-import java.util.HashMap;
-import org.apache.log4j.Level;
-import java.util.ArrayList;
-import java.util.Iterator;
-import de.applejuicenet.client.shared.dac.UploadDO;
-import java.util.HashSet;
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.JLabel;
-import de.applejuicenet.client.shared.Version;
-import javax.swing.JTable;
 import java.awt.BorderLayout;
-import javax.swing.table.TableCellRenderer;
-import java.awt.Component;
-import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.ListSelectionModel;
 import java.awt.Color;
+import java.awt.Component;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.fassade.entity.Upload;
+import de.applejuicenet.client.fassade.entity.Version;
+import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.4 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.5 2005/01/21 16:28:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -71,22 +71,22 @@ public class MainPanel
     }
 
     public void updateByDownload(HashMap downloads) {
-        DownloadDO downloadDO = null;
+        Download download = null;
         String versionsNr;
         String key;
         String key2;
         VersionHolder versionHolder;
-        DownloadSourceDO[] sources;
+        DownloadSource[] sources;
         boolean updateView = false;
         try {
             synchronized (downloads) {
                 Iterator it = downloads.values().iterator();
                 while (it.hasNext()) {
-                    downloadDO = (DownloadDO) it.next();
-                    if (downloadDO == null) {
+                    download = (Download) it.next();
+                    if (download == null) {
                         continue;
                     }
-                    sources = downloadDO.getSources();
+                    sources = download.getSources();
                     for (int i = 0; i < sources.length; i++) {
                         if (sources[i] == null || sources[i].getVersion() == null) {
                             continue;
@@ -125,7 +125,7 @@ public class MainPanel
     }
 
     public void updateByUploads(HashMap uploads) {
-        UploadDO uploadDO = null;
+        Upload upload = null;
         String versionsNr;
         String key;
         String key2;
@@ -135,15 +135,15 @@ public class MainPanel
             synchronized (uploads) {
                 Iterator it = uploads.values().iterator();
                 while (it.hasNext()) {
-                    uploadDO = (UploadDO) it.next();
-                    if (uploadDO == null || uploadDO.getVersion() == null) {
+                    upload = (Upload) it.next();
+                    if (upload == null || upload.getVersion() == null) {
                         continue;
                     }
-                    key = Integer.toString(uploadDO.getUploadID());
+                    key = Integer.toString(upload.getUploadID());
                     if (!ids.contains(key)) {
                         updateView = true;
                         ids.add(key);
-                        versionsNr = uploadDO.getVersion().getVersion();
+                        versionsNr = upload.getVersion().getVersion();
                         key2 = versionsNr;
                         if (versions.containsKey(key2)) {
                             versionHolder = (VersionHolder) versions.get(key2);
@@ -152,7 +152,7 @@ public class MainPanel
                             versionHolder = new VersionHolder(versionsNr);
                             versions.put(key2, versionHolder);
                         }
-                        versionHolder.addUser(uploadDO.getVersion().
+                        versionHolder.addUser(upload.getVersion().
                                               getBetriebsSystem());
                     }
                 }
@@ -180,35 +180,35 @@ public class MainPanel
             setText(value.toString());
             switch (column) {
                 case 1: {
-                    setIcon(new Version("", Version.WIN32).getVersionIcon());
+                    setIcon(getVersionIcon(Version.WIN32));
                     break;
                 }
                 case 2: {
-                    setIcon(new Version("", Version.LINUX).getVersionIcon());
+                    setIcon(getVersionIcon(Version.LINUX));
                     break;
                 }
                 case 3: {
-                    setIcon(new Version("", Version.MACINTOSH).getVersionIcon());
+                    setIcon(getVersionIcon(Version.MACINTOSH));
                     break;
                 }
                 case 4: {
-                    setIcon(new Version("", Version.SOLARIS).getVersionIcon());
+                    setIcon(getVersionIcon(Version.SOLARIS));
                     break;
                 }
                 case 5: {
-                    setIcon(new Version("", Version.OS2).getVersionIcon());
+                    setIcon(getVersionIcon(Version.OS2));
                     break;
                 }
                 case 6: {
-                    setIcon(new Version("", Version.FREEBSD).getVersionIcon());
+                    setIcon(getVersionIcon(Version.FREEBSD));
                     break;
                 }
                 case 7: {
-                    setIcon(new Version("", Version.NETWARE).getVersionIcon());
+                    setIcon(getVersionIcon(Version.NETWARE));
                     break;
                 }
                 case 8: {
-                    setIcon(new Version("", Version.UNBEKANNT).getVersionIcon());
+                    setIcon(getVersionIcon(-11 /*unbekannt*/));
                     break;
                 }
                 default: {
@@ -224,6 +224,35 @@ public class MainPanel
         }
     }
 
+	private Icon getVersionIcon(int version) {
+        switch (version) {
+	        case Version.WIN32: {
+	            return IconManager.getInstance().getIcon("winsymbol");
+	        }
+	        case Version.LINUX: {
+	            return IconManager.getInstance().getIcon("linuxsymbol");
+	        }
+	        case Version.FREEBSD: {
+	            return IconManager.getInstance().getIcon("freebsdsymbol");
+	        }
+	        case Version.MACINTOSH: {
+	            return IconManager.getInstance().getIcon("macsymbol");
+	        }
+	        case Version.SOLARIS: {
+	            return IconManager.getInstance().getIcon("sunossymbol");
+	        }
+	        case Version.NETWARE: {
+	            return IconManager.getInstance().getIcon("netwaresymbol");
+	        }
+	        case Version.OS2: {
+	            return IconManager.getInstance().getIcon("os2symbol");
+	        }
+	        default: {
+	            return IconManager.getInstance().getIcon("unbekanntsymbol");
+	        }
+        }
+    }
+    
     class TableValueCellRenderer
         extends JLabel
         implements TableCellRenderer {
