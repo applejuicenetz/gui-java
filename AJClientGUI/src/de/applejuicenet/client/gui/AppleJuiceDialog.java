@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.32 2003/08/22 12:52:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.33 2003/08/23 11:16:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.33  2003/08/23 11:16:13  maj0r
+ * Plattformunabhaengigkeit wieder hergestellt.
+ *
  * Revision 1.32  2003/08/22 12:52:19  maj0r
  * Version auf 0.13 Beta erhoeht.
  *
@@ -271,7 +274,7 @@ public class AppleJuiceDialog
           if (rb2.isSelected()) {
             String path = System.getProperty("user.dir") + File.separator +
                 "language" + File.separator;
-            String dateiName = path + rb2.getText() + ".xml";
+            String dateiName = path + rb2.getText().toLowerCase() + ".xml";
             LanguageSelector.getInstance(dateiName);
           }
         }

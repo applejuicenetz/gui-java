@@ -11,7 +11,7 @@ import java.util.zip.ZipEntry;
 import de.applejuicenet.client.gui.plugins.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.7 2003/08/20 10:52:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.8 2003/08/23 11:16:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.gui.plugins.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.8  2003/08/23 11:16:35  maj0r
+ * Plattformunabhaengigkeit wieder hergestellt.
+ *
  * Revision 1.7  2003/08/20 10:52:51  maj0r
  * JarClassloader korrigiert.
  *
@@ -47,7 +50,7 @@ public class PluginJarClassLoader
 
     public PluginConnector getPlugin(String jar) throws Exception {
         File aJar = new File(jar);
-        String theClassName = jar.substring(jar.lastIndexOf('\\') + 1, jar.lastIndexOf(".jar"));
+        String theClassName = jar.substring(jar.lastIndexOf(File.separatorChar) + 1, jar.lastIndexOf(".jar"));
         loadClassBytesFromJar(aJar);
         Class cl = loadClass("de.applejuicenet.client.gui.plugins." + theClassName);
         Object aPlugin = cl.newInstance();
