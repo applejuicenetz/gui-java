@@ -20,7 +20,7 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SecurerXMLHolder.java,v 1.10 2004/06/12 13:13:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SecurerXMLHolder.java,v 1.11 2004/08/05 10:33:49 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -101,6 +101,9 @@ public class SecurerXMLHolder
         }
         catch (WebSiteNotFoundException wsnfE) {
             //Verbindung zum Core ueberlastet.
+            if (logger.isEnabledFor(Level.DEBUG)) {
+                logger.debug("Verbindung zum Core ueberlastet.", wsnfE);
+            }
             return false;
         }
         catch (Exception ex) {
