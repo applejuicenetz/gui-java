@@ -84,7 +84,6 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
-import de.applejuicenet.client.gui.components.AJMenuItem;
 
 /**
  * $Header:
@@ -125,27 +124,27 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 
 	private Set plugins;
 
-	private AJMenuItem menuItemOptionen = new AJMenuItem();
+	private JMenuItem menuItemOptionen = new JMenuItem();
 
-	private AJMenuItem menuItemDateiliste = new AJMenuItem();
+	private JMenuItem menuItemDateiliste = new JMenuItem();
 
-	private AJMenuItem menuItemCheckUpdate = new AJMenuItem();
+	private JMenuItem menuItemCheckUpdate = new JMenuItem();
 
-	private AJMenuItem menuItemCoreBeenden = new AJMenuItem();
+	private JMenuItem menuItemCoreBeenden = new JMenuItem();
 
-	private AJMenuItem menuItemUeber = new AJMenuItem();
+	private JMenuItem menuItemUeber = new JMenuItem();
 
-	private AJMenuItem menuItemDeaktivieren = new AJMenuItem();
+	private JMenuItem menuItemDeaktivieren = new JMenuItem();
 
-	private AJMenuItem menuItemAktivieren = new AJMenuItem();
+	private JMenuItem menuItemAktivieren = new JMenuItem();
 
-	private AJMenuItem popupOptionenMenuItem = new AJMenuItem("Optionen");
+	private JMenuItem popupOptionenMenuItem = new JMenuItem("Optionen");
 
-	private AJMenuItem popupAboutMenuItem = new AJMenuItem("&Info");
+	private JMenuItem popupAboutMenuItem = new JMenuItem("&Info");
 
-	private AJMenuItem popupShowHideMenuItem = new AJMenuItem("%Show");
+	private JMenuItem popupShowHideMenuItem = new JMenuItem("%Show");
 
-	private AJMenuItem popupCheckUpdateMenuItem = new AJMenuItem("Update");
+	private JMenuItem popupCheckUpdateMenuItem = new JMenuItem("Update");
 
 	private JButton sound = new JButton();
 

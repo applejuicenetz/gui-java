@@ -57,10 +57,9 @@ import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
-import de.applejuicenet.client.gui.components.AJButton;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.70 2004/07/09 11:34:00 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.71 2004/07/09 12:42:01 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -83,11 +82,11 @@ public class SharePanel
     private JLabel dateien = new JLabel();
     private MouseAdapter treeMouseAdapter;
 
-    private AJButton neueListe = new AJButton();
-    private AJButton neuLaden = new AJButton();
-    private AJButton refresh = new AJButton();
-    private AJButton prioritaetSetzen = new AJButton();
-    private AJButton prioritaetAufheben = new AJButton();
+    private JButton neueListe = new JButton();
+    private JButton neuLaden = new JButton();
+    private JButton refresh = new JButton();
+    private JButton prioritaetSetzen = new JButton();
+    private JButton prioritaetAufheben = new JButton();
     private JComboBox cmbPrio = new JComboBox();
     private AJSettings ajSettings;
 

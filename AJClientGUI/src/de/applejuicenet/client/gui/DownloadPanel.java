@@ -64,7 +64,6 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
-import de.applejuicenet.client.gui.components.AJButton;
 
 /**
  * $Header:
@@ -95,7 +94,7 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 
 	private JTextField downloadLink = new JTextField();
 
-	private AJButton btnStartDownload = new AJButton("Download");
+	private JButton btnStartDownload = new JButton("Download");
 
 	private PowerDownloadPanel powerDownloadPanel;
 

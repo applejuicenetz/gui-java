@@ -29,13 +29,12 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.components.AJLabel;
+import de.applejuicenet.client.shared.MultiLineToolTip;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.19 2004/07/09 11:34:00 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.21 2004/07/09 12:46:38 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -53,7 +52,7 @@ public class ODAnsichtPanel
     private Settings settings;
     JCheckBox cmbAktiv = new JCheckBox();
     JCheckBox cmbDownloadUebersicht = new JCheckBox();
-    private JCheckBox enableToolTip = new JCheckBox("Tooltipp anzeigen (Neustart erforderlich)");
+    private JCheckBox enableToolTip = new JCheckBox();
     private JCheckBox cmbStartscreenZeigen = new JCheckBox();
     private Logger logger;
     private Icon menuIcon;
@@ -87,6 +86,9 @@ public class ODAnsichtPanel
         cmbStartscreenZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.options.ansicht.zeigestartscreen")));
+        enableToolTip.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(".root.javagui.options.ansicht.zeigetooltipps")));
+
         setLayout(new BorderLayout());
         farbeFertigerDownload.setOpaque(true);
         farbeFertigerDownload.setBackground(settings.
@@ -101,6 +103,7 @@ public class ODAnsichtPanel
         cmbDownloadUebersicht.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
                 settings.setDownloadUebersicht(cmbDownloadUebersicht.isSelected());
+                dirty = true;
             }
         });
         cmbStartscreenZeigen.setSelected(om.shouldShowConnectionDialogOnStartup());
@@ -123,14 +126,14 @@ public class ODAnsichtPanel
             }
         });
         ImageIcon icon = im.getIcon("hint");
-        AJLabel hint1 = new AJLabel(icon) {
+        JLabel hint1 = new JLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);
                 return tip;
             }
         };
-        AJLabel hint2 = new AJLabel(icon) {
+        JLabel hint2 = new JLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
                 tip.setComponent(this);

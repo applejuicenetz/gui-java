@@ -46,7 +46,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.28 2004/06/17 09:57:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.29 2004/07/09 12:42:01 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -94,6 +94,9 @@ public class JTreeTable
     }
 
     public String getToolTipText(MouseEvent me){
+        if (!Settings.getSettings().isToolTipEnabled()) {
+            return null;
+        }
         Point p = me.getPoint();
         int column = columnAtPoint(p);
         if (column == 0){
