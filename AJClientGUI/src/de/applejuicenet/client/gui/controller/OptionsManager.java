@@ -9,7 +9,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.17 2003/08/11 14:10:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.18 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.18  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.17  2003/08/11 14:10:28  maj0r
  * DownloadPartList eingefügt.
  * Diverse Änderungen.
@@ -127,7 +130,7 @@ public class OptionsManager
       String altPasswort = getFirstAttrbuteByTagName(new String[] {"options", "remote",
                                     "passwort"});
       if (altPasswort.compareTo(remote.getOldPassword()) == 0) {
-        DataManager.getInstance().setPassword(remote.getNewPassword());
+        ApplejuiceFassade.getInstance().setPassword(remote.getNewPassword());
         setAttributeByTagName(new String[] {"options", "remote", "passwort"},
                               remote.getNewPassword());
       }
@@ -140,6 +143,6 @@ public class OptionsManager
   }
 
   public boolean saveAJSettings(AJSettings ajSettings) {
-    return DataManager.getInstance().saveAJSettings(ajSettings);
+    return ApplejuiceFassade.getInstance().saveAJSettings(ajSettings);
   }
 }

@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.15 2003/08/12 11:08:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.16 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.16  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.15  2003/08/12 11:08:23  maj0r
  * Anzeige korrigiert.
  *
@@ -126,8 +129,8 @@ public class StartPanel
 
     constraints.gridy = 1;
     constraints.insets.left = 15;
-    String coreVersion = DataManager.getInstance().getCoreVersion().getVersion();
-    panel3.add(new JLabel("GUI: " + parent.GUI_VERSION + " Controller: " + DataManager.DATAMANAGER_VERSION + " Core: " +
+    String coreVersion = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
+    panel3.add(new JLabel("GUI: " + parent.GUI_VERSION + " Controller: " + ApplejuiceFassade.DATAMANAGER_VERSION + " Core: " +
                           coreVersion),
                constraints);
 
@@ -199,9 +202,9 @@ public class StartPanel
     add(panel4, BorderLayout.CENTER);
     languageSelector = LanguageSelector.getInstance();
     languageSelector.addLanguageListener(this);
-    DataManager.getInstance().addDataUpdateListener(this,
+    ApplejuiceFassade.getInstance().addDataUpdateListener(this,
         DataUpdateListener.NETINFO_CHANGED);
-    DataManager.getInstance().addDataUpdateListener(this,
+    ApplejuiceFassade.getInstance().addDataUpdateListener(this,
         DataUpdateListener.STATUSBAR_CHANGED);
   }
 
@@ -210,7 +213,7 @@ public class StartPanel
   }
 
   public void fireLanguageChanged() {
-    NetworkInfo netInfo = DataManager.getInstance().getNetworkInfo();
+    NetworkInfo netInfo = ApplejuiceFassade.getInstance().getNetworkInfo();
     netzwerk.setText("<html><font><h2>" +
                      ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"mainform", "html7"})) +
@@ -237,7 +240,7 @@ public class StartPanel
     String temp = label9Text;
     temp = temp.replaceFirst("%s", "<Kein Server>");
     temp = temp.replaceFirst("%d",
-                             Integer.toString(DataManager.getInstance().
+                             Integer.toString(ApplejuiceFassade.getInstance().
                                               getAllServer().
                                               size()));
     temp = temp.replaceAll("%s", "-");
@@ -256,7 +259,7 @@ public class StartPanel
                       "</h2></font></html>");
     try {
         String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.de", 80, HtmlLoader.GET,
-                "/inprog/news.php?version=" + DataManager.getInstance().getCoreVersion().getVersion());
+                "/inprog/news.php?version=" + ApplejuiceFassade.getInstance().getCoreVersion().getVersion());
         htmlText = "<html>" + htmlText + "</html>";
         nachrichten.setText(htmlText);
     }
@@ -290,7 +293,7 @@ public class StartPanel
         int pos = temp.indexOf("%s");
         temp.replace(pos, pos +2, status[1]);
         pos = temp.indexOf("%d");
-        temp.replace(pos, pos +2, Integer.toString(DataManager.getInstance().
+        temp.replace(pos, pos +2, Integer.toString(ApplejuiceFassade.getInstance().
                                                   getAllServer().
                                                   size()));
         pos = temp.indexOf("%s");

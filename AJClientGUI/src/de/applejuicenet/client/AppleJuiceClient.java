@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.17 2003/07/01 14:52:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.18 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.18  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.17  2003/07/01 14:52:45  maj0r
  * Wenn kein Core gefunden wird, können nun die entsprechenden Einstellungen beim Start der GUI angepasst werden.
  *
@@ -90,7 +93,7 @@ public class AppleJuiceClient {
       String titel = null;
       LanguageSelector languageSelector = LanguageSelector.getInstance();
       QuickRemoteEinstellungDialog remoteDialog = null;
-      while (!DataManager.istCoreErreichbar()) {
+      while (!ApplejuiceFassade.istCoreErreichbar()) {
         titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
         nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.

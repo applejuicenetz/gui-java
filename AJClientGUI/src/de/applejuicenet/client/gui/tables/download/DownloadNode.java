@@ -6,7 +6,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.shared.exception.NodeAlreadyExistsException;
 import de.applejuicenet.client.gui.tables.Node;
-import de.applejuicenet.client.gui.controller.DataManager;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.7 2003/08/11 15:34:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadNode.java,v 1.8 2003/08/15 14:45:08 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadNode.java,v $
+ * Revision 1.8  2003/08/15 14:45:08  maj0r
+ * Refactoring.
+ *
  * Revision 1.7  2003/08/11 15:34:45  maj0r
  * Diverse Änderungen.
  *
@@ -127,7 +130,7 @@ public class DownloadNode implements Node {
       ArrayList toRemove = new ArrayList();
       Iterator it = directoryNodes.values().iterator();
       MapSetStringKey key = null;
-      HashMap downloads = DataManager.getInstance().getDownloads();
+      HashMap downloads = ApplejuiceFassade.getInstance().getDownloads();
       DownloadNode node = null;
       while(it.hasNext()){
           node = (DownloadNode)it.next();

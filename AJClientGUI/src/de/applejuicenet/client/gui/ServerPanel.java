@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.tables.server.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.tables.server.ServerTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.21 2003/08/10 21:08:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.22 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.gui.tables.server.ServerTableModel;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.22  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.21  2003/08/10 21:08:18  maj0r
  * Diverse Änderungen.
  *
@@ -91,7 +94,7 @@ public class ServerPanel
         int selected = serverTable.getSelectedRow();
         ServerDO server = (ServerDO) ( (ServerTableModel) serverTable.getModel()).
             getRow(selected);
-        DataManager.getInstance().connectToServer(server.getID());
+        ApplejuiceFassade.getInstance().connectToServer(server.getID());
       }
     });
 
@@ -123,7 +126,7 @@ public class ServerPanel
     panel1.add(new JLabel(), constraints);
     add(panel1, BorderLayout.NORTH);
     serverTable = new JTable();
-    serverTable.setModel(new ServerTableModel(DataManager.getInstance().
+    serverTable.setModel(new ServerTableModel(ApplejuiceFassade.getInstance().
                                               getAllServer()));
     serverTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     SortButtonRenderer renderer = new SortButtonRenderer();
@@ -174,12 +177,12 @@ public class ServerPanel
     JScrollPane aScrollPane = new JScrollPane();
     aScrollPane.getViewport().add(serverTable);
     add(aScrollPane, BorderLayout.CENTER);
-    DataManager.getInstance().addDataUpdateListener(this,
+    ApplejuiceFassade.getInstance().addDataUpdateListener(this,
         DataUpdateListener.SERVER_CHANGED);
   }
 
   public void registerSelected() {
-//    DataManager.getInstance().updateModifiedXML();
+//    ApplejuiceFassade.getInstance().updateModifiedXML();
   }
 
   public void fireContentChanged(int type, Object content) {

@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.5 2003/08/09 16:47:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.6 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.6  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.5  2003/08/09 16:47:42  maj0r
  * Diverse Änderungen.
  *
@@ -79,8 +82,14 @@ public abstract class WebXMLParser
                                             timestamp + parameters);
       }
       else {
-        xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                                            xmlCommand + "?password=" + password + "&" + parameters);
+        if (parameters.length()!=0){
+            xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
+                                                xmlCommand + "?password=" + password + "&" + parameters);
+        }
+        else{
+            xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
+                                                xmlCommand + "?password=" + password);
+        }
       }
     }
     catch (WebSiteNotFoundException ex) {

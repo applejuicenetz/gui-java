@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.18 2003/08/14 20:08:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.19 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.19  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.18  2003/08/14 20:08:42  maj0r
  * Tree fuer Shareauswahl eingefuegt, aber noch nicht fertiggestellt.
  *
@@ -438,7 +441,7 @@ public class ModifiedXMLHolder
     Long actualUploadPos = null;
     Integer speed = null;
     MapSetStringKey idKey = null;
-    HashMap share = DataManager.getInstance().getShare(false);
+    HashMap share = ApplejuiceFassade.getInstance().getShare(false);
     for (int i = 0; i < size; i++) {
       e = (Element) nodes.item(i);
       id = e.getAttribute("id");

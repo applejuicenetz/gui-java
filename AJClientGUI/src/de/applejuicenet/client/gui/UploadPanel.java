@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadTableCellRenderer;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.13 2003/08/10 21:08:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.14 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.14  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.13  2003/08/10 21:08:18  maj0r
  * Diverse Änderungen.
  *
@@ -74,7 +77,7 @@ public class UploadPanel
         panel2.setLayout(new BorderLayout());
         panel2.add(panel, BorderLayout.WEST);
         add(panel2, BorderLayout.SOUTH);
-        DataManager.getInstance().addDataUpdateListener(this,
+        ApplejuiceFassade.getInstance().addDataUpdateListener(this,
                 DataUpdateListener.UPLOAD_CHANGED);
     }
 
@@ -124,6 +127,6 @@ public class UploadPanel
     }
 
     public void registerSelected() {
-//    DataManager.getInstance().updateModifiedXML();
+//    ApplejuiceFassade.getInstance().updateModifiedXML();
     }
 }

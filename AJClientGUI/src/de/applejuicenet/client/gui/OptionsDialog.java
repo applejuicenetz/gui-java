@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.exception.*;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.12 2003/08/02 12:03:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.13 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.13  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.12  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -47,7 +50,7 @@ public class OptionsDialog
     super(parent, true);
     this.parent = parent;
     try {
-      ajSettings = DataManager.getInstance().getAJSettings();
+      ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
       jbInit();
     }
     catch (Exception e) {

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.5 2003/08/12 16:23:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.6 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.6  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.5  2003/08/12 16:23:36  maj0r
  * Kleine Layoutaenderung.
  *
@@ -32,7 +35,7 @@ package de.applejuicenet.client.gui;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.DataManager;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
@@ -90,7 +93,7 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
         if (this.downloadDO != downloadDO)
         {
             this.downloadDO = downloadDO;
-            PartListDO partListDO = DataManager.getInstance().getDownloadPartList(downloadDO);
+            PartListDO partListDO = ApplejuiceFassade.getInstance().getDownloadPartList(downloadDO);
             actualDLDateiName.setText(downloadDO.getFilename() + " (" + downloadDO.getTemporaryFileNumber() + ".data)");
             remove(actualDlOverviewTable);
             actualDlOverviewTable = new JPanel(new GridBagLayout());

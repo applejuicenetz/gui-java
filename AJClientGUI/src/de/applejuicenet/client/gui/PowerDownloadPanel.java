@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.18 2003/08/12 16:22:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.19 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.19  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.18  2003/08/12 16:22:51  maj0r
  * Kleine Farbaenderung.
  *
@@ -296,7 +299,7 @@ public class PowerDownloadPanel
                       double power = Double.parseDouble(temp);
                       powerDownload = (int) (power * 10 - 10);
                   }
-                  DataManager.getInstance().setPowerDownload(Integer.parseInt(((DownloadNode)selectedItems[i]).getId()), powerDownload);
+                  ApplejuiceFassade.getInstance().setPowerDownload(Integer.parseInt(((DownloadNode)selectedItems[i]).getId()), powerDownload);
               }
           }
       }

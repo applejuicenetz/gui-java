@@ -18,12 +18,14 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.share.ShareModel;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.gui.trees.share.DirectoryNode;
+import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeModel;
+import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeCellRenderer;
 
 import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.18 2003/08/14 20:08:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.19 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +34,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.19  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.18  2003/08/14 20:08:42  maj0r
  * Tree fuer Shareauswahl eingefuegt, aber noch nicht fertiggestellt.
  *
@@ -94,6 +99,7 @@ public class SharePanel
 
   private int anzahlDateien = 0;
   private String dateiGroesse = "0 MB";
+  private boolean treeInitialisiert = false;
 
   public SharePanel() {
     try {
@@ -105,7 +111,7 @@ public class SharePanel
   }
 
   private void jbInit() throws Exception {
-    ajSettings = DataManager.getInstance().getAJSettings();
+    ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
     Iterator it = ajSettings.getShareDirs().iterator();
     while (it.hasNext()) {
       ShareEntry entry = (ShareEntry) it.next();
@@ -126,7 +132,7 @@ public class SharePanel
     neuLaden.setIcon(IconManager.getInstance().getIcon("erneuern"));
     neuLaden.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent ae){
-          HashMap shares = DataManager.getInstance().getShare(true);
+          HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
           ShareNode rootNode = shareModel.getRootNode();
           rootNode.removeAllChildren();
           Iterator iterator = shares.values().iterator();
@@ -214,8 +220,13 @@ public class SharePanel
   }
 
   public void registerSelected() {
-    folderTree.setRootVisible(false);
-    folderTree.setModel(new DefaultTreeModel(new DirectoryNode(null, null)));
+    if (!treeInitialisiert){
+        folderTree.setRootVisible(false);
+        ShareSelectionTreeModel treeModel = new ShareSelectionTreeModel();
+        folderTree.setModel(treeModel);
+        folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());;
+        treeInitialisiert = true;
+    }
   }
 
   public void fireLanguageChanged() {

@@ -22,7 +22,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.34 2003/08/11 14:10:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.35 2003/08/15 14:46:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.35  2003/08/15 14:46:30  maj0r
+ * Refactoring.
+ *
  * Revision 1.34  2003/08/11 14:10:27  maj0r
  * DownloadPartList eingefügt.
  * Diverse Änderungen.
@@ -140,7 +143,7 @@ public class DownloadPanel
                         for (int i = 0; i < selectedItems.length; i++) {
                             if (((DownloadNode) selectedItems[i]).getNodeType() == DownloadNode.DOWNLOAD_NODE) {
                                 DownloadDO downloadDO = ((DownloadNode) selectedItems[i]).getDownloadDO();
-                                DataManager.getInstance().cancelDownload(downloadDO.getId());
+                                ApplejuiceFassade.getInstance().cancelDownload(downloadDO.getId());
                             }
                         }
                     }
@@ -156,10 +159,10 @@ public class DownloadPanel
                         if (((DownloadNode) selectedItems[i]).getNodeType() == DownloadNode.DOWNLOAD_NODE) {
                             DownloadDO downloadDO = ((DownloadNode) selectedItems[i]).getDownloadDO();
                             if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
-                                DataManager.getInstance().resumeDownload(downloadDO.getId());
+                                ApplejuiceFassade.getInstance().resumeDownload(downloadDO.getId());
                             }
                             else {
-                                DataManager.getInstance().pauseDownload(downloadDO.getId());
+                                ApplejuiceFassade.getInstance().pauseDownload(downloadDO.getId());
                             }
                         }
                     }
@@ -169,7 +172,7 @@ public class DownloadPanel
 
         item6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                DataManager.getInstance().cleanDownloadList();
+                ApplejuiceFassade.getInstance().cleanDownloadList();
             }
         });
 
@@ -204,7 +207,7 @@ public class DownloadPanel
             public void actionPerformed(ActionEvent ae) {
                 String link = downloadLink.getText();
                 if (link.length() != 0) {
-                    DataManager.getInstance().processLink(link);
+                    ApplejuiceFassade.getInstance().processLink(link);
                     downloadLink.setText("");
                 }
             }
@@ -255,7 +258,7 @@ public class DownloadPanel
         bottomPanel.add(downloadDOOverviewPanel, BorderLayout.CENTER);
         add(topPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
-        DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
+        ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
     }
 
     public Object[] getSelectedDownloadItems() {
