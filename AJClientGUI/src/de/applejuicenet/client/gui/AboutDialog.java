@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.19 2004/05/11 05:41:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.20 2004/10/06 09:26:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,7 +44,8 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 public class AboutDialog
     extends JDialog {
-    private Logger logger;
+    private static final long serialVersionUID = 6074385586703205113L;
+	private Logger logger;
     private WorkerThread worker = null;
     private BackPanel backPanel = new BackPanel();
 
@@ -221,8 +222,10 @@ public class AboutDialog
         private BackPanel backPanel;
         private List credits;
         private boolean run = true;
+        private Logger logger;
 
         public WorkerThread(Image backgroundImage, BackPanel backPanel, List credits){
+            logger = Logger.getLogger(getClass());
             this.backgroundImage = backgroundImage;
             this.backPanel = backPanel;
             this.credits = credits;
