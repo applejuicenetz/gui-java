@@ -32,7 +32,7 @@ import java.net.URLEncoder;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.52 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.53 2004/01/05 15:30:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,10 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.53  2004/01/05 15:30:22  maj0r
+ * Bug #43 gefixt (Danke an flabeg)
+ * Shareverzeichnis wird bei Prioritaetenaenderung nicht mehr komplett neu geladen, sondern nur aktualsiert.
+ *
  * Revision 1.52  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -360,7 +364,7 @@ public class SharePanel
                                     shareNode.setPriority(prio);
                                 }
                             }
-                            shareNeuLaden();
+                            shareNeuLaden(false);
                         }
                         catch (Exception e)
                         {
@@ -451,7 +455,7 @@ public class SharePanel
 
         neuLaden.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                shareNeuLaden();
+                shareNeuLaden(true);
             }
         });
 
@@ -544,7 +548,7 @@ public class SharePanel
         });
     }
 
-    private void shareNeuLaden(){
+    private void shareNeuLaden(final boolean komplettNeu){
         prioritaetAufheben.setEnabled(false);
         prioritaetSetzen.setEnabled(false);
         neuLaden.setEnabled(false);
@@ -552,7 +556,9 @@ public class SharePanel
             public Object construct() {
                 try{
                     ShareNode rootNode = shareModel.getRootNode();
-                    rootNode.removeAllChildren();
+                    if (komplettNeu){
+                        rootNode.removeAllChildren();
+                    }
                     HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
                     Iterator iterator = shares.values().iterator();
                     int anzahlDateien = 0;

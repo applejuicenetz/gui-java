@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.ShareDO;
 import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.16 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/ShareNode.java,v 1.17 2004/01/05 15:30:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareNode.java,v $
+ * Revision 1.17  2004/01/05 15:30:22  maj0r
+ * Bug #43 gefixt (Danke an flabeg)
+ * Shareverzeichnis wird bei Prioritaetenaenderung nicht mehr komplett neu geladen, sondern nur aktualsiert.
+ *
  * Revision 1.16  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -182,9 +186,17 @@ public class ShareNode
             }
         }
         else {
-            childNode = new ShareNode(this, shareDOtoAdd);
-            children.put(new MapSetStringKey(shareDOtoAdd.getId()), childNode);
-            sortedChildren = null;
+            MapSetStringKey key = new MapSetStringKey(shareDOtoAdd.getId());
+            if (children.containsKey(key)){
+                childNode = (ShareNode)children.get(key);
+                ShareDO shareDO = childNode.getDO();
+                shareDO.setPrioritaet(shareDOtoAdd.getPrioritaet());
+            }
+            else{
+                childNode = new ShareNode(this, shareDOtoAdd);
+                children.put(key, childNode);
+                sortedChildren = null;
+            }
         }
         return childNode;
     }
