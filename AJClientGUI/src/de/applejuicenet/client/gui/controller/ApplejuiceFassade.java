@@ -29,9 +29,10 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
+import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.83 2003/12/31 16:13:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.84 2004/01/01 14:26:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,6 +41,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.84  2004/01/01 14:26:53  maj0r
+ * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
+ *
  * Revision 1.83  2003/12/31 16:13:16  maj0r
  * Refactoring.
  *
@@ -726,7 +730,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public Object getObjectById(int id) {
-        return null;
+        GetObjectXMLHolder getObjectXMLHolder = new GetObjectXMLHolder();
+        return getObjectXMLHolder.getObjectByID(id);
     }
 
     public void entferneServer(int id) {

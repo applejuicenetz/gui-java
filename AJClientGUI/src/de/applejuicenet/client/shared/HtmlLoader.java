@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.exception.*;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.17 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.18 2004/01/01 14:26:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.18  2004/01/01 14:26:53  maj0r
+ * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
+ *
  * Revision 1.17  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -154,6 +157,9 @@ public abstract class HtmlLoader {
               if (inputLine == null) {
                 throw new WebSiteNotFoundException(WebSiteNotFoundException.
                                                    UNKNOWN_HOST);
+              }
+              if (inputLine.indexOf("invalid id") != -1) {
+                  return "";
               }
             }
             urlContent.append(inputLine);

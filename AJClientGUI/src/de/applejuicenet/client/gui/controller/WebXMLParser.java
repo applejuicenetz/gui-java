@@ -22,7 +22,7 @@ import de.applejuicenet.client.shared.exception.PartlistException;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.20 2003/12/31 16:17:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.21 2004/01/01 14:26:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.21  2004/01/01 14:26:53  maj0r
+ * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
+ *
  * Revision 1.20  2003/12/31 16:17:52  maj0r
  * Refactoring.
  *
@@ -155,6 +158,9 @@ public abstract class WebXMLParser
                     xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
                         xmlCommand + "?password=" + password);
                 }
+            }
+            if (xmlData.length()==0){
+                throw new IllegalArgumentException();
             }
         }
         catch (WebSiteNotFoundException ex) {
