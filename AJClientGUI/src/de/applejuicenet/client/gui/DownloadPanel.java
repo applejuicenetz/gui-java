@@ -1,26 +1,23 @@
 package de.applejuicenet.client.gui;
 
+import java.util.*;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
-import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import org.apache.log4j.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.gui.shared.*;
+import de.applejuicenet.client.gui.tables.*;
 import de.applejuicenet.client.gui.tables.download.*;
 import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
-import de.applejuicenet.client.gui.tables.JTreeTable;
-import de.applejuicenet.client.gui.shared.SortButtonRenderer;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
+import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.62 2003/12/16 09:06:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.63 2003/12/17 11:08:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +26,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.63  2003/12/17 11:08:30  maj0r
+ * Partliste wird nun nur noch über das PopupMenü geholt.
+ * Wenn der Downloadtab verlassen wird, wird das Aktualisieren der aktuellen Partliste beendet.
+ *
  * Revision 1.62  2003/12/16 09:06:40  maj0r
  * Partliste wird nun erst nach 2 Sekunden Wartezeit geholt, um ein erneutes Klicken behandeln zu können.
  *
@@ -88,7 +89,7 @@ import org.apache.log4j.Level;
  * Wizard fertiggestellt.
  *
  * Revision 1.44  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.43  2003/09/04 10:14:08  maj0r
  * Logger eingebaut.
@@ -165,12 +166,13 @@ import org.apache.log4j.Level;
  */
 
 public class DownloadPanel
-        extends JPanel
-        implements LanguageListener, RegisterI, DataUpdateListener {
+    extends JPanel
+    implements LanguageListener, RegisterI, DataUpdateListener {
 
     public static DownloadPanel _this;
 
-    private DownloadDOOverviewPanel downloadDOOverviewPanel = new DownloadDOOverviewPanel();
+    private DownloadDOOverviewPanel downloadDOOverviewPanel = new
+        DownloadDOOverviewPanel();
     private JTextField downloadLink = new JTextField();
     private JButton btnStartDownload = new JButton("Download");
     private PowerDownloadPanel powerDownloadPanel;
@@ -178,7 +180,7 @@ public class DownloadPanel
     private JLabel linkLabel = new JLabel("ajfsp-Link hinzufügen");
     private DownloadModel downloadModel;
     private JPopupMenu popup = new JPopupMenu();
-    private boolean initizialiced = false;
+    private boolean initialized = false;
     private JScrollPane aScrollPane;
     private JMenuItem item1;
     private JMenuItem item2;
@@ -187,23 +189,27 @@ public class DownloadPanel
     private JMenuItem item6;
     private String downloadAbbrechen;
     private String dialogTitel;
-/*    private JMenuItem item7;
-    private JMenuItem item8;*/
+    private JMenuItem item7;
+//    private JMenuItem item8;
     private Logger logger;
+    private boolean isDownloadUebersicht;
 
-    private DownloadPartListWatcher downloadPartListWatcher = new DownloadPartListWatcher();
+    private DownloadPartListWatcher downloadPartListWatcher = new
+        DownloadPartListWatcher();
 
     public DownloadPanel() {
         _this = this;
         logger = Logger.getLogger(getClass());
         powerDownloadPanel = new PowerDownloadPanel(this);
+        isDownloadUebersicht = Settings.getSettings().isDownloadUebersicht();
         try {
             init();
             LanguageSelector.getInstance().addLanguageListener(this);
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -219,6 +225,7 @@ public class DownloadPanel
         item4 = new JMenuItem("Umbenennen");
         item5 = new JMenuItem("Zielordner ändern");
         item6 = new JMenuItem("Fertige Übertragungen entfernen");
+        item7 = new JMenuItem("Partliste anzeigen");
         //todo
         item4.setEnabled(false);
         item5.setEnabled(false);
@@ -226,30 +233,38 @@ public class DownloadPanel
         popup.add(item1);
         popup.add(item2);
         popup.add(item6);
+        popup.add(item7);
+        item7.setVisible(false);
 
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 Object[] selectedItems = getSelectedDownloadItems();
                 if (selectedItems != null && selectedItems.length != 0) {
-                    int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(),
-                                                               downloadAbbrechen, dialogTitel,
-                            JOptionPane.YES_NO_OPTION);
+                    int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.
+                        getApp(),
+                        downloadAbbrechen, dialogTitel,
+                        JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
                         ArrayList indizesAbbrechen = new ArrayList();
                         for (int i = 0; i < selectedItems.length; i++) {
                             if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                                DownloadDO downloadDO = ((DownloadMainNode) selectedItems[i]).getDownloadDO();
-                                indizesAbbrechen.add(new Integer(downloadDO.getId()));
+                                DownloadDO downloadDO = ( (DownloadMainNode)
+                                    selectedItems[i]).getDownloadDO();
+                                indizesAbbrechen.add(new Integer(downloadDO.
+                                    getId()));
                             }
                         }
                         int size = indizesAbbrechen.size();
                         if (size > 0) {
                             int[] abbrechen = new int[size];
                             for (int i = 0; i < size; i++) {
-                                abbrechen[i] = ((Integer) indizesAbbrechen.get(i)).intValue();
+                                abbrechen[i] = ( (Integer) indizesAbbrechen.get(
+                                    i)).intValue();
                             }
-                            ApplejuiceFassade.getInstance().cancelDownload(abbrechen);
-                            SoundPlayer.getInstance().playSound(SoundPlayer.ABGEBROCHEN);
+                            ApplejuiceFassade.getInstance().cancelDownload(
+                                abbrechen);
+                            SoundPlayer.getInstance().playSound(SoundPlayer.
+                                ABGEBROCHEN);
                         }
                     }
                 }
@@ -259,17 +274,21 @@ public class DownloadPanel
         item2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 Object[] selectedItems = getSelectedDownloadItems();
-                if (selectedItems != null && selectedItems.length != 0 && !powerDownloadPanel.isAutomaticPwdlActive()) {
+                if (selectedItems != null && selectedItems.length != 0 &&
+                    !powerDownloadPanel.isAutomaticPwdlActive()) {
                     ArrayList indizesPausieren = new ArrayList();
                     ArrayList indizesFortsetzen = new ArrayList();
                     for (int i = 0; i < selectedItems.length; i++) {
                         if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                            DownloadDO downloadDO = ((DownloadMainNode) selectedItems[i]).getDownloadDO();
+                            DownloadDO downloadDO = ( (DownloadMainNode)
+                                selectedItems[i]).getDownloadDO();
                             if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
-                                indizesFortsetzen.add(new Integer(downloadDO.getId()));
+                                indizesFortsetzen.add(new Integer(downloadDO.
+                                    getId()));
                             }
                             else {
-                                indizesPausieren.add(new Integer(downloadDO.getId()));
+                                indizesPausieren.add(new Integer(downloadDO.
+                                    getId()));
                             }
                         }
                     }
@@ -277,7 +296,8 @@ public class DownloadPanel
                     if (size > 0) {
                         int[] pausieren = new int[size];
                         for (int i = 0; i < size; i++) {
-                            pausieren[i] = ((Integer) indizesPausieren.get(i)).intValue();
+                            pausieren[i] = ( (Integer) indizesPausieren.get(i)).
+                                intValue();
                         }
                         ApplejuiceFassade.getInstance().pauseDownload(pausieren);
                     }
@@ -285,9 +305,11 @@ public class DownloadPanel
                     if (size > 0) {
                         int[] fortsetzen = new int[size];
                         for (int i = 0; i < size; i++) {
-                            fortsetzen[i] = ((Integer) indizesFortsetzen.get(i)).intValue();
+                            fortsetzen[i] = ( (Integer) indizesFortsetzen.get(i)).
+                                intValue();
                         }
-                        ApplejuiceFassade.getInstance().resumeDownload(fortsetzen);
+                        ApplejuiceFassade.getInstance().resumeDownload(
+                            fortsetzen);
                     }
                 }
             }
@@ -296,6 +318,23 @@ public class DownloadPanel
         item6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 ApplejuiceFassade.getInstance().cleanDownloadList();
+            }
+        });
+
+        item7.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                Object[] selectedItems = getSelectedDownloadItems();
+                if (selectedItems != null && selectedItems.length == 1) {
+                    if (selectedItems[0].getClass() == DownloadMainNode.class
+                        &&
+                        ( (DownloadMainNode) selectedItems[0]).getType() ==
+                        DownloadMainNode.ROOT_NODE) {
+                        downloadPartListWatcher.setDownloadNode(selectedItems[0]);
+                    }
+                    else if (selectedItems[0].getClass() == DownloadSourceDO.class) {
+                        downloadPartListWatcher.setDownloadNode(selectedItems[0]);
+                    }
+                }
             }
         });
 
@@ -331,7 +370,8 @@ public class DownloadPanel
 
         DownloadTableCellRenderer renderer = new DownloadTableCellRenderer();
         for (int i = 1; i < downloadTable.getColumnModel().getColumnCount(); i++) {
-            downloadTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
+            downloadTable.getColumnModel().getColumn(i).setCellRenderer(
+                renderer);
         }
         btnStartDownload.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -340,28 +380,21 @@ public class DownloadPanel
         });
         aScrollPane = new JScrollPane(downloadTable);
         aScrollPane.setBackground(downloadTable.getBackground());
-        downloadTable.getTableHeader().setBackground(downloadTable.getBackground());
+        downloadTable.getTableHeader().setBackground(downloadTable.
+            getBackground());
         aScrollPane.getViewport().setOpaque(false);
         downloadTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 Point p = e.getPoint();
                 int selectedRow = downloadTable.rowAtPoint(p);
-                Object node = ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(selectedRow);
+                Object node = ( (TreeTableModelAdapter) downloadTable.getModel()).
+                    nodeForRow(selectedRow);
                 if (downloadTable.columnAtPoint(p) != 0) {
                     if (e.getClickCount() == 2) {
-                        ((TreeTableModelAdapter) downloadTable.getModel()).expandOrCollapseRow(selectedRow);
+                        ( (TreeTableModelAdapter) downloadTable.getModel()).
+                            expandOrCollapseRow(selectedRow);
                     }
-                }
-                if (node.getClass() == DownloadMainNode.class
-                        && ((DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
-                        downloadPartListWatcher.setDownloadNode(node);
-                }
-                else if (node.getClass() == DownloadSourceDO.class) {
-                    downloadPartListWatcher.setDownloadNode(node);
-                }
-                else {
-                    powerDownloadPanel.btnPdl.setEnabled(false);
                 }
             }
 
@@ -377,6 +410,22 @@ public class DownloadPanel
 
             private void maybeShowPopup(MouseEvent e) {
                 if (e.isPopupTrigger()) {
+                    Point p = e.getPoint();
+                    int selectedRow = downloadTable.rowAtPoint(p);
+                    downloadTable.setRowSelectionInterval(selectedRow,
+                        selectedRow);
+                    Object[] selectedItems = getSelectedDownloadItems();
+                    item7.setVisible(false);
+                    if (isDownloadUebersicht && selectedItems != null &&
+                        selectedItems.length == 1) {
+                        if ( (selectedItems[0].getClass() == DownloadMainNode.class
+                              &&
+                              ( (DownloadMainNode) selectedItems[0]).getType() ==
+                              DownloadMainNode.ROOT_NODE)
+                            || (selectedItems[0].getClass() == DownloadSourceDO.class)) {
+                            item7.setVisible(true);
+                        }
+                    }
                     popup.show(downloadTable, e.getX(), e.getY());
                 }
             }
@@ -398,9 +447,11 @@ public class DownloadPanel
         }
         JTableHeader header = downloadTable.getTableHeader();
         header.addMouseListener(new SortMouseAdapter(header, renderer2));
-        downloadTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        downloadTable.setSelectionMode(ListSelectionModel.
+                                       MULTIPLE_INTERVAL_SELECTION);
 
-        ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
+        ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+            DataUpdateListener.DOWNLOAD_CHANGED);
     }
 
     private void startDownload() {
@@ -418,30 +469,34 @@ public class DownloadPanel
             Object[] result = null;
             if (count == 1) {
                 result = new Object[count];
-                result[0] = ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(downloadTable.getSelectedRow());
+                result[0] = ( (TreeTableModelAdapter) downloadTable.getModel()).
+                    nodeForRow(downloadTable.getSelectedRow());
             }
             else if (count > 1) {
                 result = new Object[count];
                 int[] indizes = downloadTable.getSelectedRows();
                 for (int i = 0; i < indizes.length; i++) {
-                    result[i] = ((TreeTableModelAdapter) downloadTable.getModel()).nodeForRow(indizes[i]);
+                    result[i] = ( (TreeTableModelAdapter) downloadTable.
+                                 getModel()).nodeForRow(indizes[i]);
                 }
             }
             return result;
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
             return null;
         }
     }
 
     public void registerSelected() {
-        if (!initizialiced) {
+        if (!initialized) {
             try {
-                initizialiced = true;
+                initialized = true;
                 int width = aScrollPane.getWidth() - 18;
-                TableColumnModel headerModel = downloadTable.getTableHeader().getColumnModel();
+                TableColumnModel headerModel = downloadTable.getTableHeader().
+                    getColumnModel();
                 int columnCount = headerModel.getColumnCount();
                 PositionManager pm = PropertiesManager.getPositionManager();
                 if (pm.isLegal()) {
@@ -452,14 +507,16 @@ public class DownloadPanel
                 }
                 else {
                     for (int i = 0; i < columnCount; i++) {
-                        headerModel.getColumn(i).setPreferredWidth(width / columnCount);
+                        headerModel.getColumn(i).setPreferredWidth(width /
+                            columnCount);
                     }
                 }
                 downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             }
             catch (Exception e) {
-                if (logger.isEnabledFor(Level.ERROR))
+                if (logger.isEnabledFor(Level.ERROR)) {
                     logger.error("Unbehandelte Exception", e);
+                }
             }
         }
     }
@@ -467,50 +524,65 @@ public class DownloadPanel
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            String text = languageSelector.getFirstAttrbuteByTagName(new String[]{
+            String text = languageSelector.getFirstAttrbuteByTagName(new String[] {
                 "mainform", "Label14", "caption"});
             dialogTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "caption"}));
-            downloadAbbrechen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "msgdlgtext5"}));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
+            downloadAbbrechen = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "msgdlgtext5"}));
             linkLabel.setText(ZeichenErsetzer.korrigiereUmlaute(text));
-            btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "downlajfsp",
-                                                           "caption"})));
+            btnStartDownload.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "downlajfsp",
+                                          "caption"})));
             btnStartDownload.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                            "downlajfsp", "hint"})));
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "mainform",
+                "downlajfsp", "hint"})));
             String[] tableColumns = new String[10];
-            tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                           "col0caption"}));
-            tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                           "col1caption"}));
-            tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                           "col2caption"}));
-            tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                           "col3caption"}));
-            tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                           "col4caption"}));
-            tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                           "col5caption"}));
-            tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                           "col6caption"}));
-            tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                           "col7caption"}));
-            tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                           "col8caption"}));
-            tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
-                                                           "col9caption"}));
+            tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                          "col0caption"}));
+            tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                          "col1caption"}));
+            tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                          "col2caption"}));
+            tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                          "col3caption"}));
+            tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                          "col4caption"}));
+            tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                          "col5caption"}));
+            tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                          "col6caption"}));
+            tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                          "col7caption"}));
+            tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                          "col8caption"}));
+            tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
+                                          "col9caption"}));
 
             TableColumnModel tcm = downloadTable.getColumnModel();
             for (int i = 0; i < tcm.getColumnCount(); i++) {
@@ -518,29 +590,37 @@ public class DownloadPanel
             }
 
             item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "canceldown",
-                                                           "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "canceldown",
+                                          "caption"})));
             String temp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "pausedown",
-                                                           "caption"}));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "pausedown",
+                                          "caption"}));
             temp += "/" +
-                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{
-                        "mainform", "resumedown", "caption"}));
+                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+                String[] {
+                "mainform", "resumedown", "caption"}));
             item2.setText(temp);
             item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "renamefile",
-                                                           "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "renamefile",
+                                          "caption"})));
             item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "changetarget",
-                                                           "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "changetarget",
+                                          "caption"})));
             item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                           "Clearfinishedentries1", "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "Clearfinishedentries1", "caption"})));
+            item7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui",
+                                          "downloadform", "partlisteanzeigen"})));
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -557,22 +637,31 @@ public class DownloadPanel
         try {
             if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
                 HashMap downloads = (HashMap) content;
-                ((DownloadRootNode) downloadModel.getRoot()).setDownloadMap(downloads);
+                ( (DownloadRootNode) downloadModel.getRoot()).setDownloadMap(
+                    downloads);
                 DownloadDirectoryNode.setDownloads(downloads);
                 downloadTable.updateUI();
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    class SortMouseAdapter extends MouseAdapter {
+    public void lostSelection() {
+        downloadPartListWatcher.setDownloadNode(null);
+        downloadDOOverviewPanel.setDownloadDO(null);
+    }
+
+    class SortMouseAdapter
+        extends MouseAdapter {
         private JTableHeader header;
         private SortButtonRenderer renderer;
 
-        public SortMouseAdapter(JTableHeader header, SortButtonRenderer renderer) {
+        public SortMouseAdapter(JTableHeader header,
+                                SortButtonRenderer renderer) {
             this.header = header;
             this.renderer = renderer;
             header.setReorderingAllowed(false);
@@ -580,7 +669,7 @@ public class DownloadPanel
 
         public void mousePressed(MouseEvent e) {
             int col = header.columnAtPoint(e.getPoint());
-            if (col==9){
+            if (col == 9) {
                 return;
             }
             renderer.setPressedColumn(col);
@@ -598,53 +687,54 @@ public class DownloadPanel
             else {
                 isAscent = false;
             }
-            DownloadRootNode rootNode = ((DownloadRootNode) downloadModel.getRoot());
+            DownloadRootNode rootNode = ( (DownloadRootNode) downloadModel.
+                                         getRoot());
             switch (col) {
-                case 0:
-                    {
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_DOWNLOADNAME, isAscent);
-                        break;
-                    }
-                case 1:
-                    {
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_STATUS, isAscent);
-                        break;
-                    }
-                case 2:
-                    {
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_GROESSE, isAscent);
-                        break;
-                    }
-                case 3:
-                    {
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_BEREITS_GELADEN, isAscent);
-                        break;
-                    }
-                case 4:
-                    {
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_GESCHWINDIGKEIT, isAscent);
-                        break;
-                    }
-                case 5:
-                    {
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_RESTZEIT, isAscent);
-                        break;
-                    }
-                case 6:
-                    {
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_PROZENT, isAscent);
-                        break;
-                    }
-                case 7:
-                    {
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_REST_ZU_LADEN, isAscent);
-                        break;
-                    }
-                case 8:
-                    {
-                        rootNode.setSortCriteria(DownloadRootNode.SORT_PWDL, isAscent);
-                        break;
-                    }
+                case 0: {
+                    rootNode.setSortCriteria(DownloadRootNode.SORT_DOWNLOADNAME,
+                                             isAscent);
+                    break;
+                }
+                case 1: {
+                    rootNode.setSortCriteria(DownloadRootNode.SORT_STATUS,
+                                             isAscent);
+                    break;
+                }
+                case 2: {
+                    rootNode.setSortCriteria(DownloadRootNode.SORT_GROESSE,
+                                             isAscent);
+                    break;
+                }
+                case 3: {
+                    rootNode.setSortCriteria(DownloadRootNode.
+                                             SORT_BEREITS_GELADEN, isAscent);
+                    break;
+                }
+                case 4: {
+                    rootNode.setSortCriteria(DownloadRootNode.
+                                             SORT_GESCHWINDIGKEIT, isAscent);
+                    break;
+                }
+                case 5: {
+                    rootNode.setSortCriteria(DownloadRootNode.SORT_RESTZEIT,
+                                             isAscent);
+                    break;
+                }
+                case 6: {
+                    rootNode.setSortCriteria(DownloadRootNode.SORT_PROZENT,
+                                             isAscent);
+                    break;
+                }
+                case 7: {
+                    rootNode.setSortCriteria(DownloadRootNode.
+                                             SORT_REST_ZU_LADEN, isAscent);
+                    break;
+                }
+                case 8: {
+                    rootNode.setSortCriteria(DownloadRootNode.SORT_PWDL,
+                                             isAscent);
+                    break;
+                }
                 default:
                     break;
             }
@@ -652,21 +742,27 @@ public class DownloadPanel
         }
 
         public void mouseReleased(MouseEvent e) {
-            renderer.setPressedColumn(-1);
+            renderer.setPressedColumn( -1);
             header.repaint();
         }
     }
 
-    private class DownloadPartListWatcher{
+    private class DownloadPartListWatcher {
         private Thread worker = null;
         private Object nodeObject = null;
 
-        public void setDownloadNode(Object node){
-            if (worker!=null && nodeObject!=node){
+        public void setDownloadNode(Object node) {
+            if (node==null){
+                nodeObject = null;
+                worker.interrupt();
+                worker = null;
+                return;
+            }
+            if (worker != null && nodeObject != node) {
                 worker.interrupt();
                 worker = null;
             }
-            if (nodeObject!=node){
+            if (nodeObject != node) {
                 nodeObject = node;
                 worker = new Thread() {
                     public void run() {
@@ -674,9 +770,11 @@ public class DownloadPanel
                             sleep(2000);
                             SwingUtilities.invokeLater(new Runnable() {
                                 public void run() {
-                                    if (nodeObject.getClass() == DownloadMainNode.class
+                                    if (nodeObject.getClass() ==
+                                        DownloadMainNode.class
                                         &&
-                                        ( (DownloadMainNode) nodeObject).getType() ==
+                                        ( (DownloadMainNode) nodeObject).
+                                        getType() ==
                                         DownloadMainNode.ROOT_NODE) {
                                         if (!powerDownloadPanel.
                                             isAutomaticPwdlActive()) {
