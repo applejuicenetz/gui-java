@@ -32,9 +32,10 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.NetworkServerXMLHolder;
 import java.util.ArrayList;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.87 2004/01/04 12:37:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.88 2004/01/06 17:32:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,6 +44,9 @@ import java.util.ArrayList;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.88  2004/01/06 17:32:50  maj0r
+ * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
+ *
  * Revision 1.87  2004/01/04 12:37:27  maj0r
  * Bug #40 umgesetzt (Danke an hirsch.marcel)
  * Incoming-Verzeichnis kann nun für mehrere Downloads gleichzeitig geaendert werden.
@@ -357,7 +361,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             modifiedXML = new ModifiedXMLHolder();
             informationXML = new InformationXMLHolder();
             directoryXML = new DirectoryXMLHolder();
-            informationXML.reload("");
+            informationXML.reload("", false);
             shareXML = new ShareXMLHolder();
 
             String versionsTag = informationXML.getFirstAttrbuteByTagName(new
@@ -386,7 +390,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 }
                 try {
                     SessionXMLHolder session = new SessionXMLHolder();
-                    session.reload("");
+                    session.reload("", false);
                     String sessionId = session.getFirstAttrbuteByTagName(new
                         String[] {
                         "applejuice", "session", "id"}
@@ -395,9 +399,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     if (logger.isEnabledFor(Level.DEBUG)) {
                         logger.debug("SessionID = " + sessionId);
                     }
+                    int versuch = 0;
                     while (!isInterrupted()) {
                         if (System.currentTimeMillis() > time + 20000) {
-                            session.reload("");
+                            session.reload("", false);
                             sessionId = session.getFirstAttrbuteByTagName(new
                                 String[] {
                                 "applejuice", "session", "id"}
@@ -407,7 +412,16 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                             }
                         }
                         time = System.currentTimeMillis();
-                        updateModifiedXML(sessionId);
+                        if (updateModifiedXML(sessionId)){
+                            versuch = 0;
+                        }
+                        else{
+                            versuch++;
+                            if (versuch == 3){
+                                AppleJuiceDialog.closeWithErrormessage(
+                                    "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
+                            }
+                        }
                         try {
                             sleep(2000);
                         }
@@ -553,7 +567,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return modifiedXML.getServer();
     }
 
-    public synchronized void updateModifiedXML(String sessionId) {
+    public synchronized boolean updateModifiedXML(String sessionId) {
         try {
             modifiedXML.update(sessionId);
             SwingUtilities.invokeLater(new Runnable() {
@@ -569,11 +583,18 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                                              INFORMATION_CHANGED);
                 }
             });
+            return true;
+        }
+        catch(RuntimeException re){
+            // Verbindung zum Core verloren
+            // neuer Versuch
+            return false;
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
             }
+            return false;
         }
     }
 

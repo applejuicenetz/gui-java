@@ -22,7 +22,7 @@ import de.applejuicenet.client.shared.exception.PartlistException;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.21 2004/01/01 14:26:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.22 2004/01/06 17:32:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.22  2004/01/06 17:32:50  maj0r
+ * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
+ *
  * Revision 1.21  2004/01/01 14:26:53  maj0r
  * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
  *
@@ -141,7 +144,7 @@ public abstract class WebXMLParser
         webXML = true;
     }
 
-    public void reload(String parameters) throws Exception {
+    public void reload(String parameters, boolean throwWebSiteNotFoundException) throws Exception {
         String xmlData = null;
         try {
             if (useTimestamp) {
@@ -164,8 +167,13 @@ public abstract class WebXMLParser
             }
         }
         catch (WebSiteNotFoundException ex) {
-            AppleJuiceDialog.closeWithErrormessage(
-                "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
+            if (throwWebSiteNotFoundException){
+                throw ex;
+            }
+            else{
+                AppleJuiceDialog.closeWithErrormessage(
+                    "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
+            }
         }
         DocumentBuilderFactory factory =
             DocumentBuilderFactory.newInstance();

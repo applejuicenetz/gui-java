@@ -7,7 +7,7 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
 import de.applejuicenet.client.gui.controller.PartListHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/UserPartListXMLHolder.java,v 1.1 2003/12/31 16:13:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/UserPartListXMLHolder.java,v 1.2 2004/01/06 17:32:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.gui.controller.PartListHolder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UserPartListXMLHolder.java,v $
+ * Revision 1.2  2004/01/06 17:32:50  maj0r
+ * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
+ *
  * Revision 1.1  2003/12/31 16:13:31  maj0r
  * Refactoring.
  *
@@ -46,7 +49,7 @@ public class UserPartListXMLHolder
 
     public PartListDO getPartList() {
         try {
-            reload("id=" + downloadSourceDO.getId());
+            reload("id=" + downloadSourceDO.getId(), false);
             PartListDO partListDO = new PartListDO(downloadSourceDO);
             Element e = null;
             NodeList nodes = document.getElementsByTagName("fileinformation");

@@ -11,7 +11,7 @@ import java.net.URLEncoder;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.1 2003/12/31 16:13:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.2 2004/01/06 17:32:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.2  2004/01/06 17:32:50  maj0r
+ * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
+ *
  * Revision 1.1  2003/12/31 16:13:31  maj0r
  * Refactoring.
  *
@@ -73,9 +76,9 @@ public class DirectoryXMLHolder extends WebXMLParser {
                 directory = "";
 
             if (directory.length() == 0)
-                reload("");
+                reload("", false);
             else
-                reload("directory=" + URLEncoder.encode(directory, "UTF-8"));
+                reload("directory=" + URLEncoder.encode(directory, "UTF-8"), false);
             Element e = null;
             NodeList nodes = document.getElementsByTagName("applejuice");
             e = (Element) nodes.item(0);

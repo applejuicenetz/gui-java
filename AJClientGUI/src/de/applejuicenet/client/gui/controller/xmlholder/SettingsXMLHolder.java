@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.1 2003/12/31 16:13:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.2 2004/01/06 17:32:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SettingsXMLHolder.java,v $
+ * Revision 1.2  2004/01/06 17:32:50  maj0r
+ * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
+ *
  * Revision 1.1  2003/12/31 16:13:31  maj0r
  * Refactoring.
  *
@@ -61,7 +64,7 @@ public class SettingsXMLHolder
 
     public void update() {
         try {
-            reload("");
+            reload("", false);
             NodeList nodes = document.getElementsByTagName("nick");
             String nick = nodes.item(0).getFirstChild().getNodeValue();
             nodes = document.getElementsByTagName("port");
