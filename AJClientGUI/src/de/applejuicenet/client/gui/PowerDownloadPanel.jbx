@@ -1,9 +1,0 @@
-[PropertyInfo]
-btnAktiv,JRadioButton,false,false, , ,false,<default>
-btnInaktiv,JRadioButton,false,false, , ,false,<default>
-gridBagLayout1,GridBagLayout,false,false, , ,false,<default>
-[IconNames]
-
-
-
-

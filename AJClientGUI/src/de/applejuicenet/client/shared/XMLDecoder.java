@@ -8,7 +8,7 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.11 2003/06/30 20:35:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.12 2003/07/01 06:17:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import org.xml.sax.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: XMLDecoder.java,v $
+ * Revision 1.12  2003/07/01 06:17:16  maj0r
+ * Code optimiert.
+ *
  * Revision 1.11  2003/06/30 20:35:50  maj0r
  * Code optimiert.
  *
@@ -82,19 +85,20 @@ public abstract class XMLDecoder {
     else {
       NodeList nodes = document.getChildNodes();
       int attributePathSize = attributePath.length;
+      String result = null;
+      Element e = null;
       for (int i = 0; i < attributePathSize; i++) {
         int nodesSize = nodes.getLength();
         for (int x = 0; x < nodesSize; x++) {
           if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
             if (i == attributePathSize - 1) {
-              String result = "";
               if (lastIsElement) {
-                Element e = (Element) nodes.item(x);
+                e = (Element) nodes.item(x);
                 nodes = e.getChildNodes();
                 result = nodes.item(0).getNodeValue();
               }
               else {
-                Element e = (Element) nodes.item(x);
+                e = (Element) nodes.item(x);
                 result = e.getAttribute(attributePath[attributePathSize - 1]);
               }
               return result;
@@ -115,13 +119,14 @@ public abstract class XMLDecoder {
     NodeList nodes = document.getChildNodes();
     Node rootNode = nodes.item(0); //Element "root"
     nodes = rootNode.getChildNodes();
+    Element e = null;
     int attributePathSize = attributePath.length;
     for (int i = 0; i < attributePathSize - 1; i++) {
       int nodesSize = nodes.getLength();
       for (int x = 0; x < nodesSize; x++) {
         if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
           if (i == attributePathSize - 2) {
-            Element e = (Element) nodes.item(x);
+            e = (Element) nodes.item(x);
             return e.getAttribute(attributePath[attributePathSize - 1]);
           }
           else {
@@ -138,17 +143,19 @@ public abstract class XMLDecoder {
     NodeList nodes = document.getChildNodes();
     Node rootNode = nodes.item(0); //Element "root"
     nodes = rootNode.getChildNodes();
+    Element e = null;
+    XMLSerializer xs = null;
     int attributePathSize = attributePath.length;
     for (int i = 0; i < attributePathSize - 1; i++) {
       int nodesSize = nodes.getLength();
       for (int x = 0; x < nodesSize; x++) {
         if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
           if (i == attributePathSize - 2) {
-            Element e = (Element) nodes.item(x);
+            e = (Element) nodes.item(x);
             e.setAttribute(attributePath[attributePathSize - 1],
                            ZeichenErsetzer.korrigiereUmlaute(newValue, true));
             try {
-              XMLSerializer xs = new XMLSerializer(new FileWriter(filePath),
+              xs = new XMLSerializer(new FileWriter(filePath),
                   new OutputFormat(document,
                                    "UTF-8", true));
               xs.serialize(document);

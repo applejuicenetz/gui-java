@@ -6,7 +6,7 @@ import org.w3c.dom.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/SettingsXMLHolder.java,v 1.5 2003/06/30 20:35:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/SettingsXMLHolder.java,v 1.6 2003/07/01 06:17:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SettingsXMLHolder.java,v $
+ * Revision 1.6  2003/07/01 06:17:16  maj0r
+ * Code optimiert.
+ *
  * Revision 1.5  2003/06/30 20:35:50  maj0r
  * Code optimiert.
  *
@@ -64,7 +67,8 @@ public class SettingsXMLHolder
     String dir = null;
     String shareMode = null;
     ShareEntry entry = null;
-    for (int i = 0; i < nodes.getLength(); i++) {
+    int nodesSize = nodes.getLength();
+    for (int i = 0; i < nodesSize; i++) {
       e = (Element) nodes.item(i);
       dir = e.getAttribute("name");
       shareMode = e.getAttribute("sharemode");

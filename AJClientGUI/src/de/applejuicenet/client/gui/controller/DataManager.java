@@ -16,31 +16,34 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.24 2003/06/24 14:32:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.25 2003/07/01 06:17:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.25  2003/07/01 06:17:16  maj0r
+ * Code optimiert.
+ *
  * Revision 1.24  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingefügt.
+ * Klassen zum Sortieren von Tabellen eingefï¿½gt.
  * Servertabelle kann nun spaltenweise sortiert werden.
  *
  * Revision 1.23  2003/06/24 12:06:49  maj0r
- * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
+ * log4j eingefï¿½gt (inkl. Bedienung ï¿½ber Einstellungsdialog).
  *
  * Revision 1.22  2003/06/22 20:34:25  maj0r
- * Konsolenausgaben hinzugefügt.
+ * Konsolenausgaben hinzugefï¿½gt.
  *
  * Revision 1.21  2003/06/13 15:07:30  maj0r
- * Versionsanzeige hinzugefügt.
+ * Versionsanzeige hinzugefï¿½gt.
  * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
  *
  * Revision 1.20  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
+ * Historie eingefï¿½gt.
  *
  *
  */
@@ -252,58 +255,70 @@ public class DataManager { //Singleton-Implementierung
   }
 
   private void informDataUpdateListener(int type) {
-    if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
-      HashMap content = modifiedXML.getDownloads();
-      if (content.size() == 0) {
-        return;
-      }
-      Iterator it = downloadListener.iterator();
-      while (it.hasNext()) {
-        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-            DOWNLOAD_CHANGED, content);
-      }
-    }
-    else if (type == DataUpdateListener.UPLOAD_CHANGED) {
-      HashMap content = modifiedXML.getUploads();
-      if (content.size() == 0) {
-        return;
-      }
-      Iterator it = uploadListener.iterator();
-      while (it.hasNext()) {
-        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-            UPLOAD_CHANGED, content);
-      }
-
-    }
-    else if (type == DataUpdateListener.SERVER_CHANGED) {
-      HashMap content = modifiedXML.getServer();
-      if (content.size() == 0) {
-        return;
-      }
-      Iterator it = serverListener.iterator();
-      while (it.hasNext()) {
-        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-            SERVER_CHANGED, content);
-      }
-    }
-    else if (type == DataUpdateListener.SHARE_CHANGED) {
-      HashMap content = shareXML.getShare();
-      if (content.size() == 0) {
-        return;
-      }
-      Iterator it = shareListener.iterator();
-      while (it.hasNext()) {
-        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-            SHARE_CHANGED, content);
-      }
-    }
-    else if (type == DataUpdateListener.NETINFO_CHANGED) {
-      NetworkInfo content = modifiedXML.getNetworkInfo();
-      Iterator it = networkInfoListener.iterator();
-      while (it.hasNext()) {
-        ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
-            NETINFO_CHANGED, content);
-      }
+    switch (type){
+        case DataUpdateListener.DOWNLOAD_CHANGED:
+            {
+                HashMap content = modifiedXML.getDownloads();
+                if (content.size() == 0) {
+                  return;
+                }
+                Iterator it = downloadListener.iterator();
+                while (it.hasNext()) {
+                  ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+                      DOWNLOAD_CHANGED, content);
+                }
+                break;
+            }
+        case DataUpdateListener.UPLOAD_CHANGED:
+            {
+                HashMap content = modifiedXML.getUploads();
+                if (content.size() == 0) {
+                  return;
+                }
+                Iterator it = uploadListener.iterator();
+                while (it.hasNext()) {
+                  ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+                      UPLOAD_CHANGED, content);
+                }
+                break;
+            }
+        case DataUpdateListener.SERVER_CHANGED:
+            {
+                HashMap content = modifiedXML.getServer();
+                if (content.size() == 0) {
+                  return;
+                }
+                Iterator it = serverListener.iterator();
+                while (it.hasNext()) {
+                  ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+                      SERVER_CHANGED, content);
+                }
+                break;
+            }
+        case DataUpdateListener.SHARE_CHANGED:
+            {
+                HashMap content = shareXML.getShare();
+                if (content.size() == 0) {
+                  return;
+                }
+                Iterator it = shareListener.iterator();
+                while (it.hasNext()) {
+                  ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+                      SHARE_CHANGED, content);
+                }
+                break;
+            }
+        case DataUpdateListener.NETINFO_CHANGED:
+            {
+                NetworkInfo content = modifiedXML.getNetworkInfo();
+                Iterator it = networkInfoListener.iterator();
+                while (it.hasNext()) {
+                  ( (DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.
+                      NETINFO_CHANGED, content);
+                }
+                break;
+            }
+        default: break;
     }
   }
 
