@@ -15,17 +15,22 @@ import java.awt.event.MouseAdapter;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.8 2004/01/25 10:16:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.9 2004/01/29 15:52:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODAnsichtPanel.java,v $
+ * Revision 1.9  2004/01/29 15:52:33  maj0r
+ * Bug #153 umgesetzt (Danke an jr17)
+ * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
+ *
  * Revision 1.8  2004/01/25 10:16:42  maj0r
  * Optionenmenue ueberarbeitet.
  *
@@ -60,9 +65,11 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
     private Settings settings;
     JCheckBox cmbAktiv = new JCheckBox();
     JCheckBox cmbDownloadUebersicht = new JCheckBox();
+    private JCheckBox cmbStartscreenZeigen = new JCheckBox();
     private Logger logger;
     private Icon menuIcon;
     private String menuText;
+    private boolean dirty = false;
 
     public ODAnsichtPanel() {
         logger = Logger.getLogger(getClass());
@@ -86,6 +93,9 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
         cmbAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
                                                        "aktiv"})));
+        cmbStartscreenZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "options", "ansicht",
+                                          "zeigestartscreen"})));
         setLayout(new BorderLayout());
         farbeFertigerDownload.setOpaque(true);
         farbeFertigerDownload.setBackground(settings.getDownloadFertigHintergrundColor());
@@ -98,6 +108,12 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
         cmbDownloadUebersicht.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
                 settings.setDownloadUebersicht(cmbDownloadUebersicht.isSelected());
+            }
+        });
+        cmbStartscreenZeigen.setSelected(PropertiesManager.getOptionsManager().shouldShowConnectionDialogOnStartup());
+        cmbStartscreenZeigen.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent ce) {
+                dirty = true;
             }
         });
         cmbAktiv.addChangeListener(new ChangeListener() {
@@ -162,7 +178,10 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
         panel1.add(hint2, constraints);
         JPanel panel2 = new JPanel(new BorderLayout());
         panel2.add(panel1, BorderLayout.NORTH);
-        panel2.add(cmbDownloadUebersicht, BorderLayout.SOUTH);
+        JPanel panel3 = new JPanel(new BorderLayout());
+        panel3.add(cmbStartscreenZeigen, BorderLayout.NORTH);
+        panel3.add(cmbDownloadUebersicht, BorderLayout.SOUTH);
+        panel2.add(panel3, BorderLayout.SOUTH);
         add(panel2, BorderLayout.WEST);
     }
 
@@ -176,6 +195,14 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
                 logger.error("Unbehandelte Exception", e);
             return false;
         }
+    }
+
+    public boolean isDirty(){
+        return dirty;
+    }
+
+    public boolean shouldShowStartcreen(){
+        return cmbStartscreenZeigen.isSelected();
     }
 
     public Icon getIcon() {

@@ -39,7 +39,7 @@ import java.awt.Insets;
 import java.awt.Point;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.57 2004/01/25 10:18:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.58 2004/01/29 15:52:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,10 @@ import java.awt.Point;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.58  2004/01/29 15:52:33  maj0r
+ * Bug #153 umgesetzt (Danke an jr17)
+ * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
+ *
  * Revision 1.57  2004/01/25 10:18:55  maj0r
  * Nervenden Dialog ausgeblendet.
  *
@@ -377,19 +381,25 @@ public class AppleJuiceClient {
             QuickConnectionSettingsDialog remoteDialog = null;
             int versuche = 0;
             AppleJuiceDialog.initThemes();
-            while (!ApplejuiceFassade.istCoreErreichbar()) {
-                versuche++;
-                titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[] {"mainform",
-                                              "caption"}));
-                nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[] {"javagui",
-                                              "startup",
-                                              "fehlversuch"}));
-                SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
+            boolean showDialog = PropertiesManager.getOptionsManager().shouldShowConnectionDialogOnStartup();
+            while (showDialog || !ApplejuiceFassade.istCoreErreichbar()) {
                 splash.setVisible(false);
-                JOptionPane.showMessageDialog(connectFrame, nachricht, titel,
-                                              JOptionPane.ERROR_MESSAGE);
+                if (!showDialog){
+                    versuche++;
+                    titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                        getFirstAttrbuteByTagName(new String[] {"mainform",
+                                                  "caption"}));
+                    nachricht = ZeichenErsetzer.korrigiereUmlaute(
+                        languageSelector.
+                        getFirstAttrbuteByTagName(new String[] {"javagui",
+                                                  "startup",
+                                                  "fehlversuch"}));
+                    SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
+                    JOptionPane.showMessageDialog(connectFrame, nachricht,
+                                                  titel,
+                                                  JOptionPane.ERROR_MESSAGE);
+                }
+                showDialog = false;
                 remoteDialog = new QuickConnectionSettingsDialog(connectFrame);
                 remoteDialog.show();
                 if (remoteDialog.getResult() ==

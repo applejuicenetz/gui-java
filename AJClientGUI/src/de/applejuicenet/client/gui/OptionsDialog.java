@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.34 2004/01/27 07:12:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.35 2004/01/29 15:52:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import javax.swing.event.ListSelectionEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.35  2004/01/29 15:52:33  maj0r
+ * Bug #153 umgesetzt (Danke an jr17)
+ * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
+ *
  * Revision 1.34  2004/01/27 07:12:04  maj0r
  * Muell entfernt.
  *
@@ -230,6 +234,11 @@ public class OptionsDialog
             if (((ODProxyPanel)optionPanels[3]).isDirty())
             {
                 PropertiesManager.getProxyManager().saveProxySettings(((ODProxyPanel)optionPanels[3]).getProxySettings());
+                etwasGeaendert = true;
+            }
+            if (((ODAnsichtPanel)optionPanels[4]).isDirty())
+            {
+                PropertiesManager.getOptionsManager().showConnectionDialogOnStartup(((ODAnsichtPanel)optionPanels[4]).shouldShowStartcreen());
                 etwasGeaendert = true;
             }
             if (etwasGeaendert){

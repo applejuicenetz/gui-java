@@ -15,9 +15,13 @@ import java.awt.*;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.9 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.10 2004/01/29 15:52:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +30,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.10  2004/01/29 15:52:33  maj0r
+ * Bug #153 umgesetzt (Danke an jr17)
+ * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
+ *
  * Revision 1.9  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -65,7 +73,9 @@ public class QuickConnectionSettingsDialog extends JDialog {
     public static final int ABGEBROCHEN = 1;
     private ConnectionSettings remote;
     private JButton ok = new JButton("OK");
+    private JCheckBox cmbNieWiederZeigen = new JCheckBox();
     private Logger logger;
+    private boolean dirty = false;
 
     private int result = 0;
 
@@ -93,7 +103,24 @@ public class QuickConnectionSettingsDialog extends JDialog {
         String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
               getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
                                         "ueberpruefeEinst"}));
-
+        cmbNieWiederZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
+                                          "showdialog"})));
+        cmbNieWiederZeigen.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent ce) {
+                dirty = true;
+            }
+        });
+        cmbNieWiederZeigen.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    pressOK();
+                }
+                else{
+                    super.keyPressed(ke);
+                }
+            }
+        });
         JPanel panel2 = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
@@ -113,12 +140,17 @@ public class QuickConnectionSettingsDialog extends JDialog {
         getContentPane().add(panel2, BorderLayout.NORTH);
         getContentPane().add(remotePanel, BorderLayout.CENTER);
 
+        JPanel panel3 = new JPanel(new BorderLayout());
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel1.add(ok);
         JButton abbrechen = new JButton("Abbrechen");
         panel1.add(abbrechen);
 
-        getContentPane().add(panel1, BorderLayout.SOUTH);
+        JPanel panel4 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panel4.add(cmbNieWiederZeigen);
+        panel3.add(panel4, BorderLayout.NORTH);
+        panel3.add(panel1, BorderLayout.SOUTH);
+        getContentPane().add(panel3, BorderLayout.SOUTH);
 
         ok.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){
@@ -138,12 +170,12 @@ public class QuickConnectionSettingsDialog extends JDialog {
                 hide();
             }
         });
-		addWindowListener(
-			new WindowAdapter() {
-		  public void windowClosing(WindowEvent evt) {
-            result = ABGEBROCHEN;
-			hide();
-		  }
+        addWindowListener(
+            new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                result = ABGEBROCHEN;
+                hide();
+            }
     	});
         pack();
         Dimension appDimension = getSize();
@@ -168,6 +200,9 @@ public class QuickConnectionSettingsDialog extends JDialog {
     private void speichereEinstellungen() throws InvalidPasswordException {
         try{
             PropertiesManager.getOptionsManager().saveRemote(remote);
+            if (dirty){
+                PropertiesManager.getOptionsManager().showConnectionDialogOnStartup(!cmbNieWiederZeigen.isSelected());
+            }
         }
         catch (Exception e)
         {

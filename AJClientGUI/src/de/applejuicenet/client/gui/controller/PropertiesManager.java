@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.28 2004/01/24 09:52:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.29 2004/01/29 15:52:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,10 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.29  2004/01/29 15:52:34  maj0r
+ * Bug #153 umgesetzt (Danke an jr17)
+ * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
+ *
  * Revision 1.28  2004/01/24 09:52:01  maj0r
  * Spalte Verbindungsversuche eingebaut.
  *
@@ -487,6 +491,29 @@ public class PropertiesManager
     public void setSprache(String sprache) {
         setAttributeByTagName(new String[]{"options", "sprache"}
                 , sprache.toLowerCase());
+    }
+
+    public boolean shouldShowConnectionDialogOnStartup() {
+        try{
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "dialogzeigen"});;
+            if (temp==null || temp.length()==0){
+                throw new Exception("Veraltete xml");
+            }
+            return new Boolean(temp).booleanValue();
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return false;
+        }
+    }
+
+    public void showConnectionDialogOnStartup(boolean show) {
+        setAttributeByTagName(new String[]{"options", "dialogzeigen"}, Boolean.toString(show));
     }
 
     public Level getLogLevel() {

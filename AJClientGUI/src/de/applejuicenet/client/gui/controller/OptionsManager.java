@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.34 2004/01/05 19:17:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.35 2004/01/29 15:52:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.35  2004/01/29 15:52:33  maj0r
+ * Bug #153 umgesetzt (Danke an jr17)
+ * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
+ *
  * Revision 1.34  2004/01/05 19:17:18  maj0r
  * Bug #56 gefixt (Danke an MeineR)
  * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
@@ -112,4 +116,8 @@ public interface OptionsManager {
     public void loadPluginsOnStartup(boolean loadPluginsOnStartup);
 
     public boolean shouldLoadPluginsOnStartup();
+
+    public boolean shouldShowConnectionDialogOnStartup();
+
+    public void showConnectionDialogOnStartup(boolean show);
 }
