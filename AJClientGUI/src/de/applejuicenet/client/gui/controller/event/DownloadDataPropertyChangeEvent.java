@@ -22,5 +22,8 @@ public class DownloadDataPropertyChangeEvent extends DataPropertyChangeEvent{
 	public static final String DIRECTORY_CHANGED = "DIRECTORY_CHANGED";
 	public static final String PWDL_CHANGED = "PWDL_CHANGED";
 	public static final String READY_CHANGED = "READY_CHANGED";
-
+	
+	public static final String SOURCE_CHANGED = "SOURCE_CHANGED";
+	public static final String SOURCE_ADDED = "SOURCE_ADDED";
+	public static final String SOURCE_REMOVED = "SOURCE_REMOVED";	
 }

@@ -290,7 +290,6 @@ public class DownloadController extends GuiController {
 				|| event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED)
 				|| event.getName().equals(DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED)
 				|| event.getName().equals(DownloadDataPropertyChangeEvent.FILENAME_CHANGED)){
-        	System.out.println("name: " + event.getName());
 			return true;
 		}
 		return false;
