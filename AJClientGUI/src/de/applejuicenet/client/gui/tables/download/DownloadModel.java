@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.14 2003/09/03 10:29:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.15 2003/10/06 12:08:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.15  2003/10/06 12:08:18  maj0r
+ * Tabellenausgabe korrigiert.
+ *
  * Revision 1.14  2003/09/03 10:29:16  maj0r
  * Statusausgabe geaendert.
  *
@@ -145,25 +148,30 @@ public class DownloadModel
 
   public Object getValueAt(Object node, int column) {
     if (node.getClass()==DownloadMainNode.class){
-        DownloadDO downloadDO = ((DownloadMainNode)node).getDownloadDO();
-        switch (column) {
-          case 0:
-                return downloadDO.getFilename();
-          case 1:
-                return getStatus(downloadDO);
-          case 2:
-                return parseGroesse(downloadDO.getGroesse());
-          case 3:
-                return parseGroesse(downloadDO.getBereitsGeladen());
-          case 4:
-                return getSpeedAsString(downloadDO.getSpeedInBytes());
-          case 5:
-                return downloadDO.getRestZeitAsString();
-          case 7:
-                return parseGroesse(downloadDO.getGroesse()-downloadDO.getBereitsGeladen());
-          case 8:
-                return powerdownload(downloadDO.getPowerDownload());
-          default:
+        if (((DownloadMainNode)node).getType()==DownloadMainNode.ROOT_NODE){
+            DownloadDO downloadDO = ((DownloadMainNode)node).getDownloadDO();
+            switch (column) {
+              case 0:
+                    return downloadDO.getFilename();
+              case 1:
+                    return getStatus(downloadDO);
+              case 2:
+                    return parseGroesse(downloadDO.getGroesse());
+              case 3:
+                    return parseGroesse(downloadDO.getBereitsGeladen());
+              case 4:
+                    return getSpeedAsString(downloadDO.getSpeedInBytes());
+              case 5:
+                    return downloadDO.getRestZeitAsString();
+              case 7:
+                    return parseGroesse(downloadDO.getGroesse()-downloadDO.getBereitsGeladen());
+              case 8:
+                    return powerdownload(downloadDO.getPowerDownload());
+              default:
+                return "";
+            }
+        }
+        else{
             return "";
         }
     }
