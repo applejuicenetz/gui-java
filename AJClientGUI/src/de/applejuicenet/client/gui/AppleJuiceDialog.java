@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.29 2003/08/19 15:57:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.30 2003/08/20 20:08:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.30  2003/08/20 20:08:24  maj0r
+ * Version auf 0.11 erhoeht.
+ *
  * Revision 1.29  2003/08/19 15:57:21  maj0r
  * Gesamtgeschwindigkeit wird nun angezeigt.
  *
@@ -62,7 +65,7 @@ public class AppleJuiceDialog
     extends JFrame
     implements LanguageListener, DataUpdateListener {
 
-  public static final String GUI_VERSION = "0.1 Alpha";
+  public static final String GUI_VERSION = "0.11 Alpha";
 
   RegisterPanel registerPane;
   JLabel[] statusbar = new JLabel[6];
