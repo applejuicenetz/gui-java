@@ -49,7 +49,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
@@ -927,6 +926,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							ApplejuiceFassade af = ApplejuiceFassade
 									.getInstance();
 							final StringBuffer returnValues = new StringBuffer();
+							boolean somethingAdded = false;
 							while ((line = reader.readLine()) != null) {
 								filename = line;
 								checksum = reader.readLine();
@@ -937,32 +937,37 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 									String result = af.processLink(link, targetDir);
 									if (result.indexOf("ok") == 0){
 									    returnValues.append("'" + link + "' OK\n");
+									    somethingAdded = true;
 									}
 									else if (result.indexOf("already downloaded") != -1){
 									    returnValues.append(alreadyLoaded.replaceAll("%s", link) + "\n");
+									    somethingAdded = true;
 									}
 									else if (result.indexOf("incorrect link") != -1){
 									    returnValues.append(invalidLink.replaceAll("%s", link) + "\n");
+									    somethingAdded = true;
 									}
 									else if (result.indexOf("failure") != -1){
 									    returnValues.append(linkFailure + "\n");
+									    somethingAdded = true;
 									}
 								}
 							}
-						    SwingUtilities.invokeLater(new Runnable(){
-						        public void run(){
-						            JTextPane textArea = new JTextPane();
-						            textArea.setPreferredSize(new Dimension(550, 300));
-						            textArea.setMaximumSize(new Dimension(550, 300));
-						            textArea.setEditable(false);
-						            textArea.setBackground(new JLabel().getBackground());
-						            textArea.setText(returnValues.toString());
-									JOptionPane.showMessageDialog(AppleJuiceDialog
-											.getApp(), new JScrollPane(textArea), "appleJuice Client",
-											JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-						        }
-						    });							
-							
+							if (somethingAdded){
+							    SwingUtilities.invokeLater(new Runnable(){
+							        public void run(){
+							            JTextPane textArea = new JTextPane();
+							            textArea.setPreferredSize(new Dimension(550, 300));
+							            textArea.setMaximumSize(new Dimension(550, 300));
+							            textArea.setEditable(false);
+							            textArea.setBackground(new JLabel().getBackground());
+							            textArea.setText(returnValues.toString());
+										JOptionPane.showMessageDialog(AppleJuiceDialog
+												.getApp(), new JScrollPane(textArea), "appleJuice Client",
+												JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+							        }
+							    });							
+							}
 						} catch (FileNotFoundException ex) {
 							;
 							//nix zu tun
