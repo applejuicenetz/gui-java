@@ -77,44 +77,25 @@ public class ServerPanel extends JPanel implements LanguageListener,
 	private static ServerPanel instance;
 
 	private JTable serverTable;
-
 	private JButton sucheServer = new JButton();
-
 	private JPopupMenu popup = new JPopupMenu();
-
 	private JPopupMenu popup2 = new JPopupMenu();
-
 	private JPopupMenu popup3 = new JPopupMenu();
-
-	private JMenuItem item1;
-
-	private JMenuItem item2;
-
-	private JMenuItem item3;
-
-	private JMenuItem item4;
-
-	private JMenuItem item5;
-
-	private JMenuItem item6;
-
+	private JMenuItem verbinden;
+	private JMenuItem loeschen1;
+	private JMenuItem hinzufuegen2;
+	private JMenuItem hinzufuegen3;
+	private JMenuItem hinzufuegen1;
+	private JMenuItem loeschen2;
 	private JMenuItem itemCopyToClipboard;
-
 	private JLabel verbunden = new JLabel();
-
 	private JLabel versucheZuVerbinden = new JLabel();
-
 	private JLabel aelter24h = new JLabel();
-
 	private JLabel juenger24h = new JLabel();
-
 	private Logger logger;
-
-	private boolean initizialiced = false;
-
-	private String warnungTitel = "";
-
-	private String warnungNachricht = "";
+	private boolean initialized = false;
+	private String warnungTitel;
+	private String warnungNachricht;
 
 	public static synchronized ServerPanel getInstance() {
 		if (instance == null) {
@@ -140,29 +121,29 @@ public class ServerPanel extends JPanel implements LanguageListener,
 
 		sucheServer.setForeground(Color.BLUE);
 		IconManager im = IconManager.getInstance();
-		item1 = new JMenuItem("Verbinden");
-		item1.setIcon(im.getIcon("serververbinden"));
-		item5 = new JMenuItem("Hinzufuegen");
-		item5.setIcon(im.getIcon("serverneu"));
-		item2 = new JMenuItem("Loeschen");
-		item2.setIcon(im.getIcon("serverloeschen"));
-		item3 = new JMenuItem("Hinzufuegen");
-		item3.setIcon(im.getIcon("serverneu"));
-		item4 = new JMenuItem("Hinzufuegen");
-		item4.setIcon(im.getIcon("serverneu"));
-		item6 = new JMenuItem("Loeschen");
-		item6.setIcon(im.getIcon("serverloeschen"));
-		itemCopyToClipboard = new JMenuItem("Link in Ablage kopieren");
+		verbinden = new JMenuItem();
+		verbinden.setIcon(im.getIcon("serververbinden"));
+		hinzufuegen1 = new JMenuItem();
+		hinzufuegen1.setIcon(im.getIcon("serverneu"));
+		loeschen1 = new JMenuItem();
+		loeschen1.setIcon(im.getIcon("serverloeschen"));
+		hinzufuegen2 = new JMenuItem();
+		hinzufuegen2.setIcon(im.getIcon("serverneu"));
+		hinzufuegen3 = new JMenuItem();
+		hinzufuegen3.setIcon(im.getIcon("serverneu"));
+		loeschen2 = new JMenuItem();
+		loeschen2.setIcon(im.getIcon("serverloeschen"));
+		itemCopyToClipboard = new JMenuItem();
 		itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
 
-		popup.add(item1);
-		popup.add(item4);
+		popup.add(verbinden);
+		popup.add(hinzufuegen3);
 		popup.add(itemCopyToClipboard);
-		popup.add(item2);
-		popup2.add(item3);
-		popup3.add(item5);
-		popup3.add(item6);
-		item1.addActionListener(new ActionListener() {
+		popup.add(loeschen1);
+		popup2.add(hinzufuegen2);
+		popup3.add(hinzufuegen1);
+		popup3.add(loeschen2);
+		verbinden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				int selected = serverTable.getSelectedRow();
 				ServerDO server = (ServerDO) ((ServerTableModel) serverTable
@@ -236,8 +217,8 @@ public class ServerPanel extends JPanel implements LanguageListener,
 			}
 		};
 		itemCopyToClipboard.addActionListener(clipboardListener);
-		item2.addActionListener(loescheServerListener);
-		item6.addActionListener(loescheServerListener);
+		loeschen1.addActionListener(loescheServerListener);
+		loeschen2.addActionListener(loescheServerListener);
 		ActionListener newServerListener = new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				NewServerDialog newServerDialog = new NewServerDialog(
@@ -259,9 +240,9 @@ public class ServerPanel extends JPanel implements LanguageListener,
 				}
 			}
 		};
-		item3.addActionListener(newServerListener);
-		item4.addActionListener(newServerListener);
-		item5.addActionListener(newServerListener);
+		hinzufuegen2.addActionListener(newServerListener);
+		hinzufuegen3.addActionListener(newServerListener);
+		hinzufuegen1.addActionListener(newServerListener);
 
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(new GridBagLayout());
@@ -385,8 +366,8 @@ public class ServerPanel extends JPanel implements LanguageListener,
 
 	public void registerSelected() {
 		try {
-			if (!initizialiced) {
-				initizialiced = true;
+			if (!initialized) {
+				initialized = true;
 				TableColumnModel headerModel = serverTable.getTableHeader()
 						.getColumnModel();
 				int columnCount = headerModel.getColumnCount();
@@ -452,17 +433,17 @@ public class ServerPanel extends JPanel implements LanguageListener,
 							.getFirstAttrbuteByTagName(".root.javagui.serverform.col4caption"));
 			columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector
 							.getFirstAttrbuteByTagName(".root.mainform.serverlist.col5caption"));
-			item1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
+			verbinden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.connserv.caption")));
-			item2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
+			loeschen1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.delserv.caption")));
-			item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
+			hinzufuegen2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.addserv.caption")));
-			item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
+			hinzufuegen3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.addserv.caption")));
-			item5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
+			hinzufuegen1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.addserv.caption")));
-			item6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
+			loeschen2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.delserv.caption")));
 			verbunden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.javagui.serverform.verbunden")));

@@ -42,35 +42,24 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 public class DownloadPartListPanel extends JPanel implements
 		MouseMotionListener, LanguageListener {
+
 	private static final long serialVersionUID = 5259974179175947895L;
 
-	private PartListDO partListDO;
-
-	private Logger logger;
-
-	private BufferedImage image = null;
-
-	private int width;
-
-	private int height;
-
-	private long fertigSeit = -1;
-
-	private boolean miniFile = false;
-
-	private String ueberprueft = "";
-
-	private String nichtVorhanden = "";
-
-	private String vorhanden = "";
-
-	private String quellen = "";
-
-	private String uebertragen = "";
-
-	private MouseEvent savedMouseEvent = null;
-
 	private static DownloadPartListPanel instance = null;
+	
+	private PartListDO partListDO;
+	private Logger logger;
+	private BufferedImage image = null;
+	private int width;
+	private int height;
+	private long fertigSeit = -1;
+	private boolean miniFile = false;
+	private String ueberprueft;
+	private String nichtVorhanden;
+	private String vorhanden;
+	private String quellen;
+	private String uebertragen;
+	private MouseEvent savedMouseEvent = null;
 
 	private DownloadPartListPanel() {
 		super(new BorderLayout());

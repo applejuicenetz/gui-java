@@ -24,7 +24,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.20 2004/10/13 13:08:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.21 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,7 +37,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 public class ODConnectionPanel
     extends JPanel
     implements OptionsRegister {
-    private static final long serialVersionUID = -1442609626130724396L;
+    
+	private static final long serialVersionUID = -1442609626130724396L;
+    
 	private boolean dirty = false;
     private JLabel label1;
     private JLabel label3;

@@ -30,7 +30,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.30 2004/10/06 12:29:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.31 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,13 +47,13 @@ public class SearchPanel
     private static final long serialVersionUID = 3168683715237771552L;
 	private static SearchPanel instance;
     private SearchResultTabbedPane resultPanel = new SearchResultTabbedPane();
-    private JButton btnStartStopSearch = new JButton("Suche starten");
+    private JButton btnStartStopSearch = new JButton();
     private JTextField suchbegriff = new JTextField();
-    private JLabel label1 = new JLabel("Suchbegriff: ");
+    private JLabel label1 = new JLabel();
     private String bearbeitung;
-    private JLabel label2 = new JLabel("0 Suchanfragen in Bearbeitung");
+    private JLabel label2 = new JLabel();
     private Logger logger;
-    private Map searchIds = new HashMap();
+    private Map searchIds = null;
     private boolean panelSelected = false;
 
     public static synchronized SearchPanel getInstance() {
@@ -195,6 +195,9 @@ public class SearchPanel
 				public void run() {
 					try {
 			            synchronized (content) {
+			            	if (searchIds == null){
+			            		searchIds = new HashMap();
+			            	}
 			                Iterator it = ( (HashMap) content).keySet().iterator();
 			                Object key;
 			                Search aSearch;

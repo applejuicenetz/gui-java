@@ -26,7 +26,7 @@ import de.applejuicenet.client.shared.ProxySettings;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.16 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.17 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,7 +39,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 public class ODProxyPanel
     extends JPanel
     implements OptionsRegister {
+	
     private static final long serialVersionUID = 123154300371550603L;
+    
 	private boolean dirty = false;
     private JLabel label1;
     private JLabel label2;

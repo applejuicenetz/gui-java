@@ -108,97 +108,52 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		DataUpdateListener {
 
 	private static final long serialVersionUID = 1289973507051627566L;
-
 	private static Logger logger = Logger.getLogger(AppleJuiceDialog.class);
-
-	private RegisterPanel registerPane;
-
-	private JLabel[] statusbar = new JLabel[6];
-
-	private JMenu sprachMenu;
-
-	private JMenu optionenMenu;
-
-	private JMenu themesMenu = null;
-
-	private JMenu coreMenu;
-
-	private Set plugins;
-
-	private JMenuItem menuItemOptionen = new JMenuItem();
-
-	private JMenuItem menuItemDateiliste = new JMenuItem();
-
-	private JMenuItem menuItemCheckUpdate = new JMenuItem();
-
-	private JMenuItem menuItemCoreBeenden = new JMenuItem();
-
-	private JMenuItem menuItemUeber = new JMenuItem();
-
-	private JMenuItem menuItemDeaktivieren = new JMenuItem();
-
-	private JMenuItem menuItemAktivieren = new JMenuItem();
-
-	private JMenuItem popupOptionenMenuItem = new JMenuItem("Optionen");
-
-	private JMenuItem popupAboutMenuItem = new JMenuItem("&Info");
-
-	private JMenuItem popupShowHideMenuItem = new JMenuItem("%Show");
-
-	private JMenuItem popupCheckUpdateMenuItem = new JMenuItem("Update");
-
-	private JButton sound = new JButton();
-
-	private JButton memory = new JButton();
-
-	private String keinServer = "";
-
+	private static Map themes = null;
 	public static boolean rewriteProperties = false;
-
-	private boolean firstChange = true;
-
-	private MemoryMonitorDialog memoryMonitorDialog;
-
-	private static Map themes = new HashMap();
-
-	private String themeSupportTitel;
-
-	private String themeSupportNachricht;
-
-	private boolean automaticPwdlEnabled = false;
-
-	private String titel;
-
-	private static boolean themesInitialized = false;
-
-	private String bestaetigung = "";
-
-	private int desktopHeight;
-
-	private int desktopWidth;
-
-	private boolean maximized = false;
-
-	private Dimension lastFrameSize;
-
-	private Point lastFrameLocation;
-
-	private static boolean useTrayIcon = false;
-
-	private String zeigen = "";
-
-	private String verstecken = "";
-
-	private WindowsTrayIcon trayIcon;
-
-	private Icon versteckenIcon = null;
-
-	private Icon zeigenIcon = null;
-	
-	private boolean firewalled = false;
-
 	private static AppleJuiceDialog theApp;
 
+	private RegisterPanel registerPane;
+	private JLabel[] statusbar = new JLabel[6];
+	private JMenu sprachMenu;
+	private JMenu optionenMenu;
+	private JMenu themesMenu = null;
+	private JMenu coreMenu;
+	private Set plugins;
+	private JMenuItem menuItemOptionen = new JMenuItem();
+	private JMenuItem menuItemDateiliste = new JMenuItem();
+	private JMenuItem menuItemCheckUpdate = new JMenuItem();
+	private JMenuItem menuItemCoreBeenden = new JMenuItem();
+	private JMenuItem menuItemUeber = new JMenuItem();
+	private JMenuItem menuItemDeaktivieren = new JMenuItem();
+	private JMenuItem menuItemAktivieren = new JMenuItem();
+	private JMenuItem popupOptionenMenuItem = new JMenuItem();
+	private JMenuItem popupAboutMenuItem = new JMenuItem();
+	private JMenuItem popupShowHideMenuItem = new JMenuItem();
+	private JMenuItem popupCheckUpdateMenuItem = new JMenuItem();
+	private JButton sound = new JButton();
+	private JButton memory = new JButton();
+	private String keinServer;
+	private boolean firstChange = true;
+	private MemoryMonitorDialog memoryMonitorDialog;
+	private String themeSupportTitel;
+	private String themeSupportNachricht;
+	private boolean automaticPwdlEnabled = false;
+	private String titel;
+	private static boolean themesInitialized = false;
+	private String bestaetigung;
+	private int desktopHeight;
+	private int desktopWidth;
+	private boolean maximized = false;
+	private Dimension lastFrameSize;
+	private Point lastFrameLocation;
+	private static boolean useTrayIcon = false;
+	private String zeigen;
+	private String verstecken;
+	private WindowsTrayIcon trayIcon;
+	private Icon versteckenIcon = null;
+	private Icon zeigenIcon = null;
+	private boolean firewalled = false;
 	private String firewallWarning;
 	
 	public static void initThemes() {
@@ -239,6 +194,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 				String shortName = "";
 				String defaultTheme = OptionsManagerImpl.getInstance()
 						.getDefaultTheme();
+				themes = new HashMap();
 				while (it.hasNext()) {
 					URL skinUrl = (URL) it.next();
 					temp = skinUrl.getFile();
@@ -620,13 +576,13 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 					logger
 							.info("Der Ordner "
 									+ path
-									+ " f\uFFFDr die Sprachauswahl xml-Dateien ist nicht vorhanden."
+									+ " fuer die Sprachauswahl xml-Dateien ist nicht vorhanden."
 									+ "\r\nappleJuice wird beendet.");
 				}
 				closeWithErrormessage(
 						"Der Ordner "
 								+ path
-								+ " f\uFFFDr die Sprachauswahl xml-Dateien ist nicht vorhanden."
+								+ " fuer die Sprachauswahl xml-Dateien ist nicht vorhanden."
 								+ "\r\nappleJuice wird beendet.", false);
 			}
 			String[] tempListe = languagePath.list();
@@ -651,7 +607,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 			}
 
 			JMenuBar menuBar = new JMenuBar();
-			optionenMenu = new JMenu("Extras");
+			optionenMenu = new JMenu();
 			menuItemOptionen.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					showOptionsDialog();
@@ -689,7 +645,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 			optionenMenu.add(menuItemUeber);
 			menuBar.add(optionenMenu);
 
-			sprachMenu = new JMenu("Sprache");
+			sprachMenu = new JMenu();
 			menuBar.add(sprachMenu);
 			ButtonGroup lafGroup = new ButtonGroup();
 
@@ -726,7 +682,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 				});
 				lafGroup.add(rb);
 			}
-			themesMenu = new JMenu("Themes");
+			themesMenu = new JMenu();
 			if (OptionsManagerImpl.getInstance().isThemesSupported()) {
 				HashSet themesDateien = new HashSet();
 				File themesPath = new File(System.getProperty("user.dir")
@@ -760,7 +716,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 				it = themesDateien.iterator();
 				ButtonGroup lafGroup2 = new ButtonGroup();
 				String temp;
-				String shortName = "";
+				String shortName;
 				String defaultTheme = OptionsManagerImpl.getInstance()
 						.getDefaultTheme();
 				while (it.hasNext()) {
@@ -788,7 +744,6 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 					themesMenu.add(rb);
 				}
 				themesMenu.add(new JSeparator());
-				menuItemDeaktivieren.setText("deaktivieren");
 				menuItemDeaktivieren.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent ce) {
 						activateThemeSupport(false);
@@ -821,7 +776,6 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 						}
 					});
 				}
-				menuItemAktivieren.setText("aktivieren");
 				menuItemAktivieren.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent ce) {
 						activateThemeSupport(true);
@@ -831,7 +785,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 				themesMenu.add(menuItemAktivieren);
 			}
 			menuBar.add(themesMenu);
-			coreMenu = new JMenu("Core");
+			coreMenu = new JMenu();
 			coreMenu.add(menuItemCoreBeenden);
 			menuBar.add(coreMenu);
 			return menuBar;
@@ -874,12 +828,14 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	private void activateLaF(String laf) {
 		try {
 			// theme???
-			Skin aSkin = (Skin) themes.get(laf);
-			if (aSkin != null) {
-				SkinLookAndFeel.setSkin(aSkin);
-				SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
-				OptionsManagerImpl.getInstance().setDefaultTheme(laf);
-				return;
+			if (themes != null){
+				Skin aSkin = (Skin) themes.get(laf);
+				if (aSkin != null) {
+					SkinLookAndFeel.setSkin(aSkin);
+					SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
+					OptionsManagerImpl.getInstance().setDefaultTheme(laf);
+					return;
+				}
 			}
 			// laf???
 			final LookAFeel[] feels = OptionsManagerImpl.getInstance()

@@ -27,7 +27,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.19 2004/10/06 12:29:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.20 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,7 +40,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 public class ODPluginPanel
     extends JPanel
     implements OptionsRegister {
+	
     private static final long serialVersionUID = -2694086541312417833L;
+    
 	private JList pluginList;
     private JTextArea beschreibung = new JTextArea();
     private JLabel label1 = new JLabel();

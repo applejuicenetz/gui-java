@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.38 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.39 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,16 +40,16 @@ public class DownloadDOOverviewPanel
     private static final long serialVersionUID = 6888218356284268994L;
 	private DownloadPartListPanel actualDlOverviewTable;
     private JLabel actualDLDateiName = new JLabel();
-    private JLabel label5 = new JLabel("aktive Übertragung");
-    private JLabel label4 = new JLabel("Vorhanden");
-    private JLabel label3 = new JLabel("Nicht vorhanden");
-    private JLabel label2 = new JLabel("In Ordnung");
-    private JLabel label1 = new JLabel("Überprueft");
+    private JLabel label5 = new JLabel();
+    private JLabel label4 = new JLabel();
+    private JLabel label3 = new JLabel();
+    private JLabel label2 = new JLabel();
+    private JLabel label1 = new JLabel();
     private Logger logger;
-    private JButton holeListe = new JButton("Hole Partliste");
+    private JButton holeListe = new JButton();
     private Thread partListWorkerThread = null;
     private DownloadPanel downloadPanel;
-    private String verfuegbar = "verfuegbar";
+    private String verfuegbar;
     private DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     public DownloadDOOverviewPanel(DownloadPanel parent) {

@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.25 2004/10/06 12:29:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.26 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,11 +48,12 @@ public class ODAnsichtPanel
     extends JPanel
     implements OptionsRegister {
     private static final long serialVersionUID = 5364146567148505385L;
-	private JLabel farbeFertigerDownload = new JLabel("      ");
+
+    private JLabel farbeFertigerDownload = new JLabel("      ");
     private JLabel farbeQuelle = new JLabel("      ");
     private Settings settings;
-    JCheckBox cmbAktiv = new JCheckBox();
-    JCheckBox cmbDownloadUebersicht = new JCheckBox();
+    private JCheckBox cmbAktiv = new JCheckBox();
+    private JCheckBox cmbDownloadUebersicht = new JCheckBox();
     private JCheckBox enableToolTip = new JCheckBox();
     private JCheckBox cmbStartscreenZeigen = new JCheckBox();
     private Logger logger;

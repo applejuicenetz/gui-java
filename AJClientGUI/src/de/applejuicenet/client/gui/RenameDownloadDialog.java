@@ -26,7 +26,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/RenameDownloadDialog.java,v 1.2 2004/10/06 12:29:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/RenameDownloadDialog.java,v 1.3 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -38,7 +38,9 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 public class RenameDownloadDialog
     extends JDialog {
+	
     private static final long serialVersionUID = -4905149139102971419L;
+    
 	private DownloadDO downloadDO;
     private JButton schliessen = new JButton();
     private JComboBox possibleNames = new JComboBox();

@@ -11,7 +11,7 @@ import javax.swing.JTabbedPane;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultTabbedPane.java,v 1.5 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultTabbedPane.java,v 1.6 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,7 @@ public class SearchResultTabbedPane extends JTabbedPane
     implements MouseListener
 {
     private static final long serialVersionUID = 8221325852686435683L;
+    
 	private static Icon icon = IconManager.getInstance().getIcon("abbrechen");
 
     public SearchResultTabbedPane() {

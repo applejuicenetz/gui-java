@@ -23,7 +23,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.24 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.25 2004/10/14 14:56:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,7 +44,7 @@ public class LanguageSelector
     private CharArrayWriter contents = new CharArrayWriter();
     private static Logger logger = Logger.getLogger(LanguageSelector.class);
     private StringBuffer key = new StringBuffer();
-    private Set pluginsToWatch = new HashSet();
+    private Set pluginsToWatch = null;
 
     private LanguageSelector(String path) {
         try {
@@ -156,10 +156,12 @@ public class LanguageSelector
         while (it.hasNext()) {
             ( (LanguageListener) it.next()).fireLanguageChanged();
         }
-        it = pluginsToWatch.iterator();
-        String language = getFirstAttrbuteByTagName(".root.Languageinfo.name").toLowerCase();
-        while (it.hasNext()) {
-            ( (PluginConnector) it.next()).setLanguage(language);
+        if (pluginsToWatch != null){
+	        it = pluginsToWatch.iterator();
+	        String language = getFirstAttrbuteByTagName(".root.Languageinfo.name").toLowerCase();
+	        while (it.hasNext()) {
+	            ( (PluginConnector) it.next()).setLanguage(language);
+	        }
         }
     }
 

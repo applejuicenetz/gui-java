@@ -26,7 +26,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.10 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.11 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -38,8 +38,10 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 public class NewServerDialog
     extends JDialog {
-    private static final long serialVersionUID = -7474772356826645790L;
-	private JButton ok = new JButton();
+    
+	private static final long serialVersionUID = -7474772356826645790L;
+
+    private JButton ok = new JButton();
     private JTextField dyn = new JTextField();
     private JTextField port = new JTextField();
     private boolean legal = false;

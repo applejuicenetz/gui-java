@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
 import javax.swing.JToggleButton;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.23 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.24 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,18 +46,21 @@ import javax.swing.JToggleButton;
 
 public class SearchResultPanel
     extends JPanel {
+	
     private static final long serialVersionUID = 2902934143188576678L;
-	private Logger logger;
-    private JTreeTable searchResultTable;
-    private SearchResultTableModel tableModel;
-    private Search search;
-    private JButton sucheAbbrechen = new JButton();
+    
     private static String offeneSuchen = "%i offene Suchen";
     private static String gefundeneDateien = "%i gefundene Dateien";
     private static String durchsuchteClients = "%i durchsuchte Clients";
     private static String linkLaden = "Link";
     private static String sucheStoppen = "Suche stoppen";
     private static String[] columns;
+
+    private Logger logger;
+    private JTreeTable searchResultTable;
+    private SearchResultTableModel tableModel;
+    private Search search;
+    private JButton sucheAbbrechen = new JButton();
     private JLabel label1 = new JLabel();
     private JLabel label2 = new JLabel();
     private JLabel label3 = new JLabel();

@@ -95,65 +95,35 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 	private static DownloadPanel instance = null;
 
 	private DownloadDOOverviewPanel downloadDOOverviewPanel;
-
 	private JTextField downloadLink = new JTextField();
-
-	private JButton btnStartDownload = new JButton("Download");
-
+	private JButton btnStartDownload = new JButton();
 	private PowerDownloadPanel powerDownloadPanel;
-
 	private JTreeTable downloadTable;
-
-	private JLabel linkLabel = new JLabel("ajfsp-Link hinzufuegen");
-
+	private JLabel linkLabel = new JLabel();
 	private DownloadModel downloadModel;
-
 	private JPopupMenu popup = new JPopupMenu();
-
 	private boolean initialized = false;
-
 	private JScrollPane aScrollPane;
-
-	private JMenuItem item1;
-
-	private JMenuItem item2;
-
-	private JMenuItem item8;
-
-	private JMenuItem item4;
-
-	private JMenuItem item5;
-
-	private JMenuItem item6;
-
+	private JMenuItem abbrechen;
+	private JMenuItem pause;
+	private JMenuItem fortsetzen;
+	private JMenuItem umbenennen;
+	private JMenuItem zielordner;
+	private JMenuItem fertigEntfernen;
 	private JMenuItem itemCopyToClipboard = new JMenuItem();
-
 	private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
-
     private JMenuItem itemOpenWithProgram = new JMenuItem();
-	
 	private JSplitPane splitPane;
-
 	private String downloadAbbrechen;
-
 	private String dialogTitel;
-
-	private JMenuItem item7;
-
+	private JMenuItem partlisteAnzeigen;
 	private Logger logger;
-
 	private boolean panelSelected = false;
-
 	private JPopupMenu columnPopup = new JPopupMenu();
-
 	private TableColumn[] columns = new TableColumn[10];
-
 	private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[columns.length];
-
 	private JPopupMenu menu;
-
 	private JMenuItem einfuegen;
-
 	private DownloadPartListWatcher downloadPartListWatcher = new DownloadPartListWatcher();
 
 	public static synchronized DownloadPanel getInstance() {
@@ -196,39 +166,39 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new BorderLayout());
 
-		item1 = new JMenuItem("Abbrechen");
-		item2 = new JMenuItem("Pause");
-		item8 = new JMenuItem("Fortsetzen");
-		item4 = new JMenuItem("Umbenennen");
-		item5 = new JMenuItem("Zielordner aendern");
-		item6 = new JMenuItem("Fertige Übertragungen entfernen");
-		item7 = new JMenuItem("Partliste anzeigen");
+		abbrechen = new JMenuItem();
+		pause = new JMenuItem();
+		fortsetzen = new JMenuItem();
+		umbenennen = new JMenuItem();
+		zielordner = new JMenuItem();
+		fertigEntfernen = new JMenuItem();
+		partlisteAnzeigen = new JMenuItem();
 
 		menu = new JPopupMenu();
-		einfuegen = new JMenuItem("Einfuegen");
+		einfuegen = new JMenuItem();
 
 		IconManager im = IconManager.getInstance();
-		item1.setIcon(im.getIcon("abbrechen"));
-		item2.setIcon(im.getIcon("pause"));
-		item4.setIcon(im.getIcon("umbenennen"));
-		item5.setIcon(im.getIcon("zielordner"));
-		item6.setIcon(im.getIcon("bereinigen"));
-		item7.setIcon(im.getIcon("partliste"));
-		item8.setIcon(im.getIcon("pause"));
+		abbrechen.setIcon(im.getIcon("abbrechen"));
+		pause.setIcon(im.getIcon("pause"));
+		umbenennen.setIcon(im.getIcon("umbenennen"));
+		zielordner.setIcon(im.getIcon("zielordner"));
+		fertigEntfernen.setIcon(im.getIcon("bereinigen"));
+		partlisteAnzeigen.setIcon(im.getIcon("partliste"));
+		fortsetzen.setIcon(im.getIcon("pause"));
 		itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
 		itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
 		einfuegen.setIcon(im.getIcon("clipboard"));
 
-		popup.add(item1);
-		popup.add(item2);
-		popup.add(item8);
-		popup.add(item4);
-		popup.add(item5);
-		popup.add(item6);
+		popup.add(abbrechen);
+		popup.add(pause);
+		popup.add(fortsetzen);
+		popup.add(umbenennen);
+		popup.add(zielordner);
+		popup.add(fertigEntfernen);
 		popup.add(itemCopyToClipboard);
 		popup.add(itemCopyToClipboardWithSources);
-		popup.add(item7);
-		item7.setVisible(false);
+		popup.add(partlisteAnzeigen);
+		partlisteAnzeigen.setVisible(false);
     	popup.add(itemOpenWithProgram);
         itemOpenWithProgram.setIcon(im.getIcon("vlc"));
         if (ApplejuiceFassade.getInstance().isLocalhost()){
@@ -375,7 +345,7 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 			}
 		});
 
-		item1.addActionListener(new ActionListener() {
+		abbrechen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				Object[] selectedItems = getSelectedDownloadItems();
 				if (selectedItems != null && selectedItems.length != 0) {
@@ -413,31 +383,31 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 			}
 		});
 
-		item2.addActionListener(new ActionListener() {
+		pause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				pausieren();
 			}
 		});
 
-		item8.addActionListener(new ActionListener() {
+		fortsetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				fortsetzen();
 			}
 		});
 
-		item4.addActionListener(new ActionListener() {
+		umbenennen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				renameDownload();
 			}
 		});
 
-		item5.addActionListener(new ActionListener() {
+		zielordner.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				changeIncomingDir();
 			}
 		});
 
-		item6.addActionListener(new ActionListener() {
+		fertigEntfernen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				ApplejuiceFassade.getInstance().cleanDownloadList();
 				downloadDOOverviewPanel.enableHoleListButton(false);
@@ -447,7 +417,7 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 			}
 		});
 
-		item7.addActionListener(new ActionListener() {
+		partlisteAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				tryGetPartList();
 			}
@@ -685,9 +655,9 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 								selectedRow);
 					}
 					Object[] selectedItems = getSelectedDownloadItems();
-					item4.setVisible(false);
-					item5.setVisible(false);
-					item7.setVisible(false);
+					umbenennen.setVisible(false);
+					zielordner.setVisible(false);
+					partlisteAnzeigen.setVisible(false);
 					boolean pausiert = false;
 					boolean laufend = false;
 					if (selectedItems != null) {
@@ -695,11 +665,11 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 							if ((selectedItems[0].getClass() == DownloadMainNode.class && ((DownloadMainNode) selectedItems[0])
 									.getType() == DownloadMainNode.ROOT_NODE)
 									|| (selectedItems[0].getClass() == DownloadSourceDO.class)) {
-								item7.setVisible(true);
+								partlisteAnzeigen.setVisible(true);
 							}
 							if (selectedItems[0].getClass() != DownloadSourceDO.class) {
-								item4.setVisible(true);
-								item5.setVisible(true);
+								umbenennen.setVisible(true);
+								zielordner.setVisible(true);
 							}
 							if (selectedItems[0].getClass() == DownloadMainNode.class) {
 								DownloadDO downloadDO = ((DownloadMainNode) selectedItems[0])
@@ -714,7 +684,7 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 							for (int i = 0; i < selectedItems.length; i++) {
 								if ((selectedItems[i].getClass() == DownloadMainNode.class && ((DownloadMainNode) selectedItems[i])
 										.getType() == DownloadMainNode.ROOT_NODE)) {
-									item5.setVisible(true);
+									zielordner.setVisible(true);
 								}
 								DownloadDO downloadDO;
 								if (selectedItems[i].getClass() == DownloadMainNode.class) {
@@ -730,14 +700,14 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 						}
 					}
 					if (laufend) {
-						item2.setEnabled(true);
+						pause.setEnabled(true);
 					} else {
-						item2.setEnabled(false);
+						pause.setEnabled(false);
 					}
 					if (pausiert) {
-						item8.setEnabled(true);
+						fortsetzen.setEnabled(true);
 					} else {
-						item8.setEnabled(false);
+						fortsetzen.setEnabled(false);
 					}
 					popup.show(downloadTable, e.getX(), e.getY());
 				}
@@ -1053,35 +1023,35 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 			}
 			DownloadMainNode.setColumnTitles(tableColumns);
 
-			item1
+			abbrechen
 					.setText(ZeichenErsetzer
 							.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.canceldown.caption")));
-			item2
+			pause
 					.setText(ZeichenErsetzer
 							.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.pausedown.caption"))
 							+ " [F5]");
-			item8
+			fortsetzen
 					.setText(ZeichenErsetzer
 							.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.resumedown.caption"))
 							+ " [F6]");
-			item4
+			umbenennen
 					.setText(ZeichenErsetzer
 							.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.renamefile.caption"))
 							+ " [F2]");
-			item5
+			zielordner
 					.setText(ZeichenErsetzer
 							.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.changetarget.caption"))
 							+ " [F3]");
-			item6
+			fertigEntfernen
 					.setText(ZeichenErsetzer
 							.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.mainform.Clearfinishedentries1.caption")));
-			item7
+			partlisteAnzeigen
 					.setText(ZeichenErsetzer
 							.korrigiereUmlaute(languageSelector
 									.getFirstAttrbuteByTagName(".root.javagui.downloadform.partlisteanzeigen")));
@@ -1153,16 +1123,15 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 			try {
 				data = (String) transferable
 						.getTransferData(DataFlavor.stringFlavor);
+				downloadLink.setText(data);
 			} catch (Exception ex) {
-				this.downloadLink.setText("Error");
+				downloadLink.setText("Error");
 			}
-			this.downloadLink.setText(data);
 		}
 	}
 
 	class SortMouseAdapter extends MouseAdapter {
 		private JTableHeader header;
-
 		private SortButtonRenderer renderer;
 
 		public SortMouseAdapter(JTableHeader header, SortButtonRenderer renderer) {
@@ -1236,7 +1205,6 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 
 	private class DownloadPartListWatcher {
 		private Thread worker = null;
-
 		private Object nodeObject = null;
 
 		public void setDownloadNode(Object node) {

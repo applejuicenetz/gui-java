@@ -24,7 +24,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODDirectoryChooser.java,v 1.7 2004/10/06 12:29:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODDirectoryChooser.java,v 1.8 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,14 +36,14 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 public class ODDirectoryChooser
     extends JDialog {
+	
     private static final long serialVersionUID = 6193113845377232917L;
+    
 	private JTree folderTree = new JTree();
     private JButton uebernehmen = new JButton();
     private JButton abbrechen = new JButton();
-
     private boolean change = false;
     private String path;
-
     private Logger logger;
 
     public ODDirectoryChooser(JDialog parent, String title) {

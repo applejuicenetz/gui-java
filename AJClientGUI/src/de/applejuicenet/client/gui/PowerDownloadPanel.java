@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.51 2004/10/06 12:29:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.52 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,7 +65,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 public class PowerDownloadPanel
     extends JPanel
     implements LanguageListener, DataUpdateListener {
+	
     private static final long serialVersionUID = 6452879508173851941L;
+    
 	private final Color BLUE_BACKGROUND = new Color(118, 112, 148);
     private JRadioButton btnInaktiv = new JRadioButton();
     private JRadioButton btnAktiv = new JRadioButton();
@@ -80,26 +82,22 @@ public class PowerDownloadPanel
     private JTextField ratio = new JTextField("2.2");
     private JTextField autoAb = new JTextField();
     private JTextField autoBis = new JTextField();
-    public JButton btnPdl = new JButton("Uebernehmen");
-    private JButton btnAutoPdl = new JButton("Uebernehmen");
-    private JLabel powerdownload = new JLabel("Powerdownload");
-    private JLabel label6 = new JLabel(
-        "Wieviel willst Du maximal fuer 1 Byte bezahlen?");
-    private JLabel label7 = new JLabel("Fuer 1 Byte zahle");
-    private JLabel label8 = new JLabel("Credits");
-    private JLabel label9 = new JLabel("Automatischer Powerdownload");
-    private JLabel label10 = new JLabel("ab ");
-    private JLabel label11 = new JLabel("bis ");
+    public JButton btnPdl = new JButton();
+    private JButton btnAutoPdl = new JButton();
+    private JLabel powerdownload = new JLabel();
+    private JLabel label6 = new JLabel();
+    private JLabel label7 = new JLabel();
+    private JLabel label8 = new JLabel();
+    private JLabel label9 = new JLabel();
+    private JLabel label10 = new JLabel();
+    private JLabel label11 = new JLabel();
     private Logger logger;
     private RatioFocusAdapter ratioFocusAdapter;
     private JComboBox pwdlPolicies = new JComboBox();
-    private JButton autoPwdlEinstellungen = new JButton("Einstellungen");
-
+    private JButton autoPwdlEinstellungen = new JButton();
     private int standardAutomaticPwdlAb = 200;
     private int standardAutomaticPwdlBis = 30;
-
     private DownloadPanel parentPanel;
-
     private AutomaticPowerdownloadPolicy autoPwdlThread;
     private Information lastInformation;
     private JPanel backPanel = new JPanel();
@@ -201,9 +199,7 @@ public class PowerDownloadPanel
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(btnInaktiv);
         buttonGroup.add(btnAktiv);
-        btnInaktiv.setText("Powerdownload inaktiv");
         btnInaktiv.setSelected(true);
-        btnAktiv.setText("Powerdownload aktiv");
         backPanel.add(btnInaktiv, constraints);
         constraints.gridy = 3;
         backPanel.add(btnAktiv, constraints);
@@ -293,8 +289,6 @@ public class PowerDownloadPanel
         ButtonGroup buttonGroup2 = new ButtonGroup();
         buttonGroup2.add(btnAutoInaktiv);
         buttonGroup2.add(btnAutoAktiv);
-        btnAutoInaktiv.setText("inaktiv");
-        btnAutoAktiv.setText("aktiv");
         btnAutoInaktiv.setSelected(true);
         pwdlPolicies.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {

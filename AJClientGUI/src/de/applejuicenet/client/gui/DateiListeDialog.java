@@ -46,7 +46,7 @@ import de.applejuicenet.client.shared.dnd.DndTargetAdapter;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.14 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.15 2004/10/14 14:55:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -85,13 +85,13 @@ public class DateiListeDialog
 
     private void init() {
         try {
-            JMenuItem item1 = new JMenuItem("Entfernen");
-            item1.addActionListener(new ActionListener() {
+            JMenuItem entfernen = new JMenuItem();
+            entfernen.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
                     removeSelectedColumn();
                 }
             });
-            popup.add(item1);
+            popup.add(entfernen);
             table.setModel(new DateiListeTableModel());
             table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             getContentPane().setLayout(new GridBagLayout());
