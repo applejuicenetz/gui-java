@@ -6,4 +6,5 @@ public class TestKlasse {
     int b=3;
     int z=3;
     int x=3;
+    int h=2;
 }
