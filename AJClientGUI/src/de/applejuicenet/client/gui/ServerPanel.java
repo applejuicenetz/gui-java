@@ -43,9 +43,11 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import de.applejuicenet.client.shared.Information;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.48 2004/01/24 08:10:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.49 2004/02/04 13:33:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -54,6 +56,9 @@ import de.applejuicenet.client.shared.Information;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.49  2004/02/04 13:33:09  maj0r
+ * Serverlinks koennen nun auch in die Ablage kopiert werden.
+ *
  * Revision 1.48  2004/01/24 08:10:08  maj0r
  * Anzahl der Verbindungsversuche eingebaut.
  *
@@ -180,6 +185,8 @@ public class ServerPanel
     private JMenuItem item4;
     private JMenuItem item5;
     private JMenuItem item6;
+    private JMenuItem itemCopyToClipboard1;
+    private JMenuItem itemCopyToClipboard2;
     private JLabel verbunden = new JLabel();
     private JLabel versucheZuVerbinden = new JLabel();
     private JLabel aelter24h = new JLabel();
@@ -220,11 +227,18 @@ public class ServerPanel
         item4.setIcon(im.getIcon("serverneu"));
         item6 = new JMenuItem("Löschen");
         item6.setIcon(im.getIcon("serverloeschen"));
+        itemCopyToClipboard1 = new JMenuItem("Link in Ablage kopieren");
+        itemCopyToClipboard1.setIcon(im.getIcon("clipboard"));
+        itemCopyToClipboard2 = new JMenuItem("Link in Ablage kopieren");
+        itemCopyToClipboard2.setIcon(im.getIcon("clipboard"));
+
         popup.add(item1);
         popup.add(item4);
+        popup.add(itemCopyToClipboard1);
         popup.add(item2);
         popup2.add(item3);
         popup3.add(item5);
+        popup3.add(itemCopyToClipboard2);
         popup3.add(item6);
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -261,6 +275,28 @@ public class ServerPanel
                 }
             }
         };
+        ActionListener clipboardListener = new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                int[] selectedItems = serverTable.getSelectedRows();
+                if (selectedItems.length == 1) {
+                    Clipboard cb = Toolkit.getDefaultToolkit().
+                        getSystemClipboard();
+                    StringBuffer toCopy = new StringBuffer();
+                    toCopy.append("ajfsp://server|");
+                    ServerDO serverDO = (ServerDO) ( (ServerTableModel) serverTable.
+                                             getModel()).getRow(selectedItems[0]);
+                    toCopy.append(serverDO.getHost());
+                    toCopy.append("|");
+                    toCopy.append(serverDO.getPort());
+                    toCopy.append("/");
+                    StringSelection contents = new StringSelection(
+                        toCopy.toString());
+                    cb.setContents(contents, null);
+                }
+            }
+        };
+        itemCopyToClipboard1.addActionListener(clipboardListener);
+        itemCopyToClipboard2.addActionListener(clipboardListener);
         item2.addActionListener(loescheServerListener);
         item6.addActionListener(loescheServerListener);
         ActionListener newServerListener = new ActionListener() {
@@ -527,6 +563,11 @@ public class ServerPanel
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui", "serverform",
                                           "warnungnachricht"}));
+            itemCopyToClipboard1.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "getlink1", "caption"})));
+            itemCopyToClipboard2.setText(itemCopyToClipboard1.getText());
 
             TableColumnModel tcm = serverTable.getColumnModel();
             for (int i = 0; i < tcm.getColumnCount(); i++) {
