@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.*;
+import javax.swing.tree.TreeSelectionModel;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.table.*;
 
 import de.applejuicenet.client.gui.controller.*;
@@ -19,7 +21,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.30 2003/08/05 05:11:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.31 2003/08/05 20:47:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +30,9 @@ import de.applejuicenet.client.gui.tables.JTreeTable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.31  2003/08/05 20:47:06  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.30  2003/08/05 05:11:59  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -104,13 +109,18 @@ public class DownloadPanel
 
     item1 = new JMenuItem("Abbrechen");
     item2 = new JMenuItem("Pause/Fortsetzen");
-    item3 = new JMenuItem("Powerdownload");
     item4 = new JMenuItem("Umbenennen");
     item5 = new JMenuItem("Zielordner ändern");
     item6 = new JMenuItem("Fertige Übertragungen entfernen");
+    //todo
+    item1.setEnabled(false);
+    item2.setEnabled(false);
+    item4.setEnabled(false);
+    item5.setEnabled(false);
+    item6.setEnabled(false);
+    //
     popup.add(item1);
     popup.add(item2);
-    popup.add(item3);
     popup.add(item4);
     popup.add(item5);
     popup.add(item6);
@@ -147,26 +157,31 @@ public class DownloadPanel
             String link = downloadLink.getText();
             if (link.length()!=0){
                 DataManager.getInstance().processLink(link);
+                downloadLink.setText("");
             }
         }
     });
     downloadTable.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
+        super.mouseClicked(e);
         Point p = e.getPoint();
-        if (e.getClickCount() == 2 && downloadTable.columnAtPoint(p) != 0) {
-          TreeTableModelAdapter model = (TreeTableModelAdapter) downloadTable.
-              getModel();
-          int selectedRow = downloadTable.getSelectedRow();
-          ( (TreeTableModelAdapter) downloadTable.getModel()).expandOrCollapseRow(selectedRow);
+        int selectedRow = downloadTable.rowAtPoint(p);
+        DownloadNode node = (DownloadNode)((TreeTableModelAdapter)downloadTable.getModel()).nodeForRow(selectedRow);
+        if (node.getNodeType() == DownloadNode.DOWNLOAD_NODE){
+            powerDownloadPanel.btnPdl.setEnabled(true);
+        }
+        else{
+            powerDownloadPanel.btnPdl.setEnabled(false);
+        }
+        if (downloadTable.columnAtPoint(p) != 0){
+            if (e.getClickCount() == 2 ) {
+              ( (TreeTableModelAdapter) downloadTable.getModel()).expandOrCollapseRow(selectedRow);
+            }
         }
       }
 
       public void mousePressed(MouseEvent me) {
-        Point p = me.getPoint();
-        int iRow = downloadTable.rowAtPoint(p);
-        int iCol = downloadTable.columnAtPoint(p);
-        downloadTable.setRowSelectionInterval(iRow, iRow);
-        downloadTable.setColumnSelectionInterval(iCol, iCol);
+        super.mousePressed(me);
         maybeShowPopup(me);
       }
 
@@ -225,9 +240,20 @@ public class DownloadPanel
   }
 
   public Object[] getSelectedDownloadItems(){
-/*      int[] indizes = downloadTable.getSelectedRows();
-      ((DownloadModel)downloadTable.getModel()).get*/
-      return null;
+      int count = downloadTable.getSelectedRowCount();
+      Object[] result = null;
+      if (count == 1){
+          result = new Object[count];
+          result[0] = ((TreeTableModelAdapter)downloadTable.getModel()).nodeForRow(downloadTable.getSelectedRow());
+      }
+      else if (count > 1){
+          result = new Object[count];
+          int[] indizes = downloadTable.getSelectedRows();
+          for (int i=0; i<indizes.length; i++){
+              result[i] = ((TreeTableModelAdapter)downloadTable.getModel()).nodeForRow(i);
+          }
+      }
+      return result;
   }
 
   public void registerSelected() {
@@ -321,9 +347,6 @@ public class DownloadPanel
                                           getFirstAttrbuteByTagName(new String[] {
         "mainform", "resumedown", "caption"}));
     item2.setText(temp);
-    item3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-        getFirstAttrbuteByTagName(new String[] {"mainform", "powerdownload",
-                                  "caption"})));
     item4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
         getFirstAttrbuteByTagName(new String[] {"mainform", "renamefile",
                                   "caption"})));

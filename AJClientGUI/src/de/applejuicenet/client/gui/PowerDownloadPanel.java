@@ -6,10 +6,11 @@ import javax.swing.*;
 
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
+import de.applejuicenet.client.gui.tables.download.DownloadNode;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.15 2003/08/05 05:11:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.16 2003/08/05 20:47:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.16  2003/08/05 20:47:06  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.15  2003/08/05 05:11:59  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -46,7 +50,7 @@ public class PowerDownloadPanel
   private JTextField ratio = new JTextField("2.2");
   private JTextField autoAb = new JTextField();
   private JTextField autoBis = new JTextField();
-  private JButton btnPdl = new JButton("�bernehmen");
+  public JButton btnPdl = new JButton("�bernehmen");
   private JButton btnAutoPdl = new JButton("�bernehmen");
   private JLabel powerdownload = new JLabel("Powerdownload");
   private JLabel label6 = new JLabel(
@@ -61,6 +65,7 @@ public class PowerDownloadPanel
 
   public PowerDownloadPanel(DownloadPanel parentPanel) {
     this.parentPanel = parentPanel;
+    btnPdl.setEnabled(false);
     try {
       jbInit();
     }
@@ -228,10 +233,19 @@ public class PowerDownloadPanel
 
   private void alterRatio(boolean increase) {
     String temp = ratio.getText();
-    int ganzZahl = Integer.parseInt(temp.substring(0, 1));
-    int nachKomma = Integer.parseInt(temp.substring(2, 3));
+    int pos = temp.indexOf('.');
+    int ganzZahl;
+    int nachKomma;
+    if (pos == -1){
+        ganzZahl = Integer.parseInt(temp);
+        nachKomma = 0;
+    }
+    else{
+        ganzZahl = Integer.parseInt(temp.substring(0, pos));
+        nachKomma = Integer.parseInt(temp.substring(pos+1));
+    }
     if (increase) {
-      if (ratioWert < 5.5f) {
+      if (ratioWert < 50f) {
         if (nachKomma == 9) {
           nachKomma = 0;
           ganzZahl += 1;
@@ -263,7 +277,20 @@ public class PowerDownloadPanel
   }
 
   void btnPdl_actionPerformed(ActionEvent e) {
-//    DataManager.getInstance().getDownloads(); war nur test f�r das model
+      Object[] selectedItems = parentPanel.getSelectedDownloadItems();
+      if (selectedItems!=null && selectedItems.length!=0){
+          for (int i=0; i<selectedItems.length; i++){
+              if (((DownloadNode)selectedItems[i]).getNodeType() == DownloadNode.DOWNLOAD_NODE){
+                  int powerDownload = 0;
+                  if (!btnInaktiv.isSelected()){
+                      String temp = ratio.getText();
+                      double power = Double.parseDouble(temp);
+                      powerDownload = (int) (power * 10 - 10);
+                  }
+                  DataManager.getInstance().setPowerDownload(Integer.parseInt(((DownloadNode)selectedItems[i]).getId()), powerDownload);
+              }
+          }
+      }
   }
 
   public void fireLanguageChanged() {

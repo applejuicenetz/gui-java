@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.13 2003/08/05 05:11:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.14 2003/08/05 20:47:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.14  2003/08/05 20:47:06  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.13  2003/08/05 05:11:59  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -296,6 +299,7 @@ public class ModifiedXMLHolder
       String filename = null;
       String targetDirectory = null;
       int powerDownload;
+      int temporaryFileNumber;
       NodeList nodes = document.getElementsByTagName("download");
       int size = nodes.getLength();
       DownloadDO downloadDO = null;
@@ -311,8 +315,10 @@ public class ModifiedXMLHolder
         targetDirectory = e.getAttribute("targetdirectory");
         temp = e.getAttribute("powerdownload");
         powerDownload = Integer.parseInt(temp);
+        temp = e.getAttribute("temporaryfilenumber");
+        temporaryFileNumber = Integer.parseInt(temp);
 
-        downloadDO = new DownloadDO(id, shareid, hash, fileSize, status, filename, targetDirectory, powerDownload);
+        downloadDO = new DownloadDO(id, shareid, hash, fileSize, status, filename, targetDirectory, powerDownload, temporaryFileNumber);
 
         downloadMap.put(new MapSetStringKey(id), downloadDO);
       }

@@ -5,7 +5,7 @@ import de.applejuicenet.client.shared.MapSetStringKey;
 import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.2 2003/07/06 20:00:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.3 2003/08/05 20:47:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import java.util.HashMap;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.3  2003/08/05 20:47:06  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.2  2003/07/06 20:00:19  maj0r
  * DownloadTable bearbeitet.
  *
@@ -29,6 +32,9 @@ public class DownloadDO {
     public static final int SUCHEN_LADEN = 0;
     public static final int NICHT_GENUG_PLATZ_FEHLER = 1;
     public static final int FERTIGSTELLEN = 12;
+    public static final int FERTIG = 14;
+    public static final int ABBRECHEN = 15;
+    public static final int AGBEGROCHEN = 17;
     public static final int PAUSIERT = 18;
 
     private String id;
@@ -40,12 +46,13 @@ public class DownloadDO {
     private String filename;
     private String targetDirectory;
     private int powerDownload;
+    private int temporaryFileNumber;
 
     private HashMap sourcen = new HashMap();
 
     public DownloadDO(String id, String shareId, String hash, String groesse,
                       int status, String filename, String targetDirectory,
-                      int powerDownload) {
+                      int powerDownload, int temporaryFileNumber) {
         this.id = id;
         this.shareId = shareId;
         this.hash = hash;
@@ -54,11 +61,12 @@ public class DownloadDO {
         this.filename = filename;
         this.targetDirectory = targetDirectory;
         this.powerDownload = powerDownload;
+        this.temporaryFileNumber = temporaryFileNumber;
     }
 
     public void alterDownload(String shareId, String hash, String groesse,
                       int status, String filename, String targetDirectory,
-                      int powerDownload){
+                      int powerDownload, int temporaryFileNumber){
         this.shareId = shareId;
         this.hash = hash;
         this.groesse = groesse;
@@ -66,6 +74,7 @@ public class DownloadDO {
         this.filename = filename;
         this.targetDirectory = targetDirectory;
         this.powerDownload = powerDownload;
+        this.temporaryFileNumber = temporaryFileNumber;
     }
 
     public String getProzentGeladen(){
@@ -161,5 +170,13 @@ public class DownloadDO {
 
     public String getId() {
         return id;
+    }
+
+    public int getTemporaryFileNumber() {
+        return temporaryFileNumber;
+    }
+
+    public void setTemporaryFileNumber(int temporaryFileNumber) {
+        this.temporaryFileNumber = temporaryFileNumber;
     }
 }

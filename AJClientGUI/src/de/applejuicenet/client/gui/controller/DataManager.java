@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.32 2003/08/05 05:11:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.33 2003/08/05 20:47:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.33  2003/08/05 20:47:06  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.32  2003/08/05 05:11:59  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -259,7 +262,7 @@ public class DataManager { //Singleton-Implementierung
         logger.info("Setze '" + shareDO.getShortfilename() + "' auf Prioritaet " + prioritaet + "...");
         try {
           String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
                                              "/function/setpriority?password=" + password + "&id=" + id + "&priority=" + prioritaet);
         }
         catch (WebSiteNotFoundException ex) {
@@ -278,7 +281,7 @@ public class DataManager { //Singleton-Implementierung
         logger.info("Downloade '" + link + "...");
         try {
           String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
                                              "/function/processlink?password=" + password + "&link=" + link );
         }
         catch (WebSiteNotFoundException ex) {
@@ -304,7 +307,7 @@ public class DataManager { //Singleton-Implementierung
         logger.info("Setze '" + downloadDO.getFilename() + "' auf PowerDownload " + powerDownload + "...");
         try {
           String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
-          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+          result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.GET,
                                              "/function/setpowerdownload?password=" + password + "&id=" + id + "&powerdownload=" + powerDownload);
         }
         catch (WebSiteNotFoundException ex) {
