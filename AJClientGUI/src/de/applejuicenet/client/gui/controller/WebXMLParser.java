@@ -1,7 +1,6 @@
 package de.applejuicenet.client.gui.controller;
 
 import java.io.*;
-import java.net.URLDecoder;
 import javax.xml.parsers.*;
 
 import org.xml.sax.*;
@@ -13,15 +12,18 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.16 2003/10/13 19:14:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.17 2003/10/14 15:39:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.17  2003/10/14 15:39:48  maj0r
+ * Stacktraces ausgebaut.
+ *
  * Revision 1.16  2003/10/13 19:14:04  maj0r
  * Kleinen Bug beim Entfernen von Downloads gefixt.
  *
@@ -176,7 +178,7 @@ public abstract class WebXMLParser
                 || getClass()==UserPartListXMLHolder.class){
                 throw new PartlistException();
             }
-            if (logger.isEnabledFor(Level.ERROR)){
+            else if (logger.isEnabledFor(Level.ERROR)){
                 String zeit = Long.toString(System.currentTimeMillis());
                 String path = System.getProperty("user.dir") + File.separator +
                     "logs";
@@ -192,11 +194,10 @@ public abstract class WebXMLParser
                     fileWriter.close();
                 }
                 catch (IOException ioE) {
-                    ioE.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                    logger.error(ioE);
                 }
                 logger.error("Unbehandelte SAX-Exception -> Inhalt in " + dateiname, x);
             }
-            x.printStackTrace();
         }
     }
 

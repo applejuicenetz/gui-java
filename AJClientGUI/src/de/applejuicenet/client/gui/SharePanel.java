@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.39 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.40 2003/10/14 15:40:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,6 +40,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.40  2003/10/14 15:40:43  maj0r
+ * Stacktraces ausgebaut.
+ *
  * Revision 1.39  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -467,7 +470,7 @@ public class SharePanel
                                                 }
                                                 catch (NodeAlreadyExistsException e)
                                                 {
-                                                    e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                                                    //Egal...
                                                 }
                                             }
                                             break;

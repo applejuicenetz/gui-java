@@ -8,7 +8,7 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.15 2003/09/07 09:29:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.16 2003/10/14 15:39:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import org.xml.sax.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: XMLDecoder.java,v $
+ * Revision 1.16  2003/10/14 15:39:28  maj0r
+ * Stacktraces ausgebaut.
+ *
  * Revision 1.15  2003/09/07 09:29:55  maj0r
  * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
@@ -72,15 +75,8 @@ public abstract class XMLDecoder {
             if (sxe.getException() != null) {
                 x = sxe.getException();
             }
-            x.printStackTrace();
-
         }
-        catch (ParserConfigurationException pce) {
-            pce.printStackTrace();
-
-        }
-        catch (IOException ioe) {
-            ioe.printStackTrace();
+        catch (Exception e) {
         }
     }
 
@@ -177,7 +173,7 @@ public abstract class XMLDecoder {
                             return;
                         }
                         catch (IOException ioE) {
-                            ioE.printStackTrace();
+                            return;
                         }
                     }
                     else {
