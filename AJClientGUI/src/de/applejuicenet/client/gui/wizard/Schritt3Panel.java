@@ -9,7 +9,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.4 2004/02/04 15:38:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,10 @@ import java.awt.event.KeyEvent;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Schritt3Panel.java,v $
+ * Revision 1.4  2004/02/04 15:38:18  maj0r
+ * Wizarddialog korrigiert
+ * Nickname wird nun auf Richtigkeit geprueft und gespeichert wird erst nach Durchlaufen des gesamten Wizards.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -83,7 +87,7 @@ public class Schritt3Panel extends WizardPanel{
     }
 
     public boolean isValidNickname(){
-        return (nickname.getText().compareToIgnoreCase("nonick")==0) ? false: true;
+        return (nickname.getText().startsWith("nonick") || nickname.getText().length()==0) ? false: true;
     }
 
     public void fireLanguageChanged() {

@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.6 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.7 2004/02/04 15:38:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WizardDialog.java,v $
+ * Revision 1.7  2004/02/04 15:38:18  maj0r
+ * Wizarddialog korrigiert
+ * Nickname wird nun auf Richtigkeit geprueft und gespeichert wird erst nach Durchlaufen des gesamten Wizards.
+ *
  * Revision 1.6  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -111,6 +115,7 @@ public class WizardDialog extends JDialog implements LanguageListener {
         zurueck.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){
                 if (aktuellesPanel.getVorherigesPanel()!=null){
+                    setEndeEnabled(false);
                     getContentPane().remove(aktuellesPanel);
                     aktuellesPanel = aktuellesPanel.getVorherigesPanel();
                     getContentPane().add(aktuellesPanel, BorderLayout.CENTER);
@@ -146,8 +151,10 @@ public class WizardDialog extends JDialog implements LanguageListener {
                     zurueck.setEnabled(true);
                     if (aktuellesPanel.getNaechstesPanel()==null){
                         weiter.setEnabled(false);
+                        setEndeEnabled(true);
                     }
                     else{
+                        setEndeEnabled(false);
                         if (aktuellesPanel==schritt3){
                             if (((Schritt3Panel)schritt3).isValidNickname()){
                                 setWeiterEnabled(true);
@@ -175,6 +182,7 @@ public class WizardDialog extends JDialog implements LanguageListener {
         buttons.add(ende);
         buttons.setBackground(Color.WHITE);
         zurueck.setEnabled(false);
+        ende.setEnabled(false);
 
         getContentPane().add(label1, BorderLayout.NORTH);
         getContentPane().add(schritt1, BorderLayout.CENTER);
@@ -201,6 +209,10 @@ public class WizardDialog extends JDialog implements LanguageListener {
 
     public void setWeiterEnabled(boolean enabled){
         weiter.setEnabled(enabled);
+    }
+
+    public void setEndeEnabled(boolean enabled){
+        ende.setEnabled(enabled);
     }
 
     public void fireLanguageChanged() {
