@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.4 2003/08/12 11:01:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.5 2003/08/12 16:23:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.5  2003/08/12 16:23:36  maj0r
+ * Kleine Layoutaenderung.
+ *
  * Revision 1.4  2003/08/12 11:01:58  maj0r
  * Anzeige korrigiert.
  *
@@ -78,11 +81,8 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
         tempPanel1.add(green);
         tempPanel1.add(label1);
 
-        JPanel tempPanel2 = new JPanel(new BorderLayout());
-        tempPanel2.add(tempPanel1, BorderLayout.NORTH);
-        tempPanel2.add(actualDLDateiName, BorderLayout.SOUTH);
-        add(tempPanel2, BorderLayout.NORTH);
-
+        add(tempPanel1, BorderLayout.NORTH);
+        actualDLDateiName.setPreferredSize(new Dimension(actualDLDateiName.getPreferredSize().width, 17));
         add(actualDlOverviewTable, BorderLayout.CENTER);
     }
 
@@ -100,7 +100,6 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
             constraints.gridx = 0;
             constraints.gridy = 0;
             constraints.weightx = 1;
-            constraints.weighty = 1;
             JLabel label1 = null;
             PartListDO.Part[] parts = partListDO.getParts();
             int anzahlParts = parts.length;
@@ -125,9 +124,15 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
             if (anzahlProZeile>512)
                 anzahlProZeile = 512;
             int count = 0;
+            constraints.gridy = 0;
+            constraints.gridx = 0;
+            constraints.gridwidth = anzahlProZeile;
+            actualDlOverviewTable.add(actualDLDateiName, constraints);
+            constraints.weighty = 1;
+            constraints.gridwidth = 1;
             for (int i = 0; i < anzahlGanzeZeilen; i++)
             {
-                constraints.gridy = i;
+                constraints.gridy = i+1;
                 for (int x = 0; x < anzahlProZeile; x++)
                 {
                     if (count<anzahlParts){
@@ -142,7 +147,7 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener{
             }
             if (count < anzahlParts)
             {
-                constraints.gridy = anzahlGanzeZeilen;
+                constraints.gridy = anzahlGanzeZeilen+1;
                 count = 0;
                 for (int i = anzahlProZeile * anzahlGanzeZeilen; i < anzahlParts ; i++)
                 {
