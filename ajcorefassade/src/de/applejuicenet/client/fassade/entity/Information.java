@@ -1,71 +1,74 @@
 package de.applejuicenet.client.fassade.entity;
 
+import java.text.DecimalFormat;
+
 public abstract class Information {
 
 	public static final int VERBUNDEN = 0;
 	public static final int NICHT_VERBUNDEN = 1;
 	public static final int VERSUCHE_ZU_VERBINDEN = 2;
+
+	private static final DecimalFormat percentFormatter = new DecimalFormat( "###,##0.00" );
 	
 	public abstract long getSessionUpload();
-
 	public abstract long getSessionDownload();
-
 	public abstract long getCredits();
-
 	public abstract long getUploadSpeed();
-
 	public abstract long getDownloadSpeed();
-
 	public abstract long getOpenConnections();
-	
-	public abstract String getServerName();
-	
+	public abstract long getMaxUploadPositions();
 	public abstract int getVerbindungsStatus();
-	
+	public abstract String getServerName();
 	public abstract String getExterneIP();
-	
 	public abstract Server getServer();
 	
-	public abstract long getMaxUploadPositions();
-	
 	public final String getCreditsAsString() {
-		return " Credits: " + bytesUmrechnen(getCredits());
+		StringBuffer result = new StringBuffer(" Credits: ");
+		result.append(bytesUmrechnen(getCredits()));
+		return result.toString();
 	}
 
 	public final String getUpDownSessionAsString() {
-		return " in: " + bytesUmrechnen(getSessionDownload()) + " out: "
-				+ bytesUmrechnen(getSessionUpload());
+		StringBuffer result = new StringBuffer(" in: ");
+		result.append(getBytesSpeed(getSessionDownload()));
+		result.append(" out: ");
+		result.append(getBytesSpeed(getSessionUpload()));
+		return result.toString();
 	}
 
 	public final String getUpDownAsString() {
-		return " in: " + getBytesSpeed(getDownloadSpeed()) + " out: "
-				+ getBytesSpeed(getUploadSpeed());
+		StringBuffer result = new StringBuffer(" in: ");
+		result.append(getBytesSpeed(getDownloadSpeed()));
+		result.append(" out: ");
+		result.append(getBytesSpeed(getUploadSpeed()));
+		return result.toString();
 	}
 
-	public final String getUpAsString() {
+	public final StringBuffer getUpAsString() {
 		return getBytesSpeed(getUploadSpeed());
 	}
 
-	public final String getDownAsString() {
+	public final StringBuffer getDownAsString() {
 		return getBytesSpeed(getDownloadSpeed());
 	}
 
-	private final String getBytesSpeed(long bytes) {
+	private final StringBuffer getBytesSpeed(long bytes) {
 		if (bytes == 0) {
-			return "0 KB/s";
+			return new StringBuffer("0 KB/s");
 		}
-		String result = bytesUmrechnen(bytes) + "/s";
+		StringBuffer result = bytesUmrechnen(bytes);
+		result.append("/s");
 		return result;
 	}
 
-	public static final String bytesUmrechnen(long bytes) {
+	private final StringBuffer bytesUmrechnen(long bytes) {
 		boolean minus = false;
 		if (bytes < 0) {
 			minus = true;
 			bytes *= -1;
 		}
 		if (bytes == 0) {
-			return "0 MB";
+			return new StringBuffer("0 MB");
 		}
 		long faktor = 1;
 		if (bytes < 1024l) {
@@ -82,27 +85,19 @@ public abstract class Information {
 		if (minus) {
 			bytes *= -1;
 		}
-		double umgerechnet = (double) bytes / (double) faktor;
-		String result = Double.toString(umgerechnet);
-		int pos = result.indexOf(".");
-		if (pos != -1) {
-			if (pos + 2 < result.length()) {
-				result = result.substring(0, pos + 3);
-			}
-			result = result.replace('.', ',');
-		}
+		double umgerechnet = (double) bytes / faktor;
+		StringBuffer result = new StringBuffer(percentFormatter.format(umgerechnet));
 		if (faktor == 1) {
-			result += " Bytes";
+			result.append(" Bytes");
 		} else if (faktor == 1024l) {
-			result += " kb";
+			result.append(" kb");
 		} else if (faktor == 1048576l) {
-			result += " MB";
+			result.append(" MB");
 		} else if (faktor == 1073741824l) {
-			result += " GB";
+			result.append(" GB");
 		} else {
-			result += " TB";
+			result.append(" TB");
 		}
 		return result;
 	}
-	
 }
