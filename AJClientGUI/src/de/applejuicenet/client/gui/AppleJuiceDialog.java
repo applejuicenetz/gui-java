@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.37 2003/08/28 10:38:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.38 2003/08/29 14:24:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.38  2003/08/29 14:24:15  maj0r
+ * About-Dialog mit entsprechendem Menuepunkt eingefuehrt.
+ *
  * Revision 1.37  2003/08/28 10:38:40  maj0r
  * Versionierung HIER entfernt.
  *
@@ -92,7 +95,8 @@ public class AppleJuiceDialog
     private JMenu sprachMenu;
     private JMenu optionenMenu;
     private HashSet plugins;
-    private JMenuItem menuItem;
+    private JMenuItem menuItemOptionen = new JMenuItem();
+    private JMenuItem menuItemUeber = new JMenuItem();
     private JFrame _this;
     private JButton pause = new JButton();
     private boolean paused = false;
@@ -135,8 +139,11 @@ public class AppleJuiceDialog
         pause.setEnabled(false);
         setTitle("AppleJuice Client");
         plugins = new HashSet();
-        Image img = IconManager.getInstance().getIcon("applejuice").getImage();
-        setIconImage(img);
+        IconManager im = IconManager.getInstance();
+        setIconImage(im.getIcon("applejuice").getImage());
+        menuItemOptionen.setIcon(im.getIcon("optionen"));
+        menuItemUeber.setIcon(im.getIcon("info"));
+
         setJMenuBar(createMenuBar());
         String path = System.getProperty("user.dir") + File.separator + "language" +
                 File.separator;
@@ -303,8 +310,7 @@ public class AppleJuiceDialog
         }
         JMenuBar menuBar = new JMenuBar();
         optionenMenu = new JMenu("Extras");
-        menuItem = new JMenuItem("Optionen");
-        menuItem.addActionListener(new ActionListener() {
+        menuItemOptionen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 OptionsDialog od = new OptionsDialog(_this);
                 Dimension appDimension = od.getSize();
@@ -314,7 +320,18 @@ public class AppleJuiceDialog
                 od.show();
             }
         });
-        optionenMenu.add(menuItem);
+        menuItemUeber.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                AboutDialog aboutDialog = new AboutDialog(_this, true);
+                Dimension appDimension = aboutDialog.getSize();
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                aboutDialog.setLocation((screenSize.width - appDimension.width)/2,
+                               (screenSize.height - appDimension.height)/2);
+                aboutDialog.show();
+            }
+        });
+        optionenMenu.add(menuItemOptionen);
+        optionenMenu.add(menuItemUeber);
         menuBar.add(optionenMenu);
 
         sprachMenu = new JMenu("Sprache");
@@ -359,8 +376,14 @@ public class AppleJuiceDialog
         sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                              getFirstAttrbuteByTagName(new String[]{"einstform", "languagesheet",
                                                                                                     "caption"})));
-        menuItem.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"einstform", "caption"})));
+        menuItemOptionen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "optbtn", "caption"})));
+        menuItemOptionen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "optbtn", "hint"})));
+        menuItemUeber.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "caption"})));
+        menuItemUeber.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "hint"})));
         optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                getFirstAttrbuteByTagName(new String[]{"javagui", "menu", "extras"})));
         if (paused)
