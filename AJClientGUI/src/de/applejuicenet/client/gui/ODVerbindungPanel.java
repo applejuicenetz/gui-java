@@ -91,10 +91,22 @@ public class ODVerbindungPanel extends JPanel {
         int obereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()), 0.6);
         kbSlider.setMinimum(untereGrenze);
         kbSlider.setMaximum(obereGrenze);
+        if (Long.parseLong(maxUpload.getText()) != ajSettings.getMaxUploadInKB()){
+          dirty = true;
+          ajSettings.setMaxUpload(Long.parseLong(maxUpload.getText()) * 1024);
+        }
       }
     });
     maxDownload.setDocument(new NumberInputVerifier());
     maxDownload.setHorizontalAlignment(JLabel.RIGHT);
+    maxDownload.addFocusListener(new FocusAdapter() {
+      public void focusLost(FocusEvent e) {
+        if (Long.parseLong(maxDownload.getText()) != ajSettings.getMaxDownloadInKB()){
+          dirty = true;
+          ajSettings.setMaxDownload(Long.parseLong(maxDownload.getText()) * 1024);
+        }
+      }
+    });
     pinggrenze.setDocument(new NumberInputVerifier());
 
     LanguageSelector languageSelector = LanguageSelector.getInstance();
@@ -142,6 +154,8 @@ public class ODVerbindungPanel extends JPanel {
       public void stateChanged(ChangeEvent e){
         JSlider slider = (JSlider)e.getSource();
         kbSlot.setText(Integer.toString(slider.getValue()) + " kb/s");
+        dirty = true;
+        ajSettings.setSpeedPerSlot(slider.getValue());
       }
     });
 
