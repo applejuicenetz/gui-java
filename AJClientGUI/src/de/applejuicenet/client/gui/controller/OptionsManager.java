@@ -9,7 +9,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.14 2003/06/24 14:32:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.15 2003/07/01 14:55:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.15  2003/07/01 14:55:06  maj0r
+ * Unnütze Abfrage entfernt.
+ *
  * Revision 1.14  2003/06/24 14:32:27  maj0r
  * Klassen zum Sortieren von Tabellen eingefügt.
  * Servertabelle kann nun spaltenweise sortiert werden.
@@ -141,10 +144,8 @@ public class OptionsManager
     }
     setAttributeByTagName(new String[] {"options", "remote", "host"}
                           , remote.getHost());
-    if (remote.isRemoteUsed()) {
-      setAttributeByTagName(new String[] {"options", "remote", "use"}
+    setAttributeByTagName(new String[] {"options", "remote", "use"}
                             , (remote.isRemoteUsed() ? "1" : "0"));
-    }
   }
 
   public boolean saveAJSettings(AJSettings ajSettings) {
