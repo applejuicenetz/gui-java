@@ -46,8 +46,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -164,6 +167,9 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 	private Icon zeigenIcon = null;
 	private boolean firewalled = false;
 	private String firewallWarning;
+	private String alreadyLoaded;
+	private String invalidLink;
+	private String linkFailure;
 	
 	public static void initThemes() {
 		try {
@@ -920,6 +926,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 							String link = "";
 							ApplejuiceFassade af = ApplejuiceFassade
 									.getInstance();
+							final StringBuffer returnValues = new StringBuffer();
 							while ((line = reader.readLine()) != null) {
 								filename = line;
 								checksum = reader.readLine();
@@ -927,9 +934,35 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 								if (size != null && checksum != null) {
 									link = "ajfsp://file|" + filename + "|"
 											+ checksum + "|" + size + "/";
-									af.processLink(link, targetDir);
+									String result = af.processLink(link, targetDir);
+									if (result.indexOf("ok") == 0){
+									    returnValues.append("'" + link + "' OK\n");
+									}
+									else if (result.indexOf("already downloaded") != -1){
+									    returnValues.append(alreadyLoaded.replaceAll("%s", link) + "\n");
+									}
+									else if (result.indexOf("incorrect link") != -1){
+									    returnValues.append(invalidLink.replaceAll("%s", link) + "\n");
+									}
+									else if (result.indexOf("failure") != -1){
+									    returnValues.append(linkFailure + "\n");
+									}
 								}
 							}
+						    SwingUtilities.invokeLater(new Runnable(){
+						        public void run(){
+						            JTextPane textArea = new JTextPane();
+						            textArea.setPreferredSize(new Dimension(550, 300));
+						            textArea.setMaximumSize(new Dimension(550, 300));
+						            textArea.setEditable(false);
+						            textArea.setBackground(new JLabel().getBackground());
+						            textArea.setText(returnValues.toString());
+									JOptionPane.showMessageDialog(AppleJuiceDialog
+											.getApp(), new JScrollPane(textArea), "appleJuice Client",
+											JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+						        }
+						    });							
+							
 						} catch (FileNotFoundException ex) {
 							;
 							//nix zu tun
@@ -1022,6 +1055,12 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 			firewallWarning = ZeichenErsetzer
 					.korrigiereUmlaute(languageSelector
 					.getFirstAttrbuteByTagName(".root.mainform.firewallwarning.caption"));
+			alreadyLoaded = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+					.getFirstAttrbuteByTagName(".root.javagui.downloadform.bereitsgeladen"));
+			invalidLink = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+					.getFirstAttrbuteByTagName(".root.javagui.downloadform.falscherlink"));
+			linkFailure = ZeichenErsetzer.korrigiereUmlaute(languageSelector
+					.getFirstAttrbuteByTagName(".root.javagui.downloadform.sonstigerlinkfehlerkurz"));
 			if (firewalled) {
 				statusbar[0].setToolTipText(firewallWarning);
 			} 
