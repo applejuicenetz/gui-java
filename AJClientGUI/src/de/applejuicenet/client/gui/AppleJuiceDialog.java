@@ -75,7 +75,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.99 2004/02/26 13:59:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.100 2004/02/26 15:12:47 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -84,6 +84,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.100  2004/02/26 15:12:47  maj0r
+ * Umgang mit ZeichenErsetzer korrigiert.
+ *
  * Revision 1.99  2004/02/26 13:59:06  maj0r
  * Aktivieren/Deaktivieren-Menuepunkt im LanguageSelector aufgenommen.
  *
@@ -1078,7 +1081,8 @@ public class AppleJuiceDialog
                 " (Core " + versionsNr +
                 " - GUI " + ApplejuiceFassade.GUI_VERSION + ")";
             setTitle(titel);
-            keinServer = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.keinserver");
+            keinServer = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.keinserver"));
             themeSupportTitel = ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.caption"));
