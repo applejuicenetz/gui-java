@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.shared.LoggerUtils;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.7 2003/07/01 14:58:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.8 2003/07/02 13:54:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.LoggerUtils;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.8  2003/07/02 13:54:34  maj0r
+ * JTreeTable komplett überarbeitet.
+ *
  * Revision 1.7  2003/07/01 14:58:07  maj0r
  * Loggerüberwachung eingefügt und unnützen Kram entfernt.
  *
@@ -40,7 +43,7 @@ public class ShareXMLHolder
 
   public ShareXMLHolder() {
     super("/xml/share.xml", "");
-      logger = Logger.getLogger(getClass());
+    logger = Logger.getLogger(getClass());
   }
 
   public void update() {
@@ -67,6 +70,7 @@ public class ShareXMLHolder
     Element e = null;
     String id_key = null;
     String filename = null;
+    String shortfilename = null;
     String size = null;
     String checksum = null;
     ShareDO share = null;
@@ -74,9 +78,10 @@ public class ShareXMLHolder
       e = (Element) nodes.item(i);
       id_key = e.getAttribute("id");
       filename = e.getAttribute("filename");
+      shortfilename = e.getAttribute("shortfilename");
       size = e.getAttribute("size");
       checksum = e.getAttribute("checksum");
-      share = new ShareDO(id_key, filename, size, checksum);
+      share = new ShareDO(id_key, filename, shortfilename, size, checksum);
       shareMap.put(id_key, share);
     }
     if (logger.isDebugEnabled()){

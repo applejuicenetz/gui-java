@@ -9,12 +9,12 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.gui.tables.download.DownloadTableCellRenderer;
-import de.applejuicenet.client.gui.tables.JTreeTable;
-import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.tables.JTreeTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.24 2003/07/01 18:49:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.25 2003/07/02 13:54:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.25  2003/07/02 13:54:34  maj0r
+ * JTreeTable komplett überarbeitet.
+ *
  * Revision 1.24  2003/07/01 18:49:03  maj0r
  * Struktur verändert.
  *
@@ -40,7 +43,7 @@ import de.applejuicenet.client.shared.*;
 
 public class DownloadPanel
     extends JPanel
-    implements LanguageListener, RegisterI {
+    implements LanguageListener, RegisterI, DataUpdateListener {
   private JTextField downloadLink = new JTextField();
   private JButton btnStartDownload = new JButton("Download");
   private PowerDownloadPanel powerDownloadPanel = new PowerDownloadPanel();
@@ -125,8 +128,7 @@ public class DownloadPanel
           TreeTableModelAdapter model = (TreeTableModelAdapter) downloadTable.
               getModel();
           int selectedRow = downloadTable.getSelectedRow();
-          ( (TreeTableModelAdapter) downloadTable.getModel()).
-              expandOrCollapseRow(selectedRow);
+          ( (TreeTableModelAdapter) downloadTable.getModel()).expandOrCollapseRow(selectedRow);
         }
       }
 
@@ -190,10 +192,11 @@ public class DownloadPanel
 
     add(topPanel, BorderLayout.CENTER);
     add(bottomPanel, BorderLayout.SOUTH);
+    DataManager.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
   }
 
   public void registerSelected() {
-//    DataManager.getInstance().updateModifiedXML();
+    //    nix zu tun
   }
 
   public void fireLanguageChanged() {
@@ -277,4 +280,8 @@ public class DownloadPanel
         getFirstAttrbuteByTagName(new String[] {"mainform",
                                   "Clearfinishedentries1", "caption"})));
   }
+
+    public void fireContentChanged(int type, Object content) {
+        downloadTable.updateUI();
+    }
 }

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/MapSetStringKey.java,v 1.1 2003/07/01 14:50:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/MapSetStringKey.java,v 1.2 2003/07/02 13:54:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: MapSetStringKey.java,v $
+ * Revision 1.2  2003/07/02 13:54:34  maj0r
+ * JTreeTable komplett überarbeitet.
+ *
  * Revision 1.1  2003/07/01 14:50:45  maj0r
  * Inner-Class Key ausgelagert und umbenannt.
  *
@@ -31,7 +34,7 @@ public class MapSetStringKey {
     public boolean equals(Object object){
         if (object == null || !(object instanceof MapSetStringKey))
             return false;
-        return value.compareToIgnoreCase(((MapSetStringKey)object).getValue())==0;
+        return value.compareTo(((MapSetStringKey)object).getValue())==0;
     }
 
     public int hashCode() {
