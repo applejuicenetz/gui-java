@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.exception;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/exception/Attic/WebSiteNotFoundException.java,v 1.8 2004/02/05 23:11:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/exception/Attic/WebSiteNotFoundException.java,v 1.9 2004/02/12 13:22:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.exception;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebSiteNotFoundException.java,v $
+ * Revision 1.9  2004/02/12 13:22:54  maj0r
+ * Mehr Logging fuer WebSiteNotFoundException eingebaut.
+ *
  * Revision 1.8  2004/02/05 23:11:28  maj0r
  * Formatierung angepasst.
  *
@@ -32,6 +35,11 @@ public class WebSiteNotFoundException
 
     public WebSiteNotFoundException(int errorCode) {
         super("Die Webseite konnte nicht aufgerufen werden.");
+        error = errorCode;
+    }
+
+    public WebSiteNotFoundException(int errorCode, Throwable t) {
+        super("Die Webseite konnte nicht aufgerufen werden.", t);
         error = errorCode;
     }
 
