@@ -30,7 +30,7 @@ import de.applejuicenet.client.AppleJuiceClient;
 import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.21 2004/07/09 14:31:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.22 2004/07/15 06:22:36 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -62,10 +62,10 @@ public class ODVerbindungPanel
     private Logger logger;
     private Icon menuIcon;
     private String menuText;
-    private JButton wizzard = new JButton("Wizzard starten");
-    private JDialog parent;
+    private JButton wizzard = new JButton();
+    private OptionsDialog parent;
 
-    public ODVerbindungPanel(JDialog parent, AJSettings ajSettings) {
+    public ODVerbindungPanel(OptionsDialog parent, AJSettings ajSettings) {
         logger = Logger.getLogger(getClass());
         this.parent = parent;
         this.ajSettings = ajSettings;
@@ -199,6 +199,8 @@ public class ODVerbindungPanel
             getFirstAttrbuteByTagName(".root.javagui.options.verbindung.label6")));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.einstform.connectionsheet.caption"));
+        wizzard.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(".root.javagui.options.verbindung.labelwizard")));
         kbSlot = new JLabel();
 
         int untereGrenze = (int) Math.pow( (double) ajSettings.getMaxUploadInKB(),
@@ -317,15 +319,7 @@ public class ODVerbindungPanel
 
         add(panel1, BorderLayout.NORTH);
 
-        maxUpload.setText(Long.toString(ajSettings.getMaxUploadInKB()));
-        maxDownload.setText(Long.toString(ajSettings.getMaxDownloadInKB()));
-        maxVerbindungen.setText(Long.toString(ajSettings.getMaxConnections()));
-        kbSlider.setValue(ajSettings.getSpeedPerSlot());
-        kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
-        automaticConnect.setSelected(ajSettings.isAutoConnect());
-        maxVerbindungenProTurn.setText(Long.toString(ajSettings.
-            getMaxNewConnectionsPerTurn()));
-        maxSourcesPerFile.setText(Long.toString(ajSettings.getMaxSourcesPerFile()));
+        reloadSettings();
     }
 
     public Icon getIcon() {
@@ -338,5 +332,19 @@ public class ODVerbindungPanel
 
     public void displayConnectionWizard() {
         AppleJuiceClient.showConnectionWizard(parent, ajSettings);
+        parent.reloadSettings();
+    }
+
+    public void reloadSettings() {
+        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
+        maxUpload.setText(Long.toString(ajSettings.getMaxUploadInKB()));
+        maxDownload.setText(Long.toString(ajSettings.getMaxDownloadInKB()));
+        maxVerbindungen.setText(Long.toString(ajSettings.getMaxConnections()));
+        kbSlider.setValue(ajSettings.getSpeedPerSlot());
+        kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
+        automaticConnect.setSelected(ajSettings.isAutoConnect());
+        maxVerbindungenProTurn.setText(Long.toString(ajSettings.
+            getMaxNewConnectionsPerTurn()));
+        maxSourcesPerFile.setText(Long.toString(ajSettings.getMaxSourcesPerFile()));
     }
 }

@@ -41,7 +41,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.30 2004/07/09 12:42:01 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.31 2004/07/15 06:22:36 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -133,21 +133,17 @@ public class ODStandardPanel
     private void init() throws Exception {
         OptionsManager optionsManager = OptionsManagerImpl.getInstance();
         IconManager im = IconManager.getInstance();
+        reloadSettings();
         menuIcon = im.getIcon("opt_standard");
         port.setDocument(new NumberInputVerifier());
         xmlPort.setDocument(new NumberInputVerifier());
-        temp.setText(ajSettings.getTempDir());
         temp.setEditable(false);
         temp.setBackground(Color.WHITE);
-        incoming.setText(ajSettings.getIncomingDir());
         incoming.setEditable(false);
         incoming.setBackground(Color.WHITE);
         browser.setEditable(false);
         browser.setBackground(Color.WHITE);
         browser.setText(optionsManager.getStandardBrowser());
-        port.setText(Long.toString(ajSettings.getPort()));
-        xmlPort.setText(Long.toString(ajSettings.getXMLPort()));
-        nick.setText(ajSettings.getNick());
         port.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
                 int portNr = Integer.parseInt(port.getText());
@@ -488,6 +484,15 @@ public class ODStandardPanel
 
     public String getMenuText() {
         return menuText;
+    }
+
+    public void reloadSettings() {
+        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
+        temp.setText(ajSettings.getTempDir());
+        incoming.setText(ajSettings.getIncomingDir());
+        port.setText(Long.toString(ajSettings.getPort()));
+        xmlPort.setText(Long.toString(ajSettings.getXMLPort()));
+        nick.setText(ajSettings.getNick());
     }
 
     class DirectoryChooserMouseAdapter

@@ -27,7 +27,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.16 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.17 2004/07/15 06:22:36 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,6 +36,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginPanel.java,v $
+ * Revision 1.17  2004/07/15 06:22:36  loevenwong
+ * Anzeige nach erneutem Wizardstart aktualisiert (Danke UP^).
+ *
  * Revision 1.16  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -225,5 +228,9 @@ public class ODPluginPanel
 
     public String getMenuText() {
         return menuText;
+    }
+
+    public void reloadSettings() {
+        // nothing to do...
     }
 }

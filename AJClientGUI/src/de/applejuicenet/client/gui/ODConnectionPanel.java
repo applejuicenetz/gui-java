@@ -24,7 +24,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.16 2004/07/05 09:18:22 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.17 2004/07/15 06:22:36 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -147,7 +147,7 @@ public class ODConnectionPanel
                     }
                     else {
                         super.keyPressed(ke);
-                    }        		
+                    }
         	}});
             passwortNeu.addKeyListener(new KeyAdapter() {
                 public void keyPressed(KeyEvent ke) {
@@ -253,5 +253,9 @@ public class ODConnectionPanel
     public void setXMLPort(String port) {
         this.port.setText(port);
         this.remote.setXmlPort(Integer.parseInt(port));
+    }
+
+    public void reloadSettings() {
+        // nothing to do...
     }
 }

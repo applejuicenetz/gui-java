@@ -34,7 +34,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.20 2004/07/09 12:42:01 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.22 2004/07/15 06:22:36 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -52,7 +52,7 @@ public class ODAnsichtPanel
     private Settings settings;
     JCheckBox cmbAktiv = new JCheckBox();
     JCheckBox cmbDownloadUebersicht = new JCheckBox();
-    private JCheckBox enableToolTip = new JCheckBox("Tooltipp anzeigen (Neustart erforderlich)");
+    private JCheckBox enableToolTip = new JCheckBox();
     private JCheckBox cmbStartscreenZeigen = new JCheckBox();
     private Logger logger;
     private Icon menuIcon;
@@ -86,16 +86,15 @@ public class ODAnsichtPanel
         cmbStartscreenZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.options.ansicht.zeigestartscreen")));
+        enableToolTip.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(".root.javagui.options.ansicht.zeigetooltipps")));
+
         setLayout(new BorderLayout());
         farbeFertigerDownload.setOpaque(true);
-        farbeFertigerDownload.setBackground(settings.
-                                            getDownloadFertigHintergrundColor());
         farbeFertigerDownload.addMouseListener(new ColorChooserMouseAdapter());
         farbeQuelle.setOpaque(true);
         farbeQuelle.setBackground(settings.getQuelleHintergrundColor());
         farbeQuelle.addMouseListener(new ColorChooserMouseAdapter());
-        cmbAktiv.setSelected(settings.isFarbenAktiv());
-        cmbDownloadUebersicht.setSelected(settings.isDownloadUebersicht());
         OptionsManager om = OptionsManagerImpl.getInstance();
         cmbDownloadUebersicht.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
@@ -115,7 +114,6 @@ public class ODAnsichtPanel
                 settings.setFarbenAktiv(cmbAktiv.isSelected());
             }
         });
-        enableToolTip.setSelected(settings.isToolTipEnabled());
         enableToolTip.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 dirty = true;
@@ -247,6 +245,8 @@ public class ODAnsichtPanel
         panel2.add(panel3, BorderLayout.SOUTH);
 
         add(panel2, BorderLayout.WEST);
+
+        reloadSettings();
     }
 
     public boolean save() {
@@ -292,6 +292,10 @@ public class ODAnsichtPanel
 
     public String getProgramPfad() {
         return openProgram.getText();
+    }
+
+    public void reloadSettings() {
+        // nix zu tun
     }
 
     class ColorChooserMouseAdapter
