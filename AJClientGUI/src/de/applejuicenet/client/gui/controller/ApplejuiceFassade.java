@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.166 2004/11/29 10:50:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.167 2004/11/29 20:57:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -299,6 +299,21 @@ public class ApplejuiceFassade {
             if (informer.containsKey(key)){
                 DataUpdateInformer anInformer = (DataUpdateInformer)informer.get(key);
                 anInformer.addDataUpdateListener(listener);
+            }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error(ERROR_MESSAGE, e);
+            }
+        }
+    }
+
+    public void removeDataUpdateListener(DataUpdateListener listener, int type) {
+        try {
+            String key = Integer.toString(type);
+            if (informer.containsKey(key)){
+                DataUpdateInformer anInformer = (DataUpdateInformer)informer.get(key);
+                anInformer.removeDataUpdateListener(listener);
             }
         }
         catch (Exception e) {

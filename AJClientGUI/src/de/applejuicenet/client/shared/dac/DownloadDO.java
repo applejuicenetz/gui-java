@@ -1,8 +1,11 @@
 package de.applejuicenet.client.shared.dac;
 
+import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -12,7 +15,7 @@ import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.29 2004/10/15 15:54:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.30 2004/11/29 20:57:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,7 +25,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
  *
  */
 
-public class DownloadDO
+public class DownloadDO extends PropertyChangeAdapter
     implements DownloadColumnValue {
 
     private static Logger logger;
@@ -58,6 +61,7 @@ public class DownloadDO
     private String speedAsString;
 
     private Map sourcen = new HashMap();
+    private Set propertyChangeListener = new HashSet();
 
     public DownloadDO(int id){
         this.id = id;
@@ -167,31 +171,60 @@ public class DownloadDO
             && status != newStatus){
             SoundPlayer.getInstance().playSound(SoundPlayer.KOMPLETT);
         }
-        this.status = newStatus;
+        if (status != newStatus){
+            this.notifyPropertyChangeListener(
+                    new PropertyChangeEvent(this, "status", Integer.toString(status), Integer.toString(newStatus)));
+            status = newStatus;
+        }
+        else{
+            status = newStatus;
+        }
     }
 
     public String getFilename() {
         return filename;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setFilename(String newFilename) {
+        if (filename != null && !filename.equals(newFilename)){
+            notifyPropertyChangeListener(
+                    new PropertyChangeEvent(this, "filename", filename, newFilename));
+            filename = newFilename;
+        }
+        else{
+            filename = newFilename;
+        }
     }
 
     public String getTargetDirectory() {
         return targetDirectory;
     }
 
-    public void setTargetDirectory(String targetDirectory) {
-        this.targetDirectory = targetDirectory;
+    public void setTargetDirectory(String newTargetDirectory) {
+        if (targetDirectory != null && !targetDirectory.equals(newTargetDirectory)){
+            notifyPropertyChangeListener(
+                    new PropertyChangeEvent(this, "targetdirectory", targetDirectory, newTargetDirectory));
+            targetDirectory = newTargetDirectory;
+        }
+        else{
+            targetDirectory = newTargetDirectory;
+        }
     }
 
     public int getPowerDownload() {
         return powerDownload;
     }
 
-    public void setPowerDownload(int powerDownload) {
-        this.powerDownload = powerDownload;
+    public void setPowerDownload(int newPowerDownload) {
+        if ( powerDownload != newPowerDownload ){
+            notifyPropertyChangeListener(
+                    new PropertyChangeEvent(this, "powerdownload", Integer.toString(powerDownload), 
+                            Integer.toString(newPowerDownload)));
+            powerDownload = newPowerDownload;
+        }
+        else{
+            powerDownload = newPowerDownload;
+        }
     }
 
     public int getId() {
@@ -210,8 +243,16 @@ public class DownloadDO
         return ready;
     }
 
-    public void setReady(long ready) {
-        this.ready = ready;
+    public void setReady(long newReady) {
+        if ( ready != newReady ){
+            notifyPropertyChangeListener(
+                    new PropertyChangeEvent(this, "ready", Long.toString(ready), 
+                            Long.toString(newReady)));
+            ready = newReady;
+        }
+        else{
+            ready = newReady;
+        }
     }
 
     public long getRestZeit() {

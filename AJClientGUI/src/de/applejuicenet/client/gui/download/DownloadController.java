@@ -6,6 +6,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.DoHolder;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
@@ -63,6 +65,8 @@ public class DownloadController extends GuiController {
 	private static final int START_POWERDOWNLOAD = 12;
 	private static final int NODE_ITEM_CLICKED = 13;
 	private static final int MAYBE_SHOW_POPUP = 14;
+	
+	private static final int DOWNLOAD_PROPERTY_CHANGE_EVENT = 15;
 
 	private DownloadPanel downloadPanel;
 
@@ -222,6 +226,10 @@ public class DownloadController extends GuiController {
 				nodeItemClicked(source);
 				break;
 			}
+			case DOWNLOAD_PROPERTY_CHANGE_EVENT:{
+				downloadPropertyChanged((PropertyChangeEvent)source);
+				break;
+			}
 			case MAYBE_SHOW_POPUP:{
 				maybeShowPopup((MouseEvent)source);
 				break;
@@ -234,6 +242,15 @@ public class DownloadController extends GuiController {
 
 	public JComponent getComponent() {
 		return downloadPanel;
+	}
+	
+	private void downloadPropertyChanged(PropertyChangeEvent evt){
+	    if (evt.getPropertyName().equals(DoHolder.VALUE_ADDED)){
+	        
+	    }
+	    else if (evt.getPropertyName().equals(DoHolder.VALUE_REMOVED)){
+	        
+	    }
 	}
 	
 	private void clearReadyDownloads(){
@@ -898,23 +915,25 @@ public class DownloadController extends GuiController {
 
 	protected void contentChanged(int type, final Object content) {
 		if (type == DataUpdateListener.DOWNLOAD_CHANGED) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						HashMap downloads = (HashMap) content;
-						((DownloadRootNode) downloadPanel.getDownloadModel().getRoot())
-								.setDownloadMap(downloads);
-						DownloadDirectoryNode.setDownloads(downloads);
-						if (panelSelected) {
-							downloadPanel.getDownloadTable().updateUI();
-						}
-					} catch (Exception e) {
-						if (logger.isEnabledFor(Level.ERROR)) {
-							logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+		    ApplejuiceFassade.getInstance().removeDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
+		    DoHolder downloads = (DoHolder) content;
+		    downloads.addPropertyChangeListener(
+		            new DownloadDOPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
+			((DownloadRootNode) downloadPanel.getDownloadModel().getRoot()).setDownloadMap(downloads);
+			DownloadDirectoryNode.setDownloads(downloads);
+			if (panelSelected) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						try {
+								downloadPanel.getDownloadTable().updateUI();
+						} catch (Exception e) {
+							if (logger.isEnabledFor(Level.ERROR)) {
+								logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+							}
 						}
 					}
-				}
-			});
+				});
+			}
 		}
 	}
 
