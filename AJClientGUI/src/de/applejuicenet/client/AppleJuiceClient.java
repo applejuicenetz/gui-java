@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.20 2003/08/24 19:43:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.21 2003/08/25 08:01:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.21  2003/08/25 08:01:21  maj0r
+ * SplashScreen-Bild geaendert.
+ *
  * Revision 1.20  2003/08/24 19:43:23  maj0r
  * Splashscreen eingefuegt.
  *
@@ -125,7 +128,7 @@ public class AppleJuiceClient {
             System.exit( -1);
         }
       }
-      Splash splash = new Splash(IconManager.getInstance().getIcon("applejuiceinfobanner").getImage());
+      Splash splash = new Splash(IconManager.getInstance().getIcon("splashscreen").getImage());
       splash.show();
       AppleJuiceDialog theApp = new AppleJuiceDialog();
       Dimension appDimension = theApp.getSize();
