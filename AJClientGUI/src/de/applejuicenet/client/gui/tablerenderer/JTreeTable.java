@@ -11,6 +11,8 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import java.util.Hashtable;
 import java.util.HashMap;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.shared.IconManager;
 
 public class JTreeTable
     extends JTable
@@ -79,7 +81,6 @@ public class JTreeTable
       }
       else {
         setBackground(table.getBackground());
-
       }
       visibleRow = row;
       return this;

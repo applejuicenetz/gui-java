@@ -110,7 +110,10 @@ public class DownloadModel
         case 8:
           return download.getPowerdownload();
         case 9:
-          return download.getVersion().getVersion();
+          if (download.getVersion()!=null)
+            return download.getVersion().getVersion();
+          else
+            return "";
         default:
           return "";
       }

@@ -10,12 +10,15 @@ package de.applejuicenet.client.shared;
  */
 
 public class Version {
+  public static int LINUX = 0;
+  public static int WIN32 = 1;
+
   private String versionNr;
   private String programmierSprache;
-  private String betriebsSystem;
+  private int betriebsSystem;
 
   public Version(String versionNr, String programmierSprache,
-                 String betriebsSystem) {
+                 int betriebsSystem) {
     this.versionNr = versionNr;
     this.programmierSprache = programmierSprache;
     this.betriebsSystem = betriebsSystem;
@@ -32,11 +35,20 @@ public class Version {
     return programmierSprache;
   }
 
-  public String getBetriebsSystem() {
+  public int getBetriebsSystem() {
     return betriebsSystem;
   }
 
-  public void setBetriebsSystem(String betriebsSystem) {
+  public String getBetriebsSystemAsString() {
+    String result = "";
+    if (betriebsSystem == LINUX)
+      result = "Linux";
+    else if (betriebsSystem == WIN32)
+      result = "Win32";
+    return result;
+  }
+
+  public void setBetriebsSystem(int betriebsSystem) {
     this.betriebsSystem = betriebsSystem;
   }
 
@@ -48,4 +60,12 @@ public class Version {
     this.programmierSprache = programmierSprache;
   }
 
+  public static int getOSTypByOSName(String OSName){
+    int result = -1;
+    if (OSName.compareToIgnoreCase("Windows NT")==0)
+      result = WIN32;
+    else if (OSName.compareToIgnoreCase("Linux")==0)
+      result = LINUX;
+    return result;
+  }
 }

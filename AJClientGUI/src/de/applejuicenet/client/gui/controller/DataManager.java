@@ -61,14 +61,19 @@ public class DataManager {   //Singleton-Implementierung
     serverListener = new HashSet();
     serverMap = new HashMap();
    //Dummy-Implementierung
-   Version version = new Version("0.27", "Java", "Win");
+   Version version = new Version("0.27", "Java", Version.WIN32);
+   Version version2 = new Version("0.28", "Java", Version.LINUX);
    String versionText;
    DownloadSourceDO source = new DownloadSourceDO(false, "datei2.jpg", DownloadSourceDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "Maj0r", null);
-   HashSet sourcen = new HashSet();
-   sourcen.add(source);
+   DownloadSourceDO source2 = new DownloadSourceDO(false, "datei3.jpg", DownloadSourceDO.VERSUCHEINDIREKT, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version2, "Maj0r", null);
+   HashSet sourcen1 = new HashSet();
+   sourcen1.add(source);
+   HashSet sourcen2 = new HashSet();
+   sourcen2.add(source);
+   sourcen2.add(source2);
    downloads = new DownloadSourceDO[2];
-   downloads[0] = new DownloadSourceDO(true, "dateiliste.mov", DownloadSourceDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
-   downloads[1] = new DownloadSourceDO(true, "Film.avi", DownloadSourceDO.WARTESCHLANGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "", sourcen);
+   downloads[0] = new DownloadSourceDO(true, "dateiliste.mov", DownloadSourceDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", null, "", sourcen1);
+   downloads[1] = new DownloadSourceDO(true, "Film.avi", DownloadSourceDO.WARTESCHLANGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", null, "", sourcen2);
    //Dummy-Ende
 
    //load XMLs
@@ -78,7 +83,7 @@ public class DataManager {   //Singleton-Implementierung
    shareXML = new WebXMPParser("/xml/share.xml", "");
 
    String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[]{"applejuice", "generalinformation", "version"}, true);
-   coreVersion = new Version(versionsTag, "Java", (String) System.getProperties().get("os.name"));
+   coreVersion = new Version(versionsTag, "Java", Version.getOSTypByOSName((String) System.getProperties().get("os.name")));
 //   updateDownloads();
   }
 

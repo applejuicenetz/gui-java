@@ -24,6 +24,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
+import de.applejuicenet.client.gui.tablerenderer.DownloadTableCellRenderer;
+import javax.swing.SwingUtilities;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -106,7 +108,20 @@ public class DownloadPanel extends JPanel implements LanguageListener, RegisterI
 
     downloadModel = new DownloadModel();
     downloadTable = new JTreeTable(downloadModel);
+
+    TableColumn tc = downloadTable.getColumnModel().getColumn(9);
+    tc.setCellRenderer(new DownloadTableCellRenderer());
+
+
     downloadTable.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent me){
+        Point p = me.getPoint();
+        int iRow = downloadTable.rowAtPoint(p);
+        int iCol = downloadTable.columnAtPoint(p);
+        downloadTable.setRowSelectionInterval(iRow, iRow);
+        downloadTable.setColumnSelectionInterval(iCol, iCol);
+      }
+
       public void mouseReleased(MouseEvent e) {
         super.mouseReleased(e);
         if (e.isPopupTrigger()) {
