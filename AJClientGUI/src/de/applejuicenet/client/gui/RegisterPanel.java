@@ -16,9 +16,11 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.31 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.32 2004/03/02 17:37:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +29,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.32  2004/03/02 17:37:10  maj0r
+ * Pluginverwendung vereinfacht.
+ *
  * Revision 1.31  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -180,6 +185,15 @@ public class RegisterPanel
             if (tempListe[i].toLowerCase().endsWith(".jar")) {
                 URL url = null;
                 try {
+                    File pluginFile = new File(path + tempListe[i]);
+                    if (pluginFile.isFile()) {
+                        //testen, ob es wirklich ein skinfile ist
+                        ZipFile jf = new ZipFile(pluginFile);
+                        ZipEntry entry = jf.getEntry("plugin_properties.xml");
+                        if (entry==null){
+                            continue;
+                        }
+                    }
                     url = new URL("file://" + path + tempListe[i]);
                     jarLoader = new PluginJarClassLoader(url);
                     PluginConnector aPlugin = jarLoader.getPlugin(path +

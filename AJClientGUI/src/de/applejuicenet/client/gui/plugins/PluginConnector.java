@@ -35,36 +35,55 @@ public abstract class PluginConnector
 
     protected ImageIcon pluginIcon = null;
     private boolean initialized = false;
+    private final PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder;
+
+    protected PluginConnector(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder){
+        this.pluginsPropertiesXMLHolder = pluginsPropertiesXMLHolder;
+    }
+
+    public final String getXMLAttributeByTagName(String identifier){
+        return pluginsPropertiesXMLHolder.getXMLAttributeByTagName(identifier);
+    }
 
     /**
      *
      * @return String: Titel, der als Reitertext ausgegeben wird
      */
-    public abstract String getTitle();
+    public final String getTitle(){
+        return getXMLAttributeByTagName(".root.general.title");
+    }
 
     /**
      *
      * @return String: Versions-Nr
      */
-    public abstract String getVersion();
+    public final String getVersion(){
+        return getXMLAttributeByTagName(".root.general.version");
+    }
 
     /**
      *
      * @return String: Name des Autors
      */
-    public abstract String getAutor();
+    public final String getAutor(){
+        return getXMLAttributeByTagName(".root.general.author");
+    }
 
     /**
      *
      * @return boolean: Liefert true zurück, wenn das Plugin eine sichtbare Oberflaeche haben soll, sonst false
      */
-    public abstract boolean istReiter();
+    public final boolean istReiter(){
+        return getXMLAttributeByTagName(".root.general.istab").toLowerCase().equals("true");
+    }
 
     /**
      *
      * @return String: Liefert eine Kurzbeschreibung des Plugins zurück.
      */
-    public abstract String getBeschreibung();
+    public final String getBeschreibung(){
+        return getXMLAttributeByTagName(".root.general.description");
+    }
 
     /**
      *

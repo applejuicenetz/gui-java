@@ -12,9 +12,10 @@ import java.util.zip.ZipEntry;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.gui.plugins.PluginsPropertiesXMLHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.13 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.14 2004/03/02 17:37:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +24,9 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
  * @author: Maj0r aj@tkl-soft.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.14  2004/03/02 17:37:10  maj0r
+ * Pluginverwendung vereinfacht.
+ *
  * Revision 1.13  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -101,7 +105,7 @@ public class PluginJarClassLoader
         for (Enumeration e = jf.entries(); e.hasMoreElements(); ) {
             ZipEntry entry = (ZipEntry) e.nextElement();
             entryName = entry.getName();
-            if (entryName.indexOf(".class") == -1) {
+            if (entryName.indexOf(".class") == -1 && !entryName.equals("plugin_properties.xml")) {
                 continue;
             }
             InputStream is = jf.getInputStream(entry);
@@ -113,10 +117,16 @@ public class PluginJarClassLoader
                 int incr = is.read(buf, read, l - read);
                 read += incr;
             }
-            String name = entryName.replace('/', '.');
-            name = name.replaceAll(".class", "");
-            defineClass(name, buf, 0, buf.length);
-            classes.add(name);
+            if (entryName.equals("plugin_properties.xml")){
+                String xmlString = new String(buf, 0, buf.length);
+                PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder = new PluginsPropertiesXMLHolder(xmlString);
+            }
+            else{
+                String name = entryName.replace('/', '.');
+                name = name.replaceAll(".class", "");
+                defineClass(name, buf, 0, buf.length);
+                classes.add(name);
+            }
         }
     }
 }
