@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.22 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.23 2004/01/06 16:03:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.23  2004/01/06 16:03:00  maj0r
+ * Bug #13 umgesetzt (Danke an HabkeineMail)
+ * Powerdownload-Werte werden jetzt bei Klick auf einen Download / Quelle im Powerdownloadfeld angezeigt.
+ *
  * Revision 1.22  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -187,7 +191,7 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
 
     public void setDownloadDO(DownloadDO downloadDO) {
         try{
-            if (!settings.isDownloadUebersicht() || downloadDO==null){
+            if (downloadDO==null){
                 partListWorkerThread.interrupt();
                 actualDLDateiName.setText("");
                 actualDlOverviewTable.setPartList(null);
@@ -231,8 +235,9 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
             partListWorkerThread.interrupt();
             actualDLDateiName.setText("");
             actualDlOverviewTable.setPartList(null);
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)){
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
