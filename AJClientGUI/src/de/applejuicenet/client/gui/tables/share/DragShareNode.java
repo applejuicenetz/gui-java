@@ -2,9 +2,10 @@ package de.applejuicenet.client.gui.tables.share;
 
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
+import java.io.Serializable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/DragShareNode.java,v 1.1 2003/08/27 16:44:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/DragShareNode.java,v 1.2 2003/08/28 06:11:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,13 +14,16 @@ import java.awt.datatransfer.DataFlavor;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DragShareNode.java,v $
+ * Revision 1.2  2003/08/28 06:11:02  maj0r
+ * DragNDrop vervollstaendigt.
+ *
  * Revision 1.1  2003/08/27 16:44:42  maj0r
  * Unterstuetzung fuer DragNDrop teilweise eingebaut.
  *
  *
  */
 
-public class DragShareNode implements Transferable {
+public class DragShareNode implements Transferable, Serializable {
 
     private Object[] nodes;
 

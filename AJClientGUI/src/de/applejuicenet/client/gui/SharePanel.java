@@ -26,7 +26,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.30 2003/08/27 16:44:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.31 2003/08/28 06:11:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,6 +35,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.31  2003/08/28 06:11:02  maj0r
+ * DragNDrop vervollstaendigt.
+ *
  * Revision 1.30  2003/08/27 16:44:42  maj0r
  * Unterstuetzung fuer DragNDrop teilweise eingebaut.
  *
@@ -155,7 +158,7 @@ public class SharePanel
 
     private void jbInit() throws Exception {
         //todo
-        neueListe.setEnabled(false);
+//        neueListe.setEnabled(false);
 
         neueListe.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
