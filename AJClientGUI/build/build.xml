@@ -36,6 +36,7 @@
    <target name="help"/>
 
    <target name="gui-compile" description="compiles the appleJuice-gui">
+      <mkdir dir="${gui.compiledir}"/>
       <javac srcdir="${gui.srcdir}" destdir="${gui.compiledir}" debug="true">
          <classpath>
           <path refid="lib.path"/>
