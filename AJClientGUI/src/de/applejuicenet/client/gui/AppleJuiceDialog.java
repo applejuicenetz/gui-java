@@ -23,7 +23,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import com.l2fprod.gui.plaf.skin.Skin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.62 2003/11/19 17:05:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.63 2003/12/05 11:17:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,9 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.63  2003/12/05 11:17:11  maj0r
+ * Sobald man den richtigen Listener verwendet, funktionierts auch richtig...
+ *
  * Revision 1.62  2003/11/19 17:05:20  maj0r
  * Autom. Pwdl ueberarbeitet.
  *
@@ -534,8 +537,8 @@ public class AppleJuiceDialog
                         standardSkin = aSkin;
                         rb.setSelected(true);
                     }
-                    rb.addChangeListener(new ChangeListener() {
-                        public void stateChanged(ChangeEvent ce) {
+                    rb.addItemListener(new ItemListener() {
+                        public void itemStateChanged(ItemEvent ae) {
                             if (rb.isSelected()) {
                                 activateLaF(rb.getText());
                             }
