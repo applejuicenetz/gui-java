@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.7 2003/08/09 10:56:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.8 2003/08/10 21:08:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.8  2003/08/10 21:08:18  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.7  2003/08/09 10:56:38  maj0r
  * DownloadTabelle weitergeführt.
  *
@@ -126,13 +129,13 @@ public class DownloadModel
           case 2:
                 return parseGroesse(downloadDO.getGroesse());
           case 3:
-                return parseGroesse(downloadDO.getReady());
+                return parseGroesse(downloadDO.getBereitsGeladen());
           case 4:
                 return getSpeedAsString(downloadDO.getSpeedInBytes());
           case 5:
                 return downloadDO.getRestZeitAsString();
           case 7:
-                return parseGroesse(new Long(downloadDO.getGroesse().longValue()-downloadDO.getReady().longValue()));
+                return parseGroesse(new Long(downloadDO.getGroesse().longValue()-downloadDO.getBereitsGeladen().longValue()));
           case 8:
                 return powerdownload(downloadDO.getPowerDownload());
           default:
@@ -168,7 +171,7 @@ public class DownloadModel
             case 4:
                   {
                       if (downloadSourceDO.getStatus()!=DownloadSourceDO.UEBERTRAGUNG)
-                          return "0 Bytes/s";
+                          return "";
                       else
                           return getSpeedAsString((long)downloadSourceDO.getSpeed().intValue());
                   }

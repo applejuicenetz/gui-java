@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadTableCellRenderer;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.12 2003/08/09 10:57:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.13 2003/08/10 21:08:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.13  2003/08/10 21:08:18  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.12  2003/08/09 10:57:29  maj0r
  * UploadTabelle weitergeführt.
  *
@@ -55,6 +58,7 @@ public class UploadPanel
         LanguageSelector.getInstance().addLanguageListener(this);
         uploadDataTable = new JTable();
         uploadDataTable.setModel(new UploadDataTableModel());
+        uploadDataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         UploadTableCellRenderer renderer = new UploadTableCellRenderer();
         for (int i = 1; i < uploadDataTable.getColumnModel().getColumnCount(); i++) {
             uploadDataTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
@@ -108,12 +112,15 @@ public class UploadPanel
     }
 
     public void fireContentChanged(int type, Object content) {
-        if (type != DataUpdateListener.UPLOAD_CHANGED ||
+        if (type == DataUpdateListener.UPLOAD_CHANGED ||
                 !(content instanceof HashMap)) {
-            return;
+            int selected = uploadDataTable.getSelectedRow();
+            ((UploadDataTableModel) uploadDataTable.getModel()).setTable((HashMap)
+                    content);
+            if (selected != -1 && selected < uploadDataTable.getRowCount()) {
+              uploadDataTable.setRowSelectionInterval(selected, selected);
+            }
         }
-        ((UploadDataTableModel) uploadDataTable.getModel()).setTable((HashMap)
-                content);
     }
 
     public void registerSelected() {

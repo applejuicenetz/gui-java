@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.7 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.8 2003/08/10 21:08:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODVerbindungPanel.java,v $
+ * Revision 1.8  2003/08/10 21:08:18  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.7  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -86,6 +89,15 @@ public class ODVerbindungPanel
     });
     maxVerbindungen.setDocument(new NumberInputVerifier());
     maxVerbindungen.setHorizontalAlignment(JLabel.RIGHT);
+    maxVerbindungen.addFocusListener(new FocusAdapter() {
+      public void focusLost(FocusEvent e) {
+        if (Long.parseLong(maxVerbindungen.getText()) !=
+            ajSettings.getMaxConnections()) {
+          dirty = true;
+          ajSettings.setMaxConnections(Long.parseLong(maxVerbindungen.getText()));
+        }
+      }
+    });
     maxUpload.setDocument(new NumberInputVerifier());
     maxUpload.setHorizontalAlignment(JLabel.RIGHT);
     maxUpload.addFocusListener(new FocusAdapter() {
@@ -167,12 +179,16 @@ public class ODVerbindungPanel
         ajSettings.setSpeedPerSlot(slider.getValue());
       }
     });
-
     automaticConnect = new JCheckBox(ZeichenErsetzer.korrigiereUmlaute(
         languageSelector.
         getFirstAttrbuteByTagName(new String[] {"einstform", "autoconn",
                                   "caption"})));
-
+    automaticConnect.addChangeListener(new ChangeListener(){
+        public void stateChanged(ChangeEvent e) {
+          dirty = true;
+          ajSettings.setAutoConnect(automaticConnect.isSelected());
+        }
+    });
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.anchor = GridBagConstraints.NORTH;
     constraints.fill = GridBagConstraints.BOTH;
@@ -262,8 +278,10 @@ public class ODVerbindungPanel
 
     maxUpload.setText(Long.toString(ajSettings.getMaxUploadInKB()));
     maxDownload.setText(Long.toString(ajSettings.getMaxDownloadInKB()));
+    maxVerbindungen.setText(Long.toString(ajSettings.getMaxConnections()));
     kbSlider.setValue(ajSettings.getSpeedPerSlot());
     kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
+    automaticConnect.setSelected(ajSettings.isAutoConnect());
   }
 
   class SlotMouseAdapter

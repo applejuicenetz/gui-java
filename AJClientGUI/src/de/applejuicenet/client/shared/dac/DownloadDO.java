@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.4 2003/08/09 10:57:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.5 2003/08/10 21:08:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import java.util.Iterator;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.5  2003/08/10 21:08:18  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.4  2003/08/09 10:57:54  maj0r
  * Upload- und DownloadTabelle weitergeführt.
  *
@@ -239,5 +242,14 @@ public class DownloadDO {
             speed += (long)((DownloadSourceDO)it.next()).getSpeed().intValue();
         }
         return speed;
+    }
+
+    public Long getBereitsGeladen(){
+        long geladen = ready.longValue();
+        Iterator it = sourcen.values().iterator();
+        while (it.hasNext()){
+            geladen += (long)((DownloadSourceDO)it.next()).getBereitsGeladen();
+        }
+        return new Long(geladen);
     }
 }

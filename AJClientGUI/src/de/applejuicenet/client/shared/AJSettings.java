@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared;
 import java.util.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/AJSettings.java,v 1.3 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/AJSettings.java,v 1.4 2003/08/10 21:08:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.util.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AJSettings.java,v $
+ * Revision 1.4  2003/08/10 21:08:18  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.3  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -25,6 +28,8 @@ public class AJSettings {
   private boolean allowBrowse;
   private long maxUpload;
   private long maxDownload;
+  private long maxConnections;
+  private boolean autoConnect;
   private int speedPerSlot;
   private String incomingDir;
   private String tempDir;
@@ -33,7 +38,7 @@ public class AJSettings {
   public AJSettings(String nick, long port, long xmlPort,
                     boolean allowBrowse, long maxUpload, long maxDownload,
                     int speedPerSlot, String incomingDir, String tempDir,
-                    HashSet shareDirs) {
+                    HashSet shareDirs, long maxConnections, boolean autoConnect) {
     this.nick = nick;
     this.port = port;
     this.xmlPort = xmlPort;
@@ -44,6 +49,8 @@ public class AJSettings {
     this.incomingDir = incomingDir;
     this.tempDir = tempDir;
     this.shareDirs = shareDirs;
+    this.maxConnections = maxConnections;
+    this.autoConnect = autoConnect;
   }
 
   public String getNick() {
@@ -133,4 +140,20 @@ public class AJSettings {
   public void setShareDirs(HashSet shareDirs) {
     this.shareDirs = shareDirs;
   }
+
+    public long getMaxConnections() {
+        return maxConnections;
+    }
+
+    public void setMaxConnections(long maxConnections) {
+        this.maxConnections = maxConnections;
+    }
+
+    public boolean isAutoConnect() {
+        return autoConnect;
+    }
+
+    public void setAutoConnect(boolean autoConnect) {
+        this.autoConnect = autoConnect;
+    }
 }

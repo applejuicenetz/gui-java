@@ -6,7 +6,7 @@ import org.w3c.dom.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/SettingsXMLHolder.java,v 1.6 2003/07/01 06:17:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/SettingsXMLHolder.java,v 1.7 2003/08/10 21:08:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SettingsXMLHolder.java,v $
+ * Revision 1.7  2003/08/10 21:08:18  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.6  2003/07/01 06:17:16  maj0r
  * Code optimiert.
  *
@@ -54,6 +57,12 @@ public class SettingsXMLHolder
     nodes = document.getElementsByTagName("maxdownload");
     long maxDownload = Long.parseLong(nodes.item(0).getFirstChild().
                                       getNodeValue());
+    nodes = document.getElementsByTagName("maxconnections");
+    long maxConnections = Long.parseLong(nodes.item(0).getFirstChild().
+                                      getNodeValue());
+    nodes = document.getElementsByTagName("autoconnect");
+    boolean autoConnect = new Boolean(nodes.item(0).getFirstChild().
+                                      getNodeValue()).booleanValue();
     nodes = document.getElementsByTagName("speedperslot");
     int speedPerSlot = Integer.parseInt(nodes.item(0).getFirstChild().
                                         getNodeValue());
@@ -77,7 +86,7 @@ public class SettingsXMLHolder
     }
     settings = new AJSettings(nick, port, xmlPort, allowBrowse, maxUpload,
                               maxDownload, speedPerSlot, incomingDir, tempDir,
-                              shareEntries);
+                              shareEntries, maxConnections, autoConnect);
   }
 
   public AJSettings getAJSettings() {

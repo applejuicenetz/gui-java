@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.35 2003/08/09 16:47:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.36 2003/08/10 21:08:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.36  2003/08/10 21:08:18  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.35  2003/08/09 16:47:42  maj0r
  * Diverse Änderungen.
  *
@@ -202,6 +205,10 @@ public class DataManager { //Singleton-Implementierung
           URLEncoder.encode(ajSettings.getIncomingDir(), "UTF-8");
       parameters += "&Temporarydirectory=" +
           URLEncoder.encode(ajSettings.getTempDir(), "UTF-8");
+      parameters += "&maxconnections=" +
+          URLEncoder.encode(Long.toString(ajSettings.getMaxConnections()), "UTF-8");
+      parameters += "&autoconnect=" +
+          URLEncoder.encode(new Boolean(ajSettings.isAutoConnect()).toString(), "UTF-8");
     }
     catch (UnsupportedEncodingException ex1) {
     }
@@ -233,6 +240,74 @@ public class DataManager { //Singleton-Implementierung
     informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
     checkInProgress = false;
   }
+
+  public boolean resumeDownload(String id){
+      HashMap downloads = getDownloads();
+      String result;
+      DownloadDO downloadDO = (DownloadDO)downloads.get(new MapSetStringKey(id));
+      if (downloadDO==null)
+          return false;
+      logger.info("Resume '" + downloadDO.getFilename() + "'...");
+      try {
+        String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+        result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+                                           "/function/resumedownload?password=" + password + "&id=" + id);
+      }
+      catch (WebSiteNotFoundException ex) {
+        return false;
+      }
+      return true;
+  }
+
+    public boolean cancelDownload(String id){
+        HashMap downloads = getDownloads();
+        String result;
+        DownloadDO downloadDO = (DownloadDO)downloads.get(new MapSetStringKey(id));
+        if (downloadDO==null)
+            return false;
+        logger.info("Cancel '" + downloadDO.getFilename() + "'...");
+        try {
+          String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+          result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+                                             "/function/canceldownload?password=" + password + "&id=" + id);
+        }
+        catch (WebSiteNotFoundException ex) {
+          return false;
+        }
+        return true;
+    }
+
+    public boolean cleanDownloadList(){
+        logger.info("Clear list...");
+        String result;
+        try {
+          String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+          result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+                                             "/function/cleandownloadlist?password=" + password);
+        }
+        catch (WebSiteNotFoundException ex) {
+          return false;
+        }
+        return true;
+    }
+
+    public boolean pauseDownload(String id){
+        HashMap downloads = getDownloads();
+        String result;
+        DownloadDO downloadDO = (DownloadDO)downloads.get(new MapSetStringKey(id));
+        if (downloadDO==null)
+            return false;
+        logger.info("Pause '" + downloadDO.getFilename() + "'...");
+        try {
+          String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+          result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+                                             "/function/pausedownload?password=" + password + "&id=" + id);
+        }
+        catch (WebSiteNotFoundException ex) {
+          return false;
+        }
+        return true;
+    }
 
   public boolean connectToServer(int id) {
     HashMap server = getAllServer();

@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.16 2003/08/09 10:57:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.17 2003/08/10 21:08:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.17  2003/08/10 21:08:18  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.16  2003/08/09 10:57:54  maj0r
  * Upload- und DownloadTabelle weitergeführt.
  *
@@ -390,9 +393,14 @@ public class ModifiedXMLHolder
           speed = new Integer(0);
         }
         versionNr = e.getAttribute("version");
-        temp = e.getAttribute("operatingsystem");
-        os = Integer.parseInt(temp);
-        version = new Version(versionNr, os);
+        if (versionNr.compareToIgnoreCase("0.0.0.0")==0){
+            version = null;
+        }
+        else{
+            temp = e.getAttribute("operatingsystem");
+            os = Integer.parseInt(temp);
+            version = new Version(versionNr, os);
+        }
         temp = e.getAttribute("queueposition");
         queuePosition = Integer.parseInt(temp);
         temp = e.getAttribute("powerdownload");
@@ -426,14 +434,15 @@ public class ModifiedXMLHolder
     Long uploadTo = null;
     Long actualUploadPos = null;
     Integer speed = null;
-    MapSetStringKey shareIDKey = null;
+    MapSetStringKey idKey = null;
     HashMap share = DataManager.getInstance().getShare(false);
     for (int i = 0; i < size; i++) {
       e = (Element) nodes.item(i);
-      shareId = e.getAttribute("shareid");
-      shareIDKey = new MapSetStringKey(shareId);
-      if (uploadMap.containsKey(shareIDKey)) {
-        upload = (UploadDO) uploadMap.get(shareIDKey);
+      id = e.getAttribute("id");
+      idKey = new MapSetStringKey(id);
+      if (uploadMap.containsKey(idKey)) {
+        upload = (UploadDO) uploadMap.get(idKey);
+        upload.setShareFileID(new Integer(e.getAttribute("shareid")).intValue());
         upload.setPrioritaet(new Integer(e.getAttribute("priority")));
         upload.setNick(e.getAttribute("nick"));
         upload.setStatus(Integer.parseInt(e.getAttribute("status")));
@@ -443,11 +452,15 @@ public class ModifiedXMLHolder
         upload.setSpeed(new Integer(e.getAttribute("speed")));
       }
       else {
-        id = e.getAttribute("id");
-        os = Integer.parseInt(e.getAttribute("operatingsystem"));
+        shareId = e.getAttribute("shareid");
         versionsNr = e.getAttribute("version");
-        version = new Version(versionsNr, os);
-
+        if (versionsNr.compareToIgnoreCase("0.0.0.0")==0){
+            version = null;
+        }
+        else{
+            os = Integer.parseInt(e.getAttribute("operatingsystem"));
+            version = new Version(versionsNr, os);
+        }
         prioritaet = new Integer(e.getAttribute("priority"));
         nick = e.getAttribute("nick");
         status = e.getAttribute("status");
@@ -458,9 +471,9 @@ public class ModifiedXMLHolder
         upload = new UploadDO(id, shareId, version, status, nick,
                                        uploadFrom, uploadTo, actualUploadPos,
                                        speed, prioritaet);
-        ShareDO shareDO = (ShareDO)share.get(shareIDKey);
+        ShareDO shareDO = (ShareDO)share.get(new MapSetStringKey(shareId));
         upload.setDateiName(shareDO.getShortfilename());
-        uploadMap.put(shareIDKey, upload);
+        uploadMap.put(idKey, upload);
       }
     }
   }

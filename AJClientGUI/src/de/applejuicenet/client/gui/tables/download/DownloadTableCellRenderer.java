@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.tables.download.DownloadNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.7 2003/08/09 10:56:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadTableCellRenderer.java,v 1.8 2003/08/10 21:08:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadNode;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadTableCellRenderer.java,v $
+ * Revision 1.8  2003/08/10 21:08:18  maj0r
+ * Diverse Änderungen.
+ *
  * Revision 1.7  2003/08/09 10:56:38  maj0r
  * DownloadTabelle weitergeführt.
  *
@@ -146,25 +149,23 @@ public class DownloadTableCellRenderer
           JPanel returnPanel = new JPanel(new BorderLayout());
           JLabel image = new JLabel();
 
-          long aktuelleZeit = System.currentTimeMillis();
-          long tag = 24 * 60 * 60 * 1000;
-          JLabel serverName = new JLabel();
+          JLabel versionText = new JLabel();
 
           if (isSelected) {
             returnPanel.setBackground(table.getSelectionBackground());
             returnPanel.setForeground(table.getSelectionForeground());
             image.setBackground(table.getSelectionBackground());
-            serverName.setBackground(table.getSelectionBackground());
+            versionText.setBackground(table.getSelectionBackground());
             image.setForeground(table.getSelectionForeground());
-            serverName.setBackground(table.getSelectionForeground());
+            versionText.setBackground(table.getSelectionForeground());
           }
           else {
             returnPanel.setBackground(background);
             returnPanel.setForeground(foreground);
             image.setBackground(table.getBackground());
-            serverName.setBackground(table.getBackground());
+            versionText.setBackground(table.getBackground());
             image.setForeground(table.getForeground());
-            serverName.setBackground(table.getForeground());
+            versionText.setBackground(table.getForeground());
           }
 
           if (downloadSourceDO.getVersion() == null) {
@@ -189,10 +190,10 @@ public class DownloadTableCellRenderer
 
               }
           }
-          serverName.setText("  " + downloadSourceDO.getVersion().getVersion());
-          serverName.setFont(table.getFont());
+          versionText.setText("  " + downloadSourceDO.getVersion().getVersion());
+          versionText.setFont(table.getFont());
           returnPanel.add(image, BorderLayout.WEST);
-          returnPanel.add(serverName, BorderLayout.CENTER);
+          returnPanel.add(versionText, BorderLayout.CENTER);
           return returnPanel;
         }
       else {
