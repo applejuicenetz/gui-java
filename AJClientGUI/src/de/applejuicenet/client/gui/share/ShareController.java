@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
 import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.10 2004/12/03 17:31:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.11 2004/12/08 14:36:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -359,39 +359,29 @@ public class ShareController extends GuiController {
 		sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
 		sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
 		sharePanel.getBtnNeuLaden().setEnabled(false);
-        SwingWorker worker = new SwingWorker() {
-            public Object construct() {
+        new Thread() {
+            public void run() {
                 try {
                     Object[] values = sharePanel.getShareTable().getSelectedItems();
-                    if (values == null) {
-                        return null;
+                    synchronized (values) {
+                        if (values == null) {
+                            return;
+                        }
+                        ShareNode shareNode = null;
+                        for (int i = 0; i < values.length; i++) {
+                            shareNode = (ShareNode) values[i];
+                            shareNode.setPriority(1);
+                        }
                     }
-                    ShareNode shareNode = null;
-                    for (int i = 0; i < values.length; i++) {
-                        shareNode = (ShareNode) values[i];
-                        shareNode.setPriority(1);
-                    }
+                    shareNeuLaden(false);
                 }
                 catch (Exception e) {
                     if (logger.isEnabledFor(Level.ERROR)) {
                         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                     }
                 }
-                return null;
             }
-
-            public void finished() {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                    	sharePanel.getShareTable().updateUI();
-                        sharePanel.getBtnPrioritaetAufheben().setEnabled(true);
-                        sharePanel.getBtnPrioritaetSetzen().setEnabled(true);
-                        sharePanel.getBtnNeuLaden().setEnabled(true);
-                    }
-                });
-            }
-        };
-        worker.start();
+        }.start();
 	}
 	
 	private void prioritaetSetzen(){
