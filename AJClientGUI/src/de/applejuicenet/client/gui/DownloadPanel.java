@@ -17,7 +17,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.63 2003/12/17 11:08:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.64 2003/12/17 11:24:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.64  2003/12/17 11:24:28  maj0r
+ * Frischen NullPointer behoben.
+ *
  * Revision 1.63  2003/12/17 11:08:30  maj0r
  * Partliste wird nun nur noch über das PopupMenü geholt.
  * Wenn der Downloadtab verlassen wird, wird das Aktualisieren der aktuellen Partliste beendet.
@@ -754,8 +757,10 @@ public class DownloadPanel
         public void setDownloadNode(Object node) {
             if (node==null){
                 nodeObject = null;
-                worker.interrupt();
-                worker = null;
+                if (worker != null){
+                    worker.interrupt();
+                    worker = null;
+                }
                 return;
             }
             if (worker != null && nodeObject != node) {
