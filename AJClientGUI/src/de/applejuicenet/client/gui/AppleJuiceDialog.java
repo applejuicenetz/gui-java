@@ -73,7 +73,7 @@ import java.io.FileInputStream;
 import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.86 2004/01/26 16:21:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.87 2004/01/26 16:48:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.87  2004/01/26 16:48:07  maj0r
+ * Fehler beim TrayIcon-Menue behoben.
+ *
  * Revision 1.86  2004/01/26 16:21:05  maj0r
  * Optionendialog besser positioniert und kann nun ueber das TrayIcon aufgerufen werden.
  *
@@ -332,6 +335,7 @@ public class AppleJuiceDialog
     private static boolean useTrayIcon = false;
     private JMenuItem popupShowHideMenuItem;
     private JMenuItem popupAboutMenuItem;
+    private JMenuItem popupOptionenMenuItem;
     private String zeigen = "";
     private String verstecken = "";
     private WindowsTrayIcon trayIcon;
@@ -1045,6 +1049,8 @@ public class AppleJuiceDialog
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"mainform", "optbtn",
                                           "hint"})));
+            popupOptionenMenuItem.setText(menuItemOptionen.getText());
+            popupOptionenMenuItem.setToolTipText(menuItemOptionen.getToolTipText());
             menuItemCoreBeenden.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
@@ -1156,11 +1162,19 @@ public class AppleJuiceDialog
             }
         });
         popup.add(popupShowHideMenuItem);
-        popup.add(menuItemOptionen);
+        popupOptionenMenuItem = new JMenuItem("Optionen");
+        popupOptionenMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                showOptionsDialog();
+            }
+        });
+
+        popup.add(popupOptionenMenuItem);
         IconManager im = IconManager.getInstance();
         versteckenIcon = im.getIcon("hide");
         zeigenIcon = im.getIcon("applejuice");
         Icon aboutIcon = im.getIcon("about");
+        popupOptionenMenuItem.setIcon(im.getIcon("optionen"));
         popupAboutMenuItem = new JMenuItem("&Info", aboutIcon);
         popupAboutMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
