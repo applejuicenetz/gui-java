@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.20 2003/08/16 17:49:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.21 2003/08/20 10:52:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.21  2003/08/20 10:52:51  maj0r
+ * JarClassloader korrigiert.
+ *
  * Revision 1.20  2003/08/16 17:49:56  maj0r
  * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
  * DownloaduebersichtTabelle kann deaktiviert werden.
@@ -116,8 +119,8 @@ public class RegisterPanel
         try {
           url = new URL("file://" + path + tempListe[i]);
           String className = tempListe[i].substring(0, pos);
-          jarLoader = new PluginJarClassLoader(url, className);
-          PluginConnector aPlugin = jarLoader.getPlugin();
+          jarLoader = new PluginJarClassLoader(url);
+          PluginConnector aPlugin = jarLoader.getPlugin(path + tempListe[i]);
           if (aPlugin != null) {
             if (aPlugin.istReiter()) {
               ImageIcon icon = aPlugin.getIcon();

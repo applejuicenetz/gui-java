@@ -1,11 +1,17 @@
 package de.applejuicenet.client.shared;
 
 import java.net.*;
+import java.io.File;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.jar.JarFile;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
 
 import de.applejuicenet.client.gui.plugins.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.6 2003/08/16 17:58:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.7 2003/08/20 10:52:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +20,9 @@ import de.applejuicenet.client.gui.plugins.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.7  2003/08/20 10:52:51  maj0r
+ * JarClassloader korrigiert.
+ *
  * Revision 1.6  2003/08/16 17:58:58  maj0r
  * Diverse Farben können nun manuell eingestellt bzw. deaktiviert werden.
  * DownloaduebersichtTabelle kann deaktiviert werden.
@@ -28,22 +37,51 @@ import de.applejuicenet.client.gui.plugins.*;
  */
 
 public class PluginJarClassLoader
-    extends URLClassLoader {
-  private URL url;
-  private String className;
+        extends URLClassLoader {
+    private URL url;
 
-  public PluginJarClassLoader(URL url, String className) {
-    super(new URL[] {url});
-    this.url = url;
-    this.className = className;
-  }
-
-  public PluginConnector getPlugin() throws Exception{
-    Class aClass = loadClass("de.applejuicenet.client.gui.plugins." + className);
-    Object aPlugin = aClass.newInstance();
-    if (! (aPlugin instanceof PluginConnector)) {
-      return null;
+    public PluginJarClassLoader(URL url) {
+        super(new URL[]{url});
+        this.url = url;
     }
-    return (PluginConnector) aPlugin;
-  }
+
+    public PluginConnector getPlugin(String jar) throws Exception {
+        File aJar = new File(jar);
+        String theClassName = jar.substring(jar.lastIndexOf('\\') + 1, jar.lastIndexOf(".jar"));
+        loadClassBytesFromJar(aJar);
+        Class cl = loadClass("de.applejuicenet.client.gui.plugins." + theClassName);
+        Object aPlugin = cl.newInstance();
+        return (PluginConnector) aPlugin;
+    }
+
+    private void loadClassBytesFromJar(File jar) throws Exception {
+        if (!jar.isFile())
+            return;
+
+        JarFile jf = new JarFile(jar);
+        String entryName;
+
+        for (Enumeration e = jf.entries(); e.hasMoreElements();)
+        {
+            ZipEntry entry = (ZipEntry) e.nextElement();
+            entryName = entry.getName();
+            if (entryName.indexOf(".class") == -1)
+            {
+                continue;
+            }
+            InputStream is = jf.getInputStream(entry);
+            int l = (int) entry.getSize();
+            byte[] buf = new byte[l];
+            int read = 0;
+
+            while (read < l)
+            {
+                int incr = is.read(buf, read, l - read);
+                read += incr;
+            }
+            String name = entryName.replace('/', '.');
+            name = name.replaceAll(".class", "");
+            defineClass(name, buf, 0, buf.length);
+        }
+    }
 }
