@@ -30,7 +30,7 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.42 2004/03/23 14:51:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.43 2004/04/02 09:24:58 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +39,9 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.43  2004/04/02 09:24:58  loevenwong
+ * Einstellungen der Goodies werden jetzt auch gespeichert.
+ *
  * Revision 1.42  2004/03/23 14:51:13  maj0r
  * Bug behoben, der sich durch die dynamische Generierung der properties.xml ohne Neustart eingeschlichen hat.
  *
@@ -402,6 +405,34 @@ class PropertiesManager
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
         }
         return null;
+    }
+
+    public LookAFeel getDefaultLookAndFeel() {
+        try {
+            LookAFeel[] looks = this.getLookAndFeels();
+            String temp = getFirstAttrbuteByTagName(new String[] {"options",
+                "lookandfeels", "default", "name"});
+            if (temp != null) {
+                for (int i=0; i<looks.length; i++) {
+                    if (temp.equals(looks[i].getName())) {
+                        return looks[i];
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
+            }
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+        }
+        return null;
+    }
+
+    public void setDefaultLookAndFeel(LookAFeel lookAFeel) {
+        setAttributeByTagName(new String[] {"options", "lookandfeels", "default", "name"}
+                              , lookAFeel.getName());
     }
 
     public String getStandardBrowser() {
@@ -827,10 +858,22 @@ class PropertiesManager
         ApplejuiceFassade.getInstance().saveAJSettings(ajSettings);
     }
 
-    //PositionManager-Interface
+    private boolean isVeralteteXML() {
+        String xmlTest = getFirstAttrbuteByTagName(new String[] {"options", "lookandfeels", "default", "name"});
+        if (xmlTest.length() == 0) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     protected void init() {
         try {
+            if (isVeralteteXML()) {
+                throw new Exception(
+                    "Properties.xml hat altes Format. Wird neu erstellt.");
+            }
             String temp = getFirstAttrbuteByTagName(new String[] {"options",
                 "location", "x"});
             if (temp.length() != 0) {

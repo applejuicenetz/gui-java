@@ -22,7 +22,7 @@ import de.applejuicenet.client.gui.tools.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.111 2004/03/15 18:55:01 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.112 2004/04/02 09:24:58 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.112  2004/04/02 09:24:58  loevenwong
+ * Einstellungen der Goodies werden jetzt auch gespeichert.
+ *
  * Revision 1.111  2004/03/15 18:55:01  maj0r
  * Windowstheme darf nur auf Windowssystemen verwendet werden.
  *
@@ -427,6 +430,12 @@ public class AppleJuiceDialog
                 }
                 SkinLookAndFeel.setSkin(standardSkin);
                 SkinLookAndFeel.enable();
+            }
+            else {
+                LookAFeel defaultlookandfeel = OptionsManagerImpl.getInstance().getDefaultLookAndFeel();
+                if (defaultlookandfeel != null) {
+                    UIManager.setLookAndFeel(defaultlookandfeel.getClassName());
+                }
             }
         }
         catch (Exception e) {
@@ -942,11 +951,25 @@ public class AppleJuiceDialog
             }
             else {
                 final LookAFeel[] feels = OptionsManagerImpl.getInstance().getLookAndFeels();
+                LookAFeel defaultlookandfeel = OptionsManagerImpl.getInstance().getDefaultLookAndFeel();
                 ButtonGroup lafGroup2 = new ButtonGroup();
                 for (int i=0; i<feels.length; i++){
-                    JCheckBoxLookAndFeelMenuItem lookAndFeelMenuItem = new JCheckBoxLookAndFeelMenuItem(feels[i]);
+                    final JCheckBoxLookAndFeelMenuItem lookAndFeelMenuItem = new JCheckBoxLookAndFeelMenuItem(feels[i]);
                     lafGroup2.add(lookAndFeelMenuItem);
                     themesMenu.add(lookAndFeelMenuItem);
+                    if (defaultlookandfeel != null && feels[i].getName().equals(defaultlookandfeel.getName())) {
+                        lookAndFeelMenuItem.setSelected(true);
+                    }
+                    else {
+                        lookAndFeelMenuItem.setSelected(false);
+                    }
+                    lookAndFeelMenuItem.addItemListener(new ItemListener() {
+                        public void itemStateChanged(ItemEvent ae) {
+                            if (lookAndFeelMenuItem.isSelected()) {
+                                activateLaF(lookAndFeelMenuItem.getText());
+                            }
+                        }
+                    });
                 }
                 menuItemAktivieren.setText("aktivieren");
                 menuItemAktivieren.addActionListener(new ActionListener() {
@@ -1007,11 +1030,25 @@ public class AppleJuiceDialog
 
     private void activateLaF(String laf) {
         try {
+            // theme???
             Skin aSkin = (Skin) themes.get(laf);
             if (aSkin != null) {
                 SkinLookAndFeel.setSkin(aSkin);
                 SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
                 OptionsManagerImpl.getInstance().setDefaultTheme(laf);
+                return;
+            }
+            // laf???
+            final LookAFeel[] feels = OptionsManagerImpl.getInstance().
+                getLookAndFeels();
+            if (feels != null && laf != null) {
+                for (int i = 0; i < feels.length; i++) {
+                    if (laf.equals(feels[i].getName())) {
+                        OptionsManagerImpl.getInstance().setDefaultLookAndFeel(
+                            feels[i]);
+                        return;
+                    }
+                }
             }
         }
         catch (Exception e) {
@@ -1358,6 +1395,7 @@ public class AppleJuiceDialog
         if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
             xmlData.append("                    <laf2 name=\"JGoodies Windows\" value=\"com.jgoodies.plaf.windows.ExtWindowsLookAndFeel\"/>\r\n");
         }
+        xmlData.append("                    <default name=\"JGoodies Plastic\"/>\r\n");
         xmlData.append("                </lookandfeels>\r\n");
         xmlData.append(
             "        <location height=\"\" width=\"\" x=\"\" y=\"\"/>\r\n");
