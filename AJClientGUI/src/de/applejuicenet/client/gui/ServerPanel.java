@@ -15,7 +15,7 @@ import de.applejuicenet.client.gui.shared.SortButtonRenderer;
 import de.applejuicenet.client.gui.shared.HeaderListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.17 2003/06/24 14:32:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.18 2003/07/01 14:53:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import de.applejuicenet.client.gui.shared.HeaderListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.18  2003/07/01 14:53:48  maj0r
+ * Unnützes Update der Serverliste entfernt.
+ *
  * Revision 1.17  2003/06/24 14:32:27  maj0r
  * Klassen zum Sortieren von Tabellen eingefügt.
  * Servertabelle kann nun spaltenweise sortiert werden.
@@ -164,7 +167,7 @@ public class ServerPanel
   }
 
   public void registerSelected() {
-    DataManager.getInstance().updateModifiedXML();
+//    DataManager.getInstance().updateModifiedXML();
   }
 
   public void fireContentChanged(int type, Object content) {
@@ -176,7 +179,6 @@ public class ServerPanel
     ( (ServerTableModel) serverTable.getModel()).setTable( (HashMap) content);
     if (selected != -1 && selected < serverTable.getRowCount()) {
       serverTable.setRowSelectionInterval(selected, selected);
-
     }
   }
 
