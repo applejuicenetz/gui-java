@@ -16,7 +16,7 @@ import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.10 2003/10/31 11:31:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.11 2003/11/16 12:34:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.xml.serialize.XMLSerializer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.11  2003/11/16 12:34:23  maj0r
+ * Themes einngebaut (Danke an LinuxDoc)
+ *
  * Revision 1.10  2003/10/31 11:31:45  maj0r
  * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
  *
@@ -230,6 +233,29 @@ public class PropertiesManager
                                                    "Die Datei wird neu erstellt.", false);
             return null;
         }
+    }
+
+    public String getDefaultTheme() {
+        try{
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "defaulttheme"});;
+            if (temp==null || temp.length()==0){
+                throw new Exception("Kein Defaulttheme vorhanden.");
+            }
+            return temp;
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return "";
+        }
+    }
+
+    public void setDefaultTheme(String themeShortName) {
+        setAttributeByTagName(new String[]{"options", "defaulttheme"}, themeShortName);
     }
 
     public boolean isErsterStart() {

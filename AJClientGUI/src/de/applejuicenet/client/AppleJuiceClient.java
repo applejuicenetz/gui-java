@@ -11,9 +11,11 @@ import org.apache.log4j.*;
 import de.applejuicenet.client.gui.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
+import com.l2fprod.util.OS;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.33 2003/10/31 19:04:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.34 2003/11/16 12:34:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +24,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.34  2003/11/16 12:34:23  maj0r
+ * Themes einngebaut (Danke an LinuxDoc)
+ *
  * Revision 1.33  2003/10/31 19:04:58  maj0r
  * Sounds eingebaut.
  *
@@ -105,6 +110,23 @@ public class AppleJuiceClient {
         Logger rootLogger = Logger.getRootLogger();
         logger = Logger.getLogger(AppleJuiceClient.class.getName());
 
+        try{
+            if (OS.isOneDotFour()) {
+              java.lang.reflect.Method method = JFrame.class.
+                getMethod("setDefaultLookAndFeelDecorated",
+                          new Class[]{boolean.class});
+              method.invoke(null, new Object[]{Boolean.TRUE});
+
+              method = JDialog.class.
+                getMethod("setDefaultLookAndFeelDecorated",
+                          new Class[]{boolean.class});
+              method.invoke(null, new Object[]{Boolean.TRUE});
+            }
+        }
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.FATAL))
+                logger.fatal("Programmabbruch", e);
+        }
         String datum = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date(
                 System.currentTimeMillis()));
         String dateiName;

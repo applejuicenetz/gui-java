@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.7 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.8 2003/11/16 12:34:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AboutDialog.java,v $
+ * Revision 1.8  2003/11/16 12:34:23  maj0r
+ * Themes einngebaut (Danke an LinuxDoc)
+ *
  * Revision 1.7  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -55,6 +58,7 @@ import org.apache.log4j.Level;
 public class AboutDialog extends JDialog {
     private Logger logger;
     private Thread worker;
+    private BackPanel backPanel = new BackPanel();
 
     public AboutDialog(Frame parent, boolean modal) {
         super(parent, modal);
@@ -75,13 +79,23 @@ public class AboutDialog extends JDialog {
         }
     }
 
+    public Dimension getPreferredSize() {
+        if (backPanel != null)
+        {
+            return backPanel.getPreferredSize();
+        }
+        else{
+            return super.getPreferredSize();
+        }
+    }
+
     private void init() {
         setResizable(false);
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                    getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "caption"})));
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(new BackPanel(), BorderLayout.CENTER);
+        getContentPane().add(backPanel, BorderLayout.CENTER);
         pack();
     }
 
@@ -228,32 +242,15 @@ public class AboutDialog extends JDialog {
         }
 
         public Dimension getPreferredSize() {
-            Dimension oldSize = super.getPreferredSize();
-            Dimension newSize = new Dimension();
-            Dimension returnSize = new Dimension();
-
             if (backgroundImage != null)
             {
-                newSize.width = backgroundImage.getWidth(this) + 1;
-                newSize.height = backgroundImage.getHeight(this) + 1;
+                int width = backgroundImage.getWidth(this) + 1;
+                int height = backgroundImage.getHeight(this) + 1;
+                return new Dimension(width, height);
             }
-            if (oldSize.height > newSize.height)
-            {
-                returnSize.height = oldSize.height;
+            else{
+                return super.getPreferredSize();
             }
-            else
-            {
-                returnSize.height = newSize.height;
-            }
-            if (oldSize.width > newSize.width)
-            {
-                returnSize.width = oldSize.width;
-            }
-            else
-            {
-                returnSize.width = newSize.width;
-            }
-            return (returnSize);
         }
     }
 

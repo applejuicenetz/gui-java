@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.27 2003/10/31 11:31:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.28 2003/11/16 12:34:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.28  2003/11/16 12:34:23  maj0r
+ * Themes einngebaut (Danke an LinuxDoc)
+ *
  * Revision 1.27  2003/10/31 11:31:45  maj0r
  * Soundeffekte fuer diverse Ereignisse eingefuegt. Kommen noch mehr.
  *
@@ -67,4 +70,8 @@ public interface OptionsManager {
     public void saveAJSettings(AJSettings ajSettings);
 
     public String[] getActualServers();
+
+    public String getDefaultTheme();
+
+    public void setDefaultTheme(String themeShortName);
 }
