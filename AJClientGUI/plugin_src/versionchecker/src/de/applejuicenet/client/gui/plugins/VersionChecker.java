@@ -13,36 +13,13 @@ import de.applejuicenet.client.gui.plugins.panels.MainPanel;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.7 2004/03/03 15:35:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.8 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: open-source</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: GPL</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: VersionChecker.java,v $
- * Revision 1.7  2004/03/03 15:35:45  maj0r
- * PMD-Optimierung
- *
- * Revision 1.6  2004/03/03 11:55:50  maj0r
- * Sprachunterstuetzung eungebaut.
- *
- * Revision 1.5  2004/03/02 21:06:40  maj0r
- * Kleine Fehler behoben.
- *
- * Revision 1.4  2004/03/02 21:05:46  maj0r
- * Schnittstelle veraendert.
- *
- * Revision 1.3  2004/03/02 17:36:11  maj0r
- * An neue Plugin-Schnittstelle angepasst.
- *
- * Revision 1.2  2004/01/30 16:32:56  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.1  2004/01/27 15:45:45  maj0r
- * Erste Version des Plugins VersionChecker gebaut.
- *
  *
  */
 

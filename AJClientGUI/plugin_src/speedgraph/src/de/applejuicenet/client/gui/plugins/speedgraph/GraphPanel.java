@@ -8,27 +8,13 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/GraphPanel.java,v 1.4 2004/01/30 16:35:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/GraphPanel.java,v 1.5 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: open-source</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: GraphPanel.java,v $
- * Revision 1.4  2004/01/30 16:35:00  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.3  2003/12/22 16:25:02  maj0r
- * Bug behoben, der auftratt, wenn das Plugin aktualisiert wurde, obwohl es noch nicht angezeigt wird (Danke an Luke).
- *
- * Revision 1.2  2003/09/15 07:28:45  maj0r
- * Plugin zeigt nun ein Raster und die Zeit auf der x-Achse.
- *
- * Revision 1.1  2003/09/13 11:33:17  maj0r
- * Neues Plugin SpeedGraph.
- *
  *
  */
 

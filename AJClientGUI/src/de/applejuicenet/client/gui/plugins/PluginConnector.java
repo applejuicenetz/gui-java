@@ -11,15 +11,15 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 /**
  * <p>Titel: AppleJuice Core-GUI</p>
  *
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
  * appleJuice-Core</p>
  *
  * <p><b>Copyright: General Public License</b></p>
  *
  * <p>Diese Klasse darf nicht veraendert werden!
- * Um ein Plugin zu erstellen, muss diese Klasse überschrieben werden.</p>
+ * Um ein Plugin zu erstellen, muss diese Klasse ueberschrieben werden.</p>
  *
- * @author: Maj0r [maj0r@applejuicenet.de]
+ * @author: Maj0r [aj@tkl-soft.de]
  */
 
 public abstract class PluginConnector
@@ -85,7 +85,7 @@ public abstract class PluginConnector
 
     /**
      *
-     * @return boolean: Liefert true zurück, wenn das Plugin eine sichtbare Oberflaeche haben soll, sonst false
+     * @return boolean: Liefert true zurueck, wenn das Plugin eine sichtbare Oberflaeche haben soll, sonst false
      */
     public final boolean istReiter(){
         return getGeneralXMLAttributeByTagName(".root.general.istab.value").toLowerCase().equals("true");
@@ -93,7 +93,7 @@ public abstract class PluginConnector
 
     /**
      *
-     * @return String: Liefert eine Kurzbeschreibung des Plugins zurück.
+     * @return String: Liefert eine Kurzbeschreibung des Plugins zurueck.
      */
     public final String getBeschreibung(){
         String result = "";
@@ -138,7 +138,7 @@ public abstract class PluginConnector
     public void lostSelection() {};
 
     /**
-     * Wird automatisch aufgerufen, wenn die Sprache geändert wurde.
+     * Wird automatisch aufgerufen, wenn die Sprache geaendert wurde.
      * zB kann an dieser Stelle eine eigene xml-Datei zur Anpassung der eigenen Panels ausgewertet werden
      **/
     public abstract void fireLanguageChanged();
@@ -154,7 +154,7 @@ public abstract class PluginConnector
 
     /**
      * Wird automatisch aufgerufen, wenn neue Informationen vom Server
-     * eingegangen sind. Über den DataManger können diese abgerufen werden.
+     * eingegangen sind. Über den DataManger koennen diese abgerufen werden.
      *
      * @param type int: Typ des angesprochenen Listeners
      * @param content Object: Geaenderte Werte, Typ abhaengig vom

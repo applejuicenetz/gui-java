@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.37 2004/10/12 15:41:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.38 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,12 +44,12 @@ public class DownloadDOOverviewPanel
     private JLabel label4 = new JLabel("Vorhanden");
     private JLabel label3 = new JLabel("Nicht vorhanden");
     private JLabel label2 = new JLabel("In Ordnung");
-    private JLabel label1 = new JLabel("Überprüft");
+    private JLabel label1 = new JLabel("Überprueft");
     private Logger logger;
     private JButton holeListe = new JButton("Hole Partliste");
     private Thread partListWorkerThread = null;
     private DownloadPanel downloadPanel;
-    private String verfuegbar = "verfügbar";
+    private String verfuegbar = "verfuegbar";
     private DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     public DownloadDOOverviewPanel(DownloadPanel parent) {

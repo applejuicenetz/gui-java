@@ -36,41 +36,13 @@ import de.applejuicenet.client.shared.ProxySettings;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.8 2004/04/14 14:02:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/Attic/ServerWatcherPlugin.java,v 1.9 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: open-source</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: GPL</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: ServerWatcherPlugin.java,v $
- * Revision 1.8  2004/04/14 14:02:05  maj0r
- * An neue Schnittstelle und an neuen Speicherort fuer Settingsdateien angepasst.
- * Version 1.2
- *
- * Revision 1.7  2004/03/03 13:13:58  maj0r
- * Pfad zur xml-Datei angepasst und Proxysupport eingebaut.
- *
- * Revision 1.6  2004/03/03 12:49:26  maj0r
- * Sprachunterstuetzung eungebaut.
- *
- * Revision 1.5  2004/03/02 21:10:57  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.4  2003/09/13 18:35:19  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.3  2003/09/12 11:15:49  maj0r
- * Server lassen sich nun speichern und entfernen.
- * Version 1.1
- *
- * Revision 1.2  2003/09/12 06:29:03  maj0r
- * ServerWatcher v1.0
- *
- * Revision 1.1  2003/09/11 15:03:00  maj0r
- * ServerWatcherPlugin begonnen.
- *
  *
  */
 
@@ -218,7 +190,7 @@ public class ServerWatcherPlugin extends PluginConnector {
                 }
                 catch (MalformedURLException e) {
                     editorPane.setText("");
-                    statusText.setText("Ungültige URL");
+                    statusText.setText("Ungueltige URL");
                 }
                 catch (IOException e) {
                     editorPane.setText("");

@@ -12,7 +12,7 @@ import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.12 2004/10/06 12:29:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.13 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -122,7 +122,7 @@ public class ServerTableModel
             if (index == -1) { // Der Server ist neu
                 servers.add(server);
             }
-            else { // Der Server hat sich verändert
+            else { // Der Server hat sich veraendert
                 ServerDO oldServer = (ServerDO) servers.get(index);
                 oldServer.setHost(server.getHost());
                 oldServer.setName(server.getName());

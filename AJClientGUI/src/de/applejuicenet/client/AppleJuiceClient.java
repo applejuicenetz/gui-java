@@ -48,13 +48,13 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.81 2004/10/14 08:08:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.82 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r [maj0r@applejuicenet.de]
+ * @author: Maj0r [aj@tkl-soft.de]
  *
  */
 
@@ -108,7 +108,7 @@ public class AppleJuiceClient {
         }
         if (!gueltig) {
             JOptionPane.showMessageDialog(new Frame(),
-                "Es wird mindestens JRE 1.4 benötigt!", "appleJuice Client",
+                "Es wird mindestens JRE 1.4 benoetigt!", "appleJuice Client",
                                           JOptionPane.ERROR_MESSAGE);
         }
 
@@ -369,7 +369,7 @@ public class AppleJuiceClient {
                 theApp.setLocation(location);
             }
             theApp.setVisible(true);
-            nachricht = "appleJuice-Core-GUI läuft...";
+            nachricht = "appleJuice-Core-GUI laeuft...";
             if (logger.isEnabledFor(Level.INFO)) {
                 logger.info(nachricht);
             }

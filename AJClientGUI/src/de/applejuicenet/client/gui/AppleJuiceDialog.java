@@ -100,7 +100,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r [maj0r@applejuicenet.de]
+ * @author: Maj0r [aj@tkl-soft.de]
  *
  */
 

@@ -36,7 +36,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.44 2004/06/23 14:12:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.45 2004/10/14 08:57:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -738,10 +738,10 @@ public class ModifiedXMLHolder
                 securer.interrupt();
             }
             if (logger.isEnabledFor(Level.INFO)){
-                logger.info("Das Passwort wurde coreseitig geändert.\r\nDas GUI wird beendet.");
+                logger.info("Das Passwort wurde coreseitig geaendert.\r\nDas GUI wird beendet.");
             }
             AppleJuiceDialog.closeWithErrormessage(
-                "Das Passwort wurde coreseitig geändert.\r\nDas GUI wird beendet.", true);
+                "Das Passwort wurde coreseitig geaendert.\r\nDas GUI wird beendet.", true);
         }
     }
 

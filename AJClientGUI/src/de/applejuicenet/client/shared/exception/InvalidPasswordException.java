@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.exception;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/exception/InvalidPasswordException.java,v 1.6 2004/10/11 18:18:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/exception/InvalidPasswordException.java,v 1.7 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,6 @@ public class InvalidPasswordException
     private static final long serialVersionUID = 7472157584197707747L;
 
 	public InvalidPasswordException() {
-        super("Ungültiges Kennwort");
+        super("Ungueltiges Kennwort");
     }
 }

@@ -36,7 +36,7 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * Copyright: General Public License
  * </p>
  * 
- * @author: Maj0r [maj0r@applejuicenet.de]
+ * @author: Maj0r [aj@tkl-soft.de]
  *  
  */
 

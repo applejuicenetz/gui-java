@@ -16,11 +16,11 @@ import org.w3c.dom.NodeList;
 import de.applejuicenet.client.shared.XMLDecoder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerXML.java,v 1.3 2004/04/14 14:02:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerXML.java,v 1.4 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: open-source</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: GPL</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *

@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.17 2004/06/23 12:38:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.18 2004/10/14 08:57:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,7 +28,7 @@ public class UploadDataTableModel
 
     final static String[] COL_NAMES = {
         "Dateiname", "Status", "Wer", "Geschwindigkeit", "Prozent geladen", "Gesamt geladen",
-        "Priorität", "Client"};
+        "Prioritaet", "Client"};
 
     static protected Class[] cTypes = {
         TreeTableModel.class, String.class, String.class, String.class, String.class, String.class,

@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.PowerDownloadPanel;
 import java.awt.Frame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.12 2004/06/18 11:37:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.13 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -163,7 +163,7 @@ public abstract class AutomaticPowerdownloadPolicy
 
     /**
      *  Umsetzung der Powerdownloadverarbeitung
-     *  Es wird nur EIN Durchlauf mit abschlieﬂender sleep(ms)-Anweisung(!!!) implementiert.
+     *  Es wird nur EIN Durchlauf mit abschlieszender sleep(ms)-Anweisung(!!!) implementiert.
      *  Die Schleife ergibt sich durch die run()-Methode des Threads.
      **/
     public abstract void doAction() throws Exception;

@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.Search;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchResultTableModel.java,v 1.13 2004/06/17 09:57:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchResultTableModel.java,v 1.14 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,7 +25,7 @@ public class SearchResultTableModel
     private Logger logger;
 
     final static String[] COL_NAMES = {
-        "Dateiname", "Größe", "Anzahl"};
+        "Dateiname", "Groesze", "Anzahl"};
 
     static protected Class[] cTypes = {
         TreeTableModel.class, String.class, String.class};

@@ -104,7 +104,7 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 
 	private JTreeTable downloadTable;
 
-	private JLabel linkLabel = new JLabel("ajfsp-Link hinzufügen");
+	private JLabel linkLabel = new JLabel("ajfsp-Link hinzufuegen");
 
 	private DownloadModel downloadModel;
 
@@ -200,12 +200,12 @@ public class DownloadPanel extends JPanel implements LanguageListener,
 		item2 = new JMenuItem("Pause");
 		item8 = new JMenuItem("Fortsetzen");
 		item4 = new JMenuItem("Umbenennen");
-		item5 = new JMenuItem("Zielordner ändern");
+		item5 = new JMenuItem("Zielordner aendern");
 		item6 = new JMenuItem("Fertige Übertragungen entfernen");
 		item7 = new JMenuItem("Partliste anzeigen");
 
 		menu = new JPopupMenu();
-		einfuegen = new JMenuItem("Einfügen");
+		einfuegen = new JMenuItem("Einfuegen");
 
 		IconManager im = IconManager.getInstance();
 		item1.setIcon(im.getIcon("abbrechen"));

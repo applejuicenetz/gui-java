@@ -24,24 +24,13 @@ import javax.swing.ListSelectionModel;
 import java.awt.Color;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.3 2004/03/14 15:10:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.4 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: open-source</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: MainPanel.java,v $
- * Revision 1.3  2004/03/14 15:10:11  maj0r
- * ConcurrentModificationException behoben.
- *
- * Revision 1.2  2004/01/30 16:32:56  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.1  2004/01/27 15:45:45  maj0r
- * Erste Version des Plugins VersionChecker gebaut.
- *
  *
  */
 

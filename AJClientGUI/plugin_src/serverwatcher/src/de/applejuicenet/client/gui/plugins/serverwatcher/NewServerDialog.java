@@ -10,19 +10,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/NewServerDialog.java,v 1.1 2003/09/12 11:15:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/NewServerDialog.java,v 1.2 2004/10/14 08:57:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: open-source</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: NewServerDialog.java,v $
- * Revision 1.1  2003/09/12 11:15:49  maj0r
- * Server lassen sich nun speichern und entfernen.
- * Version 1.1
- *
  *
  */
 
