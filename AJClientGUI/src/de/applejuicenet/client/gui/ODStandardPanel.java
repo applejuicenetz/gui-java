@@ -8,9 +8,11 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import javax.swing.JFileChooser;
+import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.18 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.19 2004/01/05 07:28:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +21,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.19  2004/01/05 07:28:59  maj0r
+ * Begonnen einen Standardwebbrowser einzubauen.
+ *
  * Revision 1.18  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -75,6 +80,8 @@ public class ODStandardPanel
     private JLabel label3 = new JLabel();
     private JLabel label4 = new JLabel();
     private JLabel label6 = new JLabel();
+    private JLabel label7 = new JLabel();
+    private JLabel selectStandardBrowser;
     private JLabel openTemp;
     private JLabel openIncoming;
     private JTextField temp = new JTextField();
@@ -82,6 +89,7 @@ public class ODStandardPanel
     private JTextField port = new JTextField();
     private JTextField xmlPort = new JTextField();
     private JTextField nick = new JTextField();
+    private JTextField browser = new JTextField();
     private JLabel hint1;
     private JLabel hint2;
     private JLabel hint3;
@@ -130,6 +138,7 @@ public class ODStandardPanel
     }
 
     private void init() throws Exception {
+        OptionsManager optionsManager = PropertiesManager.getOptionsManager();
         port.setDocument(new NumberInputVerifier());
         xmlPort.setDocument(new NumberInputVerifier());
         temp.setText(ajSettings.getTempDir());
@@ -138,6 +147,9 @@ public class ODStandardPanel
         incoming.setText(ajSettings.getIncomingDir());
         incoming.setEditable(false);
         incoming.setBackground(Color.WHITE);
+        browser.setEditable(false);
+        browser.setBackground(Color.WHITE);
+        browser.setText(optionsManager.getStandardBrowser());
         port.setText(Long.toString(ajSettings.getPort()));
         xmlPort.setText(Long.toString(ajSettings.getXMLPort()));
         nick.setText(ajSettings.getNick());
@@ -174,7 +186,7 @@ public class ODStandardPanel
         JPanel panel8 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel8.add(new JLabel("Logging: "));
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        Level logLevel = PropertiesManager.getOptionsManager().getLogLevel();
+        Level logLevel = optionsManager.getLogLevel();
 
         LevelItem[] levelItems = new LevelItem[3];//{ "Info", "Debug", "keins"};
         levelItems[0] = new LevelItem(Level.INFO, ZeichenErsetzer.korrigiereUmlaute(
@@ -212,7 +224,7 @@ public class ODStandardPanel
         updateInfoModus.addItem(item0);
         updateInfoModus.addItem(item1);
         updateInfoModus.addItem(item2);
-        int infoModus = PropertiesManager.getOptionsManager().getVersionsinfoModus();
+        int infoModus = optionsManager.getVersionsinfoModus();
         switch (infoModus){
             case 0:{
                 updateInfoModus.setSelectedItem(item0);
@@ -260,6 +272,9 @@ public class ODStandardPanel
         label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                          getFirstAttrbuteByTagName(new String[]{"javagui", "options",
                                                                                                 "standard", "xmlport"})));
+      label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options",
+                                                                                                      "standard", "standardbrowser"})));
 
         IconManager im = IconManager.getInstance();
         ImageIcon icon = im.getIcon("hint");
@@ -330,6 +345,31 @@ public class ODStandardPanel
         openTemp.addMouseListener(dcMouseAdapter);
         openIncoming = new JLabel(icon2);
         openIncoming.addMouseListener(dcMouseAdapter);
+        selectStandardBrowser = new JLabel(icon2);
+        selectStandardBrowser.addMouseListener(new MouseAdapter(){
+            public void mouseEntered(MouseEvent e) {
+                JLabel source = (JLabel) e.getSource();
+                source.setBorder(BorderFactory.createLineBorder(Color.black));
+            }
+
+            public void mouseClicked(MouseEvent e) {
+                JLabel source = (JLabel) e.getSource();
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogType(JFileChooser.FILES_ONLY);
+                int returnVal = fileChooser.showOpenDialog(source);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    File browserFile = fileChooser.getSelectedFile();
+                    if (browserFile.isFile()){
+
+                    }
+                }
+            }
+
+            public void mouseExited(MouseEvent e) {
+                JLabel source = (JLabel) e.getSource();
+                source.setBorder(null);
+            }
+        });
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
@@ -343,6 +383,7 @@ public class ODStandardPanel
         JPanel panel3 = new JPanel(new GridBagLayout());
         JPanel panel4 = new JPanel(new GridBagLayout());
         JPanel panel7 = new JPanel(new GridBagLayout());
+        JPanel panel10 = new JPanel(new GridBagLayout());
 
         constraints.insets.right = 5;
         constraints.insets.left = 4;
@@ -351,6 +392,7 @@ public class ODStandardPanel
         panel3.add(label3, constraints);
         panel4.add(label4, constraints);
         panel7.add(label6, constraints);
+        panel10.add(label7, constraints);
 
         constraints.insets.left = 0;
         constraints.insets.right = 2;
@@ -361,10 +403,12 @@ public class ODStandardPanel
         panel3.add(port, constraints);
         panel7.add(xmlPort, constraints);
         panel4.add(nick, constraints);
+        panel10.add(browser, constraints);
         constraints.gridx = 2;
         constraints.weightx = 0;
         panel1.add(openTemp, constraints);
         panel2.add(openIncoming, constraints);
+        panel10.add(selectStandardBrowser, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -378,6 +422,8 @@ public class ODStandardPanel
         panel6.add(panel7, constraints);
         constraints.gridy = 4;
         panel6.add(panel4, constraints);
+        constraints.gridy = 5;
+        panel6.add(panel10, constraints);
 
         constraints.insets.top = 10;
         constraints.gridx = 1;
@@ -391,13 +437,13 @@ public class ODStandardPanel
         constraints.gridy = 4;
         panel6.add(hint3, constraints);
 
-        constraints.gridy = 5;
+        constraints.gridy = 6;
         constraints.gridx = 0;
         constraints.gridwidth = 1;
         panel6.add(panel8, constraints);
         constraints.gridx = 1;
         panel6.add(hint5, constraints);
-        constraints.gridy = 6;
+        constraints.gridy = 7;
         constraints.gridx = 0;
         panel6.add(panel9, constraints);
 

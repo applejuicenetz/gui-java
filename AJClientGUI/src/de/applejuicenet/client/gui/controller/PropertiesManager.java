@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.17 2004/01/02 16:48:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.18 2004/01/05 07:28:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.18  2004/01/05 07:28:59  maj0r
+ * Begonnen einen Standardwebbrowser einzubauen.
+ *
  * Revision 1.17  2004/01/02 16:48:30  maj0r
  * Serverliste holen geaendert.
  *
@@ -278,6 +281,31 @@ public class PropertiesManager
 
     public void setDefaultTheme(String themeShortName) {
         setAttributeByTagName(new String[]{"options", "defaulttheme"}, themeShortName);
+    }
+
+    public String getStandardBrowser(){
+        try{
+            String temp = getFirstAttrbuteByTagName(new String[]{"options", "browser", "file"});;
+            if (temp == null){
+                return "";
+            }
+            else{
+                return temp;
+            }
+        }
+        catch (Exception e)
+        {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("properties.xml neu erstellt", e);
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+            return "";
+        }
+    }
+
+    public void setStandardBrowser(String browser){
+        setAttributeByTagName(new String[]{"options", "browser", "file"}, browser);
     }
 
     public boolean isErsterStart() {
