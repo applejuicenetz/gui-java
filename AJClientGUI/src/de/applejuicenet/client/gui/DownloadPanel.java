@@ -67,7 +67,7 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.92 2004/02/12 18:40:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.93 2004/02/19 20:28:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -76,6 +76,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.93  2004/02/19 20:28:20  maj0r
+ * - Links werden nun bei Uebernahme in eine verwertbare Schreibweise geparst.
+ *
  * Revision 1.92  2004/02/12 18:40:35  maj0r
  * Muell entfernt.
  *
@@ -1007,26 +1010,10 @@ public class DownloadPanel
         if (link.length() != 0) {
             new Thread() {
                 public void run() {
-                    String encodedLink = link;
-                    try {
-                        StringBuffer tempLink = new StringBuffer(link);
-                        for (int i = 0; i < tempLink.length(); i++) {
-                            if (tempLink.charAt(i) == ' ') {
-                                tempLink.setCharAt(i, '.');
-                            }
-                        }
-                        encodedLink = URLEncoder.encode(tempLink.toString(),
-                            "ISO-8859-1");
-                    }
-                    catch (UnsupportedEncodingException ex) {
-                        //gibbet, also nix zu behandeln...
-                    }
-                    ApplejuiceFassade.getInstance().processLink(encodedLink);
+                    ApplejuiceFassade.getInstance().processLink(link);
                     SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
                 }
-            }
-
-            .start();
+            }.start();
             downloadLink.setText("");
         }
     }

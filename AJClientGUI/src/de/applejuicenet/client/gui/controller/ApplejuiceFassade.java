@@ -35,7 +35,7 @@ import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.gui.controller.xmlholder.PartListXMLHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.116 2004/02/19 11:07:41 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.117 2004/02/19 20:28:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -917,9 +917,23 @@ public class ApplejuiceFassade {
             }
             String password = PropertiesManager.getOptionsManager().
                 getRemoteSettings().getOldPassword();
+            String encodedLink = link;
+            try {
+                StringBuffer tempLink = new StringBuffer(link);
+                for (int i = 0; i < tempLink.length(); i++) {
+                    if (tempLink.charAt(i) == ' ') {
+                        tempLink.setCharAt(i, '.');
+                    }
+                }
+                encodedLink = URLEncoder.encode(tempLink.toString(),
+                    "ISO-8859-1");
+            }
+            catch (UnsupportedEncodingException ex) {
+                //gibbet nicht, also nix zu behandeln...
+            }
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
                                          "/function/processlink?password=" +
-                                         password + "&link=" + link, false);
+                                         password + "&link=" + encodedLink, false);
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
