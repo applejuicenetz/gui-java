@@ -48,7 +48,7 @@ import java.util.Date;
 import javax.swing.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.1 2003/11/04 13:14:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.2 2003/11/05 10:20:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -58,6 +58,9 @@ import javax.swing.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MemoryMonitor.java,v $
+ * Revision 1.2  2003/11/05 10:20:29  maj0r
+ * Max.RAM-Anzeige eingebaut.
+ *
  * Revision 1.1  2003/11/04 13:14:50  maj0r
  * Memory-Monitor eingebaut.
  *
@@ -72,7 +75,7 @@ public class MemoryMonitor extends JPanel implements Runnable {
     private BufferedImage bimg;
     private Graphics2D big;
     private Font font = new Font("Times New Roman", Font.PLAIN, 11);
-    private Runtime r = Runtime.getRuntime();
+    private Runtime runtime = Runtime.getRuntime();
     private int columnInc;
     private int pts[];
     private int ptNum;
@@ -84,6 +87,7 @@ public class MemoryMonitor extends JPanel implements Runnable {
     private Color graphColor = new Color(46, 139, 87);
     private Color mfColor = new Color(0, 100, 0);
     private String usedStr;
+    private String maxMem;
 
     public void startMemoryMonitor(){
         start();
@@ -105,6 +109,7 @@ public class MemoryMonitor extends JPanel implements Runnable {
                 }
             }
         });
+        maxMem = String.valueOf((int) runtime.maxMemory() / 1024);
     }
 
     public Dimension getMinimumSize() {
@@ -130,12 +135,12 @@ public class MemoryMonitor extends JPanel implements Runnable {
         big.setBackground(getBackground());
         big.clearRect(0, 0, w, h);
 
-        float freeMemory = (float) r.freeMemory();
-        float totalMemory = (float) r.totalMemory();
+        float freeMemory = (float) runtime.freeMemory();
+        float totalMemory = (float) runtime.totalMemory();
 
         // .. Draw allocated and used strings ..
         big.setColor(Color.green);
-        big.drawString(String.valueOf((int) totalMemory / 1024) + "K allocated", 4.0f, (float) ascent + 0.5f);
+        big.drawString(String.valueOf((int) totalMemory / 1024) + "K / " + maxMem +  "K allocated", 4.0f, (float) ascent + 0.5f);
         usedStr = String.valueOf(((int) (totalMemory - freeMemory)) / 1024)
                 + "K used";
         big.drawString(usedStr, 4, h - descent);
@@ -152,8 +157,8 @@ public class MemoryMonitor extends JPanel implements Runnable {
         int i = 0;
         for (; i < MemUsage; i++)
         {
-            mfRect.setRect(5, (float) ssH + i * blockHeight,
-                           blockWidth, (float) blockHeight - 1);
+            mfRect.setRect(5, ssH + i * blockHeight,
+                           blockWidth, blockHeight - 1);
             big.fill(mfRect);
         }
 
