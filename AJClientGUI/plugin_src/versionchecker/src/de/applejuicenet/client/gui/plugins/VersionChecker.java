@@ -9,7 +9,7 @@ import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.2 2004/01/30 16:32:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.3 2004/03/02 17:36:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: VersionChecker.java,v $
+ * Revision 1.3  2004/03/02 17:36:11  maj0r
+ * An neue Plugin-Schnittstelle angepasst.
+ *
  * Revision 1.2  2004/01/30 16:32:56  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -31,7 +34,8 @@ public class VersionChecker extends PluginConnector {
     private MainPanel mainPanel;
     private Logger logger;
 
-    public VersionChecker() {
+    public VersionChecker(PluginsPropertiesXMLHolder pluginsPropertiesXMLHolder) {
+        super(pluginsPropertiesXMLHolder);
         setLayout(new BorderLayout());
         logger = Logger.getLogger(getClass());
         mainPanel = new MainPanel();
@@ -65,28 +69,5 @@ public class VersionChecker extends PluginConnector {
     }
 
     public void registerSelected() {
-    }
-
-    public String getTitle() {
-        return "VersionChecker";
-    }
-
-    public String getAutor() {
-        return "Maj0r";
-    }
-
-    public String getBeschreibung() {
-        return "Welche Core-Versionen sind zurzeit im Einsatz?\r\n" +
-            "Welche Betriebssysteme werden eingesetzt?\r\n" +
-            "Dieses Plugin beantwortet Deine Fragen.\r\n\r\n" +
-            "GUI ab 0.54.7 wird benötigt.";
-    }
-
-    public String getVersion() {
-        return "1.1";
-    }
-
-    public boolean istReiter() {
-        return true;
     }
 }
