@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.18 2004/01/05 07:28:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.19 2004/01/05 17:08:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.19  2004/01/05 17:08:36  maj0r
+ * Fehlerbehandlung korrigiert.
+ *
  * Revision 1.18  2004/01/05 07:28:59  maj0r
  * Begonnen einen Standardwebbrowser einzubauen.
  *
@@ -306,6 +309,12 @@ public class PropertiesManager
 
     public void setStandardBrowser(String browser){
         setAttributeByTagName(new String[]{"options", "browser", "file"}, browser);
+        String temp = getStandardBrowser();
+        if (temp.compareTo(browser) !=0 ){
+            AppleJuiceDialog.rewriteProperties = true;
+            AppleJuiceDialog.closeWithErrormessage("Fehler beim Zugriff auf die properties.xml. " +
+                                                   "Die Datei wird neu erstellt.", false);
+        }
     }
 
     public boolean isErsterStart() {
