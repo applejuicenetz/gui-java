@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.25 2003/09/04 14:00:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.26 2003/09/04 22:12:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.26  2003/09/04 22:12:45  maj0r
+ * Logger verfeinert.
+ * Threadbeendigung korrigiert.
+ *
  * Revision 1.25  2003/09/04 14:00:09  maj0r
  * Version 0.23.
  *
@@ -259,28 +263,24 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public void startXMLCheck() {
-        runThread = true;
-        final SwingWorker worker = new SwingWorker() {
+        workerThread = new SwingWorker() {
                     public Object construct() {
+                        runThread = true;
                         while (runThread){
                             updateModifiedXML();
                         }
                         return null;
                     }
-                    public void finished() {
-                        runThread = false;
-                    }
                 };
-        workerThread = worker;
-        worker.start();
-        if (logger.isEnabledFor(Level.INFO))
-            logger.info("WorkerThread gestartet...");
+        workerThread.start();
+        if (logger.isEnabledFor(Level.DEBUG))
+            logger.debug("MainWorkerThread gestartet. " + workerThread);
     }
 
     public void stopXMLCheck() {
         workerThread.interrupt();
-        if (logger.isEnabledFor(Level.INFO))
-            logger.info("WorkerThread beendet...");
+        if (logger.isEnabledFor(Level.DEBUG))
+            logger.debug("MainWorkerThread beendet. " + workerThread);
     }
 
     public PartListDO getDownloadPartList(DownloadDO downloadDO) {
@@ -351,9 +351,17 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
                 }
             });
-            wait(2000);
+            try{
+                wait(2000);
+            }
+            catch (InterruptedException e)
+            {
+                //Wenn der Dialog beendet wird, kann der Thread
+                //grade im Wait erwischt werden.
+                //Das ist kein Fehler
+            }
         }
-        catch (InterruptedException e)
+        catch (Exception e)
         {
             if (logger.isEnabledFor(Level.ERROR))
                 logger.error("Unbehandelte Exception", e);

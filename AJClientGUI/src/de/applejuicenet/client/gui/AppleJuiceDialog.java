@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.40 2003/09/04 10:13:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.41 2003/09/04 22:12:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.41  2003/09/04 22:12:45  maj0r
+ * Logger verfeinert.
+ * Threadbeendigung korrigiert.
+ *
  * Revision 1.40  2003/09/04 10:13:28  maj0r
  * Logger eingebaut.
  *
@@ -277,11 +281,11 @@ public class AppleJuiceDialog
 
     private void closeDialog(WindowEvent evt) {
         setVisible(false);
+        ApplejuiceFassade.getInstance().stopXMLCheck();
         String nachricht = "appleJuice-Core-GUI wird beendet...";
         if (logger.isEnabledFor(Level.INFO))
             logger.info(nachricht);
         System.out.println(nachricht);
-        ApplejuiceFassade.getInstance().stopXMLCheck();
         einstellungenSpeichern();
         System.exit(0);
     }
@@ -289,6 +293,7 @@ public class AppleJuiceDialog
     public static void closeWithErrormessage(String error, boolean speichereEinstellungen) {
         JOptionPane.showMessageDialog(theApp, error, "Fehler!",
                                       JOptionPane.OK_OPTION);
+        ApplejuiceFassade.getInstance().stopXMLCheck();
         String nachricht = "appleJuice-Core-GUI wird beendet...";
         Logger aLogger = Logger.getLogger(AppleJuiceDialog.class.getName());
         if (aLogger.isEnabledFor(Level.INFO))
@@ -393,48 +398,60 @@ public class AppleJuiceDialog
     }
 
     public void fireLanguageChanged() {
-        LanguageSelector languageSelector = LanguageSelector.getInstance();
-        String versionsNr = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
-        setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new
-                                                           String[]{"mainform", "caption"})) + " (Core " + versionsNr + ")");
-        sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                             getFirstAttrbuteByTagName(new String[]{"einstform", "languagesheet",
-                                                                                                    "caption"})));
-        menuItemOptionen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "optbtn", "caption"})));
-        menuItemOptionen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "optbtn", "hint"})));
-        menuItemUeber.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "caption"})));
-        menuItemUeber.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "hint"})));
-        optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "menu", "extras"})));
-        if (paused)
-        {
-            pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"javagui", "mainform",
-                                                                                                   "fortsetzen"})));
+        try{
+            LanguageSelector languageSelector = LanguageSelector.getInstance();
+            String versionsNr = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
+            setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                       getFirstAttrbuteByTagName(new
+                                                               String[]{"mainform", "caption"})) + " (Core " + versionsNr + ")");
+            sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                 getFirstAttrbuteByTagName(new String[]{"einstform", "languagesheet",
+                                                                                                        "caption"})));
+            menuItemOptionen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "optbtn", "caption"})));
+            menuItemOptionen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "optbtn", "hint"})));
+            menuItemUeber.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "caption"})));
+            menuItemUeber.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "hint"})));
+            optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "menu", "extras"})));
+            if (paused)
+            {
+                pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                getFirstAttrbuteByTagName(new String[]{"javagui", "mainform",
+                                                                                                       "fortsetzen"})));
+            }
+            else
+            {
+                pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                                getFirstAttrbuteByTagName(new String[]{"javagui", "mainform",
+                                                                                                       "pause"})));
+            }
         }
-        else
-        {
-            pause.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"javagui", "mainform",
-                                                                                                   "pause"})));
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 
     public void fireContentChanged(int type, Object content) {
-        if (type == DataUpdateListener.STATUSBAR_CHANGED)
-        {
-            String[] status = (String[]) content;
-            statusbar[0].setText(status[0]);
-            statusbar[1].setText(status[1]);
-            statusbar[2].setText(status[2]);
-            statusbar[3].setText(status[3]);
-            statusbar[4].setText(status[4]);
-            statusbar[5].setText(status[5]);
+        try{
+            if (type == DataUpdateListener.STATUSBAR_CHANGED)
+            {
+                String[] status = (String[]) content;
+                statusbar[0].setText(status[0]);
+                statusbar[1].setText(status[1]);
+                statusbar[2].setText(status[2]);
+                statusbar[3].setText(status[3]);
+                statusbar[4].setText(status[4]);
+                statusbar[5].setText(status[5]);
+            }
+        }
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
         }
     }
 }

@@ -5,12 +5,13 @@ import java.text.SimpleDateFormat;
 
 import org.w3c.dom.*;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.shared.LoggerUtils;
 import de.applejuicenet.client.shared.MapSetStringKey;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.12 2003/09/01 15:50:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.13 2003/09/04 22:12:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,10 @@ import de.applejuicenet.client.shared.MapSetStringKey;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.13  2003/09/04 22:12:45  maj0r
+ * Logger verfeinert.
+ * Threadbeendigung korrigiert.
+ *
  * Revision 1.12  2003/09/01 15:50:51  maj0r
  * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
  *
@@ -51,60 +56,56 @@ import de.applejuicenet.client.shared.MapSetStringKey;
  */
 
 public class ShareXMLHolder
-    extends WebXMLParser {
-  private HashMap shareMap;
-  private Logger logger;
+        extends WebXMLParser {
+    private HashMap shareMap;
+    private Logger logger;
 
-  public ShareXMLHolder() {
-    super("/xml/share.xml", "", false);
-    logger = Logger.getLogger(getClass());
-  }
+    public ShareXMLHolder() {
+        super("/xml/share.xml", "", false);
+        logger = Logger.getLogger(getClass());
+    }
 
-  public void update() {
-    reload("");
-    updateShare();
-  }
+    public void update() {
+        reload("");
+        updateShare();
+    }
 
-  private void updateShare() {
-    String methode = "updateShare() -";
-    if (logger.isDebugEnabled()){
-        logger.debug(LoggerUtils.createDebugMessage(methode, LoggerUtils.EINTRITT));
+    private void updateShare() {
+        try{
+            if (shareMap == null) {
+                shareMap = new HashMap();
+            }
+            reload("");
+            NodeList nodes = document.getElementsByTagName("share");
+            int nodesSize = nodes.getLength();
+            Element e = null;
+            int id_key;
+            String filename = null;
+            String shortfilename = null;
+            long size;
+            String checksum = null;
+            ShareDO share = null;
+            int prioritaet;
+            for (int i = 0; i < nodesSize; i++) {
+                e = (Element) nodes.item(i);
+                id_key = Integer.parseInt(e.getAttribute("id"));
+                filename = e.getAttribute("filename");
+                shortfilename = e.getAttribute("shortfilename");
+                size = Long.parseLong(e.getAttribute("size"));
+                checksum = e.getAttribute("checksum");
+                prioritaet = Integer.parseInt(e.getAttribute("priority"));
+                share = new ShareDO(id_key, filename, shortfilename, size, checksum, prioritaet);
+                shareMap.put(new MapSetStringKey(id_key), share);
+            }
+        }
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
     }
-    if (shareMap == null) {
-      shareMap = new HashMap();
-    }
-    reload("");
-    if (logger.isDebugEnabled()){
-      logger.debug(LoggerUtils.createDebugMessage(methode + " Geholt vom Server", LoggerUtils.DEFAULT));
-    }
-    NodeList nodes = document.getElementsByTagName("share");
-    int nodesSize = nodes.getLength();
-    Element e = null;
-    int id_key;
-    String filename = null;
-    String shortfilename = null;
-    long size;
-    String checksum = null;
-    ShareDO share = null;
-    int prioritaet;
-    for (int i = 0; i < nodesSize; i++) {
-      e = (Element) nodes.item(i);
-      id_key = Integer.parseInt(e.getAttribute("id"));
-      filename = e.getAttribute("filename");
-      shortfilename = e.getAttribute("shortfilename");
-      size = Long.parseLong(e.getAttribute("size"));
-      checksum = e.getAttribute("checksum");
-      prioritaet = Integer.parseInt(e.getAttribute("priority"));
-      share = new ShareDO(id_key, filename, shortfilename, size, checksum, prioritaet);
-      shareMap.put(new MapSetStringKey(id_key), share);
-    }
-    if (logger.isDebugEnabled()){
-        logger.debug(LoggerUtils.createDebugMessage(methode, LoggerUtils.AUSTRITT));
-    }
-  }
 
-  public HashMap getShare() {
-    updateShare();
-    return shareMap;
-  }
+    public HashMap getShare() {
+        updateShare();
+        return shareMap;
+    }
 }
