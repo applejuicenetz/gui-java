@@ -3,13 +3,14 @@ package de.applejuicenet.client.shared;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 import javax.sound.sampled.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.3 2003/10/31 19:04:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.4 2003/11/05 11:01:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,9 @@ import javax.sound.sampled.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SoundPlayer.java,v $
+ * Revision 1.4  2003/11/05 11:01:35  maj0r
+ * Fehler bei der Soundausgabe bei fehlerhaften Sounddateien (z.B. falsches Format) oder fehlendem Sounddevice behoben.
+ *
  * Revision 1.3  2003/10/31 19:04:58  maj0r
  * Sounds eingebaut.
  *
@@ -62,63 +66,69 @@ public class SoundPlayer {
     }
 
     public void playSound(int sound){
-        if (!PropertiesManager.getOptionsManager().isSoundEnabled()){
-            return;
+        try{
+            if (!PropertiesManager.getOptionsManager().isSoundEnabled()){
+                return;
+            }
+            File soundFile = null;
+            switch (sound){
+                case ABGEBROCHEN:{
+                    soundFile = new File(soundPath + "abgebrochen.wav");
+                    break;
+                }
+                case SUCHEN:{
+                    soundFile = new File(soundPath + "suchen.wav");
+                    break;
+                }
+                case VERBINDEN:{
+                    soundFile = new File(soundPath + "verbinden.wav");
+                    break;
+                }
+                case GESPEICHERT:{
+                    soundFile = new File(soundPath + "gespeichert.wav");
+                    break;
+                }
+                case KOMPLETT:{
+                    soundFile = new File(soundPath + "komplett.wav");
+                    break;
+                }
+                case LADEN:{
+                    soundFile = new File(soundPath + "laden.wav");
+                    break;
+                }
+                case POWER:{
+                    soundFile = new File(soundPath + "pwdl.wav");
+                    break;
+                }
+                case VERWEIGERT:{
+                    soundFile = new File(soundPath + "verweigert.wav");
+                    break;
+                }
+                case KONKRETISIEREN:{
+                    soundFile = new File(soundPath + "konkretisieren.wav");
+                    break;
+                }
+                case ZUGANG_GEWAEHRT:{
+                    soundFile = new File(soundPath + "zuganggestattet.wav");
+                    break;
+                }
+                case GESTARTET:{
+                    soundFile = new File(soundPath + "gestartet.wav");
+                    break;
+                }
+                default:
+                {
+                    logger.error("SoundPlayer::playSound() ungueltiger Parameter: " + sound);
+                }
+            }
+            Clip soundToPlay = loadSound(soundFile);
+            if (soundToPlay!=null){
+                soundToPlay.start();
+            }
         }
-        File soundFile = null;
-        switch (sound){
-            case ABGEBROCHEN:{
-                soundFile = new File(soundPath + "abgebrochen.wav");
-                break;
-            }
-            case SUCHEN:{
-                soundFile = new File(soundPath + "suchen.wav");
-                break;
-            }
-            case VERBINDEN:{
-                soundFile = new File(soundPath + "verbinden.wav");
-                break;
-            }
-            case GESPEICHERT:{
-                soundFile = new File(soundPath + "gespeichert.wav");
-                break;
-            }
-            case KOMPLETT:{
-                soundFile = new File(soundPath + "komplett.wav");
-                break;
-            }
-            case LADEN:{
-                soundFile = new File(soundPath + "laden.wav");
-                break;
-            }
-            case POWER:{
-                soundFile = new File(soundPath + "pwdl.wav");
-                break;
-            }
-            case VERWEIGERT:{
-                soundFile = new File(soundPath + "verweigert.wav");
-                break;
-            }
-            case KONKRETISIEREN:{
-                soundFile = new File(soundPath + "konkretisieren.wav");
-                break;
-            }
-            case ZUGANG_GEWAEHRT:{
-                soundFile = new File(soundPath + "zuganggestattet.wav");
-                break;
-            }
-            case GESTARTET:{
-                soundFile = new File(soundPath + "gestartet.wav");
-                break;
-            }
-            default:
-            {
-                logger.error("SoundPlayer::playSound() ungueltiger Parameter: " + sound);
-            }
-        }
-        Clip soundToPlay = loadSound(soundFile);
-        if (soundToPlay!=null){
-            soundToPlay.start();
+        catch(Exception e)
+        {
+            logger.error(e);
         }
     }
 
@@ -143,6 +153,18 @@ public class SoundPlayer {
             DataLine.Info info = new DataLine.Info(Clip.class, sound.getFormat(), ((int) sound.getFrameLength()*format.getFrameSize()));
             clip = (Clip) AudioSystem.getLine(info);
             clip.open(sound);
+        }
+        catch(LineUnavailableException luE)
+        {
+            logger.info("Kein Audioausgabegeraet gefunden. Bitte Soundausgabe deaktivieren.", luE);
+        }
+        catch (IOException ioE)
+        {
+            logger.error("Die Datei " + file.getAbsolutePath() + " konnte nicht gefunden werden.");
+        }
+        catch (UnsupportedAudioFileException uafE)
+        {
+            logger.error("Die Datei " + file.getAbsolutePath() + " hat ein ungueltiges Format und kann nicht ausgegeben werden.");
         }
         catch(Exception e)
         {
