@@ -46,49 +46,13 @@ import de.applejuicenet.client.shared.dnd.DndTargetAdapter;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.11 2004/03/05 15:49:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.12 2004/05/10 15:59:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: DateiListeDialog.java,v $
- * Revision 1.11  2004/03/05 15:49:38  maj0r
- * PMD-Optimierung
- *
- * Revision 1.10  2004/02/25 13:57:53  maj0r
- * Bug #246 gefixt (Danke an mail_tom62)
- * Nun koennen auch bei "voller" Dateilistetabelle im Sharebereich neue Dateien hinein gezogen werden.
- *
- * Revision 1.9  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.8  2004/02/05 23:11:26  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.7  2004/01/19 16:59:15  maj0r
- * Dateiname bei Dateilistengenerierung korrigiert.
- *
- * Revision 1.6  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.5  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.4  2003/10/14 15:44:54  maj0r
- * Logger eingebaut.
- *
- * Revision 1.3  2003/08/28 10:39:05  maj0r
- * Sharelisten koennen jetzt gespeichert werden.
- *
- * Revision 1.2  2003/08/28 06:11:02  maj0r
- * DragNDrop vervollstaendigt.
- *
- * Revision 1.1  2003/08/27 16:44:42  maj0r
- * Unterstuetzung fuer DragNDrop teilweise eingebaut.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -246,12 +210,13 @@ public class DateiListeDialog
                     text.append("<html><head><title>appleJuice Linklist</title></head><body bgcolor=#000080 text=#ffffff "
                                 + "link=#ffffff vlink=#ffffff><table align=center border=0><tr><td><b>appleJuice Dateien</b></td></tr><br>" +
                                 "\r\n");
+                    ShareDO[] sortedShareDOs = sortShareDOs(shareDO);
                     for (int x = 0; x < shareDO.length; x++) {
                         text.append("<tr><td><a href=\"ajfsp://file|");
-                        text.append(shareDO[x].getShortfilename() + "|" +
-                                    shareDO[x].getCheckSum() + "|" +
-                                    shareDO[x].getSize() + "/\">");
-                        text.append(shareDO[x].getShortfilename());
+                        text.append(sortedShareDOs[x].getShortfilename() + "|" +
+                                    sortedShareDOs[x].getCheckSum() + "|" +
+                                    sortedShareDOs[x].getSize() + "/\">");
+                        text.append(sortedShareDOs[x].getShortfilename());
                         text.append("</a></td></tr>" + "\r\n");
                     }
                     text.append("</table></body></html>");
@@ -266,10 +231,11 @@ public class DateiListeDialog
                                 "\r\n\r\n");
                     text.append("Diese Datei darf nicht modifiziert werden!" +
                                 "\r\n" + "-----\r\n100\r\n");
-                    for (int x = 0; x < shareDO.length; x++) {
-                        text.append(shareDO[x].getShortfilename() + "\r\n");
-                        text.append(shareDO[x].getCheckSum() + "\r\n");
-                        text.append(shareDO[x].getSize() + "\r\n");
+                    ShareDO[] sortedShareDOs = sortShareDOs(shareDO);
+                    for (int x = 0; x < sortedShareDOs.length; x++) {
+                        text.append(sortedShareDOs[x].getShortfilename() + "\r\n");
+                        text.append(sortedShareDOs[x].getCheckSum() + "\r\n");
+                        text.append(sortedShareDOs[x].getSize() + "\r\n");
                     }
                 }
                 try {
@@ -283,6 +249,25 @@ public class DateiListeDialog
                     }
                 }
             }
+        }
+
+        private ShareDO[] sortShareDOs(ShareDO[] shareDO){
+            ShareDO[] sortedDOs = shareDO;
+            int n = sortedDOs.length;
+            ShareDO tmp;
+            for (int i = 0; i < n - 1; i++) {
+                int k = i;
+                for (int j = i + 1; j < n; j++) {
+                    if (sortedDOs[j].getShortfilename().compareToIgnoreCase(
+                        sortedDOs[k].getShortfilename()) < 0) {
+                        k = j;
+                    }
+                }
+                tmp = sortedDOs[i];
+                sortedDOs[i] = sortedDOs[k];
+                sortedDOs[k] = tmp;
+            }
+            return sortedDOs;
         }
 
         public void mouseExited(MouseEvent e) {
