@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.16 2004/04/30 14:14:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.17 2004/06/18 11:48:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +34,7 @@ public class Search {
     private List entries = new ArrayList();
     private boolean changed = true;
     private long creationTime;
+    private boolean running;
 
     public static int currentSearchCount = 0;
 
@@ -168,7 +169,15 @@ public class Search {
         return (SearchEntry[]) neededEntries.toArray(new SearchEntry[neededEntries.size()]);
     }
 
-    public class SearchEntry {
+    public void setRunning(boolean running) {
+		this.running = running;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public class SearchEntry {
         private int id;
         private int searchId;
         private String checksumme;
