@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.MapSetStringKey;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.16 2004/01/12 13:17:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.17 2004/01/12 19:31:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.MapSetStringKey;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.17  2004/01/12 19:31:52  maj0r
+ * Bug #98 gefixt
+ *
  * Revision 1.16  2004/01/12 13:17:49  maj0r
  * Bug #92 gefixt (Danke an daa803)
  * Ein paar Synchronized() eingebaut.
@@ -163,8 +166,12 @@ public class DownloadDO
     }
 
     public DownloadSourceDO[] getSources() {
-        return (DownloadSourceDO[]) sourcen.values().toArray(new
-            DownloadSourceDO[sourcen.size()]);
+        DownloadSourceDO[] sources = null;
+        synchronized(sourcen){
+            sources = (DownloadSourceDO[]) sourcen.values().
+                toArray(new DownloadSourceDO[sourcen.size()]);
+        }
+        return sources;
     }
 
     public void removeSource(String id) {
