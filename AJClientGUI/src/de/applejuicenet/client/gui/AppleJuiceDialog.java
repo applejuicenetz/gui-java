@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -73,7 +75,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.97 2004/02/20 16:13:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.98 2004/02/25 13:10:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +84,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.98  2004/02/25 13:10:04  maj0r
+ * Bug #244 gefixt (Danke an Homer1Simpson)
+ * GUI stoert sich nicht mehr an Nicht-Themes-Zips im Themes-Verzeichnis.
+ *
  * Revision 1.97  2004/02/20 16:13:33  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -392,7 +398,12 @@ public class AppleJuiceDialog
                 for (int i = 0; i < themeFiles.length; i++) {
                     if (themeFiles[i].isFile() &&
                         themeFiles[i].getName().indexOf(".zip") != -1) {
-                        themesDateien.add(themeFiles[i].toURL());
+                        //testen, ob es wirklich ein skinfile ist
+                        ZipFile jf = new ZipFile(themeFiles[i]);
+                        ZipEntry entry = jf.getEntry("skinlf-themepack.xml");
+                        if (entry!=null){
+                            themesDateien.add(themeFiles[i].toURL());
+                        }
                     }
                 }
                 Iterator it = themesDateien.iterator();
@@ -873,7 +884,12 @@ public class AppleJuiceDialog
                 for (int i = 0; i < themeFiles.length; i++) {
                     if (themeFiles[i].isFile() &&
                         themeFiles[i].getName().indexOf(".zip") != -1) {
-                        themesDateien.add(themeFiles[i].toURL());
+                        //testen, ob es wirklich ein skinfile ist
+                        ZipFile jf = new ZipFile(themeFiles[i]);
+                        ZipEntry entry = jf.getEntry("skinlf-themepack.xml");
+                        if (entry!=null){
+                            themesDateien.add(themeFiles[i].toURL());
+                        }
                     }
                 }
                 it = themesDateien.iterator();
