@@ -62,8 +62,7 @@
 	<pack classes="de.applejuicenet.client.AppleJuiceClient,org.apache.xerces.parsers.XML11Configuration,
 			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl"
 	      targetJar="${basedir}/AJCoreGUI.jar"
-	      excludePkg="java,javax,sun,com.l2fprod,com.sixlegs"
-	      manifestClassPath="./needed_jars/skinlf.jar,./needed_jars/looks-1.2.1.jar"
+	      excludePkg="java,javax,sun,com.l2fprod,com.sixlegs,org.apache.log4j"
 	      manifestMainClass="de.applejuicenet.client.AppleJuiceClient">
            <classpath>
            	<pathelement path="${gui.compiledir}"/>
@@ -71,6 +70,7 @@
            </classpath>
 	   <additionalclass name="org.apache.xerces.parsers.SAXParser"/>
            <additionalfileset dir="${gui.compiledir}" excludes="**/*.txt **/*.class **/*.dep2"/>
+           <additionalfileset dir="${basedir}/needed_jars"/>
 	</pack>
    </target>
 

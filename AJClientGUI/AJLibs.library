@@ -3,12 +3,12 @@
   <!--JBuilder Library Definition File-->
   <fullname>AJLibs</fullname>
   <class>
-    <path>[tools/log4j-1.2.8.jar]</path>
     <path>[tools/pack.jar]</path>
     <path>[tools/xercesImpl.jar]</path>
     <path>[tools/xmlParserAPIs.jar]</path>
     <path>[needed_jars/skinlf.jar]</path>
     <path>[needed_jars/looks-1.2.1.jar]</path>
+    <path>[needed_jars/log4j-1.2.8.jar]</path>
   </class>
-  <lastmodsaved>1078736480281</lastmodsaved>
+  <lastmodsaved>1078864793156</lastmodsaved>
 </library>

@@ -1,0 +1,1 @@
+java -Djava.ext.dirs=./needed_jars -jar AJCoreGUI.jar
