@@ -28,7 +28,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardDialog.java,v 1.5 2004/12/07 16:48:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardDialog.java,v 1.6 2004/12/07 17:29:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -216,11 +216,11 @@ public class WizardDialog
 	                getMaxNewConnectionsPro10Sek());
 	            ApplejuiceFassade.getInstance().saveAJSettings(ajSettings);
 	        }
-	        OptionsManagerImpl.getInstance().setErsterStart(false);
 		}
 		else{
 			regularClosed = false;
 		}
+        OptionsManagerImpl.getInstance().setErsterStart(false);
         dispose();
     }
 
