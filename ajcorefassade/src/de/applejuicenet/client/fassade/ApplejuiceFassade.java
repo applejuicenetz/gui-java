@@ -718,8 +718,8 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 					|| subdir.indexOf(ApplejuiceFassade.separator) == 0) {
 				subdir = subdir.substring(1);
 			}
-			subdir = subdir.replaceAll("..", "_");
-			subdir = subdir.replaceAll(":", "_");
+			subdir = subdir.replace(".", "_");
+			subdir = subdir.replace(":", "_");
 		}
 		return subdir;
 	}
