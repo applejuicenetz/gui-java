@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.26 2004/06/15 16:19:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.27 2004/06/23 12:35:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -327,7 +327,7 @@ public class DownloadSourceDO
                 String temp = DownloadModel.position;
                 temp = temp.replaceFirst("%d",
                                          Integer.toString(getQueuePosition()));
-                return DownloadModel.warteschlange + " " + temp;
+                return temp;
             }
             case DownloadSourceDO.KEINE_BRAUCHBAREN_PARTS:
                 return DownloadModel.keineBrauchbarenParts;
