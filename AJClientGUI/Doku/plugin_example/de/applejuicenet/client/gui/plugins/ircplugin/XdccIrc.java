@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/Doku/plugin_example/de/applejuicenet/client/gui/plugins/ircplugin/Attic/XdccIrc.java,v 1.4 2003/08/28 16:19:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/Doku/plugin_example/de/applejuicenet/client/gui/plugins/ircplugin/Attic/XdccIrc.java,v 1.5 2003/08/29 06:49:32 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import de.applejuicenet.client.shared.SwingWorker;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: XdccIrc.java,v $
+ * Revision 1.5  2003/08/29 06:49:32  maj0r
+ * NullPointer behoben.
+ * Version 1.21
+ *
  * Revision 1.4  2003/08/28 16:19:29  maj0r
  * Auf SwingWorker umgebaut und Hauptklasse umbenannt.
  *
@@ -1724,10 +1728,11 @@ public class XdccIrc
         public void valueChanged(ListSelectionEvent e) {
             if (e.getValueIsAdjusting() == false)
             {
-                if (userList.getSelectedIndex() != -1)
+                Object obj = userList.getSelectedValue();
+                if (obj != null)
                 {
                     tabUpdate("Init Window",
-                              "Nickname: " + userList.getSelectedValue().toString() +
+                              "Nickname: " + obj.toString() +
                               " was selected.");
                 }
             }

@@ -52,7 +52,7 @@ public class IrcPlugin extends PluginConnector {
     }
 
     public String getVersion() {
-        return "1.2";
+        return "1.21";
     }
 
     public boolean istReiter() {
