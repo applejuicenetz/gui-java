@@ -5,11 +5,12 @@ import java.util.*;
 import javax.swing.table.*;
 
 import de.applejuicenet.client.shared.dac.*;
+import de.applejuicenet.client.shared.MapSetStringKey;
 import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.gui.shared.SortableTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerTableModel.java,v 1.5 2003/06/24 14:32:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerTableModel.java,v 1.6 2003/07/01 14:54:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,9 @@ import de.applejuicenet.client.gui.shared.SortableTableModel;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerTableModel.java,v $
+ * Revision 1.6  2003/07/01 14:54:27  maj0r
+ * Weggefallene Server werden erkannt und entfernt.
+ *
  * Revision 1.5  2003/06/24 14:32:27  maj0r
  * Klassen zum Sortieren von Tabellen eingefügt.
  * Servertabelle kann nun spaltenweise sortiert werden.
@@ -117,6 +121,18 @@ public class ServerTableModel
   }
 
   public void setTable(HashMap changedContent) {
+    //alte Server entfernen
+    MapSetStringKey suchKey = null;
+    ArrayList toRemove = new ArrayList();
+    for(int i=0; i<servers.size(); i++){
+        suchKey = new MapSetStringKey(((ServerDO)servers.get(i)).getIDasString());
+        if (!changedContent.containsKey(suchKey)){
+              toRemove.add(servers.get(i));
+        }
+    }
+    for (int x=0; x<toRemove.size(); x++){
+        servers.remove(toRemove.get(x));
+    }
     Iterator it = changedContent.values().iterator();
     while (it.hasNext()) {
       ServerDO server = (ServerDO) it.next();
