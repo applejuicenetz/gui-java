@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/MainNode.java,v 1.9 2004/05/28 15:32:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/MainNode.java,v 1.10 2004/06/12 12:24:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -107,7 +107,10 @@ public class MainNode
             for (int i = 0; i < uploadsForThread.length; i++) {
                 if (uploadsForThread[i].getStatus() ==
                     statusToCheck) {
-                    if (active){
+                    if (statusToCheck == UploadDO.AKTIVE_UEBERTRAGUNG){
+                        children.add(uploadsForThread[i]);
+                    }
+                    else if (active){
                         if (uploadsForThread[i].getDirectState() == UploadDO.STATE_DIREKT_VERBUNDEN){
                             children.add(uploadsForThread[i]);
                         }
