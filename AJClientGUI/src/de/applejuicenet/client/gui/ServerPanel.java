@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.15 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.16 2003/06/22 20:34:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.16  2003/06/22 20:34:25  maj0r
+ * Konsolenausgaben hinzugefügt.
+ *
  * Revision 1.15  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -69,7 +72,7 @@ public class ServerPanel
         int selected = serverTable.getSelectedRow();
         ServerDO server = (ServerDO) ( (ServerTableModel) serverTable.getModel()).
             getRow(selected);
-        DataManager.connectToServer(server.getID());
+        DataManager.getInstance().connectToServer(server.getID());
       }
     });
 

@@ -11,9 +11,10 @@ import javax.swing.Timer;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
+import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.21 2003/06/13 15:07:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.22 2003/06/22 20:34:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +23,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.22  2003/06/22 20:34:25  maj0r
+ * Konsolenausgaben hinzugefügt.
+ *
  * Revision 1.21  2003/06/13 15:07:30  maj0r
  * Versionsanzeige hinzugefügt.
  * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
@@ -166,16 +170,26 @@ public class DataManager { //Singleton-Implementierung
     updateStatusbar();
   }
 
-  public static boolean connectToServer(int id) {
-    String result;
-    try {
-      result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
-                                         "/function/serverlogin?id=" + id);
-    }
-    catch (WebSiteNotFoundException ex) {
+  public boolean connectToServer(int id) {
+    HashMap server = getAllServer();
+    String id_key = Integer.toString(id);
+    ServerDO serverDO = (ServerDO) server.get(id_key);
+    if (serverDO==null){
+      System.out.print("Warnung: Server mit ID: "+ id_key +" nicht gefunden!");
       return false;
     }
-    return true;
+    else{
+      String result;
+      System.out.print("Verbinde mit '" + serverDO.getName() + "'...");
+      try {
+        result = HtmlLoader.getHtmlContent(getHost(), HtmlLoader.POST,
+                                           "/function/serverlogin?id=" + id);
+      }
+      catch (WebSiteNotFoundException ex) {
+        return false;
+      }
+      return true;
+    }
   }
 
   private static String getHost() {
