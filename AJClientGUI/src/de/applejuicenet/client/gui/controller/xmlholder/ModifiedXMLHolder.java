@@ -22,7 +22,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.11 2004/01/30 21:34:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.12 2004/02/02 19:28:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.12  2004/02/02 19:28:57  maj0r
+ * Kompression wird nur beim initialen Laden und bei entferntem Core verwendet.
+ *
  * Revision 1.11  2004/01/30 21:34:48  maj0r
  * GUI sollte nun auch bei Ueberlastung des Core besser verbinden (Danke an the_Killerbee).
  *
@@ -293,12 +296,12 @@ public class ModifiedXMLHolder
                 //lazy loading
                 case 0:{
                     count ++;
-                    filter = "&filter=ids;down;uploads;server;informations";
+                    filter = "&filter=ids;down;uploads;server;informations&mode=zip";
                     break;
                 }
                 case 1:{
                     count ++;
-                    filter = "&filter=ids;informations;user";
+                    filter = "&filter=ids;informations;user&mode=zip";
                     break;
                 }
                 case 2:{

@@ -22,7 +22,7 @@ import de.applejuicenet.client.shared.exception.PartlistException;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.24 2004/02/02 15:13:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.25 2004/02/02 19:28:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.25  2004/02/02 19:28:57  maj0r
+ * Kompression wird nur beim initialen Laden und bei entferntem Core verwendet.
+ *
  * Revision 1.24  2004/02/02 15:13:47  maj0r
  * Kommunikation GUI<->Core erfolgt nun gezipped.
  *
@@ -108,7 +111,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * Umbenannt und Hostverwendung korrigiert.
  *
  * Revision 1.9  2003/06/10 12:31:03  maj0r
- * Historie eingef�gt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -123,6 +126,7 @@ public abstract class WebXMLParser
     private boolean useTimestamp = true;
     private String password;
     private Logger logger;
+    private String zipMode = "";
 
     public WebXMLParser(String xmlCommand, String parameters) {
         super();
@@ -146,6 +150,9 @@ public abstract class WebXMLParser
         if (host == null || host.length() == 0) {
             host = "localhost";
         }
+        if (host.compareToIgnoreCase("localhost")!=0 && host.compareTo("127.0.0.1")!=0){
+            zipMode = "mode=zip&";
+        }
         this.xmlCommand = xmlCommand;
         webXML = true;
     }
@@ -153,21 +160,23 @@ public abstract class WebXMLParser
     public void reload(String parameters, boolean throwWebSiteNotFoundException) throws Exception {
         String xmlData = null;
         try {
+            String command = xmlCommand + "?";
+            if (parameters.indexOf("mode=zip")==-1){
+                command += zipMode;
+            }
             if (useTimestamp) {
-                xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                    xmlCommand + "?mode=zip&password=" + password + "&timestamp=" +
-                    timestamp + parameters);
+                command += "password=" + password + "&timestamp=" +
+                timestamp + parameters;
             }
             else {
                 if (parameters.length() != 0) {
-                    xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                        xmlCommand + "?mode=zip&password=" + password + "&" + parameters);
+                    command += "password=" + password + "&" + parameters;
                 }
                 else {
-                    xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
-                        xmlCommand + "?mode=zip&password=" + password);
+                    command += "password=" + password;
                 }
             }
+            xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET, command);
             if (xmlData.length()==0){
                 throw new IllegalArgumentException();
             }
