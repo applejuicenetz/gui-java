@@ -84,7 +84,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import java.util.StringTokenizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.117 2004/05/03 14:40:02 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.118 2004/05/05 08:28:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -258,7 +258,7 @@ public class AppleJuiceDialog
         menuItemUeber.setIcon(im.getIcon("info"));
         menuItemCoreBeenden.setIcon(im.getIcon("skull"));
         menuItemDateiliste.setIcon(im.getIcon("speichern"));
-/** @todo         menuItemCheckUpdate.setIcon(im.getIcon("update"); */
+        menuItemCheckUpdate.setIcon(im.getIcon("update"));
 
         setJMenuBar(createMenuBar());
         if (OptionsManagerImpl.getInstance().isThemesSupported()) {
@@ -1172,7 +1172,7 @@ public class AppleJuiceDialog
         xmlData.append(
             "    <options dialogzeigen=\"true\" firststart=\"true\" sound=\"true\" sprache=\"deutsch\" ");
         xmlData.append(
-            "themes=\"true\" defaulttheme=\"toxicthemepack\" loadplugins=\"true\" ");
+            "themes=\"false\" defaulttheme=\"toxicthemepack\" loadplugins=\"true\" ");
         xmlData.append(
             "linklistenerport=\"8768\" versionsinfo=\"1\" >\r\n");
         xmlData.append(
