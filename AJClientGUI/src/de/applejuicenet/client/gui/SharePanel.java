@@ -5,6 +5,7 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
@@ -20,12 +21,13 @@ import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.gui.trees.share.DirectoryNode;
 import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeModel;
 import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeCellRenderer;
+import de.applejuicenet.client.gui.trees.share.WaitNode;
 
 import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.20 2003/08/20 07:49:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.21 2003/08/22 11:34:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +36,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.21  2003/08/22 11:34:43  maj0r
+ * WarteNode eingefuegt.
+ *
  * Revision 1.20  2003/08/20 07:49:50  maj0r
  * Programmstart beschleunigt.
  *
@@ -128,9 +133,9 @@ public class SharePanel
     neuLaden.setIcon(IconManager.getInstance().getIcon("erneuern"));
     neuLaden.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent ae){
-          HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
           ShareNode rootNode = shareModel.getRootNode();
           rootNode.removeAllChildren();
+          HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
           Iterator iterator = shares.values().iterator();
           anzahlDateien = 0;
           double size = 0;
@@ -217,17 +222,30 @@ public class SharePanel
 
   public void registerSelected() {
     if (!treeInitialisiert){
-        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
-        Iterator it = ajSettings.getShareDirs().iterator();
-        while (it.hasNext()) {
-          ShareEntry entry = (ShareEntry) it.next();
-          ( (DefaultListModel) folderList.getModel()).addElement(entry);
-        }
-        folderTree.setRootVisible(false);
-        ShareSelectionTreeModel treeModel = new ShareSelectionTreeModel();
-        folderTree.setModel(treeModel);
-        folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());;
         treeInitialisiert = true;
+        folderTree.setModel(new DefaultTreeModel(new WaitNode()));
+        folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
+        final SwingWorker worker = new SwingWorker() {
+                    public Object construct() {
+                        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
+                        Iterator it = ajSettings.getShareDirs().iterator();
+                        while (it.hasNext()) {
+                          ShareEntry entry = (ShareEntry) it.next();
+                          ( (DefaultListModel) folderList.getModel()).addElement(entry);
+                        }
+                        return null;
+                    }
+                };
+        worker.start();
+        final SwingWorker worker2 = new SwingWorker() {
+                    public Object construct() {
+                        ShareSelectionTreeModel treeModel = new ShareSelectionTreeModel();
+                        folderTree.setModel(treeModel);
+                        folderTree.setRootVisible(false);
+                        return null;
+                    }
+                };
+        worker2.start();
     }
   }
 
