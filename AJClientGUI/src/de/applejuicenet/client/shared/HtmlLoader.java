@@ -15,7 +15,7 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.20 2004/02/02 15:12:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.21 2004/02/02 15:38:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.21  2004/02/02 15:38:38  maj0r
+ * Deprecation behoben.
+ *
  * Revision 1.20  2004/02/02 15:12:32  maj0r
  * Kommunikation GUI<->Core erfolgt nun gezipped.
  *
@@ -63,7 +66,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * Share wird daher wesentlich schneller angezeigt.
  *
  * Revision 1.8  2003/06/10 12:31:03  maj0r
- * Historie eingef�gt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -159,14 +162,14 @@ public abstract class HtmlLoader {
           }
 
           DataInputStream in = new DataInputStream(socket.getInputStream());
-          String inputLine = in.readLine();
+          String inputLine = readLn(in);
           if (method == HtmlLoader.GET) {
             if (inputLine == null) {
               throw new WebSiteNotFoundException(WebSiteNotFoundException.
                                                  UNKNOWN_HOST);
             }
             while (inputLine.indexOf("Content-Length:") == -1) {
-              inputLine = in.readLine();
+              inputLine = readLn(in);
               if (inputLine == null) {
                 throw new WebSiteNotFoundException(WebSiteNotFoundException.
                                                    UNKNOWN_HOST);
@@ -231,6 +234,24 @@ public abstract class HtmlLoader {
         }
         String test = urlContent.toString();
         return test;
+    }
+
+    private static String readLn(DataInputStream in){
+        try{
+            StringBuffer line = new StringBuffer();
+            byte[] toRead = new byte[1];
+            while (in.read(toRead) != -1) {
+                char read = (char) toRead[0];
+                line.append(read);
+                if (read == '\n'){
+                    break;
+                }
+            }
+            return line.toString().trim();
+        }
+        catch(Exception e){
+            return "";
+        }
     }
 
     public static String getHtmlXMLContent(String host, int method, String command) throws
