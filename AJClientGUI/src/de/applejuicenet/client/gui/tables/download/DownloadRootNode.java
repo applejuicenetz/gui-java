@@ -12,7 +12,7 @@ import java.util.Iterator;
 import de.applejuicenet.client.gui.trees.WaitNode;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.12 2003/12/17 17:03:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.13 2003/12/29 15:38:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +21,9 @@ import de.applejuicenet.client.gui.trees.WaitNode;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.13  2003/12/29 15:38:59  maj0r
+ * Wird nun immer als initialisiert markiert, wenn die Downloadmap gesetzt wird.
+ *
  * Revision 1.12  2003/12/17 17:03:37  maj0r
  * In der Downloadtabelle nun ein Warteicon angezeigt, bis erstmalig Daten geholt wurden.
  *
@@ -291,8 +294,8 @@ public class DownloadRootNode implements Node, DownloadNode {
     }
 
     public void setDownloadMap(HashMap downloadMap) {
+        initialized = true;
         if (downloads == null) {
-            initialized = true;
             downloads = downloadMap;
         }
     }
