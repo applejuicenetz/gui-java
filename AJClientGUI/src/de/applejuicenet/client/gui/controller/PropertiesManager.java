@@ -3,8 +3,10 @@ package de.applejuicenet.client.gui.controller;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,14 +23,14 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.ProxySettings;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
-import java.util.Set;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.38 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.39 2004/03/08 07:11:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +39,9 @@ import java.util.Set;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.39  2004/03/08 07:11:45  maj0r
+ * Begonnen, JGoddies einzubauen.
+ *
  * Revision 1.38  2004/03/05 15:49:39  maj0r
  * PMD-Optimierung
  *
@@ -387,6 +392,35 @@ public class PropertiesManager
     public void setDefaultTheme(String themeShortName) {
         setAttributeByTagName(new String[] {"options", "defaulttheme"}
                               , themeShortName);
+    }
+
+    public LookAFeel[] getLookAndFeels() {
+        try {
+            ArrayList lookAndFeels = new ArrayList();
+            String temp = ".";
+            String temp2;
+            int i=1;
+            while (temp!= null && temp.length()>0){
+                temp = getFirstAttrbuteByTagName(new String[] {"options",
+                    "lookandfeels", "laf" + i, "value"}); ;
+                if (temp!= null && temp.length()>0){
+                    temp2 = getFirstAttrbuteByTagName(new String[] {"options",
+                        "lookandfeels", "laf" + i, "name"}); ;
+                    lookAndFeels.add(new LookAFeel(temp2, temp));
+                }
+                i++;
+            }
+            return (LookAFeel[])lookAndFeels.toArray(new LookAFeel[lookAndFeels.size()]);
+
+        }
+        catch (Exception e) {
+            AppleJuiceDialog.rewriteProperties = true;
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
+            }
+            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+        }
+        return null;
     }
 
     public String getStandardBrowser() {

@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -48,6 +50,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -71,13 +74,12 @@ import de.applejuicenet.client.gui.tools.MemoryMonitorDialog;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
+import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import java.util.Set;
-import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.107 2004/03/05 15:49:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.108 2004/03/08 07:11:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -86,6 +88,9 @@ import java.util.Map;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.108  2004/03/08 07:11:45  maj0r
+ * Begonnen, JGoddies einzubauen.
+ *
  * Revision 1.107  2004/03/05 15:49:38  maj0r
  * PMD-Optimierung
  *
@@ -984,12 +989,20 @@ public class AppleJuiceDialog
                 themesMenu.add(menuItemDeaktivieren);
             }
             else {
+                final LookAFeel[] feels = PropertiesManager.getOptionsManager().getLookAndFeels();
+                ButtonGroup lafGroup2 = new ButtonGroup();
+                for (int i=0; i<feels.length; i++){
+                    JCheckBoxLookAndFeelMenuItem lookAndFeelMenuItem = new JCheckBoxLookAndFeelMenuItem(feels[i]);
+                    lafGroup2.add(lookAndFeelMenuItem);
+                    themesMenu.add(lookAndFeelMenuItem);
+                }
                 menuItemAktivieren.setText("aktivieren");
                 menuItemAktivieren.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ce) {
                         activateThemeSupport(true);
                     }
                 });
+                themesMenu.add(new JSeparator());
                 themesMenu.add(menuItemAktivieren);
             }
             menuBar.add(themesMenu);
@@ -1388,6 +1401,10 @@ public class AppleJuiceDialog
         xmlData.append(
             "            <hintergrund downloadFertig=\"-13382656\" quelle=\"-205\"/>\r\n");
         xmlData.append("        </farben>\r\n");
+        xmlData.append("                <lookandfeels>\r\n");
+        xmlData.append("                    <laf1 name=\"JGoodies Plastic\" value=\"com.jgoodies.plaf.plastic.Plastic3DLookAndFeel\"/>\r\n");
+        xmlData.append("                    <laf2 name=\"JGoodies Windows\" value=\"com.jgoodies.plaf.windows.ExtWindowsLookAndFeel\"/>\r\n");
+        xmlData.append("                </lookandfeels>\r\n");
         xmlData.append(
             "        <location height=\"\" width=\"\" x=\"\" y=\"\"/>\r\n");
         xmlData.append("        <columns>\r\n");
@@ -1469,6 +1486,28 @@ public class AppleJuiceDialog
 
         public String getDescription() {
             return "AJL-Dateien";
+        }
+    }
+
+    private class JCheckBoxLookAndFeelMenuItem extends JCheckBoxMenuItem{
+        private final LookAFeel lookAFeel;
+
+        public JCheckBoxLookAndFeelMenuItem(LookAFeel lookAFeelToUse){
+            super(lookAFeelToUse.getName());
+            this.lookAFeel = lookAFeelToUse;
+            addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent ae) {
+                    if (isSelected()) {
+                        try {
+                            UIManager.setLookAndFeel(lookAFeel.getClassName());
+                            SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
+                        }
+                        catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            });
         }
     }
 }

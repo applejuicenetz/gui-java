@@ -63,7 +63,7 @@
 			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl"
 	      targetJar="${basedir}/AJCoreGUI.jar"
 	      excludePkg="java,javax,sun,com.l2fprod,com.sixlegs"
-	      manifestClassPath="./needed_jars/skinlf.jar"
+	      manifestClassPath="./needed_jars/skinlf.jar,./needed_jars/looks-1.2.1.jar"
 	      manifestMainClass="de.applejuicenet.client.AppleJuiceClient">
            <classpath>
            	<pathelement path="${gui.compiledir}"/>
@@ -109,11 +109,11 @@
    <target name="build-plugin-jar" description="builds plugin - build.xml needs to be modified">
       <delete includeEmptyDirs="true">
          <fileset dir="${basedir}/plugins" casesensitive="false">
-            <include name="**/VersionChecker.jar"/>
+            <include name="**/UploadStat_1_6.jar"/>
          </fileset>
       </delete>
-	<jar destfile="${basedir}/plugins/VersionChecker.jar">
-		<fileset dir="${basedir}/plugin_src/versionchecker" includes="*.xml"/>
+	<jar destfile="${basedir}/plugins/UploadStat_1_6.jar">
+		<fileset dir="${basedir}/plugin_src/UploadStatPlugin016_source" includes="*.xml"/>
 		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
                 excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class
                         ,**/de/applejuicenet/client/gui/plugins/XMLValueHolder.class" />
