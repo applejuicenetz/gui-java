@@ -80,9 +80,11 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.WebsiteContentLoader;
+import java.util.StringTokenizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.115 2004/04/27 13:39:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.116 2004/05/03 14:16:39 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -107,6 +109,7 @@ public class AppleJuiceDialog
     private Set plugins;
     private JMenuItem menuItemOptionen = new JMenuItem();
     private JMenuItem menuItemDateiliste = new JMenuItem();
+    private JMenuItem menuItemCheckUpdate = new JMenuItem();
     private JMenuItem menuItemCoreBeenden = new JMenuItem();
     private JMenuItem menuItemUeber = new JMenuItem();
     private JMenuItem menuItemDeaktivieren = new JMenuItem();
@@ -114,6 +117,7 @@ public class AppleJuiceDialog
     private JMenuItem popupOptionenMenuItem = new JMenuItem("Optionen");
     private JMenuItem popupAboutMenuItem = new JMenuItem("&Info");
     private JMenuItem popupShowHideMenuItem = new JMenuItem("%Show");
+    private JMenuItem popupCheckUpdateMenuItem = new JMenuItem("Update");
     private JButton sound = new JButton();
     private JButton memory = new JButton();
     private String keinServer = "";
@@ -254,6 +258,7 @@ public class AppleJuiceDialog
         menuItemUeber.setIcon(im.getIcon("info"));
         menuItemCoreBeenden.setIcon(im.getIcon("skull"));
         menuItemDateiliste.setIcon(im.getIcon("speichern"));
+/** @todo         menuItemCheckUpdate.setIcon(im.getIcon("update"); */
 
         setJMenuBar(createMenuBar());
         if (OptionsManagerImpl.getInstance().isThemesSupported()) {
@@ -604,6 +609,11 @@ public class AppleJuiceDialog
                     dateiListeImportieren();
                 }
             });
+            menuItemCheckUpdate.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    checkAndDisplayUpdate();
+                }
+            });
             menuItemCoreBeenden.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.
@@ -622,6 +632,7 @@ public class AppleJuiceDialog
             });
             optionenMenu.add(menuItemOptionen);
             optionenMenu.add(menuItemDateiliste);
+            optionenMenu.add(menuItemCheckUpdate);
             optionenMenu.add(menuItemUeber);
             menuBar.add(optionenMenu);
 
@@ -929,9 +940,12 @@ public class AppleJuiceDialog
             menuItemUeber.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(".root.mainform.aboutbtn.caption")));
-            menuItemUeber.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+            menuItemCheckUpdate.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.aboutbtn.hint")));
+                getFirstAttrbuteByTagName(".root.mainform.checkupdate.caption")));
+            menuItemCheckUpdate.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(".root.mainform.checkupdate.hint")));
             menuItemDeaktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.menu.deaktivieren")));
@@ -1297,5 +1311,73 @@ public class AppleJuiceDialog
                 }
             });
         }
+    }
+    private void checkAndDisplayUpdate() {
+        Thread versionWorker = new Thread() {
+            public void run() {
+                if (logger.isEnabledFor(Level.DEBUG)) {
+                    logger.debug("VersionWorkerThread gestartet. " + this);
+                }
+                try {
+                    String downloadData = WebsiteContentLoader.
+                        getWebsiteContent("http://download.berlios.de", 80,
+                                          "/applejuicejava/version.txt");
+
+                    if (downloadData.length() > 0) {
+                        int pos1 = downloadData.indexOf("|");
+                        String aktuellsteVersion = downloadData.substring(0,
+                            pos1);
+                        StringTokenizer token1 = new StringTokenizer(
+                            aktuellsteVersion, ".");
+                        StringTokenizer token2 = new StringTokenizer(
+                            ApplejuiceFassade.GUI_VERSION, ".");
+                        if (token1.countTokens() != 3 ||
+                            token2.countTokens() != 3) {
+                            return;
+                        }
+                        String[] versionInternet = new String[3];
+                        String[] aktuelleVersion = new String[3];
+                        for (int i = 0; i < 3; i++) {
+                            versionInternet[i] = token1.nextToken();
+                            aktuelleVersion[i] = token2.nextToken();
+                        }
+                        if (!versionInternet[0].equals(aktuelleVersion[0]) ||
+                            !versionInternet[1].equals(aktuelleVersion[1]) ||
+                            !versionInternet[2].equals(aktuelleVersion[2])) {
+                            int pos2 = downloadData.lastIndexOf("|");
+                            String winLink = downloadData.substring(pos1 +
+                                1, pos2);
+                            String sonstigeLink = downloadData.substring(
+                                pos2 + 1);
+                            UpdateInformationDialog updateInformationDialog =
+                                new UpdateInformationDialog(AppleJuiceDialog.getApp(),
+                                aktuellsteVersion, winLink, sonstigeLink);
+                            updateInformationDialog.show();
+                        } else {
+                            LanguageSelector languageSelector = LanguageSelector.getInstance();
+                            String fehlerTitel = ZeichenErsetzer.korrigiereUmlaute(
+                                languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
+
+                            String fehlerNachricht = ZeichenErsetzer.korrigiereUmlaute(
+                                languageSelector.getFirstAttrbuteByTagName(".root.javagui.checkupdate.keineNeueVersion"));
+
+                            JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), fehlerNachricht,
+                                fehlerTitel,
+                                JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    if (logger.isEnabledFor(Level.INFO)) {
+                        logger.info(
+                            "Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
+                    }
+                }
+                if (logger.isEnabledFor(Level.DEBUG)) {
+                    logger.debug("VersionWorkerThread beendet. " + this);
+                }
+            }
+        };
+        versionWorker.start();
     }
 }
