@@ -14,7 +14,7 @@ import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.4 2003/09/12 13:46:41 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.5 2003/09/30 16:35:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import org.apache.xml.serialize.XMLSerializer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.5  2003/09/30 16:35:11  maj0r
+ * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
+ *
  * Revision 1.4  2003/09/12 13:46:41  maj0r
  * Bug behoben.
  *
@@ -95,7 +98,6 @@ public class PropertiesManager
     private int[] downloadWidths;
     private int[] uploadWidths;
     private int[] serverWidths;
-    private int[] searchWidths;
     private int[] shareWidths;
 
     private static String path;
@@ -359,14 +361,6 @@ public class PropertiesManager
                 serverWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "server", "column2"}));
                 serverWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "server", "column3"}));
 
-                searchWidths = new int[6];
-                searchWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "search", "column0"}));
-                searchWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "search", "column1"}));
-                searchWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "search", "column2"}));
-                searchWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "search", "column3"}));
-                searchWidths[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "search", "column4"}));
-                searchWidths[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "search", "column5"}));
-
                 shareWidths = new int[3];
                 shareWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column0"}));
                 shareWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "share", "column1"}));
@@ -419,13 +413,6 @@ public class PropertiesManager
             setAttributeByTagName(new String[]{"options", "location", "server", "column1"}, serverWidths[1]);
             setAttributeByTagName(new String[]{"options", "location", "server", "column2"}, serverWidths[2]);
             setAttributeByTagName(new String[]{"options", "location", "server", "column3"}, serverWidths[3]);
-
-            setAttributeByTagName(new String[]{"options", "location", "search", "column0"}, searchWidths[0]);
-            setAttributeByTagName(new String[]{"options", "location", "search", "column1"}, searchWidths[1]);
-            setAttributeByTagName(new String[]{"options", "location", "search", "column2"}, searchWidths[2]);
-            setAttributeByTagName(new String[]{"options", "location", "search", "column3"}, searchWidths[3]);
-            setAttributeByTagName(new String[]{"options", "location", "search", "column4"}, searchWidths[4]);
-            setAttributeByTagName(new String[]{"options", "location", "search", "column5"}, searchWidths[5]);
 
             setAttributeByTagName(new String[]{"options", "location", "share", "column0"}, shareWidths[0]);
             setAttributeByTagName(new String[]{"options", "location", "share", "column1"}, shareWidths[1]);
@@ -481,14 +468,6 @@ public class PropertiesManager
 
     public void setServerWidths(int[] serverWidths) {
         this.serverWidths = serverWidths;
-    }
-
-    public int[] getSearchWidths() {
-        return searchWidths;
-    }
-
-    public void setSearchWidths(int[] searchWidths) {
-        this.searchWidths = searchWidths;
     }
 
     public int[] getShareWidths() {

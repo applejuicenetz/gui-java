@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.29 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.30 2003/09/30 16:35:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.30  2003/09/30 16:35:11  maj0r
+ * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
+ *
  * Revision 1.29  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -238,8 +241,7 @@ public class ServerPanel
 
     public void fireContentChanged(int type, Object content) {
         try{
-            if (type == DataUpdateListener.SERVER_CHANGED &&
-                    (content instanceof HashMap))
+            if (type == DataUpdateListener.SERVER_CHANGED)
             {
                 int selected = serverTable.getSelectedRow();
                 ((ServerTableModel) serverTable.getModel()).setTable((HashMap) content);

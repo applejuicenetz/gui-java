@@ -3,6 +3,7 @@ package de.applejuicenet.client.gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -17,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.45 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.46 2003/09/30 16:35:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.46  2003/09/30 16:35:11  maj0r
+ * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
+ *
  * Revision 1.45  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -173,11 +177,20 @@ public class DownloadPanel
                     int result = JOptionPane.showConfirmDialog(null, "Wollen Sie wirklich diese Downloads abbrechen", "Bestätigung",
                             JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
+                        ArrayList indizesAbbrechen = new ArrayList();
                         for (int i = 0; i < selectedItems.length; i++) {
                             if (selectedItems[i].getClass() == DownloadMainNode.class) {
                                 DownloadDO downloadDO = ((DownloadMainNode)selectedItems[i]).getDownloadDO();
-                                ApplejuiceFassade.getInstance().cancelDownload(downloadDO.getId());
+                                indizesAbbrechen.add(new Integer(downloadDO.getId()));
                             }
+                        }
+                        int size = indizesAbbrechen.size();
+                        if (size>0){
+                            int[] abbrechen = new int[size];
+                            for (int i=0; i<size; i++){
+                                abbrechen[i] = ((Integer)indizesAbbrechen.get(i)).intValue();
+                            }
+                            ApplejuiceFassade.getInstance().cancelDownload(abbrechen);
                         }
                     }
                 }
@@ -188,16 +201,34 @@ public class DownloadPanel
             public void actionPerformed(ActionEvent ae) {
                 Object[] selectedItems = getSelectedDownloadItems();
                 if (selectedItems != null && selectedItems.length != 0) {
+                    ArrayList indizesPausieren = new ArrayList();
+                    ArrayList indizesFortsetzen = new ArrayList();
                     for (int i = 0; i < selectedItems.length; i++) {
                         if (selectedItems[i].getClass() == DownloadMainNode.class) {
                             DownloadDO downloadDO = ((DownloadMainNode)selectedItems[i]).getDownloadDO();
                             if (downloadDO.getStatus() == DownloadDO.PAUSIERT) {
-                                ApplejuiceFassade.getInstance().resumeDownload(downloadDO.getId());
+                                indizesFortsetzen.add(new Integer(downloadDO.getId()));
                             }
                             else {
-                                ApplejuiceFassade.getInstance().pauseDownload(downloadDO.getId());
+                                indizesPausieren.add(new Integer(downloadDO.getId()));
                             }
                         }
+                    }
+                    int size = indizesPausieren.size();
+                    if (size>0){
+                        int[] pausieren = new int[size];
+                        for (int i=0; i<size; i++){
+                            pausieren[i] = ((Integer)indizesPausieren.get(i)).intValue();
+                        }
+                        ApplejuiceFassade.getInstance().pauseDownload(pausieren);
+                    }
+                    size = indizesFortsetzen.size();
+                    if (size>0){
+                        int[] fortsetzen = new int[size];
+                        for (int i=0; i<size; i++){
+                            fortsetzen[i] = ((Integer)indizesFortsetzen.get(i)).intValue();
+                        }
+                        ApplejuiceFassade.getInstance().resumeDownload(fortsetzen);
                     }
                 }
             }

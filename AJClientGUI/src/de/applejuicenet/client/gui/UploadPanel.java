@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.23 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.24 2003/09/30 16:35:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.24  2003/09/30 16:35:11  maj0r
+ * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
+ *
  * Revision 1.23  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -163,8 +166,7 @@ public class UploadPanel
     }
 
     public void fireContentChanged(int type, Object content) {
-        if (type == DataUpdateListener.UPLOAD_CHANGED ||
-                !(content instanceof HashMap)) {
+        if (type == DataUpdateListener.UPLOAD_CHANGED) {
             uploadDataTableModel.setTable((HashMap)content);
             uploadDataTable.updateUI();
             anzahlClients = uploadDataTableModel.getRowCount();

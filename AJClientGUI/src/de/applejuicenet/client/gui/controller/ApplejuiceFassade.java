@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.41 2003/09/13 11:30:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.42 2003/09/30 16:35:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.42  2003/09/30 16:35:11  maj0r
+ * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
+ *
  * Revision 1.41  2003/09/13 11:30:40  maj0r
  * Neuen Listener fuer Geschwindigkeitsanzeigen eingebaut.
  *
@@ -223,6 +226,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     public static final String GUI_VERSION = "0.31 Beta";
 
     private HashSet downloadListener;
+    private HashSet searchListener;
     private HashSet shareListener;
     private HashSet uploadListener;
     private HashSet serverListener;
@@ -275,6 +279,10 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             {
                 listenerSet = speedListener;
             }
+            else if (type == DataUpdateListener.SEARCH_CHANGED)
+            {
+                listenerSet = searchListener;
+            }
             else
             {
                 return;
@@ -296,6 +304,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         try
         {
             downloadListener = new HashSet();
+            searchListener = new HashSet();
             serverListener = new HashSet();
             uploadListener = new HashSet();
             shareListener = new HashSet();
@@ -464,6 +473,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     informDataUpdateListener(DataUpdateListener.NETINFO_CHANGED);
                     informDataUpdateListener(DataUpdateListener.STATUSBAR_CHANGED);
                     informDataUpdateListener(DataUpdateListener.SPEED_CHANGED);
+                    informDataUpdateListener(DataUpdateListener.SEARCH_CHANGED);
                 }
             });
         }
@@ -474,12 +484,32 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         }
     }
 
-    public boolean resumeDownload(int id) {
+    public boolean resumeDownload(int[] id) {
+        try
+        {
+            String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            String parameters = "&id=" + id[0];
+            if (id.length>1){
+                for (int i=1; i<id.length; i++){
+                    parameters += "&id" + i + "=" + id[i];
+                }
+            }
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+                                                  "/function/resumedownload?password=" + password + parameters, false);
+        }
+        catch (WebSiteNotFoundException ex)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean startSearch(String searchString) {
         try
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/resumedownload?password=" + password + "&id=" + id, false);
+                                                  "/function/search?password=" + password + "&search=" + searchString, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -502,12 +532,18 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return true;
     }
 
-    public boolean cancelDownload(int id) {
+    public boolean cancelDownload(int[] id) {
         try
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            String parameters = "&id=" + id[0];
+            if (id.length>1){
+                for (int i=1; i<id.length; i++){
+                    parameters += "&id" + i + "=" + id[i];
+                }
+            }
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/canceldownload?password=" + password + "&id=" + id, false);
+                                                  "/function/canceldownload?password=" + password + parameters, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -531,12 +567,18 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         return true;
     }
 
-    public boolean pauseDownload(int id) {
+    public boolean pauseDownload(int[] id) {
         try
         {
             String password = PropertiesManager.getOptionsManager().getRemoteSettings().getOldPassword();
+            String parameters = "&id=" + id[0];
+            if (id.length>1){
+                for (int i=1; i<id.length; i++){
+                    parameters += "&id" + i + "=" + id[i];
+                }
+            }
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                                                  "/function/pausedownload?password=" + password + "&id=" + id, false);
+                                                  "/function/pausedownload?password=" + password + parameters, false);
         }
         catch (WebSiteNotFoundException ex)
         {
@@ -783,6 +825,16 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                         while (it.hasNext())
                         {
                             ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.SPEED_CHANGED, content);
+                        }
+                        break;
+                    }
+                case DataUpdateListener.SEARCH_CHANGED:
+                    {
+                        HashMap content = modifiedXML.getSearchs();
+                        Iterator it = searchListener.iterator();
+                        while (it.hasNext())
+                        {
+                            ((DataUpdateListener) it.next()).fireContentChanged(DataUpdateListener.SEARCH_CHANGED, content);
                         }
                         break;
                     }

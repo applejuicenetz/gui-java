@@ -13,7 +13,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.12 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.13 2003/09/30 16:35:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.13  2003/09/30 16:35:11  maj0r
+ * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
+ *
  * Revision 1.12  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -129,6 +132,9 @@ public abstract class WebXMLParser
         {
             AppleJuiceDialog.closeWithErrormessage(
                     "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
+        }
+        if (xmlData.toLowerCase().indexOf("searchentry")!=-1){
+            int i=0;
         }
         DocumentBuilderFactory factory =
                 DocumentBuilderFactory.newInstance();

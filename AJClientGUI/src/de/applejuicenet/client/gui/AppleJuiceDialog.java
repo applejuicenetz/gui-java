@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.48 2003/09/11 08:39:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.49 2003/09/30 16:35:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.49  2003/09/30 16:35:11  maj0r
+ * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
+ *
  * Revision 1.48  2003/09/11 08:39:29  maj0r
  * Start durch Einbau von Threads beschleunigt.
  *
@@ -255,7 +258,6 @@ public class AppleJuiceDialog
         int[] downloadWidths = DownloadPanel._this.getColumnWidths();
         int[] uploadWidths = UploadPanel._this.getColumnWidths();
         int[] serverWidths = ServerPanel._this.getColumnWidths();
-        int[] searchWidths = SearchPanel._this.getColumnWidths();
         int[] shareWidths = SharePanel._this.getColumnWidths();
         Dimension dim = getSize();
         Point p = getLocationOnScreen();
@@ -272,7 +274,6 @@ public class AppleJuiceDialog
         pm.setDownloadWidths(downloadWidths);
         pm.setUploadWidths(uploadWidths);
         pm.setServerWidths(serverWidths);
-        pm.setSearchWidths(searchWidths);
         pm.setShareWidths(shareWidths);
         pm.save();
         System.exit(0);

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.listener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/listener/Attic/DataUpdateListener.java,v 1.11 2003/09/13 11:30:41 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/listener/Attic/DataUpdateListener.java,v 1.12 2003/09/30 16:35:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.listener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataUpdateListener.java,v $
+ * Revision 1.12  2003/09/30 16:35:11  maj0r
+ * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
+ *
  * Revision 1.11  2003/09/13 11:30:41  maj0r
  * Neuen Listener fuer Geschwindigkeitsanzeigen eingebaut.
  *
@@ -40,6 +43,7 @@ public interface DataUpdateListener {
   public static final int SETTINGS_CHANGED = 6;
   public static final int CONNECTION_SETTINGS_CHANGED = 7;
   public static final int SPEED_CHANGED = 8;
+  public static final int SEARCH_CHANGED = 9;
 
   public void fireContentChanged(int type, Object content);
 }

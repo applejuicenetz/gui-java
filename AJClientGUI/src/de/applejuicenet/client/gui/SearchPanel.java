@@ -1,18 +1,20 @@
 package de.applejuicenet.client.gui;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Iterator;
 import javax.swing.*;
-import javax.swing.table.*;
 
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.tables.search.SearchResultTableModel;
 import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.11 2003/09/09 12:28:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.12 2003/09/30 16:35:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +23,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.12  2003/09/30 16:35:11  maj0r
+ * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
+ *
  * Revision 1.11  2003/09/09 12:28:15  maj0r
  * Wizard fertiggestellt.
  *
@@ -42,17 +47,17 @@ import org.apache.log4j.Level;
 
 public class SearchPanel
         extends JPanel
-        implements LanguageListener, RegisterI {
+        implements LanguageListener, RegisterI, DataUpdateListener {
 
     public static SearchPanel _this;
-    private JTable searchResultTable = new JTable();
+    private JTabbedPane resultPanel = new JTabbedPane();
     private JButton btnStartStopSearch = new JButton("Suche starten");
     private JTextField suchbegriff = new JTextField();
     int anzahlSuchanfragen = 0;
     private JLabel label1 = new JLabel("Suchbegriff: ");
     private JLabel label2 = new JLabel("0 Suchanfragen in Bearbeitung");
-    private boolean initizialiced = false;
     private Logger logger;
+    private HashMap searchIds = new HashMap();
 
     public SearchPanel() {
         _this = this;
@@ -67,9 +72,6 @@ public class SearchPanel
     }
 
     private void init() throws Exception {
-        //todo
-        btnStartStopSearch.setEnabled(false);
-
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
         JPanel panel3 = new JPanel();
@@ -98,37 +100,20 @@ public class SearchPanel
         leftPanel.add(panel3, BorderLayout.NORTH);
         add(leftPanel, BorderLayout.WEST);
 
-        searchResultTable.setModel(new SearchResultTableModel());
-        JScrollPane aScrollPane = new JScrollPane();
-        aScrollPane.getViewport().add(searchResultTable);
-        add(aScrollPane, BorderLayout.CENTER);
+        add(resultPanel, BorderLayout.CENTER);
+        btnStartStopSearch.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                String suchText = suchbegriff.getText();
+                if (suchText.length()!=0){
+                    ApplejuiceFassade.getInstance().startSearch(suchText);
+                    suchbegriff.setText("");
+                }
+            }
+        });
+        ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.SEARCH_CHANGED);
     }
 
     public void registerSelected() {
-        if (!initizialiced) {
-            try {
-                initizialiced = true;
-                TableColumnModel headerModel = searchResultTable.getTableHeader().getColumnModel();
-                int columnCount = headerModel.getColumnCount();
-                PositionManager pm = PropertiesManager.getPositionManager();
-                if (pm.isLegal()) {
-                    int[] widths = pm.getSearchWidths();
-                    for (int i = 0; i < columnCount; i++) {
-                        headerModel.getColumn(i).setPreferredWidth(widths[i]);
-                    }
-                }
-                else {
-                    for (int i = 0; i < columnCount; i++) {
-                        headerModel.getColumn(i).setPreferredWidth(searchResultTable.getWidth() / columnCount);
-                    }
-                }
-                searchResultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            }
-            catch (Exception e) {
-                if (logger.isEnabledFor(Level.ERROR))
-                    logger.error("Unbehandelte Exception", e);
-            }
-        }
     }
 
     public void fireLanguageChanged() {
@@ -147,7 +132,7 @@ public class SearchPanel
                                                            "caption"}));
             label2.setText(temp.replaceAll("%d", Integer.toString(anzahlSuchanfragen)));
 
-            String[] columns = new String[6];
+            String[] columns = new String[3];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                     getFirstAttrbuteByTagName(new String[]{"mainform", "searchs",
                                                            "col0caption"}));
@@ -156,21 +141,12 @@ public class SearchPanel
                                                            "col1caption"}));
             columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                     getFirstAttrbuteByTagName(new String[]{"mainform", "searchs",
-                                                           "col4caption"}));
-            columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "searchs",
-                                                           "col5caption"}));
-            columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "searchs",
-                                                           "col4caption"}));
-            columns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "searchs",
-                                                           "col5caption"}));
+                                                           "col2caption"}));
 
-            TableColumnModel tcm = searchResultTable.getColumnModel();
+/*            TableColumnModel tcm = searchResultTable.getColumnModel();
             for (int i = 0; i < tcm.getColumnCount(); i++) {
                 tcm.getColumn(i).setHeaderValue(columns[i]);
-            }
+            }*/
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
@@ -178,12 +154,28 @@ public class SearchPanel
         }
     }
 
-    public int[] getColumnWidths(){
-        TableColumnModel tcm = searchResultTable.getColumnModel();
-        int[] widths = new int[tcm.getColumnCount()];
-        for (int i = 0; i < tcm.getColumnCount(); i++) {
-            widths[i] = tcm.getColumn(i).getWidth();
+    public void fireContentChanged(int type, Object content) {
+        if (type==DataUpdateListener.SEARCH_CHANGED){
+            synchronized(content){
+                Iterator it = ((HashMap)content).keySet().iterator();
+                Object key;
+                Search aSearch;
+                SearchResultPanel searchResultPanel;
+                while (it.hasNext()){
+                    key = it.next();
+                    if (!searchIds.containsKey(key)){
+                        aSearch = (Search)((HashMap)content).get(key);
+                        searchResultPanel = new SearchResultPanel(aSearch);
+                        resultPanel.add(aSearch.getSuchText(), searchResultPanel);
+                        resultPanel.setSelectedComponent(searchResultPanel);
+                        searchIds.put(key, searchResultPanel);
+                    }
+                    else{
+                        searchResultPanel = (SearchResultPanel) searchIds.get(key);
+                        searchResultPanel.updateSearchContent();
+                    }
+                }
+            }
         }
-        return widths;
     }
 }

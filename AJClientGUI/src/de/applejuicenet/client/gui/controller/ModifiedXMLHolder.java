@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.34 2003/09/14 06:37:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.35 2003/09/30 16:35:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.35  2003/09/30 16:35:11  maj0r
+ * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
+ *
  * Revision 1.34  2003/09/14 06:37:39  maj0r
  * Moeglichen NullPointer behoben.
  *
@@ -124,6 +127,7 @@ public class ModifiedXMLHolder
     private HashMap serverMap = new HashMap();
     private HashMap downloadMap = new HashMap();
     private HashMap uploadMap = new HashMap();
+    private HashMap searchMap = new HashMap();
     private NetworkInfo netInfo;
     private String[] status = new String[6];
 
@@ -156,6 +160,10 @@ public class ModifiedXMLHolder
         return downloadMap;
     }
 
+    public HashMap getSearchs() {
+        return searchMap;
+    }
+
     public NetworkInfo getNetworkInfo() {
         return netInfo;
     }
@@ -167,6 +175,7 @@ public class ModifiedXMLHolder
         updateDownloads();
         updateNetworkInfo();
         updateUploads();
+        updateSuche();
     }
 
     public void reload(String parameters) {
@@ -349,6 +358,98 @@ public class ModifiedXMLHolder
                     downloadDO.removeSource(id);
                     sourcenZuDownloads.remove(toRemoveKey);
                     continue;
+                }
+            }
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    private void updateSuche() {
+        try {
+            NodeList nodes = document.getElementsByTagName("search");
+            int size = nodes.getLength();
+            if (size>0){
+                Element e;
+                int id;
+                String suchtext;
+                int offeneSuchen;
+                int gefundeneDateien;
+                int durchsuchteClients;
+                MapSetStringKey key;
+                Search aSearch;
+                for (int i = 0; i < size; i++) {
+                    e = (Element) nodes.item(i);
+                    id = Integer.parseInt(e.getAttribute("id"));
+                    key = new MapSetStringKey(id);
+                    suchtext = e.getAttribute("searchtext");
+                    String temp = e.getAttribute("opensearchs");
+                    offeneSuchen = Integer.parseInt(temp);
+                    temp = e.getAttribute("sumsearches");
+                    durchsuchteClients = Integer.parseInt(temp);
+                    temp = e.getAttribute("foundfiles");
+                    gefundeneDateien = Integer.parseInt(temp);
+                    if (searchMap.containsKey(key)) {
+                        aSearch = (Search) searchMap.get(key);
+                        aSearch.setDurchsuchteClients(durchsuchteClients);
+                        aSearch.setGefundenDateien(gefundeneDateien);
+                        aSearch.setOffeneSuchen(offeneSuchen);
+                        aSearch.setSuchText(suchtext);
+                    }
+                    else{
+                        aSearch = new Search(id);
+                        aSearch.setDurchsuchteClients(durchsuchteClients);
+                        aSearch.setGefundenDateien(gefundeneDateien);
+                        aSearch.setOffeneSuchen(offeneSuchen);
+                        aSearch.setSuchText(suchtext);
+                        searchMap.put(key, aSearch);
+                    }
+
+                }
+            }
+            nodes = document.getElementsByTagName("searchentry");
+            size = nodes.getLength();
+            if (size>0){
+                Element e;
+                int id;
+                int searchid;
+                String checksum;
+                long groesse;
+                MapSetStringKey key;
+                Search aSearch;
+                Search.SearchEntry searchEntry;
+                Element innerElement;
+                NodeList childNodes;
+                String dateiName;
+                int haeufigkeit;
+                Search.SearchEntry.FileName filename;
+                for (int i = 0; i < size; i++) {
+                    e = (Element) nodes.item(i);
+                    id = Integer.parseInt(e.getAttribute("id"));
+                    searchid = Integer.parseInt(e.getAttribute("searchid"));
+                    key = new MapSetStringKey(searchid);
+                    checksum = e.getAttribute("checksum");
+                    groesse = Long.parseLong(e.getAttribute("size"));
+                    aSearch = (Search) searchMap.get(key);
+                    if (aSearch!=null){
+                        searchEntry = aSearch.new SearchEntry(id, checksum, groesse);
+                        childNodes = nodes.item(0).getChildNodes();
+                        int nodesSize = childNodes.getLength();
+                        for (int y = 0; y < nodesSize; y++) {
+                            if (childNodes.item(y).getNodeType()==Node.ELEMENT_NODE){
+                                innerElement = (Element) childNodes.item(y);
+                                if (innerElement.getNodeName().compareToIgnoreCase("filename")==0){
+                                    dateiName = innerElement.getAttribute("name");
+                                    haeufigkeit = Integer.parseInt(innerElement.getAttribute("user"));
+                                    filename = searchEntry.new FileName(dateiName, haeufigkeit);
+                                    searchEntry.addFileName(filename);
+                                }
+                            }
+                        }
+                        aSearch.addSearchEntry(searchEntry);
+                    }
                 }
             }
         }
