@@ -10,11 +10,11 @@ import java.awt.event.ActionListener;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -26,7 +26,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.13 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.14 2004/03/02 20:47:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,6 +35,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginPanel.java,v $
+ * Revision 1.14  2004/03/02 20:47:18  maj0r
+ * Beschreibungsfeld in eine JTextArea geaendert.
+ *
  * Revision 1.13  2004/02/21 18:20:30  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -70,7 +73,7 @@ public class ODPluginPanel
     extends JPanel
     implements OptionsRegister {
     private JList pluginList;
-    private JEditorPane beschreibung = new JEditorPane();
+    private JTextArea beschreibung = new JTextArea();
     private JLabel label1 = new JLabel();
     private AppleJuiceDialog theApp;
     private JButton einstellungen = new JButton();
@@ -115,6 +118,8 @@ public class ODPluginPanel
             beschreibung.getPreferredSize().
             height));
         beschreibung.setEditable(false);
+        beschreibung.setLineWrap(true);
+        beschreibung.setWrapStyleWord(true);
         pluginList = new JList(v);
         pluginList.setPreferredSize(new Dimension(190,
                                                   pluginList.getPreferredSize().
