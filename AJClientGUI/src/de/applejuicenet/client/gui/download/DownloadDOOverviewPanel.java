@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.4 2004/12/01 14:12:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/Attic/DownloadDOOverviewPanel.java,v 1.5 2004/12/06 10:29:53 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -250,10 +250,10 @@ public class DownloadDOOverviewPanel
                     actualDlOverviewTable.setPartList(null, null);
                 }
                 else {
-                    actualDlOverviewTable.setPartList(partList, new Integer(downloadDO.getId()));                                
                     String tmp = verfuegbar.replaceFirst("%s", 
                     		decimalFormat.format(partList.getProzentVerfuegbar()));
                     actualDLDateiName.setText(dateiNameText + " - " + tmp);
+                    actualDlOverviewTable.setPartList(partList, new Integer(downloadDO.getId()));                                
                 }
     			return true;
         	}
@@ -265,6 +265,9 @@ public class DownloadDOOverviewPanel
 
         private boolean workDownloadSourceDO(DownloadSourceDO downloadSoureDO) {
 			PartListDO partList;
+			String tmp = downloadSoureDO.getFilename() + " (" +
+				downloadSoureDO.getNickname() + ")";
+			actualDLDateiName.setText(tmp);
 			try {
 				partList = ApplejuiceFassade.getInstance().getPartList(
 						downloadSoureDO);
@@ -279,15 +282,9 @@ public class DownloadDOOverviewPanel
 			if (partList == null) {
 				actualDLDateiName.setText("");
 			} else {
+				actualDLDateiName.setText(tmp + " - " + verfuegbar.replaceFirst("%s", decimalFormat
+						.format(partList.getProzentVerfuegbar())));
 				actualDlOverviewTable.setPartList(partList, new Integer(downloadSoureDO.getId()));
-				StringBuffer tmp = new StringBuffer();
-				tmp.append(downloadSoureDO.getFilename());
-				tmp.append(" (");
-				tmp.append(downloadSoureDO.getNickname());
-				tmp.append(") - ");
-				tmp.append(verfuegbar.replaceFirst("%s", decimalFormat
-						.format(partList.getProzentVerfuegbar())));				
-				actualDLDateiName.setText(tmp.toString());
 			}
 			return false;
 		}
