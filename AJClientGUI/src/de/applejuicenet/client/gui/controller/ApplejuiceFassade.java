@@ -2,17 +2,23 @@ package de.applejuicenet.client.gui.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+
 import javax.swing.SwingUtilities;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.xmlholder.DirectoryXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.
     DownloadPartListXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.InformationXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.ModifiedXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.NetworkServerXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.SessionXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.SettingsXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.ShareXMLHolder;
@@ -29,13 +35,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
-import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
-import de.applejuicenet.client.gui.controller.xmlholder.NetworkServerXMLHolder;
-import java.util.ArrayList;
-import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.105 2004/02/04 13:10:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.106 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -155,7 +157,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * Wizard fertiggestellt.
  *
  * Revision 1.31  2003/09/07 09:29:55  maj0r
-     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.29  2003/09/06 14:48:50  maj0r
  * Core-Dateisystem-Separator statisch verwendbar.
@@ -393,12 +395,12 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     }
                     int versuch = 0;
                     while (!isInterrupted()) {
-                        if (updateModifiedXML(sessionId)){
+                        if (updateModifiedXML(sessionId)) {
                             versuch = 0;
                         }
-                        else{
+                        else {
                             versuch++;
-                            if (versuch == 3){
+                            if (versuch == 3) {
                                 AppleJuiceDialog.closeWithErrormessage(
                                     "Die Verbindung zum Core ist abgebrochen.\r\nDas GUI wird beendet.", true);
                             }
@@ -437,26 +439,27 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         }
     }
 
-    public String[] getCurrentIncomingDirs(){
+    public String[] getCurrentIncomingDirs() {
         HashMap download = getDownloadsSnapshot();
         DownloadDO downloadDO = null;
         ArrayList incomingDirs = new ArrayList();
         boolean found;
-        synchronized (download){
+        synchronized (download) {
             Iterator it = download.values().iterator();
-            while (it.hasNext()){
-                downloadDO = (DownloadDO)it.next();
-                if (downloadDO.getTargetDirectory().length()==0){
+            while (it.hasNext()) {
+                downloadDO = (DownloadDO) it.next();
+                if (downloadDO.getTargetDirectory().length() == 0) {
                     continue;
                 }
                 found = false;
-                for (int i=0; i<incomingDirs.size(); i++){
-                    if (((String)incomingDirs.get(i)).compareToIgnoreCase(downloadDO.getTargetDirectory())==0){
+                for (int i = 0; i < incomingDirs.size(); i++) {
+                    if ( ( (String) incomingDirs.get(i)).compareToIgnoreCase(
+                        downloadDO.getTargetDirectory()) == 0) {
                         found = true;
                         break;
                     }
                 }
-                if (!found){
+                if (!found) {
                     incomingDirs.add(downloadDO.getTargetDirectory());
                 }
             }
@@ -480,7 +483,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     }
 
     public String[] getNetworkKnownServers() {
-        NetworkServerXMLHolder getServerXMLHolder = NetworkServerXMLHolder.getInstance();
+        NetworkServerXMLHolder getServerXMLHolder = NetworkServerXMLHolder.
+            getInstance();
         return getServerXMLHolder.getNetworkKnownServers();
     }
 
@@ -503,7 +507,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             if (settingsXML == null) {
                 return getAJSettings();
             }
-            else{
+            else {
                 return settingsXML.getCurrentAJSettings();
             }
         }
@@ -528,8 +532,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     String password = PropertiesManager.getOptionsManager().
                         getRemoteSettings().getOldPassword();
                     HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                        "/function/setsettings?password=" +
-                        password + "&" + parameters, false);
+                                                 "/function/setsettings?password=" +
+                                                 password + "&" + parameters, false);
                 }
                 catch (Exception e) {
                     if (logger.isEnabledFor(Level.ERROR)) {
@@ -537,7 +541,9 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     }
                 }
             }
-        }.start();
+        }
+
+        .start();
     }
 
     public void saveAJSettings(AJSettings ajSettings) {
@@ -592,7 +598,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
 
     public synchronized boolean updateModifiedXML(String sessionId) {
         try {
-            if (modifiedXML.update(sessionId)){
+            if (modifiedXML.update(sessionId)) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         informDataUpdateListener(DataUpdateListener.
@@ -614,7 +620,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             }
             return true;
         }
-        catch(RuntimeException re){
+        catch (RuntimeException re) {
             // Verbindung zum Core verloren
             // neuer Versuch
             return false;
@@ -779,7 +785,8 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             String password = PropertiesManager.getOptionsManager().
                 getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
-                "/function/cleandownloadlist?password=" + password, false);
+                                         "/function/cleandownloadlist?password=" +
+                                         password, false);
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
@@ -886,7 +893,9 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                     }
                 }
             }
-        }.start();
+        }
+
+        .start();
     }
 
     public void setPowerDownload(int[] id, int powerDownload) {

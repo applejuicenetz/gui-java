@@ -1,27 +1,37 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.gui.controller.PropertiesManager;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.shared.exception.InvalidPasswordException;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.ConnectionSettings;
-
-import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.*;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.10 2004/01/29 15:52:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/QuickConnectionSettingsDialog.java,v 1.11 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f?r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +40,9 @@ import java.awt.event.KeyEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: QuickConnectionSettingsDialog.java,v $
+ * Revision 1.11  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.10  2004/01/29 15:52:33  maj0r
  * Bug #153 umgesetzt (Danke an jr17)
  * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
@@ -68,7 +81,8 @@ import java.awt.event.KeyEvent;
  *
  */
 
-public class QuickConnectionSettingsDialog extends JDialog {
+public class QuickConnectionSettingsDialog
+    extends JDialog {
     private ODConnectionPanel remotePanel;
     public static final int ABGEBROCHEN = 1;
     private ConnectionSettings remote;
@@ -79,20 +93,20 @@ public class QuickConnectionSettingsDialog extends JDialog {
 
     private int result = 0;
 
-    public QuickConnectionSettingsDialog(Frame parent){
+    public QuickConnectionSettingsDialog(Frame parent) {
         super(parent, true);
         logger = Logger.getLogger(getClass());
-        try{
+        try {
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    private void init(){
+    private void init() {
         remote = PropertiesManager.getOptionsManager().getRemoteSettings();
         remotePanel = new ODConnectionPanel(remote, this, true);
         setTitle("appleJuice Client");
@@ -101,11 +115,12 @@ public class QuickConnectionSettingsDialog extends JDialog {
 
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-              getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
-                                        "ueberpruefeEinst"}));
-        cmbNieWiederZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
-                                          "showdialog"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
+                                      "ueberpruefeEinst"}));
+        cmbNieWiederZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
+                                      "showdialog"})));
         cmbNieWiederZeigen.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
                 dirty = true;
@@ -116,7 +131,7 @@ public class QuickConnectionSettingsDialog extends JDialog {
                 if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
                     pressOK();
                 }
-                else{
+                else {
                     super.keyPressed(ke);
                 }
             }
@@ -152,20 +167,21 @@ public class QuickConnectionSettingsDialog extends JDialog {
         panel3.add(panel1, BorderLayout.SOUTH);
         getContentPane().add(panel3, BorderLayout.SOUTH);
 
-        ok.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
+        ok.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
                 try {
                     speichereEinstellungen();
                     result = 0;
                     hide();
-                } catch (InvalidPasswordException e) {
+                }
+                catch (InvalidPasswordException e) {
                     zeigeFehlerNachricht();
                 }
             }
         });
 
-        abbrechen.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
+        abbrechen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
                 result = ABGEBROCHEN;
                 hide();
             }
@@ -176,42 +192,45 @@ public class QuickConnectionSettingsDialog extends JDialog {
                 result = ABGEBROCHEN;
                 hide();
             }
-    	});
+        });
         pack();
         Dimension appDimension = getSize();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation( (screenSize.width - appDimension.width) / 2,
-                           (screenSize.height - appDimension.height) / 2);
+                    (screenSize.height - appDimension.height) / 2);
 
     }
 
-    public void pressOK(){
+    public void pressOK() {
         ok.doClick();
     }
 
-    public int getResult(){
+    public int getResult() {
         return result;
     }
 
-    private void zeigeFehlerNachricht(){
-        JOptionPane.showMessageDialog(this, "Falsches Passwort", "Fehler", JOptionPane.ERROR_MESSAGE);
+    private void zeigeFehlerNachricht() {
+        JOptionPane.showMessageDialog(this, "Falsches Passwort", "Fehler",
+                                      JOptionPane.ERROR_MESSAGE);
     }
 
     private void speichereEinstellungen() throws InvalidPasswordException {
-        try{
+        try {
             PropertiesManager.getOptionsManager().saveRemote(remote);
-            if (dirty){
-                PropertiesManager.getOptionsManager().showConnectionDialogOnStartup(!cmbNieWiederZeigen.isSelected());
+            if (dirty) {
+                PropertiesManager.getOptionsManager().
+                    showConnectionDialogOnStartup(!cmbNieWiederZeigen.
+                                                  isSelected());
             }
         }
-        catch (Exception e)
-        {
-            if (e.getClass()==InvalidPasswordException.class){
-                throw (InvalidPasswordException)e;
+        catch (Exception e) {
+            if (e.getClass() == InvalidPasswordException.class) {
+                throw (InvalidPasswordException) e;
             }
-            else{
-                if (logger.isEnabledFor(Level.ERROR))
+            else {
+                if (logger.isEnabledFor(Level.ERROR)) {
                     logger.error("Unbehandelte Exception", e);
+                }
             }
         }
     }

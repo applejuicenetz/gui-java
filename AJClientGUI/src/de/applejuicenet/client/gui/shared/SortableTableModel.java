@@ -1,9 +1,9 @@
 package de.applejuicenet.client.gui.shared;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/SortableTableModel.java,v 1.2 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/SortableTableModel.java,v 1.3 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.util.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SortableTableModel.java,v $
+ * Revision 1.3  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.2  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -24,13 +27,13 @@ import java.util.*;
  */
 
 public interface SortableTableModel {
-  public int getRowCount();
+    public int getRowCount();
 
-  public ArrayList getContent();
+    public ArrayList getContent();
 
-  public Object getValueAt(int row, int column);
+    public Object getValueAt(int row, int column);
 
-  public Class getColumnClass(int column);
+    public Class getColumnClass(int column);
 
-  public void sortByColumn(int column, boolean isAscent);
+    public void sortByColumn(int column, boolean isAscent);
 }

@@ -1,24 +1,35 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.CropImageFilter;
-import java.awt.image.ImageFilter;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.CropImageFilter;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.13 2004/01/18 12:21:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.14 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +38,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AboutDialog.java,v $
+ * Revision 1.14  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.13  2004/01/18 12:21:44  maj0r
  * Credits geaendert.
  *
@@ -70,7 +84,8 @@ import org.apache.log4j.Level;
  *
  */
 
-public class AboutDialog extends JDialog {
+public class AboutDialog
+    extends JDialog {
     private Logger logger;
     private Thread worker;
     private BackPanel backPanel = new BackPanel();
@@ -78,28 +93,28 @@ public class AboutDialog extends JDialog {
     public AboutDialog(Frame parent, boolean modal) {
         super(parent, modal);
         logger = Logger.getLogger(getClass());
-        try{
+        try {
             addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent evt) {
-                    if (worker!=null){
+                    if (worker != null) {
                         worker.interrupt();
                     }
                 }
             });
             init();
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public Dimension getPreferredSize() {
-        if (backPanel != null)
-        {
+        if (backPanel != null) {
             return backPanel.getPreferredSize();
         }
-        else{
+        else {
             return super.getPreferredSize();
         }
     }
@@ -108,14 +123,15 @@ public class AboutDialog extends JDialog {
         setResizable(false);
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
+                                      "caption"})));
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(backPanel, BorderLayout.CENTER);
         pack();
     }
 
-
-    class BackPanel extends JPanel {
+    class BackPanel
+        extends JPanel {
         private Image backgroundImage;
         private Image flagge;
         private JLabel version = new JLabel();
@@ -125,29 +141,35 @@ public class AboutDialog extends JDialog {
         public BackPanel() {
             super();
             logger = Logger.getLogger(getClass());
-            try{
+            try {
                 init();
             }
-            catch (Exception e){
-                if (logger.isEnabledFor(Level.ERROR))
+            catch (Exception e) {
+                if (logger.isEnabledFor(Level.ERROR)) {
                     logger.error("Unbehandelte Exception", e);
+                }
             }
             worker = new Thread() {
                 public void run() {
-                    if (logger.isEnabledFor(Level.DEBUG))
+                    if (logger.isEnabledFor(Level.DEBUG)) {
                         logger.debug("About-Workerthread gestartet. " + worker);
+                    }
                     Image new_img, toDraw;
                     ImageFilter filter = new ImageFilter();
                     int creditsHoehe = 60;
                     int creditsBreite = 135;
-                    int imageX = backgroundImage.getWidth(BackPanel.this) / 2 + 20;
-                    int imageY = backgroundImage.getHeight(BackPanel.this) / 2 - 15;
-                    filter = new CropImageFilter(imageX, imageY, creditsBreite, creditsHoehe);
-                    new_img = createImage(new FilteredImageSource(backgroundImage.getSource(), filter));
-                    filter = new CropImageFilter(0, 0, creditsBreite, creditsHoehe);
+                    int imageX = backgroundImage.getWidth(BackPanel.this) / 2 +
+                        20;
+                    int imageY = backgroundImage.getHeight(BackPanel.this) / 2 -
+                        15;
+                    filter = new CropImageFilter(imageX, imageY, creditsBreite,
+                                                 creditsHoehe);
+                    new_img = createImage(new FilteredImageSource(
+                        backgroundImage.getSource(), filter));
+                    filter = new CropImageFilter(0, 0, creditsBreite,
+                                                 creditsHoehe);
                     int y = creditsHoehe;
-                    try
-                    {
+                    try {
                         sleep(1000);
                         Graphics g = BackPanel.this.getGraphics();
                         g.setColor(Color.BLACK);
@@ -155,12 +177,11 @@ public class AboutDialog extends JDialog {
                         Graphics toDrawGraphics;
                         FontMetrics fm;
                         int strWidth;
-                        while (!isInterrupted())
-                        {
-                            try{
+                        while (!isInterrupted()) {
+                            try {
                                 sleep(100);
                             }
-                            catch (InterruptedException iE){
+                            catch (InterruptedException iE) {
                                 interrupt();
                             }
                             toDraw = createImage(creditsBreite, creditsHoehe);
@@ -168,34 +189,40 @@ public class AboutDialog extends JDialog {
                             toDrawGraphics.drawImage(new_img, 0, 0, BackPanel.this);
                             y--;
                             int abstand = -15;
-                            for (int i=0; i<credits.size(); i++){
-                                entry = (CreditsEntry)credits.get(i);
-                                if (entry.isUeberschrift()){
+                            for (int i = 0; i < credits.size(); i++) {
+                                entry = (CreditsEntry) credits.get(i);
+                                if (entry.isUeberschrift()) {
                                     abstand += 20;
-                                    toDrawGraphics.setFont(new Font("Arial", Font.BOLD, 12));
+                                    toDrawGraphics.setFont(new Font("Arial",
+                                        Font.BOLD, 12));
                                     toDrawGraphics.setColor(Color.BLUE);
                                 }
-                                else{
+                                else {
                                     abstand += 15;
-                                    toDrawGraphics.setFont(new Font("Arial", Font.PLAIN, 12));
+                                    toDrawGraphics.setFont(new Font("Arial",
+                                        Font.PLAIN, 12));
                                     toDrawGraphics.setColor(Color.BLACK);
                                 }
                                 fm = toDrawGraphics.getFontMetrics();
-                                strWidth = fm.stringWidth ( entry.getAusgabetext() );
-                                toDrawGraphics.drawString(entry.getAusgabetext(), (creditsBreite - strWidth) / 2, y + abstand);
+                                strWidth = fm.stringWidth(entry.getAusgabetext());
+                                toDrawGraphics.drawString(entry.getAusgabetext(),
+                                    (creditsBreite - strWidth) / 2, y + abstand);
                             }
-                            g.drawImage(toDraw, imageX+1, imageY-11, BackPanel.this);
-                            if (y==-5 - credits.size() * 15){
+                            g.drawImage(toDraw, imageX + 1, imageY - 11,
+                                        BackPanel.this);
+                            if (y == -5 - credits.size() * 15) {
                                 y = creditsHoehe;
                             }
                         }
                     }
-                    catch (Exception e){
-                        if (logger.isEnabledFor(Level.ERROR))
+                    catch (Exception e) {
+                        if (logger.isEnabledFor(Level.ERROR)) {
                             logger.error("Unbehandelte Exception", e);
+                        }
                     }
-                    if (logger.isEnabledFor(Level.DEBUG))
+                    if (logger.isEnabledFor(Level.DEBUG)) {
                         logger.debug("About-Workerthread beendet. " + worker);
+                    }
                 }
             };
             worker.start();
@@ -217,16 +244,15 @@ public class AboutDialog extends JDialog {
             credits.add(new CreditsEntry(false, "#applejuice"));
             credits.add(new CreditsEntry(false, "www.applejuicenet.de"));
 
-            backgroundImage = IconManager.getInstance().getIcon("applejuiceinfobanner").getImage();
+            backgroundImage = IconManager.getInstance().getIcon(
+                "applejuiceinfobanner").getImage();
             flagge = IconManager.getInstance().getIcon("deutsch").getImage();
             MediaTracker mt = new MediaTracker(this);
             mt.addImage(backgroundImage, 0);
-            try
-            {
+            try {
                 mt.waitForAll();
             }
-            catch (InterruptedException x)
-            {
+            catch (InterruptedException x) {
                 //kein Bild da, dann kack drauf ;-)
             }
             version.setText("Version " + ApplejuiceFassade.GUI_VERSION);
@@ -248,31 +274,32 @@ public class AboutDialog extends JDialog {
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setColor(saved);
 
-            if (backgroundImage != null)
-            {
+            if (backgroundImage != null) {
                 int imageX = (getWidth() - backgroundImage.getWidth(this)) / 2;
-                int imageY = (getHeight() - backgroundImage.getHeight(this)) / 2;
+                int imageY = (getHeight() - backgroundImage.getHeight(this)) /
+                    2;
                 g.drawImage(backgroundImage, imageX, imageY, this);
-                if (flagge!=null){
-                    g.drawImage(flagge, backgroundImage.getWidth(this) - flagge.getWidth(this), 0, this);
+                if (flagge != null) {
+                    g.drawImage(flagge,
+                                backgroundImage.getWidth(this) - flagge.getWidth(this),
+                                0, this);
                 }
             }
         }
 
         public Dimension getPreferredSize() {
-            if (backgroundImage != null)
-            {
+            if (backgroundImage != null) {
                 int width = backgroundImage.getWidth(this) + 3;
                 int height = backgroundImage.getHeight(this) + 3;
                 return new Dimension(width, height);
             }
-            else{
+            else {
                 return super.getPreferredSize();
             }
         }
     }
 
-    class CreditsEntry{
+    class CreditsEntry {
         private boolean ueberschrift;
         private String ausgabetext;
 

@@ -1,9 +1,9 @@
 package de.applejuicenet.client.gui.tables;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/Node.java,v 1.2 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/Node.java,v 1.3 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import javax.swing.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Node.java,v $
+ * Revision 1.3  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.2  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *

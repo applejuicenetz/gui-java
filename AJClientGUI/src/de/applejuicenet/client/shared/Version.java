@@ -1,9 +1,9 @@
 package de.applejuicenet.client.shared;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.12 2004/01/28 13:04:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Version.java,v 1.13 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import javax.swing.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Version.java,v $
+ * Revision 1.13  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.12  2004/01/28 13:04:48  maj0r
  * Fehlende Symbole eingefuegt.
  *
@@ -34,98 +37,90 @@ import javax.swing.*;
  */
 
 public class Version {
-  public static final int UNBEKANNT = 0;
-  public static final int WIN32 = 1;
-  public static final int LINUX = 2;
-  public static final int MACINTOSH = 3;
-  public static final int SOLARIS = 4;
-  public static final int OS2 = 5;
-  public static final int FREEBSD = 6;
-  public static final int NETWARE = 7;
+    public static final int UNBEKANNT = 0;
+    public static final int WIN32 = 1;
+    public static final int LINUX = 2;
+    public static final int MACINTOSH = 3;
+    public static final int SOLARIS = 4;
+    public static final int OS2 = 5;
+    public static final int FREEBSD = 6;
+    public static final int NETWARE = 7;
 
-  private String versionNr;
-  private int betriebsSystem;
+    private String versionNr;
+    private int betriebsSystem;
 
-  public Version(String versionNr, int betriebsSystem) {
-    this.versionNr = versionNr;
-    this.betriebsSystem = betriebsSystem;
-  }
-
-  public Version() {
-  }
-
-  public String getVersion() {
-    return versionNr;
-  }
-
-  public int getBetriebsSystem() {
-    return betriebsSystem;
-  }
-
-  public String getBetriebsSystemAsString() {
-    String result = "";
-    if (betriebsSystem == LINUX) {
-      result = "Linux";
+    public Version(String versionNr, int betriebsSystem) {
+        this.versionNr = versionNr;
+        this.betriebsSystem = betriebsSystem;
     }
-    else if (betriebsSystem == WIN32) {
-      result = "Win32";
+
+    public Version() {
     }
-    return result;
-  }
 
-  public void setBetriebsSystem(int betriebsSystem) {
-    this.betriebsSystem = betriebsSystem;
-  }
-
-  public void setVersion(String versionNr) {
-    this.versionNr = versionNr;
-  }
-
-  public static int getOSTypByOSName(String OSName) {
-    int result = -1;
-    if (OSName.compareToIgnoreCase("Windows NT") == 0) {
-      result = WIN32;
+    public String getVersion() {
+        return versionNr;
     }
-    else if (OSName.compareToIgnoreCase("Linux") == 0) {
-      result = LINUX;
-    }
-    return result;
-  }
 
-  public ImageIcon getVersionIcon(){
-      switch (betriebsSystem){
-          case Version.WIN32:
-              {
-                  return IconManager.getInstance().getIcon("winsymbol");
-              }
-          case Version.LINUX:
-              {
-                  return IconManager.getInstance().getIcon("linuxsymbol");
-              }
-          case Version.FREEBSD:
-              {
-                  return IconManager.getInstance().getIcon("freebsdsymbol");
-              }
-          case Version.MACINTOSH:
-              {
-                  return IconManager.getInstance().getIcon("macsymbol");
-              }
-          case Version.SOLARIS:
-              {
-                  return IconManager.getInstance().getIcon("sunossymbol");
-              }
-          case Version.NETWARE:
-          {
-              return IconManager.getInstance().getIcon("netwaresymbol");
-          }
-          case Version.OS2:
-          {
-              return IconManager.getInstance().getIcon("os2symbol");
-          }
-          default:
-              {
-                  return IconManager.getInstance().getIcon("unbekanntsymbol");
-              }
-      }
-  }
+    public int getBetriebsSystem() {
+        return betriebsSystem;
+    }
+
+    public String getBetriebsSystemAsString() {
+        String result = "";
+        if (betriebsSystem == LINUX) {
+            result = "Linux";
+        }
+        else if (betriebsSystem == WIN32) {
+            result = "Win32";
+        }
+        return result;
+    }
+
+    public void setBetriebsSystem(int betriebsSystem) {
+        this.betriebsSystem = betriebsSystem;
+    }
+
+    public void setVersion(String versionNr) {
+        this.versionNr = versionNr;
+    }
+
+    public static int getOSTypByOSName(String OSName) {
+        int result = -1;
+        if (OSName.compareToIgnoreCase("Windows NT") == 0) {
+            result = WIN32;
+        }
+        else if (OSName.compareToIgnoreCase("Linux") == 0) {
+            result = LINUX;
+        }
+        return result;
+    }
+
+    public ImageIcon getVersionIcon() {
+        switch (betriebsSystem) {
+            case Version.WIN32: {
+                return IconManager.getInstance().getIcon("winsymbol");
+            }
+            case Version.LINUX: {
+                return IconManager.getInstance().getIcon("linuxsymbol");
+            }
+            case Version.FREEBSD: {
+                return IconManager.getInstance().getIcon("freebsdsymbol");
+            }
+            case Version.MACINTOSH: {
+                return IconManager.getInstance().getIcon("macsymbol");
+            }
+            case Version.SOLARIS: {
+                return IconManager.getInstance().getIcon("sunossymbol");
+            }
+            case Version.NETWARE: {
+                return IconManager.getInstance().getIcon("netwaresymbol");
+            }
+            case Version.OS2: {
+                return IconManager.getInstance().getIcon("os2symbol");
+            }
+            default: {
+                return IconManager.getInstance().getIcon("unbekanntsymbol");
+            }
+        }
+    }
 }

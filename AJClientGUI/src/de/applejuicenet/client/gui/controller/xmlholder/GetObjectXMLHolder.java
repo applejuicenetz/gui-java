@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.4 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/GetObjectXMLHolder.java,v 1.5 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: GetObjectXMLHolder.java,v $
+ * Revision 1.5  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.4  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -25,16 +28,20 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  *
  */
 
-import org.w3c.dom.*;
 import org.apache.log4j.Logger;
-import de.applejuicenet.client.shared.dac.*;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
-import de.applejuicenet.client.gui.controller.PartListHolder;
 import de.applejuicenet.client.shared.Version;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.shared.dac.InformationDO;
+import de.applejuicenet.client.shared.dac.ServerDO;
+import de.applejuicenet.client.shared.dac.ShareDO;
+import de.applejuicenet.client.shared.dac.UploadDO;
 
 public class GetObjectXMLHolder
-        extends WebXMLParser{
+    extends WebXMLParser {
     private Logger logger;
 
     public GetObjectXMLHolder() {
@@ -44,7 +51,7 @@ public class GetObjectXMLHolder
 
     public void update() {}
 
-    private Object getShareObject(NodeList nodes){
+    private Object getShareObject(NodeList nodes) {
         int id_key;
         String filename = null;
         String shortfilename = null;
@@ -60,11 +67,12 @@ public class GetObjectXMLHolder
         size = Long.parseLong(e.getAttribute("size"));
         checksum = e.getAttribute("checksum");
         prioritaet = Integer.parseInt(e.getAttribute("priority"));
-        shareDO = new ShareDO(id_key, filename, shortfilename, size, checksum, prioritaet);
+        shareDO = new ShareDO(id_key, filename, shortfilename, size, checksum,
+                              prioritaet);
         return shareDO;
     }
 
-    private Object getDownloadObject(NodeList nodes){
+    private Object getDownloadObject(NodeList nodes) {
         int size = nodes.getLength();
         DownloadDO downloadDO = null;
         Element e = (Element) nodes.item(0);
@@ -81,12 +89,14 @@ public class GetObjectXMLHolder
         int powerDownload = Integer.parseInt(temp);
         temp = e.getAttribute("temporaryfilenumber");
         int temporaryFileNumber = Integer.parseInt(temp);
-        downloadDO = new DownloadDO(id, shareid, hash, fileSize, sizeReady, status, filename,
-                targetDirectory, powerDownload, temporaryFileNumber);
+        downloadDO = new DownloadDO(id, shareid, hash, fileSize, sizeReady,
+                                    status, filename,
+                                    targetDirectory, powerDownload,
+                                    temporaryFileNumber);
         return downloadDO;
     }
 
-    private Object getInformationObject(NodeList nodes){
+    private Object getInformationObject(NodeList nodes) {
         long sessionUpload;
         long sessionDownload;
         long credits;
@@ -101,12 +111,13 @@ public class GetObjectXMLHolder
         openConnections = Long.parseLong(e.getAttribute("openconnections"));
         sessionUpload = Long.parseLong(e.getAttribute("sessionupload"));
         sessionDownload = Long.parseLong(e.getAttribute("sessiondownload"));
-        InformationDO information = new InformationDO(id, sessionUpload, sessionDownload, credits, uploadSpeed, downloadSpeed,
-                                      openConnections);
+        InformationDO information = new InformationDO(id, sessionUpload,
+            sessionDownload, credits, uploadSpeed, downloadSpeed,
+            openConnections);
         return information;
     }
 
-    private Object getUploadObject(NodeList nodes){
+    private Object getUploadObject(NodeList nodes) {
         Element e = null;
         int shareId;
         UploadDO upload = null;
@@ -140,12 +151,12 @@ public class GetObjectXMLHolder
         actualUploadPos = Long.parseLong(e.getAttribute("actualuploadposition"));
         speed = Integer.parseInt(e.getAttribute("speed"));
         upload = new UploadDO(id, shareId, version, status, nick,
-                uploadFrom, uploadTo, actualUploadPos,
-                speed, prioritaet);
+                              uploadFrom, uploadTo, actualUploadPos,
+                              speed, prioritaet);
         return upload;
     }
 
-    private Object getDownloadSourceObject(NodeList nodes){
+    private Object getDownloadSourceObject(NodeList nodes) {
         int downloadFrom;
         int downloadTo;
         int actualDownloadPosition;
@@ -195,13 +206,14 @@ public class GetObjectXMLHolder
         nickname = e.getAttribute("nickname");
         temp = e.getAttribute("downloadid");
         downloadId = Integer.parseInt(temp);
-        DownloadSourceDO downloadSourceDO = new DownloadSourceDO(id, status, directstate, downloadFrom, downloadTo,
-                                                actualDownloadPosition, speed, version, queuePosition,
-                                                powerDownload, filename, nickname, downloadId);
+        DownloadSourceDO downloadSourceDO = new DownloadSourceDO(id, status,
+            directstate, downloadFrom, downloadTo,
+            actualDownloadPosition, speed, version, queuePosition,
+            powerDownload, filename, nickname, downloadId);
         return downloadSourceDO;
     }
 
-    private Object getServerObject(NodeList nodes){
+    private Object getServerObject(NodeList nodes) {
         Element e = null;
         String id_key = null;
         int id;
@@ -225,27 +237,27 @@ public class GetObjectXMLHolder
         try {
             reload("id=" + id, false);
             NodeList nodes = document.getElementsByTagName("share");
-            if (nodes.getLength()==1){
+            if (nodes.getLength() == 1) {
                 return getShareObject(nodes);
             }
             nodes = document.getElementsByTagName("download");
-            if (nodes.getLength()==1){
+            if (nodes.getLength() == 1) {
                 return getDownloadObject(nodes);
             }
             nodes = document.getElementsByTagName("upload");
-            if (nodes.getLength()==1){
+            if (nodes.getLength() == 1) {
                 return getUploadObject(nodes);
             }
             nodes = document.getElementsByTagName("user");
-            if (nodes.getLength()==1){
+            if (nodes.getLength() == 1) {
                 return getDownloadSourceObject(nodes);
             }
             nodes = document.getElementsByTagName("server");
-            if (nodes.getLength()==1){
+            if (nodes.getLength() == 1) {
                 return getServerObject(nodes);
             }
             nodes = document.getElementsByTagName("information");
-            if (nodes.getLength()==1){
+            if (nodes.getLength() == 1) {
                 getInformationObject(nodes);
             }
             return null;

@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.xmlholder.
     DownloadPartListXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.UserPartListXMLHolder;
@@ -22,7 +22,7 @@ import de.applejuicenet.client.shared.exception.PartlistException;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.25 2004/02/02 19:28:57 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.26 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +31,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.26  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.25  2004/02/02 19:28:57  maj0r
  * Kompression wird nur beim initialen Laden und bei entferntem Core verwendet.
  *
@@ -150,23 +153,25 @@ public abstract class WebXMLParser
         if (host == null || host.length() == 0) {
             host = "localhost";
         }
-        if (host.compareToIgnoreCase("localhost")!=0 && host.compareTo("127.0.0.1")!=0){
+        if (host.compareToIgnoreCase("localhost") != 0 &&
+            host.compareTo("127.0.0.1") != 0) {
             zipMode = "mode=zip&";
         }
         this.xmlCommand = xmlCommand;
         webXML = true;
     }
 
-    public void reload(String parameters, boolean throwWebSiteNotFoundException) throws Exception {
+    public void reload(String parameters, boolean throwWebSiteNotFoundException) throws
+        Exception {
         String xmlData = null;
         try {
             String command = xmlCommand + "?";
-            if (parameters.indexOf("mode=zip")==-1){
+            if (parameters.indexOf("mode=zip") == -1) {
                 command += zipMode;
             }
             if (useTimestamp) {
                 command += "password=" + password + "&timestamp=" +
-                timestamp + parameters;
+                    timestamp + parameters;
             }
             else {
                 if (parameters.length() != 0) {
@@ -176,16 +181,17 @@ public abstract class WebXMLParser
                     command += "password=" + password;
                 }
             }
-            xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET, command);
-            if (xmlData.length()==0){
+            xmlData = HtmlLoader.getHtmlXMLContent(host, HtmlLoader.GET,
+                command);
+            if (xmlData.length() == 0) {
                 throw new IllegalArgumentException();
             }
         }
         catch (WebSiteNotFoundException ex) {
-            if (throwWebSiteNotFoundException){
+            if (throwWebSiteNotFoundException) {
                 throw ex;
             }
-            else{
+            else {
                 return;
             }
         }

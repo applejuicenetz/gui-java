@@ -1,11 +1,11 @@
 package de.applejuicenet.client.shared;
 
+import java.awt.Color;
+
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 
-import java.awt.*;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.5 2004/01/05 19:17:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.6 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +14,9 @@ import java.awt.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Settings.java,v $
+ * Revision 1.6  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.5  2004/01/05 19:17:19  maj0r
  * Bug #56 gefixt (Danke an MeineR)
  * Das Laden der Plugins beim Start kann über das Optionenmenue deaktiviert werden.
@@ -35,26 +38,33 @@ public class Settings {
     private boolean downloadUebersicht = true;
     private boolean loadPlugins = true;
 
-    public Settings(Boolean farbenAktiv, Color downloadFertigHintergrundColor, Color quelleHintergrundColor,
-                    Boolean downloadUebersicht, Boolean loadPlugins){
-        if (farbenAktiv!=null)
+    public Settings(Boolean farbenAktiv, Color downloadFertigHintergrundColor,
+                    Color quelleHintergrundColor,
+                    Boolean downloadUebersicht, Boolean loadPlugins) {
+        if (farbenAktiv != null) {
             this.farbenAktiv = farbenAktiv.booleanValue();
-        if (downloadFertigHintergrundColor!=null)
-            this.downloadFertigHintergrundColor = downloadFertigHintergrundColor;
-        if (quelleHintergrundColor!=null)
+        }
+        if (downloadFertigHintergrundColor != null) {
+            this.downloadFertigHintergrundColor =
+                downloadFertigHintergrundColor;
+        }
+        if (quelleHintergrundColor != null) {
             this.quelleHintergrundColor = quelleHintergrundColor;
-        if (downloadUebersicht!=null)
+        }
+        if (downloadUebersicht != null) {
             this.downloadUebersicht = downloadUebersicht.booleanValue();
-        if (loadPlugins!=null)
+        }
+        if (loadPlugins != null) {
             this.loadPlugins = downloadUebersicht.booleanValue();
+        }
     }
 
-    public static Settings getSettings(){
+    public static Settings getSettings() {
         return PropertiesManager.getOptionsManager().getSettings();
     }
 
-    public void save(){
-        if (dirty){
+    public void save() {
+        if (dirty) {
             PropertiesManager.getOptionsManager().saveSettings(this);
             dirty = false;
         }
@@ -64,10 +74,13 @@ public class Settings {
         return downloadFertigHintergrundColor;
     }
 
-    public void setDownloadFertigHintergrundColor(Color downloadFertigHintergrundColor) {
-        if (this.downloadFertigHintergrundColor.getRGB() != downloadFertigHintergrundColor.getRGB()){
+    public void setDownloadFertigHintergrundColor(Color
+        downloadFertigHintergrundColor) {
+        if (this.downloadFertigHintergrundColor.getRGB() !=
+            downloadFertigHintergrundColor.getRGB()) {
             dirty = true;
-            this.downloadFertigHintergrundColor = downloadFertigHintergrundColor;
+            this.downloadFertigHintergrundColor =
+                downloadFertigHintergrundColor;
         }
     }
 
@@ -76,7 +89,8 @@ public class Settings {
     }
 
     public void setQuelleHintergrundColor(Color quelleHintergrundColor) {
-        if (this.quelleHintergrundColor.getRGB() != quelleHintergrundColor.getRGB()){
+        if (this.quelleHintergrundColor.getRGB() !=
+            quelleHintergrundColor.getRGB()) {
             dirty = true;
             this.quelleHintergrundColor = quelleHintergrundColor;
         }
@@ -87,7 +101,7 @@ public class Settings {
     }
 
     public void setFarbenAktiv(boolean farbenAktiv) {
-        if (this.farbenAktiv!=farbenAktiv){
+        if (this.farbenAktiv != farbenAktiv) {
             dirty = true;
             this.farbenAktiv = farbenAktiv;
         }
@@ -102,18 +116,18 @@ public class Settings {
     }
 
     public void setDownloadUebersicht(boolean downloadUebersicht) {
-        if (this.downloadUebersicht!=downloadUebersicht){
+        if (this.downloadUebersicht != downloadUebersicht) {
             dirty = true;
             this.downloadUebersicht = downloadUebersicht;
         }
     }
 
-    public boolean shouldLoadPluginsOnStartup(){
+    public boolean shouldLoadPluginsOnStartup() {
         return loadPlugins;
     }
 
-    public void loadPluginsOnStartup(boolean loadPluginsOnStartup){
-        if (loadPlugins != loadPluginsOnStartup){
+    public void loadPluginsOnStartup(boolean loadPluginsOnStartup) {
+        if (loadPlugins != loadPluginsOnStartup) {
             dirty = true;
             loadPlugins = loadPluginsOnStartup;
         }

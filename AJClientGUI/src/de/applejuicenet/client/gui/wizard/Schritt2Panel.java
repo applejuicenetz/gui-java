@@ -1,12 +1,15 @@
 package de.applejuicenet.client.gui.wizard;
 
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt2Panel.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt2Panel.java,v 1.5 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +18,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Schritt2Panel.java,v $
+ * Revision 1.5  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -30,17 +36,18 @@ import java.awt.*;
  *
  */
 
-public class Schritt2Panel extends WizardPanel{
+public class Schritt2Panel
+    extends WizardPanel {
     private JLabel label1 = new JLabel();
     private JTextArea textArea1 = new JTextArea();
     private JTextArea textArea2 = new JTextArea();
 
-    public Schritt2Panel(){
+    public Schritt2Panel() {
         super();
         init();
     }
 
-    private void init(){
+    private void init() {
         textArea1.setWrapStyleWord(true);
         textArea2.setWrapStyleWord(true);
         textArea1.setLineWrap(true);
@@ -75,11 +82,14 @@ public class Schritt2Panel extends WizardPanel{
 
     public void fireLanguageChanged() {
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "wizard", "schritt2", "label1"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
+                                      "schritt2", "label1"})));
         textArea1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "wizard", "schritt2", "label2"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
+                                      "schritt2", "label2"})));
         textArea2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "wizard", "schritt2", "label3"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
+                                      "schritt2", "label3"})));
     }
 
 }

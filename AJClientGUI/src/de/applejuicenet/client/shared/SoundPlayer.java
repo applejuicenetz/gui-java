@@ -1,16 +1,20 @@
 package de.applejuicenet.client.shared;
 
-import org.apache.log4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
 
-import javax.sound.sampled.*;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.6 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.7 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +23,9 @@ import javax.sound.sampled.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SoundPlayer.java,v $
+ * Revision 1.7  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.6  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -60,80 +67,80 @@ public class SoundPlayer {
 
     private SoundPlayer() {
         soundPath = System.getProperty("user.dir") + File.separator +
-                    "sounds" + File.separator;
+            "sounds" + File.separator;
     }
 
     public static SoundPlayer getInstance() {
-        if (instance == null)
-        {
+        if (instance == null) {
             instance = new SoundPlayer();
             logger = Logger.getLogger(instance.getClass());
         }
         return instance;
     }
 
-    public void playSound(int sound){
-        try{
-            if (!PropertiesManager.getOptionsManager().isSoundEnabled()){
+    public void playSound(int sound) {
+        try {
+            if (!PropertiesManager.getOptionsManager().isSoundEnabled()) {
                 return;
             }
             File soundFile = null;
-            switch (sound){
-                case ABGEBROCHEN:{
+            switch (sound) {
+                case ABGEBROCHEN: {
                     soundFile = new File(soundPath + "abgebrochen.wav");
                     break;
                 }
-                case SUCHEN:{
+                case SUCHEN: {
                     soundFile = new File(soundPath + "suchen.wav");
                     break;
                 }
-                case VERBINDEN:{
+                case VERBINDEN: {
                     soundFile = new File(soundPath + "verbinden.wav");
                     break;
                 }
-                case GESPEICHERT:{
+                case GESPEICHERT: {
                     soundFile = new File(soundPath + "gespeichert.wav");
                     break;
                 }
-                case KOMPLETT:{
+                case KOMPLETT: {
                     soundFile = new File(soundPath + "komplett.wav");
                     break;
                 }
-                case LADEN:{
+                case LADEN: {
                     soundFile = new File(soundPath + "laden.wav");
                     break;
                 }
-                case POWER:{
+                case POWER: {
                     soundFile = new File(soundPath + "pwdl.wav");
                     break;
                 }
-                case VERWEIGERT:{
+                case VERWEIGERT: {
                     soundFile = new File(soundPath + "verweigert.wav");
                     break;
                 }
-                case KONKRETISIEREN:{
+                case KONKRETISIEREN: {
                     soundFile = new File(soundPath + "konkretisieren.wav");
                     break;
                 }
-                case ZUGANG_GEWAEHRT:{
+                case ZUGANG_GEWAEHRT: {
                     soundFile = new File(soundPath + "zuganggestattet.wav");
                     break;
                 }
-                case GESTARTET:{
+                case GESTARTET: {
                     soundFile = new File(soundPath + "gestartet.wav");
                     break;
                 }
-                default:
-                {
-                    logger.error("SoundPlayer::playSound() ungueltiger Parameter: " + sound);
+                default: {
+                    logger.error(
+                        "SoundPlayer::playSound() ungueltiger Parameter: " +
+                        sound);
                 }
             }
             final Clip soundToPlay = loadSound(soundFile);
-            new Thread(){
-                public void run(){
-                    if (soundToPlay!=null){
+            new Thread() {
+                public void run() {
+                    if (soundToPlay != null) {
                         soundToPlay.start();
-                        while (soundToPlay.isRunning()){
+                        while (soundToPlay.isRunning()) {
                             try {
                                 sleep(50);
                             }
@@ -145,50 +152,54 @@ public class SoundPlayer {
                         soundToPlay.stop();
                     }
                 }
-            }.start();
+            }
+
+            .start();
         }
-        catch(Exception e)
-        {
+        catch (Exception e) {
             logger.error(e);
         }
     }
 
-    private Clip loadSound(File file){
+    private Clip loadSound(File file) {
         Clip clip = null;
-        try
-        {
+        try {
             AudioInputStream sound = null;
             sound = AudioSystem.getAudioInputStream(file);
             AudioFormat format = sound.getFormat();
 
-            if ((format.getEncoding() == AudioFormat.Encoding.ULAW) ||
-                (format.getEncoding() == AudioFormat.Encoding.ALAW))
-            {
-                AudioFormat tmp = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                                                  format.getSampleRate(),format.getSampleSizeInBits() * 2,
-                                                  format.getChannels(),format.getFrameSize() * 2,
-                                                  format.getFrameRate(),true);
+            if ( (format.getEncoding() == AudioFormat.Encoding.ULAW) ||
+                (format.getEncoding() == AudioFormat.Encoding.ALAW)) {
+                AudioFormat tmp = new AudioFormat(AudioFormat.Encoding.
+                                                  PCM_SIGNED,
+                                                  format.getSampleRate(),
+                                                  format.getSampleSizeInBits() *
+                                                  2,
+                                                  format.getChannels(),
+                                                  format.getFrameSize() * 2,
+                                                  format.getFrameRate(), true);
                 sound = AudioSystem.getAudioInputStream(tmp, sound);
                 format = tmp;
             }
-            DataLine.Info info = new DataLine.Info(Clip.class, sound.getFormat(), ((int) sound.getFrameLength()*format.getFrameSize()));
+            DataLine.Info info = new DataLine.Info(Clip.class, sound.getFormat(),
+                ( (int) sound.getFrameLength() * format.getFrameSize()));
             clip = (Clip) AudioSystem.getLine(info);
             clip.open(sound);
         }
-        catch(LineUnavailableException luE)
-        {
-            logger.info("Kein Audioausgabegeraet gefunden. Bitte Soundausgabe deaktivieren.", luE);
+        catch (LineUnavailableException luE) {
+            logger.info(
+                "Kein Audioausgabegeraet gefunden. Bitte Soundausgabe deaktivieren.",
+                luE);
         }
-        catch (IOException ioE)
-        {
-            logger.error("Die Datei " + file.getAbsolutePath() + " konnte nicht gefunden werden.");
+        catch (IOException ioE) {
+            logger.error("Die Datei " + file.getAbsolutePath() +
+                         " konnte nicht gefunden werden.");
         }
-        catch (UnsupportedAudioFileException uafE)
-        {
-            logger.error("Die Datei " + file.getAbsolutePath() + " hat ein ungueltiges Format und kann nicht ausgegeben werden.");
+        catch (UnsupportedAudioFileException uafE) {
+            logger.error("Die Datei " + file.getAbsolutePath() +
+                " hat ein ungueltiges Format und kann nicht ausgegeben werden.");
         }
-        catch(Exception e)
-        {
+        catch (Exception e) {
             logger.error(e);
         }
         return clip;

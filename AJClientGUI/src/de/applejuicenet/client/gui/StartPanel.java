@@ -7,11 +7,17 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
@@ -19,16 +25,9 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import javax.swing.JTextPane;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.text.html.HTMLFrameHyperlinkEvent;
-import javax.swing.text.html.HTMLDocument;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
-import javax.swing.JOptionPane;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.41 2004/02/04 14:26:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.42 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +36,9 @@ import javax.swing.JOptionPane;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.42  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.41  2004/02/04 14:26:05  maj0r
  * Bug #185 gefixt (Danke an muhviestarr)
  * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
@@ -190,8 +192,8 @@ public class StartPanel
 
     private LanguageSelector languageSelector;
 
-    public static synchronized StartPanel getInstance(){
-        if (instance == null){
+    public static synchronized StartPanel getInstance() {
+        if (instance == null) {
             instance = new StartPanel();
         }
         return instance;
@@ -352,17 +354,18 @@ public class StartPanel
                     nachrichten.setContentType("text/html");
                     nachrichten.setEditable(false);
                     nachrichten.setText(htmlText);
-                    nachrichten.addHyperlinkListener(new HyperlinkListener (){
+                    nachrichten.addHyperlinkListener(new HyperlinkListener() {
                         public void hyperlinkUpdate(HyperlinkEvent e) {
-                           if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                               if (e.getURL() != null){
-                                   String url = e.getURL().toString();
-                                   if (url.length() != 0) {
-                                       executeLink(url);
-                                   }
-                               }
-                           }
-                       }
+                            if (e.getEventType() ==
+                                HyperlinkEvent.EventType.ACTIVATED) {
+                                if (e.getURL() != null) {
+                                    String url = e.getURL().toString();
+                                    if (url.length() != 0) {
+                                        executeLink(url);
+                                    }
+                                }
+                            }
+                        }
                     });
                 }
                 catch (Exception e) {
@@ -393,11 +396,13 @@ public class StartPanel
             catch (Exception ex) {
                 LanguageSelector ls = LanguageSelector.
                     getInstance();
-                String nachricht = ZeichenErsetzer.korrigiereUmlaute(ls.getFirstAttrbuteByTagName(new
-                    String[] {"javagui", "startup",
-                    "updatefehlernachricht"}));
-                String titel = ZeichenErsetzer.korrigiereUmlaute(ls.getFirstAttrbuteByTagName(new
-                    String[] {"mainform", "caption"}));
+                String nachricht = ZeichenErsetzer.korrigiereUmlaute(ls.
+                    getFirstAttrbuteByTagName(new
+                                              String[] {"javagui", "startup",
+                                              "updatefehlernachricht"}));
+                String titel = ZeichenErsetzer.korrigiereUmlaute(ls.
+                    getFirstAttrbuteByTagName(new
+                                              String[] {"mainform", "caption"}));
                 JOptionPane.showMessageDialog(this, nachricht,
                                               titel,
                                               JOptionPane.INFORMATION_MESSAGE);
@@ -449,12 +454,12 @@ public class StartPanel
                 getFirstAttrbuteByTagName(new String[] {"mainform", "html10"}));
             StringBuffer temp = new StringBuffer(label9Text);
             int pos = temp.indexOf("%s");
-            if (pos != -1){
+            if (pos != -1) {
                 temp.replace(pos, pos + 2, keinServer);
             }
             pos = temp.indexOf("%d");
-            if (pos != -1){
-                temp.replace(pos, pos + 2 , Integer.toString(ApplejuiceFassade.
+            if (pos != -1) {
+                temp.replace(pos, pos + 2, Integer.toString(ApplejuiceFassade.
                     getInstance().
                     getAllServer().
                     size()));
@@ -465,11 +470,11 @@ public class StartPanel
                                           "status0"}));
             temp = new StringBuffer(label10Text);
             pos = temp.indexOf("%d");
-            if (pos != -1){
+            if (pos != -1) {
                 if (information != null) {
                     temp.replace(pos, pos + 2,
-                                             Long.toString(information.
-                        getOpenConnections()));
+                                 Long.toString(information.
+                                               getOpenConnections()));
                 }
                 else {
                     temp.replace(pos, pos + 2, "0");
@@ -484,34 +489,34 @@ public class StartPanel
             temp = new StringBuffer(label6Text);
             if (netInfo != null) {
                 pos = temp.indexOf("%d");
-                if (pos != -1){
+                if (pos != -1) {
                     temp.replace(pos, pos + 2,
-                                        netInfo.
-                                        getAJUserGesamtAsStringWithPoints());
+                                 netInfo.
+                                 getAJUserGesamtAsStringWithPoints());
                 }
                 pos = temp.indexOf("%d");
-                if (pos != -1){
+                if (pos != -1) {
                     temp.replace(pos, pos + 2, netInfo.
-                        getAJAnzahlDateienAsStringWithPoints());
+                                 getAJAnzahlDateienAsStringWithPoints());
                 }
                 pos = temp.indexOf("%s");
-                if (pos != -1){
+                if (pos != -1) {
                     temp.replace(pos, pos + 2,
-                                             netInfo.getAJGesamtShareWithPoints(
+                                 netInfo.getAJGesamtShareWithPoints(
                         0));
                 }
             }
             else {
                 pos = temp.indexOf("%d");
-                if (pos != -1){
+                if (pos != -1) {
                     temp.replace(pos, pos + 2, "0");
                 }
                 pos = temp.indexOf("%d");
-                if (pos != -1){
+                if (pos != -1) {
                     temp.replace(pos, pos + 2, "0");
                 }
                 pos = temp.indexOf("%s");
-                if (pos != -1){
+                if (pos != -1) {
                     temp.replace(pos, pos + 2, "0 MB");
                 }
 
@@ -536,17 +541,17 @@ public class StartPanel
                 netInfo = (NetworkInfo) content;
                 StringBuffer temp = new StringBuffer(label6Text);
                 int pos = temp.indexOf("%d");
-                if (pos != -1){
+                if (pos != -1) {
                     temp.replace(pos, pos + 2,
                                  netInfo.getAJUserGesamtAsStringWithPoints());
                 }
                 pos = temp.indexOf("%d");
-                if (pos != -1){
+                if (pos != -1) {
                     temp.replace(pos, pos + 2,
                                  netInfo.getAJAnzahlDateienAsStringWithPoints());
                 }
                 pos = temp.indexOf("%s");
-                if (pos != -1){
+                if (pos != -1) {
                     temp.replace(pos, pos + 2,
                                  netInfo.getAJGesamtShareWithPoints(0));
                 }

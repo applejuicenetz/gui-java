@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/ConnectionSettings.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/ConnectionSettings.java,v 1.4 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.security.NoSuchAlgorithmException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ConnectionSettings.java,v $
+ * Revision 1.4  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -45,8 +48,9 @@ public class ConnectionSettings {
 
     public ConnectionSettings(String host, String password, int xmlPort) {
         this.host = host;
-        if (password.length() == 0)
+        if (password.length() == 0) {
             password = getMD5("");
+        }
         this.oldPassword = password;
         this.xmlPort = xmlPort;
     }
@@ -67,39 +71,39 @@ public class ConnectionSettings {
     }
 
     public String getHost() {
-        if (host == null)
+        if (host == null) {
             host = "";
+        }
         return host;
     }
 
     public String getOldPassword() {
-        if (oldPassword == null)
+        if (oldPassword == null) {
             oldPassword = "";
+        }
         return oldPassword;
     }
 
     public String getNewPassword() {
-        if (newPassword == null)
+        if (newPassword == null) {
             newPassword = "";
+        }
         return newPassword;
     }
 
     private String getMD5(String text) {
         byte[] intext = text.getBytes();
         MessageDigest md5 = null;
-        try
-        {
+        try {
             md5 = MessageDigest.getInstance("MD5");
         }
-        catch (NoSuchAlgorithmException e)
-        {
+        catch (NoSuchAlgorithmException e) {
             //Gibbet nicht...
         }
         byte[] md5rslt = md5.digest(intext);
 
         StringBuffer verifyMsg = new StringBuffer();
-        for (int i = 0; i < md5rslt.length; i++)
-        {
+        for (int i = 0; i < md5rslt.length; i++) {
             int hexChar = 0xFF & md5rslt[i];
             String hexString = Integer.toHexString(hexChar);
             hexString = (hexString.length() == 1) ? "0" + hexString : hexString;

@@ -1,13 +1,13 @@
 package de.applejuicenet.client;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import java.awt.Frame;
-import org.apache.log4j.Logger;
+import javax.swing.JFrame;
+
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.1 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.2 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClientTG.java,v $
+ * Revision 1.2  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.1  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *

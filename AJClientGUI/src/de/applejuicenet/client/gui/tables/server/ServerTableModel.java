@@ -1,15 +1,17 @@
 package de.applejuicenet.client.gui.tables.server;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
 
-import de.applejuicenet.client.shared.dac.*;
-import de.applejuicenet.client.gui.shared.TableSorter;
 import de.applejuicenet.client.gui.shared.SortableTableModel;
+import de.applejuicenet.client.gui.shared.TableSorter;
+import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.8 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableModel.java,v 1.9 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +20,9 @@ import de.applejuicenet.client.gui.shared.SortableTableModel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerTableModel.java,v $
+ * Revision 1.9  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.8  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -56,115 +61,114 @@ import de.applejuicenet.client.gui.shared.SortableTableModel;
  */
 
 public class ServerTableModel
-    extends AbstractTableModel implements SortableTableModel{
-  final static String[] COL_NAMES = {
-      "Name", "DynIP", "Port", "Verbindungsversuche", "Letztes mal online"};
+    extends AbstractTableModel
+    implements SortableTableModel {
+    final static String[] COL_NAMES = {
+        "Name", "DynIP", "Port", "Verbindungsversuche", "Letztes mal online"};
 
-  private TableSorter sorter;
-  private ArrayList servers = new ArrayList();
+    private TableSorter sorter;
+    private ArrayList servers = new ArrayList();
 
-  public ArrayList getContent() {
-    return servers;
-  }
-
-  public Object getRow(int row) {
-    if ( (servers != null) && (row < servers.size())) {
-      return servers.get(row);
-    }
-    return null;
-  }
-
-
-  public void sortByColumn(int column, boolean isAscent) {
-    if (sorter == null) {
-      sorter = new TableSorter(this);
-    }
-    sorter.sort(column, isAscent);
-    fireTableDataChanged();
-  }
-
-
-  public Object getValueAt(int row, int column) {
-    if ( (servers == null) || (row >= servers.size())) {
-      return "";
+    public ArrayList getContent() {
+        return servers;
     }
 
-    ServerDO server = (ServerDO) servers.get(row);
-    if (server == null) {
-      return "";
+    public Object getRow(int row) {
+        if ( (servers != null) && (row < servers.size())) {
+            return servers.get(row);
+        }
+        return null;
     }
 
-    switch (column) {
-      case 0:
-        return server.getName();
-      case 1:
-        return server.getHost();
-      case 2:
-        return server.getPort();
-      case 3:
-        return new Integer(server.getVersuche());
-      case 4:
-        return server.getTimeLastSeenAsString();
-      default:
-        return "";
+    public void sortByColumn(int column, boolean isAscent) {
+        if (sorter == null) {
+            sorter = new TableSorter(this);
+        }
+        sorter.sort(column, isAscent);
+        fireTableDataChanged();
     }
-  }
 
-  public int getColumnCount() {
-    return COL_NAMES.length;
-  }
+    public Object getValueAt(int row, int column) {
+        if ( (servers == null) || (row >= servers.size())) {
+            return "";
+        }
 
-  public String getColumnName(int index) {
-    return COL_NAMES[index];
-  }
+        ServerDO server = (ServerDO) servers.get(row);
+        if (server == null) {
+            return "";
+        }
 
-  public int getRowCount() {
-    if (servers == null) {
-      return 0;
-    }
-    return servers.size();
-  }
-
-  public Class getClass(int index) {
-      if (index==3){
-          return Number.class;
-      }
-      else{
-          return String.class;
-      }
-  }
-
-  public void setTable(HashMap changedContent) {
-    //alte Server entfernen
-    String suchKey = null;
-    ArrayList toRemove = new ArrayList();
-    for(int i=0; i<servers.size(); i++){
-        suchKey = Integer.toString(((ServerDO)servers.get(i)).getID());
-        if (!changedContent.containsKey(suchKey)){
-              toRemove.add(servers.get(i));
+        switch (column) {
+            case 0:
+                return server.getName();
+            case 1:
+                return server.getHost();
+            case 2:
+                return server.getPort();
+            case 3:
+                return new Integer(server.getVersuche());
+            case 4:
+                return server.getTimeLastSeenAsString();
+            default:
+                return "";
         }
     }
-    for (int x=0; x<toRemove.size(); x++){
-        servers.remove(toRemove.get(x));
+
+    public int getColumnCount() {
+        return COL_NAMES.length;
     }
-    Iterator it = changedContent.values().iterator();
-    while (it.hasNext()) {
-      ServerDO server = (ServerDO) it.next();
-      int index = servers.indexOf(server);
-      if (index == -1) { // Der Server ist neu
-        servers.add(server);
-      }
-      else { // Der Server hat sich verändert
-        ServerDO oldServer = (ServerDO) servers.get(index);
-        oldServer.setHost(server.getHost());
-        oldServer.setName(server.getName());
-        oldServer.setPort(server.getPort());
-        oldServer.setVersuche(server.getVersuche());
-        oldServer.setTimeLastSeen(server.getTimeLastSeen());
-        oldServer.setConnected(server.isConnected());
-        oldServer.setTryConnect(server.isTryConnect());
-      }
+
+    public String getColumnName(int index) {
+        return COL_NAMES[index];
     }
-    this.fireTableDataChanged();
-  }
+
+    public int getRowCount() {
+        if (servers == null) {
+            return 0;
+        }
+        return servers.size();
+    }
+
+    public Class getClass(int index) {
+        if (index == 3) {
+            return Number.class;
+        }
+        else {
+            return String.class;
+        }
+    }
+
+    public void setTable(HashMap changedContent) {
+        //alte Server entfernen
+        String suchKey = null;
+        ArrayList toRemove = new ArrayList();
+        for (int i = 0; i < servers.size(); i++) {
+            suchKey = Integer.toString( ( (ServerDO) servers.get(i)).getID());
+            if (!changedContent.containsKey(suchKey)) {
+                toRemove.add(servers.get(i));
+            }
+        }
+        for (int x = 0; x < toRemove.size(); x++) {
+            servers.remove(toRemove.get(x));
+        }
+        Iterator it = changedContent.values().iterator();
+        while (it.hasNext()) {
+            ServerDO server = (ServerDO) it.next();
+            int index = servers.indexOf(server);
+            if (index == -1) { // Der Server ist neu
+                servers.add(server);
+            }
+            else { // Der Server hat sich verändert
+                ServerDO oldServer = (ServerDO) servers.get(index);
+                oldServer.setHost(server.getHost());
+                oldServer.setName(server.getName());
+                oldServer.setPort(server.getPort());
+                oldServer.setVersuche(server.getVersuche());
+                oldServer.setTimeLastSeen(server.getTimeLastSeen());
+                oldServer.setConnected(server.isConnected());
+                oldServer.setTryConnect(server.isTryConnect());
+            }
+        }
+        this.fireTableDataChanged();
+    }
 }

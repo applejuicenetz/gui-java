@@ -1,24 +1,29 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.gui.trees.WaitNode;
-import de.applejuicenet.client.gui.trees.chooser.DirectoryChooserTreeModel;
-import de.applejuicenet.client.gui.trees.chooser.DirectoryChooserTreeCellRenderer;
-import de.applejuicenet.client.gui.trees.chooser.DirectoryChooserNode;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeModel;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.trees.WaitNode;
+import de.applejuicenet.client.gui.trees.chooser.DirectoryChooserNode;
+import de.applejuicenet.client.gui.trees.chooser.
+    DirectoryChooserTreeCellRenderer;
+import de.applejuicenet.client.gui.trees.chooser.DirectoryChooserTreeModel;
 import de.applejuicenet.client.shared.SwingWorker;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
-import javax.swing.*;
-import javax.swing.tree.DefaultTreeModel;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODDirectoryChooser.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODDirectoryChooser.java,v 1.4 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +32,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODDirectoryChooser.java,v $
+ * Revision 1.4  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -39,7 +47,8 @@ import org.apache.log4j.Level;
  *
  */
 
-public class ODDirectoryChooser extends JDialog{
+public class ODDirectoryChooser
+    extends JDialog {
     private JTree folderTree = new JTree();
     private JButton uebernehmen = new JButton();
     private JButton abbrechen = new JButton();
@@ -49,21 +58,21 @@ public class ODDirectoryChooser extends JDialog{
 
     private Logger logger;
 
-    public ODDirectoryChooser(JDialog parent, String title){
+    public ODDirectoryChooser(JDialog parent, String title) {
         super(parent, true);
         logger = Logger.getLogger(getClass());
-        try{
+        try {
             setTitle(title);
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    private void init(){
+    private void init() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(new JScrollPane(folderTree), BorderLayout.CENTER);
@@ -72,7 +81,8 @@ public class ODDirectoryChooser extends JDialog{
         uebernehmen.setEnabled(false);
         final SwingWorker worker = new SwingWorker() {
             public Object construct() {
-                DirectoryChooserTreeModel treeModel = new DirectoryChooserTreeModel();
+                DirectoryChooserTreeModel treeModel = new
+                    DirectoryChooserTreeModel();
                 folderTree.setModel(treeModel);
                 folderTree.setRootVisible(false);
                 uebernehmen.setEnabled(true);
@@ -87,45 +97,45 @@ public class ODDirectoryChooser extends JDialog{
             getFirstAttrbuteByTagName(new String[] {"einstform", "Button1",
                                       "caption"})));
         uebernehmen.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            uebernehmen();
-          }
+            public void actionPerformed(ActionEvent e) {
+                uebernehmen();
+            }
         });
         abbrechen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(new String[] {"einstform", "Button2",
                                       "caption"})));
         abbrechen.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            dispose();
-          }
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
         });
         getContentPane().add(aPanel, BorderLayout.SOUTH);
         pack();
-        setSize(getWidth()*2, getHeight());
+        setSize(getWidth() * 2, getHeight());
     }
 
-    public boolean isNewPathSelected(){
+    public boolean isNewPathSelected() {
         return change;
     }
 
-    public String getSelectedPath(){
+    public String getSelectedPath() {
         return path;
     }
 
-    private void uebernehmen(){
-        try{
-            if (folderTree.getSelectionCount()!=0){
+    private void uebernehmen() {
+        try {
+            if (folderTree.getSelectionCount() != 0) {
                 change = true;
                 DirectoryChooserNode node = (DirectoryChooserNode)
-                               folderTree.getLastSelectedPathComponent();
+                    folderTree.getLastSelectedPathComponent();
                 path = node.getDO().getPath();
             }
             dispose();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 }

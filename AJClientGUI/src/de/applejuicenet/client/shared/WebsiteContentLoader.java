@@ -1,19 +1,18 @@
 package de.applejuicenet.client.shared;
 
-import de.applejuicenet.client.gui.controller.PropertiesManager;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/WebsiteContentLoader.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/WebsiteContentLoader.java,v 1.5 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +21,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WebsiteContentLoader.java,v $
+ * Revision 1.5  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -40,40 +42,48 @@ import org.apache.log4j.Logger;
 
 public abstract class WebsiteContentLoader {
 
-    public static String getWebsiteContent(String website, int port, String pfadAndparameters){
+    public static String getWebsiteContent(String website, int port,
+                                           String pfadAndparameters) {
         Logger logger = Logger.getLogger(WebsiteContentLoader.class);
         StringBuffer htmlContent = new StringBuffer();
         try {
             String tmpUrl = website + ":" + port + pfadAndparameters;
-            ProxySettings proxySettings = PropertiesManager.getProxyManager().getProxySettings();
-            if (proxySettings.isUse()){
+            ProxySettings proxySettings = PropertiesManager.getProxyManager().
+                getProxySettings();
+            if (proxySettings.isUse()) {
                 System.getProperties().put("proxyHost", proxySettings.getHost());
-                System.getProperties().put("proxyPort", Integer.toString(proxySettings.getPort()));
+                System.getProperties().put("proxyPort",
+                                           Integer.toString(proxySettings.
+                    getPort()));
             }
             URL url = new URL(tmpUrl);
             URLConnection uc = url.openConnection();
-            if (proxySettings.isUse()){
-                uc.setRequestProperty("Proxy-Authorization","Basic " + proxySettings.getUserpass());
+            if (proxySettings.isUse()) {
+                uc.setRequestProperty("Proxy-Authorization",
+                                      "Basic " + proxySettings.getUserpass());
             }
             InputStream content = uc.getInputStream();
             BufferedReader in =
-                    new BufferedReader(new InputStreamReader(content));
+                new BufferedReader(new InputStreamReader(content));
             String line;
-            while ((line = in.readLine()) != null) {
+            while ( (line = in.readLine()) != null) {
                 htmlContent.append(line);
             }
-            if (proxySettings.isUse()){
+            if (proxySettings.isUse()) {
                 System.getProperties().remove("proxyHost");
                 System.getProperties().remove("proxyPort");
             }
         }
         catch (IOException e) {
-            if (logger.isEnabledFor(Level.INFO))
-                logger.info("Zugang zu einer Webseite verweigert. Falsche Proxyeinstellungen?");
+            if (logger.isEnabledFor(Level.INFO)) {
+                logger.info(
+                    "Zugang zu einer Webseite verweigert. Falsche Proxyeinstellungen?");
+            }
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
         return htmlContent.toString();
     }

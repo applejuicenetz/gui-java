@@ -1,18 +1,19 @@
 package de.applejuicenet.client.gui.trees.chooser;
 
-import de.applejuicenet.client.shared.dac.DirectoryDO;
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.gui.tables.Node;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.trees.ApplejuiceNode;
-
-import javax.swing.*;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
 
+import javax.swing.Icon;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.tables.Node;
+import de.applejuicenet.client.gui.trees.ApplejuiceNode;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.dac.DirectoryDO;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserNode.java,v 1.2 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserNode.java,v 1.3 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +22,9 @@ import java.util.ArrayList;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DirectoryChooserNode.java,v $
+ * Revision 1.3  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.2  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -30,12 +34,15 @@ import java.util.ArrayList;
  *
  */
 
-public class DirectoryChooserNode extends DefaultMutableTreeNode implements Node, ApplejuiceNode{
+public class DirectoryChooserNode
+    extends DefaultMutableTreeNode
+    implements Node, ApplejuiceNode {
     private DirectoryDO directoryDO;
     private ArrayList children = null;
     private DirectoryChooserNode parent;
 
-    public DirectoryChooserNode(DirectoryChooserNode parent, DirectoryDO directoryDO) {
+    public DirectoryChooserNode(DirectoryChooserNode parent,
+                                DirectoryDO directoryDO) {
         this.parent = parent;
         this.directoryDO = directoryDO;
     }
@@ -60,21 +67,22 @@ public class DirectoryChooserNode extends DefaultMutableTreeNode implements Node
     }
 
     public Icon getConvenientIcon() {
-        if (directoryDO==null)
-            return null;      //rootNode
+        if (directoryDO == null) {
+            return null; //rootNode
+        }
 
         IconManager im = IconManager.getInstance();
-        switch (directoryDO.getType()){
+        switch (directoryDO.getType()) {
             case DirectoryDO.TYPE_DESKTOP:
-                    return im.getIcon("server");
+                return im.getIcon("server");
             case DirectoryDO.TYPE_DISKETTE:
-                    return im.getIcon("diskette");
+                return im.getIcon("diskette");
             case DirectoryDO.TYPE_LAUFWERK:
-                    return im.getIcon("laufwerk");
+                return im.getIcon("laufwerk");
             case DirectoryDO.TYPE_ORDNER:
-                    return im.getIcon("tree");
+                return im.getIcon("tree");
             case DirectoryDO.TYPE_RECHNER:
-                    return im.getIcon("server");
+                return im.getIcon("server");
             default:
                 return null;
         }
@@ -85,22 +93,24 @@ public class DirectoryChooserNode extends DefaultMutableTreeNode implements Node
     }
 
     public String toString() {
-        if (directoryDO==null)
+        if (directoryDO == null) {
             return "rootNode";
+        }
         return directoryDO.getName();
     }
 
-    public ApplejuiceNode addChild(DirectoryDO childDirectoryDO){
-        if (children==null){
+    public ApplejuiceNode addChild(DirectoryDO childDirectoryDO) {
+        if (children == null) {
             children = new ArrayList();
         }
-        DirectoryChooserNode childNode = new DirectoryChooserNode(this, childDirectoryDO);
+        DirectoryChooserNode childNode = new DirectoryChooserNode(this,
+            childDirectoryDO);
         children.add(childNode);
         return childNode;
     }
 
     protected Object[] getChildren() {
-        if (children==null){
+        if (children == null) {
             children = new ArrayList();
             ApplejuiceFassade.getInstance().getDirectory(directoryDO.getPath(), this);
         }

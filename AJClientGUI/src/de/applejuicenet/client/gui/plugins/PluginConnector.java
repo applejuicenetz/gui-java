@@ -1,99 +1,94 @@
 package de.applejuicenet.client.gui.plugins;
 
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.jar.JarFile;
-
 import java.io.File;
 import java.io.InputStream;
-import javax.swing.*;
+import java.util.Enumeration;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
-import de.applejuicenet.client.gui.*;
-import de.applejuicenet.client.gui.listener.*;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+
+import de.applejuicenet.client.gui.RegisterI;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.15 2003/12/29 16:04:17 maj0r Exp $
+ * <p>Titel: AppleJuice Core-GUI</p>
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: General Public License</p>
+ * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten
+ * appleJuice-Core</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * <p><b>Copyright: General Public License</b></p>
  *
- * $Log: PluginConnector.java,v $
- * Revision 1.15  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
+ * <p>Diese Klasse darf nicht verändert werden!
+ * Um ein Plugin zu erstellen, muss diese Klasse überschrieben werden.
+ * Die Pluginklasse muss zwingend wie das jar-File heissen.
+ * Beim Pluginstart wird automatisch der Standardkonstruktor aufgerufen, alle anderen werden ignoriert.</p>
  *
- * Revision 1.14  2003/12/29 12:54:33  maj0r
- * Ein Plugin kann nun ein JPanel fuer den Optionsdialog durchreichen.
- *
- * Revision 1.13  2003/12/17 11:06:29  maj0r
- * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
- *
- * Revision 1.12  2003/09/13 11:31:30  maj0r
- * Verwendung vereinfacht.
- *
- * Revision 1.11  2003/08/21 09:30:40  maj0r
- * Unnoetige Imports entfernt.
- *
- * Revision 1.10  2003/08/20 20:05:47  maj0r
- * Plugin korrigiert.
- *
- * Revision 1.9  2003/08/19 19:27:12  maj0r
- * no message
- *
- * Revision 1.8  2003/06/13 22:29:38  maj0r
- * Schnittstelle korrigiert.
- *
- * Revision 1.7  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
- *
+ * @author: Maj0r [maj0r@applejuicenet.de]
  */
 
 public abstract class PluginConnector
-        extends JPanel
-        implements LanguageListener, DataUpdateListener, RegisterI {
-    /*Diese Datei sollte nicht verändert werden!
-      Um ein Plugin zu erstellen, muss diese Klasse überschrieben werden.
-      Die Plugin Klasse muss zwingend wie das jar-File heissen.
-      Beim Pluginstart wird automatisch der Standardkonstruktor aufgerufen, alle anderen werden ignoriert.*/
+    extends JPanel
+    implements LanguageListener, DataUpdateListener, RegisterI {
 
     protected ImageIcon pluginIcon = null;
     private boolean initialized = false;
 
-    //Titel, der als Reitertext ausgegeben wird
+    /**
+     *
+     * @return String: Titel, der als Reitertext ausgegeben wird
+     */
     public abstract String getTitle();
 
-    //Versions-Nr
+    /**
+     *
+     * @return String: Versions-Nr
+     */
     public abstract String getVersion();
 
-    //Man will sich ja schließlich auch verewigen;-)
+    /**
+     *
+     * @return String: Name des Autors
+     */
     public abstract String getAutor();
 
-    //true, wenn das Plugin eine sichtbare Oberfläche haben soll
+    /**
+     *
+     * @return boolean: Liefert true zurück, wenn das Plugin eine sichtbare Oberflaeche haben soll, sonst false
+     */
     public abstract boolean istReiter();
 
-    //Liefert eine Kurzbeschreibung des Plugins zurück.
+    /**
+     *
+     * @return String: Liefert eine Kurzbeschreibung des Plugins zurück.
+     */
     public abstract String getBeschreibung();
 
-    //Liefert eine JPanel fuer den Optionsdialog oder NULL, wenn keine Optionen noetig sind
-    public JPanel getOptionPanel(){
+    /**
+     *
+     * @return JPanel: Liefert eine JPanel fuer den Optionsdialog oder NULL, wenn keine Optionen vorhanden sind
+     */
+    public JPanel getOptionPanel() {
         return null;
     }
 
-    protected void initIcon(){
+    protected void initIcon() {
         if (!initialized) {
             initialized = true;
             try {
                 String classname = getClass().toString();
-                String path = System.getProperty("user.dir") + File.separator + "plugins" +
-                        File.separator + classname.substring(classname.lastIndexOf('.') + 1) + ".jar";
+                String path = System.getProperty("user.dir") + File.separator +
+                    "plugins" +
+                    File.separator +
+                    classname.substring(classname.lastIndexOf('.') + 1) +
+                    ".jar";
                 File aJar = new File(path);
                 JarFile jf = new JarFile(aJar);
                 String entryName;
 
-                for (Enumeration e = jf.entries(); e.hasMoreElements();) {
+                for (Enumeration e = jf.entries(); e.hasMoreElements(); ) {
                     ZipEntry entry = (ZipEntry) e.nextElement();
                     entryName = entry.getName();
                     if (entryName.indexOf("icon.gif") != -1) {
@@ -118,22 +113,40 @@ public abstract class PluginConnector
         }
     }
 
-    /*Das Icon, welches in der Lasche angezeigt werden soll, es muss als icon.gif im package plugins gespeichert
-      werden, damit es später an die richtige Stelle im jar-Archiv wandert (ca. 16x16)*/
+    /**
+     * Liefert ein Icon zurueck, welches in der Lasche angezeigt werden soll. Es muss als icon.gif im package plugins gespeichert
+     * werden, damit es spaeter an die richtige Stelle im jar-Archiv wandert (ca. 16x16)
+     *
+     * @return ImageIcon: LaschenIcon
+     */
     public ImageIcon getIcon() {
         return pluginIcon;
     }
 
-    //Wird aufgerufen, wenn der Reiter ausgewählt wird.
+    /**
+     * Wird aufgerufen, wenn der Reiter fuer dieses Plugin selektiert wurde.
+     */
     public abstract void registerSelected();
 
-    public void lostSelection(){};
+    /**
+     * Wird aufgerufen, wenn der Reiter fuer dieses Plugin die Selektion verliert.
+     */
+    public void lostSelection() {};
 
-    /*Wird automatisch aufgerufen, wenn die Sprache geändert wurde.
-      Ggf. kann an dieser Stelle eine eigene xml-Datei zur Anpassung der eigenen Panels ausgewertet werden*/
+    /**
+     * Wird automatisch aufgerufen, wenn die Sprache geändert wurde.
+     * zB kann an dieser Stelle eine eigene xml-Datei zur Anpassung der eigenen Panels ausgewertet werden
+     **/
     public abstract void fireLanguageChanged();
 
-    /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
-      Über den DataManger können diese abgerufen werden.*/
+    /**
+     * Wird automatisch aufgerufen, wenn neue Informationen vom Server
+     * eingegangen sind. Über den DataManger können diese abgerufen werden.
+     *
+     * @param type int: Typ des angesprochenen Listeners
+     * @param content Object: Geaenderte Werte, Typ abhaengig vom
+     *   angesprochenen Listener
+     * @see DataUpdateListener.class
+     */
     public abstract void fireContentChanged(int type, Object content);
 }

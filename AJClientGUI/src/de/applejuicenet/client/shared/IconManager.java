@@ -1,17 +1,18 @@
 package de.applejuicenet.client.shared;
 
-import java.net.*;
-import java.util.*;
+import java.net.URL;
+import java.util.HashMap;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 
-import de.applejuicenet.client.shared.icons.*;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.shared.icons.DummyClass;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.9 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.10 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +21,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: IconManager.java,v $
+ * Revision 1.10  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.9  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -54,8 +58,7 @@ public class IconManager {
     }
 
     public static IconManager getInstance() {
-        if (instance == null)
-        {
+        if (instance == null) {
             instance = new IconManager();
             logger = Logger.getLogger(instance.getClass());
         }
@@ -64,24 +67,22 @@ public class IconManager {
 
     public ImageIcon getIcon(String key) {
         ImageIcon result = null;
-        try
-        {
+        try {
             String hashtableKey = key;
-            if (icons.containsKey(hashtableKey))
-            {
+            if (icons.containsKey(hashtableKey)) {
                 result = (ImageIcon) icons.get(hashtableKey);
             }
-            else
-            {
+            else {
                 URL url = new DummyClass().getClass().getResource(key + ".gif");
                 Image img = Toolkit.getDefaultToolkit().getImage(url);
                 result = new ImageIcon(img);
                 icons.put(hashtableKey, result);
             }
         }
-        catch(Exception e){
-            if (logger.isEnabledFor(Level.INFO))
-                logger.info("Icon "+ key + ".gif nicht gefunden", e);
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.INFO)) {
+                logger.info("Icon " + key + ".gif nicht gefunden", e);
+            }
         }
         return result;
     }

@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,19 +19,24 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
@@ -47,23 +53,21 @@ import de.applejuicenet.client.gui.tables.download.DownloadMainNode;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.gui.tables.download.DownloadRootNode;
 import de.applejuicenet.client.gui.tables.download.DownloadTableCellRenderer;
+import de.applejuicenet.client.gui.tables.download.
+    DownloadTablePercentCellRenderer;
+import de.applejuicenet.client.gui.tables.download.
+    DownloadTableVersionCellRenderer;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.gui.tables.download.DownloadTablePercentCellRenderer;
-import de.applejuicenet.client.gui.tables.download.DownloadTableVersionCellRenderer;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.JSplitPane;
-import javax.swing.table.TableColumn;
-import javax.swing.JCheckBoxMenuItem;
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.89 2004/02/04 14:26:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.90 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -72,6 +76,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.90  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.89  2004/02/04 14:26:05  maj0r
  * Bug #185 gefixt (Danke an muhviestarr)
  * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
@@ -125,10 +132,10 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * Incoming-Verzeichnis kann nun für mehrere Downloads gleichzeitig geaendert werden.
  *
  * Revision 1.74  2004/01/01 18:38:14  maj0r
-     * Partlisten von einigen wenigen DownloadSourcen wurden bei Bedarf nicht geholt.
+ * Partlisten von einigen wenigen DownloadSourcen wurden bei Bedarf nicht geholt.
  *
  * Revision 1.73  2003/12/30 20:52:19  maj0r
-     * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
+ * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
  *
  * Revision 1.72  2003/12/30 14:52:11  maj0r
  * Das Zielverzeichnis fuer einen Download kann nun geaendert werden.
@@ -221,7 +228,7 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * Wizard fertiggestellt.
  *
  * Revision 1.44  2003/09/07 09:29:55  maj0r
-     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.43  2003/09/04 10:14:08  maj0r
  * Logger eingebaut.
@@ -332,13 +339,14 @@ public class DownloadPanel
 
     private JPopupMenu columnPopup = new JPopupMenu();
     private TableColumn[] columns = new TableColumn[10];
-    private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[columns.length];
+    private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[
+        columns.length];
 
     private DownloadPartListWatcher downloadPartListWatcher = new
         DownloadPartListWatcher();
 
-    public static synchronized DownloadPanel getInstance(){
-        if (instance == null){
+    public static synchronized DownloadPanel getInstance() {
+        if (instance == null) {
             instance = new DownloadPanel();
         }
         return instance;
@@ -477,23 +485,26 @@ public class DownloadPanel
                             copyToClipboard = true;
                         }
                     }
-                    if (copyToClipboard){
-                        long port = ApplejuiceFassade.getInstance().getAJSettings().getPort();
-                        Information information = ApplejuiceFassade.getInstance().getInformation();
-                        toCopy.append( "|" );
-                        toCopy.append( information.getExterneIP() );
-                        toCopy.append( ":" );
-                        toCopy.append( port );
-                        if (information.getVerbindungsStatus()==Information.VERBUNDEN){
+                    if (copyToClipboard) {
+                        long port = ApplejuiceFassade.getInstance().
+                            getAJSettings().getPort();
+                        Information information = ApplejuiceFassade.getInstance().
+                            getInformation();
+                        toCopy.append("|");
+                        toCopy.append(information.getExterneIP());
+                        toCopy.append(":");
+                        toCopy.append(port);
+                        if (information.getVerbindungsStatus() ==
+                            Information.VERBUNDEN) {
                             ServerDO serverDO = information.getServerDO();
-                            if (serverDO!=null){
-                                toCopy.append( ":" );
-                                toCopy.append( serverDO.getHost() );
-                                toCopy.append( ":" );
-                                toCopy.append( serverDO.getPort() );
+                            if (serverDO != null) {
+                                toCopy.append(":");
+                                toCopy.append(serverDO.getHost());
+                                toCopy.append(":");
+                                toCopy.append(serverDO.getPort());
                             }
                         }
-                        toCopy.append( "/" );
+                        toCopy.append("/");
                         StringSelection contents = new StringSelection(
                             toCopy.toString());
                         cb.setContents(contents, null);
@@ -636,7 +647,7 @@ public class DownloadPanel
             public void actionPerformed(ActionEvent ae) {
                 Object[] selectedItems = getSelectedDownloadItems();
                 if (selectedItems == null ||
-                    selectedItems.length == 0){
+                    selectedItems.length == 0) {
                     return;
                 }
                 String[] dirs = ApplejuiceFassade.getInstance().
@@ -735,28 +746,36 @@ public class DownloadPanel
         downloadTable = new JTreeTable(downloadModel);
 
         TableColumnModel model = downloadTable.getColumnModel();
-        for (int i=0; i<columns.length; i++){
+        for (int i = 0; i < columns.length; i++) {
             columns[i] = model.getColumn(i);
-            columnPopupItems[i] = new JCheckBoxMenuItem((String)columns[i].getHeaderValue());
+            columnPopupItems[i] = new JCheckBoxMenuItem( (String) columns[i].
+                getHeaderValue());
             final int x = i;
-            columnPopupItems[i].addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent ae){
-                    if (columnPopupItems[x].isSelected()){
+            columnPopupItems[i].addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    if (columnPopupItems[x].isSelected()) {
                         downloadTable.getColumnModel().addColumn(columns[x]);
-                        PropertiesManager.getPositionManager().setDownloadColumnVisible(x, true);
-                        PropertiesManager.getPositionManager().setDownloadColumnIndex(
-                            x, downloadTable.getColumnModel().getColumnIndex(columns[x].getIdentifier()));
+                        PropertiesManager.getPositionManager().
+                            setDownloadColumnVisible(x, true);
+                        PropertiesManager.getPositionManager().
+                            setDownloadColumnIndex(
+                            x,
+                            downloadTable.getColumnModel().getColumnIndex(columns[
+                            x].getIdentifier()));
                     }
-                    else{
+                    else {
                         downloadTable.getColumnModel().removeColumn(columns[x]);
-                        PropertiesManager.getPositionManager().setDownloadColumnVisible(x, false);
-                        for (int i=0; i<columns.length; i++){
-                            try{
-                                PropertiesManager.getPositionManager().setDownloadColumnIndex(
-                                    i, downloadTable.getColumnModel().getColumnIndex(columns[i].getIdentifier()));
+                        PropertiesManager.getPositionManager().
+                            setDownloadColumnVisible(x, false);
+                        for (int i = 0; i < columns.length; i++) {
+                            try {
+                                PropertiesManager.getPositionManager().
+                                    setDownloadColumnIndex(
+                                    i,
+                                    downloadTable.getColumnModel().
+                                    getColumnIndex(columns[i].getIdentifier()));
                             }
-                            catch (IllegalArgumentException niaE)
-                            {
+                            catch (IllegalArgumentException niaE) {
                                 //nix zu tun
                             }
                         }
@@ -817,44 +836,46 @@ public class DownloadPanel
                     &&
                     ( (DownloadMainNode) node).getType() ==
                     DownloadMainNode.ROOT_NODE) {
-                    DownloadDO downloadDO = ((DownloadMainNode)node).getDownloadDO();
+                    DownloadDO downloadDO = ( (DownloadMainNode) node).
+                        getDownloadDO();
                     if (!powerDownloadPanel.isAutomaticPwdlActive()) {
                         powerDownloadPanel.btnPdl.setEnabled(true);
                         if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
-                            || downloadDO.getStatus() == DownloadDO.PAUSIERT){
+                            || downloadDO.getStatus() == DownloadDO.PAUSIERT) {
                             powerDownloadPanel.setPwdlValue(downloadDO.
                                 getPowerDownload());
                         }
-                        else{
+                        else {
                             downloadDOOverviewPanel.enableHoleListButton(false);
                             powerDownloadPanel.btnPdl.setEnabled(false);
                             powerDownloadPanel.setPwdlValue(0);
                         }
                     }
-                    if (Settings.getSettings().isDownloadUebersicht()){
+                    if (Settings.getSettings().isDownloadUebersicht()) {
                         downloadDOOverviewPanel.enableHoleListButton(false);
                         tryGetPartList();
                     }
-                    else{
-                        if ((downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
-                            || downloadDO.getStatus() == DownloadDO.PAUSIERT)){
-                           downloadDOOverviewPanel.enableHoleListButton(true);
-                       }
-                       else{
-                           downloadDOOverviewPanel.enableHoleListButton(false);
-                       }
+                    else {
+                        if ( (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
+                              || downloadDO.getStatus() == DownloadDO.PAUSIERT)) {
+                            downloadDOOverviewPanel.enableHoleListButton(true);
+                        }
+                        else {
+                            downloadDOOverviewPanel.enableHoleListButton(false);
+                        }
                     }
                 }
                 else if (node.getClass() == DownloadSourceDO.class) {
                     if (!powerDownloadPanel.isAutomaticPwdlActive()) {
                         powerDownloadPanel.btnPdl.setEnabled(true);
-                        powerDownloadPanel.setPwdlValue(((DownloadSourceDO)node).getPowerDownload());
+                        powerDownloadPanel.setPwdlValue( ( (DownloadSourceDO)
+                            node).getPowerDownload());
                     }
-                    if (Settings.getSettings().isDownloadUebersicht()){
+                    if (Settings.getSettings().isDownloadUebersicht()) {
                         downloadDOOverviewPanel.enableHoleListButton(false);
                         tryGetPartList();
                     }
-                    else{
+                    else {
                         downloadDOOverviewPanel.enableHoleListButton(true);
                     }
                 }
@@ -943,7 +964,8 @@ public class DownloadPanel
         bottomPanel.add(powerDownloadPanel, BorderLayout.WEST);
         bottomPanel.add(downloadDOOverviewPanel, BorderLayout.CENTER);
 
-        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPanel);
+        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel,
+                                   bottomPanel);
         add(splitPane, BorderLayout.CENTER);
 
         SortButtonRenderer renderer2 = new SortButtonRenderer();
@@ -953,16 +975,17 @@ public class DownloadPanel
         }
         header.addMouseListener(new SortMouseAdapter(header, renderer2));
         header.addMouseListener(new HeaderPopupListener());
-        header.addMouseMotionListener(new MouseMotionAdapter(){
-            public void mouseDragged(MouseEvent e){
+        header.addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseDragged(MouseEvent e) {
                 PositionManager pm = PropertiesManager.getPositionManager();
                 TableColumnModel columnModel = downloadTable.getColumnModel();
-                for (int i=0; i<columns.length; i++){
-                    try{
-                        pm.setDownloadColumnIndex(i, columnModel.getColumnIndex(columns[i].getIdentifier()));
+                for (int i = 0; i < columns.length; i++) {
+                    try {
+                        pm.setDownloadColumnIndex(i,
+                                                  columnModel.getColumnIndex(columns[
+                            i].getIdentifier()));
                     }
-                    catch (IllegalArgumentException niaE)
-                    {
+                    catch (IllegalArgumentException niaE) {
                         //nix zu tun
                     }
                 }
@@ -1047,7 +1070,7 @@ public class DownloadPanel
                     for (int i = 0; i < columns.length; i++) {
                         columns[i].setPreferredWidth(widths[i]);
                         downloadTable.removeColumn(columns[i]);
-                        if (visibilies[i]){
+                        if (visibilies[i]) {
                             visibleColumns.add(columns[i]);
                         }
                     }
@@ -1055,9 +1078,9 @@ public class DownloadPanel
                     for (int i = 0; i < visibleColumns.size(); i++) {
                         for (int x = 0; x < columns.length; x++) {
                             if (visibleColumns.contains(columns[x])
-                                && indizes[x] == pos +1){
+                                && indizes[x] == pos + 1) {
                                 downloadTable.addColumn(columns[x]);
-                                pos ++;
+                                pos++;
                                 break;
                             }
                         }
@@ -1070,7 +1093,9 @@ public class DownloadPanel
                     }
                 }
                 downloadTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                int loc = (int)((splitPane.getHeight()-splitPane.getDividerSize()-powerDownloadPanel.getPreferredSize().height));
+                int loc = (int) ( (splitPane.getHeight() -
+                                   splitPane.getDividerSize() -
+                                   powerDownloadPanel.getPreferredSize().height));
                 splitPane.setDividerLocation(loc);
             }
             downloadTable.updateUI();
@@ -1181,7 +1206,8 @@ public class DownloadPanel
                 languageSelector.getFirstAttrbuteByTagName(new String[] {
                 "mainform",
                 "getlink1", "caption"})));
-            itemCopyToClipboardWithSources.setText(ZeichenErsetzer.korrigiereUmlaute(
+            itemCopyToClipboardWithSources.setText(ZeichenErsetzer.
+                korrigiereUmlaute(
                 languageSelector.getFirstAttrbuteByTagName(new String[] {
                 "javagui",
                 "downloadform", "getlinkwithsources"})));
@@ -1211,7 +1237,7 @@ public class DownloadPanel
                 ( (DownloadRootNode) downloadModel.getRoot()).setDownloadMap(
                     downloads);
                 DownloadDirectoryNode.setDownloads(downloads);
-                if (panelSelected){
+                if (panelSelected) {
                     downloadTable.updateUI();
                 }
             }
@@ -1372,38 +1398,39 @@ public class DownloadPanel
         }
     }
 
-    class HeaderPopupListener extends MouseAdapter {
+    class HeaderPopupListener
+        extends MouseAdapter {
         private TableColumnModel model;
 
-        public HeaderPopupListener(){
+        public HeaderPopupListener() {
             model = downloadTable.getColumnModel();
             columnPopupItems[0].setSelected(true);
         }
 
         public void mousePressed(MouseEvent me) {
-           super.mousePressed(me);
-           maybeShowPopup(me);
-       }
+            super.mousePressed(me);
+            maybeShowPopup(me);
+        }
 
-       public void mouseReleased(MouseEvent e) {
-           super.mouseReleased(e);
-           maybeShowPopup(e);
-       }
+        public void mouseReleased(MouseEvent e) {
+            super.mouseReleased(e);
+            maybeShowPopup(e);
+        }
 
-       private void maybeShowPopup(MouseEvent e){
-           if (e.isPopupTrigger()){
-               for (int i=1; i<columns.length; i++){
-                   try{
-                       model.getColumnIndex(columns[i].getIdentifier());
-                       columnPopupItems[i].setSelected(true);
-                   }
-                   catch (IllegalArgumentException niaE)
-                   {
-                       columnPopupItems[i].setSelected(false);
-                   }
-               }
-               columnPopup.show(downloadTable.getTableHeader(), e.getX(), e.getY());
-           }
-       }
-   }
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                for (int i = 1; i < columns.length; i++) {
+                    try {
+                        model.getColumnIndex(columns[i].getIdentifier());
+                        columnPopupItems[i].setSelected(true);
+                    }
+                    catch (IllegalArgumentException niaE) {
+                        columnPopupItems[i].setSelected(false);
+                    }
+                }
+                columnPopup.show(downloadTable.getTableHeader(), e.getX(),
+                                 e.getY());
+            }
+        }
+    }
 }

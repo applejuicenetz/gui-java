@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/NetworkServerXMLHolder.java,v 1.2 2004/01/02 16:52:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/NetworkServerXMLHolder.java,v 1.3 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: NetworkServerXMLHolder.java,v $
+ * Revision 1.3  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.2  2004/01/02 16:52:43  maj0r
  * Debug-Aenderung entfernt.
  *
@@ -22,12 +25,13 @@ package de.applejuicenet.client.gui.controller.xmlholder;
 import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.XMLDecoder;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class NetworkServerXMLHolder
     extends XMLDecoder {
@@ -46,7 +50,7 @@ public class NetworkServerXMLHolder
         return instance;
     }
 
-    public String[] getNetworkKnownServers(){
+    public String[] getNetworkKnownServers() {
         String xmlData = null;
         try {
             xmlData = WebsiteContentLoader.getWebsiteContent(
@@ -64,7 +68,7 @@ public class NetworkServerXMLHolder
             Element e = null;
             String link;
             int nodesSize = nodes.getLength();
-            if (nodesSize == 0){
+            if (nodesSize == 0) {
                 return null;
             }
             String[] servers = new String[nodesSize];

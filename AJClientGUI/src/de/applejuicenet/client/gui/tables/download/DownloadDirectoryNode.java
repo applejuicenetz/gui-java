@@ -3,13 +3,15 @@ package de.applejuicenet.client.gui.tables.download;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import javax.swing.Icon;
+
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.7 2004/01/12 14:53:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.8 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +20,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDirectoryNode.java,v $
+ * Revision 1.8  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.7  2004/01/12 14:53:23  maj0r
  * Muell entfernt.
  *
@@ -32,7 +37,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * Schoenheitssachen.
  *
  * Revision 1.3  2003/12/30 20:52:19  maj0r
-     * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
+ * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
  *
  * Revision 1.2  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
@@ -280,10 +285,10 @@ public class DownloadDirectoryNode
                           getSpeedInBytes());
         }
         else if (sort == SORT_STATUS) {
-            o1 =  ( (DownloadMainNode)
-                childNodes[row1]).getDownloadDO().getStatusAsString();
+            o1 = ( (DownloadMainNode)
+                  childNodes[row1]).getDownloadDO().getStatusAsString();
             o2 = ( (DownloadMainNode)
-                childNodes[row2]).getDownloadDO().getStatusAsString();
+                  childNodes[row2]).getDownloadDO().getStatusAsString();
         }
 
         if (o1 == null && o2 == null) {

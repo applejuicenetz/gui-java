@@ -1,17 +1,16 @@
 package de.applejuicenet.client.gui.powerdownload;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.HashMap;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.5 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +19,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AutomaticPowerdownloadPolicy.java,v $
+ * Revision 1.5  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -35,78 +37,80 @@ import org.apache.log4j.Level;
  *
  */
 
-public abstract class AutomaticPowerdownloadPolicy extends Thread{
+public abstract class AutomaticPowerdownloadPolicy
+    extends Thread {
 
     private HashSet threads = new HashSet();
-    protected ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.getInstance();
+    protected ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.
+        getInstance();
     private Logger logger = Logger.getLogger(getClass());
 
     private boolean paused = true;
 
-    public final void run(){
-        try{
-            if (initAction()){
-                while(!isInterrupted()){
-                    if(!paused){
+    public final void run() {
+        try {
+            if (initAction()) {
+                while (!isInterrupted()) {
+                    if (!paused) {
                         doAction();
                     }
                     sleep(1000);
                 }
             }
         }
-        catch(InterruptedException iE){
+        catch (InterruptedException iE) {
             pauseAllDownloads();
             interrupt();
         }
-        catch (Exception ex)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
-    public final void interrupt(){
-        try{
+    public final void interrupt() {
+        try {
             Iterator it = threads.iterator();
-            while (it.hasNext()){
+            while (it.hasNext()) {
                 Object obj = it.next();
-                if (obj instanceof Thread){
-                    ((Thread)obj).interrupt();
+                if (obj instanceof Thread) {
+                    ( (Thread) obj).interrupt();
                 }
             }
             super.interrupt();
         }
-        catch (Exception ex)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
-    public final void setPaused(boolean pause){
+    public final void setPaused(boolean pause) {
         paused = pause;
-        if (pause){
+        if (pause) {
             pauseAllDownloads();
-            try{
+            try {
                 informPaused();
             }
             catch (Exception ex) {
-                if (logger.isEnabledFor(Level.ERROR))
+                if (logger.isEnabledFor(Level.ERROR)) {
                     logger.error("Unbehandelte Exception", ex);
+                }
             }
         }
     }
 
-    private final void pauseAllDownloads(){
-        try{
+    private final void pauseAllDownloads() {
+        try {
             HashMap downloads = applejuiceFassade.getDownloadsSnapshot();
-            synchronized(downloads){
+            synchronized (downloads) {
                 Iterator it = downloads.values().iterator();
                 int[] ids = new int[downloads.size()];
                 int temp = 0;
                 DownloadDO downloadDO = null;
-                while (it.hasNext())
-                {
+                while (it.hasNext()) {
                     downloadDO = (DownloadDO) it.next();
                     ids[temp] = downloadDO.getId();
                     temp++;
@@ -115,14 +119,14 @@ public abstract class AutomaticPowerdownloadPolicy extends Thread{
                 applejuiceFassade.setPowerDownload(ids, 0);
             }
         }
-        catch (Exception ex)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
-    public final boolean isPaused(){
+    public final boolean isPaused() {
         return paused;
     }
 

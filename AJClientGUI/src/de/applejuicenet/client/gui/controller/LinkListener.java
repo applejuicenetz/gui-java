@@ -1,12 +1,16 @@
 package de.applejuicenet.client.gui.controller;
 
-import java.io.*;
-import java.net.*;
-import org.apache.log4j.Logger;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.4 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +19,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: LinkListener.java,v $
+ * Revision 1.4  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -44,9 +51,10 @@ public class LinkListener
             connect = new Thread(this);
             connect.start();
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -57,30 +65,33 @@ public class LinkListener
                 try {
                     DataInputStream in = new DataInputStream(client.
                         getInputStream());
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                    BufferedReader reader = new BufferedReader(new
+                        InputStreamReader(in));
                     String line = reader.readLine();
                     String link = getLinkFromReadLine(line);
-                    if (link!=null){
+                    if (link != null) {
                         ApplejuiceFassade.getInstance().processLink(link);
                     }
                 }
-                catch (Exception e){
-                    if (logger.isEnabledFor(Level.ERROR))
+                catch (Exception e) {
+                    if (logger.isEnabledFor(Level.ERROR)) {
                         logger.error("Unbehandelte Exception", e);
+                    }
                     client.close();
                     return;
                 }
                 client.close();
             }
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    private boolean isValidAjLink(String line){
-        try{
+    private boolean isValidAjLink(String line) {
+        try {
             if (line == null) {
                 return false;
             }
@@ -93,17 +104,17 @@ public class LinkListener
                 return false;
             }
         }
-        catch(Exception e){
+        catch (Exception e) {
             return false;
         }
         return true;
     }
 
-    private String getLinkFromReadLine(String line){
-        if (!isValidAjLink(line)){
+    private String getLinkFromReadLine(String line) {
+        if (!isValidAjLink(line)) {
             return null;
         }
-        else{
+        else {
             return line.substring(line.indexOf("ajfsp://"));
         }
     }

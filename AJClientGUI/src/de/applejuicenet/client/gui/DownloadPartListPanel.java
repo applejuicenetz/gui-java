@@ -1,16 +1,17 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.shared.dac.PartListDO;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import javax.swing.JPanel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.shared.dac.PartListDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.11 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.12 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +20,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.12  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.11  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -52,7 +56,8 @@ import org.apache.log4j.Logger;
  *
  */
 
-public class DownloadPartListPanel extends JPanel {
+public class DownloadPartListPanel
+    extends JPanel {
     private PartListDO partListDO;
     private Logger logger;
     private BufferedImage image = null;
@@ -65,38 +70,37 @@ public class DownloadPartListPanel extends JPanel {
     }
 
     public void paintComponent(Graphics g) {
-        if (partListDO != null && image!=null)
-        {
-            if (height != (int)getVisibleRect().getHeight() || width != (int)getVisibleRect().getWidth()){
+        if (partListDO != null && image != null) {
+            if (height != (int) getVisibleRect().getHeight() ||
+                width != (int) getVisibleRect().getWidth()) {
                 setPartList(partListDO);
             }
             g.drawImage(image, 0, 0, null);
         }
-        else
+        else {
             super.paintComponent(g);
+        }
     }
 
     public void setPartList(PartListDO partListDO) {
-        try
-        {
+        try {
             this.partListDO = partListDO;
-            height = (int)getVisibleRect().getHeight();
-            width = (int)getVisibleRect().getWidth();
-            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            height = (int) getVisibleRect().getHeight();
+            width = (int) getVisibleRect().getWidth();
+            image = new BufferedImage(width, height,
+                                      BufferedImage.TYPE_INT_ARGB);
             Graphics graphics = image.getGraphics();
-            if (partListDO != null){
-                int anzahlRows = (height / 16)-1;
+            if (partListDO != null) {
+                int anzahlRows = (height / 16) - 1;
                 int anzahlZeile = width / 2;
                 int anzahl = anzahlRows * anzahlZeile;
                 int groesseProPart;
                 int anzahlParts;
-                if (partListDO.getGroesse() > anzahl)
-                {
+                if (partListDO.getGroesse() > anzahl) {
                     groesseProPart = (int) partListDO.getGroesse() / anzahl;
                     anzahlParts = anzahl;
                 }
-                else
-                {
+                else {
                     groesseProPart = 1;
                     anzahlParts = (int) partListDO.getGroesse();
                 }
@@ -111,83 +115,77 @@ public class DownloadPartListPanel extends JPanel {
                 int kleiner;
                 int groesstes;
                 boolean ueberprueft;
-                while (bisher < anzahlParts)
-                {
+                while (bisher < anzahlParts) {
                     bisher++;
-                    if (x >= anzahlZeile * 2 - 2)
-                    {
+                    if (x >= anzahlZeile * 2 - 2) {
                         y++;
                         x = 1;
                     }
                     position += groesseProPart;
-                    while (parts[partPos].getFromPosition() < position && partPos < parts.length - 1)
-                    {
+                    while (parts[partPos].getFromPosition() < position &&
+                           partPos < parts.length - 1) {
                         partPos++;
                     }
-                    if (partPos>0)
+                    if (partPos > 0) {
                         partPos--;
-                    if (parts[partPos].getType() == -1 && partListDO.getPartListType()==PartListDO.MAIN_PARTLIST)
-                    {
+                    }
+                    if (parts[partPos].getType() == -1 &&
+                        partListDO.getPartListType() ==
+                        PartListDO.MAIN_PARTLIST) {
                         mbStart = position / 1048576 * 1048576;
                         mbEnde = mbStart + 1048576;
                         kleiner = partPos;
                         groesstes = partPos;
-                        while (parts[kleiner].getFromPosition() > mbStart && kleiner > 0)
-                        {
+                        while (parts[kleiner].getFromPosition() > mbStart &&
+                               kleiner > 0) {
                             kleiner--;
                         }
-                        while (parts[groesstes].getFromPosition() < mbEnde && groesstes < parts.length - 1)
-                        {
+                        while (parts[groesstes].getFromPosition() < mbEnde &&
+                               groesstes < parts.length - 1) {
                             groesstes++;
                         }
                         groesstes--;
                         ueberprueft = true;
-                        for (int l = kleiner; l <= groesstes; l++)
-                        {
-                            if (parts[l].getType() != -1)
-                            {
+                        for (int l = kleiner; l <= groesstes; l++) {
+                            if (parts[l].getType() != -1) {
                                 ueberprueft = false;
                                 break;
                             }
                         }
-                        if (ueberprueft)
-                        {
+                        if (ueberprueft) {
                             graphics.setColor(PartListDO.COLOR_TYPE_UEBERPRUEFT);
                         }
-                        else
-                        {
+                        else {
                             graphics.setColor(PartListDO.COLOR_TYPE_OK);
                         }
                     }
-                    else
-                    {
+                    else {
                         graphics.setColor(getColorByType(parts[partPos].getType()));
                     }
-                    graphics.fillRect(x, (y * 16) + 1 , x + 1, (y + 1) * 16);
+                    graphics.fillRect(x, (y * 16) + 1, x + 1, (y + 1) * 16);
                     x += 2;
                 }
-                if(x<width){
+                if (x < width) {
                     graphics.setColor(Color.WHITE);
-                    graphics.fillRect(x, (y * 16) + 1 , width-1, (y + 1) * 16);
+                    graphics.fillRect(x, (y * 16) + 1, width - 1, (y + 1) * 16);
                     y++;
                 }
-                if(y*16<height){
+                if (y * 16 < height) {
                     graphics.setColor(Color.WHITE);
-                    graphics.fillRect(0, (y * 16) + 1 , width-1, height - 1);
+                    graphics.fillRect(0, (y * 16) + 1, width - 1, height - 1);
                 }
             }
             updateUI();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     private Color getColorByType(int type) {
-        switch (type)
-        {
+        switch (type) {
             case -1:
                 return PartListDO.COLOR_TYPE_OK;
             case 0:

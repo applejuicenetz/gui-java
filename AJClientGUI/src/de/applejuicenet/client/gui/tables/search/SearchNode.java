@@ -1,15 +1,17 @@
 package de.applejuicenet.client.gui.tables.search;
 
+import java.util.HashMap;
+
+import javax.swing.Icon;
+
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Search;
-
-import javax.swing.*;
-import java.util.HashMap;
+import de.applejuicenet.client.shared.Search.SearchEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.7 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.8 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +20,9 @@ import java.util.HashMap;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchNode.java,v $
+ * Revision 1.8  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.7  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -42,7 +47,8 @@ import java.util.HashMap;
  *
  */
 
-public class SearchNode implements Node{
+public class SearchNode
+    implements Node {
     public static int SORT_NO_SORT = -1;
     public static int SORT_FILENAME = 0;
     public static int SORT_GROESSE = 1;
@@ -58,12 +64,12 @@ public class SearchNode implements Node{
     private HashMap children;
     private Object[] sortedChildNodes;
 
-    public SearchNode(Search aSearch){
+    public SearchNode(Search aSearch) {
         valueObject = aSearch;
         type = ROOT_NODE;
     }
 
-    public SearchNode(Search.SearchEntry aSearchEntry){
+    public SearchNode(Search.SearchEntry aSearchEntry) {
         valueObject = aSearchEntry;
         type = ENTRY_NODE;
     }
@@ -73,43 +79,50 @@ public class SearchNode implements Node{
     }
 
     public String toString() {
-        if (type==ROOT_NODE)
+        if (type == ROOT_NODE) {
             return "";
-        else if (type==ENTRY_NODE){
-            return ((Search.SearchEntry)valueObject).getFileNames()[0].getDateiName();
         }
-        else return "";
+        else if (type == ENTRY_NODE) {
+            return ( (Search.SearchEntry) valueObject).getFileNames()[0].
+                getDateiName();
+        }
+        else {
+            return "";
+        }
     }
 
-    public int getChildCount(){
+    public int getChildCount() {
         Object o = getChildren();
-        if (o==null){
+        if (o == null) {
             return 0;
         }
         return getChildren().length;
     }
 
     public Object[] getChildren() {
-        if (type==ROOT_NODE){
-            if (children==null && ((Search)valueObject).getSearchEntries().length==0){
+        if (type == ROOT_NODE) {
+            if (children == null &&
+                ( (Search) valueObject).getSearchEntries().length == 0) {
                 WaitNode[] waitNode = new WaitNode[1];
                 waitNode[0] = new WaitNode();
                 return waitNode;
             }
             boolean sort = false;
-            if (children==null){
+            if (children == null) {
                 children = new HashMap();
-                Search.SearchEntry[] entries = ((Search)valueObject).getSearchEntries();
-                for (int i=0; i<entries.length; i++){
-                    children.put(Integer.toString(entries[i].getId()), new SearchNode(entries[i]));
+                Search.SearchEntry[] entries = ( (Search) valueObject).
+                    getSearchEntries();
+                for (int i = 0; i < entries.length; i++) {
+                    children.put(Integer.toString(entries[i].getId()),
+                                 new SearchNode(entries[i]));
                 }
-                ((Search)valueObject).setChanged(false);
+                ( (Search) valueObject).setChanged(false);
             }
-            else{
-                if (((Search)valueObject).isChanged()){
+            else {
+                if ( ( (Search) valueObject).isChanged()) {
                     Search.SearchEntry[] entries = ( (Search) valueObject).
                         getSearchEntries();
-                    ((Search)valueObject).setChanged(false);
+                    ( (Search) valueObject).setChanged(false);
                     String key;
                     for (int i = 0; i < entries.length; i++) {
                         key = Integer.toString(entries[i].getId());
@@ -121,16 +134,19 @@ public class SearchNode implements Node{
                 }
             }
             if (sort || sortedChildNodes == null) {
-                return sort( (Object[]) children.values().toArray(new SearchNode[children.size()]));
+                return sort( (Object[]) children.values().toArray(new
+                    SearchNode[children.size()]));
             }
             else {
                 return sortedChildNodes;
             }
         }
-        else if (type==ENTRY_NODE){
-            return ((Search.SearchEntry)valueObject).getFileNames();
+        else if (type == ENTRY_NODE) {
+            return ( (Search.SearchEntry) valueObject).getFileNames();
         }
-        else return null;
+        else {
+            return null;
+        }
     }
 
     public int getNodeType() {
@@ -185,7 +201,8 @@ public class SearchNode implements Node{
         Object o2 = null;
 
         if (sort == SORT_FILENAME) {
-            Search.SearchEntry entry1 = (Search.SearchEntry)((SearchNode) childNodes[row1]).getValueObject();
+            Search.SearchEntry entry1 = (Search.SearchEntry) ( (SearchNode)
+                childNodes[row1]).getValueObject();
             Search.SearchEntry.FileName[] filenames = entry1.getFileNames();
             int haeufigkeit = 0;
             String dateiname = "";
@@ -196,7 +213,8 @@ public class SearchNode implements Node{
                 }
             }
             o1 = dateiname;
-            Search.SearchEntry entry2 = (Search.SearchEntry)((SearchNode) childNodes[row2]).getValueObject();
+            Search.SearchEntry entry2 = (Search.SearchEntry) ( (SearchNode)
+                childNodes[row2]).getValueObject();
             filenames = entry2.getFileNames();
             haeufigkeit = 0;
             dateiname = "";
@@ -209,20 +227,24 @@ public class SearchNode implements Node{
             o2 = dateiname;
         }
         else if (sort == SORT_GROESSE) {
-            Search.SearchEntry entry1 = (Search.SearchEntry)((SearchNode) childNodes[row1]).getValueObject();
+            Search.SearchEntry entry1 = (Search.SearchEntry) ( (SearchNode)
+                childNodes[row1]).getValueObject();
             o1 = new Long(entry1.getGroesse());
-            Search.SearchEntry entry2 = (Search.SearchEntry)((SearchNode) childNodes[row2]).getValueObject();
+            Search.SearchEntry entry2 = (Search.SearchEntry) ( (SearchNode)
+                childNodes[row2]).getValueObject();
             o2 = new Long(entry2.getGroesse());
         }
         else if (sort == SORT_ANZAHL) {
-            Search.SearchEntry entry1 = (Search.SearchEntry)((SearchNode) childNodes[row1]).getValueObject();
+            Search.SearchEntry entry1 = (Search.SearchEntry) ( (SearchNode)
+                childNodes[row1]).getValueObject();
             Search.SearchEntry.FileName[] filenames = entry1.getFileNames();
             int haeufigkeit = 0;
             for (int i = 0; i < filenames.length; i++) {
                 haeufigkeit += filenames[i].getHaeufigkeit();
             }
             o1 = new Integer(haeufigkeit);
-            Search.SearchEntry entry2 = (Search.SearchEntry)((SearchNode) childNodes[row1]).getValueObject();
+            Search.SearchEntry entry2 = (Search.SearchEntry) ( (SearchNode)
+                childNodes[row1]).getValueObject();
             filenames = entry2.getFileNames();
             haeufigkeit = 0;
             for (int i = 0; i < filenames.length; i++) {

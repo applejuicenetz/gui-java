@@ -3,7 +3,7 @@ package de.applejuicenet.client.gui.controller.xmlholder;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/InformationXMLHolder.java,v 1.1 2003/12/31 16:13:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/InformationXMLHolder.java,v 1.2 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: InformationXMLHolder.java,v $
+ * Revision 1.2  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.1  2003/12/31 16:13:31  maj0r
  * Refactoring.
  *
@@ -29,11 +32,11 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
 
 public class InformationXMLHolder
     extends WebXMLParser {
-  public InformationXMLHolder() {
-    super("/xml/information.xml", "");
-  }
+    public InformationXMLHolder() {
+        super("/xml/information.xml", "");
+    }
 
-  public void update() {
+    public void update() {
 
-  }
+    }
 }

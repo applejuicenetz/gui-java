@@ -1,22 +1,34 @@
 package de.applejuicenet.client.gui;
 
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Iterator;
-import javax.swing.*;
 
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.shared.*;
-import org.apache.log4j.Logger;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.shared.Search;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.21 2004/02/04 14:26:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.22 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +37,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.22  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.21  2004/02/04 14:26:05  maj0r
  * Bug #185 gefixt (Danke an muhviestarr)
  * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
@@ -77,8 +92,8 @@ import org.apache.log4j.Level;
  */
 
 public class SearchPanel
-        extends JPanel
-        implements LanguageListener, RegisterI, DataUpdateListener {
+    extends JPanel
+    implements LanguageListener, RegisterI, DataUpdateListener {
 
     private static SearchPanel instance;
     private JTabbedPane resultPanel = new JTabbedPane();
@@ -91,8 +106,8 @@ public class SearchPanel
     private HashMap searchIds = new HashMap();
     private boolean panelSelected = false;
 
-    public static synchronized SearchPanel getInstance(){
-        if (instance == null){
+    public static synchronized SearchPanel getInstance() {
+        if (instance == null) {
             instance = new SearchPanel();
         }
         return instance;
@@ -104,8 +119,9 @@ public class SearchPanel
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -141,17 +157,17 @@ public class SearchPanel
         add(resultPanel, BorderLayout.CENTER);
 
         suchbegriff.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent ke){
-                if (ke.getKeyCode() == KeyEvent.VK_ENTER){
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
                     btnStartStopSearch.doClick();
                 }
             }
         });
 
-        btnStartStopSearch.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
+        btnStartStopSearch.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
                 String suchText = suchbegriff.getText();
-                if (suchText.length()!=0){
+                if (suchText.length() != 0) {
                     ApplejuiceFassade.getInstance().startSearch(suchText);
                     suchbegriff.setSelectionStart(0);
                     suchbegriff.setSelectionEnd(suchText.length());
@@ -160,13 +176,15 @@ public class SearchPanel
             }
         });
 
-        ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.SEARCH_CHANGED);
+        ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+            DataUpdateListener.SEARCH_CHANGED);
     }
 
     public void registerSelected() {
         panelSelected = true;
-        SearchResultPanel searchResultPanel = (SearchResultPanel) resultPanel.getSelectedComponent();
-        if (searchResultPanel != null){
+        SearchResultPanel searchResultPanel = (SearchResultPanel) resultPanel.
+            getSelectedComponent();
+        if (searchResultPanel != null) {
             searchResultPanel.updateSearchContent();
         }
     }
@@ -175,83 +193,90 @@ public class SearchPanel
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "searchlbl",
-                                                           "caption"})) + ": ");
+                getFirstAttrbuteByTagName(new String[] {"mainform", "searchlbl",
+                                          "caption"})) + ": ");
             btnStartStopSearch.setText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "searchbtn",
-                                                           "searchcaption"})));
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "searchbtn",
+                                          "searchcaption"})));
 
             bearbeitung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "opensearches",
-                                                           "caption"}));
-            label2.setText(bearbeitung.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "opensearches",
+                                          "caption"}));
+            label2.setText(bearbeitung.replaceAll("%d",
+                                                  Integer.toString(Search.currentSearchCount)));
 
             String[] resultTexte = new String[5];
-            resultTexte[0]=(ZeichenErsetzer.korrigiereUmlaute(
-                                languageSelector.
-                                getFirstAttrbuteByTagName(new String[]{"javagui", "searchform",
-                                                                       "offenesuchen"})));
-            resultTexte[1]=(ZeichenErsetzer.korrigiereUmlaute(
-                                languageSelector.
-                                getFirstAttrbuteByTagName(new String[]{"javagui", "searchform",
-                                                                       "gefundenedateien"})));
-            resultTexte[2]=(ZeichenErsetzer.korrigiereUmlaute(
-                                languageSelector.
-                                getFirstAttrbuteByTagName(new String[]{"javagui", "searchform",
-                                                                       "durchsuchteclients"})));
-            resultTexte[3]=(ZeichenErsetzer.korrigiereUmlaute(
-                                languageSelector.
-                                getFirstAttrbuteByTagName(new String[]{"mainform", "Getlink3",
-                                                                       "caption"})));
-            resultTexte[4]=(ZeichenErsetzer.korrigiereUmlaute(
-                                languageSelector.
-                                getFirstAttrbuteByTagName(new String[]{"mainform", "cancelsearch",
-                                                                       "caption"})));
+            resultTexte[0] = (ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "searchform",
+                                          "offenesuchen"})));
+            resultTexte[1] = (ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "searchform",
+                                          "gefundenedateien"})));
+            resultTexte[2] = (ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "searchform",
+                                          "durchsuchteclients"})));
+            resultTexte[3] = (ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "Getlink3",
+                                          "caption"})));
+            resultTexte[4] = (ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "cancelsearch",
+                                          "caption"})));
 
             String[] columns = new String[3];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "searchs",
-                                                           "col0caption"}));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "searchs",
+                                          "col0caption"}));
             columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "searchs",
-                                                           "col1caption"}));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "searchs",
+                                          "col1caption"}));
             columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "searchs",
-                                                           "col2caption"}));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "searchs",
+                                          "col2caption"}));
 
             SearchResultPanel.setTexte(resultTexte, columns);
 
-            for (int i=0; i<resultPanel.getComponentCount(); i++){
-                ((SearchResultPanel)resultPanel.getComponentAt(i)).aendereSprache();
+            for (int i = 0; i < resultPanel.getComponentCount(); i++) {
+                ( (SearchResultPanel) resultPanel.getComponentAt(i)).
+                    aendereSprache();
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void fireContentChanged(int type, Object content) {
-        try{
-            if (type==DataUpdateListener.SEARCH_CHANGED){
-                synchronized(content){
-                    Iterator it = ((HashMap)content).keySet().iterator();
+        try {
+            if (type == DataUpdateListener.SEARCH_CHANGED) {
+                synchronized (content) {
+                    Iterator it = ( (HashMap) content).keySet().iterator();
                     Object key;
                     Search aSearch;
                     SearchResultPanel searchResultPanel;
-                    while (it.hasNext()){
+                    while (it.hasNext()) {
                         key = it.next();
-                        if (!searchIds.containsKey(key)){
-                            aSearch = (Search)((HashMap)content).get(key);
+                        if (!searchIds.containsKey(key)) {
+                            aSearch = (Search) ( (HashMap) content).get(key);
                             searchResultPanel = new SearchResultPanel(aSearch, this);
-                            resultPanel.addTab(aSearch.getSuchText(), searchResultPanel);
+                            resultPanel.addTab(aSearch.getSuchText(),
+                                               searchResultPanel);
                             resultPanel.setSelectedComponent(searchResultPanel);
                             searchIds.put(key, searchResultPanel);
                         }
-                        else{
-                            searchResultPanel = (SearchResultPanel) searchIds.get(key);
-                            if (panelSelected){
+                        else {
+                            searchResultPanel = (SearchResultPanel) searchIds.
+                                get(key);
+                            if (panelSelected) {
                                 searchResultPanel.updateSearchContent();
                             }
                         }
@@ -259,25 +284,30 @@ public class SearchPanel
                     Object[] searchPanels = resultPanel.getComponents();
                     int id;
                     String searchKey;
-                    for (int i=0; i<searchPanels.length; i++){
-                        id = ((SearchResultPanel)searchPanels[i]).getSearch().getId();
+                    for (int i = 0; i < searchPanels.length; i++) {
+                        id = ( (SearchResultPanel) searchPanels[i]).getSearch().
+                            getId();
                         searchKey = Integer.toString(id);
-                        if (!((HashMap)content).containsKey(searchKey)){
-                            ((SearchResultPanel)searchPanels[i]).setActiveSearch(false);
+                        if (! ( (HashMap) content).containsKey(searchKey)) {
+                            ( (SearchResultPanel) searchPanels[i]).
+                                setActiveSearch(false);
                         }
                     }
-                    label2.setText(bearbeitung.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
+                    label2.setText(bearbeitung.replaceAll("%d",
+                        Integer.toString(Search.currentSearchCount)));
                 }
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    public void close(SearchResultPanel aSearchResultPanel){
-        String searchKey = Integer.toString(aSearchResultPanel.getSearch().getId());
+    public void close(SearchResultPanel aSearchResultPanel) {
+        String searchKey = Integer.toString(aSearchResultPanel.getSearch().
+                                            getId());
         searchIds.remove(searchKey);
         resultPanel.remove(aSearchResultPanel);
     }

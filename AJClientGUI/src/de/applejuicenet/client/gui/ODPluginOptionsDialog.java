@@ -1,23 +1,23 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.gui.plugins.PluginConnector;
 import java.awt.BorderLayout;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import javax.swing.JFrame;
-import javax.swing.JDialog;
 import java.awt.Dimension;
-import java.awt.Toolkit;
-import javax.swing.JButton;
 import java.awt.FlowLayout;
-import javax.swing.JPanel;
-import java.awt.event.ActionListener;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginOptionsDialog.java,v 1.3 2004/01/05 13:21:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginOptionsDialog.java,v 1.4 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginOptionsDialog.java,v $
+ * Revision 1.4  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2004/01/05 13:21:32  maj0r
  * Logger eingebaut.
  *
@@ -39,16 +42,18 @@ import org.apache.log4j.Logger;
  *
  */
 
-public class ODPluginOptionsDialog extends JDialog{
+public class ODPluginOptionsDialog
+    extends JDialog {
     private PluginConnector pluginConnector;
     private JButton schliessen = new JButton();
     private Logger logger;
 
-    public ODPluginOptionsDialog(JDialog parent, PluginConnector pluginConnector) {
+    public ODPluginOptionsDialog(JDialog parent,
+                                 PluginConnector pluginConnector) {
         super(parent, true);
         this.pluginConnector = pluginConnector;
         logger = Logger.getLogger(getClass());
-        try{
+        try {
             init();
         }
         catch (Exception e) {
@@ -58,10 +63,10 @@ public class ODPluginOptionsDialog extends JDialog{
         }
     }
 
-    private void init(){
+    private void init() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        schliessen.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
+        schliessen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
                 ODPluginOptionsDialog.this.dispose();
             }
         });
@@ -78,7 +83,8 @@ public class ODPluginOptionsDialog extends JDialog{
                                       "schliessen"})));
         setTitle(title);
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(pluginConnector.getOptionPanel(), BorderLayout.CENTER);
+        getContentPane().add(pluginConnector.getOptionPanel(),
+                             BorderLayout.CENTER);
         JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         southPanel.add(schliessen);
         getContentPane().add(southPanel, BorderLayout.SOUTH);
@@ -87,8 +93,8 @@ public class ODPluginOptionsDialog extends JDialog{
         Dimension screenSize = Toolkit.getDefaultToolkit().
             getScreenSize();
         setLocation( (screenSize.width -
-                                   appDimension.width) / 2,
-                                 (screenSize.height -
-                                  appDimension.height) / 2);
+                      appDimension.width) / 2,
+                    (screenSize.height -
+                     appDimension.height) / 2);
     }
 }

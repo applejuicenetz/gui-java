@@ -52,7 +52,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
-import java.awt.Frame;
+
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
 /**
@@ -112,7 +112,7 @@ public class WindowsTrayIcon {
      * Construct a new Tray Icon
      * Using a Java Image - This can be loaded from a 16x16 GIF or JPG file
      *
-         * Param image	16x16 icon - make sure it's loaded in memory - use MediaTracker
+     * Param image	16x16 icon - make sure it's loaded in memory - use MediaTracker
      * Param w	the icon width - eg. 16
      * Param h	the icon height - eg. 16
      *
@@ -151,7 +151,7 @@ public class WindowsTrayIcon {
      * Change this icon's Image
      * Using a Java Image - This can be loaded from a 16x16 GIF or JPG file
      *
-         * Param image	16x16 icon - make sure it's loaded in memory - use MediaTracker
+     * Param image	16x16 icon - make sure it's loaded in memory - use MediaTracker
      * Param w	the icon width
      * Param h	the icon height
      *
@@ -354,18 +354,18 @@ public class WindowsTrayIcon {
 
     /**
      * Send a message to another app (message can contain an integer)
-         * Can be used to detect that another instance of your app is already running
+     * Can be used to detect that another instance of your app is already running
      * That instance can for example restore it's window after it receives the windows
      * message - see demo app for more info
      *
      * Param appName = the title of the hidden window to search for
-         * Param message = the integer message to send (only native int size supported)
+     * Param message = the integer message to send (only native int size supported)
      */
     public static native int sendWindowsMessage(String appName, int message);
 
     /**
      * Set callback method for receiving windows messages
-         * See sendWindowsMessage() for more information or take a look at the demo app
+     * See sendWindowsMessage() for more information or take a look at the demo app
      *
      * Param callback = the callback method for this app
      */
@@ -484,7 +484,7 @@ public class WindowsTrayIcon {
     }
 
     /**
-         * Private method called by native library when user selects popup menu item
+     * Private method called by native library when user selects popup menu item
      *
      * Param id = id of menu item (each menu item has unique id)
      */
@@ -496,7 +496,7 @@ public class WindowsTrayIcon {
 
     /**
      * Private method called by native library when it receives a sendWindowsMessage event
-         * See sendWindowsMessage() for more information or take a look at the demo app
+     * See sendWindowsMessage() for more information or take a look at the demo app
      *
      * Param lParam = parameter send along with windows message
      */
@@ -550,7 +550,7 @@ public class WindowsTrayIcon {
     final static int POPUP_MODE_DEFAULT = 4;
 
     /**
-         * Add popup menu item - used by setTrayIcon() in subclasses of TrayIconPopupItem
+     * Add popup menu item - used by setTrayIcon() in subclasses of TrayIconPopupItem
      *
      * Param id = the icon's id
      * Param level = the submenu level

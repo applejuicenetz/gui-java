@@ -1,18 +1,30 @@
 package de.applejuicenet.client.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import javax.swing.Icon;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import javax.swing.Icon;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.13 2004/01/25 10:16:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODVerbindungPanel.java,v 1.14 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +33,9 @@ import javax.swing.Icon;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODVerbindungPanel.java,v $
+ * Revision 1.14  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.13  2004/01/25 10:16:42  maj0r
  * Optionenmenue ueberarbeitet.
  *
@@ -46,7 +61,8 @@ import javax.swing.Icon;
  */
 
 public class ODVerbindungPanel
-        extends JPanel implements OptionsRegister{
+    extends JPanel
+    implements OptionsRegister {
     private boolean dirty = false;
     private JLabel label1;
     private JLabel label2;
@@ -68,14 +84,13 @@ public class ODVerbindungPanel
     public ODVerbindungPanel(AJSettings ajSettings) {
         logger = Logger.getLogger(getClass());
         this.ajSettings = ajSettings;
-        try
-        {
+        try {
             jbInit();
         }
-        catch (Exception ex)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
@@ -106,10 +121,10 @@ public class ODVerbindungPanel
         maxVerbindungen.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
                 if (Long.parseLong(maxVerbindungen.getText()) !=
-                        ajSettings.getMaxConnections())
-                {
+                    ajSettings.getMaxConnections()) {
                     dirty = true;
-                    ajSettings.setMaxConnections(Long.parseLong(maxVerbindungen.getText()));
+                    ajSettings.setMaxConnections(Long.parseLong(maxVerbindungen.
+                        getText()));
                 }
             }
         });
@@ -117,16 +132,19 @@ public class ODVerbindungPanel
         maxUpload.setHorizontalAlignment(JLabel.RIGHT);
         maxUpload.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
-                int untereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()),
+                int untereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.
+                    getText()),
                                                   0.2);
-                int obereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()),
+                int obereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.
+                    getText()),
                                                  0.6);
                 kbSlider.setMinimum(untereGrenze);
                 kbSlider.setMaximum(obereGrenze);
-                if (Long.parseLong(maxUpload.getText()) != ajSettings.getMaxUploadInKB())
-                {
+                if (Long.parseLong(maxUpload.getText()) !=
+                    ajSettings.getMaxUploadInKB()) {
                     dirty = true;
-                    ajSettings.setMaxUpload(Long.parseLong(maxUpload.getText()) * 1024);
+                    ajSettings.setMaxUpload(Long.parseLong(maxUpload.getText()) *
+                                            1024);
                 }
             }
         });
@@ -135,10 +153,10 @@ public class ODVerbindungPanel
         maxDownload.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
                 if (Long.parseLong(maxDownload.getText()) !=
-                        ajSettings.getMaxDownloadInKB())
-                {
+                    ajSettings.getMaxDownloadInKB()) {
                     dirty = true;
-                    ajSettings.setMaxDownload(Long.parseLong(maxDownload.getText()) *
+                    ajSettings.setMaxDownload(Long.parseLong(maxDownload.
+                        getText()) *
                                               1024);
                 }
             }
@@ -148,16 +166,15 @@ public class ODVerbindungPanel
         maxVerbindungenProTurn.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
                 long wert = Long.parseLong(maxVerbindungenProTurn.getText());
-                if (wert != ajSettings.getMaxNewConnectionsPerTurn())
-                {
-                    if (wert < 1 || wert > 200)
-                    {
-                        maxVerbindungenProTurn.setText(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()));
+                if (wert != ajSettings.getMaxNewConnectionsPerTurn()) {
+                    if (wert < 1 || wert > 200) {
+                        maxVerbindungenProTurn.setText(Long.toString(ajSettings.
+                            getMaxNewConnectionsPerTurn()));
                     }
-                    else
-                    {
+                    else {
                         dirty = true;
-                        ajSettings.setMaxNewConnectionsPerTurn(Long.parseLong(maxVerbindungenProTurn.getText()));
+                        ajSettings.setMaxNewConnectionsPerTurn(Long.parseLong(
+                            maxVerbindungenProTurn.getText()));
                     }
                 }
             }
@@ -165,27 +182,28 @@ public class ODVerbindungPanel
         LanguageSelector languageSelector = LanguageSelector.getInstance();
 
         label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"einstform", "Label4",
-                                                                                                     "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Label4",
+                                      "caption"})));
         label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"einstform", "Label5",
-                                                                                                     "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Label5",
+                                      "caption"})));
         label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                                                                     "verbindung", "label3"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "verbindung", "label3"})));
         label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"einstform", "Label13",
-                                                                                                     "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Label13",
+                                      "caption"})));
         label5 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                                                                     "verbindung", "label5"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "verbindung", "label5"})));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-           getFirstAttrbuteByTagName(new String[]{"einstform", "connectionsheet", "caption"}));
+            getFirstAttrbuteByTagName(new String[] {"einstform",
+                                      "connectionsheet", "caption"}));
         kbSlot = new JLabel();
 
-        int untereGrenze = (int) Math.pow((double) ajSettings.getMaxUploadInKB(),
+        int untereGrenze = (int) Math.pow( (double) ajSettings.getMaxUploadInKB(),
                                           0.2);
-        int obereGrenze = (int) Math.pow((double) ajSettings.getMaxUploadInKB(),
+        int obereGrenze = (int) Math.pow( (double) ajSettings.getMaxUploadInKB(),
                                          0.6);
 
         kbSlider = new JSlider(untereGrenze, obereGrenze);
@@ -201,9 +219,9 @@ public class ODVerbindungPanel
             }
         });
         automaticConnect = new JCheckBox(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"einstform", "autoconn",
-                                                       "caption"})));
+            languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"einstform", "autoconn",
+                                      "caption"})));
         automaticConnect.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 dirty = true;
@@ -286,7 +304,8 @@ public class ODVerbindungPanel
         kbSlider.setValue(ajSettings.getSpeedPerSlot());
         kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
         automaticConnect.setSelected(ajSettings.isAutoConnect());
-        maxVerbindungenProTurn.setText(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()));
+        maxVerbindungenProTurn.setText(Long.toString(ajSettings.
+            getMaxNewConnectionsPerTurn()));
     }
 
     public Icon getIcon() {

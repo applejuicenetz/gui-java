@@ -1,14 +1,19 @@
 package de.applejuicenet.client.shared;
 
-import javax.swing.*;
-import javax.swing.plaf.metal.MetalToolTipUI;
-import java.awt.*;
+import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.Enumeration;
+
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import javax.swing.JComponent;
+import javax.swing.JToolTip;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.metal.MetalToolTipUI;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.5 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.6 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +22,9 @@ import java.util.Enumeration;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MultiLineToolTip.java,v $
+ * Revision 1.6  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.5  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -30,14 +38,14 @@ import java.util.Enumeration;
  */
 
 public class MultiLineToolTip
-        extends JToolTip {
+    extends JToolTip {
 
     public MultiLineToolTip() {
         setUI(new MultiLineToolTipUI());
     }
 
     private class MultiLineToolTipUI
-            extends MetalToolTipUI {
+        extends MetalToolTipUI {
         private String[] strs;
 
         public void paint(Graphics g, JComponent c) {
@@ -46,11 +54,9 @@ public class MultiLineToolTip
             g.setColor(c.getBackground());
             g.fillRect(0, 0, size.width, size.height);
             g.setColor(c.getForeground());
-            if (strs != null)
-            {
+            if (strs != null) {
                 int length = strs.length;
-                for (int i = 0; i < length; i++)
-                {
+                for (int i = 0; i < length; i++) {
                     g.drawString(strs[i], 3, (metrics.getHeight()) * (i + 1));
                 }
             }
@@ -58,33 +64,28 @@ public class MultiLineToolTip
 
         public Dimension getPreferredSize(JComponent c) {
             FontMetrics metrics = c.getFontMetrics(c.getFont());
-            String tipText = ((JToolTip) c).getTipText();
-            if (tipText == null)
-            {
+            String tipText = ( (JToolTip) c).getTipText();
+            if (tipText == null) {
                 tipText = "";
             }
             StringTokenizer st = new StringTokenizer(tipText, "|");
             int maxWidth = 0;
             Vector v = new Vector();
-            while (st.hasMoreTokens())
-            {
+            while (st.hasMoreTokens()) {
                 String token = st.nextToken();
                 int width = SwingUtilities.computeStringWidth(metrics, token);
                 maxWidth = (maxWidth < width) ? width : maxWidth;
                 v.addElement(token);
             }
             int lines = v.size();
-            if (lines < 1)
-            {
+            if (lines < 1) {
                 strs = null;
                 lines = 1;
             }
-            else
-            {
+            else {
                 strs = new String[lines];
                 int i = 0;
-                for (Enumeration e = v.elements(); e.hasMoreElements(); i++)
-                {
+                for (Enumeration e = v.elements(); e.hasMoreElements(); i++) {
                     strs[i] = (String) e.nextElement();
                 }
             }

@@ -10,7 +10,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.27 2004/01/26 11:01:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.28 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.28  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.27  2004/01/26 11:01:14  maj0r
  * Neuen Downloadstatus eingebaut.
  *
@@ -200,7 +203,8 @@ public class DownloadModel
         DownloadColumnValue columnValue = null;
         if (node.getClass() == DownloadMainNode.class &&
             ( (DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
-            columnValue = (DownloadColumnValue)( (DownloadMainNode) node).getDownloadDO();
+            columnValue = (DownloadColumnValue) ( (DownloadMainNode) node).
+                getDownloadDO();
         }
         else if (node instanceof DownloadColumnValue) {
             columnValue = (DownloadColumnValue) node;

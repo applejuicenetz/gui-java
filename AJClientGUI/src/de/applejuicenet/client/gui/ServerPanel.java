@@ -1,21 +1,25 @@
 package de.applejuicenet.client.gui;
 
 import java.util.HashMap;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -24,6 +28,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
@@ -37,17 +42,13 @@ import de.applejuicenet.client.gui.shared.SortButtonRenderer;
 import de.applejuicenet.client.gui.tables.server.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.tables.server.ServerTableModel;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import de.applejuicenet.client.shared.Information;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.51 2004/02/04 14:26:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.52 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -56,6 +57,9 @@ import java.awt.datatransfer.StringSelection;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.52  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.51  2004/02/04 14:26:05  maj0r
  * Bug #185 gefixt (Danke an muhviestarr)
  * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
@@ -133,7 +137,7 @@ import java.awt.datatransfer.StringSelection;
  * Ein Panel entfernt. War ohne Funktion.
  *
  * Revision 1.27  2003/09/07 09:29:55  maj0r
-     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.26  2003/09/04 10:13:28  maj0r
  * Logger eingebaut.
@@ -202,8 +206,8 @@ public class ServerPanel
     private String warnungTitel = "";
     private String warnungNachricht = "";
 
-    public static synchronized ServerPanel getInstance(){
-        if (instance == null){
+    public static synchronized ServerPanel getInstance() {
+        if (instance == null) {
             instance = new ServerPanel();
         }
         return instance;
@@ -255,10 +259,12 @@ public class ServerPanel
                 ServerDO server = (ServerDO) ( (ServerTableModel) serverTable.
                                               getModel()).
                     getRow(selected);
-                if (ApplejuiceFassade.getInstance().getInformation().getVerbindungsStatus() == Information.VERBUNDEN){
-                    int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), warnungNachricht, warnungTitel,
-                                  JOptionPane.YES_NO_OPTION);
-                    if (result != JOptionPane.YES_OPTION){
+                if (ApplejuiceFassade.getInstance().getInformation().
+                    getVerbindungsStatus() == Information.VERBUNDEN) {
+                    int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.
+                        getApp(), warnungNachricht, warnungTitel,
+                        JOptionPane.YES_NO_OPTION);
+                    if (result != JOptionPane.YES_OPTION) {
                         return;
                     }
                 }
@@ -292,8 +298,9 @@ public class ServerPanel
                         getSystemClipboard();
                     StringBuffer toCopy = new StringBuffer();
                     toCopy.append("ajfsp://server|");
-                    ServerDO serverDO = (ServerDO) ( (ServerTableModel) serverTable.
-                                             getModel()).getRow(selectedItems[0]);
+                    ServerDO serverDO = (ServerDO) ( (ServerTableModel)
+                        serverTable.
+                        getModel()).getRow(selectedItems[0]);
                     toCopy.append(serverDO.getHost());
                     toCopy.append("|");
                     toCopy.append(serverDO.getPort());
@@ -343,7 +350,7 @@ public class ServerPanel
                     public void run() {
                         ApplejuiceFassade af = ApplejuiceFassade.getInstance();
                         String[] server = af.getNetworkKnownServers();
-                        if (server == null || server.length == 0){
+                        if (server == null || server.length == 0) {
                             return;
                         }
                         for (int i = 0; i < server.length; i++) {
@@ -506,9 +513,10 @@ public class ServerPanel
     public void fireLanguageChanged() {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            sucheServer.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                 getFirstAttrbuteByTagName(new String[]{"mainform", "Label11",
-                 "caption"})));
+            sucheServer.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "Label11",
+                                          "caption"})));
             String[] columns = new String[5];
             columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"mainform",

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.24 2004/01/06 16:03:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.25 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.25  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.24  2004/01/06 16:03:49  maj0r
  * Bug #13 umgesetzt (Danke an HabkeineMail)
  * Powerdownload-Werte werden jetzt bei Klick auf einen Download / Quelle im Powerdownloadfeld angezeigt.
@@ -93,28 +96,35 @@ package de.applejuicenet.client.gui;
  *
  */
 
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.PartListDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.Settings;
-import de.applejuicenet.client.shared.SwingWorker;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
-import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.shared.Settings;
+import de.applejuicenet.client.shared.SwingWorker;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+import de.applejuicenet.client.shared.dac.PartListDO;
 
-import javax.swing.*;
-import java.awt.*;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-public class DownloadDOOverviewPanel extends JPanel implements LanguageListener, DataUpdateListener{
-    private DownloadPartListPanel actualDlOverviewTable = new DownloadPartListPanel();
+public class DownloadDOOverviewPanel
+    extends JPanel
+    implements LanguageListener, DataUpdateListener {
+    private DownloadPartListPanel actualDlOverviewTable = new
+        DownloadPartListPanel();
     private JLabel actualDLDateiName = new JLabel();
     private JLabel label4 = new JLabel("Vorhanden");
     private JLabel label3 = new JLabel("Nicht vorhanden");
@@ -128,21 +138,21 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
 
     public DownloadDOOverviewPanel(DownloadPanel parent) {
         logger = Logger.getLogger(getClass());
-        try{
+        try {
             downloadPanel = parent;
             init();
             settings = Settings.getSettings();
             LanguageSelector.getInstance().addLanguageListener(this);
             PropertiesManager.getOptionsManager().addSettingsListener(this);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    public void enableHoleListButton(boolean enable){
+    public void enableHoleListButton(boolean enable) {
         holeListe.setEnabled(enable);
     }
 
@@ -180,13 +190,14 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
         panel3.add(tempPanel1, BorderLayout.CENTER);
 
         add(panel3, BorderLayout.NORTH);
-        actualDLDateiName.setPreferredSize(new Dimension(actualDLDateiName.getPreferredSize().width, 17));
+        actualDLDateiName.setPreferredSize(new Dimension(actualDLDateiName.
+            getPreferredSize().width, 17));
         JPanel panel1 = new JPanel(new BorderLayout());
         panel1.add(actualDLDateiName, BorderLayout.NORTH);
         panel1.add(actualDlOverviewTable, BorderLayout.CENTER);
         add(panel1, BorderLayout.CENTER);
-        holeListe.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
+        holeListe.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
                 holeListe.setEnabled(false);
                 downloadPanel.tryGetPartList();
             }
@@ -194,20 +205,20 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
     }
 
     public void setDownloadDO(DownloadDO downloadDO) {
-        try{
-            if (downloadDO==null){
+        try {
+            if (downloadDO == null) {
                 partListWorkerThread.interrupt();
                 actualDLDateiName.setText("");
                 actualDlOverviewTable.setPartList(null);
             }
-            else if (downloadDO.getStatus()!=DownloadDO.FERTIGSTELLEN &&
-                    downloadDO.getStatus()!=DownloadDO.FERTIG)
-            {
+            else if (downloadDO.getStatus() != DownloadDO.FERTIGSTELLEN &&
+                     downloadDO.getStatus() != DownloadDO.FERTIG) {
                 final DownloadDO tempDO = downloadDO;
                 partListWorkerThread.interrupt();
                 partListWorkerThread = new Thread() {
                     public void run() {
-                        actualDLDateiName.setText(" " + tempDO.getFilename() + " (" +
+                        actualDLDateiName.setText(" " + tempDO.getFilename() +
+                                                  " (" +
                                                   tempDO.getTemporaryFileNumber() +
                                                   ".data)");
                         actualDlOverviewTable.setPartList(null);
@@ -234,72 +245,80 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
                 partListWorkerThread.start();
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             partListWorkerThread.interrupt();
             actualDLDateiName.setText("");
             actualDlOverviewTable.setPartList(null);
-            if (logger.isEnabledFor(Level.ERROR)){
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
             }
         }
     }
 
     public void setDownloadSourceDO(DownloadSourceDO downloadSourceDO) {
-        try{
+        try {
             partListWorkerThread.interrupt();
-            if (downloadSourceDO==null){
+            if (downloadSourceDO == null) {
                 actualDLDateiName.setText("");
                 actualDlOverviewTable.setPartList(null);
             }
-            else
-            {
+            else {
                 final DownloadSourceDO tempDO = downloadSourceDO;
                 final SwingWorker worker2 = new SwingWorker() {
-                            public Object construct() {
-                                actualDLDateiName.setText(tempDO.getFilename() + " (" + tempDO.getNickname() + ")");
-                                actualDlOverviewTable.setPartList(null);
-                                return ApplejuiceFassade.getInstance().getPartList(tempDO);
-                            }
-                            public void finished(){
-                                actualDLDateiName.setText(tempDO.getFilename() + " (" + tempDO.getNickname() + ")");
-                                actualDlOverviewTable.setPartList((PartListDO) getValue());
-                            }
-                        };
+                    public Object construct() {
+                        actualDLDateiName.setText(tempDO.getFilename() + " (" +
+                                                  tempDO.getNickname() + ")");
+                        actualDlOverviewTable.setPartList(null);
+                        return ApplejuiceFassade.getInstance().getPartList(
+                            tempDO);
+                    }
+
+                    public void finished() {
+                        actualDLDateiName.setText(tempDO.getFilename() + " (" +
+                                                  tempDO.getNickname() + ")");
+                        actualDlOverviewTable.setPartList( (PartListDO)
+                            getValue());
+                    }
+                };
                 worker2.start();
             }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void fireLanguageChanged() {
-        try{
+        try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "Label4", "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "Label4",
+                                          "caption"})));
             label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "Label3", "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "Label3",
+                                          "caption"})));
             label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "Label2", "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "Label2",
+                                          "caption"})));
             label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"mainform", "Label1", "caption"})));
-            holeListe.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "Label1",
+                                          "caption"})));
+            holeListe.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
                 getFirstAttrbuteByTagName(new String[] {"javagui",
                                           "downloadform", "partlisteanzeigen"})));
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void fireContentChanged(int type, Object content) {
-        if (type == DataUpdateListener.SETTINGS_CHANGED){
+        if (type == DataUpdateListener.SETTINGS_CHANGED) {
             settings = (Settings) content;
         }
     }

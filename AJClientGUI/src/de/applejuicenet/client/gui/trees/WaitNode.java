@@ -1,13 +1,13 @@
 package de.applejuicenet.client.gui.trees;
 
+import javax.swing.Icon;
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.IconManager;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.*;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/Attic/WaitNode.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/Attic/WaitNode.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import javax.swing.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WaitNode.java,v $
+ * Revision 1.4  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -31,7 +34,9 @@ import javax.swing.*;
  *
  */
 
-public class WaitNode extends DefaultMutableTreeNode implements Node{
+public class WaitNode
+    extends DefaultMutableTreeNode
+    implements Node {
     public Icon getConvenientIcon() {
         return IconManager.getInstance().getIcon("warten");
     }

@@ -1,20 +1,24 @@
 package de.applejuicenet.client.gui;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.DefaultSingleSelectionModel;
+import javax.swing.ImageIcon;
+import javax.swing.JTabbedPane;
 
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.gui.plugins.*;
-import de.applejuicenet.client.shared.*;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.PluginJarClassLoader;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.29 2004/02/04 14:26:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.30 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +27,9 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.30  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.29  2004/02/04 14:26:05  maj0r
  * Bug #185 gefixt (Danke an muhviestarr)
  * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
@@ -81,8 +88,8 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  */
 
 public class RegisterPanel
-        extends JTabbedPane
-        implements LanguageListener {
+    extends JTabbedPane
+    implements LanguageListener {
     private StartPanel startPanel;
     private DownloadPanel downloadPanel;
     private SearchPanel searchPanel;
@@ -94,21 +101,20 @@ public class RegisterPanel
 
     public RegisterPanel(AppleJuiceDialog parent) {
         logger = Logger.getLogger(getClass());
-        try
-        {
+        try {
             this.parent = parent;
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    private void tabFocusLost(int index){
-        RegisterI register = (RegisterI)getComponentAt(index);
-        if (register!=null){
+    private void tabFocusLost(int index) {
+        RegisterI register = (RegisterI) getComponentAt(index);
+        if (register != null) {
             register.lostSelection();
         }
     }
@@ -116,13 +122,13 @@ public class RegisterPanel
     private void init() {
         LanguageSelector.getInstance().addLanguageListener(this);
         setModel(new DefaultSingleSelectionModel() {
-          public void setSelectedIndex(int index) {
-            int oldIndex = getSelectedIndex();
-            if (oldIndex!=-1){
-                tabFocusLost(oldIndex);
+            public void setSelectedIndex(int index) {
+                int oldIndex = getSelectedIndex();
+                if (oldIndex != -1) {
+                    tabFocusLost(oldIndex);
+                }
+                super.setSelectedIndex(index);
             }
-            super.setSelectedIndex(index);
-          }
         });
         startPanel = StartPanel.getInstance();
         sharePanel = SharePanel.getInstance();
@@ -151,51 +157,50 @@ public class RegisterPanel
         ImageIcon icon5 = im.getIcon("server");
         addTab("Server", icon5, serverPanel);
 
-        if (PropertiesManager.getOptionsManager().shouldLoadPluginsOnStartup()){
+        if (PropertiesManager.getOptionsManager().shouldLoadPluginsOnStartup()) {
             loadPlugins();
         }
     }
 
     private void loadPlugins() {
-        String path = System.getProperty("user.dir") + File.separator + "plugins" +
-                File.separator;
+        String path = System.getProperty("user.dir") + File.separator +
+            "plugins" +
+            File.separator;
         File pluginPath = new File(path);
-        if (!pluginPath.isDirectory())
-        {
+        if (!pluginPath.isDirectory()) {
             System.out.println("Warnung: Kein Verzeichnis 'plugins' vorhanden!");
             return;
         }
         String[] tempListe = pluginPath.list();
         PluginJarClassLoader jarLoader = null;
-        for (int i = 0; i < tempListe.length; i++)
-        {
-            if (tempListe[i].toLowerCase().endsWith(".jar"))
-            {
+        for (int i = 0; i < tempListe.length; i++) {
+            if (tempListe[i].toLowerCase().endsWith(".jar")) {
                 URL url = null;
-                try
-                {
+                try {
                     url = new URL("file://" + path + tempListe[i]);
                     jarLoader = new PluginJarClassLoader(url);
-                    PluginConnector aPlugin = jarLoader.getPlugin(path + tempListe[i]);
-                    if (aPlugin != null)
-                    {
-                        if (aPlugin.istReiter())
-                        {
+                    PluginConnector aPlugin = jarLoader.getPlugin(path +
+                        tempListe[i]);
+                    if (aPlugin != null) {
+                        if (aPlugin.istReiter()) {
                             ImageIcon icon = aPlugin.getIcon();
                             addTab(aPlugin.getTitle(), icon, aPlugin);
                         }
                         parent.addPluginToHashSet(aPlugin);
-                        String nachricht = "Plugin " + aPlugin.getTitle() + " geladen...";
-                        if (logger.isEnabledFor(Level.INFO))
+                        String nachricht = "Plugin " + aPlugin.getTitle() +
+                            " geladen...";
+                        if (logger.isEnabledFor(Level.INFO)) {
                             logger.info(nachricht);
+                        }
                         System.out.println(nachricht);
                     }
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     //Von einem Plugin lassen wir uns nicht beirren! ;-)
-                    if (logger.isEnabledFor(Level.ERROR))
-                        logger.error("Ein Plugin konnte nicht instanziert werden", e);
+                    if (logger.isEnabledFor(Level.ERROR)) {
+                        logger.error(
+                            "Ein Plugin konnte nicht instanziert werden", e);
+                    }
                     continue;
                 }
             }
@@ -203,43 +208,43 @@ public class RegisterPanel
     }
 
     public void fireLanguageChanged() {
-        try{
+        try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             setTitleAt(0,
                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new
-                                                                 String[]{
-                                                                     "mainform", "homesheet", "caption"})));
+                getFirstAttrbuteByTagName(new
+                                          String[] {
+                                          "mainform", "homesheet", "caption"})));
             setTitleAt(1,
                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new
-                                                                 String[]{
-                                                                     "mainform", "sharesheet", "caption"})));
+                getFirstAttrbuteByTagName(new
+                                          String[] {
+                                          "mainform", "sharesheet", "caption"})));
             setTitleAt(2,
                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new
-                                                                 String[]{
-                                                                     "mainform", "seachsheet", "caption"})));
+                getFirstAttrbuteByTagName(new
+                                          String[] {
+                                          "mainform", "seachsheet", "caption"})));
             setTitleAt(3,
                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new
-                                                                 String[]{
-                                                                     "mainform", "queuesheet", "caption"})));
+                getFirstAttrbuteByTagName(new
+                                          String[] {
+                                          "mainform", "queuesheet", "caption"})));
             setTitleAt(4,
                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new
-                                                                 String[]{
-                                                                     "mainform", "uploadsheet", "caption"})));
+                getFirstAttrbuteByTagName(new
+                                          String[] {
+                                          "mainform", "uploadsheet", "caption"})));
             setTitleAt(5,
                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                         getFirstAttrbuteByTagName(new
-                                                                 String[]{
-                                                                     "mainform", "serversheet", "caption"})));
+                getFirstAttrbuteByTagName(new
+                                          String[] {
+                                          "mainform", "serversheet", "caption"})));
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 }

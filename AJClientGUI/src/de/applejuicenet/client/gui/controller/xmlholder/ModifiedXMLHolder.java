@@ -1,6 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 import java.util.HashMap;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -22,7 +23,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.13 2004/02/04 13:10:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.14 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +32,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.14  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.13  2004/02/04 13:10:37  maj0r
  * Neues Linkformat zusaetzlich in den Downloadbereich eingebaut.
  *
@@ -250,12 +254,12 @@ public class ModifiedXMLHolder
     }
 
     public synchronized boolean update(String sessionId) {
-        if (sessionKontext == null){
+        if (sessionKontext == null) {
             sessionKontext = "&session=" + sessionId;
         }
-        if (tryToReload()){
-            switch (count){
-                case 0:{
+        if (tryToReload()) {
+            switch (count) {
+                case 0: {
                     updateIDs();
                     updateDownloads();
                     updateUploads();
@@ -264,7 +268,7 @@ public class ModifiedXMLHolder
                     getInformation(true);
                     break;
                 }
-                case 1:{
+                case 1: {
                     updateIDs();
                     updateDownloads();
                     updateUploads();
@@ -273,7 +277,7 @@ public class ModifiedXMLHolder
                     getInformation(true);
                     break;
                 }
-                default:{
+                default: {
                     updateIDs();
                     updateDownloads();
                     updateUploads();
@@ -285,34 +289,35 @@ public class ModifiedXMLHolder
             }
             return true;
         }
-        else{
+        else {
             return false;
         }
     }
 
-    private boolean tryToReload(){
+    private boolean tryToReload() {
         if (reloadInProgress) {
             return false;
         }
         else {
-            switch (count){
+            switch (count) {
                 //lazy loading
-                case 0:{
-                    count ++;
-                    filter = "&filter=ids;down;uploads;server;informations&mode=zip";
+                case 0: {
+                    count++;
+                    filter =
+                        "&filter=ids;down;uploads;server;informations&mode=zip";
                     break;
                 }
-                case 1:{
-                    count ++;
+                case 1: {
+                    count++;
                     filter = "&filter=ids;informations;user&mode=zip";
                     break;
                 }
-                case 2:{
-                    count ++;
+                case 2: {
+                    count++;
                     filter = ""; // kein Filter
                     break;
                 }
-                default:{
+                default: {
                     break;
                 }
             }
@@ -322,7 +327,7 @@ public class ModifiedXMLHolder
     }
 
     private boolean secureSession() {
-        try{
+        try {
             return securerHolder.secure(sessionKontext, information);
         }
         catch (Exception ex) {
@@ -339,10 +344,10 @@ public class ModifiedXMLHolder
             Securer securer = new Securer();
             securer.start();
             super.reload(parameters, true);
-            if (!securer.isInterrupted()){
+            if (!securer.isInterrupted()) {
                 securer.interrupt();
             }
-            if (!securer.isOK()){
+            if (!securer.isOK()) {
                 SessionXMLHolder session = new SessionXMLHolder();
                 session.reload("", false);
                 String sessionId = session.getFirstAttrbuteByTagName(new
@@ -404,16 +409,18 @@ public class ModifiedXMLHolder
                 String serverName = null;
                 String externeIP;
                 int verbindungsStatus = Information.NICHT_VERBUNDEN;
-                ServerDO serverDO = null;;
+                ServerDO serverDO = null; ;
                 if (tryConnectToServer != -1) {
-                    serverDO = (ServerDO) serverMap.get(Integer.toString(tryConnectToServer));
+                    serverDO = (ServerDO) serverMap.get(Integer.toString(
+                        tryConnectToServer));
                     if (serverDO != null) {
                         verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
                         serverName = serverDO.getName();
                     }
                 }
                 else if (connectedWithServerId != -1) {
-                    serverDO = (ServerDO) serverMap.get(Integer.toString(connectedWithServerId));
+                    serverDO = (ServerDO) serverMap.get(Integer.toString(
+                        connectedWithServerId));
                     if (serverDO != null) {
                         verbindungsStatus = Information.VERBUNDEN;
                         serverName = serverDO.getName();
@@ -499,11 +506,11 @@ public class ModifiedXMLHolder
     private void updateIDs() {
         try {
             NodeList nodes = document.getElementsByTagName("removed");
-            if (nodes == null || nodes.getLength() == 0){
+            if (nodes == null || nodes.getLength() == 0) {
                 return;
             }
             nodes = nodes.item(0).getChildNodes();
-            if (nodes == null || nodes.getLength() == 0){
+            if (nodes == null || nodes.getLength() == 0) {
                 return;
             }
             Element e = null;
@@ -513,7 +520,7 @@ public class ModifiedXMLHolder
             DownloadDO downloadDO;
             DownloadSourceDO[] sourcen;
             for (int i = 0; i < size; i++) {
-                if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE){
+                if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
                     e = (Element) nodes.item(i);
                     id = e.getAttribute("id");
                     toRemoveKey = id;
@@ -951,7 +958,8 @@ public class ModifiedXMLHolder
                     serverDO.setHost(e.getAttribute("host"));
                     serverDO.setTimeLastSeen(Long.parseLong(e.getAttribute(
                         "lastseen")));
-                    serverDO.setVersuche(Integer.parseInt(e.getAttribute("connectiontry")));
+                    serverDO.setVersuche(Integer.parseInt(e.getAttribute(
+                        "connectiontry")));
                     serverDO.setPort(e.getAttribute("port"));
                 }
                 else {
@@ -961,7 +969,8 @@ public class ModifiedXMLHolder
                     lastseen = Long.parseLong(e.getAttribute("lastseen"));
                     port = e.getAttribute("port");
                     versuche = Integer.parseInt(e.getAttribute("connectiontry"));
-                    server = new ServerDO(id, name, host, port, lastseen, versuche);
+                    server = new ServerDO(id, name, host, port, lastseen,
+                                          versuche);
                     serverMap.put(id_key, server);
                 }
             }
@@ -998,7 +1007,8 @@ public class ModifiedXMLHolder
                     ( (ServerDO) alterServer).setTryConnect(false);
                 }
                 if (tryConnectToServer != -1) {
-                    ServerDO serverDO = (ServerDO) serverMap.get(Integer.toString(tryConnectToServer));
+                    ServerDO serverDO = (ServerDO) serverMap.get(Integer.
+                        toString(tryConnectToServer));
                     serverDO.setTryConnect(true);
                 }
                 this.tryConnectToServer = tryConnectToServer;
@@ -1010,7 +1020,8 @@ public class ModifiedXMLHolder
                 ( (ServerDO) alterServer).setConnected(false);
             }
             if (connectedWithServerId != -1) {
-                ServerDO serverDO = (ServerDO) serverMap.get(Integer.toString(connectedWithServerId));
+                ServerDO serverDO = (ServerDO) serverMap.get(Integer.toString(
+                    connectedWithServerId));
                 serverDO.setConnected(true);
             }
             this.connectedWithServerId = connectedWithServerId;
@@ -1026,14 +1037,15 @@ public class ModifiedXMLHolder
         }
     }
 
-    private class Securer extends Thread{
+    private class Securer
+        extends Thread {
         private boolean ok = true;
 
-        public void run(){
+        public void run() {
             while (!interrupted()) {
                 try {
                     sleep(5000);
-                    if (!secureSession()){
+                    if (!secureSession()) {
                         ok = false;
                         interrupt();
                     }
@@ -1045,7 +1057,7 @@ public class ModifiedXMLHolder
             }
         }
 
-        public boolean isOK(){
+        public boolean isOK() {
             return ok;
         }
     }

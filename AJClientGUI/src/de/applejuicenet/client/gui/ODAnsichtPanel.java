@@ -1,24 +1,33 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.shared.Settings;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JToolTip;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-
-import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.Settings;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.9 2004/01/29 15:52:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODAnsichtPanel.java,v 1.10 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +36,9 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODAnsichtPanel.java,v $
+ * Revision 1.10  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.9  2004/01/29 15:52:33  maj0r
  * Bug #153 umgesetzt (Danke an jr17)
  * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
@@ -59,7 +71,9 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
  *
  */
 
-public class ODAnsichtPanel extends JPanel implements OptionsRegister{
+public class ODAnsichtPanel
+    extends JPanel
+    implements OptionsRegister {
     private JLabel farbeFertigerDownload = new JLabel("      ");
     private JLabel farbeQuelle = new JLabel("      ");
     private Settings settings;
@@ -73,13 +87,14 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
 
     public ODAnsichtPanel() {
         logger = Logger.getLogger(getClass());
-        try{
+        try {
             settings = Settings.getSettings();
             init();
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -87,18 +102,24 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         IconManager im = IconManager.getInstance();
         menuIcon = im.getIcon("opt_ansicht");
-        cmbDownloadUebersicht.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
-                                                       "downloadansicht"})));
+        cmbDownloadUebersicht.setText(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "ansicht",
+                                      "downloadansicht"})));
         cmbAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
-                                                       "aktiv"})));
-        cmbStartscreenZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[] {"javagui", "options", "ansicht",
-                                          "zeigestartscreen"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "ansicht",
+                                      "aktiv"})));
+        cmbStartscreenZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "ansicht",
+                                      "zeigestartscreen"})));
         setLayout(new BorderLayout());
         farbeFertigerDownload.setOpaque(true);
-        farbeFertigerDownload.setBackground(settings.getDownloadFertigHintergrundColor());
+        farbeFertigerDownload.setBackground(settings.
+                                            getDownloadFertigHintergrundColor());
         farbeFertigerDownload.addMouseListener(new ColorChooserMouseAdapter());
         farbeQuelle.setOpaque(true);
         farbeQuelle.setBackground(settings.getQuelleHintergrundColor());
@@ -110,7 +131,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
                 settings.setDownloadUebersicht(cmbDownloadUebersicht.isSelected());
             }
         });
-        cmbStartscreenZeigen.setSelected(PropertiesManager.getOptionsManager().shouldShowConnectionDialogOnStartup());
+        cmbStartscreenZeigen.setSelected(PropertiesManager.getOptionsManager().
+                                         shouldShowConnectionDialogOnStartup());
         cmbStartscreenZeigen.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
                 dirty = true;
@@ -137,8 +159,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
             }
         };
         String tooltipp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                       "ansicht", "ttipp_farbewaehlen"}));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "ansicht", "ttipp_farbewaehlen"}));
         hint1.setToolTipText(tooltipp);
         hint2.setToolTipText(tooltipp);
 
@@ -150,22 +172,29 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.insets.bottom = 5;
-        panel1.setBorder(BorderFactory.createTitledBorder(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
-                                                       "hintergrundfarben"}))));
+        panel1.setBorder(BorderFactory.createTitledBorder(ZeichenErsetzer.
+            korrigiereUmlaute(languageSelector.
+                              getFirstAttrbuteByTagName(new String[] {"javagui",
+            "options", "ansicht",
+            "hintergrundfarben"}))));
         panel1.add(cmbAktiv, constraints);
         constraints.gridy = 1;
         constraints.insets.left = 5;
         constraints.insets.right = 5;
-        panel1.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
-                                                       "fertigerdownload"}))), constraints);
+        panel1.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "ansicht",
+                                      "fertigerdownload"}))), constraints);
         constraints.gridy = 2;
-        panel1.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
-                                                       "quelle"}))), constraints);
+        panel1.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "ansicht",
+                                      "quelle"}))), constraints);
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-             getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht", "caption"}));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "ansicht", "caption"}));
         constraints.gridx = 1;
         constraints.gridy = 1;
         panel1.add(farbeFertigerDownload, constraints);
@@ -186,22 +215,23 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
     }
 
     public boolean save() {
-        try{
+        try {
             settings.save();
             return true;
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
             return false;
         }
     }
 
-    public boolean isDirty(){
+    public boolean isDirty() {
         return dirty;
     }
 
-    public boolean shouldShowStartcreen(){
+    public boolean shouldShowStartcreen() {
         return cmbStartscreenZeigen.isSelected();
     }
 
@@ -214,7 +244,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
     }
 
     class ColorChooserMouseAdapter
-            extends MouseAdapter {
+        extends MouseAdapter {
         public void mouseEntered(MouseEvent e) {
             JLabel source = (JLabel) e.getSource();
             source.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -224,16 +254,21 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister{
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             JLabel source = (JLabel) e.getSource();
             JColorChooser jColorChooserBackground = new JColorChooser();
-            Color newColor = jColorChooserBackground.showDialog(null, ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(new String[]{"javagui", "options", "ansicht",
-                                                           "hintergrundfarbewaehlen"})),
-                    source.getBackground());
-            if (newColor != null && newColor.getRGB() != source.getBackground().getRGB()) {
+            Color newColor = jColorChooserBackground.showDialog(null,
+                ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                  getFirstAttrbuteByTagName(new
+                String[] {"javagui", "options", "ansicht",
+                "hintergrundfarbewaehlen"})),
+                source.getBackground());
+            if (newColor != null &&
+                newColor.getRGB() != source.getBackground().getRGB()) {
                 source.setBackground(newColor);
-                if (source==farbeQuelle)
+                if (source == farbeQuelle) {
                     settings.setQuelleHintergrundColor(newColor);
-                else
+                }
+                else {
                     settings.setDownloadFertigHintergrundColor(newColor);
+                }
             }
         }
 

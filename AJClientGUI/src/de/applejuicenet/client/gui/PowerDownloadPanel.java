@@ -52,7 +52,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.37 2004/01/31 08:49:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.38 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -61,6 +61,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.38  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.37  2004/01/31 08:49:04  maj0r
  * PwdlPolicies werden jetzt wie Plugins als jars eingebunden.
  *
@@ -143,8 +146,8 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  */
 
 public class PowerDownloadPanel
-        extends JPanel
-        implements LanguageListener, DataUpdateListener {
+    extends JPanel
+    implements LanguageListener, DataUpdateListener {
     private final Color BLUE_BACKGROUND = new Color(118, 112, 148);
     private JRadioButton btnInaktiv = new JRadioButton();
     private JRadioButton btnAktiv = new JRadioButton();
@@ -163,7 +166,7 @@ public class PowerDownloadPanel
     private JButton btnAutoPdl = new JButton("Uebernehmen");
     private JLabel powerdownload = new JLabel("Powerdownload");
     private JLabel label6 = new JLabel(
-            "Wieviel willst Du maximal fuer 1 Byte bezahlen?");
+        "Wieviel willst Du maximal fuer 1 Byte bezahlen?");
     private JLabel label7 = new JLabel("Fuer 1 Byte zahle");
     private JLabel label8 = new JLabel("Credits");
     private JLabel label9 = new JLabel("Automatischer Powerdownload");
@@ -185,14 +188,13 @@ public class PowerDownloadPanel
         logger = Logger.getLogger(getClass());
         this.parentPanel = parentPanel;
         btnPdl.setEnabled(false);
-        try
-        {
+        try {
             jbInit();
         }
-        catch (Exception ex)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
@@ -347,21 +349,22 @@ public class PowerDownloadPanel
         btnAutoInaktiv.setText("inaktiv");
         btnAutoAktiv.setText("aktiv");
         btnAutoAktiv.setSelected(true);
-        pwdlPolicies.addItemListener(new ItemListener(){
+        pwdlPolicies.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                AutomaticPowerdownloadPolicy policy = (AutomaticPowerdownloadPolicy)pwdlPolicies.getSelectedItem();
+                AutomaticPowerdownloadPolicy policy = (
+                    AutomaticPowerdownloadPolicy) pwdlPolicies.getSelectedItem();
                 StringBuffer text = new StringBuffer(policy.getDescription());
-                int i=0;
-                while (i<text.length()){
-                    if (text.charAt(i)=='.'){
-                        text.insert(i+1, '|');
+                int i = 0;
+                while (i < text.length()) {
+                    if (text.charAt(i) == '.') {
+                        text.insert(i + 1, '|');
                         i++;
                     }
                     i++;
                 }
                 text.insert(0, policy.toString() + "|" +
-                               "Autor: " + policy.getAuthor() + "|" +
-                               "Beschreibung:|");
+                            "Autor: " + policy.getAuthor() + "|" +
+                            "Beschreibung:|");
                 btnHint3.setToolTipText(text.toString());
             }
         });
@@ -383,18 +386,19 @@ public class PowerDownloadPanel
         autoBis.setDocument(new NumberInputVerifier());
         autoBis.setPreferredSize(new Dimension(40, 21));
         autoBis.setText(Integer.toString(standardAutomaticPwdlBis));
-        autoAb.addFocusListener(new FocusAdapter(){
-            public void focusLost(FocusEvent fe){
+        autoAb.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent fe) {
                 int eingegeben = Integer.parseInt(autoAb.getText());
-                if (eingegeben<Integer.parseInt(autoBis.getText())){
+                if (eingegeben < Integer.parseInt(autoBis.getText())) {
                     autoAb.setText(Integer.toString(standardAutomaticPwdlAb));
                 }
             }
         });
-        autoBis.addFocusListener(new FocusAdapter(){
-            public void focusLost(FocusEvent fe){
+        autoBis.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent fe) {
                 int eingegeben = Integer.parseInt(autoBis.getText());
-                if (eingegeben<standardAutomaticPwdlBis || eingegeben>Integer.parseInt(autoAb.getText())){
+                if (eingegeben < standardAutomaticPwdlBis ||
+                    eingegeben > Integer.parseInt(autoAb.getText())) {
                     autoBis.setText(Integer.toString(standardAutomaticPwdlBis));
                 }
             }
@@ -408,46 +412,49 @@ public class PowerDownloadPanel
         constraints.gridy = 12;
         constraints.gridwidth = 3;
         backPanel.add(btnAutoPdl, constraints);
-        btnAutoPdl.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
+        btnAutoPdl.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
                 alterAutoPwdl();
             }
         });
         add(new JScrollPane(backPanel), BorderLayout.NORTH);
-        ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.INFORMATION_CHANGED);
-        ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
+        ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+            DataUpdateListener.INFORMATION_CHANGED);
+        ApplejuiceFassade.getInstance().addDataUpdateListener(this,
+            DataUpdateListener.DOWNLOAD_CHANGED);
     }
 
-    public void setPwdlValue(int pwdlValue){
-        if (pwdlValue<12){
+    public void setPwdlValue(int pwdlValue) {
+        if (pwdlValue < 12) {
             ratio.setText("2.2");
             btnInaktiv.setSelected(true);
         }
-        else{
-            float wert = (float) ((float)(pwdlValue + 10) / 10);
+        else {
+            float wert = (float) ( (float) (pwdlValue + 10) / 10);
             ratio.setText(Float.toString(wert));
             btnAktiv.setSelected(true);
         }
     }
 
-    private void alterAutoPwdl(){
-        if (btnAutoAktiv.isSelected()){
-            if (pwdlPolicies.isEnabled()){
+    private void alterAutoPwdl() {
+        if (btnAutoAktiv.isSelected()) {
+            if (pwdlPolicies.isEnabled()) {
                 pwdlPolicies.setEnabled(false);
                 autoAb.setEnabled(false);
                 autoBis.setEnabled(false);
                 btnPdl.setEnabled(false);
-                AutomaticPowerdownloadPolicy selectedPolicy = (AutomaticPowerdownloadPolicy) pwdlPolicies.getSelectedItem();
+                AutomaticPowerdownloadPolicy selectedPolicy = (
+                    AutomaticPowerdownloadPolicy) pwdlPolicies.getSelectedItem();
                 manageAutoPwdl(selectedPolicy);
                 AppleJuiceDialog.getApp().informAutomaticPwdlEnabled(true);
             }
         }
-        else{
-            if (!pwdlPolicies.isEnabled()){
+        else {
+            if (!pwdlPolicies.isEnabled()) {
                 pwdlPolicies.setEnabled(true);
                 autoAb.setEnabled(true);
                 autoBis.setEnabled(true);
-                if (autoPwdlThread!=null){
+                if (autoPwdlThread != null) {
                     autoPwdlThread.interrupt();
                     autoPwdlThread = null;
                 }
@@ -456,29 +463,33 @@ public class PowerDownloadPanel
         }
     }
 
-    public boolean isAutomaticPwdlActive(){
-        if (!pwdlPolicies.isEnabled() && autoPwdlThread!=null){
+    public boolean isAutomaticPwdlActive() {
+        if (!pwdlPolicies.isEnabled() && autoPwdlThread != null) {
             return true;
         }
-        else{
+        else {
             return false;
         }
     }
 
-    private void manageAutoPwdl(final AutomaticPowerdownloadPolicy selectedPolicy){
-        if (autoPwdlThread!=null){
+    private void manageAutoPwdl(final AutomaticPowerdownloadPolicy
+                                selectedPolicy) {
+        if (autoPwdlThread != null) {
             autoPwdlThread.interrupt();
             autoPwdlThread = null;
         }
         AutomaticPowerdownloadPolicy policy = null;
         try {
-            policy = (AutomaticPowerdownloadPolicy)selectedPolicy.getClass().newInstance();
-        } catch (InstantiationException e) {
-            if (logger.isEnabledFor(Level.ERROR)){
+            policy = (AutomaticPowerdownloadPolicy) selectedPolicy.getClass().
+                newInstance();
+        }
+        catch (InstantiationException e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
             }
-        } catch (IllegalAccessException e) {
-            if (logger.isEnabledFor(Level.ERROR)){
+        }
+        catch (IllegalAccessException e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
             }
         }
@@ -487,18 +498,18 @@ public class PowerDownloadPanel
         autoPwdlThread.start();
     }
 
-    private void fillPwdlPolicies(){
+    private void fillPwdlPolicies() {
         AutomaticPowerdownloadPolicy[] policies = loadPolicies();
-        for (int i=0; i<policies.length; i++){
+        for (int i = 0; i < policies.length; i++) {
             pwdlPolicies.addItem(policies[i]);
         }
-        if (pwdlPolicies.getItemCount()>0){
+        if (pwdlPolicies.getItemCount() > 0) {
             pwdlPolicies.setSelectedIndex(0);
         }
     }
 
     private AutomaticPowerdownloadPolicy[] loadPolicies() {
-        try{
+        try {
             String path = System.getProperty("user.dir") + File.separator +
                 "pwdlpolicies" +
                 File.separator;
@@ -527,10 +538,11 @@ public class PowerDownloadPanel
                     }
                     catch (Exception e) {
                         //Von einer Policy lassen wir uns nicht beirren! ;-)
-                        if (logger.isEnabledFor(Level.ERROR))
+                        if (logger.isEnabledFor(Level.ERROR)) {
                             logger.error(
                                 "Eine PowerdownloadPolicy konnte nicht instanziert werden",
                                 e);
+                        }
                         continue;
                     }
                 }
@@ -538,9 +550,8 @@ public class PowerDownloadPanel
             return (AutomaticPowerdownloadPolicy[]) policies.toArray(new
                 AutomaticPowerdownloadPolicy[policies.size()]);
         }
-        catch (Exception ex)
-        {
-            if (logger.isEnabledFor(Level.ERROR)){
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
             }
             return new AutomaticPowerdownloadPolicy[0];
@@ -548,174 +559,178 @@ public class PowerDownloadPanel
     }
 
     private void alterRatio(boolean increase) {
-        try
-        {
+        try {
             String temp = ratio.getText();
             int pos = temp.indexOf('.');
             int ganzZahl;
             int nachKomma;
-            if (pos == -1)
-            {
+            if (pos == -1) {
                 ganzZahl = Integer.parseInt(temp);
                 nachKomma = 0;
             }
-            else
-            {
+            else {
                 ganzZahl = Integer.parseInt(temp.substring(0, pos));
                 nachKomma = Integer.parseInt(temp.substring(pos + 1));
             }
-            if (increase)
-            {
-                if (ratioWert < 50f)
-                {
-                    if (nachKomma == 9)
-                    {
+            if (increase) {
+                if (ratioWert < 50f) {
+                    if (nachKomma == 9) {
                         nachKomma = 0;
                         ganzZahl += 1;
                     }
-                    else
-                    {
+                    else {
                         nachKomma += 1;
                     }
                 }
-                else
-                {
+                else {
                     return;
                 }
             }
-            else
-            {
-                if (ratioWert > 2.2f)
-                {
-                    if (nachKomma == 0)
-                    {
+            else {
+                if (ratioWert > 2.2f) {
+                    if (nachKomma == 0) {
                         nachKomma = 9;
                         ganzZahl -= 1;
                     }
-                    else
-                    {
+                    else {
                         nachKomma -= 1;
                     }
                 }
-                else
-                {
+                else {
                     return;
                 }
             }
             ratio.setText(ganzZahl + "." + nachKomma);
             ratioWert = Float.parseFloat(ratio.getText());
         }
-        catch (Exception ex)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
     void btnPdl_actionPerformed(ActionEvent e) {
-        try
-        {
+        try {
             Object[] selectedItems = parentPanel.getSelectedDownloadItems();
-            if (selectedItems != null && selectedItems.length != 0)
-            {
+            if (selectedItems != null && selectedItems.length != 0) {
                 int powerDownload = 0;
-                if (!btnInaktiv.isSelected())
-                {
+                if (!btnInaktiv.isSelected()) {
                     String temp = ratio.getText();
                     double power = 2.2;
-                    try{
+                    try {
                         power = Double.parseDouble(temp);
                     }
                     catch (NumberFormatException nfE) {
-                        if (logger.isEnabledFor(Level.ERROR))
+                        if (logger.isEnabledFor(Level.ERROR)) {
                             logger.error("Unbehandelte Exception", nfE);
+                        }
                         ratio.setText("2.2");
                     }
                     powerDownload = (int) (power * 10 - 10);
                 }
                 ArrayList temp = new ArrayList();
-                for (int i = 0; i < selectedItems.length; i++)
-                {
-                    if (selectedItems[i].getClass() == DownloadMainNode.class)
-                    {
-                        temp.add(new Integer(((DownloadMainNode) selectedItems[i]).getDownloadDO().getId()));
+                for (int i = 0; i < selectedItems.length; i++) {
+                    if (selectedItems[i].getClass() == DownloadMainNode.class) {
+                        temp.add(new Integer( ( (DownloadMainNode)
+                                               selectedItems[i]).getDownloadDO().
+                                             getId()));
                     }
                 }
                 int[] ids = new int[temp.size()];
-                for (int i=0; i<temp.size(); i++){
-                    ids[i] = ((Integer)temp.get(i)).intValue();
+                for (int i = 0; i < temp.size(); i++) {
+                    ids[i] = ( (Integer) temp.get(i)).intValue();
                 }
-                ApplejuiceFassade.getInstance().setPowerDownload(ids, powerDownload);
-                if (btnAktiv.isSelected()){
+                ApplejuiceFassade.getInstance().setPowerDownload(ids,
+                    powerDownload);
+                if (btnAktiv.isSelected()) {
                     SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
                 }
             }
         }
-        catch (Exception ex)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
     public void fireLanguageChanged() {
-        try
-        {
+        try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            powerdownload.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                    getFirstAttrbuteByTagName(new String[]{"mainform", "powerdownload",
-                                                                                                           "caption"})));
+            powerdownload.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "powerdownload",
+                                          "caption"})));
             label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                             getFirstAttrbuteByTagName(new String[]{"mainform", "Label6", "caption"})));
-            btnInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                 getFirstAttrbuteByTagName(new String[]{"mainform", "powerinactive",
-                                                                                                        "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "Label6",
+                                          "caption"})));
+            btnInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "powerinactive",
+                                          "caption"})));
             btnAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "poweractive",
-                                                                                                      "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "poweractive",
+                                          "caption"})));
             label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                             getFirstAttrbuteByTagName(new String[]{"mainform", "Label7", "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "Label7",
+                                          "caption"})));
             label8.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                             getFirstAttrbuteByTagName(new String[]{"mainform", "Label8", "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform", "Label8",
+                                          "caption"})));
             label9.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                             getFirstAttrbuteByTagName(new String[]{"javagui", "downloadtab",
-                                                                                                    "label1"})));
-            btnAutoInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                     getFirstAttrbuteByTagName(new String[]{"javagui", "downloadtab",
-                                                                                                            "rbInaktiv"})));
-            btnAutoAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "downloadtab",
-                                                                                                          "rbAktiv"})));
+                getFirstAttrbuteByTagName(new String[] {"javagui",
+                                          "downloadtab",
+                                          "label1"})));
+            btnAutoInaktiv.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui",
+                                          "downloadtab",
+                                          "rbInaktiv"})));
+            btnAutoAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui",
+                                          "downloadtab",
+                                          "rbAktiv"})));
             label10.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "downloadtab",
-                                                                                                     "pdlAb"})));
+                getFirstAttrbuteByTagName(new String[] {"javagui",
+                                          "downloadtab",
+                                          "pdlAb"})));
             label11.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "downloadtab",
-                                                                                                     "pdlBis"})));
+                getFirstAttrbuteByTagName(new String[] {"javagui",
+                                          "downloadtab",
+                                          "pdlBis"})));
             String ok = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                          getFirstAttrbuteByTagName(new
-                                                                  String[]{"javagui", "downloadtab", "btnOK"}));
+                getFirstAttrbuteByTagName(new
+                                          String[] {"javagui", "downloadtab",
+                                          "btnOK"}));
             btnAutoPdl.setText(ok);
             btnPdl.setText(ok);
-            btnHint.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                     getFirstAttrbuteByTagName(new String[]{"javagui", "tooltipps",
-                                                                                                            "powerdownload"})));
-            btnHint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                      getFirstAttrbuteByTagName(new String[]{"javagui", "tooltipps",
-                                                                                                             "autopowerdownload"})));
+            btnHint.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "tooltipps",
+                                          "powerdownload"})));
+            btnHint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "tooltipps",
+                                          "autopowerdownload"})));
         }
-        catch (Exception ex)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
     public void fireContentChanged(int type, Object content) {
         try {
-            if (type == DataUpdateListener.INFORMATION_CHANGED){
+            if (type == DataUpdateListener.INFORMATION_CHANGED) {
                 lastInformation = (Information) content;
-                if (!pwdlPolicies.isEnabled() && autoPwdlThread != null && lastInformation!=null) {
+                if (!pwdlPolicies.isEnabled() && autoPwdlThread != null &&
+                    lastInformation != null) {
                     long eingegebenBis = Integer.parseInt(autoBis.getText()) *
                         1048576l;
                     long eingegebenAb = Integer.parseInt(autoAb.getText()) *
@@ -730,51 +745,50 @@ public class PowerDownloadPanel
                     }
                 }
             }
-            else if (type == DataUpdateListener.DOWNLOAD_CHANGED && autoPwdlThread !=null &&
-                     !pwdlPolicies.isEnabled() && autoPwdlThread.isPaused()){
+            else if (type == DataUpdateListener.DOWNLOAD_CHANGED &&
+                     autoPwdlThread != null &&
+                     !pwdlPolicies.isEnabled() && autoPwdlThread.isPaused()) {
                 HashMap downloads = (HashMap) content;
                 DownloadDO downloadDO;
-                synchronized (downloads){
+                synchronized (downloads) {
                     Iterator it = downloads.values().iterator();
-                    while(it.hasNext()){
-                        downloadDO = (DownloadDO)it.next();
-                        if (downloadDO.getStatus()==DownloadDO.SUCHEN_LADEN){
-                            ApplejuiceFassade.getInstance().pauseDownload(new int[]{downloadDO.getId()});
+                    while (it.hasNext()) {
+                        downloadDO = (DownloadDO) it.next();
+                        if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
+                            ApplejuiceFassade.getInstance().pauseDownload(new int[] {
+                                downloadDO.getId()});
                         }
                     }
                 }
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    private class RatioFocusAdapter extends FocusAdapter{
+    private class RatioFocusAdapter
+        extends FocusAdapter {
         public void focusLost(FocusEvent fe) {
-            try
-            {
+            try {
                 String temp = ratio.getText();
                 temp = temp.replaceAll(",", ".");
                 int pos = temp.lastIndexOf('.');
-                if (pos != -1)
-                {
+                if (pos != -1) {
                     temp = temp.substring(0, pos + 2);
                 }
                 double pwdl = new Double(temp).doubleValue();
-                if (pwdl < 2.2 || pwdl > 50)
-                {
+                if (pwdl < 2.2 || pwdl > 50) {
                     ratio.setText("2.2");
                 }
-                else
-                {
+                else {
                     ratio.setText(temp);
                 }
                 btnAktiv.setSelected(true);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 ratio.setText("2.2");
             }
         }

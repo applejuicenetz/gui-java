@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.exception;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/exception/NoIconAvailableException.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/exception/NoIconAvailableException.java,v 1.5 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.exception;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: NoIconAvailableException.java,v $
+ * Revision 1.5  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -21,7 +24,7 @@ package de.applejuicenet.client.shared.exception;
 
 public class NoIconAvailableException
     extends Exception {
-  public NoIconAvailableException() {
-    super("An der angebenen Stelle wurde kein Icon gefunden.");
-  }
+    public NoIconAvailableException() {
+        super("An der angebenen Stelle wurde kein Icon gefunden.");
+    }
 }

@@ -1,12 +1,16 @@
 package de.applejuicenet.client.gui.wizard;
 
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt4Panel.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt4Panel.java,v 1.4 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +19,9 @@ import java.awt.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Schritt4Panel.java,v $
+ * Revision 1.4  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -27,17 +34,18 @@ import java.awt.*;
  *
  */
 
-public class Schritt4Panel extends WizardPanel{
+public class Schritt4Panel
+    extends WizardPanel {
     private JTextArea label1 = new JTextArea();
     private JTextArea label2 = new JTextArea();
     private JComboBox verbindungsart = new JComboBox();
 
-    public Schritt4Panel(){
+    public Schritt4Panel() {
         super();
         init();
     }
 
-    private void init(){
+    private void init() {
         label1.setWrapStyleWord(true);
         label1.setLineWrap(true);
         label1.setBackground(Color.WHITE);
@@ -48,8 +56,8 @@ public class Schritt4Panel extends WizardPanel{
         label2.setEditable(false);
 
         ConnectionKind[] connections = ConnectionXML.getConnections();
-        if (connections!=null){
-            for (int i=0; i<connections.length; i++){
+        if (connections != null) {
+            for (int i = 0; i < connections.length; i++) {
                 verbindungsart.addItem(connections[i]);
             }
             verbindungsart.setSelectedIndex(0);
@@ -81,14 +89,16 @@ public class Schritt4Panel extends WizardPanel{
         add(new JLabel(), constraints);
     }
 
-    public ConnectionKind getVerbindungsart(){
+    public ConnectionKind getVerbindungsart() {
         return (ConnectionKind) verbindungsart.getSelectedItem();
     }
 
     public void fireLanguageChanged() {
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "wizard", "schritt4", "label1"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
+                                      "schritt4", "label1"})));
         label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "wizard", "schritt4", "label2"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
+                                      "schritt4", "label2"})));
     }
 }

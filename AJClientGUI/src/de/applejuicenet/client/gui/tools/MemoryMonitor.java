@@ -39,16 +39,22 @@
 
 package de.applejuicenet.client.gui.tools;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Date;
-import javax.swing.*;
+import java.awt.image.BufferedImage;
+import javax.swing.JPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitor.java,v 1.5 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -58,6 +64,9 @@ import javax.swing.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MemoryMonitor.java,v $
+ * Revision 1.5  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -73,7 +82,9 @@ import javax.swing.*;
  *
  */
 
-public class MemoryMonitor extends JPanel implements Runnable {
+public class MemoryMonitor
+    extends JPanel
+    implements Runnable {
 
     private Thread thread;
     private long sleepAmount = 1000;
@@ -95,11 +106,11 @@ public class MemoryMonitor extends JPanel implements Runnable {
     private String usedStr;
     private String maxMem;
 
-    public void startMemoryMonitor(){
+    public void startMemoryMonitor() {
         start();
     }
 
-    public void stopMemoryMonitor(){
+    public void stopMemoryMonitor() {
         stop();
     }
 
@@ -107,7 +118,7 @@ public class MemoryMonitor extends JPanel implements Runnable {
         setBackground(Color.black);
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                if (thread == null){
+                if (thread == null) {
                     start();
                 }
                 else {
@@ -115,7 +126,7 @@ public class MemoryMonitor extends JPanel implements Runnable {
                 }
             }
         });
-        maxMem = String.valueOf((int) (runtime.maxMemory() / 1024));
+        maxMem = String.valueOf( (int) (runtime.maxMemory() / 1024));
     }
 
     public Dimension getMinimumSize() {
@@ -130,11 +141,9 @@ public class MemoryMonitor extends JPanel implements Runnable {
         return new Dimension(135, 80);
     }
 
-
     public void paint(Graphics g) {
 
-        if (big == null)
-        {
+        if (big == null) {
             return;
         }
 
@@ -146,9 +155,10 @@ public class MemoryMonitor extends JPanel implements Runnable {
 
         // .. Draw allocated and used strings ..
         big.setColor(Color.green);
-        big.drawString(String.valueOf((int) totalMemory / 1024) + "K / " + maxMem +  "K allocated", 4.0f, (float) ascent + 0.5f);
-        usedStr = String.valueOf(((int) (totalMemory - freeMemory)) / 1024)
-                + "K used";
+        big.drawString(String.valueOf( (int) totalMemory / 1024) + "K / " +
+                       maxMem + "K allocated", 4.0f, (float) ascent + 0.5f);
+        usedStr = String.valueOf( ( (int) (totalMemory - freeMemory)) / 1024)
+            + "K used";
         big.drawString(usedStr, 4, h - descent);
 
         // Calculate remaining size
@@ -159,10 +169,9 @@ public class MemoryMonitor extends JPanel implements Runnable {
 
         // .. Memory Free ..
         big.setColor(mfColor);
-        int MemUsage = (int) ((freeMemory / totalMemory) * 10);
+        int MemUsage = (int) ( (freeMemory / totalMemory) * 10);
         int i = 0;
-        for (; i < MemUsage; i++)
-        {
+        for (; i < MemUsage; i++) {
             mfRect.setRect(5, ssH + i * blockHeight,
                            blockWidth, blockHeight - 1);
             big.fill(mfRect);
@@ -170,8 +179,7 @@ public class MemoryMonitor extends JPanel implements Runnable {
 
         // .. Memory Used ..
         big.setColor(Color.green);
-        for (; i < 10; i++)
-        {
+        for (; i < 10; i++) {
             muRect.setRect(5, ssH + i * blockHeight,
                            blockWidth, blockHeight - 1);
             big.fill(muRect);
@@ -189,8 +197,7 @@ public class MemoryMonitor extends JPanel implements Runnable {
         int graphRow = graphH / 10;
 
         // .. Draw row ..
-        for (int j = graphY; j <= graphH + graphY; j += graphRow)
-        {
+        for (int j = graphY; j <= graphH + graphY; j += graphRow) {
             graphLine.setLine(graphX, j, graphX + graphW, j);
             big.draw(graphLine);
         }
@@ -198,76 +205,62 @@ public class MemoryMonitor extends JPanel implements Runnable {
         // .. Draw animated column movement ..
         int graphColumn = graphW / 15;
 
-        if (columnInc == 0)
-        {
+        if (columnInc == 0) {
             columnInc = graphColumn;
         }
 
-        for (int j = graphX + columnInc; j < graphW + graphX; j += graphColumn)
-        {
+        for (int j = graphX + columnInc; j < graphW + graphX; j += graphColumn) {
             graphLine.setLine(j, graphY, j, graphY + graphH);
             big.draw(graphLine);
         }
 
         --columnInc;
 
-        if (pts == null)
-        {
+        if (pts == null) {
             pts = new int[graphW];
             ptNum = 0;
         }
-        else if (pts.length != graphW)
-        {
+        else if (pts.length != graphW) {
             int tmp[] = null;
-            if (ptNum < graphW)
-            {
+            if (ptNum < graphW) {
                 tmp = new int[ptNum];
                 System.arraycopy(pts, 0, tmp, 0, tmp.length);
             }
-            else
-            {
+            else {
                 tmp = new int[graphW];
-                System.arraycopy(pts, pts.length - tmp.length, tmp, 0, tmp.length);
+                System.arraycopy(pts, pts.length - tmp.length, tmp, 0,
+                                 tmp.length);
                 ptNum = tmp.length - 2;
             }
             pts = new int[graphW];
             System.arraycopy(tmp, 0, pts, 0, tmp.length);
         }
-        else
-        {
+        else {
             big.setColor(Color.yellow);
             pts[ptNum] = (int) (graphY + graphH * (freeMemory / totalMemory));
-            for (int j = graphX + graphW - ptNum, k = 0; k < ptNum; k++, j++)
-            {
-                if (k != 0)
-                {
-                    if (pts[k] != pts[k - 1])
-                    {
+            for (int j = graphX + graphW - ptNum, k = 0; k < ptNum; k++, j++) {
+                if (k != 0) {
+                    if (pts[k] != pts[k - 1]) {
                         big.drawLine(j - 1, pts[k - 1], j, pts[k]);
                     }
-                    else
-                    {
+                    else {
                         big.fillRect(j, pts[k], 1, 1);
                     }
                 }
             }
-            if (ptNum + 2 == pts.length)
-            {
+            if (ptNum + 2 == pts.length) {
                 // throw out oldest point
-                for (int j = 1; j < ptNum; j++)
-                {
+                for (int j = 1; j < ptNum; j++) {
                     pts[j - 1] = pts[j];
                 }
                 --ptNum;
             }
-            else
-            {
+            else {
                 ptNum++;
             }
         }
         g.drawImage(bimg, 0, 0, this);
     }
-
 
     private void start() {
         thread = new Thread(this);
@@ -276,34 +269,27 @@ public class MemoryMonitor extends JPanel implements Runnable {
         thread.start();
     }
 
-
     private synchronized void stop() {
         thread = null;
         notify();
     }
 
-
     public void run() {
 
         Thread me = Thread.currentThread();
 
-        while (thread == me && !isShowing() || getSize().width == 0)
-        {
-            try
-            {
+        while (thread == me && !isShowing() || getSize().width == 0) {
+            try {
                 thread.sleep(500);
             }
-            catch (InterruptedException e)
-            {
+            catch (InterruptedException e) {
                 return;
             }
         }
 
-        while (thread == me && isShowing())
-        {
+        while (thread == me && isShowing()) {
             Dimension d = getSize();
-            if (d.width != w || d.height != h)
-            {
+            if (d.width != w || d.height != h) {
                 w = d.width;
                 h = d.height;
                 bimg = (BufferedImage) createImage(w, h);
@@ -314,16 +300,13 @@ public class MemoryMonitor extends JPanel implements Runnable {
                 descent = fm.getDescent();
             }
             repaint();
-            try
-            {
+            try {
                 thread.sleep(sleepAmount);
             }
-            catch (InterruptedException e)
-            {
+            catch (InterruptedException e) {
                 break;
             }
         }
         thread = null;
     }
 }
-

@@ -1,15 +1,16 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
-import java.util.*;
+import java.util.HashMap;
 
-import org.w3c.dom.*;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
-import de.applejuicenet.client.shared.dac.*;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
+import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.3 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ShareXMLHolder.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,9 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.4  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -73,7 +77,7 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  */
 
 public class ShareXMLHolder
-        extends WebXMLParser {
+    extends WebXMLParser {
     private HashMap shareMap;
     private Logger logger;
 
@@ -83,18 +87,19 @@ public class ShareXMLHolder
     }
 
     public void update() {
-        try{
+        try {
             reload("", false);
         }
-        catch(Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
         updateShare();
     }
 
     private void updateShare() {
-        try{
+        try {
             if (shareMap == null) {
                 shareMap = new HashMap();
             }
@@ -117,13 +122,15 @@ public class ShareXMLHolder
                 size = Long.parseLong(e.getAttribute("size"));
                 checksum = e.getAttribute("checksum");
                 prioritaet = Integer.parseInt(e.getAttribute("priority"));
-                share = new ShareDO(id_key, filename, shortfilename, size, checksum, prioritaet);
+                share = new ShareDO(id_key, filename, shortfilename, size,
+                                    checksum, prioritaet);
                 shareMap.put(Integer.toString(id_key), share);
             }
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 

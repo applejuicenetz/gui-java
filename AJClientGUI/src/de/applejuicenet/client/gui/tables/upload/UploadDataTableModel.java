@@ -1,18 +1,17 @@
 package de.applejuicenet.client.gui.tables.upload;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import javax.swing.table.*;
-
-import de.applejuicenet.client.shared.dac.*;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.tables.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.tables.TreeTableModel;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.9 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.10 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +20,9 @@ import de.applejuicenet.client.gui.tables.TreeTableModel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadDataTableModel.java,v $
+ * Revision 1.10  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.9  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -55,9 +57,11 @@ import de.applejuicenet.client.gui.tables.TreeTableModel;
  */
 
 public class UploadDataTableModel
-        extends AbstractTreeTableModel implements LanguageListener {
+    extends AbstractTreeTableModel
+    implements LanguageListener {
     final static String[] COL_NAMES = {
-        "Dateiname", "Status", "Wer", "Geschwindigkeit", "Prozent geladen", "Priorität", "Client"};
+        "Dateiname", "Status", "Wer", "Geschwindigkeit", "Prozent geladen",
+        "Priorität", "Client"};
 
     private String uebertragung;
     private String keineVerbindungMoeglich;
@@ -73,8 +77,7 @@ public class UploadDataTableModel
     }
 
     public Object getRow(int row) {
-        if ((uploads != null) && (row < uploads.size()))
-        {
+        if ( (uploads != null) && (row < uploads.size())) {
             return uploads.values().toArray()[row];
         }
         return null;
@@ -89,25 +92,24 @@ public class UploadDataTableModel
     }
 
     public Object getValueAt(Object node, int column) {
-        if (node.getClass()==MainNode.class && ( ((MainNode)node).getType()==MainNode.LOADING_UPLOADS
-            || ((MainNode)node).getType()==MainNode.WAITING_UPLOADS
-            || ((MainNode)node).getType()==MainNode.REST_UPLOADS)) {
-            if (column==0){
+        if (node.getClass() == MainNode.class &&
+            ( ( (MainNode) node).getType() == MainNode.LOADING_UPLOADS
+             || ( (MainNode) node).getType() == MainNode.WAITING_UPLOADS
+             || ( (MainNode) node).getType() == MainNode.REST_UPLOADS)) {
+            if (column == 0) {
                 return node.toString() + " (" + getChildCount(node) + ")";
             }
-            else{
+            else {
                 return "";
             }
         }
-        else if (node.getClass()==UploadDO.class){
+        else if (node.getClass() == UploadDO.class) {
             UploadDO upload = (UploadDO) node;
-            switch (column)
-            {
+            switch (column) {
                 case 0:
                     return upload.getDateiName();
                 case 1:
-                    switch (upload.getStatus())
-                    {
+                    switch (upload.getStatus()) {
                         case UploadDO.AKTIVE_UEBERTRAGUNG:
                             return uebertragung;
                         case UploadDO.KEINE_VERBINDUNG_MOEGLICH:
@@ -123,28 +125,22 @@ public class UploadDataTableModel
                     }
                 case 2:
                     return upload.getNick();
-                case 3:
-                    {
-                        if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG)
-                        {
-                            return getSpeedAsString(upload.getSpeed());
-                        }
-                        else
-                        {
-                            return "";
-                        }
+                case 3: {
+                    if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG) {
+                        return getSpeedAsString(upload.getSpeed());
                     }
-                case 4:
-                    {
-                        if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG)
-                        {
-                            return getSpeedAsString(upload.getSpeed());
-                        }
-                        else
-                        {
-                            return "";
-                        }
+                    else {
+                        return "";
                     }
+                }
+                case 4: {
+                    if (upload.getStatus() == UploadDO.AKTIVE_UEBERTRAGUNG) {
+                        return getSpeedAsString(upload.getSpeed());
+                    }
+                    else {
+                        return "";
+                    }
+                }
                 case 5:
                     return new Integer(upload.getPrioritaet());
                 case 6:
@@ -157,43 +153,44 @@ public class UploadDataTableModel
     }
 
     public int getRowCount() {
-        if (uploads == null)
-        {
+        if (uploads == null) {
             return 0;
         }
         return uploads.size();
     }
 
     public Class getClass(int column) {
-        if (column == 0)
+        if (column == 0) {
             return TreeTableModel.class;
-        else if (column == 5)
+        }
+        else if (column == 5) {
             return Integer.class;
+        }
         return String.class;
     }
 
     private String getSpeedAsString(long speed) {
-        if (speed == 0)
+        if (speed == 0) {
             return "0 Bytes/s";
+        }
         double size = speed;
         int faktor = 1;
-        if (size < 1024)
+        if (size < 1024) {
             faktor = 1;
-        else
+        }
+        else {
             faktor = 1024;
 
+        }
         size = size / faktor;
         String s = Double.toString(size);
-        if (s.indexOf(".") + 3 < s.length())
-        {
+        if (s.indexOf(".") + 3 < s.length()) {
             s = s.substring(0, s.indexOf(".") + 3);
         }
-        if (faktor == 1)
-        {
+        if (faktor == 1) {
             s += " Bytes/s";
         }
-        else
-        {
+        else {
             s += " kb/s";
         }
         return s;
@@ -201,80 +198,111 @@ public class UploadDataTableModel
 
     public void fireLanguageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        uebertragung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform", "uploads", "uplstat1"}));
-        keineVerbindungMoeglich = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform", "uploads", "uplstat8"}));
-        versucheIndirekteVerbindung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform", "uploads", "uplstat7"}));
-        versucheZuVerbinden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform", "uploads", "uplstat6"}));
-        warteschlange = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform", "uploads", "uplstat3"}));
+        uebertragung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
+                                      "uplstat1"}));
+        keineVerbindungMoeglich = ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+            "uploads", "uplstat8"}));
+        versucheIndirekteVerbindung = ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+            "uploads", "uplstat7"}));
+        versucheZuVerbinden = ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.getFirstAttrbuteByTagName(new String[] {"mainform",
+            "uploads", "uplstat6"}));
+        warteschlange = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"mainform", "uploads",
+                                      "uplstat3"}));
     }
 
     public Object getChild(Object parent, int index) {
         Object[] obj = getChildren(parent);
-        if (obj!=null && obj.length>index)
+        if (obj != null && obj.length > index) {
             return obj[index];
-        else
+        }
+        else {
             return null;
+        }
     }
 
     public int getChildCount(Object parent) {
         Object[] obj = getChildren(parent);
-        if (obj!=null)
+        if (obj != null) {
             return obj.length;
-        else
+        }
+        else {
             return 0;
+        }
     }
 
-    private Object[] getChildren(Object parent){
-        if (parent.getClass()==MainNode.class){
-            MainNode mainNode = (MainNode)parent;
-            if (mainNode.getType()==MainNode.ROOT_NODE)
+    private Object[] getChildren(Object parent) {
+        if (parent.getClass() == MainNode.class) {
+            MainNode mainNode = (MainNode) parent;
+            if (mainNode.getType() == MainNode.ROOT_NODE) {
                 return mainNode.getChildren();
-            else if (mainNode.getType()==MainNode.LOADING_UPLOADS){
-                if (uploads==null)
+            }
+            else if (mainNode.getType() == MainNode.LOADING_UPLOADS) {
+                if (uploads == null) {
                     return null;
-                else{
+                }
+                else {
                     ArrayList children = new ArrayList();
-                    UploadDO[] uploadsForThread = (UploadDO[])uploads.values().toArray(new UploadDO[uploads.size()]);
-                    for (int i=0; i<uploadsForThread.length; i++){
-                        if (uploadsForThread[i].getStatus()==UploadDO.AKTIVE_UEBERTRAGUNG)
+                    UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
+                        toArray(new UploadDO[uploads.size()]);
+                    for (int i = 0; i < uploadsForThread.length; i++) {
+                        if (uploadsForThread[i].getStatus() ==
+                            UploadDO.AKTIVE_UEBERTRAGUNG) {
                             children.add(uploadsForThread[i]);
+                        }
                     }
-                    return (UploadDO[]) children.toArray(new UploadDO[children.size()]);
+                    return (UploadDO[]) children.toArray(new UploadDO[children.
+                        size()]);
                 }
             }
-            else if (mainNode.getType()==MainNode.WAITING_UPLOADS){
-                if (uploads==null)
+            else if (mainNode.getType() == MainNode.WAITING_UPLOADS) {
+                if (uploads == null) {
                     return null;
-                else{
+                }
+                else {
                     ArrayList children = new ArrayList();
-                    UploadDO[] uploadsForThread = (UploadDO[])uploads.values().toArray(new UploadDO[uploads.size()]);
-                    for (int i=0; i<uploadsForThread.length; i++){
-                        if (uploadsForThread[i].getStatus()==UploadDO.WARTESCHLANGE)
+                    UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
+                        toArray(new UploadDO[uploads.size()]);
+                    for (int i = 0; i < uploadsForThread.length; i++) {
+                        if (uploadsForThread[i].getStatus() ==
+                            UploadDO.WARTESCHLANGE) {
                             children.add(uploadsForThread[i]);
+                        }
                     }
-                    return (UploadDO[]) children.toArray(new UploadDO[children.size()]);
+                    return (UploadDO[]) children.toArray(new UploadDO[children.
+                        size()]);
                 }
             }
-            else if (mainNode.getType()==MainNode.REST_UPLOADS){
-                if (uploads==null)
+            else if (mainNode.getType() == MainNode.REST_UPLOADS) {
+                if (uploads == null) {
                     return null;
-                else{
+                }
+                else {
                     ArrayList children = new ArrayList();
-                    UploadDO[] uploadsForThread = (UploadDO[])uploads.values().toArray(new UploadDO[uploads.size()]);
-                    for (int i=0; i<uploadsForThread.length; i++){
-                        if (uploadsForThread[i].getStatus()!=UploadDO.AKTIVE_UEBERTRAGUNG &&
-                                uploadsForThread[i].getStatus()!=UploadDO.WARTESCHLANGE)
+                    UploadDO[] uploadsForThread = (UploadDO[]) uploads.values().
+                        toArray(new UploadDO[uploads.size()]);
+                    for (int i = 0; i < uploadsForThread.length; i++) {
+                        if (uploadsForThread[i].getStatus() !=
+                            UploadDO.AKTIVE_UEBERTRAGUNG &&
+                            uploadsForThread[i].getStatus() !=
+                            UploadDO.WARTESCHLANGE) {
                             children.add(uploadsForThread[i]);
+                        }
                     }
-                    return (UploadDO[]) children.toArray(new UploadDO[children.size()]);
+                    return (UploadDO[]) children.toArray(new UploadDO[children.
+                        size()]);
                 }
             }
         }
         return null;
     }
 
-    public void setTable(HashMap content){
-        if (uploads==null){
+    public void setTable(HashMap content) {
+        if (uploads == null) {
             uploads = content;
         }
     }

@@ -1,12 +1,12 @@
 package de.applejuicenet.client.gui.wizard;
 
+import java.awt.Color;
+import javax.swing.JPanel;
+
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardPanel.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardPanel.java,v 1.5 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import java.awt.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: WizardPanel.java,v $
+ * Revision 1.5  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -30,12 +33,13 @@ import java.awt.*;
  *
  */
 
-public abstract class WizardPanel extends JPanel{
+public abstract class WizardPanel
+    extends JPanel {
     private WizardPanel naechstesPanel;
     private WizardPanel vorherigesPanel;
     protected LanguageSelector languageSelector;
 
-    public WizardPanel(){
+    public WizardPanel() {
         super();
         setBackground(Color.WHITE);
         languageSelector = LanguageSelector.getInstance();

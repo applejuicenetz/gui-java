@@ -1,16 +1,21 @@
 package de.applejuicenet.client.gui.wizard;
 
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 import java.io.File;
 
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt1Panel.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt1Panel.java,v 1.5 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +24,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: Schritt1Panel.java,v $
+ * Revision 1.5  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -34,44 +42,44 @@ import java.io.File;
  *
  */
 
-public class Schritt1Panel extends WizardPanel{
+public class Schritt1Panel
+    extends WizardPanel {
     private JTextArea label1 = new JTextArea();
     private JComboBox sprachen = new JComboBox();
 
-    public Schritt1Panel(){
+    public Schritt1Panel() {
         super();
         init();
     }
 
-    private void init(){
+    private void init() {
         label1.setWrapStyleWord(true);
         label1.setLineWrap(true);
         label1.setEditable(false);
         label1.setBackground(Color.WHITE);
 
-        String path = System.getProperty("user.dir") + File.separator + "language" +
-                File.separator;
+        String path = System.getProperty("user.dir") + File.separator +
+            "language" +
+            File.separator;
         File languagePath = new File(path);
-        if (languagePath.isDirectory())
-        {
+        if (languagePath.isDirectory()) {
             String[] tempListe = languagePath.list();
-            for (int i = 0; i < tempListe.length; i++)
-            {
+            for (int i = 0; i < tempListe.length; i++) {
                 int pos = tempListe[i].indexOf(".xml");
-                if (pos != -1)
-                {
+                if (pos != -1) {
                     String temp = tempListe[i].substring(0, pos);
                     sprachen.addItem(temp);
                 }
             }
         }
 
-        sprachen.addItemListener(new ItemListener(){
-            public void itemStateChanged(ItemEvent e){
+        sprachen.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
                 Object selected = sprachen.getSelectedItem();
-                if (selected!=null){
-                    String path = System.getProperty("user.dir") + File.separator +
-                            "language" + File.separator;
+                if (selected != null) {
+                    String path = System.getProperty("user.dir") +
+                        File.separator +
+                        "language" + File.separator;
                     String dateiName = path + (String) selected + ".xml";
                     LanguageSelector.getInstance(dateiName);
                 }
@@ -103,7 +111,8 @@ public class Schritt1Panel extends WizardPanel{
 
     public void fireLanguageChanged() {
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "wizard", "schritt1", "label1"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
+                                      "schritt1", "label1"})));
     }
 
 }

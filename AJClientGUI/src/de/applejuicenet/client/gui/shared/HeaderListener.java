@@ -1,10 +1,11 @@
 package de.applejuicenet.client.gui.shared;
 
-import java.awt.event.*;
-import javax.swing.table.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.table.JTableHeader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/HeaderListener.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/shared/Attic/HeaderListener.java,v 1.5 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +14,9 @@ import javax.swing.table.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: HeaderListener.java,v $
+ * Revision 1.5  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -33,38 +37,39 @@ import javax.swing.table.*;
 public class HeaderListener
     extends MouseAdapter {
 
-  JTableHeader header;
-  SortButtonRenderer renderer;
+    JTableHeader header;
+    SortButtonRenderer renderer;
 
-  public HeaderListener(JTableHeader header, SortButtonRenderer renderer) {
-    this.header = header;
-    this.renderer = renderer;
-  }
-
-  public void mousePressed(MouseEvent e) {
-    int col = header.columnAtPoint(e.getPoint());
-    int sortCol = header.getTable().convertColumnIndexToModel(col);
-    renderer.setPressedColumn(col);
-    renderer.setSelectedColumn(col);
-    header.repaint();
-
-    if (header.getTable().isEditing()) {
-      header.getTable().getCellEditor().stopCellEditing();
+    public HeaderListener(JTableHeader header, SortButtonRenderer renderer) {
+        this.header = header;
+        this.renderer = renderer;
     }
 
-    boolean isAscent;
-    if (SortButtonRenderer.UP == renderer.getState(col)) {
-      isAscent = true;
-    }
-    else {
-      isAscent = false;
-    }
-    ( (SortableTableModel) header.getTable().getModel()).sortByColumn(sortCol,
-        isAscent);
-  }
+    public void mousePressed(MouseEvent e) {
+        int col = header.columnAtPoint(e.getPoint());
+        int sortCol = header.getTable().convertColumnIndexToModel(col);
+        renderer.setPressedColumn(col);
+        renderer.setSelectedColumn(col);
+        header.repaint();
 
-  public void mouseReleased(MouseEvent e) {
-    renderer.setPressedColumn( -1);
-    header.repaint();
-  }
+        if (header.getTable().isEditing()) {
+            header.getTable().getCellEditor().stopCellEditing();
+        }
+
+        boolean isAscent;
+        if (SortButtonRenderer.UP == renderer.getState(col)) {
+            isAscent = true;
+        }
+        else {
+            isAscent = false;
+        }
+        ( (SortableTableModel) header.getTable().getModel()).sortByColumn(
+            sortCol,
+            isAscent);
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        renderer.setPressedColumn( -1);
+        header.repaint();
+    }
 }

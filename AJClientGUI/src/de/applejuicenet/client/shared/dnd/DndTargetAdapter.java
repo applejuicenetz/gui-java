@@ -1,10 +1,13 @@
 package de.applejuicenet.client.shared.dnd;
 
-import java.awt.*;
-import java.awt.dnd.*;
+import java.awt.Point;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dnd/Attic/DndTargetAdapter.java,v 1.2 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dnd/Attic/DndTargetAdapter.java,v 1.3 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +16,9 @@ import java.awt.dnd.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DndTargetAdapter.java,v $
+ * Revision 1.3  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.2  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -22,7 +28,8 @@ import java.awt.dnd.*;
  *
  */
 
-abstract public class DndTargetAdapter implements DropTargetListener {
+abstract public class DndTargetAdapter
+    implements DropTargetListener {
 
     abstract protected Object getTarget(Point point);
 
@@ -38,12 +45,10 @@ abstract public class DndTargetAdapter implements DropTargetListener {
     }
 
     public void dragOver(DropTargetDragEvent event) {
-        if (getTarget(event.getLocation()) != null)
-        {
+        if (getTarget(event.getLocation()) != null) {
             event.acceptDrag(event.getDropAction());
         }
-        else
-        {
+        else {
             event.rejectDrag();
         }
     }

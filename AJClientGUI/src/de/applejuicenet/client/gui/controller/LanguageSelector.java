@@ -1,16 +1,15 @@
 package de.applejuicenet.client.gui.controller;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.HashSet;
+import java.util.Iterator;
 
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-
-import javax.swing.*;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.shared.XMLDecoder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.11 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.12 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +18,9 @@ import javax.swing.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.12  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.11  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -42,7 +44,7 @@ import javax.swing.*;
  */
 
 public class LanguageSelector
-        extends XMLDecoder {
+    extends XMLDecoder {
     private HashSet languageListener = new HashSet();
     private static LanguageSelector instance = null;
 
@@ -53,8 +55,8 @@ public class LanguageSelector
     public static LanguageSelector getInstance() {
         if (instance == null) {
             String path = System.getProperty("user.dir") + File.separator +
-                    "language" +
-                    File.separator;
+                "language" +
+                File.separator;
             OptionsManager om = PropertiesManager.getOptionsManager();
             String datei = om.getSprache();
             path += datei + ".xml";
@@ -80,7 +82,7 @@ public class LanguageSelector
     }
 
     public void addLanguageListener(LanguageListener listener) {
-        if (!(languageListener.contains(listener))) {
+        if (! (languageListener.contains(listener))) {
             languageListener.add(listener);
         }
     }
@@ -94,7 +96,7 @@ public class LanguageSelector
     private void informLanguageListener() {
         Iterator it = languageListener.iterator();
         while (it.hasNext()) {
-            ((LanguageListener) it.next()).fireLanguageChanged();
+            ( (LanguageListener) it.next()).fireLanguageChanged();
         }
     }
 }

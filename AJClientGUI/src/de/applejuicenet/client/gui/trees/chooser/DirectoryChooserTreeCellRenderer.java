@@ -1,13 +1,14 @@
 package de.applejuicenet.client.gui.trees.chooser;
 
+import java.awt.Component;
+import javax.swing.Icon;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeCellRenderer;
+
 import de.applejuicenet.client.gui.tables.Node;
 
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.*;
-import java.awt.*;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserTreeCellRenderer.java,v 1.5 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/trees/chooser/Attic/DirectoryChooserTreeCellRenderer.java,v 1.6 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +17,9 @@ import java.awt.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryChooserTreeCellRenderer.java,v $
+ * Revision 1.6  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.5  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -34,18 +38,19 @@ import java.awt.*;
  *
  */
 
-public class DirectoryChooserTreeCellRenderer extends DefaultTreeCellRenderer{
+public class DirectoryChooserTreeCellRenderer
+    extends DefaultTreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value,
                                                   boolean sel, boolean expanded,
                                                   boolean leaf,
                                                   int row, boolean hasFocus) {
 
-      Component c = super.getTreeCellRendererComponent(tree, value,
-                                         sel, expanded, leaf, row, hasFocus);
-      Icon icon = ( (Node) value).getConvenientIcon();
-      if (icon != null) {
-        setIcon(icon);
-      }
-      return this;
+        Component c = super.getTreeCellRendererComponent(tree, value,
+            sel, expanded, leaf, row, hasFocus);
+        Icon icon = ( (Node) value).getConvenientIcon();
+        if (icon != null) {
+            setIcon(icon);
+        }
+        return this;
     }
 }

@@ -49,7 +49,7 @@ public class UploadTableTreeCellRenderer
             returnPanel.add(text, BorderLayout.CENTER);
             return returnPanel;
         }
-        else{
+        else {
             UploadDO uploadDO = (UploadDO) obj;
             JLabel text = new JLabel();
             text.setOpaque(true);

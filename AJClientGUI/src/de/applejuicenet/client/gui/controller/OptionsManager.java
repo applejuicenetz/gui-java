@@ -1,14 +1,14 @@
 package de.applejuicenet.client.gui.controller;
 
+import org.apache.log4j.Level;
+import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
-import de.applejuicenet.client.gui.listener.DataUpdateListener;
-import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.35 2004/01/29 15:52:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.36 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.36  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.35  2004/01/29 15:52:33  maj0r
  * Bug #153 umgesetzt (Danke an jr17)
  * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
@@ -93,7 +96,7 @@ public interface OptionsManager {
     public ConnectionSettings getRemoteSettings();
 
     public void saveRemote(ConnectionSettings remote) throws
-            InvalidPasswordException;
+        InvalidPasswordException;
 
     public void saveAJSettings(AJSettings ajSettings);
 

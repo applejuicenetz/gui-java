@@ -1,13 +1,13 @@
 package de.applejuicenet.client.gui.tables.download;
 
+import javax.swing.ImageIcon;
+
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
-import javax.swing.*;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/IconGetter.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/IconGetter.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import javax.swing.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: IconGetter.java,v $
+ * Revision 1.4  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -29,18 +32,21 @@ import javax.swing.*;
  */
 
 public abstract class IconGetter {
-    private static ImageIcon downloadIcon = IconManager.getInstance().getIcon("treeRoot");
-    private static ImageIcon direktVerbundenIcon = IconManager.getInstance().getIcon("treeUebertrage");
-    private static ImageIcon verbindungUnbekanntIcon = IconManager.getInstance().getIcon("treeIndirekt");
-    private static ImageIcon indirektVerbundenIcon = IconManager.getInstance().getIcon("treeWarteschlange");
+    private static ImageIcon downloadIcon = IconManager.getInstance().getIcon(
+        "treeRoot");
+    private static ImageIcon direktVerbundenIcon = IconManager.getInstance().
+        getIcon("treeUebertrage");
+    private static ImageIcon verbindungUnbekanntIcon = IconManager.getInstance().
+        getIcon("treeIndirekt");
+    private static ImageIcon indirektVerbundenIcon = IconManager.getInstance().
+        getIcon("treeWarteschlange");
 
     public static ImageIcon getConvenientIcon(Object node) {
-        if (node.getClass()==DownloadDO.class){
+        if (node.getClass() == DownloadDO.class) {
             return downloadIcon;
         }
-        else if (node.getClass()==DownloadSourceDO.class){
-            switch (((DownloadSourceDO)node).getDirectstate())
-            {
+        else if (node.getClass() == DownloadSourceDO.class) {
+            switch ( ( (DownloadSourceDO) node).getDirectstate()) {
                 case DownloadSourceDO.UNBEKANNT:
                     return verbindungUnbekanntIcon;
                 case DownloadSourceDO.DIREKTE_VERBINDUNG:
@@ -51,7 +57,8 @@ public abstract class IconGetter {
                     return verbindungUnbekanntIcon;
             }
         }
-        else
+        else {
             return null;
+        }
     }
 }

@@ -9,7 +9,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZLibUtils.java,v 1.1 2004/02/02 15:12:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/ZLibUtils.java,v 1.2 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ZLibUtils.java,v $
+ * Revision 1.2  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.1  2004/02/02 15:12:03  maj0r
  * Hilfsklasse zum Entzippen eines byte-Arrays.
  *
@@ -41,8 +44,9 @@ public abstract class ZLibUtils {
                 buf = new byte[256];
                 bufnum = defl.deflate(buf);
                 bos.write(buf, 0, bufnum);
-                if (bufnum < buf.length)
+                if (bufnum < buf.length) {
                     done = true;
+                }
             }
             bos.flush();
             bos.close();
@@ -70,8 +74,9 @@ public abstract class ZLibUtils {
                 try {
                     bufnum = infl.inflate(buf);
                     retval.append(new String(buf, 0, bufnum));
-                    if (bufnum < buf.length)
+                    if (bufnum < buf.length) {
                         done = true;
+                    }
                 }
                 catch (DataFormatException dfe) {
                     done = true;

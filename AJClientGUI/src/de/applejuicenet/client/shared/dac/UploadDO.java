@@ -1,9 +1,9 @@
 package de.applejuicenet.client.shared.dac;
 
-import de.applejuicenet.client.shared.*;
+import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.10 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.11 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.11  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.10  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -37,142 +40,142 @@ import de.applejuicenet.client.shared.*;
  */
 
 public class UploadDO {
-  public static final int AKTIVE_UEBERTRAGUNG = 1;
-  public static final int WARTESCHLANGE = 2;
-  public static final int VERSUCHE_ZU_VERBINDEN = 5;
-  public static final int VERSUCHE_INDIREKTE_VERBINDUNG = 6;
-  public static final int KEINE_VERBINDUNG_MOEGLICH = 7;
+    public static final int AKTIVE_UEBERTRAGUNG = 1;
+    public static final int WARTESCHLANGE = 2;
+    public static final int VERSUCHE_ZU_VERBINDEN = 5;
+    public static final int VERSUCHE_INDIREKTE_VERBINDUNG = 6;
+    public static final int KEINE_VERBINDUNG_MOEGLICH = 7;
 
-  private final int uploadID;
-  private String dateiName;
-  private int shareFileID;
-  private Version version;
-  private int status;
-  private String nick;
-  private long uploadFrom;
-  private long uploadTo;
-  private long actualUploadPosition;
-  private int speed;
-  private int prioritaet;
+    private final int uploadID;
+    private String dateiName;
+    private int shareFileID;
+    private Version version;
+    private int status;
+    private String nick;
+    private long uploadFrom;
+    private long uploadTo;
+    private long actualUploadPosition;
+    private int speed;
+    private int prioritaet;
 
-  public UploadDO(int uploadID, int shareFileID, Version version, int status,
-                  String nick, long uploadFrom, long uploadTo,
-                  long actualUploadPosition, int speed, int prioritaet) {
-    this.uploadID = uploadID;
-    this.shareFileID = shareFileID;
-    this.version = version;
-    this.status = status;
-    this.nick = nick;
-    this.uploadFrom = uploadFrom;
-    this.uploadTo = uploadTo;
-    this.actualUploadPosition = actualUploadPosition;
-    this.speed = speed;
-    this.prioritaet = prioritaet;
-  }
+    public UploadDO(int uploadID, int shareFileID, Version version, int status,
+                    String nick, long uploadFrom, long uploadTo,
+                    long actualUploadPosition, int speed, int prioritaet) {
+        this.uploadID = uploadID;
+        this.shareFileID = shareFileID;
+        this.version = version;
+        this.status = status;
+        this.nick = nick;
+        this.uploadFrom = uploadFrom;
+        this.uploadTo = uploadTo;
+        this.actualUploadPosition = actualUploadPosition;
+        this.speed = speed;
+        this.prioritaet = prioritaet;
+    }
 
-  public UploadDO(int uploadID, int shareFileID, Version version,
-                  String status,
-                  String nick, long uploadFrom, long uploadTo,
-                  long actualUploadPosition, int speed, int prioritaet) {
-    this.uploadID = uploadID;
-    this.shareFileID = shareFileID;
-    this.version = version;
-    this.status = Integer.parseInt(status);
-    this.nick = nick;
-    this.uploadFrom = uploadFrom;
-    this.uploadTo = uploadTo;
-    this.actualUploadPosition = actualUploadPosition;
-    this.speed = speed;
-    this.prioritaet = prioritaet;
-  }
+    public UploadDO(int uploadID, int shareFileID, Version version,
+                    String status,
+                    String nick, long uploadFrom, long uploadTo,
+                    long actualUploadPosition, int speed, int prioritaet) {
+        this.uploadID = uploadID;
+        this.shareFileID = shareFileID;
+        this.version = version;
+        this.status = Integer.parseInt(status);
+        this.nick = nick;
+        this.uploadFrom = uploadFrom;
+        this.uploadTo = uploadTo;
+        this.actualUploadPosition = actualUploadPosition;
+        this.speed = speed;
+        this.prioritaet = prioritaet;
+    }
 
-  public int getUploadID() {
-    return uploadID;
-  }
+    public int getUploadID() {
+        return uploadID;
+    }
 
-  public String getUploadIDAsString() {
-    return Integer.toString(uploadID);
-  }
+    public String getUploadIDAsString() {
+        return Integer.toString(uploadID);
+    }
 
-  public int getShareFileID() {
-    return shareFileID;
-  }
+    public int getShareFileID() {
+        return shareFileID;
+    }
 
-  public String getShareFileIDAsString() {
-    return Integer.toString(shareFileID);
-  }
+    public String getShareFileIDAsString() {
+        return Integer.toString(shareFileID);
+    }
 
-  public void setShareFileID(int shareFileID) {
-    this.shareFileID = shareFileID;
-  }
+    public void setShareFileID(int shareFileID) {
+        this.shareFileID = shareFileID;
+    }
 
-  public Version getVersion() {
-    return version;
-  }
+    public Version getVersion() {
+        return version;
+    }
 
-  public void setVersion(Version version) {
-    this.version = version;
-  }
+    public void setVersion(Version version) {
+        this.version = version;
+    }
 
-  public int getStatus() {
-    return status;
-  }
+    public int getStatus() {
+        return status;
+    }
 
-  public String getStatusAsString() {
-    return Integer.toString(status);
-  }
+    public String getStatusAsString() {
+        return Integer.toString(status);
+    }
 
-  public void setStatus(int status) {
-    this.status = status;
-  }
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-  public String getNick() {
-    return nick;
-  }
+    public String getNick() {
+        return nick;
+    }
 
-  public void setNick(String nick) {
-    this.nick = nick;
-  }
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
 
-  public long getUploadFrom() {
-    return uploadFrom;
-  }
+    public long getUploadFrom() {
+        return uploadFrom;
+    }
 
-  public void setUploadFrom(long uploadFrom) {
-    this.uploadFrom = uploadFrom;
-  }
+    public void setUploadFrom(long uploadFrom) {
+        this.uploadFrom = uploadFrom;
+    }
 
-  public long getUploadTo() {
-    return uploadTo;
-  }
+    public long getUploadTo() {
+        return uploadTo;
+    }
 
-  public void setUploadTo(long uploadTo) {
-    this.uploadTo = uploadTo;
-  }
+    public void setUploadTo(long uploadTo) {
+        this.uploadTo = uploadTo;
+    }
 
-  public long getActualUploadPosition() {
-    return actualUploadPosition;
-  }
+    public long getActualUploadPosition() {
+        return actualUploadPosition;
+    }
 
-  public void setActualUploadPosition(long actualUploadPosition) {
-    this.actualUploadPosition = actualUploadPosition;
-  }
+    public void setActualUploadPosition(long actualUploadPosition) {
+        this.actualUploadPosition = actualUploadPosition;
+    }
 
-  public int getSpeed() {
-    return speed;
-  }
+    public int getSpeed() {
+        return speed;
+    }
 
-  public void setPrioritaet(int prioritaet) {
-    this.prioritaet = prioritaet;
-  }
+    public void setPrioritaet(int prioritaet) {
+        this.prioritaet = prioritaet;
+    }
 
-  public int getPrioritaet() {
-    return prioritaet;
-  }
+    public int getPrioritaet() {
+        return prioritaet;
+    }
 
-  public void setSpeed(int speed) {
-    this.speed = speed;
-  }
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
 
     public String getDateiName() {
         return dateiName;
@@ -182,25 +185,26 @@ public class UploadDO {
         this.dateiName = dateiName;
     }
 
-    public String getDownloadPercentAsString(){
-        if (actualUploadPosition==-1 || uploadFrom==-1)
-            return "0";
-        double temp = actualUploadPosition - uploadFrom;
-        if (temp==0.0){
+    public String getDownloadPercentAsString() {
+        if (actualUploadPosition == -1 || uploadFrom == -1) {
             return "0";
         }
-        temp =  temp * 100 / getSize();
+        double temp = actualUploadPosition - uploadFrom;
+        if (temp == 0.0) {
+            return "0";
+        }
+        temp = temp * 100 / getSize();
         String result = Double.toString(temp);
-        if (result.indexOf(".") + 3 < result.length())
-        {
+        if (result.indexOf(".") + 3 < result.length()) {
             result = result.substring(0, result.indexOf(".") + 3);
         }
         return result;
     }
 
-    public long getSize(){
-        if (uploadTo==-1 || uploadFrom==-1)
+    public long getSize() {
+        if (uploadTo == -1 || uploadFrom == -1) {
             return 0;
+        }
         return uploadTo - uploadFrom;
     }
 

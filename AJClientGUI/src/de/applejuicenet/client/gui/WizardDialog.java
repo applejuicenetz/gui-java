@@ -1,26 +1,38 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.AJSettings;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.PropertiesManager;
-import de.applejuicenet.client.gui.wizard.*;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.wizard.ConnectionKind;
+import de.applejuicenet.client.gui.wizard.Schritt1Panel;
+import de.applejuicenet.client.gui.wizard.Schritt2Panel;
+import de.applejuicenet.client.gui.wizard.Schritt3Panel;
+import de.applejuicenet.client.gui.wizard.Schritt4Panel;
+import de.applejuicenet.client.gui.wizard.Schritt5Panel;
+import de.applejuicenet.client.gui.wizard.WizardPanel;
+import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.7 2004/02/04 15:38:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/WizardDialog.java,v 1.8 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +41,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WizardDialog.java,v $
+ * Revision 1.8  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.7  2004/02/04 15:38:18  maj0r
  * Wizarddialog korrigiert
  * Nickname wird nun auf Richtigkeit geprueft und gespeichert wird erst nach Durchlaufen des gesamten Wizards.
@@ -54,8 +69,9 @@ import org.apache.log4j.Level;
  *
  */
 
-
-public class WizardDialog extends JDialog implements LanguageListener {
+public class WizardDialog
+    extends JDialog
+    implements LanguageListener {
     private Logger logger;
     private WizardPanel aktuellesPanel;
     private WizardPanel schritt1 = new Schritt1Panel();
@@ -72,14 +88,15 @@ public class WizardDialog extends JDialog implements LanguageListener {
     public WizardDialog(Frame parent, boolean modal) {
         super(parent, modal);
         logger = Logger.getLogger(getClass());
-        try{
+        try {
             init();
             LanguageSelector ls = LanguageSelector.getInstance();
             ls.addLanguageListener(this);
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -102,39 +119,40 @@ public class WizardDialog extends JDialog implements LanguageListener {
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                LanguageSelector.getInstance().removeLanguageListener(WizardDialog.this);
+                LanguageSelector.getInstance().removeLanguageListener(
+                    WizardDialog.this);
                 PropertiesManager.getOptionsManager().setErsterStart(false);
                 dispose();
             }
         });
-        ende.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
+        ende.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
                 close();
             }
         });
-        zurueck.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
-                if (aktuellesPanel.getVorherigesPanel()!=null){
+        zurueck.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                if (aktuellesPanel.getVorherigesPanel() != null) {
                     setEndeEnabled(false);
                     getContentPane().remove(aktuellesPanel);
                     aktuellesPanel = aktuellesPanel.getVorherigesPanel();
                     getContentPane().add(aktuellesPanel, BorderLayout.CENTER);
                     weiter.setEnabled(true);
-                    if (aktuellesPanel.getVorherigesPanel()==null){
+                    if (aktuellesPanel.getVorherigesPanel() == null) {
                         zurueck.setEnabled(false);
                     }
-                    else{
+                    else {
                         zurueck.setEnabled(true);
                     }
-                    if (aktuellesPanel==schritt3){
-                        if (((Schritt3Panel)schritt3).isValidNickname()){
+                    if (aktuellesPanel == schritt3) {
+                        if ( ( (Schritt3Panel) schritt3).isValidNickname()) {
                             setWeiterEnabled(true);
                         }
-                        else{
+                        else {
                             setWeiterEnabled(false);
                         }
                     }
-                    else{
+                    else {
                         setWeiterEnabled(true);
                     }
                     WizardDialog.this.validate();
@@ -142,28 +160,28 @@ public class WizardDialog extends JDialog implements LanguageListener {
                 }
             }
         });
-        weiter.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
-                if (aktuellesPanel.getNaechstesPanel()!=null){
+        weiter.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                if (aktuellesPanel.getNaechstesPanel() != null) {
                     getContentPane().remove(aktuellesPanel);
                     aktuellesPanel = aktuellesPanel.getNaechstesPanel();
                     getContentPane().add(aktuellesPanel, BorderLayout.CENTER);
                     zurueck.setEnabled(true);
-                    if (aktuellesPanel.getNaechstesPanel()==null){
+                    if (aktuellesPanel.getNaechstesPanel() == null) {
                         weiter.setEnabled(false);
                         setEndeEnabled(true);
                     }
-                    else{
+                    else {
                         setEndeEnabled(false);
-                        if (aktuellesPanel==schritt3){
-                            if (((Schritt3Panel)schritt3).isValidNickname()){
+                        if (aktuellesPanel == schritt3) {
+                            if ( ( (Schritt3Panel) schritt3).isValidNickname()) {
                                 setWeiterEnabled(true);
                             }
-                            else{
+                            else {
                                 setWeiterEnabled(false);
                             }
                         }
-                        else{
+                        else {
                             setWeiterEnabled(true);
                         }
                     }
@@ -172,8 +190,8 @@ public class WizardDialog extends JDialog implements LanguageListener {
                 }
             }
         });
-        ende.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
+        ende.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
                 close();
             }
         });
@@ -188,43 +206,49 @@ public class WizardDialog extends JDialog implements LanguageListener {
         getContentPane().add(schritt1, BorderLayout.CENTER);
         aktuellesPanel = schritt1;
         getContentPane().add(buttons, BorderLayout.SOUTH);
-        setSize(icon1.getIconWidth(), icon1.getIconHeight() + 180 + buttons.getPreferredSize().height);
+        setSize(icon1.getIconWidth(),
+                icon1.getIconHeight() + 180 + buttons.getPreferredSize().height);
         setResizable(false);
         fireLanguageChanged();
     }
 
-    private void close(){
+    private void close() {
         LanguageSelector.getInstance().removeLanguageListener(this);
-        if (((Schritt3Panel)schritt3).isValidNickname()){
-            ConnectionKind connection = ((Schritt4Panel)schritt4).getVerbindungsart();
-            ajSettings.setNick(((Schritt3Panel)schritt3).getNickname());
+        if ( ( (Schritt3Panel) schritt3).isValidNickname()) {
+            ConnectionKind connection = ( (Schritt4Panel) schritt4).
+                getVerbindungsart();
+            ajSettings.setNick( ( (Schritt3Panel) schritt3).getNickname());
             ajSettings.setMaxUpload(connection.getMaxUpload() * 1024);
             ajSettings.setMaxDownload(connection.getMaxDownload() * 1024);
-            ajSettings.setMaxNewConnectionsPerTurn(connection.getMaxNewConnectionsPro10Sek());
+            ajSettings.setMaxNewConnectionsPerTurn(connection.
+                getMaxNewConnectionsPro10Sek());
             ApplejuiceFassade.getInstance().saveAJSettings(ajSettings);
         }
         PropertiesManager.getOptionsManager().setErsterStart(false);
         dispose();
     }
 
-    public void setWeiterEnabled(boolean enabled){
+    public void setWeiterEnabled(boolean enabled) {
         weiter.setEnabled(enabled);
     }
 
-    public void setEndeEnabled(boolean enabled){
+    public void setEndeEnabled(boolean enabled) {
         ende.setEnabled(enabled);
     }
 
     public void fireLanguageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "wizard", "titel"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
+                                      "titel"})));
         zurueck.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "wizard", "zurueck"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
+                                      "zurueck"})));
         weiter.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "wizard", "weiter"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard",
+                                      "weiter"})));
         ende.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "wizard", "ende"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "wizard", "ende"})));
         schritt1.fireLanguageChanged();
         schritt2.fireLanguageChanged();
         schritt3.fireLanguageChanged();

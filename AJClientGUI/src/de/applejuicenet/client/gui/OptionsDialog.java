@@ -1,19 +1,41 @@
 package de.applejuicenet.client.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.exception.*;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-import javax.swing.event.ListSelectionListener;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.OptionsManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.35 2004/01/29 15:52:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.36 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +44,9 @@ import javax.swing.event.ListSelectionEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.36  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.35  2004/01/29 15:52:33  maj0r
  * Bug #153 umgesetzt (Danke an jr17)
  * Verbindungsdialog kann nun per Option beim naechsten GUI-Start erzwungen werden.
@@ -111,7 +136,7 @@ import javax.swing.event.ListSelectionEvent;
  */
 
 public class OptionsDialog
-        extends JDialog {
+    extends JDialog {
     private JFrame parent;
     private JButton speichern;
     private JButton abbrechen;
@@ -126,16 +151,15 @@ public class OptionsDialog
     public OptionsDialog(JFrame parent) throws HeadlessException {
         super(parent, true);
         logger = Logger.getLogger(getClass());
-        try
-        {
+        try {
             this.parent = parent;
             ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -145,8 +169,8 @@ public class OptionsDialog
         IconManager im = IconManager.getInstance();
 
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                   getFirstAttrbuteByTagName(new
-                                                           String[]{"einstform", "caption"})));
+            getFirstAttrbuteByTagName(new
+                                      String[] {"einstform", "caption"})));
         optionPanels = new OptionsRegister[6];
         optionPanels[0] = new ODStandardPanel(this, ajSettings, remote);
         optionPanels[1] = new ODVerbindungPanel(ajSettings);
@@ -158,22 +182,26 @@ public class OptionsDialog
         menuList = new JList(optionPanels);
         menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         menuList.setCellRenderer(new MenuListCellRenderer());
-        for (int i=0; i<optionPanels.length; i++){
-            registerPanel.add(optionPanels[i].getMenuText(), (JPanel)optionPanels[i]);
+        for (int i = 0; i < optionPanels.length; i++) {
+            registerPanel.add(optionPanels[i].getMenuText(),
+                              (JPanel) optionPanels[i]);
         }
-        menuList.addListSelectionListener(new ListSelectionListener(){
+        menuList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent listSelectionEvent) {
                 Object selected = menuList.getSelectedValue();
-                registerLayout.show(registerPanel, ((OptionsRegister)selected).getMenuText());
+                registerLayout.show(registerPanel,
+                                    ( (OptionsRegister) selected).getMenuText());
             }
         });
         menuList.setSelectedValue(optionPanels[0], true);
-        speichern = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                  getFirstAttrbuteByTagName(new String[]{"einstform", "Button1",
-                                                                                                         "caption"})));
-        abbrechen = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                  getFirstAttrbuteByTagName(new String[]{"einstform", "Button2",
-                                                                                                         "caption"})));
+        speichern = new JButton(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Button1",
+                                      "caption"})));
+        abbrechen = new JButton(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"einstform", "Button2",
+                                      "caption"})));
         abbrechen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
@@ -197,58 +225,66 @@ public class OptionsDialog
     }
 
     private void speichern() {
-        try{
+        try {
             OptionsManager om = PropertiesManager.getOptionsManager();
             boolean etwasGeaendert;
-            etwasGeaendert = ((ODAnsichtPanel)optionPanels[4]).save();
-            if (((ODStandardPanel)optionPanels[0]).isDirty() || ((ODVerbindungPanel)optionPanels[1]).isDirty())
-            {
+            etwasGeaendert = ( (ODAnsichtPanel) optionPanels[4]).save();
+            if ( ( (ODStandardPanel) optionPanels[0]).isDirty() ||
+                ( (ODVerbindungPanel) optionPanels[1]).isDirty()) {
                 om.saveAJSettings(ajSettings);
-                om.setStandardBrowser(((ODStandardPanel)optionPanels[0]).getBrowserPfad());
-                om.loadPluginsOnStartup(((ODStandardPanel)optionPanels[0]).shouldLoadPluginsOnStartup());
-                if (((ODStandardPanel)optionPanels[0]).isDirty()){
-                    om.setLogLevel(((ODStandardPanel)optionPanels[0]).getLogLevel());
-                    om.setVersionsinfoModus(((ODStandardPanel)optionPanels[0]).getVersionsinfoModus());
+                om.setStandardBrowser( ( (ODStandardPanel) optionPanels[0]).
+                                      getBrowserPfad());
+                om.loadPluginsOnStartup( ( (ODStandardPanel) optionPanels[0]).
+                                        shouldLoadPluginsOnStartup());
+                if ( ( (ODStandardPanel) optionPanels[0]).isDirty()) {
+                    om.setLogLevel( ( (ODStandardPanel) optionPanels[0]).
+                                   getLogLevel());
+                    om.setVersionsinfoModus( ( (ODStandardPanel) optionPanels[0]).
+                                            getVersionsinfoModus());
                 }
                 etwasGeaendert = true;
             }
-            if (((ODConnectionPanel)optionPanels[2]).isDirty() || ((ODStandardPanel)optionPanels[0]).isXmlPortDirty())
-            {
-                try
-                {
+            if ( ( (ODConnectionPanel) optionPanels[2]).isDirty() ||
+                ( (ODStandardPanel) optionPanels[0]).isXmlPortDirty()) {
+                try {
                     om.saveRemote(remote);
                     etwasGeaendert = true;
                 }
-                catch (InvalidPasswordException ex)
-                {
-                    LanguageSelector languageSelector = LanguageSelector.getInstance();
-                    String titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                     getFirstAttrbuteByTagName(new String[]{"javagui", "eingabefehler"}));
-                    String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                         getFirstAttrbuteByTagName(new String[]{"javagui", "options",
-                                                                                                                "remote", "fehlertext"}));
+                catch (InvalidPasswordException ex) {
+                    LanguageSelector languageSelector = LanguageSelector.
+                        getInstance();
+                    String titel = ZeichenErsetzer.korrigiereUmlaute(
+                        languageSelector.
+                        getFirstAttrbuteByTagName(new String[] {"javagui",
+                                                  "eingabefehler"}));
+                    String nachricht = ZeichenErsetzer.korrigiereUmlaute(
+                        languageSelector.
+                        getFirstAttrbuteByTagName(new String[] {"javagui",
+                                                  "options",
+                                                  "remote", "fehlertext"}));
                     JOptionPane.showMessageDialog(parent, nachricht, titel,
                                                   JOptionPane.OK_OPTION);
                 }
             }
-            if (((ODProxyPanel)optionPanels[3]).isDirty())
-            {
-                PropertiesManager.getProxyManager().saveProxySettings(((ODProxyPanel)optionPanels[3]).getProxySettings());
+            if ( ( (ODProxyPanel) optionPanels[3]).isDirty()) {
+                PropertiesManager.getProxyManager().saveProxySettings( ( (
+                    ODProxyPanel) optionPanels[3]).getProxySettings());
                 etwasGeaendert = true;
             }
-            if (((ODAnsichtPanel)optionPanels[4]).isDirty())
-            {
-                PropertiesManager.getOptionsManager().showConnectionDialogOnStartup(((ODAnsichtPanel)optionPanels[4]).shouldShowStartcreen());
+            if ( ( (ODAnsichtPanel) optionPanels[4]).isDirty()) {
+                PropertiesManager.getOptionsManager().
+                    showConnectionDialogOnStartup( ( (ODAnsichtPanel)
+                    optionPanels[4]).shouldShowStartcreen());
                 etwasGeaendert = true;
             }
-            if (etwasGeaendert){
+            if (etwasGeaendert) {
                 SoundPlayer.getInstance().playSound(SoundPlayer.GESPEICHERT);
             }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
         dispose();
     }
@@ -263,8 +299,8 @@ public class OptionsDialog
             int index,
             boolean isSelected,
             boolean cellHasFocus) {
-            setText(((OptionsRegister)value).getMenuText() + "   ");
-            setIcon(((OptionsRegister)value).getIcon());
+            setText( ( (OptionsRegister) value).getMenuText() + "   ");
+            setIcon( ( (OptionsRegister) value).getIcon());
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
                 setForeground(list.getSelectionForeground());
@@ -279,9 +315,9 @@ public class OptionsDialog
             return this;
         }
 
-        public Dimension getPreferredSize(){
+        public Dimension getPreferredSize() {
             Dimension size = super.getPreferredSize();
-            return new Dimension(size.width, size.height*2);
+            return new Dimension(size.width, size.height * 2);
         }
     }
 }

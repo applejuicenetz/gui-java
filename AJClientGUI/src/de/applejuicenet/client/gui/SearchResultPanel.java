@@ -1,31 +1,38 @@
 package de.applejuicenet.client.gui;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-
-import javax.swing.*;
-import javax.swing.table.TableColumnModel;
-
-import de.applejuicenet.client.gui.tables.search.SearchResultTableModel;
-import de.applejuicenet.client.gui.tables.search.SearchNode;
-import de.applejuicenet.client.gui.tables.JTreeTable;
-import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.shared.Search;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import de.applejuicenet.client.shared.Search.SearchEntry;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
-import de.applejuicenet.client.gui.shared.SortButtonRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.shared.SortButtonRenderer;
+import de.applejuicenet.client.gui.tables.JTreeTable;
+import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.tables.search.SearchNode;
+import de.applejuicenet.client.gui.tables.search.SearchResultTableModel;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.Search;
+import de.applejuicenet.client.shared.Search.SearchEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.12 2004/01/25 08:31:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.13 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +41,9 @@ import de.applejuicenet.client.shared.IconManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.13  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.12  2004/01/25 08:31:11  maj0r
  * Icons eingebaut.
  *
@@ -76,7 +86,8 @@ import de.applejuicenet.client.shared.IconManager;
  *
  */
 
-public class SearchResultPanel extends JPanel{
+public class SearchResultPanel
+    extends JPanel {
     private Logger logger;
     private JTreeTable searchResultTable;
     private SearchResultTableModel tableModel;
@@ -108,16 +119,17 @@ public class SearchResultPanel extends JPanel{
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    public Search getSearch(){
+    public Search getSearch() {
         return search;
     }
 
-    public void setActiveSearch(boolean active){
+    public void setActiveSearch(boolean active) {
         activeSearch = active;
         schliessen.setEnabled(!active);
         sucheAbbrechen.setEnabled(active);
@@ -128,17 +140,17 @@ public class SearchResultPanel extends JPanel{
         item1.setText(linkLaden);
         item1.setIcon(im.getIcon("download"));
         sucheAbbrechen.setText(sucheStoppen);
-        sucheAbbrechen.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
+        sucheAbbrechen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
                 sucheAbbrechen.setEnabled(false);
                 ApplejuiceFassade.getInstance().cancelSearch(search.getId());
             }
         });
         schliessen.setEnabled(false);
-        schliessen.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
-                SwingUtilities.invokeLater(new Runnable(){
-                    public void run(){
+        schliessen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
                         parentSearchPanel.close(SearchResultPanel.this);
                     }
                 });
@@ -164,14 +176,13 @@ public class SearchResultPanel extends JPanel{
         southPanel.add(panel1, BorderLayout.WEST);
         southPanel.add(textPanel, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
-        MouseAdapter popupMouseAdapter = new MouseAdapter(){
+        MouseAdapter popupMouseAdapter = new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
-                if (SwingUtilities.isRightMouseButton(me))
-                {
+                if (SwingUtilities.isRightMouseButton(me)) {
                     Point p = me.getPoint();
                     int iRow = searchResultTable.rowAtPoint(p);
                     int iCol = searchResultTable.columnAtPoint(p);
-                    if (iRow!=-1 && iCol!=-1){
+                    if (iRow != -1 && iCol != -1) {
                         searchResultTable.setRowSelectionInterval(iRow, iRow);
                         searchResultTable.setColumnSelectionInterval(iCol, iCol);
                     }
@@ -185,13 +196,14 @@ public class SearchResultPanel extends JPanel{
             }
 
             private void maybeShowPopup(MouseEvent e) {
-                if (e.isPopupTrigger())
-                {
+                if (e.isPopupTrigger()) {
                     int sel = searchResultTable.getSelectedRow();
-                    if (sel!=-1){
-                        Object result = ((TreeTableModelAdapter) searchResultTable.getModel()).nodeForRow(sel);
-                        if (result.getClass()==SearchNode.class ||
-                                result.getClass()==Search.SearchEntry.FileName.class){
+                    if (sel != -1) {
+                        Object result = ( (TreeTableModelAdapter)
+                                         searchResultTable.getModel()).
+                            nodeForRow(sel);
+                        if (result.getClass() == SearchNode.class ||
+                            result.getClass() == Search.SearchEntry.FileName.class) {
                             popup.show(searchResultTable, e.getX(), e.getY());
                         }
                     }
@@ -202,32 +214,40 @@ public class SearchResultPanel extends JPanel{
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int sel = searchResultTable.getSelectedRow();
-                if (sel!=-1){
-                    Object result = ((TreeTableModelAdapter) searchResultTable.getModel()).nodeForRow(sel);
-                    if (result.getClass()==SearchNode.class){
-                        Search.SearchEntry entry = (Search.SearchEntry)((SearchNode)result).getValueObject();
+                if (sel != -1) {
+                    Object result = ( (TreeTableModelAdapter) searchResultTable.
+                                     getModel()).nodeForRow(sel);
+                    if (result.getClass() == SearchNode.class) {
+                        Search.SearchEntry entry = (Search.SearchEntry) ( (
+                            SearchNode) result).getValueObject();
                         StringBuffer toCopy = new StringBuffer();
                         toCopy.append("ajfsp://file|");
-                        toCopy.append(searchResultTable.getValueAt(sel, 0) + "|" + entry.getChecksumme() + "|" + entry.getGroesse() + "/");
+                        toCopy.append(searchResultTable.getValueAt(sel, 0) +
+                                      "|" + entry.getChecksumme() + "|" +
+                                      entry.getGroesse() + "/");
                         String link = toCopy.toString();
                         ApplejuiceFassade.getInstance().processLink(link);
                     }
-                    else if (result.getClass()==Search.SearchEntry.FileName.class){
-                        String dateiname = ((Search.SearchEntry.FileName)result).getDateiName();
+                    else if (result.getClass() == Search.SearchEntry.FileName.class) {
+                        String dateiname = ( (Search.SearchEntry.FileName)
+                                            result).getDateiName();
                         int i = sel;
                         Object temp = null;
-                        while (i>0){
+                        while (i > 0) {
                             i--;
-                            temp = ((TreeTableModelAdapter) searchResultTable.getModel()).nodeForRow(i);
-                            if (temp.getClass()==SearchNode.class){
+                            temp = ( (TreeTableModelAdapter) searchResultTable.
+                                    getModel()).nodeForRow(i);
+                            if (temp.getClass() == SearchNode.class) {
                                 break;
                             }
                         }
-                        if (temp!=null && temp.getClass()==SearchNode.class){
-                            Search.SearchEntry entry = (Search.SearchEntry)((SearchNode)temp).getValueObject();
+                        if (temp != null && temp.getClass() == SearchNode.class) {
+                            Search.SearchEntry entry = (Search.SearchEntry) ( (
+                                SearchNode) temp).getValueObject();
                             StringBuffer toCopy = new StringBuffer();
                             toCopy.append("ajfsp://file|");
-                            toCopy.append(dateiname + "|" + entry.getChecksumme() + "|" +
+                            toCopy.append(dateiname + "|" + entry.getChecksumme() +
+                                          "|" +
                                           entry.getGroesse() + "/");
                             String link = toCopy.toString();
                             ApplejuiceFassade.getInstance().processLink(link);
@@ -238,7 +258,7 @@ public class SearchResultPanel extends JPanel{
         });
         TableColumnModel model = searchResultTable.getColumnModel();
         SortButtonRenderer renderer = new SortButtonRenderer();
-        for (int i=0; i<tableColumns.length; i++){
+        for (int i = 0; i < tableColumns.length; i++) {
             tableColumns[i] = model.getColumn(i);
             tableColumns[i].setHeaderRenderer(renderer);
         }
@@ -246,7 +266,7 @@ public class SearchResultPanel extends JPanel{
         header.addMouseListener(new SortMouseAdapter(header, renderer));
     }
 
-    public static void setTexte(String[] texte, String[] tableColumns){
+    public static void setTexte(String[] texte, String[] tableColumns) {
         offeneSuchen = texte[0];
         gefundeneDateien = texte[1];
         durchsuchteClients = texte[2];
@@ -255,45 +275,53 @@ public class SearchResultPanel extends JPanel{
         columns = tableColumns;
     }
 
-    public void updateSearchContent(){
-        try{
-            if(search.isChanged()){
+    public void updateSearchContent() {
+        try {
+            if (search.isChanged()) {
                 searchResultTable.updateUI();
                 updateZahlen();
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    private void updateZahlen(){
+    private void updateZahlen() {
         SearchEntry[] searchEntries = search.getSearchEntries();
         searchHitsCount = 0;
-        for (int i=0; i<searchEntries.length; i++){
+        for (int i = 0; i < searchEntries.length; i++) {
             searchHitsCount += searchEntries[i].getFileNames().length;
         }
-        label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
-        label2.setText(gefundeneDateien.replaceFirst("%i", Integer.toString(searchHitsCount)));
-        label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
+        label1.setText(offeneSuchen.replaceFirst("%i",
+                                                 Integer.toString(search.getOffeneSuchen())));
+        label2.setText(gefundeneDateien.replaceFirst("%i",
+            Integer.toString(searchHitsCount)));
+        label3.setText(durchsuchteClients.replaceFirst("%i",
+            Integer.toString(search.getDurchsuchteClients())));
     }
 
-    public void aendereSprache(){
-        try{
+    public void aendereSprache() {
+        try {
             item1.setText(linkLaden);
             sucheAbbrechen.setText(sucheStoppen);
-            label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
-            label2.setText(gefundeneDateien.replaceFirst("%i", Integer.toString(search.getGefundenDateien())));
-            label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
+            label1.setText(offeneSuchen.replaceFirst("%i",
+                Integer.toString(search.getOffeneSuchen())));
+            label2.setText(gefundeneDateien.replaceFirst("%i",
+                Integer.toString(search.getGefundenDateien())));
+            label3.setText(durchsuchteClients.replaceFirst("%i",
+                Integer.toString(search.getDurchsuchteClients())));
             TableColumnModel tcm = searchResultTable.getColumnModel();
             for (int i = 0; i < tcm.getColumnCount(); i++) {
                 tcm.getColumn(i).setHeaderValue(columns[i]);
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -332,7 +360,7 @@ public class SearchResultPanel extends JPanel{
             }
 
             SearchNode rootNode = ( (SearchNode) tableModel.
-                                         getRoot());
+                                   getRoot());
 
             if (pressedColumn == tableColumns[0]) {
                 rootNode.setSortCriteria(SearchNode.SORT_FILENAME,

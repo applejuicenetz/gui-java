@@ -1,18 +1,19 @@
 package de.applejuicenet.client.gui.tables.download;
 
-import de.applejuicenet.client.shared.dac.DownloadDO;
-import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.gui.tables.Node;
-import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-
-import javax.swing.*;
 import java.util.ArrayList;
 
+import javax.swing.Icon;
+
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.gui.tables.Node;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.4 2003/12/30 20:15:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.5 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +22,9 @@ import java.util.ArrayList;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadMainNode.java,v $
+ * Revision 1.5  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.4  2003/12/30 20:15:55  maj0r
  * Kleine Anpassung, damit das Umbenennen von Downloads funktioniert.
  *
@@ -36,7 +40,8 @@ import java.util.ArrayList;
  *
  */
 
-public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
+public class DownloadMainNode
+    implements Node, DownloadNode, LanguageListener {
     public static final int ROOT_NODE = -1;
     public static final int LOADING_DOWNLOADS = 0;
     public static final int WAITING_DOWNLOADS = 1;
@@ -49,11 +54,12 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
     private DownloadDO downloadDO;
 
     private static Icon waitingIcon = IconManager.getInstance().getIcon("cool");
-    private static Icon loadingIcon = IconManager.getInstance().getIcon("download");
+    private static Icon loadingIcon = IconManager.getInstance().getIcon(
+        "download");
     private static Icon restIcon = IconManager.getInstance().getIcon("eek");
     private static Icon rootIcon = IconManager.getInstance().getIcon("treeRoot");
 
-    public DownloadMainNode(DownloadDO downloadDO){
+    public DownloadMainNode(DownloadDO downloadDO) {
         type = ROOT_NODE;
         this.downloadDO = downloadDO;
         children = new DownloadMainNode[3];
@@ -62,47 +68,50 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
         children[2] = new DownloadMainNode(downloadDO, REST_DOWNLOADS);
     }
 
-    public DownloadMainNode(DownloadDO downloadDO, int type){
+    public DownloadMainNode(DownloadDO downloadDO, int type) {
         super();
         this.type = type;
         this.downloadDO = downloadDO;
-        if (type==LOADING_DOWNLOADS){
+        if (type == LOADING_DOWNLOADS) {
             LanguageSelector.getInstance().addLanguageListener(this);
             fireLanguageChanged();
         }
-        else if (type==WAITING_DOWNLOADS){
+        else if (type == WAITING_DOWNLOADS) {
             LanguageSelector.getInstance().addLanguageListener(this);
             fireLanguageChanged();
         }
-        else if (type==REST_DOWNLOADS){
+        else if (type == REST_DOWNLOADS) {
             LanguageSelector.getInstance().addLanguageListener(this);
             fireLanguageChanged();
         }
     }
 
     public Icon getConvenientIcon() {
-        if (type==LOADING_DOWNLOADS){
+        if (type == LOADING_DOWNLOADS) {
             return loadingIcon;
         }
-        else if (type==WAITING_DOWNLOADS){
+        else if (type == WAITING_DOWNLOADS) {
             return waitingIcon;
         }
-        else if (type==REST_DOWNLOADS){
+        else if (type == REST_DOWNLOADS) {
             return restIcon;
         }
-        else if (type==ROOT_NODE){
+        else if (type == ROOT_NODE) {
             return rootIcon;
         }
-        else
+        else {
             return null;
+        }
     }
 
-    public int getChildCount(){
+    public int getChildCount() {
         Object[] obj = getChildren();
-        if (obj==null)
+        if (obj == null) {
             return 0;
-        else
+        }
+        else {
             return obj.length;
+        }
     }
 
     public boolean isLeaf() {
@@ -110,59 +119,66 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
     }
 
     public Object[] getChildren() {
-        switch (type){
-            case ROOT_NODE:{
-                if (downloadDO.getStatus()==DownloadDO.SUCHEN_LADEN){
+        switch (type) {
+            case ROOT_NODE: {
+                if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
                     return children;
                 }
-                else{
+                else {
                     boolean childFound = false;
-                    for (int i=0; i<children.length; i++){
-                        if (children[i].getChildCount()>0){
+                    for (int i = 0; i < children.length; i++) {
+                        if (children[i].getChildCount() > 0) {
                             childFound = true;
                             break;
                         }
                     }
-                    if (childFound){
+                    if (childFound) {
                         return children;
                     }
-                    else{
+                    else {
                         return null;
                     }
                 }
             }
-            case LOADING_DOWNLOADS:{
+            case LOADING_DOWNLOADS: {
                 ArrayList kinder = new ArrayList();
                 DownloadSourceDO[] downloadSourceDO = downloadDO.getSources();
-                for (int i=0; i<downloadSourceDO.length; i++){
-                    if (downloadSourceDO[i].getStatus()==DownloadSourceDO.UEBERTRAGUNG){
+                for (int i = 0; i < downloadSourceDO.length; i++) {
+                    if (downloadSourceDO[i].getStatus() ==
+                        DownloadSourceDO.UEBERTRAGUNG) {
                         kinder.add(downloadSourceDO[i]);
                     }
                 }
-                return (DownloadSourceDO[]) kinder.toArray(new DownloadSourceDO[kinder.size()]);
+                return (DownloadSourceDO[]) kinder.toArray(new DownloadSourceDO[
+                    kinder.size()]);
             }
-            case WAITING_DOWNLOADS:{
+            case WAITING_DOWNLOADS: {
                 ArrayList kinder = new ArrayList();
                 DownloadSourceDO[] downloadSourceDO = downloadDO.getSources();
-                for (int i=0; i<downloadSourceDO.length; i++){
-                    if (downloadSourceDO[i].getStatus()==DownloadSourceDO.IN_WARTESCHLANGE){
+                for (int i = 0; i < downloadSourceDO.length; i++) {
+                    if (downloadSourceDO[i].getStatus() ==
+                        DownloadSourceDO.IN_WARTESCHLANGE) {
                         kinder.add(downloadSourceDO[i]);
                     }
                 }
-                return (DownloadSourceDO[]) kinder.toArray(new DownloadSourceDO[kinder.size()]);
+                return (DownloadSourceDO[]) kinder.toArray(new DownloadSourceDO[
+                    kinder.size()]);
             }
-            case REST_DOWNLOADS:{
+            case REST_DOWNLOADS: {
                 ArrayList kinder = new ArrayList();
                 DownloadSourceDO[] downloadSourceDO = downloadDO.getSources();
-                for (int i=0; i<downloadSourceDO.length; i++){
-                    if (downloadSourceDO[i].getStatus()!=DownloadSourceDO.UEBERTRAGUNG
-                        && downloadSourceDO[i].getStatus()!=DownloadSourceDO.IN_WARTESCHLANGE){
+                for (int i = 0; i < downloadSourceDO.length; i++) {
+                    if (downloadSourceDO[i].getStatus() !=
+                        DownloadSourceDO.UEBERTRAGUNG
+                        &&
+                        downloadSourceDO[i].getStatus() != DownloadSourceDO.IN_WARTESCHLANGE) {
                         kinder.add(downloadSourceDO[i]);
                     }
                 }
-                return (DownloadSourceDO[]) kinder.toArray(new DownloadSourceDO[kinder.size()]);
+                return (DownloadSourceDO[]) kinder.toArray(new DownloadSourceDO[
+                    kinder.size()]);
             }
-            default:{
+            default: {
                 return null;
             }
         }
@@ -173,9 +189,10 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
     }
 
     public String toString() {
-        if (type==ROOT_NODE)
+        if (type == ROOT_NODE) {
             return downloadDO.getFilename();
-        else{
+        }
+        else {
             return text + " (" + getChildCount() + ")";
         }
     }
@@ -186,17 +203,20 @@ public class DownloadMainNode implements Node, DownloadNode, LanguageListener{
 
     public void fireLanguageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        if (type==LOADING_DOWNLOADS){
-            text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                    new String[] {"javagui", "downloadform", "ladendedownloads"}));
+        if (type == LOADING_DOWNLOADS) {
+            text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(
+                new String[] {"javagui", "downloadform", "ladendedownloads"}));
         }
-        else if (type==WAITING_DOWNLOADS){
-            text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                    new String[] {"javagui", "downloadform", "wartendedownloads"}));
+        else if (type == WAITING_DOWNLOADS) {
+            text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(
+                new String[] {"javagui", "downloadform", "wartendedownloads"}));
         }
-        else if (type==REST_DOWNLOADS){
-            text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                    new String[] {"javagui", "downloadform", "dreckigerrest"}));
+        else if (type == REST_DOWNLOADS) {
+            text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                getFirstAttrbuteByTagName(
+                new String[] {"javagui", "downloadform", "dreckigerrest"}));
         }
     }
 }

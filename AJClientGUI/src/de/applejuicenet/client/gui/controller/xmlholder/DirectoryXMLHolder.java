@@ -1,17 +1,17 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
-import de.applejuicenet.client.shared.dac.DirectoryDO;
-import de.applejuicenet.client.gui.trees.ApplejuiceNode;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-
 import java.net.URLEncoder;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
+import de.applejuicenet.client.gui.trees.ApplejuiceNode;
+import de.applejuicenet.client.shared.dac.DirectoryDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.3 2004/01/29 10:05:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.4  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2004/01/29 10:05:02  maj0r
  * Sharebaum wird jetzt wieder korrekt angezeigt.
  *
@@ -61,7 +64,8 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  *
  */
 
-public class DirectoryXMLHolder extends WebXMLParser {
+public class DirectoryXMLHolder
+    extends WebXMLParser {
 
     private String directory;
     private Logger logger;
@@ -73,29 +77,31 @@ public class DirectoryXMLHolder extends WebXMLParser {
     }
 
     public void update() {
-        try
-        {
-            if (directory == null)
+        try {
+            if (directory == null) {
                 directory = "";
 
-            if (directory.length() == 0)
+            }
+            if (directory.length() == 0) {
                 reload("", false);
-            else
+            }
+            else {
                 reload("directory=" + URLEncoder.encode(directory, "UTF-8"), false);
+            }
             Element e = null;
             NodeList nodes = document.getElementsByTagName("filesystem");
             e = (Element) nodes.item(0);
             DirectoryDO.setSeparator(e.getAttribute("seperator"));
             nodes = document.getElementsByTagName("dir");
-            for (int i=0; i<nodes.getLength(); i++){
+            for (int i = 0; i < nodes.getLength(); i++) {
                 e = (Element) nodes.item(i);
                 getNodes(e, directoryNode);
             }
         }
-        catch (Exception ex)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
@@ -108,20 +114,19 @@ public class DirectoryXMLHolder extends WebXMLParser {
         fileSystem = Boolean.getBoolean(element.getAttribute("isfilesystem"));
         type = Integer.parseInt(element.getAttribute("type"));
         path = element.getAttribute("path");
-        if (path.length() == 0)
-        {
-            if (directoryNode.getDO() != null)
-            {
+        if (path.length() == 0) {
+            if (directoryNode.getDO() != null) {
                 String parentPfad = directoryNode.getDO().getPath();
-                if (parentPfad.length() != 0 && parentPfad.lastIndexOf(DirectoryDO.getSeparator()) == parentPfad.length() - 1)
-                {
+                if (parentPfad.length() != 0 &&
+                    parentPfad.lastIndexOf(DirectoryDO.getSeparator()) ==
+                    parentPfad.length() - 1) {
                     path = parentPfad + name;
                 }
-                else
+                else {
                     path = parentPfad + DirectoryDO.getSeparator() + name;
+                }
             }
-            else
-            {
+            else {
                 path = DirectoryDO.getSeparator();
             }
         }

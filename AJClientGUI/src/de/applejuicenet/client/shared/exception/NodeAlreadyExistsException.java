@@ -7,8 +7,9 @@ package de.applejuicenet.client.shared.exception;
  * Time: 14:08:20
  * To change this template use Options | File Templates.
  */
-public class NodeAlreadyExistsException extends Exception{
-    public NodeAlreadyExistsException(String text){
+public class NodeAlreadyExistsException
+    extends Exception {
+    public NodeAlreadyExistsException(String text) {
         super(text);
     }
 }

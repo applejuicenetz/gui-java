@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.listener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/listener/Attic/DataUpdateListener.java,v 1.14 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/listener/Attic/DataUpdateListener.java,v 1.15 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.listener;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DataUpdateListener.java,v $
+ * Revision 1.15  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.14  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -40,16 +43,16 @@ package de.applejuicenet.client.gui.listener;
  */
 
 public interface DataUpdateListener {
-  public static final int DOWNLOAD_CHANGED = 0;
-  public static final int UPLOAD_CHANGED = 1;
-  public static final int SERVER_CHANGED = 2;
-  public static final int SHARE_CHANGED = 3;
-  public static final int NETINFO_CHANGED = 4;
-  public static final int SETTINGS_CHANGED = 6;
-  public static final int CONNECTION_SETTINGS_CHANGED = 7;
-  public static final int SPEED_CHANGED = 8;
-  public static final int SEARCH_CHANGED = 9;
-  public static final int INFORMATION_CHANGED = 10;
+    public static final int DOWNLOAD_CHANGED = 0;
+    public static final int UPLOAD_CHANGED = 1;
+    public static final int SERVER_CHANGED = 2;
+    public static final int SHARE_CHANGED = 3;
+    public static final int NETINFO_CHANGED = 4;
+    public static final int SETTINGS_CHANGED = 6;
+    public static final int CONNECTION_SETTINGS_CHANGED = 7;
+    public static final int SPEED_CHANGED = 8;
+    public static final int SEARCH_CHANGED = 9;
+    public static final int INFORMATION_CHANGED = 10;
 
-  public void fireContentChanged(int type, Object content);
+    public void fireContentChanged(int type, Object content);
 }

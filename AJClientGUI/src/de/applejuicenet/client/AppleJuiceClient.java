@@ -7,20 +7,25 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
+
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Toolkit;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.ConnectFrame;
 import de.applejuicenet.client.gui.QuickConnectionSettingsDialog;
+import de.applejuicenet.client.gui.UpdateInformationDialog;
 import de.applejuicenet.client.gui.WizardDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -32,14 +37,9 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
-import de.applejuicenet.client.gui.ConnectFrame;
-import de.applejuicenet.client.gui.UpdateInformationDialog;
-import java.awt.Insets;
-import java.awt.Point;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.59 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.60 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,6 +48,9 @@ import java.awt.Point;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.60  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.59  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -156,7 +159,7 @@ import java.awt.Point;
  * Wizard erweitert, aber noch nicht fertiggestellt.
  *
  * Revision 1.25  2003/09/07 09:29:55  maj0r
-     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.24  2003/09/06 14:57:55  maj0r
  * Splashscreenausblendung verlagert.
@@ -234,26 +237,27 @@ public class AppleJuiceClient {
     public static void runmain(String[] args) {
         String javaVersion = System.getProperty("java.version");
         StringBuffer version = new StringBuffer(javaVersion);
-        for (int i=version.length()-1; i>=0; i--){
-            if (version.charAt(i)=='.'){
+        for (int i = version.length() - 1; i >= 0; i--) {
+            if (version.charAt(i) == '.') {
                 version.deleteCharAt(i);
             }
         }
-        if (javaVersion.length()>2){
+        if (javaVersion.length() > 2) {
             javaVersion = javaVersion.substring(0, 2);
         }
         boolean gueltig = false;
-        try{
-            int versionsNr = Integer.parseInt(version.toString().substring(0,2));
-            if (versionsNr >= 14){
+        try {
+            int versionsNr = Integer.parseInt(version.toString().substring(0, 2));
+            if (versionsNr >= 14) {
                 gueltig = true;
             }
         }
-        catch(Exception e){
+        catch (Exception e) {
             //nix zu tun
         }
-        if (!gueltig){
-            JOptionPane.showMessageDialog(new Frame(), "Es wird mindestens JRE 1.4 benötigt!", "appleJuice Client",
+        if (!gueltig) {
+            JOptionPane.showMessageDialog(new Frame(),
+                "Es wird mindestens JRE 1.4 benötigt!", "appleJuice Client",
                                           JOptionPane.ERROR_MESSAGE);
         }
 
@@ -306,7 +310,7 @@ public class AppleJuiceClient {
                 System.exit(1);
             }
         }
-        else{
+        else {
             int PORT = PropertiesManager.getOptionsManager().
                 getLinkListenerPort();
             String passwort = PropertiesManager.getOptionsManager().
@@ -315,8 +319,10 @@ public class AppleJuiceClient {
                 Socket socket = new Socket("localhost", PORT);
                 socket.close();
                 //bereits ein GUI vorhanden, also GUI schliessen
-                JOptionPane.showMessageDialog(new Frame(), "Eine Instanz des GUIs ist bereits in Verwendung.",
-                                              "appleJuice Client", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(new Frame(),
+                    "Eine Instanz des GUIs ist bereits in Verwendung.",
+                                              "appleJuice Client",
+                                              JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
             }
             catch (IOException ex) {
@@ -379,7 +385,8 @@ public class AppleJuiceClient {
             ConnectFrame connectFrame = new ConnectFrame();
 //            connectFrame.show();
 //            connectFrame.hide();
-            Splash splash = new Splash(connectFrame, IconManager.getInstance().getIcon(
+            Splash splash = new Splash(connectFrame,
+                                       IconManager.getInstance().getIcon(
                 "splashscreen").getImage());
             splash.show();
             if (logger.isEnabledFor(Level.INFO)) {
@@ -396,10 +403,11 @@ public class AppleJuiceClient {
             QuickConnectionSettingsDialog remoteDialog = null;
             int versuche = 0;
             AppleJuiceDialog.initThemes();
-            boolean showDialog = PropertiesManager.getOptionsManager().shouldShowConnectionDialogOnStartup();
+            boolean showDialog = PropertiesManager.getOptionsManager().
+                shouldShowConnectionDialogOnStartup();
             while (showDialog || !ApplejuiceFassade.istCoreErreichbar()) {
                 splash.setVisible(false);
-                if (!showDialog){
+                if (!showDialog) {
                     versuche++;
                     titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                         getFirstAttrbuteByTagName(new String[] {"mainform",
@@ -428,7 +436,8 @@ public class AppleJuiceClient {
                         PropertiesManager.getOptionsManager().
                         getRemoteSettings().
                         getHost());
-                    JOptionPane.showMessageDialog(connectFrame, nachricht, titel,
+                    JOptionPane.showMessageDialog(connectFrame, nachricht,
+                                                  titel,
                                                   JOptionPane.OK_OPTION);
                     logger.fatal(nachricht);
                     System.out.println("Fehler: " + nachricht);
@@ -449,14 +458,18 @@ public class AppleJuiceClient {
             else {
                 Toolkit tk = Toolkit.getDefaultToolkit();
                 Dimension screenSize = tk.getScreenSize();
-                Dimension appScreenSize = new Dimension(screenSize.width, screenSize.height);
-                Insets insets = tk.getScreenInsets(theApp.getGraphicsConfiguration());
+                Dimension appScreenSize = new Dimension(screenSize.width,
+                    screenSize.height);
+                Insets insets = tk.getScreenInsets(theApp.
+                    getGraphicsConfiguration());
                 appScreenSize.width -= (insets.left + insets.right);
                 appScreenSize.width = appScreenSize.width / 5 * 4;
                 appScreenSize.height -= (insets.top + insets.bottom);
                 appScreenSize.height = appScreenSize.height / 5 * 4;
-                Point location = new Point((screenSize.width - appScreenSize.width)/2,
-                                           (screenSize.height - appScreenSize.height)/2);
+                Point location = new Point( (screenSize.width -
+                                             appScreenSize.width) / 2,
+                                           (screenSize.height -
+                                            appScreenSize.height) / 2);
                 lm.setMainXY(location);
                 lm.setMainDimension(appScreenSize);
                 theApp.setSize(appScreenSize);
@@ -494,11 +507,12 @@ public class AppleJuiceClient {
                     try {
                         String downloadData = WebsiteContentLoader.
                             getWebsiteContent("http://download.berlios.de", 80,
-                            "/applejuicejava/version.txt");
+                                              "/applejuicejava/version.txt");
 
                         if (downloadData.length() > 0) {
                             int pos1 = downloadData.indexOf("|");
-                            String aktuellsteVersion = downloadData.substring(0, pos1);
+                            String aktuellsteVersion = downloadData.substring(0,
+                                pos1);
                             StringTokenizer token1 = new StringTokenizer(
                                 aktuellsteVersion, ".");
                             StringTokenizer token2 = new StringTokenizer(
@@ -531,24 +545,28 @@ public class AppleJuiceClient {
                                      Integer.parseInt(aktuelleVersion[2])) {
                                 cosmeticUpdate = true;
                             }
-                            if (versionsInfoModus==2
-                                && (cosmeticUpdate || importantUpdate || versionUpdate )){
+                            if (versionsInfoModus == 2
+                                &&
+                                (cosmeticUpdate || importantUpdate || versionUpdate)) {
                                 showInfo = true;
                             }
-                            else if(versionsInfoModus==1
-                                    && (importantUpdate || versionUpdate)){
+                            else if (versionsInfoModus == 1
+                                     && (importantUpdate || versionUpdate)) {
                                 showInfo = true;
                             }
-                            else if(versionsInfoModus==0
-                                    && versionUpdate){
+                            else if (versionsInfoModus == 0
+                                     && versionUpdate) {
                                 showInfo = true;
                             }
                             if (showInfo) {
                                 int pos2 = downloadData.lastIndexOf("|");
-                                String winLink = downloadData.substring(pos1 + 1, pos2);
-                                String sonstigeLink = downloadData.substring(pos2 + 1);
+                                String winLink = downloadData.substring(pos1 +
+                                    1, pos2);
+                                String sonstigeLink = downloadData.substring(
+                                    pos2 + 1);
                                 UpdateInformationDialog updateInformationDialog =
-                                    new UpdateInformationDialog(theApp, aktuellsteVersion, winLink, sonstigeLink);
+                                    new UpdateInformationDialog(theApp,
+                                    aktuellsteVersion, winLink, sonstigeLink);
                                 updateInformationDialog.show();
                             }
                         }

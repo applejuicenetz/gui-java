@@ -1,17 +1,17 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
-import de.applejuicenet.client.gui.controller.WebXMLParser;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
-import de.applejuicenet.client.shared.Information;
-import org.w3c.dom.NodeList;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.WebXMLParser;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
+import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SecurerXMLHolder.java,v 1.3 2004/01/30 16:32:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SecurerXMLHolder.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SecurerXMLHolder.java,v $
+ * Revision 1.4  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2004/01/30 16:32:31  maj0r
  * Verbindung sollte nun auch bei belasteten Verbindungen aufgebaut werden.
  * MapSetStringKey ausgebaut.
@@ -33,10 +36,11 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  *
  */
 
-public class SecurerXMLHolder extends WebXMLParser {
+public class SecurerXMLHolder
+    extends WebXMLParser {
     private Logger logger;
 
-    public SecurerXMLHolder(){
+    public SecurerXMLHolder() {
         super("/xml/modified.xml", "");
         logger = Logger.getLogger(getClass());
     }
@@ -45,13 +49,13 @@ public class SecurerXMLHolder extends WebXMLParser {
         throw new RuntimeException();
     }
 
-    public boolean secure(String sessionKontext, Information information){
-        try{
+    public boolean secure(String sessionKontext, Information information) {
+        try {
             reload(sessionKontext + "&filter=informations", true);
             updateInformation(information);
             return true;
         }
-        catch(WebSiteNotFoundException wsnfE){
+        catch (WebSiteNotFoundException wsnfE) {
             //Verbindung zum Core ueberlastet.
             return false;
         }
@@ -63,8 +67,8 @@ public class SecurerXMLHolder extends WebXMLParser {
         }
     }
 
-    private void updateInformation(Information information){
-        if (information != null){
+    private void updateInformation(Information information) {
+        if (information != null) {
             NodeList nodes = document.getElementsByTagName("information");
             long sessionUpload;
             long sessionDownload;
@@ -91,7 +95,8 @@ public class SecurerXMLHolder extends WebXMLParser {
                 information.setSessionUpload(sessionUpload);
                 information.setSessionDownload(sessionDownload);
             }
-            ApplejuiceFassade.getInstance().informDataUpdateListener(DataUpdateListener.INFORMATION_CHANGED);
+            ApplejuiceFassade.getInstance().informDataUpdateListener(
+                DataUpdateListener.INFORMATION_CHANGED);
         }
     }
 }

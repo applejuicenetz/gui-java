@@ -1,31 +1,32 @@
 package de.applejuicenet.client.gui;
 
 import java.util.Vector;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import javax.swing.JDialog;
-import javax.swing.Icon;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.11 2004/01/25 10:16:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODPluginPanel.java,v 1.12 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,6 +35,9 @@ import de.applejuicenet.client.shared.IconManager;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODPluginPanel.java,v $
+ * Revision 1.12  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.11  2004/01/25 10:16:42  maj0r
  * Optionenmenue ueberarbeitet.
  *
@@ -60,7 +64,8 @@ import de.applejuicenet.client.shared.IconManager;
  */
 
 public class ODPluginPanel
-    extends JPanel implements OptionsRegister{
+    extends JPanel
+    implements OptionsRegister {
     private JList pluginList;
     private JEditorPane beschreibung = new JEditorPane();
     private JLabel label1 = new JLabel();
@@ -141,7 +146,8 @@ public class ODPluginPanel
                                       String[] {"javagui", "options", "plugins",
                                       "einstellungen"})));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[]{"einstform", "TabSheet1", "caption"}));
+            getFirstAttrbuteByTagName(new String[] {"einstform", "TabSheet1",
+                                      "caption"}));
 
         add(label1, BorderLayout.NORTH);
         add(pluginList, BorderLayout.WEST);
@@ -154,9 +160,10 @@ public class ODPluginPanel
         add(panel1, BorderLayout.CENTER);
         einstellungen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                if (selectedPluginConnector != null){
+                if (selectedPluginConnector != null) {
                     ODPluginOptionsDialog pluginOptionsDialog =
-                        new ODPluginOptionsDialog(parentDialog, selectedPluginConnector);
+                        new ODPluginOptionsDialog(parentDialog,
+                                                  selectedPluginConnector);
                     pluginOptionsDialog.setResizable(true);
                     pluginOptionsDialog.show();
                 }
@@ -175,7 +182,7 @@ public class ODPluginPanel
             return plugin.getTitle();
         }
 
-        public PluginConnector getPlugin(){
+        public PluginConnector getPlugin() {
             return plugin;
         }
 
@@ -198,7 +205,7 @@ public class ODPluginPanel
         PluginContainer selected = (PluginContainer) ( (JList) e.getSource()).
             getSelectedValue();
         beschreibung.setText(selected.getBeschreibung());
-        if ( selected.getPluginOptionPanel() == null) {
+        if (selected.getPluginOptionPanel() == null) {
             einstellungen.setVisible(false);
         }
         else {

@@ -1,6 +1,7 @@
 package de.applejuicenet.client.gui;
 
 import java.io.File;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -25,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolTip;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -38,7 +40,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.23 2004/02/04 14:57:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.24 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,6 +49,9 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.24  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.23  2004/02/04 14:57:20  maj0r
  * Bug #94 gefixt (Danke an error666)
  * Zulaessige Werte für Core-Port und XML-Port sind 1024<x<=32000.
@@ -112,7 +117,8 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  */
 
 public class ODStandardPanel
-    extends JPanel implements OptionsRegister {
+    extends JPanel
+    implements OptionsRegister {
     private boolean dirty = false;
     private boolean xmlPortDirty = false;
     private JLabel label1 = new JLabel();
@@ -211,11 +217,11 @@ public class ODStandardPanel
             public void focusLost(FocusEvent e) {
                 int portNr = Integer.parseInt(port.getText());
                 if (ajSettings.getPort() != portNr) {
-                    if (portNr > 1024 && portNr <=32000){
+                    if (portNr > 1024 && portNr <= 32000) {
                         dirty = true;
                         ajSettings.setPort(Integer.parseInt(port.getText()));
                     }
-                    else{
+                    else {
                         port.setText(Long.toString(ajSettings.getPort()));
                     }
                 }
@@ -225,13 +231,13 @@ public class ODStandardPanel
             public void focusLost(FocusEvent e) {
                 int xmlPortNr = Integer.parseInt(xmlPort.getText());
                 if (ajSettings.getXMLPort() != Long.parseLong(xmlPort.getText())) {
-                    if (xmlPortNr > 1024 && xmlPortNr <=32000){
+                    if (xmlPortNr > 1024 && xmlPortNr <= 32000) {
                         dirty = true;
                         xmlPortDirty = true;
                         remote.setXmlPort(Integer.parseInt(xmlPort.getText()));
                         ajSettings.setXMLPort(Long.parseLong(xmlPort.getText()));
                     }
-                    else{
+                    else {
                         xmlPort.setText(Long.toString(ajSettings.getXMLPort()));
                     }
                 }
@@ -265,8 +271,9 @@ public class ODStandardPanel
             languageSelector.getFirstAttrbuteByTagName(new String[] {"javagui",
             "options", "logging", "off"})));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                           getFirstAttrbuteByTagName(new String[]{"einstform", "standardsheet",
-                                                                                                  "caption"}));
+            getFirstAttrbuteByTagName(new String[] {"einstform",
+                                      "standardsheet",
+                                      "caption"}));
         cmbLog = new JComboBox(levelItems);
         cmbLog.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {

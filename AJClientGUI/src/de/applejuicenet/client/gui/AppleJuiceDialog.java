@@ -1,6 +1,9 @@
 package de.applejuicenet.client.gui;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -31,6 +34,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -39,11 +43,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -60,20 +66,14 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.tools.MemoryMonitorDialog;
+import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import javax.swing.JSlider;
-import de.applejuicenet.client.shared.AJSettings;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.93 2004/02/04 16:10:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.94 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.94  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.93  2004/02/04 16:10:46  maj0r
  * Titel im Fehlerdialog geaendert.
  *
@@ -239,7 +242,7 @@ import java.io.*;
  * Um Wizard erweitert, aber noch nicht fertiggestellt.
  *
  * Revision 1.43  2003/09/07 09:29:55  maj0r
-     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.42  2003/09/05 09:02:26  maj0r
  * Threadverwendung verbessert.
@@ -302,7 +305,7 @@ import java.io.*;
  * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
  *
  * Revision 1.23  2003/06/22 19:54:45  maj0r
-     * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
+ * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
  *
  * Revision 1.22  2003/06/13 15:07:30  maj0r
  * Versionsanzeige hinzugefügt.
@@ -372,8 +375,8 @@ public class AppleJuiceDialog
                                            File.separator + "themes");
                 if (!themesPath.isDirectory()) {
                     closeWithErrormessage("Der Ordner" +
-                        " für die Themes zip-Dateien ist nicht vorhanden." +
-                        "\r\nappleJuice wird beendet.", false);
+                                          " für die Themes zip-Dateien ist nicht vorhanden." +
+                                          "\r\nappleJuice wird beendet.", false);
                 }
                 File[] themeFiles = themesPath.listFiles();
                 for (int i = 0; i < themeFiles.length; i++) {
@@ -530,7 +533,8 @@ public class AppleJuiceDialog
                             if ( (evt.getModifiers() & MouseEvent.BUTTON1_MASK) !=
                                 0 &&
                                 evt.getClickCount() == 2) {
-                               AppleJuiceDialog dialog = AppleJuiceDialog.getApp();
+                                AppleJuiceDialog dialog = AppleJuiceDialog.
+                                    getApp();
                                 if (!isVisible()) {
                                     dialog.setVisible(true);
                                     dialog.requestFocus();
@@ -761,8 +765,8 @@ public class AppleJuiceDialog
             File languagePath = new File(path);
             if (!languagePath.isDirectory()) {
                 closeWithErrormessage("Der Ordner " + path +
-                    " für die Sprachauswahl xml-Dateien ist nicht vorhanden." +
-                    "\r\nappleJuice wird beendet.", false);
+                                      " für die Sprachauswahl xml-Dateien ist nicht vorhanden." +
+                                      "\r\nappleJuice wird beendet.", false);
             }
             String[] tempListe = languagePath.list();
             HashSet sprachDateien = new HashSet();
@@ -856,8 +860,8 @@ public class AppleJuiceDialog
                                            File.separator + "themes");
                 if (!themesPath.isDirectory()) {
                     closeWithErrormessage("Der Ordner " + path +
-                        " für die Themes zip-Dateien ist nicht vorhanden." +
-                        "\r\nappleJuice wird beendet.", false);
+                                          " für die Themes zip-Dateien ist nicht vorhanden." +
+                                          "\r\nappleJuice wird beendet.", false);
                 }
                 File[] themeFiles = themesPath.listFiles();
                 for (int i = 0; i < themeFiles.length; i++) {
@@ -930,7 +934,7 @@ public class AppleJuiceDialog
         }
     }
 
-    private void showOptionsDialog(){
+    private void showOptionsDialog() {
         OptionsDialog od = new OptionsDialog(getApp());
         Dimension optDimension = od.getSize();
         Dimension screenSize = Toolkit.getDefaultToolkit().
@@ -989,23 +993,23 @@ public class AppleJuiceDialog
         }
     }
 
-    private void dateiListeImportieren(){
+    private void dateiListeImportieren() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
         fileChooser.setFileFilter(new TxtFileFilter());
         fileChooser.setDialogTitle(menuItemDateiliste.getText());
         fileChooser.setMultiSelectionEnabled(false);
         int i = fileChooser.showOpenDialog(this);
-        if (i == JFileChooser.APPROVE_OPTION){
+        if (i == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            if (file.isFile()){
+            if (file.isFile()) {
                 BufferedReader reader = null;
                 try {
                     reader = new BufferedReader(new
-                        FileReader(file));
+                                                FileReader(file));
                     String line = "";
                     while ( (line = reader.readLine()) != null) {
-                        if (line.compareTo("100") == 0){
+                        if (line.compareTo("100") == 0) {
                             break;
                         }
                     }
@@ -1015,11 +1019,12 @@ public class AppleJuiceDialog
                     String link = "";
                     ApplejuiceFassade af = ApplejuiceFassade.getInstance();
                     while ( (line = reader.readLine()) != null) {
-                        filename  = line;
+                        filename = line;
                         checksum = reader.readLine();
                         size = reader.readLine();
-                        if (size != null && checksum != null){
-                            link = "ajfsp://file|" + filename + "|" + checksum + "|" + size + "/";
+                        if (size != null && checksum != null) {
+                            link = "ajfsp://file|" + filename + "|" + checksum +
+                                "|" + size + "/";
                             af.processLink(link);
                         }
                     }
@@ -1122,7 +1127,8 @@ public class AppleJuiceDialog
                     getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
                                               "verstecken"}));
                 popupOptionenMenuItem.setText(menuItemOptionen.getText());
-                popupOptionenMenuItem.setToolTipText(menuItemOptionen.getToolTipText());
+                popupOptionenMenuItem.setToolTipText(menuItemOptionen.
+                    getToolTipText());
             }
         }
         catch (Exception e) {
@@ -1195,81 +1201,93 @@ public class AppleJuiceDialog
             }
         });
         popup.add(popupAboutMenuItem);
-        new Thread(){
-          public void run(){
-              final AJSettings ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
-              final JSlider uploadSlider = new JSlider(JSlider.VERTICAL, 0, 50, (int) ajSettings.getMaxUploadInKB());
-              final JSlider downloadSlider = new JSlider(JSlider.VERTICAL, 0, 300, (int) ajSettings.getMaxDownloadInKB());
-              uploadSlider.setPaintLabels(true);
-              uploadSlider.setPaintTicks(true);
-              uploadSlider.setPaintTrack(true);
-              uploadSlider.setSnapToTicks(true);
-              downloadSlider.setPaintLabels(true);
-              downloadSlider.setPaintTicks(true);
-              downloadSlider.setPaintTrack(true);
-              downloadSlider.setSnapToTicks(true);
-              final JMenu uploadMenu = new JMenu("Upload");
-              final JMenu downloadMenu = new JMenu("Download");
-              JPanel uploadPanel = new JPanel(new BorderLayout());
-              JPanel downloadPanel = new JPanel(new BorderLayout());
-              final JLabel label1 = new JLabel("50 kb/s");
-              final JLabel label2 = new JLabel("50 kb/s");
-              label1.setText(Long.toString(ajSettings.getMaxUploadInKB()) + " kb/s");
-              label2.setText(Long.toString(ajSettings.getMaxDownloadInKB()) + " kb/s");
-              uploadPanel.add(label1, BorderLayout.NORTH);
-              uploadPanel.add(uploadSlider, BorderLayout.SOUTH);
-              uploadMenu.add(uploadPanel);
-              downloadPanel.add(label2, BorderLayout.NORTH);
-              downloadPanel.add(downloadSlider, BorderLayout.SOUTH);
-              downloadMenu.add(downloadPanel);
-              uploadSlider.addChangeListener(new ChangeListener() {
-                  public void stateChanged(ChangeEvent e) {
-                      JSlider slider = (JSlider) e.getSource();
-                      label1.setText(Integer.toString(slider.getValue()) + " kb/s");
-                  }
-              });
-              downloadSlider.addChangeListener(new ChangeListener() {
-                  public void stateChanged(ChangeEvent e) {
-                      JSlider slider = (JSlider) e.getSource();
-                      label2.setText(Integer.toString(slider.getValue()) + " kb/s");
-                  }
-              });
-              uploadSlider.addMouseListener(new MouseAdapter(){
-                  public void mouseReleased(MouseEvent e){
-                      if (uploadSlider.getValue() < uploadSlider.getMaximum()
-                          && uploadSlider.getValue() > 0){
-                          long down = downloadSlider.getValue() * 1024;
-                          long up = uploadSlider.getValue() * 1024;
-                          ApplejuiceFassade.getInstance().setMaxUpAndDown(up,
-                              down);
-                      }
-                      else{
-                          uploadSlider.setValue((int) ajSettings.getMaxUploadInKB());
-                      }
-                  }
-              });
-              downloadSlider.addMouseListener(new MouseAdapter(){
-                  public void mouseReleased(MouseEvent e){
-                      if (downloadSlider.getValue() < downloadSlider.getMaximum()
-                          && downloadSlider.getValue() > 0){
-                          long down = downloadSlider.getValue() * 1024;
-                          long up = uploadSlider.getValue() * 1024;
-                          ApplejuiceFassade.getInstance().setMaxUpAndDown(up,
-                              down);
-                      }
-                      else{
-                          downloadSlider.setValue((int) ajSettings.getMaxDownloadInKB());
-                      }
-                  }
-              });
-              SwingUtilities.invokeLater(new Runnable(){
-                  public void run(){
-                      popup.add(uploadMenu);
-                      popup.add(downloadMenu);
-                  }
-              });
-          }
-        }.start();
+        new Thread() {
+            public void run() {
+                final AJSettings ajSettings = ApplejuiceFassade.getInstance().
+                    getAJSettings();
+                final JSlider uploadSlider = new JSlider(JSlider.VERTICAL, 0,
+                    50, (int) ajSettings.getMaxUploadInKB());
+                final JSlider downloadSlider = new JSlider(JSlider.VERTICAL, 0,
+                    300, (int) ajSettings.getMaxDownloadInKB());
+                uploadSlider.setPaintLabels(true);
+                uploadSlider.setPaintTicks(true);
+                uploadSlider.setPaintTrack(true);
+                uploadSlider.setSnapToTicks(true);
+                downloadSlider.setPaintLabels(true);
+                downloadSlider.setPaintTicks(true);
+                downloadSlider.setPaintTrack(true);
+                downloadSlider.setSnapToTicks(true);
+                final JMenu uploadMenu = new JMenu("Upload");
+                final JMenu downloadMenu = new JMenu("Download");
+                JPanel uploadPanel = new JPanel(new BorderLayout());
+                JPanel downloadPanel = new JPanel(new BorderLayout());
+                final JLabel label1 = new JLabel("50 kb/s");
+                final JLabel label2 = new JLabel("50 kb/s");
+                label1.setText(Long.toString(ajSettings.getMaxUploadInKB()) +
+                               " kb/s");
+                label2.setText(Long.toString(ajSettings.getMaxDownloadInKB()) +
+                               " kb/s");
+                uploadPanel.add(label1, BorderLayout.NORTH);
+                uploadPanel.add(uploadSlider, BorderLayout.SOUTH);
+                uploadMenu.add(uploadPanel);
+                downloadPanel.add(label2, BorderLayout.NORTH);
+                downloadPanel.add(downloadSlider, BorderLayout.SOUTH);
+                downloadMenu.add(downloadPanel);
+                uploadSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent e) {
+                        JSlider slider = (JSlider) e.getSource();
+                        label1.setText(Integer.toString(slider.getValue()) +
+                                       " kb/s");
+                    }
+                });
+                downloadSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent e) {
+                        JSlider slider = (JSlider) e.getSource();
+                        label2.setText(Integer.toString(slider.getValue()) +
+                                       " kb/s");
+                    }
+                });
+                uploadSlider.addMouseListener(new MouseAdapter() {
+                    public void mouseReleased(MouseEvent e) {
+                        if (uploadSlider.getValue() < uploadSlider.getMaximum()
+                            && uploadSlider.getValue() > 0) {
+                            long down = downloadSlider.getValue() * 1024;
+                            long up = uploadSlider.getValue() * 1024;
+                            ApplejuiceFassade.getInstance().setMaxUpAndDown(up,
+                                down);
+                        }
+                        else {
+                            uploadSlider.setValue( (int) ajSettings.
+                                                  getMaxUploadInKB());
+                        }
+                    }
+                });
+                downloadSlider.addMouseListener(new MouseAdapter() {
+                    public void mouseReleased(MouseEvent e) {
+                        if (downloadSlider.getValue() <
+                            downloadSlider.getMaximum()
+                            && downloadSlider.getValue() > 0) {
+                            long down = downloadSlider.getValue() * 1024;
+                            long up = uploadSlider.getValue() * 1024;
+                            ApplejuiceFassade.getInstance().setMaxUpAndDown(up,
+                                down);
+                        }
+                        else {
+                            downloadSlider.setValue( (int) ajSettings.
+                                getMaxDownloadInKB());
+                        }
+                    }
+                });
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        popup.add(uploadMenu);
+                        popup.add(downloadMenu);
+                    }
+                });
+            }
+        }
+
+        .start();
         return popup;
     }
 
@@ -1361,11 +1379,13 @@ public class AppleJuiceDialog
         }
     }
 
-    private class TxtFileFilter extends FileFilter{
+    private class TxtFileFilter
+        extends FileFilter {
         public boolean accept(File file) {
-            if (!file.isFile())
+            if (!file.isFile()) {
                 return true;
-            else{
+            }
+            else {
                 String name = file.getName();
                 return (name.toLowerCase().endsWith(".ajl"));
             }

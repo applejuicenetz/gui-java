@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/InformationDO.java,v 1.1 2004/01/01 14:27:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/InformationDO.java,v 1.2 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: InformationDO.java,v $
+ * Revision 1.2  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.1  2004/01/01 14:27:25  maj0r
  * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
  *
@@ -26,8 +29,10 @@ public class InformationDO {
     private long downloadSpeed;
     private long openConnections;
 
-    public InformationDO(int id, long sessionUpload, long sessionDownload, long credits,
-                         long uploadSpeed, long downloadSpeed, long openConnections) {
+    public InformationDO(int id, long sessionUpload, long sessionDownload,
+                         long credits,
+                         long uploadSpeed, long downloadSpeed,
+                         long openConnections) {
         this.id = id;
         this.sessionUpload = sessionUpload;
         this.sessionDownload = sessionDownload;

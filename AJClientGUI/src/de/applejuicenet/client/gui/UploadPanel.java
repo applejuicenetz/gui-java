@@ -1,16 +1,24 @@
 package de.applejuicenet.client.gui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import org.apache.log4j.Level;
@@ -28,17 +36,9 @@ import de.applejuicenet.client.gui.tables.upload.UploadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.tables.upload.UploadTableTreeCellRenderer;
 import de.applejuicenet.client.gui.tables.upload.UploadTableVersionCellRenderer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
-import javax.swing.table.JTableHeader;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.JPopupMenu;
-import javax.swing.table.TableColumn;
-import javax.swing.JCheckBoxMenuItem;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.37 2004/02/04 14:26:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.38 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,6 +47,9 @@ import java.util.ArrayList;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.38  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.37  2004/02/04 14:26:05  maj0r
  * Bug #185 gefixt (Danke an muhviestarr)
  * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
@@ -94,7 +97,7 @@ import java.util.ArrayList;
  * Wizard fertiggestellt.
  *
  * Revision 1.22  2003/09/07 09:29:55  maj0r
-     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+ * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.21  2003/09/02 16:08:14  maj0r
  * Downloadbaum komplett umgebaut.
@@ -152,10 +155,11 @@ public class UploadPanel
 
     private JPopupMenu columnPopup = new JPopupMenu();
     private TableColumn[] columns = new TableColumn[7];
-    private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[columns.length];
+    private JCheckBoxMenuItem[] columnPopupItems = new JCheckBoxMenuItem[
+        columns.length];
 
-    public static synchronized UploadPanel getInstance(){
-        if (instance == null){
+    public static synchronized UploadPanel getInstance() {
+        if (instance == null) {
             instance = new UploadPanel();
         }
         return instance;
@@ -197,28 +201,36 @@ public class UploadPanel
             UploadTableVersionCellRenderer());
 
         TableColumnModel model = uploadDataTable.getColumnModel();
-        for (int i=0; i<columns.length; i++){
+        for (int i = 0; i < columns.length; i++) {
             columns[i] = model.getColumn(i);
-            columnPopupItems[i] = new JCheckBoxMenuItem((String)columns[i].getHeaderValue());
+            columnPopupItems[i] = new JCheckBoxMenuItem( (String) columns[i].
+                getHeaderValue());
             final int x = i;
-            columnPopupItems[i].addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent ae){
-                    if (columnPopupItems[x].isSelected()){
+            columnPopupItems[i].addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    if (columnPopupItems[x].isSelected()) {
                         uploadDataTable.getColumnModel().addColumn(columns[x]);
-                        PropertiesManager.getPositionManager().setUploadColumnVisible(x, true);
-                        PropertiesManager.getPositionManager().setUploadColumnIndex(
-                            x, uploadDataTable.getColumnModel().getColumnIndex(columns[x].getIdentifier()));
+                        PropertiesManager.getPositionManager().
+                            setUploadColumnVisible(x, true);
+                        PropertiesManager.getPositionManager().
+                            setUploadColumnIndex(
+                            x,
+                            uploadDataTable.getColumnModel().getColumnIndex(columns[
+                            x].getIdentifier()));
                     }
-                    else{
+                    else {
                         uploadDataTable.getColumnModel().removeColumn(columns[x]);
-                        PropertiesManager.getPositionManager().setUploadColumnVisible(x, false);
-                        for (int i=0; i<columns.length; i++){
-                            try{
-                                PropertiesManager.getPositionManager().setUploadColumnIndex(
-                                    i, uploadDataTable.getColumnModel().getColumnIndex(columns[i].getIdentifier()));
+                        PropertiesManager.getPositionManager().
+                            setUploadColumnVisible(x, false);
+                        for (int i = 0; i < columns.length; i++) {
+                            try {
+                                PropertiesManager.getPositionManager().
+                                    setUploadColumnIndex(
+                                    i,
+                                    uploadDataTable.getColumnModel().
+                                    getColumnIndex(columns[i].getIdentifier()));
                             }
-                            catch (IllegalArgumentException niaE)
-                            {
+                            catch (IllegalArgumentException niaE) {
                                 //nix zu tun
                             }
                         }
@@ -231,16 +243,17 @@ public class UploadPanel
 
         JTableHeader header = uploadDataTable.getTableHeader();
         header.addMouseListener(new HeaderPopupListener());
-        header.addMouseMotionListener(new MouseMotionAdapter(){
-            public void mouseDragged(MouseEvent e){
+        header.addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseDragged(MouseEvent e) {
                 PositionManager pm = PropertiesManager.getPositionManager();
                 TableColumnModel columnModel = uploadDataTable.getColumnModel();
-                for (int i=0; i<columns.length; i++){
-                    try{
-                        pm.setUploadColumnIndex(i, columnModel.getColumnIndex(columns[i].getIdentifier()));
+                for (int i = 0; i < columns.length; i++) {
+                    try {
+                        pm.setUploadColumnIndex(i,
+                                                columnModel.getColumnIndex(columns[
+                            i].getIdentifier()));
                     }
-                    catch (IllegalArgumentException niaE)
-                    {
+                    catch (IllegalArgumentException niaE) {
                         //nix zu tun
                     }
                 }
@@ -341,7 +354,7 @@ public class UploadPanel
                     for (int i = 0; i < columns.length; i++) {
                         columns[i].setPreferredWidth(widths[i]);
                         uploadDataTable.removeColumn(columns[i]);
-                        if (visibilies[i]){
+                        if (visibilies[i]) {
                             visibleColumns.add(columns[i]);
                         }
                     }
@@ -349,9 +362,9 @@ public class UploadPanel
                     for (int i = 0; i < visibleColumns.size(); i++) {
                         for (int x = 0; x < columns.length; x++) {
                             if (visibleColumns.contains(columns[x])
-                                && indizes[x] == pos +1){
+                                && indizes[x] == pos + 1) {
                                 uploadDataTable.addColumn(columns[x]);
-                                pos ++;
+                                pos++;
                                 break;
                             }
                         }
@@ -378,38 +391,39 @@ public class UploadPanel
         panelSelected = false;
     }
 
-    class HeaderPopupListener extends MouseAdapter {
+    class HeaderPopupListener
+        extends MouseAdapter {
         private TableColumnModel model;
 
-        public HeaderPopupListener(){
+        public HeaderPopupListener() {
             model = uploadDataTable.getColumnModel();
             columnPopupItems[0].setSelected(true);
         }
 
         public void mousePressed(MouseEvent me) {
-           super.mousePressed(me);
-           maybeShowPopup(me);
-       }
+            super.mousePressed(me);
+            maybeShowPopup(me);
+        }
 
-       public void mouseReleased(MouseEvent e) {
-           super.mouseReleased(e);
-           maybeShowPopup(e);
-       }
+        public void mouseReleased(MouseEvent e) {
+            super.mouseReleased(e);
+            maybeShowPopup(e);
+        }
 
-       private void maybeShowPopup(MouseEvent e){
-           if (e.isPopupTrigger()){
-               for (int i=1; i<columns.length; i++){
-                   try{
-                       model.getColumnIndex(columns[i].getIdentifier());
-                       columnPopupItems[i].setSelected(true);
-                   }
-                   catch (IllegalArgumentException niaE)
-                   {
-                       columnPopupItems[i].setSelected(false);
-                   }
-               }
-               columnPopup.show(uploadDataTable.getTableHeader(), e.getX(), e.getY());
-           }
-       }
-   }
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                for (int i = 1; i < columns.length; i++) {
+                    try {
+                        model.getColumnIndex(columns[i].getIdentifier());
+                        columnPopupItems[i].setSelected(true);
+                    }
+                    catch (IllegalArgumentException niaE) {
+                        columnPopupItems[i].setSelected(false);
+                    }
+                }
+                columnPopup.show(uploadDataTable.getTableHeader(), e.getX(),
+                                 e.getY());
+            }
+        }
+    }
 }

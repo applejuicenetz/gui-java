@@ -1,19 +1,30 @@
 package de.applejuicenet.client.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.ChangeListener;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import javax.swing.Icon;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import javax.swing.Icon;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.applejuicenet.client.shared.ProxySettings;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.7 2004/01/25 10:16:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODProxyPanel.java,v 1.8 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +33,9 @@ import javax.swing.Icon;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ODProxyPanel.java,v $
+ * Revision 1.8  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.7  2004/01/25 10:16:42  maj0r
  * Optionenmenue ueberarbeitet.
  *
@@ -39,7 +53,8 @@ import javax.swing.Icon;
  */
 
 public class ODProxyPanel
-        extends JPanel implements OptionsRegister{
+    extends JPanel
+    implements OptionsRegister {
     private boolean dirty = false;
     private JLabel label1;
     private JLabel label2;
@@ -57,14 +72,13 @@ public class ODProxyPanel
 
     public ODProxyPanel() {
         logger = Logger.getLogger(getClass());
-        try
-        {
+        try {
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -81,39 +95,44 @@ public class ODProxyPanel
         proxySettings = PropertiesManager.getProxyManager().getProxySettings();
 
         label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "options", "proxy",
-                                                                                                     "host"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "proxy",
+                                      "host"})));
         label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "options", "proxy",
-                                                                                                     "port"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "proxy",
+                                      "port"})));
         label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "options", "proxy",
-                                                                                                     "benutzername"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "proxy",
+                                      "benutzername"})));
         label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "options", "proxy",
-                                                                                                     "passwort"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "proxy",
+                                      "passwort"})));
         use.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "options", "proxy",
-                                                                                                     "verwenden"})));
-       menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-           getFirstAttrbuteByTagName(new String[]{"javagui", "options", "proxy", "caption"}));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "proxy",
+                                      "verwenden"})));
+        menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "proxy", "caption"}));
         host.setText(proxySettings.getHost());
         host.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
-                if (proxySettings.getHost().compareTo(host.getText()) != 0)
-                {
+                if (proxySettings.getHost().compareTo(host.getText()) != 0) {
                     dirty = true;
                 }
             }
         });
         port.setDocument(new NumberInputVerifier());
-        if (proxySettings.getPort()!=-1){
+        if (proxySettings.getPort() != -1) {
             port.setText(Integer.toString(proxySettings.getPort()));
         }
         port.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
-                if (Integer.toString(proxySettings.getPort()).compareTo(host.getText()) != 0)
-                {
+                if (Integer.toString(proxySettings.getPort()).compareTo(host.
+                    getText()) != 0) {
                     dirty = true;
                 }
             }
@@ -129,7 +148,7 @@ public class ODProxyPanel
             }
         });
         use.setSelected(proxySettings.isUse());
-        use.addChangeListener(new ChangeListener(){
+        use.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 dirty = true;
             }
@@ -179,14 +198,14 @@ public class ODProxyPanel
     }
 
     public ProxySettings getProxySettings() {
-        if (dirty){
+        if (dirty) {
             proxySettings.setUse(use.isSelected());
             proxySettings.setHost(host.getText());
             String tmpPort = port.getText();
-            if (tmpPort.length()==0){
-                proxySettings.setPort(-1);
+            if (tmpPort.length() == 0) {
+                proxySettings.setPort( -1);
             }
-            else{
+            else {
                 proxySettings.setPort(Integer.parseInt(tmpPort));
             }
             proxySettings.setUserpass(user.getText(), passwort.getText());

@@ -1,9 +1,9 @@
 package de.applejuicenet.client.shared;
 
-import java.util.*;
+import java.util.HashSet;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/AJSettings.java,v 1.6 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/AJSettings.java,v 1.7 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import java.util.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AJSettings.java,v $
+ * Revision 1.7  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.6  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -44,7 +47,8 @@ public class AJSettings {
     public AJSettings(String nick, long port, long xmlPort,
                       long maxUpload, long maxDownload,
                       int speedPerSlot, String incomingDir, String tempDir,
-                      HashSet shareDirs, long maxConnections, boolean autoConnect,
+                      HashSet shareDirs, long maxConnections,
+                      boolean autoConnect,
                       long maxNewConnectionsPerTurn) {
         this.nick = nick;
         this.port = port;
@@ -160,8 +164,9 @@ public class AJSettings {
         return maxNewConnectionsPerTurn;
     }
 
-    public void setMaxNewConnectionsPerTurn(long maxNewConnectionsPerTurn) throws IllegalArgumentException{
-        if (maxNewConnectionsPerTurn<1 || maxNewConnectionsPerTurn>200){
+    public void setMaxNewConnectionsPerTurn(long maxNewConnectionsPerTurn) throws
+        IllegalArgumentException {
+        if (maxNewConnectionsPerTurn < 1 || maxNewConnectionsPerTurn > 200) {
             throw new IllegalArgumentException();
         }
         this.maxNewConnectionsPerTurn = maxNewConnectionsPerTurn;

@@ -1,19 +1,20 @@
 package de.applejuicenet.client.shared;
 
-import java.net.*;
 import java.io.File;
 import java.io.InputStream;
-import java.util.jar.JarFile;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Enumeration;
+import java.util.Vector;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-import de.applejuicenet.client.gui.plugins.*;
-import java.util.Vector;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.12 2004/01/14 15:25:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.13 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +23,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r aj@tkl-soft.de>
  *
  * $Log: PluginJarClassLoader.java,v $
+ * Revision 1.13  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.12  2004/01/14 15:25:25  maj0r
  * Loggerausgabe eingebaut.
  *
@@ -55,19 +59,19 @@ import org.apache.log4j.Level;
  */
 
 public class PluginJarClassLoader
-        extends URLClassLoader {
+    extends URLClassLoader {
     private URL url;
     private Logger logger;
 
     public PluginJarClassLoader(URL url) {
-        super(new URL[]{url});
+        super(new URL[] {url});
         this.url = url;
         logger = Logger.getLogger(getClass());
     }
 
     public PluginConnector getPlugin(String jar) throws Exception {
         File aJar = new File(jar);
-        try{
+        try {
             String theClassName = jar.substring(jar.lastIndexOf(File.
                 separatorChar) + 1, jar.lastIndexOf(".jar"));
             loadClassBytesFromJar(aJar);
@@ -76,27 +80,28 @@ public class PluginJarClassLoader
             Object aPlugin = cl.newInstance();
             return (PluginConnector) aPlugin;
         }
-        catch(Exception e){
-            if (logger.isEnabledFor(Level.INFO))
-                logger.info("Plugin " + jar + " entspricht nicht dem Standard und wurde nicht geladen.");
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.INFO)) {
+                logger.info("Plugin " + jar +
+                    " entspricht nicht dem Standard und wurde nicht geladen.");
+            }
             return null;
         }
     }
 
     private void loadClassBytesFromJar(File jar) throws Exception {
-        if (!jar.isFile())
+        if (!jar.isFile()) {
             return;
+        }
 
         JarFile jf = new JarFile(jar);
         String entryName;
         Vector classes = new Vector();
 
-        for (Enumeration e = jf.entries(); e.hasMoreElements();)
-        {
+        for (Enumeration e = jf.entries(); e.hasMoreElements(); ) {
             ZipEntry entry = (ZipEntry) e.nextElement();
             entryName = entry.getName();
-            if (entryName.indexOf(".class") == -1)
-            {
+            if (entryName.indexOf(".class") == -1) {
                 continue;
             }
             InputStream is = jf.getInputStream(entry);
@@ -104,8 +109,7 @@ public class PluginJarClassLoader
             byte[] buf = new byte[l];
             int read = 0;
 
-            while (read < l)
-            {
+            while (read < l) {
                 int incr = is.read(buf, read, l - read);
                 read += incr;
             }

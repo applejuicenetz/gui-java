@@ -1,15 +1,17 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
-import java.util.*;
+import java.util.HashSet;
 
-import org.w3c.dom.*;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
-import de.applejuicenet.client.shared.*;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
+import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.ShareEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.3 2004/02/04 13:10:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/SettingsXMLHolder.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +20,9 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SettingsXMLHolder.java,v $
+ * Revision 1.4  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2004/02/04 13:10:37  maj0r
  * Neues Linkformat zusaetzlich in den Downloadbereich eingebaut.
  *
@@ -56,7 +61,7 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  */
 
 public class SettingsXMLHolder
-        extends WebXMLParser {
+    extends WebXMLParser {
     private AJSettings settings;
     private Logger logger;
 
@@ -71,26 +76,30 @@ public class SettingsXMLHolder
             NodeList nodes = document.getElementsByTagName("nick");
             String nick = nodes.item(0).getFirstChild().getNodeValue();
             nodes = document.getElementsByTagName("port");
-            long port = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
+            long port = Long.parseLong(nodes.item(0).getFirstChild().
+                                       getNodeValue());
             nodes = document.getElementsByTagName("xmlport");
-            long xmlPort = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
+            long xmlPort = Long.parseLong(nodes.item(0).getFirstChild().
+                                          getNodeValue());
             nodes = document.getElementsByTagName("maxupload");
-            long maxUpload = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
+            long maxUpload = Long.parseLong(nodes.item(0).getFirstChild().
+                                            getNodeValue());
             nodes = document.getElementsByTagName("maxdownload");
             long maxDownload = Long.parseLong(nodes.item(0).getFirstChild().
-                    getNodeValue());
+                                              getNodeValue());
             nodes = document.getElementsByTagName("maxconnections");
             long maxConnections = Long.parseLong(nodes.item(0).getFirstChild().
-                    getNodeValue());
+                                                 getNodeValue());
             nodes = document.getElementsByTagName("autoconnect");
             boolean autoConnect = new Boolean(nodes.item(0).getFirstChild().
-                    getNodeValue()).booleanValue();
+                                              getNodeValue()).booleanValue();
             nodes = document.getElementsByTagName("speedperslot");
             int speedPerSlot = Integer.parseInt(nodes.item(0).getFirstChild().
-                    getNodeValue());
+                                                getNodeValue());
             nodes = document.getElementsByTagName("maxnewconnectionsperturn");
-            long maxNewConnectionsPerTurn = Long.parseLong(nodes.item(0).getFirstChild().
-                    getNodeValue());
+            long maxNewConnectionsPerTurn = Long.parseLong(nodes.item(0).
+                getFirstChild().
+                getNodeValue());
             nodes = document.getElementsByTagName("incomingdirectory");
             String incomingDir = nodes.item(0).getFirstChild().getNodeValue();
             nodes = document.getElementsByTagName("temporarydirectory");
@@ -110,13 +119,15 @@ public class SettingsXMLHolder
                 shareEntries.add(entry);
             }
             settings = new AJSettings(nick, port, xmlPort, maxUpload,
-                    maxDownload, speedPerSlot, incomingDir, tempDir,
-                    shareEntries, maxConnections, autoConnect,
-                    maxNewConnectionsPerTurn);
+                                      maxDownload, speedPerSlot, incomingDir,
+                                      tempDir,
+                                      shareEntries, maxConnections, autoConnect,
+                                      maxNewConnectionsPerTurn);
         }
         catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
@@ -126,7 +137,7 @@ public class SettingsXMLHolder
     }
 
     public AJSettings getCurrentAJSettings() {
-        if(settings == null){
+        if (settings == null) {
             update();
         }
         return settings;

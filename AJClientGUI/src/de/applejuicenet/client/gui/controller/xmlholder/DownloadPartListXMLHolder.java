@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DownloadPartListXMLHolder.java,v 1.2 2004/01/06 17:32:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DownloadPartListXMLHolder.java,v 1.3 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListXMLHolder.java,v $
+ * Revision 1.3  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.2  2004/01/06 17:32:50  maj0r
  * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
  *
@@ -50,14 +53,18 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  *
  */
 
-import org.w3c.dom.*;
 import org.apache.log4j.Logger;
-import de.applejuicenet.client.shared.dac.*;
-import de.applejuicenet.client.gui.controller.WebXMLParser;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import de.applejuicenet.client.gui.controller.PartListHolder;
+import de.applejuicenet.client.gui.controller.WebXMLParser;
+import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.PartListDO;
+import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 public class DownloadPartListXMLHolder
-        extends WebXMLParser implements PartListHolder{
+    extends WebXMLParser
+    implements PartListHolder {
     private Logger logger;
     private DownloadDO downloadDO;
 

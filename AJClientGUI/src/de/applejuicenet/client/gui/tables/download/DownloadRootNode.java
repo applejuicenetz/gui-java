@@ -3,14 +3,16 @@ package de.applejuicenet.client.gui.tables.download;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import javax.swing.Icon;
+
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.20 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.21 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +21,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.21  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.20  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -33,7 +38,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * Sortierung korrigiert.
  *
  * Revision 1.16  2003/12/30 20:52:19  maj0r
-     * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
+ * Umbenennen von Downloads und Aendern von Zielverzeichnissen vervollstaendigt.
  *
  * Revision 1.15  2003/12/30 09:01:59  maj0r
  * Bug #10 fixed (Danke an muhviestarr)
@@ -43,7 +48,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * Header korrigiert.
  *
  * Revision 1.13  2003/12/29 15:38:59  maj0r
-     * Wird nun immer als initialisiert markiert, wenn die Downloadmap gesetzt wird.
+ * Wird nun immer als initialisiert markiert, wenn die Downloadmap gesetzt wird.
  *
  * Revision 1.12  2003/12/17 17:03:37  maj0r
  * In der Downloadtabelle nun ein Warteicon angezeigt, bis erstmalig Daten geholt wurden.
@@ -180,7 +185,8 @@ public class DownloadRootNode
                             newNode = new DownloadDirectoryNode(downloadDO.
                                 getTargetDirectory());
                             childrenPath.put(mapKey,
-                                             new PathEntry(downloadDO.getTargetDirectory(),
+                                             new PathEntry(downloadDO.
+                                getTargetDirectory(),
                                 newNode));
                             targetDirs.put(key, newNode);
                             children.add(newNode);
@@ -321,10 +327,10 @@ public class DownloadRootNode
                           getSpeedInBytes());
         }
         else if (sort == SORT_STATUS) {
-            o1 =  ( (DownloadMainNode)
-                childNodes[row1]).getDownloadDO().getStatusAsString();
+            o1 = ( (DownloadMainNode)
+                  childNodes[row1]).getDownloadDO().getStatusAsString();
             o2 = ( (DownloadMainNode)
-                childNodes[row2]).getDownloadDO().getStatusAsString();
+                  childNodes[row2]).getDownloadDO().getStatusAsString();
         }
 
         if (o1 == null && o2 == null) {

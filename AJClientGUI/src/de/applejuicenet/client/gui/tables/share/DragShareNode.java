@@ -1,11 +1,12 @@
 package de.applejuicenet.client.gui.tables.share;
 
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.DataFlavor;
 import java.io.Serializable;
 
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/DragShareNode.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/share/Attic/DragShareNode.java,v 1.4 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +15,9 @@ import java.io.Serializable;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DragShareNode.java,v $
+ * Revision 1.4  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -26,7 +30,8 @@ import java.io.Serializable;
  *
  */
 
-public class DragShareNode implements Transferable, Serializable {
+public class DragShareNode
+    implements Transferable, Serializable {
 
     private Object[] nodes;
 
@@ -39,12 +44,14 @@ public class DragShareNode implements Transferable, Serializable {
     }
 
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "ShareNodesTransferer")};
+        return new DataFlavor[] {
+            new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType,
+                           "ShareNodesTransferer")};
     }
 
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-        if (flavor.equals(new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "ShareNodesTransferer")))
-        {
+        if (flavor.equals(new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType,
+                                         "ShareNodesTransferer"))) {
             return true;
         }
         return false;

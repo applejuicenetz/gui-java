@@ -1,9 +1,11 @@
 package de.applejuicenet.client.shared;
 
-import javax.swing.text.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/NumberInputVerifier.java,v 1.7 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/NumberInputVerifier.java,v 1.8 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +14,9 @@ import javax.swing.text.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: NumberInputVerifier.java,v $
+ * Revision 1.8  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.7  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -27,41 +32,41 @@ import javax.swing.text.*;
 public class NumberInputVerifier
     extends PlainDocument {
 
-  private boolean limits;
-  private int max = 0;
-  private int min = 0;
+    private boolean limits;
+    private int max = 0;
+    private int min = 0;
 
-  public NumberInputVerifier() {
-    limits = false;
-  }
-
-  public NumberInputVerifier(int min, int max) {
-    limits = true;
-    this.min = min;
-    this.max = max;
-  }
-
-  public void insertString(int offset, String str, AttributeSet attSet) throws
-      BadLocationException {
-    if (str == null) {
-      return;
+    public NumberInputVerifier() {
+        limits = false;
     }
-    String old = getText(0, getLength());
 
-    try {
-      Integer.parseInt(str);
-      if (limits) {
-        int gesamt = Integer.parseInt(old.substring(0, offset) + str +
-                                      old.substring(offset));
-        if (gesamt < min || gesamt > max) {
-          return;
+    public NumberInputVerifier(int min, int max) {
+        limits = true;
+        this.min = min;
+        this.max = max;
+    }
+
+    public void insertString(int offset, String str, AttributeSet attSet) throws
+        BadLocationException {
+        if (str == null) {
+            return;
         }
-      }
+        String old = getText(0, getLength());
+
+        try {
+            Integer.parseInt(str);
+            if (limits) {
+                int gesamt = Integer.parseInt(old.substring(0, offset) + str +
+                                              old.substring(offset));
+                if (gesamt < min || gesamt > max) {
+                    return;
+                }
+            }
+        }
+        catch (NumberFormatException nfE) {
+            return;
+        }
+        super.insertString(offset, str, attSet);
+        old = getText(0, getLength());
     }
-    catch (NumberFormatException nfE) {
-      return;
-    }
-    super.insertString(offset, str, attSet);
-    old = getText(0, getLength());
-  }
 }

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.5 2004/02/04 13:10:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Information.java,v 1.6 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Information.java,v $
+ * Revision 1.6  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.5  2004/02/04 13:10:04  maj0r
  * Aktuell verwendeter Server kann nun direkt ausgegeben werden.
  *
@@ -28,13 +31,15 @@ package de.applejuicenet.client.shared;
  *
  */
 
+import java.util.HashMap;
+
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.ServerDO;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import java.util.HashMap;
 
-public class Information implements LanguageListener {
+public class Information
+    implements LanguageListener {
 
     public static final int VERBUNDEN = 0;
     public static final int NICHT_VERBUNDEN = 1;
@@ -57,17 +62,19 @@ public class Information implements LanguageListener {
     private String externeIP;
     private int serverId;
 
-    static{
+    static {
         languageSelector = LanguageSelector.getInstance();
         Information info = new Information();
         languageSelector.addLanguageListener(info);
         info.fireLanguageChanged();
     }
 
-    private Information(){} //nur fuer den LanguageSelector
+    private Information() {} //nur fuer den LanguageSelector
 
-    public Information(int id, long sessionUpload, long sessionDownload, long credits, long uploadSpeed, long downloadSpeed,
-                       long openConnections, int verbindungsStatus, String serverName, String externeIP, ServerDO serverDO) {
+    public Information(int id, long sessionUpload, long sessionDownload,
+                       long credits, long uploadSpeed, long downloadSpeed,
+                       long openConnections, int verbindungsStatus,
+                       String serverName, String externeIP, ServerDO serverDO) {
         this.id = id;
         this.sessionUpload = sessionUpload;
         this.sessionDownload = sessionDownload;
@@ -76,10 +83,10 @@ public class Information implements LanguageListener {
         this.downloadSpeed = downloadSpeed;
         this.openConnections = openConnections;
         this.verbindungsStatus = verbindungsStatus;
-        if (verbindungsStatus==NICHT_VERBUNDEN || serverName==null){
+        if (verbindungsStatus == NICHT_VERBUNDEN || serverName == null) {
             this.serverName = "";
         }
-        else{
+        else {
             this.serverName = serverName;
         }
         this.externeIP = externeIP;
@@ -90,53 +97,53 @@ public class Information implements LanguageListener {
         return id;
     }
 
-    public void setSessionUpload(long sessionUpload){
+    public void setSessionUpload(long sessionUpload) {
         this.sessionUpload = sessionUpload;
     }
 
-    public void setSessionDownload(long sessionDownload){
+    public void setSessionDownload(long sessionDownload) {
         this.sessionDownload = sessionDownload;
     }
 
-    public void setCredits(long credits){
+    public void setCredits(long credits) {
         this.credits = credits;
     }
 
-    public void setServer(ServerDO serverDO){
-        if (serverDO == null){
+    public void setServer(ServerDO serverDO) {
+        if (serverDO == null) {
             serverId = -1;
         }
-        else{
+        else {
             serverId = serverDO.getID();
         }
     }
 
-    public ServerDO getServerDO(){
-        if (serverId == -1){
+    public ServerDO getServerDO() {
+        if (serverId == -1) {
             return null;
         }
-        else{
+        else {
             HashMap server = ApplejuiceFassade.getInstance().getAllServer();
-            ServerDO serverDO = (ServerDO)server.get(Integer.toString(serverId));
-            if (serverDO!=null){
+            ServerDO serverDO = (ServerDO) server.get(Integer.toString(serverId));
+            if (serverDO != null) {
                 return serverDO;
             }
-            else{
+            else {
                 serverId = -1;
                 return null;
             }
         }
     }
 
-    public void setUploadSpeed(long uploadSpeed){
+    public void setUploadSpeed(long uploadSpeed) {
         this.uploadSpeed = uploadSpeed;
     }
 
-    public void setDownloadSpeed(long downloadSpeed){
+    public void setDownloadSpeed(long downloadSpeed) {
         this.downloadSpeed = downloadSpeed;
     }
 
-    public void setOpenConnections(long openConnections){
+    public void setOpenConnections(long openConnections) {
         this.openConnections = openConnections;
     }
 
@@ -176,24 +183,30 @@ public class Information implements LanguageListener {
         return externeIP;
     }
 
-    public String getCreditsAsString(){
+    public String getCreditsAsString() {
         return " Credits: " + bytesUmrechnen(credits);
     }
 
-    public String getUpDownSessionAsString(){
-        return " in: " + bytesUmrechnen(sessionDownload) + " out: " + bytesUmrechnen(sessionUpload);
+    public String getUpDownSessionAsString() {
+        return " in: " + bytesUmrechnen(sessionDownload) + " out: " +
+            bytesUmrechnen(sessionUpload);
     }
 
-    public String getUpDownAsString(){
-        return " in: " + getBytesSpeed(downloadSpeed) + " out: " + getBytesSpeed(uploadSpeed);
+    public String getUpDownAsString() {
+        return " in: " + getBytesSpeed(downloadSpeed) + " out: " +
+            getBytesSpeed(uploadSpeed);
     }
 
-    public String getVerbindungsStatusAsString(){
-        switch (verbindungsStatus){
-            case VERBUNDEN: return verbunden;
-            case NICHT_VERBUNDEN: return nichtVerbunden;
-            case VERSUCHE_ZU_VERBINDEN: return verbinden;
-            default: return "";
+    public String getVerbindungsStatusAsString() {
+        switch (verbindungsStatus) {
+            case VERBUNDEN:
+                return verbunden;
+            case NICHT_VERBUNDEN:
+                return nichtVerbunden;
+            case VERSUCHE_ZU_VERBINDEN:
+                return verbinden;
+            default:
+                return "";
         }
     }
 
@@ -237,8 +250,9 @@ public class Information implements LanguageListener {
         String result = Double.toString(umgerechnet);
         int pos = result.indexOf(".");
         if (pos != -1) {
-            if (pos + 2 < result.length())
+            if (pos + 2 < result.length()) {
                 result = result.substring(0, pos + 3);
+            }
             result = result.replace('.', ',');
         }
         if (faktor == 1) {
@@ -260,11 +274,11 @@ public class Information implements LanguageListener {
     }
 
     public void fireLanguageChanged() {
-        verbunden = languageSelector.getFirstAttrbuteByTagName(new String[]{
+        verbunden = languageSelector.getFirstAttrbuteByTagName(new String[] {
             "javagui", "mainform", "verbunden"});
-        verbinden = languageSelector.getFirstAttrbuteByTagName(new String[]{
+        verbinden = languageSelector.getFirstAttrbuteByTagName(new String[] {
             "javagui", "mainform", "verbinden"});
-        nichtVerbunden = languageSelector.getFirstAttrbuteByTagName(new String[]{
+        nichtVerbunden = languageSelector.getFirstAttrbuteByTagName(new String[] {
             "javagui", "mainform", "nichtverbunden"});
     }
 

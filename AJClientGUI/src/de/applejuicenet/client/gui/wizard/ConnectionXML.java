@@ -1,17 +1,17 @@
 package de.applejuicenet.client.gui.wizard;
 
-import java.io.*;
+import java.io.File;
 import java.util.ArrayList;
 
-import de.applejuicenet.client.shared.*;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
-import org.w3c.dom.NodeList;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import de.applejuicenet.client.shared.XMLDecoder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/ConnectionXML.java,v 1.3 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/ConnectionXML.java,v 1.4 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.w3c.dom.Node;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ConnectionXML.java,v $
+ * Revision 1.4  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.3  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -33,7 +36,7 @@ import org.w3c.dom.Node;
  */
 
 public class ConnectionXML
-        extends XMLDecoder {
+    extends XMLDecoder {
     private static Logger logger;
 
     private ConnectionXML(String path) {
@@ -41,10 +44,10 @@ public class ConnectionXML
         logger = Logger.getLogger(getClass());
     }
 
-    public static ConnectionKind[] getConnections(){
-        try{
+    public static ConnectionKind[] getConnections() {
+        try {
             String path = System.getProperty("user.dir") + File.separator +
-                    "wizard.xml";
+                "wizard.xml";
             ConnectionXML connectionXML = new ConnectionXML(path);
 
             Element e = null;
@@ -53,25 +56,29 @@ public class ConnectionXML
             int maxUpload;
             int maxDownload;
             int maxNewConnectionsPro10Sek;
-            NodeList nodes = connectionXML.document.getElementsByTagName("wizard");
+            NodeList nodes = connectionXML.document.getElementsByTagName(
+                "wizard");
             nodes = nodes.item(0).getChildNodes();
             int nodesSize = nodes.getLength();
             for (int y = 0; y < nodesSize; y++) {
-                if (nodes.item(y).getNodeType()==Node.ELEMENT_NODE){
+                if (nodes.item(y).getNodeType() == Node.ELEMENT_NODE) {
                     e = (Element) nodes.item(y);
                     bezeichnung = e.getAttribute("bezeichnung");
                     maxUpload = Integer.parseInt(e.getAttribute("maxupload"));
                     maxDownload = Integer.parseInt(e.getAttribute("maxdownload"));
-                    maxNewConnectionsPro10Sek = Integer.parseInt(e.getAttribute("maxnewconnections10"));
-                    connectionKinds.add(new ConnectionKind(bezeichnung, maxUpload, maxDownload, maxNewConnectionsPro10Sek));
+                    maxNewConnectionsPro10Sek = Integer.parseInt(e.getAttribute(
+                        "maxnewconnections10"));
+                    connectionKinds.add(new ConnectionKind(bezeichnung,
+                        maxUpload, maxDownload, maxNewConnectionsPro10Sek));
                 }
             }
-            return (ConnectionKind[]) connectionKinds.toArray(new ConnectionKind[connectionKinds.size()]);
+            return (ConnectionKind[]) connectionKinds.toArray(new
+                ConnectionKind[connectionKinds.size()]);
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
             return null;
         }
     }

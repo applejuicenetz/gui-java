@@ -1,14 +1,21 @@
 package de.applejuicenet.client.shared;
 
-import java.io.*;
-import javax.xml.parsers.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.xml.serialize.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.19 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.20 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +24,9 @@ import org.xml.sax.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: XMLDecoder.java,v $
+ * Revision 1.20  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.19  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -73,7 +83,7 @@ public abstract class XMLDecoder {
 
     protected void reload(File xmlFile) {
         DocumentBuilderFactory factory =
-                DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             document = builder.parse(xmlFile);
@@ -107,7 +117,8 @@ public abstract class XMLDecoder {
             for (int i = 0; i < attributePathSize; i++) {
                 nodesSize = nodes.getLength();
                 for (int x = 0; x < nodesSize; x++) {
-                    if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
+                    if (nodes.item(x).getNodeName().equalsIgnoreCase(
+                        attributePath[i])) {
                         if (i == attributePathSize - 1 && lastIsElement) {
                             e = (Element) nodes.item(x);
                             nodes = e.getChildNodes();
@@ -116,7 +127,8 @@ public abstract class XMLDecoder {
                         }
                         else if (i == attributePathSize - 2 && !lastIsElement) {
                             e = (Element) nodes.item(x);
-                            result = e.getAttribute(attributePath[attributePathSize - 1]);
+                            result = e.getAttribute(attributePath[
+                                attributePathSize - 1]);
                             return result;
                         }
                         else {
@@ -141,10 +153,12 @@ public abstract class XMLDecoder {
         for (int i = 0; i < attributePathSize - 1; i++) {
             nodesSize = nodes.getLength();
             for (int x = 0; x < nodesSize; x++) {
-                if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
+                if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[
+                    i])) {
                     if (i == attributePathSize - 2) {
                         e = (Element) nodes.item(x);
-                        return e.getAttribute(attributePath[attributePathSize - 1]);
+                        return e.getAttribute(attributePath[attributePathSize -
+                                              1]);
                     }
                     else {
                         nodes = nodes.item(x).getChildNodes();
@@ -160,7 +174,8 @@ public abstract class XMLDecoder {
         setAttributeByTagName(attributePath, Integer.toString(newValue));
     }
 
-    protected void setAttributeByTagName(String[] attributePath, String newValue) {
+    protected void setAttributeByTagName(String[] attributePath,
+                                         String newValue) {
         NodeList nodes = document.getChildNodes();
         Node rootNode = nodes.item(0); //Element "root"
         nodes = rootNode.getChildNodes();
@@ -171,15 +186,17 @@ public abstract class XMLDecoder {
         for (int i = 0; i < attributePathSize - 1; i++) {
             nodesSize = nodes.getLength();
             for (int x = 0; x < nodesSize; x++) {
-                if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
+                if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[
+                    i])) {
                     if (i == attributePathSize - 2) {
                         e = (Element) nodes.item(x);
                         e.setAttribute(attributePath[attributePathSize - 1],
-                                ZeichenErsetzer.korrigiereUmlaute(newValue, true));
+                                       ZeichenErsetzer.korrigiereUmlaute(
+                            newValue, true));
                         try {
                             xs = new XMLSerializer(new FileWriter(filePath),
-                                    new OutputFormat(document,
-                                            "UTF-8", true));
+                                new OutputFormat(document,
+                                                 "UTF-8", true));
                             xs.serialize(document);
                             return;
                         }

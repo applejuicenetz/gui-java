@@ -1,38 +1,59 @@
 package de.applejuicenet.client.gui;
 
-import java.util.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.TableColumnModel;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.border.*;
-import javax.swing.table.*;
 
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.gui.listener.*;
-import de.applejuicenet.client.shared.*;
-import de.applejuicenet.client.shared.exception.NodeAlreadyExistsException;
-import de.applejuicenet.client.shared.dac.ShareDO;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PropertiesManager;
+import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.tables.share.ShareModel;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.gui.tables.share.ShareTable;
-import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeModel;
-import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeCellRenderer;
+import de.applejuicenet.client.gui.trees.WaitNode;
 import de.applejuicenet.client.gui.trees.share.DirectoryNode;
 import de.applejuicenet.client.gui.trees.share.DirectoryTree;
-import de.applejuicenet.client.gui.trees.WaitNode;
-
-import java.awt.event.*;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-import java.net.URLEncoder;
-import java.io.*;
+import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeCellRenderer;
+import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeModel;
+import de.applejuicenet.client.shared.AJSettings;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.ShareEntry;
+import de.applejuicenet.client.shared.SwingWorker;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
+import de.applejuicenet.client.shared.dac.ShareDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.55 2004/02/04 14:26:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.56 2004/02/05 23:11:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +62,9 @@ import java.io.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.56  2004/02/05 23:11:27  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.55  2004/02/04 14:26:05  maj0r
  * Bug #185 gefixt (Danke an muhviestarr)
  * Einstellungen des GUIs werden beim Schliessen des Core gesichert.
@@ -192,8 +216,8 @@ import java.io.*;
  */
 
 public class SharePanel
-        extends JPanel
-        implements LanguageListener, RegisterI {
+    extends JPanel
+    implements LanguageListener, RegisterI {
 
     private static SharePanel instance;
 
@@ -234,8 +258,8 @@ public class SharePanel
 
     private Logger logger;
 
-    public static synchronized SharePanel getInstance(){
-        if (instance == null){
+    public static synchronized SharePanel getInstance() {
+        if (instance == null) {
             instance = new SharePanel();
         }
         return instance;
@@ -243,14 +267,13 @@ public class SharePanel
 
     private SharePanel() {
         logger = Logger.getLogger(getClass());
-        try
-        {
+        try {
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -266,13 +289,17 @@ public class SharePanel
         itemCopyToClipboard.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 Object[] obj = shareTable.getSelectedItems();
-                if (((ShareNode)obj[0]).isLeaf()){
-                    ShareDO shareDO = ((ShareNode)obj[0]).getDO();
-                    Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+                if ( ( (ShareNode) obj[0]).isLeaf()) {
+                    ShareDO shareDO = ( (ShareNode) obj[0]).getDO();
+                    Clipboard cb = Toolkit.getDefaultToolkit().
+                        getSystemClipboard();
                     StringBuffer toCopy = new StringBuffer();
                     toCopy.append("ajfsp://file|");
-                    toCopy.append(shareDO.getShortfilename() + "|" + shareDO.getCheckSum() + "|" + shareDO.getSize() + "/");
-                    StringSelection contents = new StringSelection(toCopy.toString());
+                    toCopy.append(shareDO.getShortfilename() + "|" +
+                                  shareDO.getCheckSum() + "|" + shareDO.getSize() +
+                                  "/");
+                    StringSelection contents = new StringSelection(toCopy.
+                        toString());
                     cb.setContents(contents, null);
                 }
             }
@@ -280,27 +307,32 @@ public class SharePanel
         itemCopyToClipboardAsUBBCode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 Object[] obj = shareTable.getSelectedItems();
-                if (((ShareNode)obj[0]).isLeaf()){
-                    ShareDO shareDO = ((ShareNode)obj[0]).getDO();
-                    Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+                if ( ( (ShareNode) obj[0]).isLeaf()) {
+                    ShareDO shareDO = ( (ShareNode) obj[0]).getDO();
+                    Clipboard cb = Toolkit.getDefaultToolkit().
+                        getSystemClipboard();
                     StringBuffer toCopy = new StringBuffer();
-                    StringBuffer tempFilename = new StringBuffer(shareDO.getShortfilename());
-                    for (int i=0; i<tempFilename.length(); i++){
-                        if (tempFilename.charAt(i)==' '){
+                    StringBuffer tempFilename = new StringBuffer(shareDO.
+                        getShortfilename());
+                    for (int i = 0; i < tempFilename.length(); i++) {
+                        if (tempFilename.charAt(i) == ' ') {
                             tempFilename.setCharAt(i, '.');
                         }
                     }
                     String encodedFilename = "";
                     try {
-                        encodedFilename = URLEncoder.encode(tempFilename.toString(), "ISO-8859-1");
+                        encodedFilename = URLEncoder.encode(tempFilename.
+                            toString(), "ISO-8859-1");
                     }
                     catch (UnsupportedEncodingException ex) {
                         //gibbet, also nix zu behandeln...
                     }
                     toCopy.append("[URL=ajfsp://file|");
-                    toCopy.append(encodedFilename + "|" + shareDO.getCheckSum() + "|" + shareDO.getSize());
+                    toCopy.append(encodedFilename + "|" + shareDO.getCheckSum() +
+                                  "|" + shareDO.getSize());
                     toCopy.append("/]" + shareDO.getShortfilename() + "[/URL]");
-                    StringSelection contents = new StringSelection(toCopy.toString());
+                    StringSelection contents = new StringSelection(toCopy.
+                        toString());
                     cb.setContents(contents, null);
                 }
             }
@@ -308,15 +340,15 @@ public class SharePanel
 
         neueListe.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                DateiListeDialog dateiListeDialog = new DateiListeDialog(AppleJuiceDialog.getApp(), false);
+                DateiListeDialog dateiListeDialog = new DateiListeDialog(
+                    AppleJuiceDialog.getApp(), false);
                 shareTable.setDragEnabled(true);
                 dateiListeDialog.show();
             }
         });
 
         cmbPrio.setEditable(false);
-        for (int i = 1; i < 251; i++)
-        {
+        for (int i = 1; i < 251; i++) {
             cmbPrio.addItem(new Integer(i));
         }
         prioritaetAufheben.addActionListener(new ActionListener() {
@@ -326,21 +358,21 @@ public class SharePanel
                 neuLaden.setEnabled(false);
                 final SwingWorker worker = new SwingWorker() {
                     public Object construct() {
-                        try{
+                        try {
                             Object[] values = shareTable.getSelectedItems();
-                            if (values == null)
+                            if (values == null) {
                                 return null;
+                            }
                             ShareNode shareNode = null;
-                            for (int i = 0; i < values.length; i++)
-                            {
+                            for (int i = 0; i < values.length; i++) {
                                 shareNode = (ShareNode) values[i];
                                 shareNode.setPriority(1);
                             }
                         }
-                        catch (Exception e)
-                        {
-                            if (logger.isEnabledFor(Level.ERROR))
+                        catch (Exception e) {
+                            if (logger.isEnabledFor(Level.ERROR)) {
                                 logger.error("Unbehandelte Exception", e);
+                            }
                         }
                         return null;
                     }
@@ -366,12 +398,14 @@ public class SharePanel
                 neuLaden.setEnabled(false);
                 new Thread() {
                     public void run() {
-                        try{
-                            int prio = ((Integer) cmbPrio.getSelectedItem()).intValue();
+                        try {
+                            int prio = ( (Integer) cmbPrio.getSelectedItem()).
+                                intValue();
                             Object[] values = shareTable.getSelectedItems();
-                            synchronized (values){
-                                if (values == null)
+                            synchronized (values) {
+                                if (values == null) {
                                     return;
+                                }
                                 ShareNode shareNode = null;
                                 for (int i = 0; i < values.length; i++) {
                                     shareNode = (ShareNode) values[i];
@@ -380,13 +414,15 @@ public class SharePanel
                             }
                             shareNeuLaden(false);
                         }
-                        catch (Exception e)
-                        {
-                            if (logger.isEnabledFor(Level.ERROR))
+                        catch (Exception e) {
+                            if (logger.isEnabledFor(Level.ERROR)) {
                                 logger.error("Unbehandelte Exception", e);
+                            }
                         }
                     }
-                }.start();
+                }
+
+                .start();
             }
         });
 
@@ -402,16 +438,16 @@ public class SharePanel
 
         shareModel = new ShareModel(new ShareNode(null, null));
         shareTable = new ShareTable(shareModel);
-        shareTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        shareTable.setSelectionMode(ListSelectionModel.
+                                    MULTIPLE_INTERVAL_SELECTION);
 
         shareTable.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
-                if (SwingUtilities.isRightMouseButton(me))
-                {
+                if (SwingUtilities.isRightMouseButton(me)) {
                     Point p = me.getPoint();
                     int iRow = shareTable.rowAtPoint(p);
                     int iCol = shareTable.columnAtPoint(p);
-                    if (iRow==-1 || iCol==-1){
+                    if (iRow == -1 || iCol == -1) {
                         return;
                     }
                     shareTable.setRowSelectionInterval(iRow, iRow);
@@ -426,16 +462,14 @@ public class SharePanel
             }
 
             private void maybeShowPopup(MouseEvent e) {
-                if (e.isPopupTrigger() && shareTable.getSelectedRowCount()==1)
-                {
+                if (e.isPopupTrigger() && shareTable.getSelectedRowCount() == 1) {
                     Object[] obj = shareTable.getSelectedItems();
-                    if (((ShareNode)obj[0]).isLeaf()){
+                    if ( ( (ShareNode) obj[0]).isLeaf()) {
                         popup2.show(shareTable, e.getX(), e.getY());
                     }
                 }
             }
         });
-
 
         titledBorder1 = new TitledBorder("Test");
         titledBorder2 = new TitledBorder("Tester");
@@ -450,14 +484,14 @@ public class SharePanel
                 refresh.setEnabled(false);
                 final SwingWorker worker = new SwingWorker() {
                     public Object construct() {
-                        try{
+                        try {
                             HashSet shares = ajSettings.getShareDirs();
                             ApplejuiceFassade.getInstance().setShare(shares);
                         }
-                        catch (Exception e)
-                        {
-                            if (logger.isEnabledFor(Level.ERROR))
+                        catch (Exception e) {
+                            if (logger.isEnabledFor(Level.ERROR)) {
                                 logger.error("Unbehandelte Exception", e);
+                            }
                         }
                         return null;
                     }
@@ -506,11 +540,12 @@ public class SharePanel
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 HashSet shares = ajSettings.getShareDirs();
-                DirectoryNode node = (DirectoryNode) folderTree.getLastSelectedPathComponent();
-                if (node != null)
-                {
+                DirectoryNode node = (DirectoryNode) folderTree.
+                    getLastSelectedPathComponent();
+                if (node != null) {
                     String path = node.getDO().getPath();
-                    ShareEntry entry = new ShareEntry(path, ShareEntry.SUBDIRECTORY);
+                    ShareEntry entry = new ShareEntry(path,
+                        ShareEntry.SUBDIRECTORY);
                     shares.add(entry);
                     ApplejuiceFassade.getInstance().setShare(shares);
                     DirectoryNode.setShareDirs(shares);
@@ -522,11 +557,12 @@ public class SharePanel
         item2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 HashSet shares = ajSettings.getShareDirs();
-                DirectoryNode node = (DirectoryNode) folderTree.getLastSelectedPathComponent();
-                if (node != null)
-                {
+                DirectoryNode node = (DirectoryNode) folderTree.
+                    getLastSelectedPathComponent();
+                if (node != null) {
                     String path = node.getDO().getPath();
-                    ShareEntry entry = new ShareEntry(path, ShareEntry.SINGLEDIRECTORY);
+                    ShareEntry entry = new ShareEntry(path,
+                        ShareEntry.SINGLEDIRECTORY);
                     shares.add(entry);
                     ApplejuiceFassade.getInstance().setShare(shares);
                     DirectoryNode.setShareDirs(shares);
@@ -538,23 +574,20 @@ public class SharePanel
         item3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 HashSet shares = ajSettings.getShareDirs();
-                DirectoryNode node = (DirectoryNode) folderTree.getLastSelectedPathComponent();
-                if (node != null)
-                {
+                DirectoryNode node = (DirectoryNode) folderTree.
+                    getLastSelectedPathComponent();
+                if (node != null) {
                     String path = node.getDO().getPath();
                     Iterator it = shares.iterator();
                     ShareEntry toRemove = null;
-                    while (it.hasNext())
-                    {
+                    while (it.hasNext()) {
                         toRemove = (ShareEntry) it.next();
-                        if (toRemove.getDir().compareToIgnoreCase(path) == 0)
-                        {
+                        if (toRemove.getDir().compareToIgnoreCase(path) == 0) {
                             break;
                         }
                         toRemove = null;
                     }
-                    if (toRemove != null)
-                    {
+                    if (toRemove != null) {
                         shares.remove(toRemove);
                         ApplejuiceFassade.getInstance().setShare(shares);
                         DirectoryNode.setShareDirs(shares);
@@ -565,15 +598,15 @@ public class SharePanel
         });
     }
 
-    private void shareNeuLaden(final boolean komplettNeu){
+    private void shareNeuLaden(final boolean komplettNeu) {
         prioritaetAufheben.setEnabled(false);
         prioritaetSetzen.setEnabled(false);
         neuLaden.setEnabled(false);
         final SwingWorker worker = new SwingWorker() {
             public Object construct() {
-                try{
+                try {
                     ShareNode rootNode = shareModel.getRootNode();
-                    if (komplettNeu){
+                    if (komplettNeu) {
                         rootNode.removeAllChildren();
                     }
                     HashMap shares = ApplejuiceFassade.getInstance().getShare(true);
@@ -586,8 +619,7 @@ public class SharePanel
                     String path;
                     ShareNode superParentNode;
                     ShareNode parentNode;
-                    while (iterator.hasNext())
-                    {
+                    while (iterator.hasNext()) {
                         shareDO = (ShareDO) iterator.next();
                         rootNode.addChild(shareDO);
                         size += shareDO.getSize();
@@ -595,19 +627,20 @@ public class SharePanel
                     }
                     size = size / 1048576;
                     dateiGroesse = Double.toString(size);
-                    if (dateiGroesse.indexOf(".") + 3 < dateiGroesse.length())
-                    {
-                        dateiGroesse = dateiGroesse.substring(0, dateiGroesse.indexOf(".") + 3) + " MB";
+                    if (dateiGroesse.indexOf(".") + 3 < dateiGroesse.length()) {
+                        dateiGroesse = dateiGroesse.substring(0,
+                            dateiGroesse.indexOf(".") + 3) + " MB";
                     }
                     String temp = eintraege;
-                    temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
+                    temp = temp.replaceFirst("%i",
+                                             Integer.toString(anzahlDateien));
                     temp = temp.replaceFirst("%s", dateiGroesse);
                     dateien.setText(temp);
                 }
-                catch (Exception e)
-                {
-                    if (logger.isEnabledFor(Level.ERROR))
+                catch (Exception e) {
+                    if (logger.isEnabledFor(Level.ERROR)) {
                         logger.error("Unbehandelte Exception", e);
+                    }
                 }
                 return null;
             }
@@ -637,11 +670,12 @@ public class SharePanel
     }
 
     public void registerSelected() {
-        try{
+        try {
             if (!initialized) {
                 initialized = true;
                 shareTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                TableColumnModel headerModel = shareTable.getTableHeader().getColumnModel();
+                TableColumnModel headerModel = shareTable.getTableHeader().
+                    getColumnModel();
                 int columnCount = headerModel.getColumnCount();
                 PositionManager pm = PropertiesManager.getPositionManager();
                 if (pm.isLegal()) {
@@ -652,190 +686,217 @@ public class SharePanel
                 }
                 else {
                     for (int i = 0; i < columnCount; i++) {
-                        headerModel.getColumn(i).setPreferredWidth(shareTable.getWidth() / columnCount);
+                        headerModel.getColumn(i).setPreferredWidth(shareTable.
+                            getWidth() / columnCount);
                     }
                 }
             }
-            if (!treeInitialisiert)
-            {
+            if (!treeInitialisiert) {
                 treeInitialisiert = true;
-                new Thread(){
-                    public void run(){
-                        ajSettings = ApplejuiceFassade.getInstance().getAJSettings();
+                new Thread() {
+                    public void run() {
+                        ajSettings = ApplejuiceFassade.getInstance().
+                            getAJSettings();
                         DirectoryNode.setShareDirs(ajSettings.getShareDirs());
-                        SwingUtilities.invokeLater(new Runnable(){
-                            public void run(){
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
                                 initShareSelectionTree();
                             }
                         });
                     }
-                }.start();
+                }
+
+                .start();
             }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void fireLanguageChanged() {
-        try{
+        try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            titledBorder1.setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                     getFirstAttrbuteByTagName(new String[]{"mainform", "dirssheet",
-                                                                                                            "caption"})));
-            titledBorder2.setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                     getFirstAttrbuteByTagName(new String[]{"mainform", "filessheet",
-                                                                                                            "caption"})));
+            titledBorder1.setTitle(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "dirssheet",
+                                          "caption"})));
+            titledBorder2.setTitle(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "filessheet",
+                                          "caption"})));
             item1.setText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                            "addwsubdirsbtn", "caption"})));
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "mainform",
+                "addwsubdirsbtn", "caption"})));
             item2.setText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                            "addosubdirsbtn", "caption"})));
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "mainform",
+                "addosubdirsbtn", "caption"})));
             item3.setText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                            "deldirbtn", "caption"})));
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "mainform",
+                "deldirbtn", "caption"})));
             itemCopyToClipboard.setText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                            "getlink1", "caption"})));
-            itemCopyToClipboardAsUBBCode.setText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui",
-                                                                            "shareform", "linkalsubbcode"})));
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "mainform",
+                "getlink1", "caption"})));
+            itemCopyToClipboardAsUBBCode.setText(ZeichenErsetzer.
+                                                 korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "javagui",
+                "shareform", "linkalsubbcode"})));
             refresh.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"mainform", "startsharecheck",
-                                                                                                     "caption"})));
-            refresh.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                     getFirstAttrbuteByTagName(new String[]{"mainform", "startsharecheck",
-                                                                                                            "hint"})));
-            neueListe.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                getFirstAttrbuteByTagName(new String[]{"mainform", "newfilelist",
-                                                                                                       "caption"})));
-            neueListe.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "newfilelist",
-                                                                                                              "hint"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "startsharecheck",
+                                          "caption"})));
+            refresh.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "startsharecheck",
+                                          "hint"})));
+            neueListe.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "newfilelist",
+                                          "caption"})));
+            neueListe.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "newfilelist",
+                                          "hint"})));
             neuLaden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "sharereload",
-                                                                                                      "caption"})));
-            neuLaden.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                      getFirstAttrbuteByTagName(new String[]{"mainform", "sharereload",
-                                                                                                             "hint"})));
-            prioritaetSetzen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "setprio",
-                                                                                                              "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "sharereload",
+                                          "caption"})));
+            neuLaden.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform",
+                                          "sharereload",
+                                          "hint"})));
+            prioritaetSetzen.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "setprio",
+                                          "caption"})));
             prioritaetSetzen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                            "setprio", "hint"})));
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "mainform",
+                "setprio", "hint"})));
             prioritaetAufheben.setText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                            "clearprio", "caption"})));
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "mainform",
+                "clearprio", "caption"})));
             prioritaetAufheben.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(new String[]{"mainform",
-                                                                            "clearprio", "hint"})));
+                languageSelector.getFirstAttrbuteByTagName(new String[] {
+                "mainform",
+                "clearprio", "hint"})));
 
             String[] tableColumns = new String[3];
-            tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                getFirstAttrbuteByTagName(new String[]{"mainform", "sfiles",
-                                                                                                       "col0caption"}));
-            tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                getFirstAttrbuteByTagName(new String[]{"mainform", "sfiles",
-                                                                                                       "col1caption"}));
-            tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                getFirstAttrbuteByTagName(new String[]{"mainform", "sfiles",
-                                                                                                       "col2caption"}));
+            tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "sfiles",
+                                          "col0caption"}));
+            tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "sfiles",
+                                          "col1caption"}));
+            tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "sfiles",
+                                          "col2caption"}));
 
             TableColumnModel tcm = shareTable.getColumnModel();
-            for (int i = 0; i < 3; i++)
-            {
+            for (int i = 0; i < 3; i++) {
                 tcm.getColumn(i).setHeaderValue(tableColumns[i]);
             }
 
             eintraege = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                          getFirstAttrbuteByTagName(new String[]{"javagui", "shareform", "anzahlShare"}));
-            if (anzahlDateien > 0)
-            {
+                getFirstAttrbuteByTagName(new String[] {"javagui", "shareform",
+                                          "anzahlShare"}));
+            if (anzahlDateien > 0) {
                 String temp = eintraege;
                 temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
                 temp = temp.replaceFirst("%s", dateiGroesse);
                 dateien.setText(temp);
             }
-            else
-            {
+            else {
                 dateien.setText("");
             }
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    class TreeMouseAdapter extends MouseAdapter {
+    class TreeMouseAdapter
+        extends MouseAdapter {
         public void mousePressed(MouseEvent me) {
-            try{
-                if (SwingUtilities.isRightMouseButton(me))
-                {
+            try {
+                if (SwingUtilities.isRightMouseButton(me)) {
                     Point p = me.getPoint();
                     int iRow = folderTree.getRowForLocation(p.x, p.y);
                     folderTree.setSelectionRow(iRow);
                 }
                 maybeShowPopup(me);
             }
-            catch (Exception ex)
-            {
-                if (logger.isEnabledFor(Level.ERROR))
+            catch (Exception ex) {
+                if (logger.isEnabledFor(Level.ERROR)) {
                     logger.error("Unbehandelte Exception", ex);
+                }
             }
         }
 
         public void mouseReleased(MouseEvent e) {
-            try{
+            try {
                 super.mouseReleased(e);
                 maybeShowPopup(e);
             }
-            catch (Exception ex)
-            {
-                if (logger.isEnabledFor(Level.ERROR))
+            catch (Exception ex) {
+                if (logger.isEnabledFor(Level.ERROR)) {
                     logger.error("Unbehandelte Exception", ex);
+                }
             }
         }
 
         private void maybeShowPopup(MouseEvent e) {
-            try{
-                if (e.isPopupTrigger())
-                {
-                    DirectoryNode node = (DirectoryNode) folderTree.getLastSelectedPathComponent();
-                    if (node==null)
+            try {
+                if (e.isPopupTrigger()) {
+                    DirectoryNode node = (DirectoryNode) folderTree.
+                        getLastSelectedPathComponent();
+                    if (node == null) {
                         return;
+                    }
                     popup.removeAll();
                     int nodeShareMode = node.getShareMode();
                     if (nodeShareMode == DirectoryNode.NOT_SHARED
-                            || nodeShareMode == DirectoryNode.SHARED_SOMETHING
-                            || nodeShareMode == DirectoryNode.SHARED_SUB)
-                    {
+                        || nodeShareMode == DirectoryNode.SHARED_SOMETHING
+                        || nodeShareMode == DirectoryNode.SHARED_SUB) {
                         popup.add(item1);
                         popup.add(item2);
                         popup.show(folderTree, e.getX(), e.getY());
                     }
                     else if (nodeShareMode == DirectoryNode.SHARED_WITH_SUB
-                            || nodeShareMode == DirectoryNode.SHARED_WITHOUT_SUB)
-                    {
+                             ||
+                             nodeShareMode == DirectoryNode.SHARED_WITHOUT_SUB) {
                         popup.add(item3);
                         popup.show(folderTree, e.getX(), e.getY());
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                if (logger.isEnabledFor(Level.ERROR))
+            catch (Exception ex) {
+                if (logger.isEnabledFor(Level.ERROR)) {
                     logger.error("Unbehandelte Exception", ex);
+                }
             }
         }
     }
 
-    public int[] getColumnWidths(){
+    public int[] getColumnWidths() {
         TableColumnModel tcm = shareTable.getColumnModel();
         int[] widths = new int[tcm.getColumnCount()];
         for (int i = 0; i < tcm.getColumnCount(); i++) {

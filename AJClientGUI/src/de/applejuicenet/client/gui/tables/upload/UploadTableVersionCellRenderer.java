@@ -1,16 +1,18 @@
 package de.applejuicenet.client.gui.tables.upload;
 
-import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.Component;
-import javax.swing.JTable;
-import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
-import java.awt.Color;
-import de.applejuicenet.client.shared.dac.UploadDO;
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
-public class UploadTableVersionCellRenderer extends DefaultTableCellRenderer {
+import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
+import de.applejuicenet.client.shared.dac.UploadDO;
+
+public class UploadTableVersionCellRenderer
+    extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable table,
         Object value,
         boolean isSelected,
@@ -19,11 +21,11 @@ public class UploadTableVersionCellRenderer extends DefaultTableCellRenderer {
         int column) {
         Object obj = ( (TreeTableModelAdapter) table.getModel()).nodeForRow(row);
 
-        if (obj.getClass()==MainNode.class){
+        if (obj.getClass() == MainNode.class) {
             return super.getTableCellRendererComponent(table, value,
                 isSelected, hasFocus, row, column);
         }
-        else{
+        else {
             UploadDO uploadDO = (UploadDO) obj;
             Color background = table.getBackground();
             Color foreground = table.getForeground();

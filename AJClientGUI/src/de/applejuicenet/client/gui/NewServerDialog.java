@@ -1,19 +1,31 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
-import de.applejuicenet.client.shared.SoundPlayer;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.5 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/NewServerDialog.java,v 1.6 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +34,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: NewServerDialog.java,v $
+ * Revision 1.6  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.5  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -41,7 +56,8 @@ import org.apache.log4j.Logger;
  *
  */
 
-public class NewServerDialog extends JDialog {
+public class NewServerDialog
+    extends JDialog {
     private JButton ok = new JButton();
     private JTextField dyn = new JTextField();
     private JTextField port = new JTextField();
@@ -52,12 +68,13 @@ public class NewServerDialog extends JDialog {
     public NewServerDialog(Frame parent, boolean modal) {
         super(parent, modal);
         logger = Logger.getLogger(getClass());
-        try{
+        try {
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -69,10 +86,10 @@ public class NewServerDialog extends JDialog {
         });
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                        getFirstAttrbuteByTagName(new String[]{"addserverform", "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"addserverform", "caption"})));
         ok.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                        getFirstAttrbuteByTagName(new String[]{"addserverform", "okbtn",
-                                                                                               "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"addserverform", "okbtn",
+                                      "caption"})));
         dyn.setColumns(15);
         port.setColumns(5);
         port.setDocument(new NumberInputVerifier());
@@ -84,13 +101,16 @@ public class NewServerDialog extends JDialog {
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.insets.left = 5;
-        panel2.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                        getFirstAttrbuteByTagName(new String[]{"addserverform", "serverlbl",
-                                                                                               "caption"})) + ": "), constraints);
+        panel2.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"addserverform",
+                                      "serverlbl",
+                                      "caption"})) + ": "), constraints);
         constraints.gridy = 1;
-        panel2.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                        getFirstAttrbuteByTagName(new String[]{"addserverform", "portlbl",
-                                                                                               "caption"})) + ": "), constraints);
+        panel2.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(
+            languageSelector.
+            getFirstAttrbuteByTagName(new String[] {"addserverform", "portlbl",
+                                      "caption"})) + ": "), constraints);
         constraints.insets.left = 0;
         constraints.gridx = 1;
         constraints.gridy = 0;
@@ -103,18 +123,18 @@ public class NewServerDialog extends JDialog {
         getContentPane().add(panel1, BorderLayout.SOUTH);
         pack();
         port.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent ke){
-                if (ke.getKeyCode() == KeyEvent.VK_ENTER){
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
                     ok.doClick();
                 }
             }
         });
         ok.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                if (dyn.getText().length() > 0 && port.getText().length() > 0)
-                {
+                if (dyn.getText().length() > 0 && port.getText().length() > 0) {
                     legal = true;
-                    link = "ajfsp://server|" + dyn.getText() + "|" + port.getText();
+                    link = "ajfsp://server|" + dyn.getText() + "|" +
+                        port.getText();
                     close();
                 }
             }
@@ -126,7 +146,7 @@ public class NewServerDialog extends JDialog {
         dispose();
     }
 
-    public String getLink(){
+    public String getLink() {
         return link;
     }
 

@@ -1,10 +1,10 @@
 package de.applejuicenet.client.shared.dac;
 
-import java.text.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.10 2004/01/24 09:46:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.11 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.util.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerDO.java,v $
+ * Revision 1.11  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.10  2004/01/24 09:46:40  maj0r
  * An neue Doku angepasst.
  *
@@ -44,7 +47,8 @@ public class ServerDO {
     private boolean connected = false;
     private boolean tryConnect = false;
 
-    public ServerDO(int id, String name, String host, String port, long lastSeen, int versuche) {
+    public ServerDO(int id, String name, String host, String port,
+                    long lastSeen, int versuche) {
         this.id = id;
         this.name = name;
         this.host = host;
@@ -102,23 +106,21 @@ public class ServerDO {
     }
 
     public String getTimeLastSeenAsString() {
-        if (timeLastSeen == 0)
-        {
+        if (timeLastSeen == 0) {
             return "";
         }
-        else
-        {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        else {
+            SimpleDateFormat formatter = new SimpleDateFormat(
+                "dd.MM.yyyy HH:mm:ss");
             return formatter.format(new Date(timeLastSeen));
         }
     }
 
     public boolean equals(Object obj) {
-        if (obj.getClass()!=getClass())
-        {
+        if (obj.getClass() != getClass()) {
             return false;
         }
-        return (id == ((ServerDO) obj).getID());
+        return (id == ( (ServerDO) obj).getID());
     }
 
     public boolean isConnected() {

@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.7 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.8 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListDO.java,v $
+ * Revision 1.8  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.7  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -35,8 +38,9 @@ package de.applejuicenet.client.shared.dac;
  *
  */
 
-import java.awt.*;
 import java.util.ArrayList;
+
+import java.awt.Color;
 
 public class PartListDO {
     public static final Color COLOR_TYPE_UEBERPRUEFT = Color.GREEN;
@@ -61,17 +65,17 @@ public class PartListDO {
     private ArrayList parts = new ArrayList();
     private int type;
 
-    public PartListDO(DownloadDO downloadDO){
+    public PartListDO(DownloadDO downloadDO) {
         valueHolderDO = downloadDO;
         type = MAIN_PARTLIST;
     }
 
-    public PartListDO(DownloadSourceDO downloadSourceDO){
+    public PartListDO(DownloadSourceDO downloadSourceDO) {
         valueHolderDO = downloadSourceDO;
         type = SOURCE_PARTLIST;
     }
 
-    public int getPartListType(){
+    public int getPartListType() {
         return type;
     }
 
@@ -79,12 +83,12 @@ public class PartListDO {
         return groesse;
     }
 
-    public void addPart(Part aPart){
+    public void addPart(Part aPart) {
         parts.add(aPart);
     }
 
-    public Part[] getParts(){
-        return (Part[])parts.toArray(new Part[parts.size()]);
+    public Part[] getParts() {
+        return (Part[]) parts.toArray(new Part[parts.size()]);
     }
 
     public void setGroesse(long groesse) {
@@ -95,7 +99,7 @@ public class PartListDO {
         return valueHolderDO;
     }
 
-    public class Part{
+    public class Part {
         private long fromPosition;
         private int type;
 
@@ -111,5 +115,5 @@ public class PartListDO {
         public int getType() {
             return type;
         }
-   }
+    }
 }

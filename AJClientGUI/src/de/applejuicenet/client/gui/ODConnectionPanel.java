@@ -1,17 +1,29 @@
 package de.applejuicenet.client.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
-import de.applejuicenet.client.gui.controller.*;
-import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import javax.swing.Icon;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.NumberInputVerifier;
+import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.10 2004/01/25 10:16:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODConnectionPanel.java,v 1.11 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +32,9 @@ import javax.swing.Icon;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODConnectionPanel.java,v $
+ * Revision 1.11  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.10  2004/01/25 10:16:42  maj0r
  * Optionenmenue ueberarbeitet.
  *
@@ -60,7 +75,8 @@ import javax.swing.Icon;
  */
 
 public class ODConnectionPanel
-        extends JPanel implements OptionsRegister{
+    extends JPanel
+    implements OptionsRegister {
     private boolean dirty = false;
     private JLabel label1;
     private JLabel label2;
@@ -77,36 +93,37 @@ public class ODConnectionPanel
     private Icon menuIcon;
     private String menuText;
 
-    public ODConnectionPanel(ConnectionSettings remote, QuickConnectionSettingsDialog quickConnectionSettingsDialog) {
+    public ODConnectionPanel(ConnectionSettings remote,
+                             QuickConnectionSettingsDialog
+                             quickConnectionSettingsDialog) {
         logger = Logger.getLogger(getClass());
-        try
-        {
+        try {
             this.quickConnectionSettingsDialog = quickConnectionSettingsDialog;
             this.remote = remote;
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public ODConnectionPanel(ConnectionSettings remote,
-                             QuickConnectionSettingsDialog quickConnectionSettingsDialog,
+                             QuickConnectionSettingsDialog
+                             quickConnectionSettingsDialog,
                              boolean showPort) {
         logger = Logger.getLogger(getClass());
-        try
-        {
+        try {
             this.showPort = showPort;
             this.quickConnectionSettingsDialog = quickConnectionSettingsDialog;
             this.remote = remote;
             init();
         }
-        catch (Exception e)
-        {
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -121,23 +138,26 @@ public class ODConnectionPanel
 
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "options", "remote",
-                                                                                                     "host"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "remote",
+                                      "host"})));
         label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "options", "remote",
-                                                                                                     "passwortAlt"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "remote",
+                                      "passwortAlt"})));
         label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                              getFirstAttrbuteByTagName(new String[]{"javagui", "options", "remote",
-                                                                                                     "passwortNeu"})));
+            getFirstAttrbuteByTagName(new String[] {"javagui", "options",
+                                      "remote",
+                                      "passwortNeu"})));
         menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-           getFirstAttrbuteByTagName(new String[]{"einstform", "pwsheet", "caption"}));
+            getFirstAttrbuteByTagName(new String[] {"einstform", "pwsheet",
+                                      "caption"}));
         label4 = new JLabel("Port");
 
         host.setText(remote.getHost());
         host.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
-                if (remote.getHost().compareTo(host.getText()) != 0)
-                {
+                if (remote.getHost().compareTo(host.getText()) != 0) {
                     dirty = true;
                     remote.setHost(host.getText());
                 }
@@ -155,15 +175,16 @@ public class ODConnectionPanel
                 remote.setNewPassword(new String(passwortNeu.getPassword()));
             }
         });
-        if (quickConnectionSettingsDialog != null){
+        if (quickConnectionSettingsDialog != null) {
             passwortNeu.addKeyListener(new KeyAdapter() {
                 public void keyPressed(KeyEvent ke) {
                     if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
                         dirty = true;
-                        remote.setNewPassword(new String(passwortNeu.getPassword()));
+                        remote.setNewPassword(new String(passwortNeu.
+                            getPassword()));
                         quickConnectionSettingsDialog.pressOK();
                     }
-                    else{
+                    else {
                         super.keyPressed(ke);
                     }
                 }
@@ -191,7 +212,7 @@ public class ODConnectionPanel
         panel1.add(label1, constraints);
 
         int gridy = 1;
-        if (showPort){
+        if (showPort) {
             constraints.gridy = gridy;
             gridy++;
             panel1.add(label4, constraints);
@@ -211,7 +232,7 @@ public class ODConnectionPanel
         panel1.add(host, constraints);
 
         gridy = 1;
-        if (showPort){
+        if (showPort) {
             constraints.gridy = gridy;
             gridy++;
             panel1.add(port, constraints);
@@ -231,9 +252,10 @@ public class ODConnectionPanel
         panel1.add(panel2, constraints);
 
         add(panel1, BorderLayout.NORTH);
-        if (quickConnectionSettingsDialog != null){
+        if (quickConnectionSettingsDialog != null) {
             label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"einstform", "pwsheet", "caption"})));
+                getFirstAttrbuteByTagName(new String[] {"einstform", "pwsheet",
+                                          "caption"})));
             passwortAlt.setVisible(false);
             label2.setVisible(false);
         }

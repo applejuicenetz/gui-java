@@ -1,34 +1,49 @@
 package de.applejuicenet.client.gui;
 
+import java.io.File;
+import java.io.FileWriter;
+
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.table.TableColumnModel;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.tables.dateiliste.DateiListeTableModel;
+import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ShareDO;
 import de.applejuicenet.client.shared.dnd.DndTargetAdapter;
-import de.applejuicenet.client.gui.tables.dateiliste.DateiListeTableModel;
-import de.applejuicenet.client.gui.tables.share.ShareNode;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.table.TableColumnModel;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DnDConstants;
-import java.io.File;
-import java.io.FileWriter;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.7 2004/01/19 16:59:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.8 2004/02/05 23:11:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -37,6 +52,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DateiListeDialog.java,v $
+ * Revision 1.8  2004/02/05 23:11:26  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.7  2004/01/19 16:59:15  maj0r
  * Dateiname bei Dateilistengenerierung korrigiert.
  *
@@ -61,7 +79,8 @@ import org.apache.log4j.Level;
  *
  */
 
-public class DateiListeDialog extends JDialog {
+public class DateiListeDialog
+    extends JDialog {
     private JLabel speicherTxt = new JLabel();
     private JLabel speicherHtml = new JLabel();
     private JTable table = new JTable();
@@ -76,14 +95,15 @@ public class DateiListeDialog extends JDialog {
     }
 
     private void init() {
-        try{
+        try {
             JMenuItem item1 = new JMenuItem("Entfernen");
-            item1.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent ae){
+            item1.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
                     int[] selected = table.getSelectedRows();
-                    if (selected.length>0){
-                        DateiListeTableModel model = (DateiListeTableModel)table.getModel();
-                        for (int i=0; i<selected.length; i++){
+                    if (selected.length > 0) {
+                        DateiListeTableModel model = (DateiListeTableModel)
+                            table.getModel();
+                        for (int i = 0; i < selected.length; i++) {
                             model.removeRow(selected[i]);
                         }
                     }
@@ -115,27 +135,32 @@ public class DateiListeDialog extends JDialog {
             constraints.weighty = 1;
             JScrollPane scroll = new JScrollPane(table);
             scroll.setDropTarget(new DropTarget(scroll, new DndTargetAdapter() {
-                protected Object getTarget( Point point ){
+                protected Object getTarget(Point point) {
                     return this;
-                 }
+                }
 
                 public void drop(DropTargetDropEvent event) {
                     Transferable tr = event.getTransferable();
-                    if (tr.isDataFlavorSupported(new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "ShareNodesTransferer"))){
-                        try{
+                    if (tr.isDataFlavorSupported(new DataFlavor(DataFlavor.
+                        javaJVMLocalObjectMimeType, "ShareNodesTransferer"))) {
+                        try {
                             event.acceptDrop(DnDConstants.ACTION_COPY);
-                            Object[] transfer = (Object[])tr.getTransferData(
-                                    new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "ShareNodesTransferer"));
-                            if (transfer != null && transfer.length!=0){
-                                DateiListeTableModel model = (DateiListeTableModel)table.getModel();
-                                for (int i=0; i<transfer.length; i++){
-                                    model.addNodes((ShareNode)transfer[i]);
+                            Object[] transfer = (Object[]) tr.getTransferData(
+                                new DataFlavor(DataFlavor.
+                                               javaJVMLocalObjectMimeType,
+                                               "ShareNodesTransferer"));
+                            if (transfer != null && transfer.length != 0) {
+                                DateiListeTableModel model = (
+                                    DateiListeTableModel) table.getModel();
+                                for (int i = 0; i < transfer.length; i++) {
+                                    model.addNodes( (ShareNode) transfer[i]);
                                 }
                             }
                         }
-                        catch(Exception e){
-                            if (logger.isEnabledFor(Level.ERROR))
+                        catch (Exception e) {
+                            if (logger.isEnabledFor(Level.ERROR)) {
                                 logger.error("Unbehandelte Exception", e);
+                            }
                             event.getDropTargetContext().dropComplete(false);
                         }
                     }
@@ -144,8 +169,7 @@ public class DateiListeDialog extends JDialog {
             }));
             table.addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent me) {
-                    if (SwingUtilities.isRightMouseButton(me))
-                    {
+                    if (SwingUtilities.isRightMouseButton(me)) {
                         Point p = me.getPoint();
                         int iRow = table.rowAtPoint(p);
                         int iCol = table.columnAtPoint(p);
@@ -161,8 +185,7 @@ public class DateiListeDialog extends JDialog {
                 }
 
                 private void maybeShowPopup(MouseEvent e) {
-                    if (e.isPopupTrigger() && table.getSelectedRowCount()>0)
-                    {
+                    if (e.isPopupTrigger() && table.getSelectedRowCount() > 0) {
                         popup.show(table, e.getX(), e.getY());
                     }
                 }
@@ -173,35 +196,35 @@ public class DateiListeDialog extends JDialog {
             pack();
         }
         catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR))
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", ex);
+            }
         }
     }
 
     public void initLanguage() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                 getFirstAttrbuteByTagName(new String[]{"linklist",
-                                                                                                        "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"linklist",
+                                      "caption"})));
         text.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                 getFirstAttrbuteByTagName(new String[]{"linklist", "Label1",
-                                                                                                        "caption"})));
+            getFirstAttrbuteByTagName(new String[] {"linklist", "Label1",
+                                      "caption"})));
         String[] tableColumns = new String[2];
         tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"linklist", "files",
-                                                                                                   "col0caption"}));
+            getFirstAttrbuteByTagName(new String[] {"linklist", "files",
+                                      "col0caption"}));
         tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                            getFirstAttrbuteByTagName(new String[]{"linklist", "files",
-                                                                                                   "col1caption"}));
+            getFirstAttrbuteByTagName(new String[] {"linklist", "files",
+                                      "col1caption"}));
         TableColumnModel tcm = table.getColumnModel();
-        for (int i = 0; i < tableColumns.length; i++)
-        {
+        for (int i = 0; i < tableColumns.length; i++) {
             tcm.getColumn(i).setHeaderValue(tableColumns[i]);
         }
     }
 
     class SpeichernMouseAdapter
-            extends MouseAdapter {
+        extends MouseAdapter {
         public void mouseEntered(MouseEvent e) {
             JLabel source = (JLabel) e.getSource();
             source.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -211,52 +234,61 @@ public class DateiListeDialog extends JDialog {
             JLabel source = (JLabel) e.getSource();
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-            if (source==speicherTxt)
+            if (source == speicherTxt) {
                 fileChooser.setFileFilter(new TxtFileFilter());
-            else
+            }
+            else {
                 fileChooser.setFileFilter(new HtmlFileFilter());
+            }
             int i = fileChooser.showSaveDialog(DateiListeDialog.this);
-            if (i==JFileChooser.APPROVE_OPTION){
+            if (i == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 StringBuffer text = new StringBuffer();
-                ShareDO[] shareDO = ((DateiListeTableModel)table.getModel()).getShareDOs();
-                if (source != speicherTxt){
+                ShareDO[] shareDO = ( (DateiListeTableModel) table.getModel()).
+                    getShareDOs();
+                if (source != speicherTxt) {
                     if (!file.getPath().toLowerCase().endsWith(".htm")
-                        && !file.getPath().toLowerCase().endsWith(".html")){
+                        && !file.getPath().toLowerCase().endsWith(".html")) {
                         file = new File(file.getPath() + ".html");
                     }
                     text.append("<html><head><title>appleJuice Linklist</title></head><body bgcolor=#000080 text=#ffffff "
-                        + "link=#ffffff vlink=#ffffff><table align=center border=0><tr><td><b>appleJuice Dateien</b></td></tr><br>" + "\r\n");
-                    for (int x=0; x<shareDO.length; x++){
+                                + "link=#ffffff vlink=#ffffff><table align=center border=0><tr><td><b>appleJuice Dateien</b></td></tr><br>" +
+                                "\r\n");
+                    for (int x = 0; x < shareDO.length; x++) {
                         text.append("<tr><td><a href=\"ajfsp://file|");
-                        text.append(shareDO[x].getShortfilename() + "|" + shareDO[x].getCheckSum() + "|" + shareDO[x].getSize() + "/\">");
+                        text.append(shareDO[x].getShortfilename() + "|" +
+                                    shareDO[x].getCheckSum() + "|" +
+                                    shareDO[x].getSize() + "/\">");
                         text.append(shareDO[x].getShortfilename());
                         text.append("</a></td></tr>" + "\r\n");
                     }
                     text.append("</table></body></html>");
                 }
-                else{
-                    if (!file.getPath().toLowerCase().endsWith(".ajl")){
+                else {
+                    if (!file.getPath().toLowerCase().endsWith(".ajl")) {
                         file = new File(file.getPath() + ".ajl");
                     }
                     text.append("\r\n" + "Du benoetigst ein appleJuice-GUI, um diese Datei zu oeffnen. Das gibts z.B. hier "
-                        + "http://developer.berlios.de/projects/applejuicejava/" + "\r\n\r\n");
-                    text.append("Diese Datei darf nicht modifiziert werden!" + "\r\n" + "-----\r\n100\r\n");
-                    for (int x=0; x<shareDO.length; x++){
+                                +
+                        "http://developer.berlios.de/projects/applejuicejava/" +
+                                "\r\n\r\n");
+                    text.append("Diese Datei darf nicht modifiziert werden!" +
+                                "\r\n" + "-----\r\n100\r\n");
+                    for (int x = 0; x < shareDO.length; x++) {
                         text.append(shareDO[x].getShortfilename() + "\r\n");
                         text.append(shareDO[x].getCheckSum() + "\r\n");
                         text.append(shareDO[x].getSize() + "\r\n");
                     }
                 }
-                try
-                {
+                try {
                     FileWriter fileWriter = new FileWriter(file);
                     fileWriter.write(text.toString());
                     fileWriter.close();
                 }
                 catch (Exception ex) {
-                    if (logger.isEnabledFor(Level.ERROR))
+                    if (logger.isEnabledFor(Level.ERROR)) {
                         logger.error("Unbehandelte Exception", ex);
+                    }
                 }
             }
         }
@@ -267,11 +299,13 @@ public class DateiListeDialog extends JDialog {
         }
     }
 
-    class TxtFileFilter extends FileFilter{
+    class TxtFileFilter
+        extends FileFilter {
         public boolean accept(File file) {
-            if (!file.isFile())
+            if (!file.isFile()) {
                 return true;
-            else{
+            }
+            else {
                 String name = file.getName();
                 return (name.toLowerCase().endsWith(".ajl"));
             }
@@ -282,13 +316,16 @@ public class DateiListeDialog extends JDialog {
         }
     }
 
-    class HtmlFileFilter extends FileFilter{
+    class HtmlFileFilter
+        extends FileFilter {
         public boolean accept(File file) {
-            if (!file.isFile())
+            if (!file.isFile()) {
                 return true;
-            else{
+            }
+            else {
                 String name = file.getName();
-                return (name.toLowerCase().endsWith(".htm") || name.toLowerCase().endsWith(".html"));
+                return (name.toLowerCase().endsWith(".htm") ||
+                        name.toLowerCase().endsWith(".html"));
             }
         }
 

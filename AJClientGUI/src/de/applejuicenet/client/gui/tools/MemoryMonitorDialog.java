@@ -1,12 +1,15 @@
 package de.applejuicenet.client.gui.tools;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JDialog;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitorDialog.java,v 1.2 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tools/Attic/MemoryMonitorDialog.java,v 1.3 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +18,9 @@ import java.awt.event.WindowEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MemoryMonitorDialog.java,v $
+ * Revision 1.3  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.2  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -24,20 +30,21 @@ import java.awt.event.WindowEvent;
  *
  */
 
-public class MemoryMonitorDialog extends JDialog{
+public class MemoryMonitorDialog
+    extends JDialog {
     private MemoryMonitor memoryMonitorPanel;
 
-    public MemoryMonitorDialog(Dialog parent){
+    public MemoryMonitorDialog(Dialog parent) {
         super(parent, false);
         init();
     }
 
-    public MemoryMonitorDialog(Frame parent){
+    public MemoryMonitorDialog(Frame parent) {
         super(parent, false);
         init();
     }
 
-    private void init(){
+    private void init() {
         setTitle("aj Memory Monitor");
         memoryMonitorPanel = new MemoryMonitor();
         addWindowListener(new WindowAdapter() {
@@ -48,10 +55,10 @@ public class MemoryMonitorDialog extends JDialog{
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(memoryMonitorPanel, BorderLayout.CENTER);
         pack();
-        setSize(new Dimension(200,200));
+        setSize(new Dimension(200, 200));
     }
 
-    public void show(){
+    public void show() {
         super.show();
         memoryMonitorPanel.startMemoryMonitor();
     }

@@ -2,13 +2,14 @@ package de.applejuicenet.client.shared.dac;
 
 import java.util.HashMap;
 import java.util.Iterator;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.19 2004/01/30 16:32:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.20 2004/02/05 23:11:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +18,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.20  2004/02/05 23:11:28  maj0r
+ * Formatierung angepasst.
+ *
  * Revision 1.19  2004/01/30 16:32:47  maj0r
  * MapSetStringKey ausgebaut.
  *
@@ -173,7 +177,7 @@ public class DownloadDO
 
     public DownloadSourceDO[] getSources() {
         DownloadSourceDO[] sources = null;
-        synchronized(sourcen){
+        synchronized (sourcen) {
             sources = (DownloadSourceDO[]) sourcen.values().
                 toArray(new DownloadSourceDO[sourcen.size()]);
         }
@@ -265,7 +269,7 @@ public class DownloadDO
 
     public long getRestZeit() {
         long speed = getSpeedInBytes();
-        if (speed == 0){
+        if (speed == 0) {
             return Long.MAX_VALUE;
         }
         return ( (groesse - ready) / speed);
@@ -323,7 +327,7 @@ public class DownloadDO
     public long getSpeedInBytes() {
         long speed = 0;
         try {
-            synchronized (sourcen){
+            synchronized (sourcen) {
                 Iterator it = sourcen.values().iterator();
                 while (it.hasNext()) {
                     speed += ( (DownloadSourceDO) it.next()).getSpeed();
@@ -341,7 +345,7 @@ public class DownloadDO
     public long getBereitsGeladen() {
         long geladen = ready;
         try {
-            synchronized (sourcen){
+            synchronized (sourcen) {
                 Iterator it = sourcen.values().iterator();
                 while (it.hasNext()) {
                     geladen += ( (DownloadSourceDO) it.next()).

@@ -8,7 +8,6 @@ import java.awt.event.MouseListener;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
-import java.awt.Frame;
 
 public class SwingTrayPopup
     extends JPopupMenu {
