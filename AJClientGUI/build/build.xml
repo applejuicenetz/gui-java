@@ -1,45 +1,27 @@
 <?xml version="1.0"?>
 <!DOCTYPE project []>
-<project name="aj_java_gui" default="help" basedir="..">
-
-   <taskdef name="pack" classname="org.sadun.util.ant.Pack" classpath="${basedir}/tools/pack.jar"/>
+<project name="jVideobase" default="help" basedir="..">
 
    <!-- component directories ... -->
-   <property name="gui.srcdir"      location="${basedir}/src"/>
-   <property name="gui.compiledir"  location="${basedir}/classes"/>
+   <property name="srcdir"      location="${basedir}/src"/>
+   <property name="compiledir"  location="${basedir}/classes"/>
 
    <!-- other path settings, some items to be customized locally ...  -->
-   <property name="xercesImpl.jar"            location="${basedir}/tools/xercesImpl.jar"/>
-   <property name="xml-apis.jar"            location="${basedir}/tools/xml-apis.jar"/>
-   <property name="log4j-1.2.8.jar"            location="${basedir}/needed_jars/log4j-1.2.8.jar"/>
-   <property name="skinlf.jar"            location="${basedir}/needed_jars/skinlf.jar"/>
+   <property name="junit.jar"            location="${basedir}/tools/junit.jar"/>
+   <property name="looks-1.2.1.jar"            location="${basedir}/tools/looks-1.2.1.jar"/>
+   <property name="mm.mysql-2.0.14-bin.jar"            location="${basedir}/tools/mm.mysql-2.0.14-bin.jar"/>
 
    <!-- classpath for compilation ... -->
    <path id="lib.path">
-      <pathelement location="${xercesImpl.jar}"/>
-      <pathelement location="${xml-apis.jar}"/>
-      <pathelement location="${log4j-1.2.8.jar}"/>
-      <pathelement location="${skinlf.jar}"/>
+      <pathelement location="${junit.jar}"/>
+      <pathelement location="${looks-1.2.1.jar}"/>
+      <pathelement location="${mm.mysql-2.0.14-bin.jar}"/>
    </path>
 
-   <!-- usage information ... -->
-   <target name="help">
-      <echo>The following targets exist:</echo>
-      <echo>  gui-compile              compiles the appleJuice-gui</echo>
-      <echo>  gui-clean                deletes class files</echo>
-      <echo>  gui-rebuild              bcleans and compiles the appleJuice-gui</echo>
-      <echo>  create-jar               builds appleJuice-jar</echo>
-      <echo>  complete                 builds complete appleJuice</echo>
-      <echo>  build-archive            builds releasable archive-zip</echo>
-      <echo>  build-plugin-jar         builds plugin - build.xml needs to be modified</echo>
-      <echo>  build-pwdlPolicy-jar     builds PowerdownloadPolicy - build.xml needs to be modified</echo>
-      <fail message="You have to specifiy a target" />
-   </target>
-
    <!-- remove class files, DavaDoc files and test results ... -->
-   <target name="gui-clean" description="deletes class files">
+   <target name="clean" description="deletes class files">
       <delete includeEmptyDirs="true">
-         <fileset dir="${gui.compiledir}" casesensitive="false">
+         <fileset dir="${compiledir}" casesensitive="false">
             <include name="**/*.class"/>
             <exclude name="cvs"/>
             <exclude name="readme.txt"/>
@@ -47,96 +29,35 @@
       </delete>
    </target>
 
-   <target name="gui-compile" description="compiles the appleJuice-gui">
-      <javac srcdir="${gui.srcdir}" destdir="${gui.compiledir}" debug="true">
+   <target name="compile" description="compiles the appleJuice-gui">
+      <javac srcdir="${srcdir}" destdir="${compiledir}" debug="true">
          <classpath>
           <path refid="lib.path"/>
          </classpath>
       </javac>
    </target>
 
-   <target name="gui-rebuild" depends="gui-clean, gui-compile" description="cleans and compiles the appleJuice-gui">
+   <target name="rebuild" depends="clean, compile" description="cleans and compiles the jVideobase">
    </target>
 
    <target name="cruisecontrol">
       <cvs dest="${basedir}" command="update -d -P"/>
-      <antcall target="gui-rebuild"/>
+      <antcall target="rebuild"/>
    </target>
 
-   <target name="create-jar" depends="gui-compile" description="builds appleJuice-jar">
-	<pack classes="de.applejuicenet.client.AppleJuiceClient,org.apache.xerces.parsers.XML11Configuration,
-			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl,org.apache.xerces.parsers.IntegratedParserConfiguration"
-	      targetJar="${basedir}/AJCoreGUI.jar"
-	      excludePkg="java,javax,sun,com.l2fprod,com.sixlegs,org.apache.log4j"
-              manifestClassPath="./needed_jars/log4j-1.2.8.jar ./needed_jars/skinlf.jar ./needed_jars/looks-1.2.1.jar"
-	      manifestMainClass="de.applejuicenet.client.AppleJuiceClient">
-           <classpath>
-           	<pathelement path="${gui.compiledir}"/>
-           	<path refid="lib.path"/>
-           </classpath>
-	   <additionalclass name="org.apache.xerces.parsers.SAXParser"/>
-           <additionalfileset dir="${gui.compiledir}" excludes="**/*.txt **/*.class **/*.dep2"/>
-	</pack>
+   <target name="create-jar" depends="rebuild" description="builds appleJuice-jar">
+	<jar destfile="${basedir}/jVideobase.jar"
+		basedir="${compiledir}"
+		includes="de/**"
+		index="true">
+	    <manifest>
+	       <attribute name="Built-By" value="${user.name}"/>
+      		<attribute name="Class-Path" value="./tools/looks-1.2.1.jar ./tools/mm.mysql-2.0.14-bin.jar"/>
+      		<attribute name="Main-Class" value="de.tklsoft.jvideobase.JVideobase"/>
+	    </manifest>
+	</jar>
    </target>
 
-   <target name="build-archive" depends="create-jar" description="builds archive-zip">
-	<jar destfile="${basedir}/AJCoreGUI_vX_XX.zip">
-		<fileset dir="${basedir}" includes="AJCoreGUI.jar"/>
-		<fileset dir="${basedir}" includes="wizard.xml"/>
-		<fileset dir="${basedir}" includes="changelog.htm"/>
-		<fileset dir="${basedir}" includes="TrayIcon12.dll"/>
-		<fileset dir="${basedir}" includes="language/*.xml language/*.gif"/>
-		<fileset dir="${basedir}" includes="plugins/*.jar plugins/*.txt"/>
-		<fileset dir="${basedir}" includes="pwdlpolicies/*.jar pwdlpolicies/*.txt"/>
-		<fileset dir="${basedir}" includes="themes/*.zip themes/*.first"/>
-		<fileset dir="${basedir}" includes="sounds/*.wav sounds/*.first"/>
-		<fileset dir="${basedir}" includes="needed_jars/*.jar"/>
-         </jar>
-   </target>
-
-   <target name="build-winnative-archive" description="builds winnative-archive">
-	<jar destfile="${basedir}/AJCoreGUI_Win_vX_XX.zip">
-		<fileset dir="${basedir}" includes="AJCoreGUI.exe"/>
-		<fileset dir="${basedir}" includes="wizard.xml"/>
-		<fileset dir="${basedir}" includes="changelog.htm"/>
-		<fileset dir="${basedir}" includes="TrayIcon12.dll"/>
-		<fileset dir="${basedir}" includes="WICHTIG_LESEN.txt"/>
-		<fileset dir="${basedir}" includes="*.reg"/>
-		<fileset dir="${basedir}" includes="language/*.xml language/*.gif"/>
-		<fileset dir="${basedir}" includes="plugins/*.jar plugins/*.txt"/>
-		<fileset dir="${basedir}" includes="pwdlpolicies/*.jar pwdlpolicies/*.txt"/>
-		<fileset dir="${basedir}" includes="themes/*.zip themes/*.first"/>
-		<fileset dir="${basedir}" includes="sounds/*.wav sounds/*.first"/>
-		<fileset dir="${basedir}" includes="needed_jars/*.jar"/>
-         </jar>
-   </target>
-
-   <target name="build-plugin-jar" description="builds plugin - build.xml needs to be modified">
-      <delete includeEmptyDirs="true">
-         <fileset dir="${basedir}/plugins" casesensitive="false">
-            <include name="**/UploadStat_1_6.jar"/>
-         </fileset>
-      </delete>
-	<jar destfile="${basedir}/plugins/UploadStat_1_6.jar">
-		<fileset dir="${basedir}/plugin_src/UploadStatPlugin016_source" includes="*.xml"/>
-		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
-                excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class
-                        ,**/de/applejuicenet/client/gui/plugins/XMLValueHolder.class" />
-         </jar>
-   </target>
-
-   <target name="build-pwdlPolicy-jar" description="builds pwdlPolicy - build.xml needs to be modified">
-      <delete includeEmptyDirs="true">
-         <fileset dir="${basedir}/pwdlpolicies" casesensitive="false">
-            <include name="**/StandardPwdlPolicy.jar"/>
-         </fileset>
-      </delete>
-	<jar destfile="${basedir}/pwdlpolicies/StandardPwdlPolicy.jar">
-		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/powerdownload/**/*.*"
-			excludes="**/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.class" />
-         </jar>
-   </target>
-
-   <target name="complete" depends="create-jar" description="builds complete appleJuice">
+   <target name="complete" depends="create-jar" description="builds complete jVideobase">
    </target>
 </project>
