@@ -40,7 +40,7 @@ public class ShareXMLHolder extends DefaultHandler {
 
 	private final CoreConnectionSettingsHolder coreHolder;
 
-	private Map shareMap;
+	private Map<String, ShareDO> shareMap;
 
 	private String xmlCommand;
 
@@ -112,7 +112,7 @@ public class ShareXMLHolder extends DefaultHandler {
 		try {
 			String xmlString = getXMLString();
 			if (shareMap == null) {
-				shareMap = new HashMap();
+				shareMap = new HashMap<String, ShareDO>();
 			}
 			xr.parse(new InputSource(new StringReader(xmlString)));
 		} catch (Exception e) {

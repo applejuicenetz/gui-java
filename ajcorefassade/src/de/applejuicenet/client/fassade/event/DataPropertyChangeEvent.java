@@ -4,13 +4,9 @@ import java.util.Vector;
 
 public abstract class DataPropertyChangeEvent {
 	private final Object source;
-
 	private final Object name;
-
 	private final Object oldValue;
-
 	private final Object newValue;
-
 	private final DataPropertyChangeEvent[] events;
 
 	public DataPropertyChangeEvent(Object source, Object name, Object oldValue,

@@ -1,7 +1,6 @@
 package de.applejuicenet.client.fassade.controller;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
@@ -9,7 +8,7 @@ import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 public abstract class DataUpdateInformer {
 	private final int listenerType;
 
-	private Set listener = new HashSet();
+	private Set<DataUpdateListener> listener = new HashSet<DataUpdateListener>();
 
 	protected DataUpdateInformer(int dataUpdateListenerType) {
 		listenerType = dataUpdateListenerType;
@@ -29,9 +28,9 @@ public abstract class DataUpdateInformer {
 
 	public void informDataUpdateListener() {
 		Object content = getContentObject();
-		Iterator it = listener.iterator();
-		while (it.hasNext()) {
-			((DataUpdateListener) it.next()).fireContentChanged(listenerType,
+		for (DataUpdateListener curListener : listener) {
+			curListener.fireContentChanged(
+					listenerType,
 					content);
 		}
 

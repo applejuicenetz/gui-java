@@ -58,31 +58,22 @@ import de.applejuicenet.client.fassade.tools.MD5Encoder;
 
 public class ApplejuiceFassade {
 	public static final String MIN_NEEDED_CORE_VERSION = "0.30.145.610";
-
 	public static final String ERROR_MESSAGE = "Unbehandelte Exception";
 
 	public static String separator;
 
 	private final CoreConnectionSettingsHolder coreHolder;
 
-	private Map informer = new HashMap();
-
+	private Map<String, DataUpdateInformer> informer = 
+		new HashMap<String, DataUpdateInformer>();
 	private ModifiedXMLHolder modifiedXML = null;
-
 	private InformationXMLHolder informationXML = null;
-
 	private ShareXMLHolder shareXML = null;
-
 	private SettingsXMLHolder settingsXML = null;
-
 	private DirectoryXMLHolder directoryXML = null;
-
 	private Version coreVersion;
-
 	private Map share = null;
-
 	private PartListXMLHolder partlistXML = null;
-
 	private boolean coreErreichbar = false;
 
 	// Thread
@@ -176,8 +167,7 @@ public class ApplejuiceFassade {
 	public void addDataUpdateListener(DataUpdateListener listener, int type) {
 		String key = Integer.toString(type);
 		if (informer.containsKey(key)) {
-			DataUpdateInformer anInformer = (DataUpdateInformer) informer
-					.get(key);
+			DataUpdateInformer anInformer = informer.get(key);
 			anInformer.addDataUpdateListener(listener);
 		}
 	}
@@ -185,8 +175,7 @@ public class ApplejuiceFassade {
 	public void removeDataUpdateListener(DataUpdateListener listener, int type) {
 		String key = Integer.toString(type);
 		if (informer.containsKey(key)) {
-			DataUpdateInformer anInformer = (DataUpdateInformer) informer
-					.get(key);
+			DataUpdateInformer anInformer = informer.get(key);
 			anInformer.removeDataUpdateListener(listener);
 		}
 	}
@@ -254,7 +243,7 @@ public class ApplejuiceFassade {
 	public String[] getCurrentIncomingDirs() {
 		Map download = getDownloadsSnapshot();
 		DownloadDO downloadDO = null;
-		ArrayList incomingDirs = new ArrayList();
+		ArrayList<String> incomingDirs = new ArrayList<String>();
 		boolean found;
 		synchronized (download) {
 			Iterator it = download.values().iterator();
@@ -752,8 +741,7 @@ public class ApplejuiceFassade {
 	public void informDataUpdateListener(int type) {
 		String key = Integer.toString(type);
 		if (informer.containsKey(key)) {
-			DataUpdateInformer anInformer = (DataUpdateInformer) informer
-					.get(key);
+			DataUpdateInformer anInformer = informer.get(key);
 			anInformer.informDataUpdateListener();
 		}
 	}

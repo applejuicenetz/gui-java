@@ -1,7 +1,7 @@
 package de.applejuicenet.client.fassade.controller.xml;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xml/NetworkServerXMLHolder.java,v 1.1 2004/12/03 15:51:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xml/NetworkServerXMLHolder.java,v 1.2 2005/01/18 12:46:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -63,7 +63,7 @@ public class NetworkServerXMLHolder extends DefaultHandler {
 		}
 	}
 
-	private List links = new ArrayList();
+	private List<String> links = new ArrayList<String>();
 
 	public String[] getNetworkKnownServers() {
 		String xmlData = null;

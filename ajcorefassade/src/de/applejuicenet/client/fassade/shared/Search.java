@@ -31,28 +31,17 @@ import de.applejuicenet.client.fassade.shared.Search.SearchEntry.FileName;
 
 public class Search {
 	private int id;
-
 	private String suchText;
-
 	private int offeneSuchen;
-
 	private int gefundenDateien;
-
 	private int durchsuchteClients;
-
-	private Map mapping = new HashMap();
-
-	private List entries = new ArrayList();
-
+	private Map<String, SearchEntry> mapping = new HashMap<String, SearchEntry>();
+	private List<SearchEntry> entries = new ArrayList<SearchEntry>();
 	private boolean changed = true;
-
 	private long creationTime;
-
 	private boolean running;
-
 	public static int currentSearchCount = 0;
-
-	private Set filter = new HashSet();
+	private Set<String> filter = new HashSet<String>();
 
 	public Search(int id) {
 		this.id = id;
@@ -116,9 +105,8 @@ public class Search {
 
 	public void removeFilter(String newFilter) {
 		if (filter.size() == 0) {
-			String[] allTypes = FileTypeHelper.getAllTypes();
-			for (int i = 0; i < allTypes.length; i++) {
-				filter.add(allTypes[i]);
+			for (String curType : FileTypeHelper.getAllTypes()) {
+				filter.add(curType);
 			}
 		}
 		filter.remove(newFilter);
@@ -135,10 +123,9 @@ public class Search {
 			entries.add(searchEntry);
 			setChanged(true);
 		} else {
-			SearchEntry oldSearchEntry = (SearchEntry) mapping.get(key);
-			FileName[] fileNames = searchEntry.getFileNames();
-			for (int i = 0; i < fileNames.length; i++) {
-				oldSearchEntry.addFileName(fileNames[i]);
+			SearchEntry oldSearchEntry = mapping.get(key);
+			for (FileName curFileName : searchEntry.getFileNames()) {
+				oldSearchEntry.addFileName(curFileName);
 			}
 		}
 	}
@@ -148,11 +135,9 @@ public class Search {
 	}
 
 	public SearchEntry getSearchEntryById(int id) {
-		SearchEntry searchEntry;
-		for (int i = 0; i < entries.size(); i++) {
-			searchEntry = (SearchEntry) entries.get(i);
-			if (searchEntry.getId() == id) {
-				return searchEntry;
+		for (SearchEntry curSearchEntry : entries) {
+			if (curSearchEntry.getId() == id) {
+				return curSearchEntry;
 			}
 		}
 		return null;
@@ -163,10 +148,10 @@ public class Search {
 			return (SearchEntry[]) entries.toArray(new SearchEntry[entries
 					.size()]);
 		}
-		ArrayList neededEntries = new ArrayList();
-		for (int i = 0; i < entries.size(); i++) {
-			if (!filter.contains(((SearchEntry) entries.get(i)).getFileType())) {
-				neededEntries.add(entries.get(i));
+		ArrayList<SearchEntry> neededEntries = new ArrayList<SearchEntry>();
+		for (SearchEntry curSearchEntry : entries) {
+			if (!filter.contains(curSearchEntry.getFileType())) {
+				neededEntries.add(curSearchEntry);
 			}
 		}
 		return (SearchEntry[]) neededEntries
@@ -183,19 +168,12 @@ public class Search {
 
 	public class SearchEntry {
 		private int id;
-
 		private int searchId;
-
 		private String checksumme;
-
 		private long groesse;
-
 		private String groesseAsString = null;
-
-		private List fileNames = new ArrayList();
-
-		private Set keys = new HashSet();
-
+		private List<FileName> fileNames = new ArrayList<FileName>();
+		private Set<String> keys = new HashSet<String>();
 		private String type = FileTypeHelper.TYPE_UNKNOWN;
 
 		public SearchEntry(int id, int searchId, String checksumme, long groesse) {
@@ -235,8 +213,8 @@ public class Search {
 			int sound = 0;
 			int archive = 0;
 			int currentMax = 0;
-			for (int i = 0; i < fileNames.length; i++) {
-				String fileNameType = fileNames[i].getFileType();
+			for (FileName curFileName : getFileNames()) {
+				String fileNameType = curFileName.getFileType();
 				if (fileNameType.equals(FileTypeHelper.TYPE_UNKNOWN)) {
 					continue;
 				} else if (fileNameType.equals(FileTypeHelper.TYPE_PDF)) {
@@ -297,13 +275,10 @@ public class Search {
 				recalculatePossibleFileType();
 				setChanged(true);
 			} else {
-				FileName oldFileName = null;
-				int size = fileNames.size();
-				for (int i = 0; i < size; i++) {
-					oldFileName = (FileName) fileNames.get(i);
-					if (oldFileName.getDateiName().compareToIgnoreCase(
+				for (FileName curFileName : fileNames) {
+					if (curFileName.getDateiName().compareToIgnoreCase(
 							fileName.getDateiName()) == 0) {
-						oldFileName.setHaeufigkeit(fileName.getHaeufigkeit());
+						curFileName.setHaeufigkeit(fileName.getHaeufigkeit());
 					}
 				}
 			}
@@ -316,9 +291,7 @@ public class Search {
 
 		public class FileName {
 			private String dateiName;
-
 			private int haeufigkeit;
-
 			private String fileType = FileTypeHelper.TYPE_UNKNOWN;
 
 			public FileName(String dateiName, int haeufigkeit) {

@@ -25,26 +25,18 @@ import java.util.List;
 
 public class DirectoryDO {
 	public static final int TYPE_RECHNER = 1;
-
 	public static final int TYPE_LAUFWERK = 2;
-
 	public static final int TYPE_DISKETTE = 3;
-
 	public static final int TYPE_ORDNER = 4;
-
 	public static final int TYPE_DESKTOP = 5;
 
 	private static String separator;
 
 	private String name;
-
 	private int type;
-
 	private boolean fileSystem;
-
 	private String path;
-
-	private List children = null;
+	private List<DirectoryDO> children = null;
 
 	public DirectoryDO(String name, int type, boolean fileSystem, String path) {
 		this.name = name;
@@ -98,7 +90,7 @@ public class DirectoryDO {
 			return;
 		}
 		if (children == null) {
-			children = new ArrayList();
+			children = new ArrayList<DirectoryDO>();
 		}
 		children.add(directoryDO);
 	}

@@ -58,52 +58,30 @@ public class ModifiedXMLHolder extends DefaultHandler {
 
 	private final CoreConnectionSettingsHolder coreHolder;
 
-	private Map sourcenZuDownloads = new HashMap();
-
+	private Map<String, DownloadDO> sourcenZuDownloads = new HashMap<String, DownloadDO>();
 	private XMLReader xr = null;
-
-	private Map serverMap = new HashMap();
-
-	private Map downloadMap = new HashMap();
-
-	private Map uploadMap = new HashMap();
-
-	private Map searchMap = new HashMap();
-
+	private Map<String, ServerDO> serverMap = new HashMap<String, ServerDO>();
+	private Map<String, DownloadDO> downloadMap = new HashMap<String, DownloadDO>();
+	private Map<String, UploadDO> uploadMap = new HashMap<String, UploadDO>();
+	private Map<String, Search> searchMap = new HashMap<String, Search>();
 	private NetworkInfo netInfo;
-
 	private Information information;
-
 	private int count = 0;
-
 	private String filter = "";
-
 	private String sessionKontext = null;
-
 	private SecurerXMLHolder securerHolder;
-
 	private int connectedWithServerId = -1;
-
 	private int tryConnectToServer = -1;
-
 	private boolean reloadInProgress = false;
-
 	private String zipMode = "";
-
 	private String xmlCommand;
-
 	private long timestamp = 0;
-
 	private int checkCount = 0;
-
 	private CharArrayWriter contents = new CharArrayWriter();
-
-	private Map attributes = new HashMap();
-
-	private Vector downloadEvents = new Vector();
-
+	private Map<String, String> attributes = new HashMap<String, String>();
+	private Vector<DownloadDataPropertyChangeEvent> downloadEvents = 
+		new Vector<DownloadDataPropertyChangeEvent>();
 	private boolean downloadSourceEvent;
-
 	private DataPropertyChangeInformer downloadPropertyChangeInformer;
 
 	public ModifiedXMLHolder(CoreConnectionSettingsHolder coreHolder) {
@@ -135,19 +113,19 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		init();
 	}
 
-	public Map getServer() {
+	public Map<String, ServerDO> getServer() {
 		return serverMap;
 	}
 
-	public Map getUploads() {
+	public Map<String, UploadDO> getUploads() {
 		return uploadMap;
 	}
 
-	public Map getDownloads() {
+	public Map<String, DownloadDO> getDownloads() {
 		return downloadMap;
 	}
 
-	public Map getSearchs() {
+	public Map<String, Search> getSearchs() {
 		return searchMap;
 	}
 
@@ -197,8 +175,8 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		return timestamp;
 	}
 
-	public Map getSpeeds() {
-		Map speeds = new HashMap();
+	public Map<String, Long> getSpeeds() {
+		Map<String, Long> speeds = new HashMap<String, Long>();
 		if (information != null) {
 			speeds.put("uploadspeed", new Long(information.getUploadSpeed()));
 			speeds.put("downloadspeed",
@@ -288,7 +266,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		String key = Integer.toString(id);
 		ServerDO serverDO;
 		if (serverMap.containsKey(key)) {
-			serverDO = (ServerDO) serverMap.get(key);
+			serverDO = serverMap.get(key);
 		} else {
 			serverDO = new ServerDO(id);
 			serverMap.put(key, serverDO);
@@ -340,7 +318,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		String key = Integer.toString(id);
 		UploadDO uploadDO;
 		if (uploadMap.containsKey(key)) {
-			uploadDO = (UploadDO) uploadMap.get(key);
+			uploadDO = uploadMap.get(key);
 		} else {
 			uploadDO = new UploadDO(id);
 			uploadMap.put(key, uploadDO);
@@ -405,7 +383,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 				.parseInt((String) attributes.get("downloadid"));
 
 		String downloadKey = Integer.toString(downloadId);
-		DownloadDO downloadDO = (DownloadDO) downloadMap.get(downloadKey);
+		DownloadDO downloadDO = downloadMap.get(downloadKey);
 		DownloadSourceDO downloadSourceDO = null;
 		if (downloadDO != null) {
 			downloadSourceDO = downloadDO.getSourceById(id);
@@ -505,7 +483,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		DownloadDO downloadDO;
 		boolean newDownload;
 		if (downloadMap.containsKey(key)) {
-			downloadDO = (DownloadDO) downloadMap.get(key);
+			downloadDO = downloadMap.get(key);
 			newDownload = false;
 		} else {
 			downloadDO = new DownloadDO(id);
@@ -522,15 +500,12 @@ public class ModifiedXMLHolder extends DefaultHandler {
 	}
 
 	private void removeDownload(String id) {
-		DownloadDO downloadDO = (DownloadDO) downloadMap.get(sourcenZuDownloads
+		DownloadDO downloadDO = downloadMap.get(sourcenZuDownloads
 				.get(id));
 		if (downloadDO != null) {
-			DownloadSourceDO[] sourcen = downloadDO.getSources();
-			if (sourcen != null) {
-				for (int y = 0; y < sourcen.length; y++) {
-					sourcenZuDownloads.remove(Integer.toString(sourcen[y]
-							.getId()));
-				}
+			for (DownloadSourceDO curDownloadSourceDO : downloadDO.getSources()) {
+				sourcenZuDownloads.remove(Integer.toString(curDownloadSourceDO
+						.getId()));
 			}
 		}
 		downloadMap.remove(id);
@@ -582,7 +557,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		String key = Integer.toString(id);
 		Search aSearch;
 		if (searchMap.containsKey(key)) {
-			aSearch = (Search) searchMap.get(key);
+			aSearch = searchMap.get(key);
 		} else {
 			aSearch = new Search(id);
 			searchMap.put(key, aSearch);
@@ -627,9 +602,9 @@ public class ModifiedXMLHolder extends DefaultHandler {
 		}
 	}
 
-	private Set searchEntriesToDo = new HashSet();
+	private Set<SearchEntry> searchEntriesToDo = new HashSet<SearchEntry>();
 
-	private Set downloadSourcesToDo = new HashSet();
+	private Set<DownloadSourceDO> downloadSourcesToDo = new HashSet<DownloadSourceDO>();
 
 	private void checkSearchEntryFilenameAttributes(Attributes attr) {
 		if (tmpSearchEntry == null) {

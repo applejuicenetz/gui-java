@@ -1,7 +1,7 @@
 package de.applejuicenet.client.fassade.controller.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/Attic/PartListDO.java,v 1.2 2004/12/03 15:51:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/Attic/PartListDO.java,v 1.3 2005/01/18 12:46:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -62,7 +62,7 @@ public class PartListDO {
 
 	private long groesse;
 
-	private List parts = new ArrayList();
+	private List<Part> parts = new ArrayList<Part>();
 
 	private int type;
 

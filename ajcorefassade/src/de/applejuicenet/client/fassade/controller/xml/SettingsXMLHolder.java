@@ -77,7 +77,7 @@ public class SettingsXMLHolder extends WebXMLParser {
 		String incomingDir = nodes.item(0).getFirstChild().getNodeValue();
 		nodes = document.getElementsByTagName("temporarydirectory");
 		String tempDir = nodes.item(0).getFirstChild().getNodeValue();
-		Set shareEntries = new HashSet();
+		Set<ShareEntry> shareEntries = new HashSet<ShareEntry>();
 		nodes = document.getElementsByTagName("directory");
 		Element e = null;
 		String dir = null;

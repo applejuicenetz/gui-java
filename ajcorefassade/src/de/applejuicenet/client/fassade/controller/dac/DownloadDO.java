@@ -1,10 +1,8 @@
 package de.applejuicenet.client.fassade.controller.dac;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * $Header:
@@ -30,50 +28,29 @@ public class DownloadDO {
 
 	// Status - IDs
 	public static final int SUCHEN_LADEN = 0;
-
 	public static final int NICHT_GENUG_PLATZ_FEHLER = 1;
-
 	public static final int FERTIGSTELLEN = 12;
-
 	public static final int FEHLER_BEIM_FERTIGSTELLEN = 13;
-
 	public static final int FERTIG = 14;
-
 	public static final int ABBRECHEN = 15;
-
 	public static final int DATA_WIRD_ERSTELLT = 16;
-
 	public static final int ABGEGROCHEN = 17;
-
 	public static final int PAUSIERT = 18;
 
 	private final int id;
 
 	private int shareId;
-
 	private String hash;
-
 	private long groesse;
-
 	private long ready;
-
 	private int status;
-
 	private String filename;
-
 	private String targetDirectory;
-
 	private int powerDownload;
-
 	private int temporaryFileNumber;
-
 	private long oldSpeed;
-
 	private String speedAsString;
-
-	private Map sourcen = new HashMap();
-
-	private Set propertyChangeListener = new HashSet();
+	private Map<String, DownloadSourceDO> sourcen = new HashMap<String, DownloadSourceDO>();
 
 	public DownloadDO(int id) {
 		this.id = id;
