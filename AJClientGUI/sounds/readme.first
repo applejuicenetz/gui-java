@@ -1,0 +1,8 @@
+Die .wav Dateien koennen bei Bedarf ausgetaucht werden.
+Wichtig ist die richtige Schreibweise, auch Groﬂ-/Kleinschreibung ist zu beachten.
+
+Getestete Formate:
+PCM, 22050 Hz, 1 Channel, 8 bit
+PCM, 22050 Hz, 2 Channels, 8 bit
+
+Falsche Formate werden mit einer Errormessage im Log belohnt.
