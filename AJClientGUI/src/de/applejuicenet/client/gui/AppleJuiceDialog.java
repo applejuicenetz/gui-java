@@ -19,7 +19,7 @@ import de.applejuicenet.client.gui.tools.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.71 2004/01/02 16:47:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.72 2004/01/02 17:57:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.72  2004/01/02 17:57:51  maj0r
+ * Menuepunkt zum Beenden des Core auf vielfachen Wunsch an separate Stelle verschoben.
+ *
  * Revision 1.71  2004/01/02 16:47:18  maj0r
  * Standard-XML-Datei angepasst.
  *
@@ -199,6 +202,7 @@ public class AppleJuiceDialog
     private JMenu sprachMenu;
     private JMenu optionenMenu;
     private JMenu themesMenu = null;
+    private JMenu coreMenu;
     private HashSet plugins;
     private JMenuItem menuItemOptionen = new JMenuItem();
     private JMenuItem menuItemCoreBeenden = new JMenuItem();
@@ -561,7 +565,6 @@ public class AppleJuiceDialog
                 }
             });
             optionenMenu.add(menuItemOptionen);
-            optionenMenu.add(menuItemCoreBeenden);
             optionenMenu.add(menuItemUeber);
             menuBar.add(optionenMenu);
 
@@ -672,6 +675,9 @@ public class AppleJuiceDialog
                 themesMenu.add(menuItem);
             }
             menuBar.add(themesMenu);
+            coreMenu = new JMenu("Core");
+            coreMenu.add(menuItemCoreBeenden);
+            menuBar.add(coreMenu);
             return menuBar;
         }
         catch (Exception e) {
