@@ -60,6 +60,8 @@ public class DownloadController extends GuiController {
 	private static final int START_DOWNLOAD = 10;
 	private static final int PARTLISTE_ANZEIGEN_PER_BUTTON = 11;
 	private static final int START_POWERDOWNLOAD = 12;
+	private static final int NODE_ITEM_CLICKED = 13;
+	private static final int MAYBE_SHOW_POPUP = 14;
 
 	private DownloadPanel downloadPanel;
 
@@ -147,13 +149,17 @@ public class DownloadController extends GuiController {
 		});
 		downloadPartListWatcher = new DownloadPartListWatcher(this);
 		downloadPanel.getDownloadTable().addMouseListener(
-				new DownloadTableMouseAdapter(this, downloadPanel.getDownloadTable()));
+				new DownloadTableMouseListener(this, downloadPanel.getDownloadTable()
+						, NODE_ITEM_CLICKED));
+		downloadPanel.getDownloadTable().addMouseListener(
+				new DownloadTablePopupListener(this, downloadPanel.getDownloadTable()
+						, MAYBE_SHOW_POPUP));
 		LanguageSelector.getInstance().addLanguageListener(this);
 		ApplejuiceFassade.getInstance().addDataUpdateListener(this,
 				DataUpdateListener.DOWNLOAD_CHANGED);		
 	}
 	
-	public void fireAction(int actionId) {
+	public void fireAction(int actionId, Object source) {
 		switch (actionId){
 			case ABBRECHEN:{
 				downloadAbbrechen();
@@ -207,6 +213,14 @@ public class DownloadController extends GuiController {
 				startPowerDownload();
 				break;
 			}
+			case NODE_ITEM_CLICKED:{
+				nodeItemClicked(source);
+				break;
+			}
+			case MAYBE_SHOW_POPUP:{
+				maybeShowPopup((MouseEvent)source);
+				break;
+			}
 			default:{
 				logger.error("Unregistrierte EventId " + actionId);
 			}
@@ -225,7 +239,7 @@ public class DownloadController extends GuiController {
 		downloadPanel.getDownloadTable().getSelectionModel().clearSelection();
 	}
 	
-	public void fireItemClicked(Object node){
+	private void nodeItemClicked(Object node){
 		if (node.getClass() == DownloadMainNode.class
 				&& ((DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
 			DownloadDO downloadDO = ((DownloadMainNode) node)
@@ -319,7 +333,7 @@ public class DownloadController extends GuiController {
         }
 	}
 	
-	public void fireMaybeShowPopup(MouseEvent e){
+	private void maybeShowPopup(MouseEvent e){
 		Object[] selectedItems = getSelectedDownloadItems();
 		downloadPanel.getMnuUmbenennen().setVisible(false);
 		downloadPanel.getMnuZielordner().setVisible(false);

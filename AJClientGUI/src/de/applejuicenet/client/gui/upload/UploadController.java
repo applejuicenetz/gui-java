@@ -79,7 +79,7 @@ public class UploadController extends GuiController {
 				new UploadTableMouseListener(this, TABLE_MOUSE_CLICKED)); 
 		uploadPanel.getTable().addMouseListener(
 				new UploadTablePopupListener(this, TABLE_POPUP));
-		uploadPanel.getMnuCopyToClipboar().addActionListener(
+		uploadPanel.getMnuCopyToClipboard().addActionListener(
 				new GuiControllerActionListener(this, COPY_TO_CLIPBOARD));
 	}
 
@@ -287,7 +287,7 @@ public class UploadController extends GuiController {
 		columns[0].setPreferredWidth(100);
 		warteschlangeVoll = ZeichenErsetzer.korrigiereUmlaute(languageSelector
 						.getFirstAttrbuteByTagName(".root.javagui.downloadform.warteschlangevoll"));
-		uploadPanel.getMnuCopyToClipboar().setText(ZeichenErsetzer
+		uploadPanel.getMnuCopyToClipboard().setText(ZeichenErsetzer
 						.korrigiereUmlaute(languageSelector
 								.getFirstAttrbuteByTagName(".root.mainform.getlink1.caption")));
 	}

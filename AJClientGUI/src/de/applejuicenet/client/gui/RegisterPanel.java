@@ -23,13 +23,13 @@ import de.applejuicenet.client.gui.search.SearchPanel;
 import de.applejuicenet.client.gui.server.ServerPanel;
 import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.gui.start.StartController;
-import de.applejuicenet.client.gui.upload.UploadPanel;
+import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.49 2004/10/28 14:57:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.50 2004/10/29 13:38:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -48,7 +48,7 @@ public class RegisterPanel
 	private StartController startController;
     private DownloadController downloadController;
     private SearchPanel searchPanel;
-    private UploadPanel uploadPanel;
+    private UploadController uploadController;
     private ServerPanel serverPanel;
     private ShareController shareController;
     private AppleJuiceDialog parent;
@@ -99,7 +99,7 @@ public class RegisterPanel
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(60, "Lade Uploadpanel...");
         }
-        uploadPanel = UploadPanel.getInstance();
+        uploadController = UploadController.getInstance();
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(70, "Lade Searchpanel...");
         }
@@ -124,7 +124,7 @@ public class RegisterPanel
         addTab("Download", icon3, downloadController.getComponent());
 
         ImageIcon icon4 = im.getIcon("upload");
-        addTab("Upload", icon4, uploadPanel);
+        addTab("Upload", icon4, uploadController.getComponent());
 
         ImageIcon icon5 = im.getIcon("server");
         addTab("Server", icon5, serverPanel);

@@ -4,39 +4,22 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
-import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.download.table.DownloadRootNode;
 
-public class DownloadTableMouseAdapter extends MouseAdapter{
+public class DownloadTablePopupListener extends MouseAdapter{
 	
 	private JTreeTable downloadTable;
-	private DownloadController downloadController;
-	
-	public DownloadTableMouseAdapter(DownloadController downloadController,
-			JTreeTable downloadTable){
-		this.downloadController = downloadController;
-		this.downloadTable = downloadTable;
-	}
-	
-	public void mouseClicked(MouseEvent e) {
-		super.mouseClicked(e);
-		if (!DownloadRootNode.isInitialized()) {
-			return;
-		}
-		Point p = e.getPoint();
-		int selectedRow = downloadTable.rowAtPoint(p);
-		Object node = ((TreeTableModelAdapter) downloadTable.getModel())
-				.nodeForRow(selectedRow);
-		if (downloadTable.columnAtPoint(p) != 0) {
-			if (e.getClickCount() == 2) {
-				((TreeTableModelAdapter) downloadTable.getModel())
-						.expandOrCollapseRow(selectedRow);
-			}
-		}
-		downloadController.fireItemClicked(node);
-	}
+	private GuiController guiController;
+	private int actionId;
 
+	public DownloadTablePopupListener(GuiController guiController,
+			JTreeTable downloadTable, int actionId){
+		this.guiController = guiController;
+		this.downloadTable = downloadTable;
+		this.actionId = actionId;
+	}	
 	public void mousePressed(MouseEvent me) {
 		super.mousePressed(me);
 		maybeShowPopup(me);
@@ -65,7 +48,7 @@ public class DownloadTableMouseAdapter extends MouseAdapter{
 				downloadTable.setRowSelectionInterval(selectedRow,
 						selectedRow);
 			}
-			downloadController.fireMaybeShowPopup(e);
+			guiController.fireAction(actionId, e);
 		}
-	}
+	}	
 }

@@ -94,7 +94,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
 		return uploadListeLabel;
 	}
 	
-	public JMenuItem getMnuCopyToClipboar(){
+	public JMenuItem getMnuCopyToClipboard(){
 		return itemCopyToClipboard;
 	}
 	
@@ -165,6 +165,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
 			columnPopup.add(columnPopupItems[i]);
 		}
 		columnPopupItems[0].setEnabled(false);
+		columnPopupItems[0].setSelected(true);
 
 		JScrollPane aScrollPane = new JScrollPane(uploadDataTable);
 		aScrollPane.setBackground(uploadDataTable.getBackground());

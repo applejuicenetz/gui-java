@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/GuiController.java,v 1.3 2004/10/15 13:34:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/GuiController.java,v 1.4 2004/10/29 13:38:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,7 +27,7 @@ public abstract class GuiController implements LanguageListener, DataUpdateListe
 		logger = Logger.getLogger(getClass());
 	}
 	
-	public abstract void fireAction(int actionId);
+	public abstract void fireAction(int actionId, Object source);
 
 	public abstract JComponent getComponent();
 	

@@ -5,15 +5,15 @@ import java.awt.event.MouseEvent;
 
 import de.applejuicenet.client.gui.components.GuiController;
 
-public class HeaderPopupListener extends MouseAdapter {
+public class UploadTablePopupListener extends MouseAdapter{
 	private GuiController guiController;
 	private int actionId;
-
-	public HeaderPopupListener(GuiController guiController, int actionId) {
+	
+	public UploadTablePopupListener(GuiController guiController, int actionId){
 		this.guiController = guiController;
 		this.actionId = actionId;
 	}
-
+	
 	public void mousePressed(MouseEvent me) {
 		super.mousePressed(me);
 		maybeShowPopup(me);
@@ -26,7 +26,7 @@ public class HeaderPopupListener extends MouseAdapter {
 
 	private void maybeShowPopup(MouseEvent e) {
 		if (e.isPopupTrigger()) {
-			((UploadController)guiController).fireAction(actionId, e);
+			guiController.fireAction(actionId, e);
 		}
 	}
 }

@@ -81,6 +81,7 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.server.ServerPanel;
 import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.gui.share.SharePanel;
+import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
@@ -498,7 +499,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 			OptionsManagerImpl.getInstance().setSprache(sprachText);
 			int[] downloadWidths = ((DownloadPanel)DownloadController.getInstance().getComponent())
 					.getColumnWidths();
-			int[] uploadWidths = UploadPanel.getInstance().getColumnWidths();
+			int[] uploadWidths = ((UploadPanel)UploadController.getInstance().getComponent()).getColumnWidths();
 			int[] serverWidths = ServerPanel.getInstance().getColumnWidths();
 			int[] shareWidths = ((SharePanel)ShareController.getInstance().getComponent()).getColumnWidths();
 			Dimension dim = AppleJuiceDialog.getApp().getSize();
