@@ -36,7 +36,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.124 2004/02/27 13:19:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.125 2004/02/27 15:05:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -96,7 +96,7 @@ public class ApplejuiceFassade {
 
             //load XMLs
             modifiedXML = ModifiedXMLHolder.getInstance();
-            informationXML = new InformationXMLHolder();
+            informationXML = InformationXMLHolder.getInstance();
             directoryXML = new DirectoryXMLHolder();
             shareXML = new ShareXMLHolder();
         }
@@ -193,21 +193,7 @@ public class ApplejuiceFassade {
                 try {
                     int versuch = 0;
                     if (coreVersion == null){
-                        informationXML.reload("", false);
-                        String foundCore = informationXML.
-                            getFirstAttrbuteByTagName(new
-                            String[] {
-                            "applejuice", "generalinformation", "version"}
-                            , true);
-                        separator = informationXML.getFirstAttrbuteByTagName(new
-                            String[] {
-                            "applejuice", "generalinformation", "filesystem",
-                            "seperator"}
-                            , false);
-                        coreVersion = new Version(foundCore,
-                                                  Version.getOSTypByOSName( (
-                            String) System.
-                            getProperties().get("os.name")));
+                        coreVersion = informationXML.getCoreVersion();
                         checkForValidCore();
                     }
                     while (!isInterrupted()) {
