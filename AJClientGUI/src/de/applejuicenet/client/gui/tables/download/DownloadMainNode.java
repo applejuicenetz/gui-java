@@ -6,6 +6,7 @@ import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+import javax.swing.JTable;
 
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
@@ -14,48 +15,15 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
-import javax.swing.JTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.10 2004/02/27 15:24:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadMainNode.java,v 1.11 2004/04/15 16:06:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: DownloadMainNode.java,v $
- * Revision 1.10  2004/02/27 15:24:26  maj0r
- * Status "Warteschlange voll" wird nun auch in "In Warteschlange" angezeigt, da diese genauso zB fuer Pwdl-Aenderungen genauso relevant sind.
- *
- * Revision 1.9  2004/02/25 16:20:16  maj0r
- * ProgressBar auf opaque=false gesetzt.
- *
- * Revision 1.8  2004/02/24 18:21:51  maj0r
- * Schrift korrigiert.
- *
- * Revision 1.7  2004/02/24 15:38:11  maj0r
- * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
- *
- * Revision 1.6  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.5  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.4  2003/12/30 20:15:55  maj0r
- * Kleine Anpassung, damit das Umbenennen von Downloads funktioniert.
- *
- * Revision 1.3  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.2  2003/10/16 12:06:37  maj0r
- * Diverse Schoenheitskorrekturen und Optimierungen.
- *
- * Revision 1.1  2003/09/02 16:06:26  maj0r
- * Downloadbaum komplett umgebaut.
- *
+ * @author: Maj0r [maj0r@applejuicenet.de]
  *
  */
 
@@ -65,6 +33,8 @@ public class DownloadMainNode
     public static final int LOADING_DOWNLOADS = 0;
     public static final int WAITING_DOWNLOADS = 1;
     public static final int REST_DOWNLOADS = 2;
+
+    private static String columns[];
 
     private int type;
     private String text = "";
@@ -108,6 +78,14 @@ public class DownloadMainNode
             fireLanguageChanged();
         }
         init();
+    }
+
+    public static void setColumnTitles(String[] newTitles){
+        columns = newTitles;
+    }
+
+    public static String[] getColumnTitles(){
+        return columns;
     }
 
     private void init(){

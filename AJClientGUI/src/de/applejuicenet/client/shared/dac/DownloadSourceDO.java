@@ -3,86 +3,24 @@ package de.applejuicenet.client.shared.dac;
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+import javax.swing.JTable;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.tables.download.DownloadColumnComponent;
 import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Version;
-import javax.swing.JTable;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.24 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.25 2004/04/15 16:06:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
- *
- * $Log: DownloadSourceDO.java,v $
- * Revision 1.24  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.23  2004/02/25 16:20:01  maj0r
- * ProgressBar auf opaque=false gesetzt.
- * VersionLabel und ProgressBar wird nur bei tatsaechlicher Wertaenderung aktualisiert.
- *
- * Revision 1.22  2004/02/24 18:21:51  maj0r
- * Schrift korrigiert.
- *
- * Revision 1.21  2004/02/24 15:38:11  maj0r
- * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
- *
- * Revision 1.20  2004/02/24 08:49:32  maj0r
- * Bug #240 gefixt (Danke an computer.ist.org)
- * Bug behoben, der im VersionChecker zu einer NoSuchElementException fuehrte.
- *
- * Revision 1.19  2004/02/18 17:24:21  maj0r
- * Von DOM auf SAX umgebaut.
- *
- * Revision 1.18  2004/02/12 16:35:41  maj0r
- * Getter fuer aktuelle runtergeladene Prozent hinzugefuegt.
- *
- * Revision 1.17  2004/01/12 07:28:10  maj0r
- * Caching, Logging eingebaut.
- * Wiedergabe der Tabellenwerte vom Model ins Node umgebaut.
- *
- * Revision 1.16  2003/12/30 13:55:20  maj0r
- * Neuen DownloadSourceStatus indirekteVerbindungAbgelehnt eingebaut.
- *
- * Revision 1.15  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.14  2003/12/16 14:52:16  maj0r
- * An Schnittstellenerweiterung angepasst.
- *
- * Revision 1.13  2003/10/18 18:44:16  maj0r
- * Neuen Userstatus "Warteschlange voll" hinzugefuegt.
- *
- * Revision 1.12  2003/09/10 15:30:48  maj0r
- * Begonnen auf neue Session-Struktur umzubauen.
- *
- * Revision 1.11  2003/09/01 15:50:51  maj0r
- * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
- *
- * Revision 1.10  2003/08/04 14:28:55  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.9  2003/07/06 20:00:19  maj0r
- * DownloadTable bearbeitet.
- *
- * Revision 1.8  2003/07/03 19:11:16  maj0r
- * DownloadTable überarbeitet.
- *
- * Revision 1.7  2003/06/30 19:46:11  maj0r
- * Sourcestil verbessert.
- *
- * Revision 1.6  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
+ * @author: Maj0r [maj0r@applejuicenet.de]
  *
  */
 
@@ -435,7 +373,12 @@ public class DownloadSourceDO
             oldSize = size;
             sizeAsString = DownloadModel.parseGroesse(size);
         }
-        return sizeAsString;
+        if (sizeAsString == null){
+            return "";
+        }
+        else{
+            return sizeAsString;
+        }
     }
 
     public String getColumn3() {
@@ -444,7 +387,12 @@ public class DownloadSourceDO
             oldBereitsGeladen = bereitsGeladen;
             bereitsGeladenAsString = DownloadModel.parseGroesse(bereitsGeladen);
         }
-        return bereitsGeladenAsString;
+        if (bereitsGeladenAsString == null){
+            return "";
+        }
+        else{
+            return bereitsGeladenAsString;
+        }
     }
 
     public String getColumn4() {
@@ -470,7 +418,12 @@ public class DownloadSourceDO
             oldNochZuLaden = nochZuLaden;
             nochZuLadenAsString = DownloadModel.parseGroesse(nochZuLaden);
         }
-        return nochZuLadenAsString;
+        if (nochZuLadenAsString == null){
+            return "";
+        }
+        else{
+            return nochZuLadenAsString;
+        }
     }
 
     public String getColumn8() {

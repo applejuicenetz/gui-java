@@ -10,106 +10,13 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.29 2004/02/21 18:20:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.30 2004/04/15 16:06:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: DownloadModel.java,v $
- * Revision 1.29  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.28  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.27  2004/01/26 11:01:14  maj0r
- * Neuen Downloadstatus eingebaut.
- *
- * Revision 1.26  2004/01/12 07:24:49  maj0r
- * Wiedergabe der Tabellenwerte vom Model ins Node umgebaut.
- *
- * Revision 1.25  2003/12/30 13:55:20  maj0r
- * Neuen DownloadSourceStatus indirekteVerbindungAbgelehnt eingebaut.
- *
- * Revision 1.24  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.23  2003/12/28 10:49:22  maj0r
- * Parsing von Speichergroessen static gemacht.
- *
- * Revision 1.22  2003/12/17 17:03:37  maj0r
- * In der Downloadtabelle nun ein Warteicon angezeigt, bis erstmalig Daten geholt wurden.
- *
- * Revision 1.21  2003/12/16 14:52:16  maj0r
- * An Schnittstellenerweiterung angepasst.
- *
- * Revision 1.20  2003/11/03 20:57:03  maj0r
- * Sortieren nach Status eingebaut.
- *
- * Revision 1.19  2003/11/03 15:45:26  maj0r
- * Optimierungen.
- *
- * Revision 1.18  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.17  2003/10/18 18:44:16  maj0r
- * Neuen Userstatus "Warteschlange voll" hinzugefuegt.
- *
- * Revision 1.16  2003/10/16 12:06:51  maj0r
- * Diverse Schoenheitskorrekturen.
- *
- * Revision 1.15  2003/10/06 12:08:18  maj0r
- * Tabellenausgabe korrigiert.
- *
- * Revision 1.14  2003/09/03 10:29:16  maj0r
- * Statusausgabe geaendert.
- *
- * Revision 1.13  2003/09/02 16:06:26  maj0r
- * Downloadbaum komplett umgebaut.
- *
- * Revision 1.12  2003/09/01 15:50:51  maj0r
- * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
- *
- * Revision 1.11  2003/08/30 19:44:04  maj0r
- * Ausgabe geaendert.
- *
- * Revision 1.10  2003/08/25 09:28:13  maj0r
- * getChildCount() eingefuehrt.
- *
- * Revision 1.9  2003/08/18 18:19:18  maj0r
- * DownloadStatus in der Anzeige verfeinert.
- *
- * Revision 1.8  2003/08/10 21:08:18  maj0r
- * Diverse Änderungen.
- *
- * Revision 1.7  2003/08/09 10:56:38  maj0r
- * DownloadTabelle weitergeführt.
- *
- * Revision 1.6  2003/07/06 20:00:19  maj0r
- * DownloadTable bearbeitet.
- *
- * Revision 1.5  2003/07/04 15:25:38  maj0r
- * Version erhöht.
- * DownloadModel erweitert.
- *
- * Revision 1.4  2003/07/03 19:11:16  maj0r
- * DownloadTable überarbeitet.
- *
- * Revision 1.3  2003/07/02 13:54:34  maj0r
- * JTreeTable komplett überarbeitet.
- *
- * Revision 1.2  2003/07/01 18:41:39  maj0r
- * Struktur verändert.
- *
- * Revision 1.1  2003/07/01 18:34:28  maj0r
- * Struktur verändert.
- *
- * Revision 1.17  2003/06/10 12:31:03  maj0r
- * Historie eingefügt.
- *
+ * @author: Maj0r [maj0r@applejuicenet.de]
  *
  */
 

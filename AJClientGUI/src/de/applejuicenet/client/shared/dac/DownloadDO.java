@@ -2,106 +2,23 @@ package de.applejuicenet.client.shared.dac;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.SoundPlayer;
-import java.util.Map;
-import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.26 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.27 2004/04/15 16:06:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: DownloadDO.java,v $
- * Revision 1.26  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.25  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.24  2004/02/27 15:24:26  maj0r
- * Status "Warteschlange voll" wird nun auch in "In Warteschlange" angezeigt, da diese genauso zB fuer Pwdl-Aenderungen genauso relevant sind.
- *
- * Revision 1.23  2004/02/26 16:18:50  maj0r
- * Dummen Fluechtigkeitsfehler behoben.
- *
- * Revision 1.22  2004/02/26 16:15:45  maj0r
- * Sound bei fertigem Download eingebaut.
- *
- * Revision 1.21  2004/02/18 17:24:21  maj0r
- * Von DOM auf SAX umgebaut.
- *
- * Revision 1.20  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.19  2004/01/30 16:32:47  maj0r
- * MapSetStringKey ausgebaut.
- *
- * Revision 1.18  2004/01/26 11:01:14  maj0r
- * Neuen Downloadstatus eingebaut.
- *
- * Revision 1.17  2004/01/12 19:31:52  maj0r
- * Bug #98 gefixt
- *
- * Revision 1.16  2004/01/12 13:17:49  maj0r
- * Bug #92 gefixt (Danke an daa803)
- * Ein paar Synchronized() eingebaut.
- *
- * Revision 1.15  2004/01/12 07:23:46  maj0r
- * Caching, Logging eingebaut.
- * Wiedergabe der Tabellenwerte vom Model ins Node umgebaut.
- *
- * Revision 1.14  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.13  2003/12/16 14:52:16  maj0r
- * An Schnittstellenerweiterung angepasst.
- *
- * Revision 1.12  2003/11/30 17:00:06  maj0r
- * Prozentangabe bei Downloads nun auf zwei Nachkommastellen genau (Danke an muhviestarr)
- *
- * Revision 1.11  2003/11/03 14:29:16  maj0r
- * Speicheroptimierung.
- *
- * Revision 1.10  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.9  2003/10/10 15:12:26  maj0r
- * Sortieren im Downloadbereich eingefuegt.
- *
- * Revision 1.8  2003/09/11 06:54:15  maj0r
- * Auf neues Sessions-Prinzip umgebaut.
- * Sprachenwechsel korrigert, geht nun wieder flott.
- *
- * Revision 1.7  2003/09/10 15:30:48  maj0r
- * Begonnen auf neue Session-Struktur umzubauen.
- *
- * Revision 1.6  2003/09/01 15:50:51  maj0r
- * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
- *
- * Revision 1.5  2003/08/10 21:08:18  maj0r
- * Diverse Änderungen.
- *
- * Revision 1.4  2003/08/09 10:57:54  maj0r
- * Upload- und DownloadTabelle weitergeführt.
- *
- * Revision 1.3  2003/08/05 20:47:06  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.2  2003/07/06 20:00:19  maj0r
- * DownloadTable bearbeitet.
- *
- * Revision 1.1  2003/07/03 19:15:06  maj0r
- * DownloadTable überarbeitet.
- *
+ * @author: Maj0r [maj0r@applejuicenet.de]
  *
  */
 
