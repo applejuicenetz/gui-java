@@ -11,9 +11,10 @@ import javax.swing.JComponent;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.metal.MetalToolTipUI;
+import java.awt.Font;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.6 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.7 2004/04/16 14:30:57 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +23,9 @@ import javax.swing.plaf.metal.MetalToolTipUI;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: MultiLineToolTip.java,v $
+ * Revision 1.7  2004/04/16 14:30:57  maj0r
+ * ToolTipp der Downloadtabelle geaendert.
+ *
  * Revision 1.6  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -42,6 +46,10 @@ public class MultiLineToolTip
 
     public MultiLineToolTip() {
         setUI(new MultiLineToolTipUI());
+    }
+
+    public MultiLineToolTip(MetalToolTipUI toolTipUI) {
+        setUI(toolTipUI);
     }
 
     private class MultiLineToolTipUI
