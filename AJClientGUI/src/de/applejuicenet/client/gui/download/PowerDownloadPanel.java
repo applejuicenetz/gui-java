@@ -55,7 +55,7 @@ import de.applejuicenet.client.shared.PolicyJarClassLoader;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.15 2005/03/07 14:25:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.16 2005/03/14 10:09:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -432,7 +432,8 @@ public class PowerDownloadPanel
         }
         AutomaticPowerdownloadPolicy policy = null;
         try {
-        	Constructor con = selectedPolicy.getClass().getConstructor(new Class[]{ ApplejuiceFassade.class });
+        	Constructor con = selectedPolicy.getClass().getConstructor(
+                    new Class[]{ ApplejuiceFassade.class });
         	policy = 
         		(AutomaticPowerdownloadPolicy)con.newInstance(
         				new Object[]{ AppleJuiceClient.getAjFassade() });        	
@@ -642,37 +643,31 @@ public class PowerDownloadPanel
         try {
             if (type == DATALISTENER_TYPE.INFORMATION_CHANGED) {
                 lastInformation = (Information) content;
-                if (!pwdlPolicies.isEnabled() && autoPwdlThread != null &&
-                    lastInformation != null) {
-                    long eingegebenBis = Integer.parseInt(autoBis.getText()) *
+                if (autoPwdlThread != null && lastInformation != null) {
+                    long eingegebenBis = Long.parseLong(autoBis.getText()) *
                         1048576l;
-                    long eingegebenAb = Integer.parseInt(autoAb.getText()) *
+                    long eingegebenAb = Long.parseLong(autoAb.getText()) *
                         1048576l;
-                    if (lastInformation.getCredits() > eingegebenAb &&
-                        autoPwdlThread.isPaused()) {
+                    if (lastInformation.getCredits() > eingegebenAb) {
                         autoPwdlThread.setPaused(false);
                     }
-                    else if (lastInformation.getCredits() < eingegebenBis &&
-                             !autoPwdlThread.isPaused()) {
+                    else if (lastInformation.getCredits() < eingegebenBis) {
                         autoPwdlThread.setPaused(true);
                     }
                 }
             }
             else if (type == DATALISTENER_TYPE.DOWNLOAD_CHANGED &&
-                     autoPwdlThread != null &&
-                     !pwdlPolicies.isEnabled() && autoPwdlThread.isPaused()) {
-                if (autoPwdlThread.shouldPause()){
-                    HashMap<String, Download> downloads = (HashMap) content;
-                    synchronized (downloads) {
-                        List<Download> toPause = new Vector<Download>();
-                        for (Download curDownload : downloads.values()) {
-                            if (curDownload.getStatus() ==
-                                Download.SUCHEN_LADEN) {
-                            	toPause.add(curDownload);
-                            }
+                     autoPwdlThread != null && autoPwdlThread.isPaused()) {
+                HashMap<String, Download> downloads = (HashMap) content;
+                synchronized (downloads) {
+                    List<Download> toPause = new Vector<Download>();
+                    for (Download curDownload : downloads.values()) {
+                        if (curDownload.getStatus() ==
+                            Download.SUCHEN_LADEN) {
+                        	toPause.add(curDownload);
                         }
-                    	AppleJuiceClient.getAjFassade().pauseDownload(toPause);
                     }
+                	AppleJuiceClient.getAjFassade().pauseDownload(toPause);
                 }
             }
         }

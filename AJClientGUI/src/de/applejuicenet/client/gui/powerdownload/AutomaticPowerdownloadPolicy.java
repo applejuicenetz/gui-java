@@ -2,7 +2,6 @@ package de.applejuicenet.client.gui.powerdownload;
 
 import java.awt.Frame;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +15,7 @@ import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.download.PowerDownloadPanel;
 	
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.20 2005/02/15 14:00:46 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.java,v 1.21 2005/03/14 10:09:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,7 +28,7 @@ import de.applejuicenet.client.gui.download.PowerDownloadPanel;
 public abstract class AutomaticPowerdownloadPolicy
     extends Thread {
 
-    private Set threads = new HashSet();
+    private Set<Thread> threads = new HashSet<Thread>();
     private Logger logger = Logger.getLogger(getClass());
     private PowerDownloadPanel parentToInformEnde = null;
     private boolean paused = false;
@@ -61,9 +60,7 @@ public abstract class AutomaticPowerdownloadPolicy
             interrupt();
         }
         catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
         }
         if (parentToInformEnde != null){
             parentToInformEnde.autoPwdlFinished();
@@ -89,13 +86,9 @@ public abstract class AutomaticPowerdownloadPolicy
 
     public final void interrupt() {
         try {
-            Iterator it = threads.iterator();
-            while (it.hasNext()) {
-                Object obj = it.next();
+            for (Thread curThread : threads) {
                 try{
-                    if (obj != null && obj instanceof Thread) {
-                        ( (Thread) obj).interrupt();
-                    }
+                    curThread.interrupt();
                 }
                 catch(Exception ex){
                     logger.error("Fehler beim Beenden eines Threads in " + toString(), ex);
@@ -104,25 +97,22 @@ public abstract class AutomaticPowerdownloadPolicy
             super.interrupt();
         }
         catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
         }
     }
 
-    public final void setPaused(boolean pause) {
-        paused = pause;
-        if (pause) {
-            if (shouldPause) {
-                pauseAllDownloads();
-            }
+    public final synchronized void setPaused(boolean pause) {
+        if (pause == paused){
+            return;
+        }
+        paused = !paused;
+        if (paused) {
+            pauseAllDownloads();
             try {
                 informPaused();
             }
             catch (Exception ex) {
-                if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-                }
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
             }
         }
     }
@@ -140,9 +130,7 @@ public abstract class AutomaticPowerdownloadPolicy
             }
         }
         catch (Exception ex) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
         }
     }
 
