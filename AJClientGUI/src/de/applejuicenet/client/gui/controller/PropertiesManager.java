@@ -30,7 +30,7 @@ import de.applejuicenet.client.shared.XMLDecoder;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.41 2004/03/15 13:46:00 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.42 2004/03/23 14:51:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +39,9 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.42  2004/03/23 14:51:13  maj0r
+ * Bug behoben, der sich durch die dynamische Generierung der properties.xml ohne Neustart eingeschlichen hat.
+ *
  * Revision 1.41  2004/03/15 13:46:00  loevenwong
  * GUI neustart aufgrund fehlender property-datei verhindert.
  *
@@ -1036,6 +1039,7 @@ class PropertiesManager
                 AppleJuiceDialog.showInformation(PROPERTIES_ERROR);
                 firstReadError = false;
                 super.reload(this.path);
+                init();
             }
             else {
                 AppleJuiceDialog.rewriteProperties = true;
