@@ -44,7 +44,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.12 2004/11/22 16:25:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.13 2004/12/03 20:20:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -364,12 +364,12 @@ public class ChannelPanel
         int index = 0;
         if (toWrite.length()>1){
             while (!parsEnde) {
-                if (toWrite.charAt(index) == ',') {
-                    istNachkomma = true;
-                    index++;
-                    continue;
-                }
                 try {
+	                if (toWrite.charAt(index) == ',') {
+	                    istNachkomma = true;
+	                    index++;
+	                    continue;
+	                }
                     int colorCode = Integer.parseInt(toWrite.substring(
                         index, index+2));
                     index += 2;
@@ -411,6 +411,10 @@ public class ChannelPanel
                         StyleConstants.setForeground(attributes,
                             Color.BLUE);
                     }
+                    catch (StringIndexOutOfBoundsException nfE2) {
+                        StyleConstants.setForeground(attributes,
+                            Color.BLACK);
+                    }
                     return attributes;
                 }
             }
@@ -444,7 +448,7 @@ public class ChannelPanel
             case 13: return Color.PINK;
             case 14: return Color.GRAY;
             case 15: return Color.LIGHT_GRAY;
-            default: return null;
+            default: return Color.BLACK;
         }
     }
 
