@@ -20,5 +20,6 @@
             <share column0="194" column1="195" column2="194"/>
         </location>
         <proxy host="" port="" use="false" userpass="="/>
+        <server pfad="?t=1592" url="http://www.applejuicenet.org"/>
     </options>
 </root>

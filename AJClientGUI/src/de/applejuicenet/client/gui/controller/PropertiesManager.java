@@ -4,6 +4,7 @@ import java.io.*;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
@@ -14,7 +15,7 @@ import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.5 2003/09/30 16:35:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.6 2003/10/05 11:48:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +24,11 @@ import org.apache.xml.serialize.XMLSerializer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.6  2003/10/05 11:48:36  maj0r
+ * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
+ * Userpartlisten werden angezeigt.
+ * Downloadpartlisten werden alle 15 Sek. aktualisiert.
+ *
  * Revision 1.5  2003/09/30 16:35:11  maj0r
  * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
  *
@@ -318,6 +324,27 @@ public class PropertiesManager
 
     public boolean saveAJSettings(AJSettings ajSettings) {
         return ApplejuiceFassade.getInstance().saveAJSettings(ajSettings);
+    }
+
+    public String[] getActualServers() {
+        String serverUrl;
+        String serverPfad;
+        serverUrl = getFirstAttrbuteByTagName(new String[]{"options", "server",
+                                                      "url"});
+        serverPfad = getFirstAttrbuteByTagName(new String[]{"options",
+                                                          "server", "pfad"});
+        String webContent = WebsiteContentLoader.getWebsiteContent(serverUrl, 80, serverPfad);
+        StringBuffer temp = new StringBuffer(webContent);
+        int pos = 0;
+        int endIndex;
+        ArrayList servers = new ArrayList();
+        while ((pos = temp.indexOf("ajfsp", pos))!=-1){
+            endIndex = temp.indexOf("\"", pos);
+            String test = temp.substring(pos, endIndex);
+            servers.add(test);
+            pos = endIndex;
+        }
+        return (String[]) servers.toArray(new String[servers.size()]);
     }
 
     //PositionManager-Interface

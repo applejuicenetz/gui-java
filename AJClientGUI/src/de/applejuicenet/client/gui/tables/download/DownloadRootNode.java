@@ -9,10 +9,9 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.HashSet;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.4 2003/10/04 15:31:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadRootNode.java,v 1.5 2003/10/05 11:48:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,6 +20,11 @@ import java.util.HashSet;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadRootNode.java,v $
+ * Revision 1.5  2003/10/05 11:48:36  maj0r
+ * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
+ * Userpartlisten werden angezeigt.
+ * Downloadpartlisten werden alle 15 Sek. aktualisiert.
+ *
  * Revision 1.4  2003/10/04 15:31:07  maj0r
  * Erste Version des Versteckens.
  *

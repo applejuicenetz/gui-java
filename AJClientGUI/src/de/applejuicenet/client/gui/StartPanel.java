@@ -10,15 +10,20 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.28 2003/10/04 15:48:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.29 2003/10/05 11:48:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.29  2003/10/05 11:48:36  maj0r
+ * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
+ * Userpartlisten werden angezeigt.
+ * Downloadpartlisten werden alle 15 Sek. aktualisiert.
+ *
  * Revision 1.28  2003/10/04 15:48:04  maj0r
  * Unnoetige Imports entfernt.
  *
@@ -316,7 +321,6 @@ public class StartPanel
                                      Integer.toString(ApplejuiceFassade.getInstance().
                                                       getAllServer().
                                                       size()));
-            temp = temp.replaceAll("%s", "-");
             label9.setText(temp);
             label6Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                            getFirstAttrbuteByTagName(new

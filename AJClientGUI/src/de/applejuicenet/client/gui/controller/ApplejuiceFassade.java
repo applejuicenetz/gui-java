@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.44 2003/10/04 15:29:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.45 2003/10/05 11:48:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,11 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.45  2003/10/05 11:48:36  maj0r
+ * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
+ * Userpartlisten werden angezeigt.
+ * Downloadpartlisten werden alle 15 Sek. aktualisiert.
+ *
  * Revision 1.44  2003/10/04 15:29:12  maj0r
  * Userpartliste hinzugefuegt.
  *
@@ -166,17 +171,17 @@ import org.apache.log4j.Level;
  * Refactoring.
  *
  * Revision 1.38  2003/08/12 06:12:19  maj0r
- * Version erh�ht.
+ * Version erhoeht.
  *
  * Revision 1.37  2003/08/11 14:10:28  maj0r
- * DownloadPartList eingef�gt.
- * Diverse �nderungen.
+ * DownloadPartList eingefuegt.
+ * Diverse Aenderungen.
  *
  * Revision 1.36  2003/08/10 21:08:18  maj0r
- * Diverse �nderungen.
+ * Diverse Aenderungen.
  *
  * Revision 1.35  2003/08/09 16:47:42  maj0r
- * Diverse �nderungen.
+ * Diverse Aenderungen.
  *
  * Revision 1.34  2003/08/09 10:57:54  maj0r
  * Upload- und DownloadTabelle weitergef�hrt.
@@ -201,7 +206,7 @@ import org.apache.log4j.Level;
  * DownloadModel erweitert.
  *
  * Revision 1.27  2003/07/03 19:11:16  maj0r
- * DownloadTable �berarbeitet.
+ * DownloadTable ueberarbeitet.
  *
  * Revision 1.26  2003/07/01 15:00:00  maj0r
  * Keyverwendung bei HashSets und HashMaps korrigiert.
@@ -210,27 +215,27 @@ import org.apache.log4j.Level;
  * Code optimiert.
  *
  * Revision 1.24  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingef�gt.
+ * Klassen zum Sortieren von Tabellen eingefuegt.
  * Servertabelle kann nun spaltenweise sortiert werden.
  *
  * Revision 1.23  2003/06/24 12:06:49  maj0r
- * log4j eingef�gt (inkl. Bedienung �ber Einstellungsdialog).
+ * log4j eingefuegt (inkl. Bedienung ueber Einstellungsdialog).
  *
  * Revision 1.22  2003/06/22 20:34:25  maj0r
- * Konsolenausgaben hinzugef�gt.
+ * Konsolenausgaben hinzugefuegt.
  *
  * Revision 1.21  2003/06/13 15:07:30  maj0r
- * Versionsanzeige hinzugef�gt.
+ * Versionsanzeige hinzugefuegt.
  * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
  *
  * Revision 1.20  2003/06/10 12:31:03  maj0r
- * Historie eingef�gt.
+ * Historie eingefuegt.
  *
  *
  */
 
 public class ApplejuiceFassade { //Singleton-Implementierung
-    public static final String GUI_VERSION = "0.32 Beta";
+    public static final String GUI_VERSION = "0.33 Beta";
 
     private HashSet downloadListener;
     private HashSet searchListener;

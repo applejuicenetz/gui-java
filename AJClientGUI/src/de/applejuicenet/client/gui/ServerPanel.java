@@ -19,15 +19,20 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.31 2003/10/01 14:45:40 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.32 2003/10/05 11:48:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.32  2003/10/05 11:48:36  maj0r
+ * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
+ * Userpartlisten werden angezeigt.
+ * Downloadpartlisten werden alle 15 Sek. aktualisiert.
+ *
  * Revision 1.31  2003/10/01 14:45:40  maj0r
  * Suche fortgesetzt.
  *
@@ -90,8 +95,8 @@ public class ServerPanel
     public static ServerPanel _this;
 
     private JTable serverTable;
-/*    private JLabel sucheServer = new JLabel(
-            "<html><font><u>mehr Server gibt es hier</u></font></html>");*/
+    private JLabel sucheServer = new JLabel(
+            "<html><font><u>mehr Server gibt es hier</u></font></html>");
     private JPopupMenu popup = new JPopupMenu();
     private JPopupMenu popup2 = new JPopupMenu();
     private JMenuItem item1;
@@ -167,7 +172,7 @@ public class ServerPanel
         constraints.gridx = 0;
         constraints.gridy = 0;
 
-/*        sucheServer.setForeground(Color.blue);
+        sucheServer.setForeground(Color.blue);
         sucheServer.addMouseListener(new MouseAdapter() {
             public void mouseExited(MouseEvent e) {
                 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -178,10 +183,14 @@ public class ServerPanel
             }
 
             public void mouseClicked(MouseEvent e) {
-                //to do
+                String[] server = PropertiesManager.getOptionsManager().getActualServers();
+                ApplejuiceFassade af = ApplejuiceFassade.getInstance();
+                for (int i=0; i<server.length; i++){
+                    af.processLink(server[i]);
+                }
             }
         });
-        panel1.add(sucheServer, constraints);   */
+        panel1.add(sucheServer, constraints);
         constraints.gridx = 1;
         constraints.weightx = 1;
         panel1.add(new JLabel(), constraints);

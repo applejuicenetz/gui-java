@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.49 2003/10/04 15:30:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.50 2003/10/05 11:48:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,11 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.50  2003/10/05 11:48:36  maj0r
+ * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
+ * Userpartlisten werden angezeigt.
+ * Downloadpartlisten werden alle 15 Sek. aktualisiert.
+ *
  * Revision 1.49  2003/10/04 15:30:54  maj0r
  * Userpartliste hinzugefuegt.
  * Erste Version des Versteckens.
@@ -184,9 +189,9 @@ public class DownloadPanel
         popup.add(item4);
         popup.add(item5);
         popup.add(item6);
-        popup.add(new JPopupMenu.Separator());
+/*        popup.add(new JPopupMenu.Separator());
         popup.add(item7);
-        popup.add(item8);
+        popup.add(item8);*/
 
         item1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -339,7 +344,9 @@ public class DownloadPanel
                 }
                 else if (node.getClass() == DownloadSourceDO.class) {
                     powerDownloadPanel.btnPdl.setEnabled(true);
-                    downloadDOOverviewPanel.setDownloadSourceDO((DownloadSourceDO)node);
+                    if (((DownloadSourceDO)node).getQueuePosition()<=20){
+                        downloadDOOverviewPanel.setDownloadSourceDO((DownloadSourceDO)node);
+                    }
                 }
                 else {
                     powerDownloadPanel.btnPdl.setEnabled(false);
