@@ -18,12 +18,11 @@ import de.applejuicenet.client.gui.tools.MemoryMonitorDialog;
 import de.applejuicenet.client.shared.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
-import com.l2fprod.util.OS;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import com.l2fprod.gui.plaf.skin.Skin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.68 2003/12/29 16:35:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.69 2003/12/30 13:40:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +31,9 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.69  2003/12/30 13:40:27  maj0r
+ * Muell entfernt.
+ *
  * Revision 1.68  2003/12/29 16:35:12  maj0r
  * Look and Feel Verwendung korrigiert.
  *
