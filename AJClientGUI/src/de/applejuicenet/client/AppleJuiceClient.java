@@ -19,7 +19,6 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import com.l2fprod.util.OS;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.QuickConnectionSettingsDialog;
 import de.applejuicenet.client.gui.WizardDialog;
@@ -37,7 +36,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import de.applejuicenet.client.gui.ConnectFrame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.48 2003/12/29 16:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.49 2003/12/30 13:40:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,6 +45,9 @@ import de.applejuicenet.client.gui.ConnectFrame;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.49  2003/12/30 13:40:06  maj0r
+ * Ueberpruefung auf gueltige Javaversion eingebaut.
+ *
  * Revision 1.48  2003/12/29 16:35:28  maj0r
  * Taskbareinbau verbessert.
  *
@@ -184,6 +186,33 @@ public class AppleJuiceClient {
     }
 
     public static void main(String[] args) {
+        String javaVersion = System.getProperty("java.version");
+        int pos = javaVersion.indexOf("_");
+        if (pos != -1){
+            javaVersion = javaVersion.substring(0, pos);
+        }
+        StringBuffer version = new StringBuffer(javaVersion);
+        for (int i=version.length()-1; i>=0; i--){
+            if (version.charAt(i)=='.'){
+                version.deleteCharAt(i);
+            }
+        }
+        boolean gueltig = false;
+        try{
+            int versionsNr = Integer.parseInt(version.toString().substring(0,2));
+            if (versionsNr >= 15){
+                gueltig = true;
+            }
+        }
+        catch(Exception e){
+            //nix zu tun
+        }
+        if (!gueltig){
+            JOptionPane.showMessageDialog(new Frame(), "Es wird mindestens JRE 1.4 benötigt!", "appleJuice Client",
+                                          JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
+
         boolean processLink = false;
         String link = "";
         if (args != null && args.length > 0) {
@@ -238,17 +267,15 @@ public class AppleJuiceClient {
 
         try {
             if (PropertiesManager.getOptionsManager().isThemesSupported()) {
-                if (OS.isOneDotFour()) {
-                    java.lang.reflect.Method method = JFrame.class.
-                        getMethod("setDefaultLookAndFeelDecorated",
-                                  new Class[] {boolean.class});
-                    method.invoke(null, new Object[] {Boolean.TRUE});
+                java.lang.reflect.Method method = JFrame.class.
+                    getMethod("setDefaultLookAndFeelDecorated",
+                              new Class[] {boolean.class});
+                method.invoke(null, new Object[] {Boolean.TRUE});
 
-                    method = JDialog.class.
-                        getMethod("setDefaultLookAndFeelDecorated",
-                                  new Class[] {boolean.class});
-                    method.invoke(null, new Object[] {Boolean.TRUE});
-                }
+                method = JDialog.class.
+                    getMethod("setDefaultLookAndFeelDecorated",
+                              new Class[] {boolean.class});
+                method.invoke(null, new Object[] {Boolean.TRUE});
             }
         }
         catch (Exception e) {
