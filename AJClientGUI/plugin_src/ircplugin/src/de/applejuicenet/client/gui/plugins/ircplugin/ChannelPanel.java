@@ -42,7 +42,7 @@ import java.awt.event.AdjustmentEvent;
 import javax.swing.JLabel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.4 2004/05/14 19:48:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/ChannelPanel.java,v 1.5 2004/05/29 14:10:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -365,11 +365,17 @@ public class ChannelPanel
                 }
                 catch(StringIndexOutOfBoundsException sioobE){
                     parsEnde = true;
-                    int colorCode = Integer.parseInt(toWrite.substring(
-                        index, index+1));
-                    Color color = getColor(colorCode);
-                    if (!istNachkomma) {
-                        StyleConstants.setForeground(attributes, color);
+                    try {
+                        int colorCode = Integer.parseInt(toWrite.substring(
+                            index, index + 1));
+                        Color color = getColor(colorCode);
+                        if (!istNachkomma) {
+                            StyleConstants.setForeground(attributes, color);
+                        }
+                    }
+                    catch (NumberFormatException nfE2) {
+                        StyleConstants.setForeground(attributes,
+                            Color.BLUE);
                     }
                     return attributes;
                 }
