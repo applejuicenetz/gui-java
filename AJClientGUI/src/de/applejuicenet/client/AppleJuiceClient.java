@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.30 2003/10/01 20:10:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.31 2003/10/02 13:42:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,9 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.31  2003/10/02 13:42:17  maj0r
+ * Fensterpositionierung fuer ersten Start korrigiert.
+ *
  * Revision 1.30  2003/10/01 20:10:44  maj0r
  * Bischen Logging hinzu gefuegt.
  *
@@ -178,10 +181,7 @@ public class AppleJuiceClient {
             }
             else
             {
-                Dimension appDimension = theApp.getSize();
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                theApp.setLocation((screenSize.width - appDimension.width) / 2,
-                                   (screenSize.height - appDimension.height) / 2);
+                theApp.setLocation(20, 20);
             }
             theApp.show();
             nachricht = "appleJuice-Core-GUI läuft...";
