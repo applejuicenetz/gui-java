@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.tables.upload.UploadColumnComponent;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.23 2004/06/11 10:02:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.24 2004/06/15 16:19:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,11 +41,11 @@ public class UploadDO implements UploadColumnComponent{
     private int directstate;
     private long lastConnection;
 
-    private JProgressBar progress;
-    private JProgressBar wholeLoadedProgress;
-    private JLabel progressbarLabel;
-    private JLabel wholeLoadedProgressbarLabel;
-    private JLabel versionLabel;
+    private JProgressBar progress = null;
+    private JProgressBar wholeLoadedProgress = null;
+    private JLabel progressbarLabel  = null;
+    private JLabel wholeLoadedProgressbarLabel  = null;
+    private JLabel versionLabel = null;
     private boolean progressChanged = false;
     private boolean wholeLoadedProgressChanged = false;
     private boolean versionChanged = false;
@@ -53,7 +53,6 @@ public class UploadDO implements UploadColumnComponent{
 
     public UploadDO(int uploadID){
         this.uploadID = uploadID;
-        init();
     }
 
     public UploadDO(int uploadID, int shareFileID, Version version,
@@ -76,22 +75,6 @@ public class UploadDO implements UploadColumnComponent{
         this.setLoaded(loaded);
         progressChanged = true;
         versionChanged = true;
-        init();
-    }
-
-    private void init(){
-        progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
-        progress.setStringPainted(true);
-        wholeLoadedProgress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
-        wholeLoadedProgress.setStringPainted(true);
-        progressbarLabel = new JLabel();
-        progressbarLabel.setOpaque(true);
-        wholeLoadedProgressbarLabel = new JLabel();
-        wholeLoadedProgressbarLabel.setOpaque(true);
-        progress.setOpaque(false);
-        wholeLoadedProgress.setOpaque(false);
-        versionLabel = new JLabel();
-        versionLabel.setOpaque(true);
     }
 
     public int getUploadID() {
@@ -255,6 +238,11 @@ public class UploadDO implements UploadColumnComponent{
 
     public Component getProgressbarComponent(JTable table, Object value) {
         if (status == UploadDO.AKTIVE_UEBERTRAGUNG) {
+            if (progress == null){
+                progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
+                progress.setStringPainted(true);
+                progress.setOpaque(false);
+            }
             if (progressChanged){
                 String prozent = getDownloadPercentAsString();
                 progress.setString(prozent + " %");
@@ -268,11 +256,19 @@ public class UploadDO implements UploadColumnComponent{
             return progress;
         }
         else {
+            if (progressbarLabel == null){
+                progressbarLabel = new JLabel();
+                progressbarLabel.setOpaque(true);
+            }
             return progressbarLabel;
         }
     }
 
     public Component getVersionComponent(JTable table, Object value) {
+        if (versionLabel == null){
+            versionLabel = new JLabel();
+            versionLabel.setOpaque(true);
+        }
         if(versionChanged){
             versionLabel.setFont(table.getFont());
             if (getVersion() == null) {
@@ -291,6 +287,12 @@ public class UploadDO implements UploadColumnComponent{
     public Component getWholeLoadedProgressbarComponent(JTable table,
         Object value) {
         if (loaded != -1) {
+            if (wholeLoadedProgress == null){
+                wholeLoadedProgress = new JProgressBar(JProgressBar.HORIZONTAL,
+                    0, 100);
+                wholeLoadedProgress.setStringPainted(true);
+                wholeLoadedProgress.setOpaque(false);
+            }
             if (wholeLoadedProgressChanged){
                 wholeLoadedProgress.setString(loaded + " %");
                 wholeLoadedProgress.setValue(loaded);
@@ -299,6 +301,10 @@ public class UploadDO implements UploadColumnComponent{
             return wholeLoadedProgress;
         }
         else {
+            if (wholeLoadedProgressbarLabel == null){
+                wholeLoadedProgressbarLabel = new JLabel();
+                wholeLoadedProgressbarLabel.setOpaque(true);
+            }
             return wholeLoadedProgressbarLabel;
         }
     }

@@ -14,7 +14,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.25 2004/04/15 16:06:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadSourceDO.java,v 1.26 2004/06/15 16:19:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -79,15 +79,14 @@ public class DownloadSourceDO
     private int oldNochZuLaden;
     private String nochZuLadenAsString;
 
-    private JProgressBar progress;
-    private JLabel progressbarLabel;
-    private JLabel versionLabel;
+    private JProgressBar progress = null;
+    private JLabel progressbarLabel = null;
+    private JLabel versionLabel = null;
     private boolean progressChanged = false;
     private boolean versionChanged = false;
 
     public DownloadSourceDO(int id){
         this.id = id;
-        init();
     }
 
     public DownloadSourceDO(int id, int status, int directstate,
@@ -111,17 +110,6 @@ public class DownloadSourceDO
         this.downloadId = downloadId;
         progressChanged = true;
         versionChanged = true;
-        init();
-    }
-
-    private void init(){
-        progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
-        progress.setStringPainted(true);
-        progress.setOpaque(false);
-        progressbarLabel = new JLabel();
-        progressbarLabel.setOpaque(true);
-        versionLabel = new JLabel();
-        versionLabel.setOpaque(true);
     }
 
     public int getStatus() {
@@ -441,6 +429,11 @@ public class DownloadSourceDO
 
     public Component getProgressbarComponent(JTable table, Object value) {
         if (status == DownloadSourceDO.UEBERTRAGUNG) {
+            if (progress == null){
+                progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
+                progress.setStringPainted(true);
+                progress.setOpaque(false);
+            }
             if (progressChanged){
                 String prozent = getDownloadPercentAsString();
                 int pos = prozent.indexOf('.');
@@ -455,11 +448,19 @@ public class DownloadSourceDO
             return progress;
         }
         else {
+            if (progressbarLabel == null){
+                progressbarLabel = new JLabel();
+                progressbarLabel.setOpaque(true);
+            }
             return progressbarLabel;
         }
     }
 
     public Component getVersionComponent(JTable table, Object value) {
+        if (versionLabel == null){
+            versionLabel = new JLabel();
+            versionLabel.setOpaque(true);
+        }
         if(versionChanged){
             if (getVersion() == null) {
                 versionLabel.setIcon(null);

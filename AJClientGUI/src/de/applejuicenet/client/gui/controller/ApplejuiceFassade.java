@@ -39,7 +39,7 @@ import java.util.HashSet;
 import de.applejuicenet.client.shared.NetworkInfo;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.140 2004/06/15 09:43:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.141 2004/06/15 16:19:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -282,6 +282,7 @@ public class ApplejuiceFassade {
     public void startXMLCheck() {
         workerThread = new Thread() {
             public void run() {
+                setPriority(Thread.NORM_PRIORITY);
                 if (logger.isEnabledFor(Level.DEBUG)) {
                     logger.debug("MainWorkerThread gestartet. " + workerThread);
                 }

@@ -30,9 +30,10 @@ import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
+import javax.swing.SwingUtilities;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.56 2004/06/15 09:17:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.57 2004/06/15 16:19:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -546,20 +547,25 @@ public class StartPanel
                     buffer.replace(index, index + 1, ".<br>");
                 }
                 htmlText = buffer.toString();
-                nachrichten.setContentType("text/html");
-                nachrichten.setText(htmlText);
-                nachrichten.setFont(label9.getFont());
-                nachrichten.addHyperlinkListener(new HyperlinkListener() {
-                    public void hyperlinkUpdate(HyperlinkEvent e) {
-                        if (e.getEventType() ==
-                            HyperlinkEvent.EventType.ACTIVATED) {
-                            if (e.getURL() != null) {
-                                String url = e.getURL().toString();
-                                if (url.length() != 0) {
-                                    executeLink(url);
+                final String htmlContent = htmlText;
+                SwingUtilities.invokeLater(new Runnable(){
+                    public void run(){
+                        nachrichten.setContentType("text/html");
+                        nachrichten.setText(htmlContent);
+                        nachrichten.setFont(label9.getFont());
+                        nachrichten.addHyperlinkListener(new HyperlinkListener() {
+                            public void hyperlinkUpdate(HyperlinkEvent e) {
+                                if (e.getEventType() ==
+                                    HyperlinkEvent.EventType.ACTIVATED) {
+                                    if (e.getURL() != null) {
+                                        String url = e.getURL().toString();
+                                        if (url.length() != 0) {
+                                            executeLink(url);
+                                        }
+                                    }
                                 }
                             }
-                        }
+                        });
                     }
                 });
             }
