@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.controller.xmlholder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/NetworkServerXMLHolder.java,v 1.1 2004/01/02 16:49:48 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/NetworkServerXMLHolder.java,v 1.2 2004/01/02 16:52:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui.controller.xmlholder;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: NetworkServerXMLHolder.java,v $
+ * Revision 1.2  2004/01/02 16:52:43  maj0r
+ * Debug-Aenderung entfernt.
+ *
  * Revision 1.1  2004/01/02 16:49:48  maj0r
  * Serverliste holen geaendert.
  *
@@ -48,7 +51,7 @@ public class NetworkServerXMLHolder
         try {
             xmlData = WebsiteContentLoader.getWebsiteContent(
                 "http://www.applejuicenet.org", 80,
-                "/serverlist/xmllisttt.php");
+                "/serverlist/xmllist.php");
             if (xmlData == null
                 || xmlData.length() == 0) {
                 return null;
