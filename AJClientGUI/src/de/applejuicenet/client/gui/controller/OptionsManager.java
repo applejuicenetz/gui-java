@@ -13,7 +13,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.22 2003/08/22 10:54:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.23 2003/09/08 06:27:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.23  2003/09/08 06:27:11  maj0r
+ * Um Wizard erweitert, aber noch nicht fertiggestellt.
+ *
  * Revision 1.22  2003/08/22 10:54:25  maj0r
  * Klassen umbenannt.
  * ConnectionSettings ueberarbeitet.
@@ -114,6 +117,17 @@ public class OptionsManager
 
     public String getSprache() {
         return getFirstAttrbuteByTagName(new String[]{"options", "sprache"});
+    }
+
+    public boolean isErsterStart() {
+        String temp = getFirstAttrbuteByTagName(new String[]{"options", "firststart"});;
+        if (temp==null || temp.length()==0)
+            return true;
+        return new Boolean(temp).booleanValue();
+    }
+
+    public void setErsterStart(boolean ersterStart) {
+        setAttributeByTagName(new String[]{"options", "firststart"}, new Boolean(ersterStart).toString());
     }
 
     public void setSprache(String sprache) {

@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.43 2003/09/07 09:29:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.44 2003/09/08 06:27:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.44  2003/09/08 06:27:11  maj0r
+ * Um Wizard erweitert, aber noch nicht fertiggestellt.
+ *
  * Revision 1.43  2003/09/07 09:29:55  maj0r
  * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
@@ -273,9 +276,6 @@ public class AppleJuiceDialog
                 return result + " MB";
             }
         };
-        dm.startXMLCheck();
-        memoryWorker.start();
-
         try{
             //http://download.berlios.de/applejuicejava/version.txt
             String strAktuellsteVersion = HtmlLoader.getHtmlContent("download.berlios.de", 80, HtmlLoader.GET,
@@ -307,7 +307,16 @@ public class AppleJuiceDialog
             if (logger.isEnabledFor(Level.INFO))
                 logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
         }
-
+        if (OptionsManager.getInstance().isErsterStart()){
+            WizardDialog wizardDialog = new WizardDialog(this, true);
+            Dimension appDimension = wizardDialog.getSize();
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            wizardDialog.setLocation((screenSize.width - appDimension.width)/2,
+                           (screenSize.height - appDimension.height)/2);
+            wizardDialog.show();
+        }
+        dm.startXMLCheck();
+        memoryWorker.start();
     }
 
     private static void einstellungenSpeichern() {
