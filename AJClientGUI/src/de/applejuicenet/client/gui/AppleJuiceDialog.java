@@ -86,7 +86,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.124 2004/06/23 14:14:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.125 2004/06/23 14:56:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -346,7 +346,7 @@ public class AppleJuiceDialog
                                     getApp();
                                 if (!isVisible()) {
                                     dialog.setVisible(true);
-                                    dialog.requestFocus();
+                                    dialog.toFront();
                                 }
                                 else {
                                     setVisible(false);
