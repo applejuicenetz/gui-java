@@ -15,17 +15,22 @@ import de.applejuicenet.client.gui.tables.upload.UploadTableCellRenderer;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.shared.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.24 2003/09/30 16:35:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.25 2003/10/14 15:40:25 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.25  2003/10/14 15:40:25  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.24  2003/09/30 16:35:11  maj0r
  * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
  *
@@ -86,14 +91,19 @@ public class UploadPanel
     private String clientText;
     private UploadDataTableModel uploadDataTableModel;
     private boolean initizialiced = false;
+    private Logger logger;
 
     public UploadPanel() {
+        logger = Logger.getLogger(getClass());
         _this = this;
-        try {
+        try
+        {
             init();
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (Exception ex)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", ex);
         }
     }
 
@@ -107,14 +117,16 @@ public class UploadPanel
                 super.mouseClicked(e);
                 Point p = e.getPoint();
                 int selectedRow = uploadDataTable.rowAtPoint(p);
-                if (e.getClickCount() == 2) {
+                if (e.getClickCount() == 2)
+                {
                     ((TreeTableModelAdapter) uploadDataTable.getModel()).expandOrCollapseRow(selectedRow);
                 }
             }
         });
 //        uploadDataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         UploadTableCellRenderer renderer = new UploadTableCellRenderer();
-        for (int i = 0; i < uploadDataTable.getColumnModel().getColumnCount(); i++) {
+        for (int i = 0; i < uploadDataTable.getColumnModel().getColumnCount(); i++)
+        {
             uploadDataTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
         JScrollPane aScrollPane = new JScrollPane(uploadDataTable);
@@ -128,79 +140,103 @@ public class UploadPanel
         panel2.add(panel, BorderLayout.WEST);
         add(panel2, BorderLayout.SOUTH);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this,
-                DataUpdateListener.UPLOAD_CHANGED);
+                                                              DataUpdateListener.UPLOAD_CHANGED);
     }
 
     public void fireLanguageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         clientText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "uplcounttext"}));
+                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "uplcounttext"}));
         label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
         String[] columns = new String[7];
         columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
-                                                       "col0caption"}));
+                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
+                                                                                              "col0caption"}));
         columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
-                                                       "col3caption"}));
+                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
+                                                                                              "col3caption"}));
         columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
-                                                       "col1caption"}));
+                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
+                                                                                              "col1caption"}));
         columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
-                                                       "col2caption"}));
+                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
+                                                                                              "col2caption"}));
         columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(new String[] {"mainform", "queue",
-                                      "col6caption"}));
+                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "queue",
+                                                                                              "col6caption"}));
         columns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
-                                                       "col4caption"}));
+                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
+                                                                                              "col4caption"}));
         columns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
-                                                       "col5caption"}));
+                                                       getFirstAttrbuteByTagName(new String[]{"mainform", "uploads",
+                                                                                              "col5caption"}));
         TableColumnModel tcm = uploadDataTable.getColumnModel();
-        for (int i = 0; i < tcm.getColumnCount(); i++) {
+        for (int i = 0; i < tcm.getColumnCount(); i++)
+        {
             tcm.getColumn(i).setHeaderValue(columns[i]);
         }
         tcm.getColumn(0).setPreferredWidth(100);
     }
 
     public void fireContentChanged(int type, Object content) {
-        if (type == DataUpdateListener.UPLOAD_CHANGED) {
-            uploadDataTableModel.setTable((HashMap)content);
-            uploadDataTable.updateUI();
-            anzahlClients = uploadDataTableModel.getRowCount();
-            label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
+        try
+        {
+            if (type == DataUpdateListener.UPLOAD_CHANGED)
+            {
+                uploadDataTableModel.setTable((HashMap) content);
+                uploadDataTable.updateUI();
+                anzahlClients = uploadDataTableModel.getRowCount();
+                label1.setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
+            }
+        }
+        catch (Exception ex)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", ex);
         }
     }
 
-    public int[] getColumnWidths(){
+    public int[] getColumnWidths() {
         TableColumnModel tcm = uploadDataTable.getColumnModel();
         int[] widths = new int[tcm.getColumnCount()];
-        for (int i = 0; i < tcm.getColumnCount(); i++) {
+        for (int i = 0; i < tcm.getColumnCount(); i++)
+        {
             widths[i] = tcm.getColumn(i).getWidth();
         }
         return widths;
     }
 
     public void registerSelected() {
-        if (!initizialiced){
-            initizialiced = true;
-            TableColumnModel headerModel = uploadDataTable.getTableHeader().getColumnModel();
-            int columnCount = headerModel.getColumnCount();
-            PositionManager pm = PropertiesManager.getPositionManager();
-            if (pm.isLegal()){
-                int[] widths = pm.getUploadWidths();
-                for (int i=0; i<columnCount; i++){
-                    headerModel.getColumn(i).setPreferredWidth(widths[i]);
+        try
+        {
+            if (!initizialiced)
+            {
+                initizialiced = true;
+                TableColumnModel headerModel = uploadDataTable.getTableHeader().getColumnModel();
+                int columnCount = headerModel.getColumnCount();
+                PositionManager pm = PropertiesManager.getPositionManager();
+                if (pm.isLegal())
+                {
+                    int[] widths = pm.getUploadWidths();
+                    for (int i = 0; i < columnCount; i++)
+                    {
+                        headerModel.getColumn(i).setPreferredWidth(widths[i]);
+                    }
                 }
-            }
-            else{
-                for (int i=0; i<columnCount; i++){
-                    headerModel.getColumn(i).setPreferredWidth(uploadDataTable.getWidth()/columnCount);
+                else
+                {
+                    for (int i = 0; i < columnCount; i++)
+                    {
+                        headerModel.getColumn(i).setPreferredWidth(uploadDataTable.getWidth() / columnCount);
+                    }
                 }
+                uploadDataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             }
-            uploadDataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        }
+        catch (Exception ex)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", ex);
         }
     }
 }

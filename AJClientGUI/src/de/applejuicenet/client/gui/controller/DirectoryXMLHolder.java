@@ -5,19 +5,23 @@ import de.applejuicenet.client.gui.trees.ApplejuiceNode;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 import java.net.URLEncoder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.7 2003/10/12 15:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DirectoryXMLHolder.java,v 1.8 2003/10/14 15:45:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.8  2003/10/14 15:45:09  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.7  2003/10/12 15:57:55  maj0r
  * Kleinere Bugs behoben.
  * Sortiert wird nun nur noch bei Klick auf den Spaltenkopf um CPU-Zeit zu sparen.
@@ -56,38 +60,43 @@ public class DirectoryXMLHolder extends WebXMLParser {
     }
 
     public void update() {
-        if (directory == null)
-            directory = "";
+        try
+        {
+            if (directory == null)
+                directory = "";
 
-        try {
-            if (directory.length()==0)
+            if (directory.length() == 0)
                 reload("");
             else
                 reload("directory=" + URLEncoder.encode(directory, "UTF-8"));
+            Element e = null;
+            NodeList nodes = document.getElementsByTagName("applejuice");
+            e = (Element) nodes.item(0);
+            nodes = e.getChildNodes();
+            String name;
+            int nodesSize = nodes.getLength();
+            for (int i = 0; i < nodesSize; i++)
+            {
+                e = (Element) nodes.item(i);
+                name = e.getNodeName();
+                if (name.compareToIgnoreCase("filesystem") == 0)
+                {
+                    DirectoryDO.setSeparator(e.getAttribute("seperator"));
+                }
+                else if (name.compareToIgnoreCase("dir") == 0)
+                {
+                    getNodes(e, directoryNode);
+                }
+            }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        Element e = null;
-        NodeList nodes = document.getElementsByTagName("applejuice");
-        e = (Element) nodes.item(0);
-        nodes = e.getChildNodes();
-        String name;
-        int nodesSize = nodes.getLength();
-        for (int i = 0; i < nodesSize; i++)
+        catch (Exception ex)
         {
-            e = (Element) nodes.item(i);
-            name = e.getNodeName();
-            if (name.compareToIgnoreCase("filesystem")==0){
-                DirectoryDO.setSeparator(e.getAttribute("seperator"));
-            }
-            else if (name.compareToIgnoreCase("dir")==0){
-                getNodes(e, directoryNode);
-            }
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", ex);
         }
     }
 
-    private void getNodes(Element element, ApplejuiceNode directoryNode){
+    private void getNodes(Element element, ApplejuiceNode directoryNode) {
         int type;
         boolean fileSystem;
         String name;
@@ -96,16 +105,20 @@ public class DirectoryXMLHolder extends WebXMLParser {
         fileSystem = Boolean.getBoolean(element.getAttribute("isfilesystem"));
         type = Integer.parseInt(element.getAttribute("type"));
         path = element.getAttribute("path");
-        if (path.length()==0){
-            if (directoryNode.getDO()!=null){
+        if (path.length() == 0)
+        {
+            if (directoryNode.getDO() != null)
+            {
                 String parentPfad = directoryNode.getDO().getPath();
-                if (parentPfad.length()!=0 && parentPfad.lastIndexOf(DirectoryDO.getSeparator())==parentPfad.length()-1){
+                if (parentPfad.length() != 0 && parentPfad.lastIndexOf(DirectoryDO.getSeparator()) == parentPfad.length() - 1)
+                {
                     path = parentPfad + name;
                 }
                 else
                     path = parentPfad + DirectoryDO.getSeparator() + name;
             }
-            else{
+            else
+            {
                 path = DirectoryDO.getSeparator();
             }
         }
@@ -118,7 +131,8 @@ public class DirectoryXMLHolder extends WebXMLParser {
         {
             e = (Element) nodes.item(i);
             name = e.getNodeName();
-            if (name.compareToIgnoreCase("dir")==0){
+            if (name.compareToIgnoreCase("dir") == 0)
+            {
                 getNodes(e, newNode);
             }
         }

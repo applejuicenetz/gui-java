@@ -23,18 +23,23 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DnDConstants;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.3 2003/08/28 10:39:05 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DateiListeDialog.java,v 1.4 2003/10/14 15:44:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DateiListeDialog.java,v $
+ * Revision 1.4  2003/10/14 15:44:54  maj0r
+ * Logger eingebaut.
+ *
  * Revision 1.3  2003/08/28 10:39:05  maj0r
  * Sharelisten koennen jetzt gespeichert werden.
  *
@@ -53,106 +58,115 @@ public class DateiListeDialog extends JDialog {
     private JTable table = new JTable();
     private JLabel text = new JLabel();
     private JPopupMenu popup = new JPopupMenu();
+    private Logger logger;
 
     public DateiListeDialog(Frame parent, boolean modal) {
         super(parent, modal);
+        logger = Logger.getLogger(getClass());
         init();
     }
 
     private void init() {
-        JMenuItem item1 = new JMenuItem("Entfernen");
-        item1.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
-                int[] selected = table.getSelectedRows();
-                if (selected.length>0){
-                    DateiListeTableModel model = (DateiListeTableModel)table.getModel();
-                    for (int i=0; i<selected.length; i++){
-                        model.removeRow(selected[i]);
-                    }
-                }
-            }
-        });
-        popup.add(item1);
-        table.setModel(new DateiListeTableModel());
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        getContentPane().setLayout(new GridBagLayout());
-        JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        IconManager im = IconManager.getInstance();
-        speicherTxt.setIcon(im.getIcon("speichern"));
-        speicherTxt.addMouseListener(new SpeichernMouseAdapter());
-        speicherHtml.setIcon(im.getIcon("web"));
-        speicherHtml.addMouseListener(new SpeichernMouseAdapter());
-        panel1.add(speicherTxt);
-        panel1.add(speicherHtml);
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.weightx = 1;
-        getContentPane().add(panel1, constraints);
-        constraints.weightx = 0;
-        constraints.gridy = 1;
-        getContentPane().add(text, constraints);
-        constraints.gridy = 2;
-        constraints.weighty = 1;
-        JScrollPane scroll = new JScrollPane(table);
-        scroll.setDropTarget(new DropTarget(scroll, new DndTargetAdapter() {
-            protected Object getTarget( Point point ){
-                return this;
-             }
-
-            public void drop(DropTargetDropEvent event) {
-                Transferable tr = event.getTransferable();
-                if (tr.isDataFlavorSupported(new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "ShareNodesTransferer"))){
-                    try{
-                        event.acceptDrop(DnDConstants.ACTION_COPY);
-                        Object[] transfer = (Object[])tr.getTransferData(new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "ShareNodesTransferer"));
-                        if (transfer != null && transfer.length!=0){
-                            ShareNode node = null;
-                            DateiListeTableModel model = (DateiListeTableModel)table.getModel();
-                            for (int i=0; i<transfer.length; i++){
-                                model.addNodes((ShareNode)transfer[i]);
-                            }
+        try{
+            JMenuItem item1 = new JMenuItem("Entfernen");
+            item1.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent ae){
+                    int[] selected = table.getSelectedRows();
+                    if (selected.length>0){
+                        DateiListeTableModel model = (DateiListeTableModel)table.getModel();
+                        for (int i=0; i<selected.length; i++){
+                            model.removeRow(selected[i]);
                         }
                     }
-                    catch(Exception e){
-                        e.printStackTrace();
-                        event.getDropTargetContext().dropComplete(false);
+                }
+            });
+            popup.add(item1);
+            table.setModel(new DateiListeTableModel());
+            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            getContentPane().setLayout(new GridBagLayout());
+            JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            IconManager im = IconManager.getInstance();
+            speicherTxt.setIcon(im.getIcon("speichern"));
+            speicherTxt.addMouseListener(new SpeichernMouseAdapter());
+            speicherHtml.setIcon(im.getIcon("web"));
+            speicherHtml.addMouseListener(new SpeichernMouseAdapter());
+            panel1.add(speicherTxt);
+            panel1.add(speicherHtml);
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.anchor = GridBagConstraints.NORTH;
+            constraints.fill = GridBagConstraints.BOTH;
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            constraints.weightx = 1;
+            getContentPane().add(panel1, constraints);
+            constraints.weightx = 0;
+            constraints.gridy = 1;
+            getContentPane().add(text, constraints);
+            constraints.gridy = 2;
+            constraints.weighty = 1;
+            JScrollPane scroll = new JScrollPane(table);
+            scroll.setDropTarget(new DropTarget(scroll, new DndTargetAdapter() {
+                protected Object getTarget( Point point ){
+                    return this;
+                 }
+
+                public void drop(DropTargetDropEvent event) {
+                    Transferable tr = event.getTransferable();
+                    if (tr.isDataFlavorSupported(new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "ShareNodesTransferer"))){
+                        try{
+                            event.acceptDrop(DnDConstants.ACTION_COPY);
+                            Object[] transfer = (Object[])tr.getTransferData(
+                                    new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "ShareNodesTransferer"));
+                            if (transfer != null && transfer.length!=0){
+                                DateiListeTableModel model = (DateiListeTableModel)table.getModel();
+                                for (int i=0; i<transfer.length; i++){
+                                    model.addNodes((ShareNode)transfer[i]);
+                                }
+                            }
+                        }
+                        catch(Exception e){
+                            if (logger.isEnabledFor(Level.ERROR))
+                                logger.error("Unbehandelte Exception", e);
+                            event.getDropTargetContext().dropComplete(false);
+                        }
+                    }
+                    event.getDropTargetContext().dropComplete(true);
+                }
+            }));
+            table.addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent me) {
+                    if (SwingUtilities.isRightMouseButton(me))
+                    {
+                        Point p = me.getPoint();
+                        int iRow = table.rowAtPoint(p);
+                        int iCol = table.columnAtPoint(p);
+                        table.setRowSelectionInterval(iRow, iRow);
+                        table.setColumnSelectionInterval(iCol, iCol);
+                    }
+                    maybeShowPopup(me);
+                }
+
+                public void mouseReleased(MouseEvent e) {
+                    super.mouseReleased(e);
+                    maybeShowPopup(e);
+                }
+
+                private void maybeShowPopup(MouseEvent e) {
+                    if (e.isPopupTrigger() && table.getSelectedRowCount()>0)
+                    {
+                        popup.show(table, e.getX(), e.getY());
                     }
                 }
-                event.getDropTargetContext().dropComplete(true);
-            }
-        }));
-        table.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent me) {
-                if (SwingUtilities.isRightMouseButton(me))
-                {
-                    Point p = me.getPoint();
-                    int iRow = table.rowAtPoint(p);
-                    int iCol = table.columnAtPoint(p);
-                    table.setRowSelectionInterval(iRow, iRow);
-                    table.setColumnSelectionInterval(iCol, iCol);
-                }
-                maybeShowPopup(me);
-            }
-
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-                maybeShowPopup(e);
-            }
-
-            private void maybeShowPopup(MouseEvent e) {
-                if (e.isPopupTrigger() && table.getSelectedRowCount()>0)
-                {
-                    popup.show(table, e.getX(), e.getY());
-                }
-            }
-        });
-        getContentPane().add(scroll, constraints);
-        constraints.weighty = 0;
-        initLanguage();
-        pack();
+            });
+            getContentPane().add(scroll, constraints);
+            constraints.weighty = 0;
+            initLanguage();
+            pack();
+        }
+        catch (Exception ex) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", ex);
+        }
     }
 
     public void initLanguage() {
@@ -224,9 +238,9 @@ public class DateiListeDialog extends JDialog {
                     fileWriter.write(text.toString());
                     fileWriter.close();
                 }
-                catch (IOException e1)
-                {
-                    e1.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                catch (Exception ex) {
+                    if (logger.isEnabledFor(Level.ERROR))
+                        logger.error("Unbehandelte Exception", ex);
                 }
             }
         }
