@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.8 2003/06/13 22:29:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/plugins/PluginConnector.java,v 1.9 2003/08/19 19:27:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PluginConnector.java,v $
+ * Revision 1.9  2003/08/19 19:27:12  maj0r
+ * no message
+ *
  * Revision 1.8  2003/06/13 22:29:38  maj0r
  * Schnittstelle korrigiert.
  *
@@ -34,7 +37,7 @@ public abstract class PluginConnector
     implements LanguageListener, DataUpdateListener, RegisterI {
   /*Diese Datei sollte nicht verändert werden!
     Um ein Plugin zu erstellen, muss diese Klasse überschrieben werden.
-    Die Plugin Klasse muss zwingend AppleJuicePlugin.java heissen.
+    Die Plugin Klasse muss zwingend wie das jar-File heissen.
     Beim Pluginstart wird automatisch der Standardkonstruktor aufgerufen, alle anderen werden ignoriert.*/
 
   //Titel, der als Reitertext ausgegeben wird
