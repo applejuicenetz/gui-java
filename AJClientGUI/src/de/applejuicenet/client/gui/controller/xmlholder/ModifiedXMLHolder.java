@@ -36,7 +36,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.36 2004/05/10 16:14:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.37 2004/05/22 20:39:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -564,6 +564,13 @@ public class ModifiedXMLHolder
                            String qName) throws SAXException {
         if (localName.equals("searchentry")){
             tmpSearchEntry = null;
+        }
+        else if (localName.equals("welcomemessage")){
+            if (netInfo == null){
+                netInfo = new NetworkInfo();
+            }
+            String tmp = contents.toString();
+            netInfo.setWelcomeMessage(tmp);
         }
         else if (checkCount>1){
             if (localName.equals("time")) {

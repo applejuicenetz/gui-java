@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.11 2004/02/18 17:24:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/NetworkInfo.java,v 1.12 2004/05/22 20:39:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: NetworkInfo.java,v $
+ * Revision 1.12  2004/05/22 20:39:30  maj0r
+ * ServerWelcomemessage eingebaut.
+ *
  * Revision 1.11  2004/02/18 17:24:21  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -39,6 +42,7 @@ public class NetworkInfo {
     private String externeIP;
     private int tryConnectToServer;
     private int connectedWithServerId;
+    private String welcomeMessage;
 
     public NetworkInfo(){
 
@@ -47,7 +51,8 @@ public class NetworkInfo {
     public NetworkInfo(long ajUserGesamt, long ajAnzahlDateien,
                        String ajGesamtShare, boolean firewalled,
                        String externeIP,
-                       int tryConnectToServer, int connectedWithServerId) {
+                       int tryConnectToServer, int connectedWithServerId,
+                       String welcomeMessage) {
         this.ajUserGesamt = ajUserGesamt;
         this.ajAnzahlDateien = ajAnzahlDateien;
         this.ajGesamtShare = ajGesamtShare;
@@ -55,6 +60,7 @@ public class NetworkInfo {
         this.externeIP = externeIP;
         this.tryConnectToServer = tryConnectToServer;
         this.connectedWithServerId = connectedWithServerId;
+        setWelcomeMessage(welcomeMessage);
     }
 
     public void setAjUserGesamt(long ajUserGesamt){
@@ -83,6 +89,14 @@ public class NetworkInfo {
 
     public void setConnectedWithServerId(int connectedWithServerId){
         this.connectedWithServerId = connectedWithServerId;
+    }
+
+    public void setWelcomeMessage(String welcomeMessage) {
+        if (welcomeMessage.toLowerCase().indexOf("<html>") == -1){
+            welcomeMessage = "<html>" + welcomeMessage + "</html>";
+        }
+        welcomeMessage = welcomeMessage.replaceAll("\n", "<br>");
+        this.welcomeMessage = welcomeMessage;
     }
 
     public NetworkInfo(String ajUserGesamt, String ajAnzahlDateien,
@@ -215,5 +229,12 @@ public class NetworkInfo {
 
     public int getConnectedWithServerId() {
         return connectedWithServerId;
+    }
+
+    public String getWelcomeMessage() {
+        if (welcomeMessage == null){
+            return "";
+        }
+        return welcomeMessage;
     }
 }

@@ -26,9 +26,11 @@ import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import javax.swing.JTextArea;
+import java.awt.Dimension;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.49 2004/03/09 16:50:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.50 2004/05/22 20:39:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -57,6 +59,7 @@ public class StartPanel
     private JLabel version;
     private JTextPane faq;
     private JLabel warnungIcon;
+    private JTextPane serverMessage;
 
     private String label9Text;
     private String label10Text;
@@ -94,27 +97,59 @@ public class StartPanel
 
     private void init() throws Exception {
         setLayout(new BorderLayout());
+        serverMessage = new JTextPane();
+        serverMessage.setContentType("text/html");
+        serverMessage.setEditable(false);
+        serverMessage.addHyperlinkListener(new HyperlinkListener() {
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if (e.getEventType() ==
+                    HyperlinkEvent.EventType.ACTIVATED) {
+                    if (e.getURL() != null) {
+                        String url = e.getURL().toString();
+                        if (url.length() != 0) {
+                            executeLink(url);
+                        }
+                    }
+                }
+            }
+        });
+
         JPanel panel3 = new JPanel(new GridBagLayout());
         panel3.setBackground(Color.WHITE);
         JPanel panel4 = new JPanel(new BorderLayout());
         panel4.setBackground(Color.WHITE);
 
-        JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel panel1 = new JPanel(new GridBagLayout());
         panel1.setBackground(Color.WHITE);
         panel1.setBackground(Color.WHITE);
 
         IconManager im = IconManager.getInstance();
         ImageIcon icon1 = im.getIcon("applejuicebanner");
         JLabel label1 = new JLabel(icon1);
-        panel1.add(label1);
-
+        JScrollPane sp = new JScrollPane(serverMessage);
+        sp.setBorder(null);
+        sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 0;
         constraints.gridy = 0;
+        panel1.add(label1, constraints);
+        constraints.gridx = 1;
+        constraints.weightx = 1;
+        panel1.add(sp, constraints);
+        constraints.weightx = 0;
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
         constraints.insets.left = 5;
 
+        constraints.gridwidth = 2;
+        panel3.add(panel1, constraints);
+        constraints.gridwidth = 1;
+
+        constraints.gridy++;
         ImageIcon icon2 = im.getIcon("start");
         JLabel label2 = new JLabel(icon2);
         panel3.add(label2, constraints);
@@ -218,7 +253,7 @@ public class StartPanel
 
         constraints.insets.top = 0;
 
-        add(panel1, BorderLayout.NORTH);
+//        add(panel1, BorderLayout.NORTH);
         panel4.add(panel3, BorderLayout.NORTH);
         JScrollPane scrollPane = new JScrollPane(panel4);
         scrollPane.setBorder(null);
@@ -405,6 +440,10 @@ public class StartPanel
                     warnungIcon.setVisible(false);
                     label7.setText("");
                 }
+                String tmp = netInfo.getWelcomeMessage();
+                if (tmp.compareTo(serverMessage.getText()) != 0){
+                    serverMessage.setText(netInfo.getWelcomeMessage());
+                }
             }
             else if (type == DataUpdateListener.INFORMATION_CHANGED) {
                 information = (Information) content;
@@ -484,6 +523,12 @@ public class StartPanel
                 else {
                     htmlText = "<html>" + htmlText + "</html>";
                 }
+                StringBuffer buffer = new StringBuffer(htmlText);
+                int index;
+                while ((index = buffer.indexOf(". ")) != -1){
+                     buffer.replace(index, index + 1, ".<br>");
+                }
+                htmlText = buffer.toString();
                 nachrichten.setContentType("text/html");
                 nachrichten.setText(htmlText);
                 nachrichten.setFont(label9.getFont());
