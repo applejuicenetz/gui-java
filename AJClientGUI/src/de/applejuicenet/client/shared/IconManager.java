@@ -9,7 +9,7 @@ import javax.swing.*;
 import de.applejuicenet.client.shared.icons.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.4 2003/06/30 20:35:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.5 2003/07/01 14:50:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.icons.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: IconManager.java,v $
+ * Revision 1.5  2003/07/01 14:50:37  maj0r
+ * Inner-Class Key ausgelagert und umbenannt.
+ *
  * Revision 1.4  2003/06/30 20:35:50  maj0r
  * Code optimiert.
  *
@@ -44,7 +47,7 @@ public class IconManager {
 
   public ImageIcon getIcon(String key) {
     ImageIcon result;
-    HashtableKey hashtableKey = new HashtableKey(key);
+    MapSetStringKey hashtableKey = new MapSetStringKey(key);
     if (icons.containsKey(hashtableKey)) {
       result = (ImageIcon) icons.get(hashtableKey);
     }
@@ -56,36 +59,5 @@ public class IconManager {
       icons.put(hashtableKey, result);
     }
     return result;
-  }
-
-  class HashtableKey {
-    private String key;
-    private int hashCode = -1;
-
-    public HashtableKey(String key) {
-      this.key = key;
-    }
-
-    public String getKey() {
-      return key;
-    }
-
-    public int hashCode() {
-      if (hashCode == -1) {
-        char[] ca = key.toCharArray();
-        int size = ca.length;
-        for (int x = 0; x < size; x++) {
-          hashCode += ca[x];
-        }
-      }
-      return (hashCode);
-    }
-
-    public boolean equals(Object obj) {
-      if ( (obj != null) && (obj instanceof HashtableKey)) {
-        return ( (HashtableKey) obj).getKey().compareToIgnoreCase(key) == 0;
-      }
-      return false;
-    }
   }
 }
