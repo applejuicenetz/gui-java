@@ -70,6 +70,7 @@
 		<fileset dir="${basedir}" includes="changelog.htm"/>
 		<fileset dir="${basedir}" includes="TrayIcon12.dll"/>
 		<fileset dir="${basedir}" includes="language/*.xml language/*.gif"/>
+		<fileset dir="${basedir}" includes="icons/*.gif"/>
 		<fileset dir="${basedir}" includes="plugins/*.jar plugins/*.txt"/>
 		<fileset dir="${basedir}" includes="pwdlpolicies/*.jar pwdlpolicies/*.txt"/>
 		<fileset dir="${basedir}" includes="themes/*.zip themes/*.first"/>
