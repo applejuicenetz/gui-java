@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.4 2003/08/20 07:49:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.5 2003/08/20 16:18:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.5  2003/08/20 16:18:51  maj0r
+ * Server koennen nun entfernt werden.
+ *
  * Revision 1.4  2003/08/20 07:49:50  maj0r
  * Programmstart beschleunigt.
  *
@@ -392,6 +395,33 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
                 result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                                       "/function/serverlogin?password=" + password + "&id=" + id);
+            }
+            catch (WebSiteNotFoundException ex)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    public boolean entferneServer(int id) {
+        HashMap server = getAllServer();
+        String id_key = Integer.toString(id);
+        ServerDO serverDO = (ServerDO) server.get(new MapSetStringKey(id_key));
+        if (serverDO == null)
+        {
+            System.out.print("Warnung: Server mit ID: " + id_key + " nicht gefunden!");
+            return false;
+        }
+        else
+        {
+            String result;
+            logger.info("Entferne '" + serverDO.getName() + "'...");
+            try
+            {
+                String password = OptionsManager.getInstance().getRemoteSettings().getOldPassword();
+                result = HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
+                                                      "/function/removeserver?password=" + password + "&id=" + id);
             }
             catch (WebSiteNotFoundException ex)
             {
