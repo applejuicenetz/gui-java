@@ -11,7 +11,7 @@ import java.net.URLEncoder;
 import de.applejuicenet.client.gui.controller.WebXMLParser;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.2 2004/01/06 17:32:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/DirectoryXMLHolder.java,v 1.3 2004/01/29 10:05:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import de.applejuicenet.client.gui.controller.WebXMLParser;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DirectoryXMLHolder.java,v $
+ * Revision 1.3  2004/01/29 10:05:02  maj0r
+ * Sharebaum wird jetzt wieder korrekt angezeigt.
+ *
  * Revision 1.2  2004/01/06 17:32:50  maj0r
  * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
  *
@@ -80,23 +83,13 @@ public class DirectoryXMLHolder extends WebXMLParser {
             else
                 reload("directory=" + URLEncoder.encode(directory, "UTF-8"), false);
             Element e = null;
-            NodeList nodes = document.getElementsByTagName("applejuice");
+            NodeList nodes = document.getElementsByTagName("filesystem");
             e = (Element) nodes.item(0);
-            nodes = e.getChildNodes();
-            String name;
-            int nodesSize = nodes.getLength();
-            for (int i = 0; i < nodesSize; i++)
-            {
+            DirectoryDO.setSeparator(e.getAttribute("seperator"));
+            nodes = document.getElementsByTagName("dir");
+            for (int i=0; i<nodes.getLength(); i++){
                 e = (Element) nodes.item(i);
-                name = e.getNodeName();
-                if (name.compareToIgnoreCase("filesystem") == 0)
-                {
-                    DirectoryDO.setSeparator(e.getAttribute("seperator"));
-                }
-                else if (name.compareToIgnoreCase("dir") == 0)
-                {
-                    getNodes(e, directoryNode);
-                }
+                getNodes(e, directoryNode);
             }
         }
         catch (Exception ex)
@@ -134,18 +127,6 @@ public class DirectoryXMLHolder extends WebXMLParser {
         }
         DirectoryDO directoryDO = new DirectoryDO(name, type, fileSystem, path);
         ApplejuiceNode newNode = directoryNode.addChild(directoryDO);
-        NodeList nodes = element.getChildNodes();
-        int nodesSize = nodes.getLength();
-        Element e = null;
-        for (int i = 0; i < nodesSize; i++)
-        {
-            e = (Element) nodes.item(i);
-            name = e.getNodeName();
-            if (name.compareToIgnoreCase("dir") == 0)
-            {
-                getNodes(e, newNode);
-            }
-        }
     }
 
     public void getDirectory(String directory, ApplejuiceNode directoryNode) {
