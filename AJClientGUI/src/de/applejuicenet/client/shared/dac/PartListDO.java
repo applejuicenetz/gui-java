@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.11 2004/02/20 14:55:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.12 2004/02/25 11:16:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,10 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PartListDO.java,v $
+ * Revision 1.12  2004/02/25 11:16:29  maj0r
+ * Bug #241 gefixt (Danke an computer.ist.org)
+ * Farbgebung war genau umgekehrt. Nun gilt wirklich: je dunkler, desto mehr Quellen gefunden.
+ *
  * Revision 1.11  2004/02/20 14:55:02  maj0r
  * Speicheroptimierungen.
  *
@@ -42,7 +46,7 @@ package de.applejuicenet.client.shared.dac;
  * HashSet ggn ArrayList getauscht, um die Reihenfolge der Parts zu behalten.
  *
  * Revision 1.1  2003/08/11 16:52:22  maj0r
- * DownloadPartList eingefügt.
+ * DownloadPartList eingefuegt.
  *
  *
  */
@@ -55,15 +59,15 @@ public class PartListDO {
     public static final Color COLOR_TYPE_UEBERPRUEFT = Color.GREEN;
     public static final Color COLOR_TYPE_OK = Color.BLACK;
     public static final Color COLOR_TYPE_0 = Color.RED;
-    public static final Color COLOR_TYPE_1 = new Color(25, 25, 250);
-    public static final Color COLOR_TYPE_2 = new Color(50, 50, 250);
-    public static final Color COLOR_TYPE_3 = new Color(75, 75, 250);
-    public static final Color COLOR_TYPE_4 = new Color(100, 100, 250);
+    public static final Color COLOR_TYPE_9 = new Color(25, 25, 250);
+    public static final Color COLOR_TYPE_8 = new Color(50, 50, 250);
+    public static final Color COLOR_TYPE_7 = new Color(75, 75, 250);
+    public static final Color COLOR_TYPE_6 = new Color(100, 100, 250);
     public static final Color COLOR_TYPE_5 = new Color(125, 125, 250);
-    public static final Color COLOR_TYPE_6 = new Color(150, 150, 250);
-    public static final Color COLOR_TYPE_7 = new Color(175, 175, 250);
-    public static final Color COLOR_TYPE_8 = new Color(200, 200, 250);
-    public static final Color COLOR_TYPE_9 = new Color(225, 225, 250);
+    public static final Color COLOR_TYPE_4 = new Color(150, 150, 250);
+    public static final Color COLOR_TYPE_3 = new Color(175, 175, 250);
+    public static final Color COLOR_TYPE_2 = new Color(200, 200, 250);
+    public static final Color COLOR_TYPE_1 = new Color(225, 225, 250);
     public static final Color COLOR_TYPE_10 = Color.BLUE;
 
     public static final Color COLOR_READY_10 = new Color(255, 255, 132);
