@@ -4,12 +4,14 @@ import java.io.*;
 import javax.xml.parsers.*;
 
 import org.xml.sax.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 import de.applejuicenet.client.gui.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.6 2003/08/15 14:46:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/WebXMLParser.java,v 1.7 2003/08/15 17:53:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +20,9 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: WebXMLParser.java,v $
+ * Revision 1.7  2003/08/15 17:53:54  maj0r
+ * Tree fuer Shareauswahl fortgefuehrt, aber noch nicht fertiggestellt.
+ *
  * Revision 1.6  2003/08/15 14:46:30  maj0r
  * Refactoring.
  *
@@ -50,6 +55,7 @@ public abstract class WebXMLParser
   private boolean firstRun = true;
   private boolean useTimestamp = true;
   private String password;
+  private Logger logger;
 
   public WebXMLParser(String xmlCommand, String parameters) {
     super();
@@ -64,6 +70,7 @@ public abstract class WebXMLParser
   }
 
   private void init(String xmlCommand){
+    logger = Logger.getLogger(getClass());
     RemoteConfiguration rc = OptionsManager.getInstance().getRemoteSettings();
     host = rc.getHost();
     password = rc.getOldPassword();
@@ -117,6 +124,8 @@ public abstract class WebXMLParser
       if (sxe.getException() != null) {
         x = sxe.getException();
       }
+      if (logger.isEnabledFor(Level.FATAL))
+        logger.fatal("Unbehandelte Exception", x);
       x.printStackTrace();
 
     }
