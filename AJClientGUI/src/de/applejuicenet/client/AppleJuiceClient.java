@@ -36,9 +36,10 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import de.applejuicenet.client.gui.ConnectFrame;
 import de.applejuicenet.client.gui.UpdateInformationDialog;
 import java.awt.Insets;
+import java.awt.Point;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.55 2004/01/09 11:40:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.56 2004/01/12 09:36:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,6 +48,9 @@ import java.awt.Insets;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.56  2004/01/12 09:36:09  maj0r
+ * Positionierung korrigiert.
+ *
  * Revision 1.55  2004/01/09 11:40:03  maj0r
  * Bei Vollbild werden nun fixe Leisten wie eine Taskleiste beachtet.
  *
@@ -416,11 +420,18 @@ public class AppleJuiceClient {
             else {
                 Toolkit tk = Toolkit.getDefaultToolkit();
                 Dimension screenSize = tk.getScreenSize();
+                Dimension appScreenSize = new Dimension(screenSize.width, screenSize.height);
                 Insets insets = tk.getScreenInsets(theApp.getGraphicsConfiguration());
-                screenSize.width -= (insets.left + insets.right);
-                screenSize.height -= (insets.top + insets.bottom);
-                theApp.setSize(screenSize);
-                theApp.setLocation(insets.left, insets.top);
+                appScreenSize.width -= (insets.left + insets.right);
+                appScreenSize.width = appScreenSize.width / 5 * 4;
+                appScreenSize.height -= (insets.top + insets.bottom);
+                appScreenSize.height = appScreenSize.height / 5 * 4;
+                Point location = new Point((screenSize.width - appScreenSize.width)/2,
+                                           (screenSize.height - appScreenSize.height)/2);
+                lm.setMainXY(location);
+                lm.setMainDimension(appScreenSize);
+                theApp.setSize(appScreenSize);
+                theApp.setLocation(location);
             }
 
             connectFrame.dispose();
