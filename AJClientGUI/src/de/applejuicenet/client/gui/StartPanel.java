@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.21 2003/09/06 14:50:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.22 2003/09/06 16:25:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.22  2003/09/06 16:25:39  maj0r
+ * Newsanfrage an neue Domain angepasst.
+ * HtmlLoader korrigiert.
+ *
  * Revision 1.21  2003/09/06 14:50:50  maj0r
  * Fehlerbehandlung verbessert.
  *
@@ -288,7 +292,13 @@ public class StartPanel
             try{
                 String htmlText = HtmlLoader.getHtmlContent("www.applejuicenet.org", 80, HtmlLoader.GET,
                                                             "/inprog/news.php?version=" + ApplejuiceFassade.getInstance().getCoreVersion().getVersion());
-                htmlText = "<html>" + htmlText + "</html>";
+                int pos = htmlText.toLowerCase().indexOf("<html>");
+                if (pos!=-1){
+                    htmlText = htmlText.substring(pos);
+                }
+                else{
+                    htmlText = "<html>" + htmlText + "</html>";
+                }
                 nachrichten.setText(htmlText);
             }
             catch (WebSiteNotFoundException e){
