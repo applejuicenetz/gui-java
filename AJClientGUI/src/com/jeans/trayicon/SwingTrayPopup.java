@@ -1,6 +1,7 @@
 package com.jeans.trayicon;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -15,8 +16,10 @@ public class SwingTrayPopup
     // Swing popup menu for a TrayIcon
     private WindowsTrayIcon m_Icon;
     private MouseListener m_Listener;
+    private Frame parent;
 
-    public SwingTrayPopup() {
+    public SwingTrayPopup(Frame parent) {
+    	this.parent = parent;
     }
 
     // Attach the menu to a TrayIcon
@@ -38,16 +41,14 @@ public class SwingTrayPopup
 
     // Show the popup menu (internal use only)
     public void showMenu(int xp, int yp) {
-        TrayDummyComponent frame = WindowsTrayIcon.getDummyComponent();
-
         // This should show the menu at a better location :-)
         //  * Thanks to Danny <danny@isfantastisch.nl> for the
         //    setAlwaysOnTop and updateUI() hint
 
         WindowsTrayIcon.setMouseClickHook(new ClickListener());
-        WindowsTrayIcon.setAlwaysOnTop(frame, true);
+//        WindowsTrayIcon.setAlwaysOnTop(parent, true);
         Dimension d = getPreferredSize();
-        show(frame, xp - d.width, yp - d.height);
+        show(parent, xp - d.width, yp - d.height);
         updateUI();
     }
 
