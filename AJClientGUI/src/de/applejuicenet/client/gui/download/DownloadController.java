@@ -70,7 +70,6 @@ public class DownloadController extends GuiController {
 	private DownloadPanel downloadPanel;
 
 	private boolean initialized = false;
-	private boolean panelSelected = false;
 	private String dialogTitel;
 	private String downloadAbbrechen;
 	private DownloadPartListWatcher downloadPartListWatcher;
@@ -181,7 +180,7 @@ public class DownloadController extends GuiController {
 	}
 	
 	public Value[] getCustomizedValues(){
-		return null;
+		return new Value[0];
 	}
 	
 	public void fireAction(int actionId, Object source) {
@@ -533,7 +532,7 @@ public class DownloadController extends GuiController {
 			if (logger.isEnabledFor(Level.ERROR)) {
 				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 			}
-			return null;
+			return new Object[0];
 		}
 	}
 	
@@ -868,7 +867,6 @@ public class DownloadController extends GuiController {
 	public void componentSelected() {
 		try {
 			downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
-			panelSelected = true;
 			if (!initialized) {
 				initialized = true;
 		        firstUpdate = false;
@@ -919,7 +917,6 @@ public class DownloadController extends GuiController {
 	}
 
 	public void componentLostSelection() {
-		panelSelected = false;
 		downloadPartListWatcher.setDownloadNode(null);
 	}
 
