@@ -20,7 +20,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.13 2004/02/20 16:13:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.14 2004/02/24 14:26:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,6 +29,9 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: LanguageSelector.java,v $
+ * Revision 1.14  2004/02/24 14:26:13  maj0r
+ * Eingelesene Woerter werden nicht mehr entfernt, sondern nur noch ueberschrieben.
+ *
  * Revision 1.13  2004/02/20 16:13:33  maj0r
  * LanguageSelector auf SAX umgebaut.
  *
@@ -100,7 +103,6 @@ public class LanguageSelector
 
     private void init(File languageFile){
         try {
-            words.clear();
             if (key.length()>0){
                 key.delete(0, key.length() - 1);
             }
