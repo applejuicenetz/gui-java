@@ -7,9 +7,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.tables.download.DownloadColumnValue;
 import de.applejuicenet.client.gui.tables.download.DownloadModel;
+import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.21 2004/02/18 17:24:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.22 2004/02/26 16:15:45 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,9 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.22  2004/02/26 16:15:45  maj0r
+ * Sound bei fertigem Download eingebaut.
+ *
  * Revision 1.21  2004/02/18 17:24:21  maj0r
  * Von DOM auf SAX umgebaut.
  *
@@ -226,7 +230,12 @@ public class DownloadDO
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(int newStatus) {
+        if (newStatus == DownloadDO.FERTIG
+            && status != -1
+            && status != newStatus){
+            SoundPlayer.getInstance().playSound(SoundPlayer.KOMPLETT);
+        }
         this.status = status;
     }
 
