@@ -25,13 +25,14 @@
    <!-- usage information ... -->
    <target name="help">
       <echo>The following targets exist:</echo>
-      <echo>  gui-compile          compiles the appleJuice-gui</echo>
-      <echo>  gui-clean              deletes class files</echo>
-      <echo>  gui-rebuild           cleans and compiles the appleJuice-gui</echo>
-      <echo>  create-jar            builds appleJuice-jar</echo>
-      <echo>  complete             builds complete appleJuice</echo>
-      <echo>  build-archive        builds releasable archive-zip</echo>
-      <echo>  build-plugin         builds plugin - build.xml needs to be modified</echo>
+      <echo>  gui-compile              compiles the appleJuice-gui</echo>
+      <echo>  gui-clean                deletes class files</echo>
+      <echo>  gui-rebuild              bcleans and compiles the appleJuice-gui</echo>
+      <echo>  create-jar               builds appleJuice-jar</echo>
+      <echo>  complete                 builds complete appleJuice</echo>
+      <echo>  build-archive            builds releasable archive-zip</echo>
+      <echo>  build-plugin-jar         builds plugin - build.xml needs to be modified</echo>
+      <echo>  build-pwdlPolicy-jar     builds PowerdownloadPolicy - build.xml needs to be modified</echo>
       <fail message="You have to specifiy a target" />
    </target>
 
@@ -105,7 +106,7 @@
          </jar>
    </target>
 
-   <target name="build-plugin" description="builds plugin - build.xml needs to be modified">
+   <target name="build-plugin-jar" description="builds plugin - build.xml needs to be modified">
       <delete includeEmptyDirs="true">
          <fileset dir="${basedir}/plugins" casesensitive="false">
             <include name="**/VersionChecker.jar"/>
@@ -117,7 +118,7 @@
          </jar>
    </target>
 
-   <target name="build-pwdlPolicy" description="builds pwdlPolicy - build.xml needs to be modified">
+   <target name="build-pwdlPolicy-jar" description="builds pwdlPolicy - build.xml needs to be modified">
       <delete includeEmptyDirs="true">
          <fileset dir="${basedir}/pwdlpolicies" casesensitive="false">
             <include name="**/StandardPwdlPolicy.jar"/>
