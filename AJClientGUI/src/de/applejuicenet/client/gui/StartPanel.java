@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.8 2003/06/13 15:07:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.9 2003/06/24 14:32:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.9  2003/06/24 14:32:27  maj0r
+ * Klassen zum Sortieren von Tabellen eingefügt.
+ * Servertabelle kann nun spaltenweise sortiert werden.
+ *
  * Revision 1.8  2003/06/13 15:07:30  maj0r
  * Versionsanzeige hinzugefügt.
  * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
@@ -116,7 +120,7 @@ public class StartPanel
     label7 = new JLabel();
     if (netInfo.isFirewalled()) {
       label7.setForeground(Color.RED);
-      label7.setText("Es ist möglich, dass Du hinter einer Firewall, einem Router, Proxy oder ähnlichem sitzt. Dies vermidert die Chance was zu laden.");
+      label7.setText("Es ist möglich, dass Du hinter einer Firewall, einem Router, Proxy oder ähnlichem sitzt. Dies vermindert die Chance was zu laden.");
     }
     else {
       label7.setForeground(Color.BLACK);

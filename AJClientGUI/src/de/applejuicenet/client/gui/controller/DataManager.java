@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.23 2003/06/24 12:06:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.24 2003/06/24 14:32:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.24  2003/06/24 14:32:27  maj0r
+ * Klassen zum Sortieren von Tabellen eingefügt.
+ * Servertabelle kann nun spaltenweise sortiert werden.
+ *
  * Revision 1.23  2003/06/24 12:06:49  maj0r
  * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
  *
@@ -99,9 +103,9 @@ public class DataManager { //Singleton-Implementierung
       //load XMLs
       modifiedXML = new ModifiedXMLHolder();
       informationXML = new InformationXMLHolder();
+      informationXML.reload("");
       shareXML = new ShareXMLHolder();
 
-      informationXML.reload("");
       String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[] {
           "applejuice", "generalinformation", "version"}
           , true);
@@ -115,6 +119,7 @@ public class DataManager { //Singleton-Implementierung
         }
       };
       modifiedTimer = new Timer(1000, modifiedAction);
+      modifiedTimer.stop();
     }
     catch (Exception e) {
       if (logger.isEnabledFor(Level.FATAL))

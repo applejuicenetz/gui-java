@@ -11,9 +11,11 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
+import de.applejuicenet.client.gui.shared.SortButtonRenderer;
+import de.applejuicenet.client.gui.shared.HeaderListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.16 2003/06/22 20:34:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.17 2003/06/24 14:32:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +24,10 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.17  2003/06/24 14:32:27  maj0r
+ * Klassen zum Sortieren von Tabellen eingefügt.
+ * Servertabelle kann nun spaltenweise sortiert werden.
+ *
  * Revision 1.16  2003/06/22 20:34:25  maj0r
  * Konsolenausgaben hinzugefügt.
  *
@@ -66,7 +72,6 @@ public class ServerPanel
     popup.add(item2);
     popup.add(new JSeparator());
     popup.add(item3);
-
     item1.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent ae) {
         int selected = serverTable.getSelectedRow();
@@ -106,6 +111,26 @@ public class ServerPanel
     serverTable = new JTable();
     serverTable.setModel(new ServerTableModel(DataManager.getInstance().
                                               getAllServer()));
+    SortButtonRenderer renderer = new SortButtonRenderer();
+    TableColumnModel model = serverTable.getColumnModel();
+    int n = model.getColumnCount();
+    for (int i=0;i<n;i++) {
+      model.getColumn(i).setHeaderRenderer(renderer);
+      model.getColumn(i).setPreferredWidth(model.getColumn(i).getWidth());
+    }
+
+    JTableHeader header = serverTable.getTableHeader();
+    header.addMouseListener(new HeaderListener(header,renderer));
+/*    ToolTipManager.sharedInstance().registerComponent(serverTable);
+    serverTable.addMouseMotionListener(new MouseMotionAdapter(){
+      public void mouseMoved(MouseEvent e){
+        int row = serverTable.rowAtPoint(e.getPoint());
+        int column = serverTable.columnAtPoint(e.getPoint());
+        Object a = serverTable.getModel().getValueAt(row, column);
+        serverTable.setToolTipText((String)a);
+      }
+    });*/
+
     TableColumn tc = serverTable.getColumnModel().getColumn(0);
     tc.setCellRenderer(new ServerTableCellRenderer());
     serverTable.addMouseListener(new MouseAdapter() {

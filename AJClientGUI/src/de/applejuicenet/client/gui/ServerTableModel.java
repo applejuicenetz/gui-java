@@ -5,9 +5,11 @@ import java.util.*;
 import javax.swing.table.*;
 
 import de.applejuicenet.client.shared.dac.*;
+import de.applejuicenet.client.gui.shared.TableSorter;
+import de.applejuicenet.client.gui.shared.SortableTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerTableModel.java,v 1.4 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerTableModel.java,v 1.5 2003/06/24 14:32:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +18,10 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerTableModel.java,v $
+ * Revision 1.5  2003/06/24 14:32:27  maj0r
+ * Klassen zum Sortieren von Tabellen eingefügt.
+ * Servertabelle kann nun spaltenweise sortiert werden.
+ *
  * Revision 1.4  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -23,15 +29,22 @@ import de.applejuicenet.client.shared.dac.*;
  */
 
 public class ServerTableModel
-    extends AbstractTableModel {
+    extends AbstractTableModel implements SortableTableModel{
   final static String[] COL_NAMES = {
       "Name", "DynIP", "Port", "Letztes mal online"};
 
+  TableSorter sorter;
+
   ArrayList servers = new ArrayList();
+
 
   public ServerTableModel(HashMap content) {
     super();
     resetTable(content);
+  }
+
+  public ArrayList getContent() {
+    return servers;
   }
 
   public Object getRow(int row) {
@@ -40,6 +53,16 @@ public class ServerTableModel
     }
     return null;
   }
+
+
+  public void sortByColumn(int column, boolean isAscent) {
+    if (sorter == null) {
+      sorter = new TableSorter(this);
+    }
+    sorter.sort(column, isAscent);
+    fireTableDataChanged();
+  }
+
 
   public Object getValueAt(int row, int column) {
     if ( (servers == null) || (row >= servers.size())) {
@@ -109,6 +132,7 @@ public class ServerTableModel
         oldServer.setTimeLastSeen(server.getTimeLastSeen());
       }
     }
+    sortByColumn(0, true);
     this.fireTableDataChanged();
   }
 

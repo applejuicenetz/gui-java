@@ -9,7 +9,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.13 2003/06/24 12:06:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.14 2003/06/24 14:32:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,10 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: OptionsManager.java,v $
+ * Revision 1.14  2003/06/24 14:32:27  maj0r
+ * Klassen zum Sortieren von Tabellen eingefügt.
+ * Servertabelle kann nun spaltenweise sortiert werden.
+ *
  * Revision 1.13  2003/06/24 12:06:49  maj0r
  * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
  *
@@ -73,7 +77,7 @@ public class OptionsManager
       return Level.ALL;
 
     if (logger.isEnabledFor(Level.DEBUG))
-      logger.debug(result);
+      logger.debug("Aktueller Loglevel: " + result.toString());
     return result;
   }
 

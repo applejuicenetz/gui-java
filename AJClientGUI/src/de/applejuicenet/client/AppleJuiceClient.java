@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.15 2003/06/24 12:06:49 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.16 2003/06/24 14:32:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.16  2003/06/24 14:32:27  maj0r
+ * Klassen zum Sortieren von Tabellen eingefügt.
+ * Servertabelle kann nun spaltenweise sortiert werden.
+ *
  * Revision 1.15  2003/06/24 12:06:49  maj0r
  * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
  *
@@ -106,7 +110,7 @@ public class AppleJuiceClient {
       System.out.println(nachricht);
     }
     catch (Exception e) {
-      if (logger.isEnabledFor(Level.INFO))
+      if (logger.isEnabledFor(Level.FATAL))
         logger.fatal("Programmabbruch", e);
       System.exit( -1);
     }

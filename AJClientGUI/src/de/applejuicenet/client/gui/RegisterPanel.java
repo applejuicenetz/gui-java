@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.plugins.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.16 2003/06/22 19:54:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.17 2003/06/24 14:32:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,10 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: RegisterPanel.java,v $
+ * Revision 1.17  2003/06/24 14:32:27  maj0r
+ * Klassen zum Sortieren von Tabellen eingefügt.
+ * Servertabelle kann nun spaltenweise sortiert werden.
+ *
  * Revision 1.16  2003/06/22 19:54:45  maj0r
  * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
  *
@@ -78,7 +82,9 @@ public class RegisterPanel
     ImageIcon icon5 = im.getIcon("server");
     addTab("Server", icon5, serverPanel);
 
+    System.out.println("langsam 1,1");
     loadPlugins();
+    System.out.println("langsam 1,2");
   }
 
   private void loadPlugins() {
