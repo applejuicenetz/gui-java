@@ -36,7 +36,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import de.applejuicenet.client.gui.ConnectFrame;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.50 2003/12/30 13:42:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.51 2003/12/30 15:31:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,6 +45,9 @@ import de.applejuicenet.client.gui.ConnectFrame;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.51  2003/12/30 15:31:18  maj0r
+ * Das GUI wird jetzt beim Start beendet, wenn bereits eine Instanz vorhanden ist.
+ *
  * Revision 1.50  2003/12/30 13:42:24  maj0r
  * Tippfehler berichtigt.
  *
@@ -263,6 +266,23 @@ public class AppleJuiceClient {
             }
             catch (Exception e) {
                 System.exit(1);
+            }
+        }
+        else{
+            int PORT = PropertiesManager.getOptionsManager().
+                getLinkListenerPort();
+            String passwort = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
+            try {
+                Socket socket = new Socket("localhost", PORT);
+                socket.close();
+                //bereits ein GUI vorhanden, also GUI schliessen
+                JOptionPane.showMessageDialog(new Frame(), "Eine Instanz des GUIs ist bereits in Verwendung.",
+                                              "appleJuice Client", JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
+            }
+            catch (IOException ex) {
+                //alles bestens
             }
         }
         Logger rootLogger = Logger.getRootLogger();
