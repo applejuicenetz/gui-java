@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.29 2003/08/02 12:03:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/DataManager.java,v 1.30 2003/08/03 19:54:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DataManager.java,v $
+ * Revision 1.30  2003/08/03 19:54:05  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.29  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -77,6 +80,7 @@ public class DataManager { //Singleton-Implementierung
   private SettingsXMLHolder settingsXML = null;
   private Version coreVersion;
   private Timer modifiedTimer;
+  private HashMap share = null;
 
   private Logger logger;
 
@@ -352,7 +356,9 @@ public class DataManager { //Singleton-Implementierung
     return modifiedXML.getUploads();
   }
 
-  public HashMap getShare() {
-    return shareXML.getShare();
+  public HashMap getShare(boolean reinit) {
+    if (share==null || reinit)
+        share = shareXML.getShare();
+    return share;
   }
 }

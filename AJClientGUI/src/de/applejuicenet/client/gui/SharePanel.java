@@ -21,7 +21,7 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.15 2003/08/02 12:03:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.16 2003/08/03 19:54:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,9 @@ import java.io.File;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.16  2003/08/03 19:54:05  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.15  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -114,7 +117,7 @@ public class SharePanel
     neuLaden.setIcon(IconManager.getInstance().getIcon("erneuern"));
     neuLaden.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent ae){
-          HashMap shares = DataManager.getInstance().getShare();
+          HashMap shares = DataManager.getInstance().getShare(true);
           ShareNode rootNode = shareModel.getRootNode();
           rootNode.removeAllChildren();
           Iterator iterator = shares.values().iterator();

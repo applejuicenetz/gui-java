@@ -7,7 +7,7 @@ import javax.swing.table.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.1 2003/07/01 18:41:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/upload/Attic/UploadDataTableModel.java,v 1.2 2003/08/03 19:54:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDataTableModel.java,v $
+ * Revision 1.2  2003/08/03 19:54:05  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.1  2003/07/01 18:41:39  maj0r
  * Struktur verändert.
  *
@@ -55,22 +58,22 @@ public class UploadDataTableModel
 
     String s = new String("");
     switch (column) {
-      case 1:
-        s = Integer.toString(upload.getShareFileID());
+      case 0:
+        s = upload.getDateiName();
         break;
-      case 2:
+      case 1:
         s = upload.getNick();
         break;
-      case 3:
+      case 2:
         s = upload.getSpeed();
         break;
-      case 4:
+      case 3:
         s = upload.getStatusAsString();
         break;
-      case 5:
+      case 4:
         s = upload.getPrioritaet();
         break;
-      case 6:
+      case 5:
         s = upload.getVersion().getVersion();
         break;
       default:

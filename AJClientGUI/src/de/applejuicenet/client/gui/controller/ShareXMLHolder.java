@@ -7,9 +7,10 @@ import org.w3c.dom.*;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.shared.LoggerUtils;
+import de.applejuicenet.client.shared.MapSetStringKey;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.9 2003/07/04 10:35:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.10 2003/08/03 19:54:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +19,9 @@ import de.applejuicenet.client.shared.LoggerUtils;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.10  2003/08/03 19:54:05  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.9  2003/07/04 10:35:42  maj0r
  * Lesen des Sockets geht nun wesentlich schneller.
  * Share wird daher wesentlich schneller angezeigt.
@@ -84,7 +88,7 @@ public class ShareXMLHolder
       size = e.getAttribute("size");
       checksum = e.getAttribute("checksum");
       share = new ShareDO(id_key, filename, shortfilename, size, checksum);
-      shareMap.put(id_key, share);
+      shareMap.put(new MapSetStringKey(id_key), share);
     }
     if (logger.isDebugEnabled()){
         logger.debug(LoggerUtils.createDebugMessage(methode, LoggerUtils.AUSTRITT));

@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.10 2003/08/02 12:03:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.11 2003/08/03 19:54:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.11  2003/08/03 19:54:05  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.10  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -241,7 +244,7 @@ public class StartPanel
         int pos = temp.indexOf("%d");
         temp.replace(pos, pos +2, netInfo.getAJUserGesamtAsStringWithPoints());
         pos = temp.indexOf("%d");
-        temp.replace(pos, pos +2, netInfo.getAJUserGesamtAsStringWithPoints());
+        temp.replace(pos, pos +2, netInfo.getAJAnzahlDateienAsStringWithPoints());
         pos = temp.indexOf("%s");
         temp.replace(pos, pos +2, netInfo.getAJGesamtShareWithPoints(0));
         label6.setText(temp.toString());

@@ -3,7 +3,7 @@ package de.applejuicenet.client.shared.dac;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.5 2003/06/30 19:46:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.6 2003/08/03 19:54:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,6 +12,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.6  2003/08/03 19:54:05  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.5  2003/06/30 19:46:11  maj0r
  * Sourcestil verbessert.
  *
@@ -26,6 +29,7 @@ public class UploadDO {
   public static final int WARTESCHLANGE = 2;
 
   private int uploadID;
+  private String dateiName;
   private int shareFileID;
   private Version version;
   private int status;
@@ -158,4 +162,12 @@ public class UploadDO {
   public void setSpeed(String speed) {
     this.speed = speed;
   }
+
+    public String getDateiName() {
+        return dateiName;
+    }
+
+    public void setDateiName(String dateiName) {
+        this.dateiName = dateiName;
+    }
 }

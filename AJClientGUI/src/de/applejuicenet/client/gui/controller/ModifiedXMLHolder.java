@@ -7,7 +7,7 @@ import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.11 2003/08/02 12:03:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ModifiedXMLHolder.java,v 1.12 2003/08/03 19:54:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -16,6 +16,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ModifiedXMLHolder.java,v $
+ * Revision 1.12  2003/08/03 19:54:05  maj0r
+ * An neue Schnittstelle angepasst.
+ *
  * Revision 1.11  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -101,7 +104,7 @@ public class ModifiedXMLHolder
         status[1] = serverDO.getName();
     }
     else if (connectedWithServerId != -1){
-        ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(tryConnectToServer)));
+        ServerDO serverDO = (ServerDO) serverMap.get(new MapSetStringKey(Integer.toString(connectedWithServerId)));
         status[0] = "Verbunden...";
         status[1] = serverDO.getName();
     }
@@ -384,6 +387,7 @@ public class ModifiedXMLHolder
     String actualUploadPos = null;
     String speed = null;
     MapSetStringKey shareIDKey = null;
+    HashMap share = DataManager.getInstance().getShare(false);
     for (int i = 0; i < size; i++) {
       e = (Element) nodes.item(i);
       shareId = e.getAttribute("shareid");
@@ -414,6 +418,8 @@ public class ModifiedXMLHolder
         upload = new UploadDO(id, shareId, version, status, nick,
                                        uploadFrom, uploadTo, actualUploadPos,
                                        speed, prioritaet);
+        ShareDO shareDO = (ShareDO)share.get(shareIDKey);
+        upload.setDateiName(shareDO.getShortfilename());
         uploadMap.put(shareIDKey, upload);
       }
     }
@@ -481,7 +487,7 @@ public class ModifiedXMLHolder
         }
         this.tryConnectToServer = tryConnectToServer;
     }
-    if (this.connectedWithServerId != connectedWithServerId){
+    //if (this.connectedWithServerId != connectedWithServerId){
         Object alterServer = serverMap.get(new MapSetStringKey(Integer.toString(this.connectedWithServerId)));
         if (alterServer!=null){
             ((ServerDO)alterServer).setConnected(false);
@@ -491,7 +497,7 @@ public class ModifiedXMLHolder
             serverDO.setConnected(true);
         }
         this.connectedWithServerId = connectedWithServerId;
-    }
+    //}
     netInfo = new NetworkInfo(users, dateien, dateigroesse, firewalled,
                               externeIP, tryConnectToServer, connectedWithServerId);
   }
