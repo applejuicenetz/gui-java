@@ -58,7 +58,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadTableVersionCellRende
 import java.awt.event.MouseMotionAdapter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.81 2004/01/09 15:33:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.82 2004/01/09 19:21:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -67,6 +67,9 @@ import java.awt.event.MouseMotionAdapter;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.82  2004/01/09 19:21:17  maj0r
+ * Kleine Korrekturen.
+ *
  * Revision 1.81  2004/01/09 15:33:56  maj0r
  * Spalten der Downloadtabelle koennen nun ordentlich verschoben werden.
  *
@@ -631,7 +634,7 @@ public class DownloadPanel
         downloadTable.getColumnModel().getColumn(9).setCellRenderer(new
             DownloadTableVersionCellRenderer());
         JTableHeader header = downloadTable.getTableHeader();
-        header.addMouseMotionListener(new HeaderDragListener(header));
+//        header.addMouseMotionListener(new HeaderDragListener(header));
 
         btnStartDownload.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -1185,7 +1188,7 @@ public class DownloadPanel
         }
     }
 
-    class HeaderDragListener
+/*    class HeaderDragListener
          extends MouseMotionAdapter {
          private JTableHeader header;
 
@@ -1203,5 +1206,5 @@ public class DownloadPanel
                  super.mouseDragged(e);
              }
          }
-     }
+     }*/
 }

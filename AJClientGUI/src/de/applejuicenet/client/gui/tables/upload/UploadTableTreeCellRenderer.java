@@ -23,37 +23,31 @@ public class UploadTableTreeCellRenderer
         Color background = table.getBackground();
         Color foreground = table.getForeground();
         if (obj.getClass() == MainNode.class) {
-            if (column == 0) {
-                JPanel returnPanel = new JPanel(new BorderLayout());
-                JLabel image = new JLabel();
-                JLabel text = new JLabel();
-                if (isSelected) {
-                    returnPanel.setBackground(table.getSelectionBackground());
-                    returnPanel.setForeground(table.getSelectionForeground());
-                    image.setBackground(table.getSelectionBackground());
-                    text.setBackground(table.getSelectionBackground());
-                    image.setForeground(table.getSelectionForeground());
-                    text.setBackground(table.getSelectionForeground());
-                }
-                else {
-                    returnPanel.setBackground(background);
-                    returnPanel.setForeground(foreground);
-                    image.setBackground(table.getBackground());
-                    text.setBackground(table.getBackground());
-                    image.setForeground(table.getForeground());
-                    text.setBackground(table.getForeground());
-                }
-                image.setIcon( ( (MainNode) obj).getConvenientIcon());
-                text.setText(" " + (String) value);
-                text.setFont(table.getFont());
-                returnPanel.add(image, BorderLayout.WEST);
-                returnPanel.add(text, BorderLayout.CENTER);
-                return returnPanel;
+            JPanel returnPanel = new JPanel(new BorderLayout());
+            JLabel image = new JLabel();
+            JLabel text = new JLabel();
+            if (isSelected) {
+                returnPanel.setBackground(table.getSelectionBackground());
+                returnPanel.setForeground(table.getSelectionForeground());
+                image.setBackground(table.getSelectionBackground());
+                text.setBackground(table.getSelectionBackground());
+                image.setForeground(table.getSelectionForeground());
+                text.setBackground(table.getSelectionForeground());
             }
             else {
-                return super.getTableCellRendererComponent(table, value,
-                    isSelected, hasFocus, row, column);
+                returnPanel.setBackground(background);
+                returnPanel.setForeground(foreground);
+                image.setBackground(table.getBackground());
+                text.setBackground(table.getBackground());
+                image.setForeground(table.getForeground());
+                text.setBackground(table.getForeground());
             }
+            image.setIcon( ( (MainNode) obj).getConvenientIcon());
+            text.setText(" " + (String) value);
+            text.setFont(table.getFont());
+            returnPanel.add(image, BorderLayout.WEST);
+            returnPanel.add(text, BorderLayout.CENTER);
+            return returnPanel;
         }
         else{
             UploadDO uploadDO = (UploadDO) obj;

@@ -32,7 +32,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.event.MouseMotionAdapter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.33 2004/01/09 15:08:44 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.34 2004/01/09 19:21:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,9 @@ import java.awt.event.MouseMotionAdapter;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.34  2004/01/09 19:21:17  maj0r
+ * Kleine Korrekturen.
+ *
  * Revision 1.33  2004/01/09 15:08:44  maj0r
  * Erste Spalte kann nun nicht mehr verschoben werden.
  *
@@ -166,8 +169,8 @@ public class UploadPanel
             UploadTablePercentCellRenderer());
         uploadDataTable.getColumnModel().getColumn(6).setCellRenderer(new
             UploadTableVersionCellRenderer());
-        JTableHeader header = uploadDataTable.getTableHeader();
-        header.addMouseMotionListener(new HeaderDragListener(header));
+/*        JTableHeader header = uploadDataTable.getTableHeader();
+        header.addMouseMotionListener(new HeaderDragListener(header));*/
 
         JScrollPane aScrollPane = new JScrollPane(uploadDataTable);
         aScrollPane.setBackground(uploadDataTable.getBackground());
@@ -284,7 +287,7 @@ public class UploadPanel
         panelSelected = false;
     }
 
-    class HeaderDragListener
+/*    class HeaderDragListener
          extends MouseMotionAdapter {
          private JTableHeader header;
 
@@ -303,5 +306,5 @@ public class UploadPanel
              }
          }
 
-     }
+     }*/
 }
