@@ -9,7 +9,7 @@ import de.applejuicenet.client.gui.controller.PropertiesManager;
 import javax.sound.sampled.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.2 2003/10/31 16:24:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/SoundPlayer.java,v 1.3 2003/10/31 19:04:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import javax.sound.sampled.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SoundPlayer.java,v $
+ * Revision 1.3  2003/10/31 19:04:58  maj0r
+ * Sounds eingebaut.
+ *
  * Revision 1.2  2003/10/31 16:24:58  maj0r
  * Soundeffekte fuer diverse Ereignisse eingefuegt.
  *
@@ -35,6 +38,10 @@ public class SoundPlayer {
     public static final int KOMPLETT = 4;
     public static final int LADEN = 5;
     public static final int POWER = 6;
+    public static final int VERWEIGERT = 7;
+    public static final int KONKRETISIEREN = 8;
+    public static final int ZUGANG_GEWAEHRT = 9;
+    public static final int GESTARTET = 10;
 
     private static SoundPlayer instance = null;
     private static Logger logger;
@@ -86,6 +93,22 @@ public class SoundPlayer {
             }
             case POWER:{
                 soundFile = new File(soundPath + "pwdl.wav");
+                break;
+            }
+            case VERWEIGERT:{
+                soundFile = new File(soundPath + "verweigert.wav");
+                break;
+            }
+            case KONKRETISIEREN:{
+                soundFile = new File(soundPath + "konkretisieren.wav");
+                break;
+            }
+            case ZUGANG_GEWAEHRT:{
+                soundFile = new File(soundPath + "zuganggestattet.wav");
+                break;
+            }
+            case GESTARTET:{
+                soundFile = new File(soundPath + "gestartet.wav");
                 break;
             }
             default:

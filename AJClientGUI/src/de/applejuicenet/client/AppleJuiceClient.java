@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.32 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.33 2003/10/31 19:04:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.33  2003/10/31 19:04:58  maj0r
+ * Sounds eingebaut.
+ *
  * Revision 1.32  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -145,13 +148,17 @@ public class AppleJuiceClient {
             String titel = null;
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog = null;
+            int versuche = 0;
             while (!ApplejuiceFassade.istCoreErreichbar())
             {
+
+                versuche++;
                 titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                           getFirstAttrbuteByTagName(new String[]{"mainform", "caption"}));
                 nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "startup",
                                                                                                      "fehlversuch"}));
+                SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
                 JOptionPane.showMessageDialog(dummyFrame, nachricht, titel,
                                               JOptionPane.ERROR_MESSAGE);
                 remoteDialog = new QuickConnectionSettingsDialog(dummyFrame);
@@ -171,6 +178,9 @@ public class AppleJuiceClient {
                     System.out.println("Fehler: " + nachricht);
                     System.exit(-1);
                 }
+            }
+            if (versuche>0){
+                SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
             }
             Splash splash = new Splash(IconManager.getInstance().getIcon("splashscreen").getImage());
             splash.show();

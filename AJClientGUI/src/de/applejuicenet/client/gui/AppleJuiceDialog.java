@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.55 2003/10/31 11:33:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.56 2003/10/31 19:04:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,6 +26,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.56  2003/10/31 19:04:58  maj0r
+ * Sounds eingebaut.
+ *
  * Revision 1.55  2003/10/31 11:33:59  maj0r
  * StandardXML angepasst.
  *
@@ -154,6 +157,7 @@ public class AppleJuiceDialog
     private String keinServer = "";
     private static Logger logger;
     public static boolean rewriteProperties = false;
+    private boolean firstChange = true;
 
     private static AppleJuiceDialog theApp;
 
@@ -479,6 +483,10 @@ public class AppleJuiceDialog
         try{
             if (type == DataUpdateListener.INFORMATION_CHANGED)
             {
+                if (firstChange){
+                    firstChange = false;
+                    SoundPlayer.getInstance().playSound(SoundPlayer.GESTARTET);
+                }
                 Information information = (Information) content;
                 statusbar[0].setText(information.getVerbindungsStatusAsString());
                 if (information.getVerbindungsStatus()==Information.NICHT_VERBUNDEN){
