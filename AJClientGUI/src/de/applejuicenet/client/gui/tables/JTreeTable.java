@@ -21,7 +21,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.6 2003/08/02 12:03:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/Attic/JTreeTable.java,v 1.7 2003/08/09 10:56:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,9 @@ import java.util.EventObject;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: JTreeTable.java,v $
+ * Revision 1.7  2003/08/09 10:56:54  maj0r
+ * Nur ein todo eingefügt.
+ *
  * Revision 1.6  2003/08/02 12:03:38  maj0r
  * An neue Schnittstelle angepasst.
  *
@@ -46,7 +49,8 @@ import java.util.EventObject;
  */
 
 public class JTreeTable extends JTable {
-
+    //todo
+    //wenn Spalten vergroessert werden, sollte ein ScrollBar erscheinen
     protected TreeTableCellRenderer tree;
 
     protected JTable thisTable;
