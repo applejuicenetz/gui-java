@@ -636,11 +636,11 @@ public class DownloadController extends GuiController {
 		}
 		final String targetDir = "";
 		if (link.length() != 0) {
+			downloadPanel.getDownloadLinkField().setText("");
 		    Thread linkThread = new Thread(){
 		        public void run(){
 					final String result = ApplejuiceFassade.getInstance().processLink(link, targetDir);
 					SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
-					downloadPanel.getDownloadLinkField().setText("");
 					if (result.indexOf("ok") != 0){
 					    SwingUtilities.invokeLater(new Runnable(){
 					        public void run(){
