@@ -19,7 +19,7 @@ import org.apache.log4j.ConsoleAppender;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.25 2004/01/20 12:45:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v 1.26 2004/01/21 07:15:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import de.applejuicenet.client.AppleJuiceClient;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PropertiesManager.java,v $
+ * Revision 1.26  2004/01/21 07:15:38  maj0r
+ * Formataenderung wird nun korrekt erkannt.
+ *
  * Revision 1.25  2004/01/20 12:45:13  maj0r
  * Spaltenindizes werden jetzt gespeichert.
  *
@@ -662,109 +665,168 @@ public class PropertiesManager
                 int mainWidth = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "width"}));
                 int mainHeight = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "location", "height"}));
                 mainDimension = new Dimension(mainWidth, mainHeight);
-
-                downloadWidths = new int[10];
-                downloadWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column0", "width"}));
-                downloadWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column1", "width"}));
-                downloadWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column2", "width"}));
-                downloadWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column3", "width"}));
-                downloadWidths[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column4", "width"}));
-                downloadWidths[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column5", "width"}));
-                downloadWidths[6] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column6", "width"}));
-                downloadWidths[7] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column7", "width"}));
-                downloadWidths[8] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column8", "width"}));
-                downloadWidths[9] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column9", "width"}));
-
-                uploadWidths = new int[7];
-                uploadWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column0", "width"}));
-                uploadWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column1", "width"}));
-                uploadWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column2", "width"}));
-                uploadWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column3", "width"}));
-                uploadWidths[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column4", "width"}));
-                uploadWidths[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column5", "width"}));
-                uploadWidths[6] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column6", "width"}));
-
-                serverWidths = new int[4];
-                serverWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "server", "column0", "width"}));
-                serverWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "server", "column1", "width"}));
-                serverWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "server", "column2", "width"}));
-                serverWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "server", "column3", "width"}));
-
-                shareWidths = new int[3];
-                shareWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "share", "column0", "width"}));
-                shareWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "share", "column1", "width"}));
-                shareWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "share", "column2", "width"}));
-
-                downloadVisibilities = new boolean[10];
-                downloadVisibilities[0] = true;
-                String xmlTest = getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column1", "visibility"});
-                if (xmlTest.length() == 0){
-                    throw new Exception("Properties.xml hat altes Format. Wird neu erstellt.");
-                }
-                downloadVisibilities[1] = new Boolean(xmlTest).booleanValue();
-                downloadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column2", "visibility"})).booleanValue();
-                downloadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column3", "visibility"})).booleanValue();
-                downloadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column4", "visibility"})).booleanValue();
-                downloadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column5", "visibility"})).booleanValue();
-                downloadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column6", "visibility"})).booleanValue();
-                downloadVisibilities[7] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column7", "visibility"})).booleanValue();
-                downloadVisibilities[8] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column8", "visibility"})).booleanValue();
-                downloadVisibilities[9] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column9", "visibility"})).booleanValue();
-
-                uploadVisibilities = new boolean[7];
-                uploadVisibilities[0] = true;
-                uploadVisibilities[1] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column1", "visibility"})).booleanValue();
-                uploadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column2", "visibility"})).booleanValue();
-                uploadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column3", "visibility"})).booleanValue();
-                uploadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column4", "visibility"})).booleanValue();
-                uploadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column5", "visibility"})).booleanValue();
-                uploadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column6", "visibility"})).booleanValue();
-
-                downloadIndex = new int[10];
-                xmlTest = getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column0", "index"});
-                if (xmlTest.length() == 0) {
-                    throw new Exception(
-                        "Properties.xml hat altes Format. Wird neu erstellt.");
-                }
-                downloadIndex[0] = Integer.parseInt(xmlTest);
-                downloadIndex[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column1", "index"}));
-                downloadIndex[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column2", "index"}));
-                downloadIndex[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column3", "index"}));
-                downloadIndex[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column4", "index"}));
-                downloadIndex[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column5", "index"}));
-                downloadIndex[6] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column6", "index"}));
-                downloadIndex[7] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column7", "index"}));
-                downloadIndex[8] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column8", "index"}));
-                downloadIndex[9] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column9", "index"}));
-
-                uploadIndex = new int[7];
-                uploadIndex[0] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column0", "index"}));
-                uploadIndex[1] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column1", "index"}));
-                uploadIndex[2] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column2", "index"}));
-                uploadIndex[3] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column3", "index"}));
-                uploadIndex[4] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column4", "index"}));
-                uploadIndex[5] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column5", "index"}));
-                uploadIndex[6] = Integer.parseInt(getFirstAttrbuteByTagName(new String[]{"options", "columns", "upload", "column6", "index"}));
             }
-            else{
-                downloadVisibilities = new boolean[10];
-                for (int i=0; i<downloadVisibilities.length; i++){
-                    downloadVisibilities[i] = true;
-                }
-                uploadVisibilities = new boolean[7];
-                for (int i=0; i<uploadVisibilities.length; i++){
-                    uploadVisibilities[i] = true;
-                }
-                uploadIndex = new int[7];
-                for (int i=0; i<uploadIndex.length; i++){
-                    uploadIndex[i] = i;
-                }
-                downloadIndex = new int[7];
-                for (int i=0; i<downloadIndex.length; i++){
-                    downloadIndex[i] = i;
-                }
+            String xmlTest = getFirstAttrbuteByTagName(new String[]{"options", "columns", "download", "column0", "width"});
+            if (xmlTest.length() == 0) {
+                throw new Exception(
+                    "Properties.xml hat altes Format. Wird neu erstellt.");
             }
-            boolean use = new Boolean(getFirstAttrbuteByTagName(new String[]{"options", "proxy", "use"})).booleanValue();
+            downloadWidths = new int[10];
+            downloadWidths[0] = Integer.parseInt(xmlTest);
+            downloadWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column1", "width"}));
+            downloadWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column2", "width"}));
+            downloadWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column3", "width"}));
+            downloadWidths[4] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column4", "width"}));
+            downloadWidths[5] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column5", "width"}));
+            downloadWidths[6] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column6", "width"}));
+            downloadWidths[7] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column7", "width"}));
+            downloadWidths[8] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column8", "width"}));
+            downloadWidths[9] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column9", "width"}));
+
+            uploadWidths = new int[7];
+            uploadWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column0", "width"}));
+            uploadWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column1", "width"}));
+            uploadWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column2", "width"}));
+            uploadWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column3", "width"}));
+            uploadWidths[4] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column4", "width"}));
+            uploadWidths[5] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column5", "width"}));
+            uploadWidths[6] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column6", "width"}));
+
+            serverWidths = new int[4];
+            serverWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "server", "column0", "width"}));
+            serverWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "server", "column1", "width"}));
+            serverWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "server", "column2", "width"}));
+            serverWidths[3] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "server", "column3", "width"}));
+
+            shareWidths = new int[3];
+            shareWidths[0] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "share", "column0", "width"}));
+            shareWidths[1] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "share", "column1", "width"}));
+            shareWidths[2] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "share", "column2", "width"}));
+
+            downloadVisibilities = new boolean[10];
+            downloadVisibilities[0] = true;
+            xmlTest = getFirstAttrbuteByTagName(new String[] {"options",
+                                                "columns", "download",
+                                                "column1", "visibility"});
+            if (xmlTest.length() == 0) {
+                throw new Exception(
+                    "Properties.xml hat altes Format. Wird neu erstellt.");
+            }
+            downloadVisibilities[1] = new Boolean(xmlTest).booleanValue();
+            downloadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column2",
+                "visibility"})).booleanValue();
+            downloadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column3",
+                "visibility"})).booleanValue();
+            downloadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column4",
+                "visibility"})).booleanValue();
+            downloadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column5",
+                "visibility"})).booleanValue();
+            downloadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column6",
+                "visibility"})).booleanValue();
+            downloadVisibilities[7] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column7",
+                "visibility"})).booleanValue();
+            downloadVisibilities[8] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column8",
+                "visibility"})).booleanValue();
+            downloadVisibilities[9] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column9",
+                "visibility"})).booleanValue();
+
+            uploadVisibilities = new boolean[7];
+            uploadVisibilities[0] = true;
+            uploadVisibilities[1] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column1",
+                "visibility"})).booleanValue();
+            uploadVisibilities[2] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column2",
+                "visibility"})).booleanValue();
+            uploadVisibilities[3] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column3",
+                "visibility"})).booleanValue();
+            uploadVisibilities[4] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column4",
+                "visibility"})).booleanValue();
+            uploadVisibilities[5] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column5",
+                "visibility"})).booleanValue();
+            uploadVisibilities[6] = new Boolean(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column6",
+                "visibility"})).booleanValue();
+
+            downloadIndex = new int[10];
+            xmlTest = getFirstAttrbuteByTagName(new String[] {"options",
+                                                "columns", "download",
+                                                "column0", "index"});
+            if (xmlTest.length() == 0) {
+                throw new Exception(
+                    "Properties.xml hat altes Format. Wird neu erstellt.");
+            }
+            downloadIndex[0] = Integer.parseInt(xmlTest);
+            downloadIndex[1] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column1", "index"}));
+            downloadIndex[2] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column2", "index"}));
+            downloadIndex[3] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column3", "index"}));
+            downloadIndex[4] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column4", "index"}));
+            downloadIndex[5] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column5", "index"}));
+            downloadIndex[6] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column6", "index"}));
+            downloadIndex[7] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column7", "index"}));
+            downloadIndex[8] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column8", "index"}));
+            downloadIndex[9] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "download", "column9", "index"}));
+
+            uploadIndex = new int[7];
+            uploadIndex[0] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column0", "index"}));
+            uploadIndex[1] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column1", "index"}));
+            uploadIndex[2] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column2", "index"}));
+            uploadIndex[3] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column3", "index"}));
+            uploadIndex[4] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column4", "index"}));
+            uploadIndex[5] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column5", "index"}));
+            uploadIndex[6] = Integer.parseInt(getFirstAttrbuteByTagName(new
+                String[] {"options", "columns", "upload", "column6", "index"}));
+            boolean use = new Boolean(getFirstAttrbuteByTagName(new String[] {
+                "options", "proxy", "use"})).booleanValue();
             String host = getFirstAttrbuteByTagName(new String[]{"options", "proxy", "host"});
             int port;
             try{
