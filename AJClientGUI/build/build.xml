@@ -67,7 +67,7 @@
 		<fileset dir="${basedir}" includes="pwdlpolicies/*.jar pwdlpolicies/*.txt"/>
 		<fileset dir="${basedir}" includes="themes/*.zip themes/*.first"/>
 		<fileset dir="${basedir}" includes="sounds/*.wav sounds/*.first"/>
-		<fileset dir="${basedir}" includes="needed_jars/*.jar"/>
+		<fileset dir="${basedir}" includes="needed_jars/*.jar" excludes="needed_jars/junit.jar"/>
          </jar>
    </target>
 

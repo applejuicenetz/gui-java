@@ -7,6 +7,6 @@
 	<classpathentry kind="lib" path="needed_jars/looks-1.2.1.jar"/>
 	<classpathentry kind="lib" path="needed_jars/skinlf.jar"/>
 	<classpathentry kind="src" path="/ajcorefassade"/>
-	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
+	<classpathentry kind="lib" path="needed_jars/junit.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
