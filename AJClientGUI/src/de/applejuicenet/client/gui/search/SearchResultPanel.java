@@ -36,7 +36,7 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
 import javax.swing.JToggleButton;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.6 2004/12/03 17:31:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.7 2004/12/06 18:12:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -232,6 +232,9 @@ public class SearchResultPanel
         }
         JTableHeader header = searchResultTable.getTableHeader();
         header.addMouseListener(new SortMouseAdapter(header, renderer));
+        if (!search.isRunning()){
+        	sucheAbbrechen.setEnabled(false);
+        }
     }
 
     private void processLink(final String link){

@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import java.util.Map;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.3 2004/11/22 16:25:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.4 2004/12/06 18:12:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -217,6 +217,7 @@ public class SearchPanel
 			                    else {
 			                        searchResultPanel = (SearchResultPanel) searchIds.
 			                            get(key);
+			                        aSearch = (Search) ( (HashMap) content).get(key);
 			                        if (panelSelected) {
 			                            searchResultPanel.updateSearchContent();
 			                        }
@@ -233,6 +234,10 @@ public class SearchPanel
 			                        int index = resultPanel.indexOfComponent((Component)searchPanels[i]);
 			                        searchIds.remove(searchKey);
 			                        resultPanel.enableIconAt(index);
+			                    }
+			                    else if (!((SearchResultPanel) searchPanels[i]).getSearch().isRunning()){
+			                    	int index = resultPanel.indexOfComponent((Component)searchPanels[i]);
+			                    	resultPanel.enableIconAt(index);
 			                    }
 			                }
 			                label2.setText(bearbeitung.replaceAll("%d",
