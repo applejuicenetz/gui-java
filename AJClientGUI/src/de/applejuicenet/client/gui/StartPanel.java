@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.33 2003/12/17 11:06:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/StartPanel.java,v 1.34 2003/12/27 13:33:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,12 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: StartPanel.java,v $
+ * Revision 1.34  2003/12/27 13:33:18  maj0r
+ * Bug #1229 fixed (Danke an muhviestarr)
+ * Text von Netzwerk, Neuigkeiten und Nachrichten ist nun auch schwarz.
+ * Bug #1226 fixed (Danke an muhviestarr)
+ * Die Ueberschrift "Warnungen" auf der Startseite wird nun ausgeblendet, wenn es keine Warnungen gibt.
+ *
  * Revision 1.33  2003/12/17 11:06:30  maj0r
  * RegisterI erweitert, um auf Verlassen eines Tabs reagieren zu koennen.
  *
@@ -129,6 +135,7 @@ public class StartPanel
     private JLabel label9;
     private JLabel label10;
     private JLabel version;
+    private JLabel warnungIcon;
 
     private String label9Text;
     private String label10Text;
@@ -199,8 +206,8 @@ public class StartPanel
         constraints.insets.left = 5;
         constraints.gridx = 0;
         ImageIcon icon3 = im.getIcon("warnung");
-        JLabel label3 = new JLabel(icon3);
-        panel3.add(label3, constraints);
+        warnungIcon = new JLabel(icon3);
+        panel3.add(warnungIcon, constraints);
 
         constraints.gridx = 1;
         warnungen = new JLabel("<html><font><h2>Warnungen</h2></font></html>");
@@ -230,7 +237,6 @@ public class StartPanel
         constraints.gridy = 5;
         constraints.insets.left = 15;
         nachrichten = new JLabel();
-        nachrichten.setForeground(APFEL_ROT);
         panel3.add(nachrichten, constraints);
 
         constraints.gridy = 6;
@@ -330,10 +336,14 @@ public class StartPanel
                                                                                                        "caption"}));
             if (netInfo != null && netInfo.isFirewalled())
             {
+                warnungen.setVisible(true);
+                warnungIcon.setVisible(true);
                 label7.setText(firewallWarning);
             }
             else
             {
+                warnungen.setVisible(false);
+                warnungIcon.setVisible(false);
                 label7.setText("");
             }
             label9Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
@@ -401,10 +411,14 @@ public class StartPanel
                 label6.setText(temp.toString());
                 if (netInfo.isFirewalled())
                 {
+                    warnungen.setVisible(true);
+                    warnungIcon.setVisible(true);
                     label7.setText(firewallWarning);
                 }
                 else
                 {
+                    warnungen.setVisible(false);
+                    warnungIcon.setVisible(false);
                     label7.setText("");
                 }
             }
