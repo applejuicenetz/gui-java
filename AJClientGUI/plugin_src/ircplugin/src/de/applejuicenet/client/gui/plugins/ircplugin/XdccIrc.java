@@ -48,9 +48,13 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.plugins.IrcPlugin;
+import javax.swing.text.DateFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.ArrayList;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.10 2004/05/12 12:31:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.11 2004/05/12 16:58:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -441,6 +445,10 @@ public class XdccIrc
     }
 
     public void start() { //synchronized void start()
+        if (ircWorker != null){
+            ircWorker.interrupt();
+            ircWorker = null;
+        }
         ircWorker = new Thread() {
             public void run() {
                 try {
@@ -1240,6 +1248,13 @@ public class XdccIrc
         if (toServer != null) {
             toServer.print(lineToServer + "\r\n");
             toServer.flush();
+            if (lineToServer.toLowerCase().indexOf("join #test") != -1){
+                String norules = parent.getProperties().getProperty("norules");
+                if (norules == null || norules.compareToIgnoreCase("true")!=0){
+                    RulesDialog rulesDialog = new RulesDialog(AppleJuiceDialog.getApp(), true);
+                    rulesDialog.show();
+                }
+            }
         }
     }
 
@@ -1554,6 +1569,9 @@ public class XdccIrc
         private JList userList = new JList(usernameList);
         private JTextArea textArea = new JTextArea();
         private JTextField textField = new JTextField();
+        private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
+        private ArrayList befehle = new ArrayList();
+        private int befehlPos = -1;
 
         private JTextPane titleArea = new JTextPane();
 
@@ -1574,6 +1592,26 @@ public class XdccIrc
             textArea.setEditable(false);
             textArea.setBackground(Color.WHITE);
             textField.addActionListener(this);
+            textField.addKeyListener(new KeyAdapter(){
+                public void keyReleased(KeyEvent ke){
+                    super.keyReleased(ke);
+                    if (befehlPos != -1){
+                        if (ke.getKeyCode() == KeyEvent.VK_UP) {
+                            textField.setText((String)befehle.get(befehlPos));
+                            if (befehlPos>0){
+                                befehlPos--;
+                            }
+                        }
+                        else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
+                            if (befehlPos<befehle.size()-1){
+                                befehlPos++;
+                            }
+                            textField.setText( (String) befehle.get(
+                                befehlPos));
+                        }
+                    }
+                }
+            });
 
             userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             userList.addMouseListener(new MouseAdapter(){
@@ -1610,7 +1648,6 @@ public class XdccIrc
             JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                                   sp1,
                                                   sp2);
-//            splitPane.setOneTouchExpandable(true);
             splitPane.setDividerLocation(theApp.getSize().width - 200);
             add(splitPane, BorderLayout.CENTER);
             add(textField, BorderLayout.SOUTH);
@@ -1655,6 +1692,13 @@ public class XdccIrc
                     updateTextArea(formatNickname("<" + getNickname() + "> ") +
                                    textField.getText());
                     textField.setText("");
+                }
+                if (message != null && message.length() > 0){
+                    befehle.add(message);
+                    if (befehle.size() > 40) {
+                        befehle.remove(0);
+                    }
+                    befehlPos = befehle.size() - 1;
                 }
             }
             else if (source == closeButton) {
@@ -1784,7 +1828,8 @@ public class XdccIrc
 
         public void updateTextArea(String message) {
             int oldCaretPosition = textArea.getCaretPosition();
-            textArea.append(message + "\n");
+            String zeit = dateFormatter.format(new Date(System.currentTimeMillis()));
+            textArea.append("[" + zeit + "]\t" + message + "\n");
 
             int newCaretPosition = textArea.getCaretPosition();
             if (newCaretPosition == oldCaretPosition) {

@@ -6,5 +6,6 @@
 		<channel newchannel="Enter channel name" />
 		<nick newnick="Nickname" />
 		<title newconnection="Connection Info"/>
+		<disablerules value="Disable chanrules"/>
 	</language>
 </root>

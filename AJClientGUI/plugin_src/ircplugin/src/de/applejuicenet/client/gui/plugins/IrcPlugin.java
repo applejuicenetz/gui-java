@@ -1,57 +1,38 @@
 package de.applejuicenet.client.gui.plugins;
 
-import java.awt.BorderLayout;
-import javax.swing.ImageIcon;
-
-import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.JLabel;
-import java.awt.Dimension;
+
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import java.io.File;
-import java.util.Properties;
-import java.io.FileInputStream;
-import java.io.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusAdapter;
-import java.io.FileOutputStream;
+import de.applejuicenet.client.gui.plugins.ircplugin.XdccIrc;
+import javax.swing.JCheckBox;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.10 2004/05/12 12:31:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/Attic/IrcPlugin.java,v 1.11 2004/05/12 16:58:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: IrcPlugin.java,v $
- * Revision 1.10  2004/05/12 12:31:39  maj0r
- * Weitere Arbeiten zum Standardplugin.
- *
- * Revision 1.9  2004/03/03 15:35:45  maj0r
- * PMD-Optimierung
- *
- * Revision 1.8  2004/03/03 14:22:23  maj0r
- * Es wird nun Deutsch und Englisch unterstuetzt.
- *
- * Revision 1.7  2004/03/03 12:50:25  maj0r
- * Sprachunterstuetzung eungebaut.
- *
- * Revision 1.6  2004/03/02 21:17:35  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.5  2003/10/27 18:26:58  maj0r
- * Bugs behoben...
- *
- * Revision 1.4  2003/10/27 14:10:07  maj0r
- * Header eingefuegt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -59,9 +40,11 @@ public class IrcPlugin extends PluginConnector {
     private XdccIrc xdccIrc;
     private String savePath;
     private Properties properties;
+    private XMLValueHolder pluginsPropertiesXMLHolder;
 
     public IrcPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon) {
         super(pluginsPropertiesXMLHolder, languageFiles, icon);
+        this.pluginsPropertiesXMLHolder = pluginsPropertiesXMLHolder;
         init();
     }
 
@@ -118,6 +101,7 @@ public class IrcPlugin extends PluginConnector {
         nick.setPreferredSize(new Dimension(200, nick.getPreferredSize().height));
         final JTextField onJoinMessage = new JTextField();
         final JTextField channels = new JTextField();
+        final JCheckBox rules = new JCheckBox();
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
         constraints.fill = GridBagConstraints.BOTH;
@@ -140,6 +124,11 @@ public class IrcPlugin extends PluginConnector {
         panel1.add(onJoinMessage, constraints);
         constraints.gridy = 2;
         panel1.add(channels, constraints);
+        constraints.gridx = 0;
+        constraints.gridwidth = 2;
+        constraints.gridy = 3;
+        rules.setText(getLanguageString(".root.language.disablerules.value"));
+        panel1.add(rules, constraints);
         String propNick = properties.getProperty("nick");
         if (propNick != null){
             nick.setText(propNick);
@@ -151,6 +140,10 @@ public class IrcPlugin extends PluginConnector {
         String propChannels = properties.getProperty("channels");
         if (propChannels != null){
             channels.setText(propChannels);
+        }
+        String propRules = properties.getProperty("norules");
+        if (propRules != null && propRules.compareToIgnoreCase("true")==0){
+            rules.setSelected(true);
         }
         nick.addFocusListener(new FocusAdapter(){
             public void focusLost(FocusEvent fe){
@@ -168,6 +161,11 @@ public class IrcPlugin extends PluginConnector {
             public void focusLost(FocusEvent fe){
                 properties.put("channels", channels.getText());
                 saveProperties();
+            }
+        });
+        rules.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e){
+                properties.put("norules", new Boolean(rules.isSelected()).toString());
             }
         });
         return panel1;
