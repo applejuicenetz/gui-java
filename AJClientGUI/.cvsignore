@@ -1,5 +1,3 @@
-ajgui.properties
 AJCoreGUI.jar
-ircplugin.properties
-AJCoreGUI_vX_XX.zip
+*.properties
 AJCoreGUI_v*.zip
