@@ -18,7 +18,7 @@ import java.util.Iterator;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.34 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.35 2004/01/05 15:11:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +27,10 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: PowerDownloadPanel.java,v $
+ * Revision 1.35  2004/01/05 15:11:19  maj0r
+ * Bug #13 umgesetzt (Danke an HabkeineMail)
+ * Powerdownload-Werte werden jetzt bei Klick auf einen Download / Quelle im Powerdownloadfeld angezeigt.
+ *
  * Revision 1.34  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -373,6 +377,18 @@ public class PowerDownloadPanel
         add(backPanel, BorderLayout.NORTH);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.INFORMATION_CHANGED);
         ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.DOWNLOAD_CHANGED);
+    }
+
+    public void setPwdlValue(int pwdlValue){
+        if (pwdlValue<12){
+            ratio.setText("2.2");
+            btnInaktiv.setSelected(true);
+        }
+        else{
+            float wert = (float) ((float)(pwdlValue + 10) / 10);
+            ratio.setText(Float.toString(wert));
+            btnAktiv.setSelected(true);
+        }
     }
 
     private void alterAutoPwdl(){

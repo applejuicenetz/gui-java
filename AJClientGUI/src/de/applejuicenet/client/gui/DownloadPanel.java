@@ -55,7 +55,7 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.76 2004/01/05 14:34:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.77 2004/01/05 15:11:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,6 +64,10 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.77  2004/01/05 15:11:19  maj0r
+ * Bug #13 umgesetzt (Danke an HabkeineMail)
+ * Powerdownload-Werte werden jetzt bei Klick auf einen Download / Quelle im Powerdownloadfeld angezeigt.
+ *
  * Revision 1.76  2004/01/05 14:34:59  maj0r
  * Bug #42 umgesetzt (Danke an dsp2004)
  * Partlisten werden nun durch eine Option wahlweise bei Mausklick auf den Download / Quelle oder ueber den Button "Partliste anzeigen" geholt.
@@ -628,6 +632,17 @@ public class DownloadPanel
                     DownloadMainNode.ROOT_NODE) {
                     if (!powerDownloadPanel.isAutomaticPwdlActive()) {
                         powerDownloadPanel.btnPdl.setEnabled(true);
+                        DownloadDO downloadDO = ((DownloadMainNode)node).getDownloadDO();
+                        if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN
+                            || downloadDO.getStatus() == DownloadDO.PAUSIERT){
+                            powerDownloadPanel.setPwdlValue(downloadDO.
+                                getPowerDownload());
+                        }
+                        else{
+                            downloadDOOverviewPanel.enableHoleListButton(false);
+                            powerDownloadPanel.btnPdl.setEnabled(false);
+                            powerDownloadPanel.setPwdlValue(0);
+                        }
                     }
                     if (Settings.getSettings().isDownloadUebersicht()){
                         downloadDOOverviewPanel.enableHoleListButton(false);
@@ -640,6 +655,7 @@ public class DownloadPanel
                 else if (node.getClass() == DownloadSourceDO.class) {
                     if (!powerDownloadPanel.isAutomaticPwdlActive()) {
                         powerDownloadPanel.btnPdl.setEnabled(true);
+                        powerDownloadPanel.setPwdlValue(((DownloadSourceDO)node).getPowerDownload());
                     }
                     if (Settings.getSettings().isDownloadUebersicht()){
                         downloadDOOverviewPanel.enableHoleListButton(false);
@@ -651,6 +667,7 @@ public class DownloadPanel
                 }
                 else {
                     powerDownloadPanel.btnPdl.setEnabled(false);
+                    powerDownloadPanel.setPwdlValue(0);
                     downloadDOOverviewPanel.enableHoleListButton(false);
                 }
             }
