@@ -5,6 +5,7 @@ import java.util.HashSet;
 import de.applejuicenet.client.shared.XMLDecoder;
 import java.util.Iterator;
 import de.applejuicenet.client.shared.exception.LanguageSelectorNotInstanciatedException;
+import java.io.File;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -33,7 +34,7 @@ public class LanguageSelector extends XMLDecoder{
     if (instance==null)
       instance = new LanguageSelector(path);
     else{
-      instance.reload(path);
+      instance.reload(new File(path));
       instance.informLanguageListener();
     }
     return instance;

@@ -7,21 +7,26 @@ import org.apache.xml.serialize.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 
-public abstract class XMLDecoder {
+public class XMLDecoder {
   private Document document;
   private String filePath;
 
-  protected XMLDecoder(String filePath) {
-    reload(filePath);
+  public XMLDecoder(String filePath) {
+    File xmlFile = new File(filePath);
+    reload(xmlFile);
   }
 
-  protected void reload(String filePath) {
+  public XMLDecoder(File xmlFile) {
+    reload(xmlFile);
+  }
+
+  protected void reload(File xmlFile) {
     DocumentBuilderFactory factory =
         DocumentBuilderFactory.newInstance();
     try {
       DocumentBuilder builder = factory.newDocumentBuilder();
-      document = builder.parse(filePath);
-      this.filePath = filePath;
+      document = builder.parse(xmlFile);
+      this.filePath = xmlFile.getPath();
     }
     catch (SAXException sxe) {
       Exception x = sxe;
@@ -91,32 +96,5 @@ public abstract class XMLDecoder {
       }
     }
     return ;  //Nicht gefunden
-
-/*    Element ele = document.getDocumentElement();
-    NodeList nl = ele.getElementsByTagName(attributePath[0]);
-    if (attributePath.length > 2) {
-      for (int i = 1; i < attributePath.length - 1; i++) {
-        nl = ele.getElementsByTagName(attributePath[i]);
-      }
-    }
-    if (nl.getLength() != 0) {
-      Element language = (Element) nl.item(0);
-      try {
-        language.setAttribute(attributePath[attributePath.length - 1], ZeichenErsetzer.korrigiereUmlaute(newValue, true));
-        try {
-          XMLSerializer xs = new XMLSerializer(new FileWriter(filePath),
-                                               new OutputFormat(document,
-              "UTF-8", true));
-          xs.serialize(document);
-        }
-        catch (IOException ioE) {
-          ioE.printStackTrace();
-        }
-      }
-      catch (DOMException ex) {
-        ex.printStackTrace();
-      }
-    }*/
   }
-
 }

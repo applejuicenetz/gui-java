@@ -6,6 +6,12 @@ import java.util.HashSet;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import java.util.Iterator;
 import javax.swing.JLabel;
+import de.applejuicenet.client.shared.HtmlLoader;
+import de.applejuicenet.client.shared.exception.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.*;
+import de.applejuicenet.client.shared.XMLDecoder;
 
 /**
  * <p>Title: AppleJuice Client-GUI</p>
@@ -39,6 +45,24 @@ public class DataManager {   //Singleton-Implementierung
     globalListener = new HashSet();
    //Dummy-Implementierung
    Version version = new Version("0.27", "Java", "Win");
+   String versionText;
+/*  File tempFile = null;
+  FileWriter fw = null;
+  try {
+    tempFile = File.createTempFile("temp", "xml");
+    fw = new FileWriter(tempFile);
+    versionText = HtmlLoader.getHtmlContent("http://localhost:9851/xml/information.xml");
+    fw.write(versionText);
+    fw.close();
+  }
+  catch (IOException ex2) {
+    ex2.printStackTrace();
+  }
+  catch (WebSiteNotFoundException ex) {
+    ex.printStackTrace();
+  }
+  XMLDecoder info = new XMLDecoder(tempFile);
+  String test = info.getFirstAttrbuteByTagName(new String[]{"applejuice", "generalinformation", "version"});*/
    DownloadSourceDO source = new DownloadSourceDO(false, "datei2.jpg", DownloadSourceDO.UEBERTRAGE, "1GB", "nix", "0", "100", "0 Kb", "?", "1:1", version, "Maj0r", null);
    HashSet sourcen = new HashSet();
    sourcen.add(source);
