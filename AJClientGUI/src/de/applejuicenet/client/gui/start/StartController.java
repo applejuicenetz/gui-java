@@ -7,7 +7,6 @@ import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Level;
 
-import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
@@ -19,7 +18,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.5 2004/12/01 13:08:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.6 2004/12/07 12:59:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,8 +63,7 @@ public class StartController extends GuiController {
 	}
 
 	private void init() {
-		HyperlinkAdapter hyperlinkAdapter = new HyperlinkAdapter(
-				AppleJuiceDialog.getApp());
+		HyperlinkAdapter hyperlinkAdapter = new HyperlinkAdapter(startPanel.getServerMessagePane());
 		startPanel.getServerMessagePane()
 				.addHyperlinkListener(hyperlinkAdapter);
 		startPanel.getNachrichtenPane().addHyperlinkListener(hyperlinkAdapter);
