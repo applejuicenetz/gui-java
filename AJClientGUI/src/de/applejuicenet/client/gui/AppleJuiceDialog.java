@@ -76,6 +76,7 @@ import de.applejuicenet.client.gui.download.DownloadPanel;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.memorymonitor.MemoryMonitorDialog;
+import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.gui.options.OptionsDialog;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.server.ServerPanel;
@@ -884,6 +885,24 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 		if (i == JFileChooser.APPROVE_OPTION) {
 			final File file = fileChooser.getSelectedFile();
 			if (file.isFile()) {
+				String[] dirs = ApplejuiceFassade.getInstance()
+				.getCurrentIncomingDirs();
+				IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(
+						AppleJuiceDialog.getApp(), dirs);
+				incomingDirSelectionDialog.setVisible(true);
+				String directory = incomingDirSelectionDialog.getSelectedIncomingDir();		
+				if (directory != null) {
+					directory = directory.trim();
+					if (directory.indexOf(File.separator) == 0
+							|| directory.indexOf(ApplejuiceFassade.separator) == 0) {
+						directory = directory.substring(1);
+					}
+				}
+				else{
+					directory = "";
+				}
+				final String targetDir = directory;
+
 				new Thread() {
 					public void run() {
 						BufferedReader reader = null;
@@ -908,7 +927,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener,
 								if (size != null && checksum != null) {
 									link = "ajfsp://file|" + filename + "|"
 											+ checksum + "|" + size + "/";
-									af.processLink(link, "");
+									af.processLink(link, targetDir);
 								}
 							}
 						} catch (FileNotFoundException ex) {
