@@ -1,28 +1,25 @@
 package de.applejuicenet.client.gui;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URL;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 
+import org.apache.log4j.*;
+import com.l2fprod.gui.plaf.skin.*;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.plugins.*;
-import de.applejuicenet.client.gui.tools.MemoryMonitor;
-import de.applejuicenet.client.gui.tools.MemoryMonitorDialog;
+import de.applejuicenet.client.gui.tools.*;
 import de.applejuicenet.client.shared.*;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
-import com.l2fprod.gui.plaf.skin.Skin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.69 2003/12/30 13:40:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.70 2003/12/30 15:13:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,6 +28,9 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.70  2003/12/30 15:13:54  maj0r
+ * Der Core kann nun uebers GUI beendet werden.
+ *
  * Revision 1.69  2003/12/30 13:40:27  maj0r
  * Muell entfernt.
  *
@@ -112,7 +112,7 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * Um Wizard erweitert, aber noch nicht fertiggestellt.
  *
  * Revision 1.43  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
+     * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
  *
  * Revision 1.42  2003/09/05 09:02:26  maj0r
  * Threadverwendung verbessert.
@@ -175,7 +175,7 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * log4j eingefügt (inkl. Bedienung über Einstellungsdialog).
  *
  * Revision 1.23  2003/06/22 19:54:45  maj0r
- * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
+     * Behandlung von fehlenden Verzeichnissen und fehlenden xml-Dateien hinzugefügt.
  *
  * Revision 1.22  2003/06/13 15:07:30  maj0r
  * Versionsanzeige hinzugefügt.
@@ -188,8 +188,8 @@ import com.l2fprod.gui.plaf.skin.Skin;
  */
 
 public class AppleJuiceDialog
-        extends JFrame
-        implements LanguageListener, DataUpdateListener {
+    extends JFrame
+    implements LanguageListener, DataUpdateListener {
 
     private RegisterPanel registerPane;
     private JLabel[] statusbar = new JLabel[6];
@@ -198,6 +198,7 @@ public class AppleJuiceDialog
     private JMenu themesMenu = null;
     private HashSet plugins;
     private JMenuItem menuItemOptionen = new JMenuItem();
+    private JMenuItem menuItemCoreBeenden = new JMenuItem();
     private JMenuItem menuItemUeber = new JMenuItem();
     private JFrame _this;
     private JButton sound = new JButton();
@@ -213,11 +214,12 @@ public class AppleJuiceDialog
     private boolean automaticPwdlEnabled = false;
     private String titel;
     private static boolean themesInitialized = false;
+    private String bestaetigung = "";
 
     private static AppleJuiceDialog theApp;
 
-    public static void initThemes(){
-        try{
+    public static void initThemes() {
+        try {
             themesInitialized = true;
             if (PropertiesManager.getOptionsManager().isThemesSupported()) {
                 HashSet themesDateien = new HashSet();
@@ -226,7 +228,7 @@ public class AppleJuiceDialog
                 if (!themesPath.isDirectory()) {
                     closeWithErrormessage("Der Ordner" +
                         " für die Themes zip-Dateien ist nicht vorhanden." +
-                                          "\r\nappleJuice wird beendet.", false);
+                        "\r\nappleJuice wird beendet.", false);
                 }
                 File[] themeFiles = themesPath.listFiles();
                 for (int i = 0; i < themeFiles.length; i++) {
@@ -264,26 +266,27 @@ public class AppleJuiceDialog
                 SkinLookAndFeel.enable();
             }
         }
-        catch(Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public AppleJuiceDialog() {
         super();
         logger = Logger.getLogger(getClass());
-        try
-        {
+        try {
             init();
             pack();
             _this = this;
             theApp = this;
             LanguageSelector.getInstance().addLanguageListener(this);
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
@@ -292,7 +295,8 @@ public class AppleJuiceDialog
     }
 
     public PluginConnector[] getPlugins() {
-        return (PluginConnector[]) plugins.toArray(new PluginConnector[plugins.size()]);
+        return (PluginConnector[]) plugins.toArray(new PluginConnector[plugins.
+            size()]);
     }
 
     public static AppleJuiceDialog getApp() {
@@ -308,25 +312,27 @@ public class AppleJuiceDialog
         menuItemUeber.setIcon(im.getIcon("info"));
 
         setJMenuBar(createMenuBar());
-        if (PropertiesManager.getOptionsManager().isThemesSupported()){
+        if (PropertiesManager.getOptionsManager().isThemesSupported()) {
             SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
         }
 
-        String path = System.getProperty("user.dir") + File.separator + "language" +
-                File.separator;
+        String path = System.getProperty("user.dir") + File.separator +
+            "language" +
+            File.separator;
         path += PropertiesManager.getOptionsManager().getSprache() + ".xml";
         registerPane = new RegisterPanel(this);
         LanguageSelector.getInstance(path);
         addWindowListener(
-                new WindowAdapter() {
-                    public void windowClosing(WindowEvent evt) {
-                        closeDialog(evt);
-                    }
-                });
+            new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                closeDialog(evt);
+            }
+        });
         getContentPane().setLayout(new BorderLayout());
         registerPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                RegisterI register = (RegisterI) registerPane.getSelectedComponent();
+                RegisterI register = (RegisterI) registerPane.
+                    getSelectedComponent();
                 register.registerSelected();
             }
         });
@@ -334,46 +340,46 @@ public class AppleJuiceDialog
 
         JPanel panel = new JPanel(new GridBagLayout());
 
-        for (int i = 0; i < statusbar.length; i++)
-        {
+        for (int i = 0; i < statusbar.length; i++) {
             statusbar[i] = new JLabel("            ");
             statusbar[i].setHorizontalAlignment(JLabel.RIGHT);
             statusbar[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
             statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
         }
         memory.setIcon(IconManager.getInstance().getIcon("mmonitor"));
-        memory.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
-                if (memoryMonitorDialog==null){
-                    memoryMonitorDialog = new MemoryMonitorDialog(AppleJuiceDialog.this);
+        memory.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                if (memoryMonitorDialog == null) {
+                    memoryMonitorDialog = new MemoryMonitorDialog(
+                        AppleJuiceDialog.this);
                     Point loc = memory.getLocationOnScreen();
-                    loc.setLocation(loc.getX()-memoryMonitorDialog.getWidth(),
-                                    loc.getY()-memoryMonitorDialog.getHeight());
+                    loc.setLocation(loc.getX() - memoryMonitorDialog.getWidth(),
+                                    loc.getY() - memoryMonitorDialog.getHeight());
                     memoryMonitorDialog.setLocation(loc);
                 }
-                if (!memoryMonitorDialog.isVisible()){
+                if (!memoryMonitorDialog.isVisible()) {
                     memoryMonitorDialog.show();
                 }
             }
         });
 
-        sound.addActionListener(new ActionListener(){
+        sound.addActionListener(new ActionListener() {
             {
-                if (PropertiesManager.getOptionsManager().isSoundEnabled()){
+                if (PropertiesManager.getOptionsManager().isSoundEnabled()) {
                     sound.setIcon(IconManager.getInstance().getIcon("soundon"));
                 }
-                else{
+                else {
                     sound.setIcon(IconManager.getInstance().getIcon("soundoff"));
                 }
             }
 
-            public void actionPerformed(ActionEvent ae){
+            public void actionPerformed(ActionEvent ae) {
                 OptionsManager om = PropertiesManager.getOptionsManager();
                 om.enableSound(!om.isSoundEnabled());
-                if (om.isSoundEnabled()){
+                if (om.isSoundEnabled()) {
                     sound.setIcon(IconManager.getInstance().getIcon("soundon"));
                 }
-                else{
+                else {
                     sound.setIcon(IconManager.getInstance().getIcon("soundoff"));
                 }
             }
@@ -413,19 +419,20 @@ public class AppleJuiceDialog
     }
 
     private static void einstellungenSpeichern() {
-        try{
+        try {
             String sprachText = LanguageSelector.getInstance().
-                    getFirstAttrbuteByTagName(new String[]{"Languageinfo", "name"});
+                getFirstAttrbuteByTagName(new String[] {"Languageinfo", "name"});
             PropertiesManager.getOptionsManager().setSprache(sprachText);
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    public void informAutomaticPwdlEnabled(boolean enabled){
-        if (enabled!=automaticPwdlEnabled){
+    public void informAutomaticPwdlEnabled(boolean enabled) {
+        if (enabled != automaticPwdlEnabled) {
             automaticPwdlEnabled = enabled;
             setTitle(titel);
             repaint();
@@ -441,14 +448,15 @@ public class AppleJuiceDialog
         Point p = getLocationOnScreen();
         setVisible(false);
         ApplejuiceFassade.getInstance().stopXMLCheck();
-        if (rewriteProperties){
+        if (rewriteProperties) {
             restorePropertiesXml();
         }
         String nachricht = "appleJuice-Core-GUI wird beendet...";
-        if (logger.isEnabledFor(Level.INFO))
+        if (logger.isEnabledFor(Level.INFO)) {
             logger.info(nachricht);
+        }
         System.out.println(nachricht);
-        if (!rewriteProperties){
+        if (!rewriteProperties) {
             einstellungenSpeichern();
             PositionManager pm = PropertiesManager.getPositionManager();
             pm.setMainXY(p);
@@ -462,52 +470,55 @@ public class AppleJuiceDialog
         System.exit(0);
     }
 
-    public static void closeWithErrormessage(String error, boolean speichereEinstellungen) {
+    public static void closeWithErrormessage(String error,
+                                             boolean speichereEinstellungen) {
         JOptionPane.showMessageDialog(theApp, error, "Fehler!",
                                       JOptionPane.OK_OPTION);
-        if (rewriteProperties){
+        if (rewriteProperties) {
             restorePropertiesXml();
         }
-        else{
+        else {
             ApplejuiceFassade.getInstance().stopXMLCheck();
         }
         String nachricht = "appleJuice-Core-GUI wird beendet...";
         Logger aLogger = Logger.getLogger(AppleJuiceDialog.class.getName());
-        if (aLogger.isEnabledFor(Level.INFO))
+        if (aLogger.isEnabledFor(Level.INFO)) {
             aLogger.info(nachricht);
+        }
         System.out.println(nachricht);
-        if (speichereEinstellungen && !rewriteProperties)
+        if (speichereEinstellungen && !rewriteProperties) {
             einstellungenSpeichern();
+        }
         System.out.println("Fehler: " + error);
-        System.exit(-1);
+        System.exit( -1);
     }
 
     protected JMenuBar createMenuBar() {
-        try{
-            if (!themesInitialized){
+        try {
+            if (!themesInitialized) {
                 AppleJuiceDialog.initThemes();
             }
-            String path = System.getProperty("user.dir") + File.separator + "language" +
-                    File.separator;
+            String path = System.getProperty("user.dir") + File.separator +
+                "language" +
+                File.separator;
             File languagePath = new File(path);
-            if (!languagePath.isDirectory())
-            {
-                closeWithErrormessage("Der Ordner " + path + " für die Sprachauswahl xml-Dateien ist nicht vorhanden." +
+            if (!languagePath.isDirectory()) {
+                closeWithErrormessage("Der Ordner " + path +
+                    " für die Sprachauswahl xml-Dateien ist nicht vorhanden." +
                                       "\r\nappleJuice wird beendet.", false);
             }
             String[] tempListe = languagePath.list();
             HashSet sprachDateien = new HashSet();
-            for (int i = 0; i < tempListe.length; i++)
-            {
-                if (tempListe[i].indexOf(".xml") != -1)
-                {
+            for (int i = 0; i < tempListe.length; i++) {
+                if (tempListe[i].indexOf(".xml") != -1) {
                     sprachDateien.add(tempListe[i]);
                 }
             }
-            if (sprachDateien.size() == 0)
-            {
-                closeWithErrormessage("Es sind keine xml-Dateien für die Sprachauswahl im Ordner " + path + " vorhanden." +
-                                      "\r\nappleJuice wird beendet.", false);
+            if (sprachDateien.size() == 0) {
+                closeWithErrormessage(
+                    "Es sind keine xml-Dateien für die Sprachauswahl im Ordner " +
+                    path + " vorhanden." +
+                    "\r\nappleJuice wird beendet.", false);
             }
 
             JMenuBar menuBar = new JMenuBar();
@@ -517,22 +528,37 @@ public class AppleJuiceDialog
                     OptionsDialog od = new OptionsDialog(_this);
                     Dimension appDimension = od.getSize();
                     Dimension screenSize = _this.getSize();
-                    od.setLocation((screenSize.width - appDimension.width) / 4,
-                                   (screenSize.height - appDimension.height) / 4);
+                    od.setLocation( (screenSize.width - appDimension.width) / 4,
+                                   (screenSize.height - appDimension.height) /
+                                   4);
                     od.show();
+                }
+            });
+            menuItemCoreBeenden.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), bestaetigung,
+                                                  "appleJuice Client", JOptionPane.YES_NO_OPTION,
+                                                  JOptionPane.WARNING_MESSAGE);
+                    if (result==JOptionPane.YES_OPTION){
+                        ApplejuiceFassade.getInstance().exitCore();
+                    }
                 }
             });
             menuItemUeber.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     AboutDialog aboutDialog = new AboutDialog(_this, true);
                     Dimension appDimension = aboutDialog.getSize();
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    aboutDialog.setLocation((screenSize.width - appDimension.width)/2,
-                                   (screenSize.height - appDimension.height)/2);
+                    Dimension screenSize = Toolkit.getDefaultToolkit().
+                        getScreenSize();
+                    aboutDialog.setLocation( (screenSize.width -
+                                              appDimension.width) / 2,
+                                            (screenSize.height -
+                                             appDimension.height) / 2);
                     aboutDialog.show();
                 }
             });
             optionenMenu.add(menuItemOptionen);
+            optionenMenu.add(menuItemCoreBeenden);
             optionenMenu.add(menuItemUeber);
             menuBar.add(optionenMenu);
 
@@ -541,16 +567,18 @@ public class AppleJuiceDialog
             ButtonGroup lafGroup = new ButtonGroup();
 
             Iterator it = sprachDateien.iterator();
-            while (it.hasNext())
-            {
-                String sprachText = LanguageSelector.getInstance(path + (String) it.next()).
-                        getFirstAttrbuteByTagName(new String[]{"Languageinfo", "name"});
+            while (it.hasNext()) {
+                String sprachText = LanguageSelector.getInstance(path +
+                    (String) it.next()).
+                    getFirstAttrbuteByTagName(new String[] {"Languageinfo",
+                                              "name"});
                 JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
-                if (PropertiesManager.getOptionsManager().getSprache().equalsIgnoreCase(sprachText))
-                {
+                if (PropertiesManager.getOptionsManager().getSprache().
+                    equalsIgnoreCase(sprachText)) {
                     rb.setSelected(true);
                 }
-                Image img = Toolkit.getDefaultToolkit().getImage(path + sprachText.toLowerCase() + ".gif");
+                Image img = Toolkit.getDefaultToolkit().getImage(path +
+                    sprachText.toLowerCase() + ".gif");
                 ImageIcon result = new ImageIcon();
                 result.setImage(img);
                 rb.setIcon(result);
@@ -559,12 +587,13 @@ public class AppleJuiceDialog
                 rb.addItemListener(new ItemListener() {
                     public void itemStateChanged(ItemEvent ae) {
                         JCheckBoxMenuItem rb2 = (JCheckBoxMenuItem) ae.
-                                getSource();
-                        if (rb2.isSelected())
-                        {
-                            String path = System.getProperty("user.dir") + File.separator +
-                                    "language" + File.separator;
-                            String dateiName = path + rb2.getText().toLowerCase() + ".xml";
+                            getSource();
+                        if (rb2.isSelected()) {
+                            String path = System.getProperty("user.dir") +
+                                File.separator +
+                                "language" + File.separator;
+                            String dateiName = path + rb2.getText().toLowerCase() +
+                                ".xml";
                             LanguageSelector.getInstance(dateiName);
                         }
                     }
@@ -572,18 +601,19 @@ public class AppleJuiceDialog
                 lafGroup.add(rb);
             }
             themesMenu = new JMenu("Themes");
-            if (PropertiesManager.getOptionsManager().isThemesSupported()){
+            if (PropertiesManager.getOptionsManager().isThemesSupported()) {
                 HashSet themesDateien = new HashSet();
-                File themesPath = new File(System.getProperty("user.dir") + File.separator + "themes");
-                if (!themesPath.isDirectory())
-                {
-                    closeWithErrormessage("Der Ordner " + path + " für die Themes zip-Dateien ist nicht vorhanden." +
+                File themesPath = new File(System.getProperty("user.dir") +
+                                           File.separator + "themes");
+                if (!themesPath.isDirectory()) {
+                    closeWithErrormessage("Der Ordner " + path +
+                        " für die Themes zip-Dateien ist nicht vorhanden." +
                                           "\r\nappleJuice wird beendet.", false);
                 }
                 File[] themeFiles = themesPath.listFiles();
-                for (int i = 0; i < themeFiles.length; i++)
-                {
-                    if (themeFiles[i].isFile() && themeFiles[i].getName().indexOf(".zip")!=-1){
+                for (int i = 0; i < themeFiles.length; i++) {
+                    if (themeFiles[i].isFile() &&
+                        themeFiles[i].getName().indexOf(".zip") != -1) {
                         themesDateien.add(themeFiles[i].toURL());
                     }
                 }
@@ -628,7 +658,7 @@ public class AppleJuiceDialog
                 });
                 themesMenu.add(menuItem);
             }
-            else{
+            else {
                 JMenuItem menuItem = new JMenuItem();
                 menuItem.setText("aktivieren");
                 menuItem.addActionListener(new ActionListener() {
@@ -641,99 +671,133 @@ public class AppleJuiceDialog
             menuBar.add(themesMenu);
             return menuBar;
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
             return null;
         }
     }
 
-    private void activateThemeSupport(boolean enable){
+    private void activateThemeSupport(boolean enable) {
         int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.this,
             themeSupportNachricht, themeSupportTitel, JOptionPane.YES_NO_OPTION);
-        if (result==JOptionPane.YES_OPTION){
+        if (result == JOptionPane.YES_OPTION) {
             PropertiesManager.getOptionsManager().
                 enableThemeSupport(enable);
             closeDialog(null);
         }
     }
 
-    private void activateLaF(String laf){
-        try{
-            Skin aSkin = (Skin)themes.get(laf);
-            if (aSkin!=null){
+    private void activateLaF(String laf) {
+        try {
+            Skin aSkin = (Skin) themes.get(laf);
+            if (aSkin != null) {
                 SkinLookAndFeel.setSkin(aSkin);
                 SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
                 PropertiesManager.getOptionsManager().setDefaultTheme(laf);
             }
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    public void setTitle(String title){
-        if (!automaticPwdlEnabled){
+    public void setTitle(String title) {
+        if (!automaticPwdlEnabled) {
             super.setTitle(titel);
         }
-        else{
+        else {
             super.setTitle(titel + " - Autopilot");
         }
     }
 
     public void fireLanguageChanged() {
-        try{
+        try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
-            String versionsNr = ApplejuiceFassade.getInstance().getCoreVersion().getVersion();
+            String versionsNr = ApplejuiceFassade.getInstance().getCoreVersion().
+                getVersion();
             titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                       getFirstAttrbuteByTagName(new
-                                                               String[]{"mainform", "caption"})) +
-                                                               " (Core " + versionsNr +
-                                                               " - GUI " + ApplejuiceFassade.GUI_VERSION + ")";
+                getFirstAttrbuteByTagName(new
+                                          String[] {"mainform", "caption"})) +
+                " (Core " + versionsNr +
+                " - GUI " + ApplejuiceFassade.GUI_VERSION + ")";
             setTitle(titel);
-            keinServer = languageSelector.getFirstAttrbuteByTagName(new String[]{
+            keinServer = languageSelector.getFirstAttrbuteByTagName(new String[] {
                 "javagui", "mainform", "keinserver"});
-            themeSupportTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"mainform", "caption"}));
-            themeSupportNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(new String[]{"javagui", "mainform", "themesupportnachricht"}));
-            sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                 getFirstAttrbuteByTagName(new String[]{"einstform", "languagesheet",
-                                                                                                        "caption"})));
-            menuItemOptionen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "optbtn", "caption"})));
-            menuItemOptionen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "optbtn", "hint"})));
-            menuItemUeber.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "caption"})));
-            menuItemUeber.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                               getFirstAttrbuteByTagName(new String[]{"mainform", "aboutbtn", "hint"})));
-            optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                   getFirstAttrbuteByTagName(new String[]{"javagui", "menu", "extras"})));
-            themesMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                                                                 getFirstAttrbuteByTagName(new String[]{"javagui", "menu", "themes"})));
+            themeSupportTitel = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "caption"}));
+            themeSupportNachricht = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "mainform",
+                                          "themesupportnachricht"}));
+            sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"einstform",
+                                          "languagesheet",
+                                          "caption"})));
+            menuItemOptionen.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "optbtn",
+                                          "caption"})));
+            menuItemOptionen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "optbtn",
+                                          "hint"})));
+            menuItemCoreBeenden.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                          "corebeenden"})));
+            menuItemCoreBeenden.setToolTipText(ZeichenErsetzer.
+                                               korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                          "corebeendenhint"})));
+            menuItemUeber.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
+                                          "caption"})));
+            menuItemUeber.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"mainform", "aboutbtn",
+                                          "hint"})));
+            optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                          "extras"})));
+            themesMenu.setText(ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                          "themes"})));
+            bestaetigung = ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.
+                getFirstAttrbuteByTagName(new String[] {"javagui", "menu",
+                                          "bestaetigung"}));
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
     public void fireContentChanged(int type, Object content) {
-        try{
-            if (type == DataUpdateListener.INFORMATION_CHANGED)
-            {
-                if (firstChange){
+        try {
+            if (type == DataUpdateListener.INFORMATION_CHANGED) {
+                if (firstChange) {
                     firstChange = false;
                     SoundPlayer.getInstance().playSound(SoundPlayer.GESTARTET);
                 }
                 Information information = (Information) content;
                 statusbar[0].setText(information.getVerbindungsStatusAsString());
-                if (information.getVerbindungsStatus()==Information.NICHT_VERBUNDEN){
+                if (information.getVerbindungsStatus() ==
+                    Information.NICHT_VERBUNDEN) {
                     statusbar[1].setText(keinServer);
                 }
-                else{
+                else {
                     statusbar[1].setText(information.getServerName());
                 }
                 statusbar[2].setText(information.getUpDownAsString());
@@ -742,41 +806,55 @@ public class AppleJuiceDialog
                 statusbar[5].setText(information.getCreditsAsString());
             }
         }
-        catch (Exception e){
-            if (logger.isEnabledFor(Level.ERROR))
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error("Unbehandelte Exception", e);
+            }
         }
     }
 
-    private static void restorePropertiesXml(){
+    private static void restorePropertiesXml() {
         String dateiname = System.getProperty("user.dir") + File.separator +
-                "properties.xml";
+            "properties.xml";
         StringBuffer xmlData = new StringBuffer();
 
         xmlData.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xmlData.append("<root>");
         xmlData.append("    <options firststart=\"true\" sound=\"true\" sprache=\"deutsch\" themes=\"true\" defaulttheme=\"aquathemepack\"");
-        xmlData.append("             linklistenerport=\"8768\" versionsinfo=\"1\" >");
-        xmlData.append("        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>");
+        xmlData.append(
+            "             linklistenerport=\"8768\" versionsinfo=\"1\" >");
+        xmlData.append(
+            "        <remote host=\"localhost\" passwort=\"\"  port=\"9851\"/>");
         xmlData.append("        <logging level=\"INFO\"/>");
         xmlData.append("        <download uebersicht=\"true\"/>");
         xmlData.append("        <farben aktiv=\"true\">");
-        xmlData.append("            <hintergrund downloadFertig=\"-13382656\" quelle=\"-205\"/>");
+        xmlData.append(
+            "            <hintergrund downloadFertig=\"-13382656\" quelle=\"-205\"/>");
         xmlData.append("        </farben>");
         xmlData.append("        <location>");
-        xmlData.append("            <main height=\"\" width=\"\" x=\"\" y=\"\"/>");
-        xmlData.append("            <download column0=\"80\" column1=\"80\" column2=\"80\"");
-        xmlData.append("                column3=\"80\" column4=\"81\" column5=\"80\" column6=\"81\"");
-        xmlData.append("                column7=\"80\" column8=\"81\" column9=\"80\"/>");
-        xmlData.append("            <upload column0=\"136\" column1=\"111\" column2=\"111\"");
+        xmlData.append(
+            "            <main height=\"\" width=\"\" x=\"\" y=\"\"/>");
+        xmlData.append(
+            "            <download column0=\"80\" column1=\"80\" column2=\"80\"");
+        xmlData.append(
+            "                column3=\"80\" column4=\"81\" column5=\"80\" column6=\"81\"");
+        xmlData.append(
+            "                column7=\"80\" column8=\"81\" column9=\"80\"/>");
+        xmlData.append(
+            "            <upload column0=\"136\" column1=\"111\" column2=\"111\"");
         xmlData.append("                column3=\"111\" column4=\"111\" column5=\"112\" column6=\"111\"/>");
         xmlData.append("            <server column0=\"201\" column1=\"201\" column2=\"201\" column3=\"200\"/>");
-        xmlData.append("            <search column0=\"103\" column1=\"103\" column2=\"103\"");
-        xmlData.append("                column3=\"103\" column4=\"103\" column5=\"103\"/>");
-        xmlData.append("            <share column0=\"194\" column1=\"195\" column2=\"194\"/>");
+        xmlData.append(
+            "            <search column0=\"103\" column1=\"103\" column2=\"103\"");
+        xmlData.append(
+            "                column3=\"103\" column4=\"103\" column5=\"103\"/>");
+        xmlData.append(
+            "            <share column0=\"194\" column1=\"195\" column2=\"194\"/>");
         xmlData.append("        </location>");
-        xmlData.append("        <proxy host=\"\" port=\"\" use=\"false\" userpass=\"=\"/>");
-        xmlData.append("        <server pfad=\"/?t=1592\" url=\"http://www.applejuicenet.org\"/>");
+        xmlData.append(
+            "        <proxy host=\"\" port=\"\" use=\"false\" userpass=\"=\"/>");
+        xmlData.append(
+            "        <server pfad=\"/?t=1592\" url=\"http://www.applejuicenet.org\"/>");
         xmlData.append("    </options>");
         xmlData.append("</root>");
 
