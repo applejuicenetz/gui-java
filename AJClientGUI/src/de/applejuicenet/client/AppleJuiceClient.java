@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.86 2004/11/24 16:11:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.87 2004/11/29 10:50:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -321,18 +321,32 @@ public class AppleJuiceClient {
             }
             ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.getInstance();
             boolean firstTry = keyDown ? false : true;
-            while (showDialog || !applejuiceFassade.istCoreErreichbar()) {
+            int erreichbarkeit = 2;
+            while (showDialog || (erreichbarkeit = applejuiceFassade.istCoreErreichbar()) != 0) {
                 splash.setVisible(false);
                 if (!showDialog) {
-                    titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                        getFirstAttrbuteByTagName(".root.mainform.caption"));
-                    nachricht = ZeichenErsetzer.korrigiereUmlaute(
-                        languageSelector.
-                        getFirstAttrbuteByTagName(".root.javagui.startup.fehlversuch"));
-                    SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
-                    JOptionPane.showMessageDialog(connectFrame, nachricht,
-                                                  titel,
-                                                  JOptionPane.ERROR_MESSAGE);
+                	if (erreichbarkeit == 2){
+	                    titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+	                        getFirstAttrbuteByTagName(".root.mainform.caption"));
+	                    nachricht = ZeichenErsetzer.korrigiereUmlaute(
+	                        languageSelector.
+	                        getFirstAttrbuteByTagName(".root.javagui.startup.fehlversuch"));
+	                    SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
+	                    JOptionPane.showMessageDialog(connectFrame, nachricht,
+	                                                  titel,
+	                                                  JOptionPane.ERROR_MESSAGE);
+                	}
+                	else{
+	                    titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+		                        getFirstAttrbuteByTagName(".root.mainform.caption"));
+		                    nachricht = ZeichenErsetzer.korrigiereUmlaute(
+			                        languageSelector.
+			                        getFirstAttrbuteByTagName(".root.mainform.msgdlgtext3"));
+		                    SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
+		                    JOptionPane.showMessageDialog(connectFrame, nachricht,
+		                                                  titel,
+		                                                  JOptionPane.ERROR_MESSAGE);
+                	}
                 }
                 showDialog = false;
                 remoteDialog = new QuickConnectionSettingsDialog(connectFrame);
