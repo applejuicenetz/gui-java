@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.12 2003/09/02 19:29:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.13 2003/09/03 10:26:07 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.13  2003/09/03 10:26:07  maj0r
+ * NullPointer behoben und Logging eingefuehrt.
+ *
  * Revision 1.12  2003/09/02 19:29:26  maj0r
  * Einige Stellen synchronisiert und Nullpointer behoben.
  * Version 0.21 beta.
@@ -68,6 +71,9 @@ import de.applejuicenet.client.gui.listener.DataUpdateListener;
 import javax.swing.*;
 import java.awt.*;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
 public class DownloadDOOverviewPanel extends JPanel implements LanguageListener, DataUpdateListener{
     private DownloadDO downloadDO = null;
     private JPanel actualDlOverviewTable = new JPanel();
@@ -77,8 +83,10 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
     private JLabel label2 = new JLabel("In Ordnung");
     private JLabel label1 = new JLabel("Überprüft");
     private Settings settings;
+    private Logger logger;
 
     public DownloadDOOverviewPanel() {
+        logger = Logger.getLogger(getClass());
         init();
         settings = Settings.getSettings();
         LanguageSelector.getInstance().addLanguageListener(this);
@@ -122,85 +130,91 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
         final PartListDO tempPartList = partListDO;
         SwingUtilities.invokeLater(new Runnable(){
             public void run(){
-                actualDLDateiName.setText(downloadDO.getFilename() + " (" + downloadDO.getTemporaryFileNumber() + ".data)");
-                remove(actualDlOverviewTable);
-                actualDlOverviewTable = new JPanel(new GridBagLayout());
-                GridBagConstraints constraints = new GridBagConstraints();
-                constraints.anchor = GridBagConstraints.NORTHWEST;
-                constraints.fill = GridBagConstraints.BOTH;
-                constraints.gridx = 0;
-                constraints.gridy = 0;
-                constraints.weightx = 1;
-                JLabel label1 = null;
-                PartListDO.Part[] parts = tempPartList.getParts();
-                int anzahl = 5632;
-                int anzahlZeile = 512;
-                int anzahlZeilen = 11;
-                if (tempPartList.getGroesse()<513){
-                    anzahl = (int) tempPartList.getGroesse();
-                    anzahlZeile = anzahl;
-                    anzahlZeilen = 1;
-                }
-                else if (tempPartList.getGroesse()<5633){
-                    anzahl = (int)tempPartList.getGroesse() / anzahlZeilen * anzahlZeilen;
-                    anzahlZeile = anzahl/anzahlZeilen;
-                }
-                constraints.gridwidth = anzahlZeile;
-                actualDlOverviewTable.add(actualDLDateiName, constraints);
-                constraints.weighty = 1;
-                constraints.gridwidth = 1;
-                int groesseProPart = (int) tempPartList.getGroesse() / anzahl;
-                long position = 0;
-                int partPos = 0;
-                long mbStart;
-                long mbEnde;
-                int kleiner;
-                int groesstes;
-                boolean ueberprueft;
-                for (int i=0; i<anzahlZeilen; i++){
-                    constraints.gridy = i+1;
-                    for (int x=0; x<anzahlZeile; x++){
-                        constraints.gridx = x;
-                        position += groesseProPart;
-                        while (parts[partPos].getFromPosition()<position && partPos<parts.length-1){
-                            partPos++;
-                        }
-                        label1 = new JLabel();
-                        label1.setOpaque(true);
-                        if (parts[partPos].getType()==-1){
-                            mbStart = position / 1048576 * 1048576;
-                            mbEnde = mbStart + 1048576;
-                            kleiner = partPos;
-                            groesstes = partPos;
-                            while (parts[kleiner].getFromPosition()>mbStart && kleiner>0){
-                                kleiner--;
+                try{
+                    actualDLDateiName.setText(downloadDO.getFilename() + " (" + downloadDO.getTemporaryFileNumber() + ".data)");
+                    remove(actualDlOverviewTable);
+                    actualDlOverviewTable = new JPanel(new GridBagLayout());
+                    GridBagConstraints constraints = new GridBagConstraints();
+                    constraints.anchor = GridBagConstraints.NORTHWEST;
+                    constraints.fill = GridBagConstraints.BOTH;
+                    constraints.gridx = 0;
+                    constraints.gridy = 0;
+                    constraints.weightx = 1;
+                    JLabel label1 = null;
+                    PartListDO.Part[] parts = tempPartList.getParts();
+                    int anzahl = 5632;
+                    int anzahlZeile = 512;
+                    int anzahlZeilen = 11;
+                    if (tempPartList.getGroesse()<513){
+                        anzahl = (int) tempPartList.getGroesse();
+                        anzahlZeile = anzahl;
+                        anzahlZeilen = 1;
+                    }
+                    else if (tempPartList.getGroesse()<5633){
+                        anzahl = (int)tempPartList.getGroesse() / anzahlZeilen * anzahlZeilen;
+                        anzahlZeile = anzahl/anzahlZeilen;
+                    }
+                    constraints.gridwidth = anzahlZeile;
+                    actualDlOverviewTable.add(actualDLDateiName, constraints);
+                    constraints.weighty = 1;
+                    constraints.gridwidth = 1;
+                    int groesseProPart = (int) tempPartList.getGroesse() / anzahl;
+                    long position = 0;
+                    int partPos = 0;
+                    long mbStart;
+                    long mbEnde;
+                    int kleiner;
+                    int groesstes;
+                    boolean ueberprueft;
+                    for (int i=0; i<anzahlZeilen; i++){
+                        constraints.gridy = i+1;
+                        for (int x=0; x<anzahlZeile; x++){
+                            constraints.gridx = x;
+                            position += groesseProPart;
+                            while (parts[partPos].getFromPosition()<position && partPos<parts.length-1){
+                                partPos++;
                             }
-                            while (parts[groesstes].getFromPosition()<mbEnde && groesstes<parts.length){
-                                groesstes++;
-                            }
-                            groesstes--;
-                            ueberprueft = true;
-                            for (int l = kleiner; l<=groesstes; l++){
-                                if (parts[l].getType()!=-1){
-                                    ueberprueft = false;
-                                    break;
+                            label1 = new JLabel();
+                            label1.setOpaque(true);
+                            if (parts[partPos].getType()==-1){
+                                mbStart = position / 1048576 * 1048576;
+                                mbEnde = mbStart + 1048576;
+                                kleiner = partPos;
+                                groesstes = partPos;
+                                while (parts[kleiner].getFromPosition()>mbStart && kleiner>0){
+                                    kleiner--;
+                                }
+                                while (parts[groesstes].getFromPosition()<mbEnde && groesstes<parts.length-1){
+                                    groesstes++;
+                                }
+                                groesstes--;
+                                ueberprueft = true;
+                                for (int l = kleiner; l<=groesstes; l++){
+                                    if (parts[l].getType()!=-1){
+                                        ueberprueft = false;
+                                        break;
+                                    }
+                                }
+                                if (ueberprueft){
+                                    label1.setBackground(PartListDO.COLOR_TYPE_UEBERPRUEFT);
+                                }
+                                else{
+                                    label1.setBackground(PartListDO.COLOR_TYPE_OK);
                                 }
                             }
-                            if (ueberprueft){
-                                label1.setBackground(PartListDO.COLOR_TYPE_UEBERPRUEFT);
-                            }
                             else{
-                                label1.setBackground(PartListDO.COLOR_TYPE_OK);
+                                label1.setBackground(getColorByType(parts[partPos].getType()));
                             }
+                            actualDlOverviewTable.add(label1, constraints);
                         }
-                        else{
-                            label1.setBackground(getColorByType(parts[partPos].getType()));
-                        }
-                        actualDlOverviewTable.add(label1, constraints);
                     }
+                    add(actualDlOverviewTable, BorderLayout.CENTER);
                 }
-                add(actualDlOverviewTable, BorderLayout.CENTER);
-            }
+                 catch(Exception e){
+                     if (logger.isEnabledFor(Level.ERROR))
+                         logger.error("Unbehandelte Exception", e);
+                 }
+             }
         });
     }
 
