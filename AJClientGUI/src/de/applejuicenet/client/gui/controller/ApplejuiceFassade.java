@@ -17,7 +17,7 @@ import de.applejuicenet.client.gui.controller.xmlholder.GetObjectXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.InformationXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.ModifiedXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.NetworkServerXMLHolder;
-import de.applejuicenet.client.gui.controller.xmlholder.SessionXMLHolder;
+import de.applejuicenet.client.gui.controller.xmlholder.PartListXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.SettingsXMLHolder;
 import de.applejuicenet.client.gui.controller.xmlholder.ShareXMLHolder;
 import de.applejuicenet.client.gui.listener.DataUpdateListener;
@@ -26,16 +26,15 @@ import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.HtmlLoader;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;
+import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.ShareEntry;
 import de.applejuicenet.client.shared.Version;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
-import de.applejuicenet.client.shared.Search;
-import de.applejuicenet.client.gui.controller.xmlholder.PartListXMLHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.120 2004/02/25 11:08:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.121 2004/02/26 10:37:13 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -43,239 +42,10 @@ import de.applejuicenet.client.gui.controller.xmlholder.PartListXMLHolder;
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
- * Revision 1.88  2004/01/06 17:32:50  maj0r
- * Es wird nun zweimal versucht den Core erneut zu erreichen, wenn die Verbindung unterbrochen wurde.
- *
- * Revision 1.87  2004/01/04 12:37:27  maj0r
- * Bug #40 umgesetzt (Danke an hirsch.marcel)
- * Incoming-Verzeichnis kann nun für mehrere Downloads gleichzeitig geaendert werden.
- *
- * Revision 1.86  2004/01/02 16:48:30  maj0r
- * Serverliste holen geaendert.
- *
- * Revision 1.84  2004/01/01 14:26:53  maj0r
- * Es koennen nun auch Objekte nach Id vom Core abgefragt werden.
- *
- * Revision 1.83  2003/12/31 16:13:16  maj0r
- * Refactoring.
- *
- * Revision 1.81  2003/12/30 20:14:59  maj0r
- * Funktionsname korrigiert.
- *
- * Revision 1.80  2003/12/30 14:03:26  maj0r
- * Neue Schnittstellenfunktionen eingebaut.
- *
- * Revision 1.79  2003/12/30 09:01:59  maj0r
- * Bug #10 fixed (Danke an muhviestarr)
- * Wenn man keine Downloads hat, steht nun nicht mehr "bitte warten" in der Downloadtabelle.
- *
- * Revision 1.78  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.77  2003/12/29 09:47:17  maj0r
- * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
- *
- * Revision 1.76  2003/12/29 07:23:18  maj0r
- * Begonnen, auf neues Versionupdateinformationssystem umzubauen.
- *
- * Revision 1.69  2003/12/16 14:51:46  maj0r
- * Suche kann nun GUI-seitig abgebrochen werden.
- *
- * Revision 1.65  2003/11/17 14:44:10  maj0r
- * Erste funktionierende Version des automatischen Powerdownloads eingebaut.
- *
- * Revision 1.64  2003/11/17 07:32:30  maj0r
- * Automatischen Pwdl begonnen.
- *
- * Revision 1.61  2003/11/04 13:14:50  maj0r
- * Memory-Monitor eingebaut.
- *
- * Revision 1.59  2003/10/31 18:01:45  maj0r
- * Ungueltige Zeichen entfernt.
- *
- * Revision 1.55  2003/10/21 14:08:45  maj0r
- * Mittels PMD Code verschoenert, optimiert.
- *
- * Revision 1.54  2003/10/21 11:36:32  maj0r
- * Infos werden nun ueber einen Listener geholt.
- *
- * Revision 1.52  2003/10/14 19:21:23  maj0r
- * Korrekturen zur Xml-Port-Verwendung.
- *
- * Revision 1.51  2003/10/14 15:44:32  maj0r
- * Unnoetige Returnwerte ausgebaut.
- * Powerdownloads werden nun innerhalb einer Connection gesetzt,
- *
- * Revision 1.50  2003/10/13 12:37:48  maj0r
- * Bug behoben.
- *
- * Revision 1.47  2003/10/09 15:42:52  maj0r
- * Bug behoben, dass nicht immer der aktuell verbundene Server angezeigt wurde.
- *
- * Revision 1.46  2003/10/06 12:08:01  maj0r
- * Unnoetiges Logging entfernt.
- *
- * Revision 1.45  2003/10/05 11:48:36  maj0r
- * Server koennen nun direkt durch Laden einer Homepage hinzugefuegt werden.
- * Userpartlisten werden angezeigt.
- * Downloadpartlisten werden alle 15 Sek. aktualisiert.
- *
- * Revision 1.44  2003/10/04 15:29:12  maj0r
- * Userpartliste hinzugefuegt.
- *
- * Revision 1.43  2003/10/01 16:52:53  maj0r
- * Suche weiter gefuehrt.
- *
- * Revision 1.42  2003/09/30 16:35:11  maj0r
- * Suche begonnen und auf neues ID-Listen-Prinzip umgebaut.
- *
- * Revision 1.41  2003/09/13 11:30:40  maj0r
- * Neuen Listener fuer Geschwindigkeitsanzeigen eingebaut.
- *
- * Revision 1.40  2003/09/12 13:19:26  maj0r
- * Proxy eingebaut, so dass nun immer Infos angezeigt werden koennen.
- *
- * Revision 1.39  2003/09/11 09:41:16  maj0r
- * Nullpointer behoben.
- *
- * Revision 1.38  2003/09/11 08:39:30  maj0r
- * Start durch Einbau von Threads beschleunigt.
- *
- * Revision 1.37  2003/09/11 06:54:15  maj0r
- * Auf neues Sessions-Prinzip umgebaut.
- * Sprachenwechsel korrigert, geht nun wieder flott.
- *
- * Revision 1.36  2003/09/10 15:30:48  maj0r
- * Begonnen auf neue Session-Struktur umzubauen.
- *
- * Revision 1.34  2003/09/10 13:16:28  maj0r
- * Veraltete Option "Browsen erlauben" entfernt und neue Option MaxNewConnectionsPerTurn hinzugefuegt.
- *
- * Revision 1.32  2003/09/09 12:28:15  maj0r
- * Wizard fertiggestellt.
- *
- * Revision 1.31  2003/09/07 09:29:55  maj0r
- * Position des Hauptfensters und Breite der Tabellenspalten werden gespeichert.
- *
- * Revision 1.29  2003/09/06 14:48:50  maj0r
- * Core-Dateisystem-Separator statisch verwendbar.
- *
- * Revision 1.27  2003/09/05 09:02:26  maj0r
- * Threadverwendung verbessert.
- *
- * Revision 1.26  2003/09/04 22:12:45  maj0r
- * Logger verfeinert.
- * Threadbeendigung korrigiert.
- *
- * Revision 1.22  2003/09/02 16:08:56  maj0r
- * Downloadbaum komplett umgebaut.
- *
- * Revision 1.20  2003/09/01 15:50:51  maj0r
- * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
- *
- * Revision 1.19  2003/08/31 11:06:22  maj0r
- * CheckInProgress geaendert.
- *
- * Revision 1.16  2003/08/28 15:47:26  maj0r
- * Warten auf Antwort vom Core entfernt.
- *
- * Revision 1.14  2003/08/28 06:56:48  maj0r
- * Methode setShares korrigiert.
- *
- * Revision 1.13  2003/08/26 19:46:34  maj0r
- * Sharebereich weiter vervollstaendigt.
- *
- * Revision 1.12  2003/08/25 13:17:46  maj0r
- * Muell entfernt.
- *
- * Revision 1.11  2003/08/24 14:59:59  maj0r
- * Diverse Aenderungen.
- *
- * Revision 1.10  2003/08/22 14:16:00  maj0r
- * Threadverwendung korrigiert.
- *
- * Revision 1.8  2003/08/22 10:03:11  maj0r
- * Threadverwendung korrigiert.
- *
- * Revision 1.7  2003/08/21 15:13:29  maj0r
- * Auf Thread umgebaut.
- *
- * Revision 1.5  2003/08/20 16:18:51  maj0r
- * Server koennen nun entfernt werden.
- *
- * Revision 1.4  2003/08/20 07:49:50  maj0r
- * Programmstart beschleunigt.
- *
- * Revision 1.3  2003/08/17 16:13:11  maj0r
- * Erstellen des DirectoryNode-Baumes korrigiert.
- *
- * Revision 1.2  2003/08/16 18:40:25  maj0r
- * Passworteingabe korrigiert.
- *
- * Revision 1.1  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.37  2003/08/11 14:10:28  maj0r
- * DownloadPartList eingefuegt.
- * Diverse Aenderungen.
- *
- * Revision 1.36  2003/08/10 21:08:18  maj0r
- * Diverse Aenderungen.
- *
- * Revision 1.35  2003/08/09 16:47:42  maj0r
- * Diverse Aenderungen.
- *
- * Revision 1.34  2003/08/09 10:57:54  maj0r
- * Upload- und DownloadTabelle weitergefuehrt.
- *
- * Revision 1.33  2003/08/05 20:47:06  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.32  2003/08/05 05:11:59  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.31  2003/08/04 14:28:55  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.30  2003/08/03 19:54:05  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.29  2003/08/02 12:03:38  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.28  2003/07/04 15:25:38  maj0r
- * DownloadModel erweitert.
- *
- * Revision 1.27  2003/07/03 19:11:16  maj0r
- * DownloadTable ueberarbeitet.
- *
- * Revision 1.26  2003/07/01 15:00:00  maj0r
- * Keyverwendung bei HashSets und HashMaps korrigiert.
- *
- * Revision 1.25  2003/07/01 06:17:16  maj0r
- * Code optimiert.
- *
- * Revision 1.24  2003/06/24 14:32:27  maj0r
- * Klassen zum Sortieren von Tabellen eingefuegt.
- * Servertabelle kann nun spaltenweise sortiert werden.
- *
- * Revision 1.23  2003/06/24 12:06:49  maj0r
- * log4j eingefuegt (inkl. Bedienung ueber Einstellungsdialog).
- *
- * Revision 1.22  2003/06/22 20:34:25  maj0r
- * Konsolenausgaben hinzugefuegt.
- *
- * Revision 1.21  2003/06/13 15:07:30  maj0r
- * Versionsanzeige hinzugefuegt.
- * Da der Controllerteil refactort werden kann, haben Controller und GUI separate Versionsnummern.
- *
- * Revision 1.20  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
  */
 
 public class ApplejuiceFassade {
-    public static final String GUI_VERSION = "0.55.10";
+    public static final String GUI_VERSION = "0.55.11";
 
     private HashSet downloadListener;
     private HashSet searchListener;
