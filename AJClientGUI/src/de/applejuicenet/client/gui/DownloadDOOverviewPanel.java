@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.36 2004/10/11 18:18:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.37 2004/10/12 15:41:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -47,6 +49,8 @@ public class DownloadDOOverviewPanel
     private JButton holeListe = new JButton("Hole Partliste");
     private Thread partListWorkerThread = null;
     private DownloadPanel downloadPanel;
+    private String verfuegbar = "verfügbar";
+    private DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     public DownloadDOOverviewPanel(DownloadPanel parent) {
         logger = Logger.getLogger(getClass());
@@ -140,10 +144,9 @@ public class DownloadDOOverviewPanel
                 }
                 partListWorkerThread = new Thread() {
                     public void run() {
-                        actualDLDateiName.setText(" " + tempDO.getFilename() +
-                                                  " (" +
-                                                  tempDO.getTemporaryFileNumber() +
-                                                  ".data)");
+                    	String dateiNameText = " " + tempDO.getFilename() +
+                        	" (" + tempDO.getTemporaryFileNumber() + ".data) ";
+                        actualDLDateiName.setText(dateiNameText);
                         actualDlOverviewTable.setPartList(null);
                         PartListDO partList = null;
                         while (!isInterrupted()) {
@@ -164,8 +167,11 @@ public class DownloadDOOverviewPanel
                                 actualDlOverviewTable.setPartList(null);
                             }
                             else {
-                                actualDlOverviewTable.setPartList(partList);
-                                try {
+                                actualDlOverviewTable.setPartList(partList);                                
+                                String tmp = verfuegbar.replaceFirst("%s", 
+                                		decimalFormat.format(partList.getProzentVerfuegbar()));
+                                actualDLDateiName.setText(dateiNameText + " - " + tmp);
+								try {
                                     sleep(2000);
                                 }
                                 catch (InterruptedException iE) {
@@ -223,10 +229,12 @@ public class DownloadDOOverviewPanel
                         if (partList == null) {
                             interrupt();
                             actualDLDateiName.setText("");
-                            actualDlOverviewTable.setPartList(null);
                         }
                         else {
                             actualDlOverviewTable.setPartList(partList);
+                            String tmp = verfuegbar.replaceFirst("%s", 
+                            		decimalFormat.format(partList.getProzentVerfuegbar()));
+                            actualDLDateiName.setText(actualDLDateiName.getText() + " - " + tmp);
                         }
                     }
                 };
@@ -256,6 +264,8 @@ public class DownloadDOOverviewPanel
             holeListe.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
                 getFirstAttrbuteByTagName(".root.javagui.downloadform.partlisteanzeigen")));
+            verfuegbar = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                    getFirstAttrbuteByTagName(".root.javagui.downloadform.verfuegbar"));
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {

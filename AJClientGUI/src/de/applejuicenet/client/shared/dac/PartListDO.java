@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.14 2004/10/11 18:18:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.15 2004/10/12 15:41:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,23 @@ public class PartListDO {
 
     public Object getValueDO() {
         return valueHolderDO;
+    }
+    
+    public double getProzentVerfuegbar(){
+    	Part[] allParts = getParts();
+    	if (allParts == null || allParts.length == 0){
+    		return -1;
+    	}
+    	long available = 0;
+    	for (int i=0; i<allParts.length-1; i++){
+    		if (allParts[i].getType() != 0){
+    			available += allParts[i+1].getFromPosition()-allParts[i].getFromPosition(); 
+    		}
+    	}
+		if (allParts[allParts.length-1].getType() != 0){
+			available += groesse - allParts[allParts.length-1].getFromPosition(); 
+		}
+    	return ((available * 100.0) /groesse);
     }
 
     public class Part {
