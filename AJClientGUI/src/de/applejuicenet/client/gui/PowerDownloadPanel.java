@@ -52,117 +52,13 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.DownloadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.44 2004/03/05 15:49:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/PowerDownloadPanel.java,v 1.45 2004/05/30 17:27:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: PowerDownloadPanel.java,v $
- * Revision 1.44  2004/03/05 15:49:39  maj0r
- * PMD-Optimierung
- *
- * Revision 1.43  2004/03/03 15:33:31  maj0r
- * PMD-Optimierung
- *
- * Revision 1.42  2004/02/25 13:16:48  maj0r
- * Featurerequest #244 gefixt (Danke an Homer1Simpson)
- * Standardmaessig ist nun beim automatischen Powerdownload der Inaktiv-Button selektiert.
- *
- * Revision 1.41  2004/02/21 18:20:30  maj0r
- * LanguageSelector auf SAX umgebaut.
- *
- * Revision 1.40  2004/02/20 11:03:38  maj0r
- * Featurerequest #228 realisiert (Danke an Major-Tom)
- * Im Pwdl-Eingabefeld funktionieren nun auch die Hoch/Runter-Pfeiltasten.
- *
- * Revision 1.39  2004/02/12 18:32:40  maj0r
- * Bug #195 gefixt (Danke an supermuhkuh)
- * Bug bei Pwdl-Einstellung korrigiert.
- *
- * Revision 1.38  2004/02/05 23:11:27  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.37  2004/01/31 08:49:04  maj0r
- * PwdlPolicies werden jetzt wie Plugins als jars eingebunden.
- *
- * Revision 1.36  2004/01/12 07:26:44  maj0r
- * Auf JSplitPane umgebaut.
- *
- * Revision 1.35  2004/01/05 15:11:19  maj0r
- * Bug #13 umgesetzt (Danke an HabkeineMail)
- * Powerdownload-Werte werden jetzt bei Klick auf einen Download / Quelle im Powerdownloadfeld angezeigt.
- *
- * Revision 1.34  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.33  2003/12/29 09:39:21  maj0r
- * Alte BugIDs entfernt, da auf neuen Bugtracker auf bugs.applejuicenet.de umgestiegen wurde.
- *
- * Revision 1.32  2003/11/24 21:12:35  maj0r
- * Hier trat merkwuerdigerweise ein Bug auf, spezielleres Logging fuer bessere Auswertung eingebaut.
- *
- * Revision 1.31  2003/11/19 17:05:20  maj0r
- * Autom. Pwdl ueberarbeitet.
- *
- * Revision 1.30  2003/11/17 14:44:10  maj0r
- * Erste funktionierende Version des automatischen Powerdownloads eingebaut.
- *
- * Revision 1.29  2003/11/17 07:32:30  maj0r
- * Automatischen Pwdl begonnen.
- *
- * Revision 1.28  2003/11/03 21:17:16  maj0r
- * Kleinen Fehler im Pwdl-Textfeld behoben.
- *
- * Revision 1.27  2003/10/31 16:24:58  maj0r
- * Soundeffekte fuer diverse Ereignisse eingefuegt.
- *
- * Revision 1.26  2003/10/27 12:40:48  maj0r
- * Buttons entsprechend dem Standard vertauscht (Danke an lova).
- *
- * Revision 1.25  2003/10/16 12:06:51  maj0r
- * Diverse Schoenheitskorrekturen.
- *
- * Revision 1.24  2003/10/14 15:43:24  maj0r
- * Logger eingebaut.
- * Powerdownloads werden nun innerhalb einer Connection gesetzt,
- *
- * Revision 1.23  2003/10/13 19:13:21  maj0r
- * Wert fuer Powerdownload kann nun auch manuell eingetragen werden.
- *
- * Revision 1.22  2003/09/02 16:08:12  maj0r
- * Downloadbaum komplett umgebaut.
- *
- * Revision 1.21  2003/09/01 15:50:51  maj0r
- * Wo es moeglich war, DOs auf primitive Datentypen umgebaut.
- *
- * Revision 1.20  2003/08/24 14:59:59  maj0r
- * Version 0.14
- * Diverse Aenderungen.
- *
- * Revision 1.19  2003/08/15 14:46:30  maj0r
- * Refactoring.
- *
- * Revision 1.18  2003/08/12 16:22:51  maj0r
- * Kleine Farbaenderung.
- *
- * Revision 1.17  2003/08/09 10:56:25  maj0r
- * DownloadTabelle weitergeführt.
- *
- * Revision 1.16  2003/08/05 20:47:06  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.15  2003/08/05 05:11:59  maj0r
- * An neue Schnittstelle angepasst.
- *
- * Revision 1.14  2003/06/30 19:46:11  maj0r
- * Sourcestil verbessert.
- *
- * Revision 1.13  2003/06/10 12:31:03  maj0r
- * Historie eingefuegt.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -759,15 +655,18 @@ public class PowerDownloadPanel
             else if (type == DataUpdateListener.DOWNLOAD_CHANGED &&
                      autoPwdlThread != null &&
                      !pwdlPolicies.isEnabled() && autoPwdlThread.isPaused()) {
-                HashMap downloads = (HashMap) content;
-                DownloadDO downloadDO;
-                synchronized (downloads) {
-                    Iterator it = downloads.values().iterator();
-                    while (it.hasNext()) {
-                        downloadDO = (DownloadDO) it.next();
-                        if (downloadDO.getStatus() == DownloadDO.SUCHEN_LADEN) {
-                            ApplejuiceFassade.getInstance().pauseDownload(new int[] {
-                                downloadDO.getId()});
+                if (autoPwdlThread.shouldPause()){
+                    HashMap downloads = (HashMap) content;
+                    DownloadDO downloadDO;
+                    synchronized (downloads) {
+                        Iterator it = downloads.values().iterator();
+                        while (it.hasNext()) {
+                            downloadDO = (DownloadDO) it.next();
+                            if (downloadDO.getStatus() ==
+                                DownloadDO.SUCHEN_LADEN) {
+                                ApplejuiceFassade.getInstance().pauseDownload(new int[] {
+                                    downloadDO.getId()});
+                            }
                         }
                     }
                 }
