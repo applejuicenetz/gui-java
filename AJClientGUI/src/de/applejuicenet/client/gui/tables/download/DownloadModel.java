@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.dac.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.8 2003/08/10 21:08:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadModel.java,v 1.9 2003/08/18 18:19:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import de.applejuicenet.client.shared.dac.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadModel.java,v $
+ * Revision 1.9  2003/08/18 18:19:18  maj0r
+ * DownloadStatus in der Anzeige verfeinert.
+ *
  * Revision 1.8  2003/08/10 21:08:18  maj0r
  * Diverse Änderungen.
  *
@@ -258,11 +261,26 @@ public class DownloadModel
             case DownloadDO.SUCHEN_LADEN:
                 {
                     DownloadSourceDO[] sources = downloadDO.getSources();
+                    String result = "";
+                    int uebertragung = 0;
+                    int warteschlange = 0;
+                    int status;
                     for (int i=0; i<sources.length; i++){
-                        if (sources[i].getStatus()==DownloadSourceDO.UEBERTRAGUNG)
-                            return laden;
+                        status = sources[i].getStatus();
+                        if (status==DownloadSourceDO.UEBERTRAGUNG){
+                            uebertragung++;
+                            result =  laden;
+                        }
+                        else if (status==DownloadSourceDO.IN_WARTESCHLANGE){
+                            warteschlange++;
+                        }
                     }
-                    return suchen;
+                    if (result.length()==0)
+                        result = suchen;
+                    if (warteschlange!=0 || uebertragung!=0)
+                        return result + " " + warteschlange + " (" + uebertragung +")";
+                    else
+                        return result;
                 }
             case DownloadDO.FERTIGSTELLEN:
                 return fertigstellen;
