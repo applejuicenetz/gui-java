@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.1 2003/11/18 16:41:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.2 2003/11/19 12:57:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: LinkListener.java,v $
+ * Revision 1.2  2003/11/19 12:57:19  maj0r
+ * Deprecated behoben.
+ *
  * Revision 1.1  2003/11/18 16:41:59  maj0r
  * Erste Version des LinkListener eingebaut.
  *
@@ -51,7 +54,8 @@ public class LinkListener
                 try {
                     DataInputStream in = new DataInputStream(client.
                         getInputStream());
-                    String line = in.readLine();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                    String line = reader.readLine();
                     String link = getLinkFromReadLine(line);
                     if (link!=null){
                         ApplejuiceFassade.getInstance().processLink(link);
