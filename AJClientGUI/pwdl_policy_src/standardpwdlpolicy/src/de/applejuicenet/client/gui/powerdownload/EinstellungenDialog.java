@@ -8,6 +8,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -18,10 +20,15 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import de.applejuicenet.client.gui.powerdownload.StandardAutomaticPwdlPolicy.Reihenfolge;
+import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberAndSpecialCharsInputVerifier;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 
 public class EinstellungenDialog extends JDialog implements ActionListener {
+
+    private static String PROZENT_GELADEN = "prozentGeladen";
+    private static String GROESSE = "groesse";
+    private static String QUELLENANZAHL = "quellenAnzahl";
 
     private int powerDownload = 12;
     private int anzahlDownloads = 2;
@@ -32,11 +39,8 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
     private JButton btnOk = new JButton("Ok");
     private JList listSorting = new JList();
     private DefaultListModel listSortingModel = new DefaultListModel();
-    private JButton btnUp = new JButton("Hoch");
-    private JButton btnDown = new JButton("Runter");
-    private static String PROZENT_GELADEN = "prozentGeladen";
-    private static String GROESSE = "groesse";
-    private static String QUELLENANZAHL = "quellenAnzahl";
+    private JLabel btnUp;
+    private JLabel btnDown;
 
     public static void main(String args[]) {
         EinstellungenDialog e = new EinstellungenDialog(null);
@@ -68,6 +72,11 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
     }
 
     private void initGui() {
+        IconManager im = IconManager.getInstance();
+        btnUp = new JLabel(im.getIcon("increase"));
+        btnDown = new JLabel(im.getIcon("decrease"));
+        tfPwdlWert.setMinimumSize(new Dimension(40, tfPwdlWert.getMinimumSize().height));
+        tfPwdlWert.setPreferredSize(new Dimension(40, tfPwdlWert.getPreferredSize().height));
         setResizable(false);
         setTitle("Powerdownload - Einstellungen");
         NumberAndSpecialCharsInputVerifier verifier = new NumberAndSpecialCharsInputVerifier(
@@ -116,7 +125,7 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
 
         listSorting.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tfSleeptime.setText(Integer.toString(sleeptime));
-        
+
         initListeners();
         pack();
     }
@@ -126,18 +135,18 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
         tfPwdlCount.addActionListener(this);
         tfPwdlWert.addActionListener(this);
         tfSleeptime.addActionListener(this);
-        btnUp.addActionListener(new ActionListener() {
+        btnUp.addMouseListener(new MouseAdapter() {
 
-            public void actionPerformed(ActionEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 int index = listSorting.getSelectedIndex();
                 if (index > 0) {
                     moveListEntry(index, index - 1);
                 }
             }
         });
-        btnDown.addActionListener(new ActionListener() {
+        btnDown.addMouseListener(new MouseAdapter() {
 
-            public void actionPerformed(ActionEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 int index = listSorting.getSelectedIndex();
                 if (index < listSorting.getModel().getSize() - 1 && index != -1) {
                     moveListEntry(index, index + 1);
