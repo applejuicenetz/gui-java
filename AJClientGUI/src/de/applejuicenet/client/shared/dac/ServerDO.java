@@ -4,7 +4,7 @@ import java.text.*;
 import java.util.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.7 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/ServerDO.java,v 1.8 2003/11/03 15:18:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,6 +13,9 @@ import java.util.*;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerDO.java,v $
+ * Revision 1.8  2003/11/03 15:18:39  maj0r
+ * Optimierungen.
+ *
  * Revision 1.7  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -95,7 +98,7 @@ public class ServerDO {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof ServerDO))
+        if (obj.getClass()!=getClass())
         {
             return false;
         }

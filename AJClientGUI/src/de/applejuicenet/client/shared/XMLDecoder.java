@@ -8,15 +8,18 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.17 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/XMLDecoder.java,v 1.18 2003/11/03 15:18:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: open-source</p>
  *
- * @author: Maj0r <AJCoreGUI@maj0r.de>
+ * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: XMLDecoder.java,v $
+ * Revision 1.18  2003/11/03 15:18:39  maj0r
+ * Optimierungen.
+ *
  * Revision 1.17  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -43,7 +46,7 @@ import org.xml.sax.*;
  * Sourcestil verbessert.
  *
  * Revision 1.9  2003/06/10 12:31:03  maj0r
- * Historie eingef�gt.
+ * Historie eingefuegt.
  *
  *
  */
@@ -97,8 +100,9 @@ public abstract class XMLDecoder {
             int attributePathSize = attributePath.length;
             String result = null;
             Element e = null;
+            int nodesSize;
             for (int i = 0; i < attributePathSize; i++) {
-                int nodesSize = nodes.getLength();
+                nodesSize = nodes.getLength();
                 for (int x = 0; x < nodesSize; x++) {
                     if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
                         if (i == attributePathSize - 1 && lastIsElement) {
@@ -130,8 +134,9 @@ public abstract class XMLDecoder {
         nodes = rootNode.getChildNodes();
         Element e = null;
         int attributePathSize = attributePath.length;
+        int nodesSize;
         for (int i = 0; i < attributePathSize - 1; i++) {
-            int nodesSize = nodes.getLength();
+            nodesSize = nodes.getLength();
             for (int x = 0; x < nodesSize; x++) {
                 if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
                     if (i == attributePathSize - 2) {
@@ -159,8 +164,9 @@ public abstract class XMLDecoder {
         Element e = null;
         XMLSerializer xs = null;
         int attributePathSize = attributePath.length;
+        int nodesSize;
         for (int i = 0; i < attributePathSize - 1; i++) {
-            int nodesSize = nodes.getLength();
+            nodesSize = nodes.getLength();
             for (int x = 0; x < nodesSize; x++) {
                 if (nodes.item(x).getNodeName().equalsIgnoreCase(attributePath[i])) {
                     if (i == attributePathSize - 2) {
