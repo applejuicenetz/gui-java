@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.5 2003/09/05 11:13:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/AboutDialog.java,v 1.6 2003/09/06 14:47:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AboutDialog.java,v $
+ * Revision 1.6  2003/09/06 14:47:40  maj0r
+ * Credits angepasst.
+ *
  * Revision 1.5  2003/09/05 11:13:27  maj0r
  * Credits geaendert.
  *
@@ -178,7 +181,7 @@ public class AboutDialog extends JDialog {
             credits.add(new CreditsEntry(true, "Kontakt"));
             credits.add(new CreditsEntry(false, "irc.bongster.de"));
             credits.add(new CreditsEntry(false, "#applejuice"));
-            credits.add(new CreditsEntry(false, "www.applejuicenet.de"));
+            credits.add(new CreditsEntry(false, "www.applejuicenet.org"));
 
             backgroundImage = IconManager.getInstance().getIcon("applejuiceinfobanner").getImage();
             flagge = IconManager.getInstance().getIcon("deutsch").getImage();
