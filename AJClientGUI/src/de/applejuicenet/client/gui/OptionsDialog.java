@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.32 2004/01/25 10:16:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/OptionsDialog.java,v 1.33 2004/01/26 19:38:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +22,9 @@ import javax.swing.event.ListSelectionEvent;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: OptionsDialog.java,v $
+ * Revision 1.33  2004/01/26 19:38:36  maj0r
+ * Menueleiste ueberarbeitet.
+ *
  * Revision 1.32  2004/01/25 10:16:42  maj0r
  * Optionenmenue ueberarbeitet.
  *
@@ -158,7 +161,7 @@ public class OptionsDialog
                 registerLayout.show(registerPanel, ((OptionsRegister)selected).getMenuText());
             }
         });
-
+        menuList.setSelectedValue(optionPanels[0], true);
         speichern = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                   getFirstAttrbuteByTagName(new String[]{"einstform", "Button1",
                                                                                                          "caption"})));
@@ -263,6 +266,11 @@ public class OptionsDialog
             setFont(list.getFont());
             setOpaque(true);
             return this;
+        }
+
+        public Dimension getPreferredSize(){
+            Dimension size = super.getPreferredSize();
+            return new Dimension(size.width, size.height*2);
         }
     }
 }
