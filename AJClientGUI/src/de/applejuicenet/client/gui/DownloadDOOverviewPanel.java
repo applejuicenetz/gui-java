@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.16 2003/09/09 12:28:14 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadDOOverviewPanel.java,v 1.17 2003/10/04 15:30:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.gui;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDOOverviewPanel.java,v $
+ * Revision 1.17  2003/10/04 15:30:26  maj0r
+ * Userpartliste hinzugefuegt.
+ *
  * Revision 1.16  2003/09/09 12:28:14  maj0r
  * Wizard fertiggestellt.
  *
@@ -68,6 +71,7 @@ package de.applejuicenet.client.gui;
 
 import de.applejuicenet.client.shared.dac.DownloadDO;
 import de.applejuicenet.client.shared.dac.PartListDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.SwingWorker;
@@ -84,7 +88,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 public class DownloadDOOverviewPanel extends JPanel implements LanguageListener, DataUpdateListener{
-    private DownloadDO downloadDO = null;
     private DownloadPartListPanel actualDlOverviewTable = new DownloadPartListPanel();
     private JLabel actualDLDateiName = new JLabel();
     private JLabel label4 = new JLabel("Vorhanden");
@@ -93,6 +96,7 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
     private JLabel label1 = new JLabel("Überprüft");
     private Settings settings;
     private Logger logger;
+    private Thread partListWorkerThread = new Thread();
 
     public DownloadDOOverviewPanel() {
         logger = Logger.getLogger(getClass());
@@ -148,20 +152,57 @@ public class DownloadDOOverviewPanel extends JPanel implements LanguageListener,
     public void setDownloadDO(DownloadDO downloadDO) {
         try{
             if (!settings.isDownloadUebersicht() || downloadDO==null){
+                partListWorkerThread.interrupt();
                 actualDLDateiName.setText("");
                 actualDlOverviewTable.setPartList(null);
             }
-            else if (this.downloadDO != downloadDO && downloadDO.getStatus()!=DownloadDO.FERTIGSTELLEN &&
+            else if (downloadDO.getStatus()!=DownloadDO.FERTIGSTELLEN &&
                     downloadDO.getStatus()!=DownloadDO.FERTIG)
             {
-                this.downloadDO = downloadDO;
                 final DownloadDO tempDO = downloadDO;
+                partListWorkerThread.interrupt();
+                partListWorkerThread = new Thread() {
+                            public void run() {
+                                actualDLDateiName.setText(tempDO.getFilename() + " (" +
+                                        tempDO.getTemporaryFileNumber() + ".data)");
+                                while(!isInterrupted()){
+                                    PartListDO partList = ApplejuiceFassade.getInstance().getPartList(tempDO);
+                                    actualDlOverviewTable.setPartList(partList);
+                                    try{
+                                        sleep(15000);
+                                    }
+                                    catch (InterruptedException iE){
+                                        interrupt();
+                                    }
+                                }
+                            }
+                };
+                partListWorkerThread.start();
+            }
+        }
+        catch (Exception e)
+        {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    public void setDownloadSourceDO(DownloadSourceDO downloadSourceDO) {
+        try{
+            partListWorkerThread.interrupt();
+            if (!settings.isDownloadUebersicht() || downloadSourceDO==null){
+                actualDLDateiName.setText("");
+                actualDlOverviewTable.setPartList(null);
+            }
+            else
+            {
+                final DownloadSourceDO tempDO = downloadSourceDO;
                 final SwingWorker worker2 = new SwingWorker() {
                             public Object construct() {
-                                return ApplejuiceFassade.getInstance().getDownloadPartList(tempDO);
+                                return ApplejuiceFassade.getInstance().getPartList(tempDO);
                             }
                             public void finished(){
-                                actualDLDateiName.setText(tempDO.getFilename() + " (" + tempDO.getTemporaryFileNumber() + ".data)");
+                                actualDLDateiName.setText(tempDO.getFilename() + " (" + tempDO.getNickname() + ")");
                                 actualDlOverviewTable.setPartList((PartListDO) getValue());
                             }
                         };

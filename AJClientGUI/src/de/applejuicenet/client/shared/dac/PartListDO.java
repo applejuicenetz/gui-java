@@ -1,7 +1,7 @@
 package de.applejuicenet.client.shared.dac;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.4 2003/09/01 18:00:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/PartListDO.java,v 1.5 2003/10/04 15:30:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,6 +10,9 @@ package de.applejuicenet.client.shared.dac;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: PartListDO.java,v $
+ * Revision 1.5  2003/10/04 15:30:26  maj0r
+ * Userpartliste hinzugefuegt.
+ *
  * Revision 1.4  2003/09/01 18:00:15  maj0r
  * Wo es ging, DO auf primitiven Datentyp umgebaut.
  * Status "geprueft" eingefuehrt.
@@ -45,12 +48,26 @@ public class PartListDO {
     public static final Color COLOR_TYPE_9 = new Color(225, 225, 250);
     public static final Color COLOR_TYPE_10 = Color.BLUE;
 
-    private DownloadDO downloadDO;
+    public static final int MAIN_PARTLIST = 0;
+    public static final int SOURCE_PARTLIST = 1;
+
+    private Object valueHolderDO;
     private long groesse;
     private ArrayList parts = new ArrayList();
+    private int type;
 
     public PartListDO(DownloadDO downloadDO){
-        this.downloadDO = downloadDO;
+        valueHolderDO = downloadDO;
+        type = MAIN_PARTLIST;
+    }
+
+    public PartListDO(DownloadSourceDO downloadSourceDO){
+        valueHolderDO = downloadSourceDO;
+        type = SOURCE_PARTLIST;
+    }
+
+    public int getPartListType(){
+        return type;
     }
 
     public long getGroesse() {
@@ -69,8 +86,8 @@ public class PartListDO {
         this.groesse = groesse;
     }
 
-    public DownloadDO getDownloadDO() {
-        return downloadDO;
+    public Object getValueDO() {
+        return valueHolderDO;
     }
 
     public class Part{

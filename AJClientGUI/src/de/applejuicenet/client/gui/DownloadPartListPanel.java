@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.5 2003/09/07 12:11:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.6 2003/10/04 15:30:26 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.6  2003/10/04 15:30:26  maj0r
+ * Userpartliste hinzugefuegt.
+ *
  * Revision 1.5  2003/09/07 12:11:59  maj0r
  * Anzeige korrigiert, da in der aktuellen Core auch Verfuegbarkeitswerte > 10 vorkommen koennen.
  *
@@ -113,7 +116,7 @@ public class DownloadPartListPanel extends JPanel {
                     }
                     if (partPos>0)
                         partPos--;
-                    if (parts[partPos].getType() == -1)
+                    if (parts[partPos].getType() == -1 && partListDO.getPartListType()==PartListDO.MAIN_PARTLIST)
                     {
                         mbStart = position / 1048576 * 1048576;
                         mbEnde = mbStart + 1048576;
@@ -153,7 +156,7 @@ public class DownloadPartListPanel extends JPanel {
                     graphics.fillRect(x, y * 16 +1 , x + 1, (y + 1) * 16);
                     x += 2;
                 }
-                getGraphics().drawImage(image, 0, 0, null);
+                updateUI();
             }
             catch (Exception e)
             {

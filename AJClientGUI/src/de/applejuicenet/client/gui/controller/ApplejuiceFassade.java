@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.43 2003/10/01 16:52:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.44 2003/10/04 15:29:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.44  2003/10/04 15:29:12  maj0r
+ * Userpartliste hinzugefuegt.
+ *
  * Revision 1.43  2003/10/01 16:52:53  maj0r
  * Suche weiter gefuehrt.
  * Version 0.32
@@ -393,8 +396,13 @@ public class ApplejuiceFassade { //Singleton-Implementierung
         }
     }
 
-    public PartListDO getDownloadPartList(DownloadDO downloadDO) {
-        DownloadPartListXMLHolder partlistXML = new DownloadPartListXMLHolder(downloadDO);
+    public PartListDO getPartList(DownloadDO downloadDO) {
+        PartListHolder partlistXML = new DownloadPartListXMLHolder(downloadDO);
+        return partlistXML.getPartList();
+    }
+
+    public PartListDO getPartList(DownloadSourceDO downloadSourceDO) {
+        PartListHolder partlistXML = new UserPartListXMLHolder(downloadSourceDO);
         return partlistXML.getPartList();
     }
 
