@@ -8,36 +8,13 @@ import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.shared.dac.UploadDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/IconGetter.java,v 1.7 2004/05/23 17:58:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/IconGetter.java,v 1.8 2004/05/25 08:53:02 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
- *
- * $Log: IconGetter.java,v $
- * Revision 1.7  2004/05/23 17:58:29  maj0r
- * Anpassungen an neue Schnittstelle.
- *
- * Revision 1.6  2004/02/21 17:09:57  maj0r
- * Neues Icon fuer unbekannte Verbindung eingebaut.
- *
- * Revision 1.5  2004/02/09 14:21:32  maj0r
- * Icons für Upload-DirectStates eingebaut.
- *
- * Revision 1.4  2004/02/05 23:11:28  maj0r
- * Formatierung angepasst.
- *
- * Revision 1.3  2003/12/29 16:04:17  maj0r
- * Header korrigiert.
- *
- * Revision 1.2  2003/10/16 12:06:37  maj0r
- * Diverse Schoenheitskorrekturen und Optimierungen.
- *
- * Revision 1.1  2003/09/02 16:06:26  maj0r
- * Downloadbaum komplett umgebaut.
- *
+ * @author: Maj0r [Maj0r@applejuicenet.de]
  *
  */
 
@@ -74,7 +51,7 @@ public abstract class IconGetter {
         else if (node.getClass() == UploadDO.class) {
             if ((((UploadDO)node).getStatus()==UploadDO.AKTIVE_UEBERTRAGUNG
                 || ((UploadDO)node).getStatus()== UploadDO.WARTESCHLANGE)
-               && ((UploadDO)node).getDirectState()==UploadDO.STATE_UNBEKANNT){
+               && ((UploadDO)node).getDirectState()==UploadDO.STATE_DIREKT_VERBUNDEN){
                 return direktVerbundenIcon;
             }
             else{
