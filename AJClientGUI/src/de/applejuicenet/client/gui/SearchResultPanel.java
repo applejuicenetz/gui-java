@@ -32,7 +32,7 @@ import de.applejuicenet.client.shared.Search;
 import de.applejuicenet.client.shared.Search.SearchEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.15 2004/02/12 21:16:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.16 2004/02/13 14:50:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,6 +41,10 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.16  2004/02/13 14:50:56  maj0r
+ * Bug #129 gefixt (Danke an dsp2004)
+ * WebsiteException durch Ueberlastung des Servers sollte nun weitgehend unterbunden sein.
+ *
  * Revision 1.15  2004/02/12 21:16:51  maj0r
  * Bug #23 gefixt (Danke an computer.ist.org)
  * Suche abbrechen korrigiert.
@@ -211,7 +215,7 @@ public class SearchResultPanel
                                       "|" + entry.getChecksumme() + "|" +
                                       entry.getGroesse() + "/");
                         String link = toCopy.toString();
-                        ApplejuiceFassade.getInstance().processLink(link);
+                        processLink(link);
                     }
                     else if (result.getClass() == Search.SearchEntry.FileName.class) {
                         String dateiname = ( (Search.SearchEntry.FileName)
@@ -235,7 +239,7 @@ public class SearchResultPanel
                                           "|" +
                                           entry.getGroesse() + "/");
                             String link = toCopy.toString();
-                            ApplejuiceFassade.getInstance().processLink(link);
+                            processLink(link);
                         }
                     }
                 }
@@ -249,6 +253,14 @@ public class SearchResultPanel
         }
         JTableHeader header = searchResultTable.getTableHeader();
         header.addMouseListener(new SortMouseAdapter(header, renderer));
+    }
+
+    private void processLink(final String link){
+        new Thread(){
+            public void run(){
+                ApplejuiceFassade.getInstance().processLink(link);
+            }
+        }.start();
     }
 
     public static void setTexte(String[] texte, String[] tableColumns) {

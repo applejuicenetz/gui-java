@@ -38,7 +38,7 @@ import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.shared.Search;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.110 2004/02/12 21:26:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.111 2004/02/13 14:50:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -278,7 +278,7 @@ import de.applejuicenet.client.shared.Search;
  */
 
 public class ApplejuiceFassade {
-    public static final String GUI_VERSION = "0.55.4";
+    public static final String GUI_VERSION = "0.55.5";
 
     private HashSet downloadListener;
     private HashSet searchListener;
@@ -913,30 +913,24 @@ public class ApplejuiceFassade {
     }
 
     public synchronized void processLink(final String link) {
-        new Thread() {
-            public void run() {
-                try {
-                    if (link == null || link.length() == 0) {
-                        if (logger.isEnabledFor(Level.INFO)) {
-                            logger.info("Ungueltiger Link uebergeben: " + link);
-                        }
-                        return;
-                    }
-                    String password = PropertiesManager.getOptionsManager().
-                        getRemoteSettings().getOldPassword();
-                    HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
-                                                 "/function/processlink?password=" +
-                                                 password + "&link=" + link, false);
+        try {
+            if (link == null || link.length() == 0) {
+                if (logger.isEnabledFor(Level.INFO)) {
+                    logger.info("Ungueltiger Link uebergeben: " + link);
                 }
-                catch (Exception e) {
-                    if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error("Unbehandelte Exception", e);
-                    }
-                }
+                return;
+            }
+            String password = PropertiesManager.getOptionsManager().
+                getRemoteSettings().getOldPassword();
+            HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.GET,
+                                         "/function/processlink?password=" +
+                                         password + "&link=" + link, false);
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Unbehandelte Exception", e);
             }
         }
-
-        .start();
     }
 
     public void setPowerDownload(int[] id, int powerDownload) {

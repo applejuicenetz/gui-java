@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.52 2004/02/05 23:11:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ServerPanel.java,v 1.53 2004/02/13 14:50:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -57,6 +57,10 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ServerPanel.java,v $
+ * Revision 1.53  2004/02/13 14:50:56  maj0r
+ * Bug #129 gefixt (Danke an dsp2004)
+ * WebsiteException durch Ueberlastung des Servers sollte nun weitgehend unterbunden sein.
+ *
  * Revision 1.52  2004/02/05 23:11:27  maj0r
  * Formatierung angepasst.
  *
@@ -327,8 +331,13 @@ public class ServerPanel
                                              appDimension.height) / 2);
                 newServerDialog.show();
                 if (newServerDialog.isLegal()) {
-                    ApplejuiceFassade.getInstance().processLink(newServerDialog.
-                        getLink());
+                    final String link = newServerDialog.
+                                getLink();
+                    new Thread(){
+                        public void run(){
+                            ApplejuiceFassade.getInstance().processLink(link);
+                        }
+                    }.start();
                 }
             }
         };

@@ -73,7 +73,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.94 2004/02/05 23:11:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.95 2004/02/13 14:50:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -82,6 +82,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.95  2004/02/13 14:50:56  maj0r
+ * Bug #129 gefixt (Danke an dsp2004)
+ * WebsiteException durch Ueberlastung des Servers sollte nun weitgehend unterbunden sein.
+ *
  * Revision 1.94  2004/02/05 23:11:26  maj0r
  * Formatierung angepasst.
  *
@@ -1001,40 +1005,44 @@ public class AppleJuiceDialog
         fileChooser.setMultiSelectionEnabled(false);
         int i = fileChooser.showOpenDialog(this);
         if (i == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
+            final File file = fileChooser.getSelectedFile();
             if (file.isFile()) {
-                BufferedReader reader = null;
-                try {
-                    reader = new BufferedReader(new
-                                                FileReader(file));
-                    String line = "";
-                    while ( (line = reader.readLine()) != null) {
-                        if (line.compareTo("100") == 0) {
-                            break;
+                new Thread(){
+                    public void run(){
+                        BufferedReader reader = null;
+                        try {
+                            reader = new BufferedReader(new
+                                                        FileReader(file));
+                            String line = "";
+                            while ( (line = reader.readLine()) != null) {
+                                if (line.compareTo("100") == 0) {
+                                    break;
+                                }
+                            }
+                            String size = "";
+                            String filename = "";
+                            String checksum = "";
+                            String link = "";
+                            ApplejuiceFassade af = ApplejuiceFassade.getInstance();
+                            while ( (line = reader.readLine()) != null) {
+                                filename = line;
+                                checksum = reader.readLine();
+                                size = reader.readLine();
+                                if (size != null && checksum != null) {
+                                    link = "ajfsp://file|" + filename + "|" + checksum +
+                                        "|" + size + "/";
+                                    af.processLink(link);
+                                }
+                            }
+                        }
+                        catch (FileNotFoundException ex) {
+                            //nix zu tun
+                        }
+                        catch (IOException ex1) {
+                            //nix zu tun
                         }
                     }
-                    String size = "";
-                    String filename = "";
-                    String checksum = "";
-                    String link = "";
-                    ApplejuiceFassade af = ApplejuiceFassade.getInstance();
-                    while ( (line = reader.readLine()) != null) {
-                        filename = line;
-                        checksum = reader.readLine();
-                        size = reader.readLine();
-                        if (size != null && checksum != null) {
-                            link = "ajfsp://file|" + filename + "|" + checksum +
-                                "|" + size + "/";
-                            af.processLink(link);
-                        }
-                    }
-                }
-                catch (FileNotFoundException ex) {
-                    //nix zu tun
-                }
-                catch (IOException ex1) {
-                    //nix zu tun
-                }
+                }.start();
             }
         }
     }
