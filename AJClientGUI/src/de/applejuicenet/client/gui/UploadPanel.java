@@ -19,7 +19,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.25 2003/10/14 15:40:25 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/UploadPanel.java,v 1.26 2003/11/30 17:01:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,6 +28,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: UploadPanel.java,v $
+ * Revision 1.26  2003/11/30 17:01:33  maj0r
+ * Hintergrundfarbe aller Scrollbereiche an ihre Tabellen angepasst.
+ *
  * Revision 1.25  2003/10/14 15:40:25  maj0r
  * Logger eingebaut.
  *
@@ -129,7 +132,11 @@ public class UploadPanel
         {
             uploadDataTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
-        JScrollPane aScrollPane = new JScrollPane(uploadDataTable);
+        JPanel panel1 = new JPanel(new BorderLayout());
+        panel1.setBackground(uploadDataTable.getBackground());
+        panel1.setOpaque(true);
+        panel1.add(uploadDataTable, BorderLayout.CENTER);
+        JScrollPane aScrollPane = new JScrollPane(panel1);
         add(aScrollPane, BorderLayout.CENTER);
 
         JPanel panel = new JPanel();

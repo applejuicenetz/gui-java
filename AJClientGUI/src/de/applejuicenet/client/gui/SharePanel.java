@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.41 2003/10/21 14:08:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SharePanel.java,v 1.42 2003/11/30 17:01:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,6 +39,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SharePanel.java,v $
+ * Revision 1.42  2003/11/30 17:01:33  maj0r
+ * Hintergrundfarbe aller Scrollbereiche an ihre Tabellen angepasst.
+ *
  * Revision 1.41  2003/10/21 14:08:45  maj0r
  * Mittels PMD Code verschoenert, optimiert.
  *
@@ -332,6 +335,9 @@ public class SharePanel
                     Point p = me.getPoint();
                     int iRow = shareTable.rowAtPoint(p);
                     int iCol = shareTable.columnAtPoint(p);
+                    if (iRow==-1 || iCol==-1){
+                        return;
+                    }
                     shareTable.setRowSelectionInterval(iRow, iRow);
                     shareTable.setColumnSelectionInterval(iCol, iCol);
                 }
@@ -520,7 +526,12 @@ public class SharePanel
         panel1.add(prioritaetAufheben);
 
         panelCenter.add(panel1, BorderLayout.NORTH);
-        panelCenter.add(new JScrollPane(shareTable), BorderLayout.CENTER);
+        JPanel panel2 = new JPanel(new BorderLayout());
+        panel2.setBackground(shareTable.getBackground());
+        panel2.setOpaque(true);
+        panel2.add(shareTable, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(panel2);
+        panelCenter.add(scrollPane, BorderLayout.CENTER);
         panelCenter.add(dateien, BorderLayout.SOUTH);
 
         JScrollPane aScrollPane = new JScrollPane(folderTree);
