@@ -10,7 +10,7 @@ import javax.swing.Icon;
 import de.applejuicenet.client.gui.tables.Node;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.10 2004/02/27 16:48:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.11 2004/02/27 20:39:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.gui.tables.Node;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
+ * Revision 1.11  2004/02/27 20:39:24  maj0r
+ * Icons weiter ausgebaut.
+ *
  * Revision 1.10  2004/02/27 16:48:27  maj0r
  * Suchergebnisse werden nun, wenn moeglich mit einem sprechenden Icon angezeigt.
  *
@@ -152,6 +155,9 @@ public class Search {
         public static final String TYPE_PDF = "pdf";
         public static final String TYPE_IMAGE = "image";
         public static final String TYPE_MOVIE = "movie";
+        public static final String TYPE_ISO = "iso";
+        public static final String TYPE_TEXT = "text";
+        public static final String TYPE_SOUND = "sound";
         public static final String TYPE_UNKNOWN = "treeRoot";
 
         private String type = TYPE_UNKNOWN;
@@ -195,6 +201,9 @@ public class Search {
             int pdf = 0;
             int image = 0;
             int movie = 0;
+            int iso = 0;
+            int text = 0;
+            int sound = 0;
             int currentMax = 0;
             for (int i=0; i<fileNames.length; i++){
                 String fileNameType = fileNames[i].getFileType();
@@ -216,15 +225,37 @@ public class Search {
                     }
                 }
                 else if (fileNameType.equals(TYPE_MOVIE)){
-                    image++;
-                    if (image>currentMax){
+                    movie++;
+                    if (movie>currentMax){
                         currentMax = movie;
                         type = TYPE_MOVIE;
                     }
                 }
+                else if (fileNameType.equals(TYPE_ISO)){
+                    iso++;
+                    if (iso>currentMax){
+                        currentMax = iso;
+                        type = TYPE_ISO;
+                    }
+                }
+                else if (fileNameType.equals(TYPE_TEXT)){
+                    text++;
+                    if (text>currentMax){
+                        currentMax = text;
+                        type = TYPE_TEXT;
+                    }
+                }
+                else if (fileNameType.equals(TYPE_SOUND)){
+                    sound++;
+                    if (sound>currentMax){
+                        currentMax = sound;
+                        type = TYPE_SOUND;
+                    }
+                }
             }
-            if (pdf == image){
-                type = TYPE_UNKNOWN;
+            if (pdf == image && movie == iso && image == movie
+                && movie == text & text == sound){
+                    type = TYPE_UNKNOWN;
             }
         }
 
@@ -285,19 +316,40 @@ public class Search {
             }
 
             private void calculatePossibleFileType(){
-                if (dateiName.endsWith(".pdf")){
+                String lower = dateiName.toLowerCase();
+                if (lower.endsWith(".pdf")){
                     fileType = TYPE_PDF;
                 }
-                else if (dateiName.endsWith(".bmp") || dateiName.endsWith(".jpg")
-                         || dateiName.endsWith(".tif") || dateiName.endsWith(".png")
-                         || dateiName.endsWith(".pcx")){
+                else if (lower.endsWith(".bmp") || lower.endsWith(".jpg")
+                         || lower.endsWith(".tif") || lower.endsWith(".png")
+                         || lower.endsWith(".pcx")){
                     fileType = TYPE_IMAGE;
                 }
-                else if (dateiName.endsWith(".mpg") || dateiName.endsWith(".avi")
-                         || dateiName.endsWith(".mov") || dateiName.endsWith(".mpeg")
-                         || dateiName.endsWith(".dat") || dateiName.endsWith(".ra")
-                         || dateiName.endsWith(".vob")){
+                else if (lower.endsWith(".mpg") || lower.endsWith(".avi")
+                         || lower.endsWith(".mov") || lower.endsWith(".mpeg")
+                         || lower.endsWith(".dat") || lower.endsWith(".ra")
+                         || lower.endsWith(".vob") || lower.endsWith(".rm")){
                     fileType = TYPE_MOVIE;
+                }
+                else if (lower.endsWith(".iso") || lower.endsWith(".bin")
+                         || lower.endsWith(".cue") || lower.endsWith(".dao")
+                         || lower.endsWith(".img") || lower.endsWith(".cif")
+                         || lower.endsWith(".nrg") || lower.endsWith(".c2d")
+                         || lower.endsWith(".bwt") || lower.endsWith(".pdi")
+                         || lower.endsWith(".b5t") || lower.endsWith(".cdi")
+                         || lower.endsWith(".ccd") || lower.endsWith(".tao")){
+                    fileType = TYPE_ISO;
+                }
+                else if (lower.endsWith(".txt") || lower.endsWith(".nfo")
+                         || lower.endsWith(".doc")){
+                    fileType = TYPE_TEXT;
+                }
+                else if (lower.endsWith(".mp3") || lower.endsWith(".wav")
+                         || lower.endsWith(".mid") || lower.endsWith(".mp2")
+                         || lower.endsWith(".m2v") || lower.endsWith(".wma")
+                         || lower.endsWith(".midi") || lower.endsWith(".ogg")
+                         || lower.endsWith(".mmf")){
+                    fileType = TYPE_SOUND;
                 }
             }
         }
