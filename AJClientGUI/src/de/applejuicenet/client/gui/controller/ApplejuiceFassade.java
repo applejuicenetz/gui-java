@@ -39,7 +39,7 @@ import java.util.HashSet;
 import de.applejuicenet.client.shared.NetworkInfo;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.142 2004/06/15 16:22:08 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.143 2004/06/23 13:34:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -553,11 +553,18 @@ public class ApplejuiceFassade {
 
     public void startSearch(String searchString) {
         try {
+        	if (searchString == null){
+        		return;
+        	}
+        	String toSearch = searchString.trim();
+        	if (toSearch.length() == 0){
+        		return;
+        	}
             String password = OptionsManagerImpl.getInstance().
                 getRemoteSettings().getOldPassword();
             HtmlLoader.getHtmlXMLContent(getHost(), HtmlLoader.POST,
                                          "/function/search?password=" +
-                                         password + "&search=" + searchString, false);
+                                         password + "&search=" + toSearch, false);
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
