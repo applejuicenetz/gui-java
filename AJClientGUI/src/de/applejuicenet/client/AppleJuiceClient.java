@@ -41,9 +41,11 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
 import java.io.DataInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import de.applejuicenet.client.gui.shared.KeyStates;
+import java.awt.event.KeyEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.74 2004/06/15 09:43:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.75 2004/07/09 07:48:43 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -246,8 +248,10 @@ public class AppleJuiceClient {
                 ApplejuiceFassade.GUI_VERSION + " wird gestartet...";
             ConnectFrame connectFrame = new ConnectFrame();
             splash = new Splash(connectFrame,
-                                       IconManager.getInstance().getIcon(
+                                IconManager.getInstance().getIcon(
                 "splashscreen").getImage(), 0, 100);
+            KeyStates ks = new KeyStates();
+            splash.addKeyListener(ks);
             splash.show();
             try {
                 if (OptionsManagerImpl.getInstance().isThemesSupported()) {
@@ -285,6 +289,10 @@ public class AppleJuiceClient {
             splash.setProgress(10, "Teste Verbindung...");
             boolean showDialog = OptionsManagerImpl.getInstance().
                 shouldShowConnectionDialogOnStartup();
+            if (!showDialog) {
+                showDialog = ks.isKeyDown(KeyEvent.VK_SHIFT);
+            }
+
             ApplejuiceFassade applejuiceFassade = ApplejuiceFassade.getInstance();
             while (showDialog || !applejuiceFassade.istCoreErreichbar()) {
                 splash.setVisible(false);
