@@ -14,7 +14,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.dac.PartListDO.Part;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.21 2004/02/20 14:55:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPartListPanel.java,v 1.22 2004/02/24 08:11:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,6 +23,10 @@ import de.applejuicenet.client.shared.dac.PartListDO.Part;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadPartListPanel.java,v $
+ * Revision 1.22  2004/02/24 08:11:39  maj0r
+ * Bug #239 gefixt (Danke an dsp2004)
+ * ArrayIndexOutOfBoundsException behoben.
+ *
  * Revision 1.21  2004/02/20 14:55:02  maj0r
  * Speicheroptimierungen.
  *
@@ -119,7 +123,7 @@ public class DownloadPartListPanel
             this.partListDO = partListDO;
             height = (int) getSize().getHeight();
             width = (int) getSize().getWidth();
-            if (partListDO != null) {
+            if (partListDO != null && partListDO.getParts().length>0) {
                 int zeilenHoehe = 15;
                 int zeilen = height / zeilenHoehe;
                 miniFile = false;
