@@ -3,9 +3,12 @@ package de.applejuicenet.client.shared;
 import java.util.Vector;
 import java.util.HashMap;
 import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
+import java.util.ArrayList;
+import java.util.HashSet;
+import de.applejuicenet.client.gui.tables.download.DownloadModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.4 2003/12/30 13:08:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/Search.java,v 1.5 2004/01/08 07:47:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -14,6 +17,9 @@ import de.applejuicenet.client.shared.Search.SearchEntry.FileName;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: Search.java,v $
+ * Revision 1.5  2004/01/08 07:47:17  maj0r
+ * 98%-CPU-Last Bug durch Suche gefixt.
+ *
  * Revision 1.4  2003/12/30 13:08:32  maj0r
  * Suchanzeige korrigiert
  * Es kann passieren, dass nicht alle gefundenen Suchergebnisse beim Core ankommen, die Ausgabe wurde entsprechend korrigiert.
@@ -36,12 +42,22 @@ public class Search {
     private int offeneSuchen;
     private int gefundenDateien;
     private int durchsuchteClients;
-    private HashMap searchEntries = new HashMap();
+    private HashMap mapping = new HashMap();
+    private ArrayList entries = new ArrayList();
+    private boolean changed = true;
 
     public static int currentSearchCount = 0;
 
     public Search(int id) {
         this.id = id;
+    }
+
+    public boolean isChanged(){
+        return changed;
+    }
+
+    public synchronized void setChanged(boolean changed){
+        this.changed = changed;
     }
 
     public String getSuchText() {
@@ -82,27 +98,31 @@ public class Search {
 
     public void addSearchEntry(SearchEntry searchEntry){
         MapSetStringKey key = new MapSetStringKey(searchEntry.getId());
-        if (!searchEntries.containsKey(key)){
-            searchEntries.put(key, searchEntry);
+        if (!mapping.containsKey(key)){
+            mapping.put(key, searchEntry);
+            entries.add(searchEntry);
+            setChanged(true);
         }
         else{
-            SearchEntry searchEntryOld = (SearchEntry)searchEntries.get(key);
+            SearchEntry oldSearchEntry = (SearchEntry)mapping.get(key);
             FileName[] fileNames = searchEntry.getFileNames();
             for (int i=0; i<fileNames.length; i++){
-                searchEntryOld.addFileName(fileNames[i]);
+                oldSearchEntry.addFileName(fileNames[i]);
             }
         }
     }
 
     public SearchEntry[] getSearchEntries(){
-        return (SearchEntry[]) searchEntries.values().toArray(new SearchEntry[searchEntries.size()]);
+        return (SearchEntry[]) entries.toArray(new SearchEntry[entries.size()]);
     }
 
     public class SearchEntry{
         private int id;
         private String checksumme;
         private long groesse;
-        private HashMap fileNames = new HashMap();
+        private String groesseAsString = null;
+        private ArrayList fileNames = new ArrayList();
+        private HashSet keys = new HashSet();
 
         public SearchEntry(int id, String checksumme, long groesse) {
             this.id = id;
@@ -122,19 +142,34 @@ public class Search {
             return groesse;
         }
 
+        public String getGroesseAsString() {
+            if (groesseAsString == null){
+                groesseAsString = DownloadModel.parseGroesse(groesse);
+            }
+            return groesseAsString;
+        }
+
         public void addFileName(FileName fileName){
             MapSetStringKey key = new MapSetStringKey(fileName.getDateiName());
-            if (!fileNames.containsKey(key)){
-                fileNames.put(key, fileName);
+            if (!keys.contains(key)){
+                keys.add(key);
+                fileNames.add(fileName);
+                setChanged(true);
             }
             else{
-                FileName fileNameOld = (FileName)fileNames.get(key);
-                fileNameOld.setHaeufigkeit(fileName.getHaeufigkeit());
+                FileName oldFileName = null;
+                int size = fileNames.size();
+                for (int i=0; i<size; i++){
+                    oldFileName = (FileName)fileNames.get(i);
+                    if (oldFileName.getDateiName().compareToIgnoreCase(fileName.getDateiName())==0){
+                        oldFileName.setHaeufigkeit(fileName.getHaeufigkeit());
+                    }
+                }
             }
         }
 
         public FileName[] getFileNames(){
-            return (FileName[]) fileNames.values().toArray(new FileName[fileNames.size()]);
+            return (FileName[]) fileNames.toArray(new FileName[fileNames.size()]);
         }
 
         public class FileName{

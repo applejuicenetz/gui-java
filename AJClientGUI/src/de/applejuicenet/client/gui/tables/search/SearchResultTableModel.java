@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchResultTableModel.java,v 1.7 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchResultTableModel.java,v 1.8 2004/01/08 07:47:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,6 +20,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultTableModel.java,v $
+ * Revision 1.8  2004/01/08 07:47:11  maj0r
+ * 98%-CPU-Last Bug durch Suche gefixt.
+ *
  * Revision 1.7  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -143,15 +146,13 @@ public class SearchResultTableModel
                                 return dateiname;
                             }
                         case 1:
-                            return parseGroesse(entry.getGroesse());
+                            return entry.getGroesseAsString();
                         case 2:
                             {
                                 Search.SearchEntry.FileName[] filenames = entry.getFileNames();
                                 int haeufigkeit = 0;
                                 for (int i = 0; i < filenames.length; i++) {
-                                    if (filenames[i].getHaeufigkeit() > haeufigkeit) {
-                                        haeufigkeit = filenames[i].getHaeufigkeit();
-                                    }
+                                    haeufigkeit += filenames[i].getHaeufigkeit();
                                 }
                                 return Integer.toString(haeufigkeit);
                             }
@@ -179,54 +180,5 @@ public class SearchResultTableModel
                 logger.error("Unbehandelte Exception", e);
         }
         return null;
-    }
-
-    private String parseGroesse(long groesse) {
-        try {
-            double share = Double.parseDouble(Long.toString(groesse));
-            int faktor;
-            if (share == 0) {
-                return "";
-            }
-            if (share < 1024) {
-                return groesse + " Bytes";
-            }
-            else if (share / 1024 < 1024) {
-                faktor = 1024;
-            }
-            else if (share / 1048576 < 1024) {
-                faktor = 1048576;
-            }
-            else if (share / 1073741824 < 1024) {
-                faktor = 1073741824;
-            }
-            else {
-                faktor = 1;
-            }
-            share = share / faktor;
-            String result = Double.toString(share);
-            if (result.indexOf(".") + 3 < result.length()) {
-                result = result.substring(0, result.indexOf(".") + 3);
-            }
-            result = result.replace('.', ',');
-            if (faktor == 1024) {
-                result += " KB";
-            }
-            else if (faktor == 1048576) {
-                result += " MB";
-            }
-            else if (faktor == 1073741824) {
-                result += " GB";
-            }
-            else {
-                result += " ??";
-            }
-            return result;
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Unbehandelte Exception", e);
-            return "";
-        }
     }
 }

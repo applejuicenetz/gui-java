@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.util.HashMap;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.4 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/search/Attic/SearchNode.java,v 1.5 2004/01/08 07:47:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import java.util.HashMap;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchNode.java,v $
+ * Revision 1.5  2004/01/08 07:47:11  maj0r
+ * 98%-CPU-Last Bug durch Suche gefixt.
+ *
  * Revision 1.4  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -86,14 +89,19 @@ public class SearchNode implements Node{
                 for (int i=0; i<entries.length; i++){
                     children.put(new MapSetStringKey(entries[i].getId()), new SearchNode(entries[i]));
                 }
+                ((Search)valueObject).setChanged(false);
             }
             else{
-                Search.SearchEntry[] entries = ((Search)valueObject).getSearchEntries();
-                MapSetStringKey key;
-                for (int i=0; i<entries.length; i++){
-                    key = new MapSetStringKey(entries[i].getId());
-                    if (!children.containsKey(key)){
-                        children.put(key, new SearchNode(entries[i]));
+                if (((Search)valueObject).isChanged()){
+                    Search.SearchEntry[] entries = ( (Search) valueObject).
+                        getSearchEntries();
+                    ((Search)valueObject).setChanged(false);
+                    MapSetStringKey key;
+                    for (int i = 0; i < entries.length; i++) {
+                        key = new MapSetStringKey(entries[i].getId());
+                        if (!children.containsKey(key)) {
+                            children.put(key, new SearchNode(entries[i]));
+                        }
                     }
                 }
             }

@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.18 2003/12/29 16:04:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchPanel.java,v 1.19 2004/01/08 07:47:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchPanel.java,v $
+ * Revision 1.19  2004/01/08 07:47:11  maj0r
+ * 98%-CPU-Last Bug durch Suche gefixt.
+ *
  * Revision 1.18  2003/12/29 16:04:17  maj0r
  * Header korrigiert.
  *
@@ -79,6 +82,7 @@ public class SearchPanel
     private JLabel label2 = new JLabel("0 Suchanfragen in Bearbeitung");
     private Logger logger;
     private HashMap searchIds = new HashMap();
+    private boolean panelSelected = false;
 
     public SearchPanel() {
         _this = this;
@@ -142,10 +146,16 @@ public class SearchPanel
                 }
             }
         });
+
         ApplejuiceFassade.getInstance().addDataUpdateListener(this, DataUpdateListener.SEARCH_CHANGED);
     }
 
     public void registerSelected() {
+        panelSelected = true;
+        SearchResultPanel searchResultPanel = (SearchResultPanel) resultPanel.getSelectedComponent();
+        if (searchResultPanel != null){
+            searchResultPanel.updateSearchContent();
+        }
     }
 
     public void fireLanguageChanged() {
@@ -228,7 +238,9 @@ public class SearchPanel
                         }
                         else{
                             searchResultPanel = (SearchResultPanel) searchIds.get(key);
-                            searchResultPanel.updateSearchContent();
+                            if (panelSelected){
+                                searchResultPanel.updateSearchContent();
+                            }
                         }
                     }
                     Object[] searchPanels = resultPanel.getComponents();
@@ -258,5 +270,6 @@ public class SearchPanel
     }
 
     public void lostSelection() {
+        panelSelected = false;
     }
 }

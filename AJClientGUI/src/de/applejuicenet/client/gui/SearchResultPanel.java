@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import de.applejuicenet.client.shared.Search.SearchEntry;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.9 2004/01/07 14:51:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/SearchResultPanel.java,v 1.10 2004/01/08 07:47:11 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,6 +30,9 @@ import de.applejuicenet.client.shared.Search.SearchEntry;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: SearchResultPanel.java,v $
+ * Revision 1.10  2004/01/08 07:47:11  maj0r
+ * 98%-CPU-Last Bug durch Suche gefixt.
+ *
  * Revision 1.9  2004/01/07 14:51:39  maj0r
  * Bug #23 gefixt (Danke an computer.ist.org)
  * Suche laesst sich nun korrekt abrechen.
@@ -232,8 +235,10 @@ public class SearchResultPanel extends JPanel{
 
     public void updateSearchContent(){
         try{
-            searchResultTable.updateUI();
-            updateZahlen();
+            if(search.isChanged()){
+                searchResultTable.updateUI();
+                updateZahlen();
+            }
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR))
