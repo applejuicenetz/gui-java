@@ -8,7 +8,7 @@ import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.shared.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.11 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.12 2003/06/22 19:02:58 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +17,9 @@ import de.applejuicenet.client.shared.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.12  2003/06/22 19:02:58  maj0r
+ * Fehlernachricht bei nicht erreichbarem Core geändert.
+ *
  * Revision 1.11  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -32,6 +35,7 @@ public class AppleJuiceClient {
       String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
           getFirstAttrbuteByTagName(new String[] {"javagui", "startup",
                                     "verbindungsfehler"}));
+      nachricht = nachricht.replaceFirst("%s", OptionsManager.getInstance().getRemoteSettings().getHost());
       JOptionPane.showMessageDialog(new Frame(), nachricht, titel,
                                     JOptionPane.OK_OPTION);
       System.exit( -1);
