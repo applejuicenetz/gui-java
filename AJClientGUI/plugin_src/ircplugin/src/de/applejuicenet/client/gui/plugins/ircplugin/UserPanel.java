@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.5 2004/06/28 15:49:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/UserPanel.java,v 1.6 2004/06/29 08:58:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -114,7 +114,7 @@ public class UserPanel
             if (message.startsWith("/")) {
                 // A command
                 if (message.toLowerCase().compareTo("/ajstats") == 0 || message.toLowerCase().compareTo("/ajversinfo") == 0
-                		|| message.toLowerCase().compareTo("/optionsinfo") == 0) {
+                		|| message.toLowerCase().compareTo("/ajoptionsinfo") == 0) {
             		long currentTime = System.currentTimeMillis();
                 	if (message.toLowerCase().compareTo("/ajstats") == 0){
                 		String text = ApplejuiceFassade.getInstance().getStats().substring(3);
