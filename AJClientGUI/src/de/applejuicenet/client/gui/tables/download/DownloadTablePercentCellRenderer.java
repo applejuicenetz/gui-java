@@ -59,7 +59,7 @@ public class DownloadTablePercentCellRenderer
                                              boolean hasFocus,
                                              int row,
                                              int column) {
-        Component c = downloadMainNode.getProgressbarComponent(value);
+        Component c = downloadMainNode.getProgressbarComponent(table, value);
         DownloadDO downloadDO = downloadMainNode.getDownloadDO();
         if (isSelected) {
             c.setBackground(table.getSelectionBackground());
@@ -87,7 +87,7 @@ public class DownloadTablePercentCellRenderer
                                            boolean hasFocus,
                                            int row,
                                            int column) {
-        Component c = downloadSourceDO.getProgressbarComponent(value);
+        Component c = downloadSourceDO.getProgressbarComponent(table, value);
         if (isSelected) {
             c.setBackground(table.getSelectionBackground());
             c.setForeground(table.getSelectionForeground());
@@ -111,7 +111,7 @@ public class DownloadTablePercentCellRenderer
                                               boolean hasFocus,
                                               int row,
                                               int column) {
-        Component c = downloadDirectoryNode.getProgressbarComponent(value);
+        Component c = downloadDirectoryNode.getProgressbarComponent(table, value);
         if (isSelected) {
             c.setBackground(table.getSelectionBackground());
             c.setForeground(table.getSelectionForeground());

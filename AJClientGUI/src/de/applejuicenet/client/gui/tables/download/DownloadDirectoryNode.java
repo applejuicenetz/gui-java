@@ -11,9 +11,10 @@ import javax.swing.JLabel;
 import de.applejuicenet.client.gui.tables.Node;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.DownloadDO;
+import javax.swing.JTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.9 2004/02/24 15:38:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/download/Attic/DownloadDirectoryNode.java,v 1.10 2004/02/24 18:21:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -22,6 +23,9 @@ import de.applejuicenet.client.shared.dac.DownloadDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadDirectoryNode.java,v $
+ * Revision 1.10  2004/02/24 18:21:51  maj0r
+ * Schrift korrigiert.
+ *
  * Revision 1.9  2004/02/24 15:38:11  maj0r
  * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
  *
@@ -353,12 +357,14 @@ public class DownloadDirectoryNode
         }
     }
 
-    public Component getProgressbarComponent(Object value) {
+    public Component getProgressbarComponent(JTable table, Object value) {
+        progressbarLabel.setFont(table.getFont());
         progressbarLabel.setText( (String) value);
         return progressbarLabel;
     }
 
-    public Component getVersionComponent(Object value) {
+    public Component getVersionComponent(JTable table, Object value) {
+        versionLabel.setFont(table.getFont());
         versionLabel.setText( (String) value);
         return versionLabel;
     }

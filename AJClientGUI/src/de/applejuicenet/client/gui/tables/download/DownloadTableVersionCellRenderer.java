@@ -58,7 +58,7 @@ public class DownloadTableVersionCellRenderer
                                              int row,
                                              int column) {
         DownloadDO downloadDO = downloadMainNode.getDownloadDO();
-        Component c = downloadMainNode.getVersionComponent(value);
+        Component c = downloadMainNode.getVersionComponent(table, value);
         if (isSelected) {
             c.setBackground(table.getSelectionBackground());
             c.setForeground(table.getSelectionForeground());
@@ -84,7 +84,7 @@ public class DownloadTableVersionCellRenderer
                                            boolean hasFocus,
                                            int row,
                                            int column) {
-        Component c = downloadSourceDO.getVersionComponent(value);
+        Component c = downloadSourceDO.getVersionComponent(table, value);
         if (isSelected) {
             c.setBackground(table.getSelectionBackground());
             c.setForeground(table.getSelectionForeground());
@@ -108,7 +108,7 @@ public class DownloadTableVersionCellRenderer
                                               boolean hasFocus,
                                               int row,
                                               int column) {
-        Component c = downloadDirectoryNode.getVersionComponent(value);
+        Component c = downloadDirectoryNode.getVersionComponent(table, value);
         if (isSelected) {
             c.setBackground(table.getSelectionBackground());
             c.setForeground(table.getSelectionForeground());

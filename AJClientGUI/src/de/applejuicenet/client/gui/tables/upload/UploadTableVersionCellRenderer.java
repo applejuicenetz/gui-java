@@ -26,7 +26,7 @@ public class UploadTableVersionCellRenderer
                 isSelected, hasFocus, row, column);
         }
         else {
-            Component c = ((UploadDO)obj).getVersionComponent(value);
+            Component c = ((UploadDO)obj).getVersionComponent(table, value);
             if (isSelected) {
                 c.setBackground(table.getSelectionBackground());
                 c.setForeground(table.getSelectionForeground());

@@ -6,9 +6,10 @@ import javax.swing.JProgressBar;
 
 import de.applejuicenet.client.gui.tables.upload.UploadColumnComponent;
 import de.applejuicenet.client.shared.Version;
+import javax.swing.JTable;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.16 2004/02/24 15:38:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/UploadDO.java,v 1.17 2004/02/24 18:21:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -17,6 +18,9 @@ import de.applejuicenet.client.shared.Version;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: UploadDO.java,v $
+ * Revision 1.17  2004/02/24 18:21:51  maj0r
+ * Schrift korrigiert.
+ *
  * Revision 1.16  2004/02/24 15:38:11  maj0r
  * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
  *
@@ -265,7 +269,7 @@ public class UploadDO implements UploadColumnComponent{
         return uploadTo - uploadFrom;
     }
 
-    public Component getProgressbarComponent(Object value) {
+    public Component getProgressbarComponent(JTable table, Object value) {
         if (status == UploadDO.AKTIVE_UEBERTRAGUNG) {
             String prozent = getDownloadPercentAsString();
             int pos = prozent.indexOf('.');
@@ -282,7 +286,8 @@ public class UploadDO implements UploadColumnComponent{
         }
     }
 
-    public Component getVersionComponent(Object value) {
+    public Component getVersionComponent(JTable table, Object value) {
+        versionLabel.setFont(table.getFont());
         if (getVersion() == null) {
             versionLabel.setIcon(null);
             versionLabel.setText("");

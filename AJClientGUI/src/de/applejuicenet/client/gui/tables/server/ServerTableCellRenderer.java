@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableCellRenderer.java,v 1.5 2004/02/24 15:38:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/tables/server/Attic/ServerTableCellRenderer.java,v 1.6 2004/02/24 18:26:41 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,9 @@ import de.applejuicenet.client.shared.dac.ServerDO;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ServerTableCellRenderer.java,v $
+ * Revision 1.6  2004/02/24 18:26:41  maj0r
+ * Schrift korrigiert.
+ *
  * Revision 1.5  2004/02/24 15:38:11  maj0r
  * CellRenderer optimiert indem die Komponenten in den DOs gehalten werden.
  *
@@ -69,6 +72,7 @@ public class ServerTableCellRenderer
             serverLabel.setIcon(IconManager.getInstance().getIcon("juenger24h"));
             //mehr Icons kommen, wenn der Core mehr kann
         }
+        serverLabel.setFont(table.getFont());
         serverLabel.setText((String) value);
         serverLabel.setOpaque(true);
         if (isSelected) {

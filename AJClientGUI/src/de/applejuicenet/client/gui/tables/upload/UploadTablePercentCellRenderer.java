@@ -25,7 +25,7 @@ public class UploadTablePercentCellRenderer
                 isSelected, hasFocus, row, column);
         }
         else {
-            Component c = ((UploadDO) obj).getProgressbarComponent(value);
+            Component c = ((UploadDO) obj).getProgressbarComponent(table, value);
             if (isSelected) {
                 c.setBackground(table.getSelectionBackground());
                 c.setForeground(table.getSelectionForeground());
