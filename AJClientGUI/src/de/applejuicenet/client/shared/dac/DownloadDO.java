@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.tables.download.DownloadModel;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.22 2004/02/26 16:15:45 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/dac/Attic/DownloadDO.java,v 1.23 2004/02/26 16:18:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import de.applejuicenet.client.shared.SoundPlayer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: DownloadDO.java,v $
+ * Revision 1.23  2004/02/26 16:18:50  maj0r
+ * Dummen Fluechtigkeitsfehler behoben.
+ *
  * Revision 1.22  2004/02/26 16:15:45  maj0r
  * Sound bei fertigem Download eingebaut.
  *
@@ -236,7 +239,7 @@ public class DownloadDO
             && status != newStatus){
             SoundPlayer.getInstance().playSound(SoundPlayer.KOMPLETT);
         }
-        this.status = status;
+        this.status = newStatus;
     }
 
     public String getFilename() {
