@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.28 2003/09/05 09:47:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.29 2003/09/06 14:48:50 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.29  2003/09/06 14:48:50  maj0r
+ * Core-Dateisystem-Separator statisch verwendbar.
+ *
  * Revision 1.28  2003/09/05 09:47:22  maj0r
  * Version 0.24
  *
@@ -188,6 +191,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
     private HashSet networkInfoListener;
     private HashSet statusbarListener;
     private static ApplejuiceFassade instance = null;
+    public static String separator;
     private ModifiedXMLHolder modifiedXML = null;
     private InformationXMLHolder informationXML = null;
     private ShareXMLHolder shareXML = null;
@@ -256,8 +260,9 @@ public class ApplejuiceFassade { //Singleton-Implementierung
             shareXML = new ShareXMLHolder();
 
             String versionsTag = informationXML.getFirstAttrbuteByTagName(new String[]{
-                "applejuice", "generalinformation", "version"}
-                                                                          , true);
+                "applejuice", "generalinformation", "version"} , true);
+            separator = informationXML.getFirstAttrbuteByTagName(new String[]{
+                "applejuice", "generalinformation", "filesystem", "seperator"} , false);
             coreVersion = new Version(versionsTag, Version.getOSTypByOSName((String) System.getProperties().get("os.name")));
         }
         catch (Exception e)
