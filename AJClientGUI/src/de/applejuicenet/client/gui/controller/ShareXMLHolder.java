@@ -9,7 +9,7 @@ import de.applejuicenet.client.shared.dac.*;
 import de.applejuicenet.client.shared.LoggerUtils;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.8 2003/07/02 13:54:34 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ShareXMLHolder.java,v 1.9 2003/07/04 10:35:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fï¿½r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,6 +18,10 @@ import de.applejuicenet.client.shared.LoggerUtils;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ShareXMLHolder.java,v $
+ * Revision 1.9  2003/07/04 10:35:42  maj0r
+ * Lesen des Sockets geht nun wesentlich schneller.
+ * Share wird daher wesentlich schneller angezeigt.
+ *
  * Revision 1.8  2003/07/02 13:54:34  maj0r
  * JTreeTable komplett überarbeitet.
  *
@@ -42,7 +46,7 @@ public class ShareXMLHolder
   private Logger logger;
 
   public ShareXMLHolder() {
-    super("/xml/share.xml", "");
+    super("/xml/share.xml", "", false);
     logger = Logger.getLogger(getClass());
   }
 
@@ -59,11 +63,9 @@ public class ShareXMLHolder
     if (shareMap == null) {
       shareMap = new HashMap();
     }
-    if (document == null) {
-      reload("");
-      if (logger.isDebugEnabled()){
-          logger.debug(LoggerUtils.createDebugMessage(methode + " Geholt vom Server", LoggerUtils.DEFAULT));
-      }
+    reload("");
+    if (logger.isDebugEnabled()){
+      logger.debug(LoggerUtils.createDebugMessage(methode + " Geholt vom Server", LoggerUtils.DEFAULT));
     }
     NodeList nodes = document.getElementsByTagName("share");
     int nodesSize = nodes.getLength();

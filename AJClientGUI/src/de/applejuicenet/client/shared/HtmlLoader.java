@@ -6,7 +6,7 @@ import java.net.*;
 import de.applejuicenet.client.shared.exception.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.8 2003/06/10 12:31:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Attic/HtmlLoader.java,v 1.9 2003/07/04 10:35:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -15,6 +15,10 @@ import de.applejuicenet.client.shared.exception.*;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: HtmlLoader.java,v $
+ * Revision 1.9  2003/07/04 10:35:42  maj0r
+ * Lesen des Sockets geht nun wesentlich schneller.
+ * Share wird daher wesentlich schneller angezeigt.
+ *
  * Revision 1.8  2003/06/10 12:31:03  maj0r
  * Historie eingefügt.
  *
@@ -27,7 +31,7 @@ public abstract class HtmlLoader {
 
   public static String getHtmlContent(String host, int method, String command) throws
       WebSiteNotFoundException {
-    String urlContent = "";
+    StringBuffer urlContent = new StringBuffer();
     try {
       InetAddress addr = InetAddress.getByName(host);
       Socket socket = new Socket(addr, 9851);
@@ -68,14 +72,14 @@ public abstract class HtmlLoader {
                                                UNKNOWN_HOST);
           }
         }
-        urlContent += inputLine;
-        while ( (inputLine = in.readLine()) != null) {
-          urlContent += inputLine;
+        urlContent.append(inputLine);
+        while((inputLine = in.readLine()) != null){
+            urlContent.append(inputLine);
         }
       }
       else {
         if (inputLine.compareToIgnoreCase("HTTP/1.1 200 OK") == 0) {
-          urlContent = inputLine;
+          urlContent = new StringBuffer(inputLine);
         }
         else {
           throw new WebSiteNotFoundException(WebSiteNotFoundException.
@@ -91,6 +95,6 @@ public abstract class HtmlLoader {
       throw new WebSiteNotFoundException(WebSiteNotFoundException.
                                          AUTHORIZATION_REQUIRED);
     }
-    return urlContent;
+    return urlContent.toString();
   }
 }
