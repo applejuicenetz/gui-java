@@ -23,7 +23,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 import com.l2fprod.gui.plaf.skin.Skin;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.64 2003/12/29 07:23:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/AppleJuiceDialog.java,v 1.65 2003/12/29 09:49:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +32,10 @@ import com.l2fprod.gui.plaf.skin.Skin;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceDialog.java,v $
+ * Revision 1.65  2003/12/29 09:49:35  maj0r
+ * Bug #1 gefixt (Danke an muhviestarr).
+ * Look and Feel beim Verbindungsdialog korrigiert.
+ *
  * Revision 1.64  2003/12/29 07:23:18  maj0r
  * Begonnen, auf neues Versionupdateinformationssystem umzubauen.
  *
@@ -180,7 +184,7 @@ public class AppleJuiceDialog
     private JLabel[] statusbar = new JLabel[6];
     private JMenu sprachMenu;
     private JMenu optionenMenu;
-    private JMenu themesMenu;
+    private JMenu themesMenu = null;
     private HashSet plugins;
     private JMenuItem menuItemOptionen = new JMenuItem();
     private JMenuItem menuItemUeber = new JMenuItem();
@@ -197,8 +201,62 @@ public class AppleJuiceDialog
     private String themeSupportNachricht;
     private boolean automaticPwdlEnabled = false;
     private String titel;
+    private static boolean themesInitialized = false;
 
     private static AppleJuiceDialog theApp;
+
+    public static void initThemes(){
+        try{
+            themesInitialized = true;
+            if (PropertiesManager.getOptionsManager().isThemesSupported()) {
+                HashSet themesDateien = new HashSet();
+                File themesPath = new File(System.getProperty("user.dir") +
+                                           File.separator + "themes");
+                if (!themesPath.isDirectory()) {
+                    closeWithErrormessage("Der Ordner" +
+                        " für die Themes zip-Dateien ist nicht vorhanden." +
+                                          "\r\nappleJuice wird beendet.", false);
+                }
+                File[] themeFiles = themesPath.listFiles();
+                for (int i = 0; i < themeFiles.length; i++) {
+                    if (themeFiles[i].isFile() &&
+                        themeFiles[i].getName().indexOf(".zip") != -1) {
+                        themesDateien.add(themeFiles[i].toURL());
+                    }
+                }
+                Iterator it = themesDateien.iterator();
+                Skin standardSkin = null;
+                Skin aSkin = null;
+                String temp;
+                String shortName = "";
+                String defaultTheme = PropertiesManager.getOptionsManager().
+                    getDefaultTheme();
+                while (it.hasNext()) {
+                    URL skinUrl = (URL) it.next();
+                    temp = skinUrl.getFile();
+                    int index1 = temp.lastIndexOf('/');
+                    int index2 = temp.lastIndexOf(".zip");
+                    if (index1 == -1 || index2 == -1) {
+                        continue;
+                    }
+                    shortName = temp.substring(index1 + 1, index2);
+                    aSkin = SkinLookAndFeel.loadThemePack(skinUrl);
+                    if (shortName.compareToIgnoreCase(defaultTheme) == 0) {
+                        standardSkin = aSkin;
+                    }
+                }
+                if (standardSkin == null) {
+                    standardSkin = aSkin;
+                }
+                SkinLookAndFeel.setSkin(standardSkin);
+                SkinLookAndFeel.enable();
+            }
+        }
+        catch(Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
 
     public AppleJuiceDialog() {
         super();
@@ -239,7 +297,6 @@ public class AppleJuiceDialog
 
         setJMenuBar(createMenuBar());
         if (PropertiesManager.getOptionsManager().isThemesSupported()){
-            SkinLookAndFeel.enable();
             SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
         }
 
@@ -416,6 +473,9 @@ public class AppleJuiceDialog
 
     protected JMenuBar createMenuBar() {
         try{
+            if (!themesInitialized){
+                AppleJuiceDialog.initThemes();
+            }
             String path = System.getProperty("user.dir") + File.separator + "language" +
                     File.separator;
             File languagePath = new File(path);
@@ -533,7 +593,7 @@ public class AppleJuiceDialog
                         continue;
                     }
                     shortName = temp.substring(index1 + 1, index2);
-                    aSkin = SkinLookAndFeel.loadThemePack(skinUrl);
+//                    aSkin = SkinLookAndFeel.loadThemePack(skinUrl);
                     final JCheckBoxMenuItem rb = new JCheckBoxMenuItem(
                         shortName);
                     if (shortName.compareToIgnoreCase(defaultTheme) == 0) {
@@ -563,7 +623,7 @@ public class AppleJuiceDialog
                     }
                 });
                 themesMenu.add(menuItem);
-                SkinLookAndFeel.setSkin(standardSkin);
+//                SkinLookAndFeel.setSkin(standardSkin);
             }
             else{
                 JMenuItem menuItem = new JMenuItem();

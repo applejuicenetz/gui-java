@@ -33,9 +33,10 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 import de.applejuicenet.client.shared.WebsiteContentLoader;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.42 2003/12/29 07:23:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.43 2003/12/29 09:49:35 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,6 +45,10 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: AppleJuiceClient.java,v $
+ * Revision 1.43  2003/12/29 09:49:35  maj0r
+ * Bug #1 gefixt (Danke an muhviestarr).
+ * Look and Feel beim Verbindungsdialog korrigiert.
+ *
  * Revision 1.42  2003/12/29 07:23:18  maj0r
  * Begonnen, auf neues Versionupdateinformationssystem umzubauen.
  *
@@ -51,8 +56,7 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
  *
  * Revision 1.40  2003/12/27 09:54:28  maj0r
- * Bug #1234 fixed (Danke an muhviestarr)
- * Splashscreen wird nun frueher angezeigt
+ * Splashscreen wird nun frueher angezeigt (Danke an muhviestarr).
  *
  * Revision 1.39  2003/11/25 14:32:46  maj0r
  * -help Parameter eingebaut.
@@ -287,8 +291,8 @@ public class AppleJuiceClient {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog = null;
             int versuche = 0;
+            AppleJuiceDialog.initThemes();
             while (!ApplejuiceFassade.istCoreErreichbar()) {
-
                 versuche++;
                 titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                     getFirstAttrbuteByTagName(new String[] {"mainform",
@@ -298,6 +302,7 @@ public class AppleJuiceClient {
                                               "startup",
                                               "fehlversuch"}));
                 SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
+                splash.setVisible(false);
                 JOptionPane.showMessageDialog(dummyFrame, nachricht, titel,
                                               JOptionPane.ERROR_MESSAGE);
                 remoteDialog = new QuickConnectionSettingsDialog(dummyFrame);
@@ -319,6 +324,7 @@ public class AppleJuiceClient {
                     System.out.println("Fehler: " + nachricht);
                     System.exit( -1);
                 }
+                splash.setVisible(true);
             }
             if (versuche > 0) {
                 SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
