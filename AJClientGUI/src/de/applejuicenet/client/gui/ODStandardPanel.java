@@ -10,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.11 2003/09/11 06:54:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/ODStandardPanel.java,v 1.12 2003/10/13 12:37:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: ODStandardPanel.java,v $
+ * Revision 1.12  2003/10/13 12:37:48  maj0r
+ * Bug #1003 behoben.
+ *
  * Revision 1.11  2003/09/11 06:54:15  maj0r
  * Auf neues Sessions-Prinzip umgebaut.
  * Sprachenwechsel korrigert, geht nun wieder flott.
@@ -53,11 +56,13 @@ public class ODStandardPanel
     private JLabel label3 = new JLabel();
     private JLabel label4 = new JLabel();
     private JLabel label5 = new JLabel();
+    private JLabel label6 = new JLabel();
     private JLabel openTemp;
     private JLabel openIncoming;
     private JTextField temp = new JTextField();
     private JTextField incoming = new JTextField();
     private JTextField port = new JTextField();
+    private JTextField xmlPort = new JTextField();
     private JTextField nick = new JTextField();
     private JComboBox cmbUploadPrio = new JComboBox();
     private JLabel hint1;
@@ -65,6 +70,7 @@ public class ODStandardPanel
     private JLabel hint3;
     private JLabel hint4;
     private JLabel hint5;
+    private JLabel hint6;
     private JDialog parent;
     private AJSettings ajSettings;
     private JComboBox cmbLog;
@@ -94,6 +100,8 @@ public class ODStandardPanel
     }
 
     private void init() throws Exception {
+        port.setDocument(new NumberInputVerifier());
+        xmlPort.setDocument(new NumberInputVerifier());
         temp.setText(ajSettings.getTempDir());
         temp.setEditable(false);
         temp.setBackground(Color.WHITE);
@@ -101,6 +109,7 @@ public class ODStandardPanel
         incoming.setEditable(false);
         incoming.setBackground(Color.WHITE);
         port.setText(Long.toString(ajSettings.getPort()));
+        xmlPort.setText(Long.toString(ajSettings.getXMLPort()));
         nick.setText(ajSettings.getNick());
         port.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
@@ -108,6 +117,15 @@ public class ODStandardPanel
                 {
                     dirty = true;
                     ajSettings.setPort(Integer.parseInt(port.getText()));
+                }
+            }
+        });
+        xmlPort.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
+                if (ajSettings.getXMLPort() != Long.parseLong(xmlPort.getText()))
+                {
+                    dirty = true;
+                    ajSettings.setXMLPort(Long.parseLong(xmlPort.getText()));
                 }
             }
         });
@@ -127,8 +145,10 @@ public class ODStandardPanel
         Level logLevel = PropertiesManager.getOptionsManager().getLogLevel();
 
         LevelItem[] levelItems = new LevelItem[2];//{ "Info", "Debug"};
-        levelItems[0] = new LevelItem(Level.INFO, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "info"})));
-        levelItems[1] = new LevelItem(Level.DEBUG, ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "debug"})));
+        levelItems[0] = new LevelItem(Level.INFO, ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "info"})));
+        levelItems[1] = new LevelItem(Level.DEBUG, ZeichenErsetzer.korrigiereUmlaute(
+                languageSelector.getFirstAttrbuteByTagName(new String[]{"javagui", "options", "logging", "debug"})));
 
         cmbLog = new JComboBox(levelItems);
         cmbLog.addItemListener(new ItemListener() {
@@ -148,6 +168,7 @@ public class ODStandardPanel
 
         setLayout(new BorderLayout());
         port.setHorizontalAlignment(JLabel.RIGHT);
+        xmlPort.setHorizontalAlignment(JLabel.RIGHT);
         JPanel panel6 = new JPanel(new GridBagLayout());
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                          getFirstAttrbuteByTagName(new String[]{"einstform", "Label2",
@@ -164,6 +185,9 @@ public class ODStandardPanel
         label5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                          getFirstAttrbuteByTagName(new String[]{"einstform", "Label14",
                                                                                                 "caption"})));
+        label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                         getFirstAttrbuteByTagName(new String[]{"javagui", "options",
+                                                                                                "standard", "xmlport"})));
 
         IconManager im = IconManager.getInstance();
         ImageIcon icon = im.getIcon("hint");
@@ -202,6 +226,13 @@ public class ODStandardPanel
                 return tip;
             }
         };
+        hint6 = new JLabel(icon) {
+            public JToolTip createToolTip() {
+                MultiLineToolTip tip = new MultiLineToolTip();
+                tip.setComponent(this);
+                return tip;
+            }
+        };
         hint1.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                getFirstAttrbuteByTagName(new String[]{"javagui", "options",
                                                                                                       "standard", "ttipp_temp"})));
@@ -217,6 +248,9 @@ public class ODStandardPanel
         hint5.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
                                                                getFirstAttrbuteByTagName(new String[]{"javagui", "options",
                                                                                                       "logging", "ttip"})));
+        hint6.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
+                                                               getFirstAttrbuteByTagName(new String[]{"javagui", "options",
+                                                                                                      "standard", "ttipp_xmlport"})));
 
         for (int i = 1; i < 11; i++)
         {
@@ -241,6 +275,7 @@ public class ODStandardPanel
         JPanel panel3 = new JPanel(new GridBagLayout());
         JPanel panel4 = new JPanel(new GridBagLayout());
         JPanel panel5 = new JPanel(new GridBagLayout());
+        JPanel panel7 = new JPanel(new GridBagLayout());
 
         constraints.insets.right = 5;
         constraints.insets.left = 4;
@@ -249,6 +284,7 @@ public class ODStandardPanel
         panel3.add(label3, constraints);
         panel4.add(label4, constraints);
         panel5.add(label5, constraints);
+        panel7.add(label6, constraints);
 
         constraints.insets.left = 0;
         constraints.insets.right = 2;
@@ -257,6 +293,7 @@ public class ODStandardPanel
         panel1.add(temp, constraints);
         panel2.add(incoming, constraints);
         panel3.add(port, constraints);
+        panel7.add(xmlPort, constraints);
         panel4.add(nick, constraints);
         panel5.add(cmbUploadPrio, constraints);
         constraints.gridx = 2;
@@ -273,8 +310,10 @@ public class ODStandardPanel
         constraints.gridy = 2;
         panel6.add(panel3, constraints);
         constraints.gridy = 3;
-        panel6.add(panel4, constraints);
+        panel6.add(panel7, constraints);
         constraints.gridy = 4;
+        panel6.add(panel4, constraints);
+        constraints.gridy = 5;
         panel6.add(panel5, constraints);
 
         constraints.insets.top = 10;
@@ -285,9 +324,11 @@ public class ODStandardPanel
         constraints.gridy = 2;
         panel6.add(hint2, constraints);
         constraints.gridy = 3;
+        panel6.add(hint6, constraints);
+        constraints.gridy = 4;
         panel6.add(hint3, constraints);
 
-        constraints.gridy = 5;
+        constraints.gridy = 6;
         constraints.gridx = 0;
         constraints.gridwidth = 1;
         panel6.add(panel8, constraints);

@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.49 2003/10/12 16:12:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/Attic/ApplejuiceFassade.java,v 1.50 2003/10/13 12:37:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI f�r den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,6 +24,9 @@ import org.apache.log4j.Level;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  * $Log: ApplejuiceFassade.java,v $
+ * Revision 1.50  2003/10/13 12:37:48  maj0r
+ * Bug #1003 behoben.
+ *
  * Revision 1.49  2003/10/12 16:12:19  maj0r
  * Neue Version 0.35
  *
@@ -442,6 +445,7 @@ public class ApplejuiceFassade { //Singleton-Implementierung
                 parameters = "Nickname=" +
                         URLEncoder.encode(ajSettings.getNick(), "UTF-8");
                 parameters += "&XMLPort=" + Long.toString(ajSettings.getXMLPort());
+                parameters += "&Port=" + Long.toString(ajSettings.getPort());
                 parameters += "&MaxUpload=" + Long.toString(ajSettings.getMaxUpload());
                 parameters += "&MaxDownload=" + Long.toString(ajSettings.getMaxDownload());
                 parameters += "&Speedperslot=" +
