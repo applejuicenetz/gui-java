@@ -22,8 +22,6 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.tables.NormalHeaderRenderer;
 import de.applejuicenet.client.gui.tables.share.ShareModel;
 import de.applejuicenet.client.gui.tables.share.ShareNode;
@@ -33,10 +31,9 @@ import de.applejuicenet.client.gui.trees.share.DirectoryTree;
 import de.applejuicenet.client.gui.trees.share.ShareSelectionTreeCellRenderer;
 import de.applejuicenet.client.shared.AJSettings;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.1 2004/10/15 10:14:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.2 2004/10/15 13:34:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -46,16 +43,14 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  *
  */
 
-public class SharePanel
-    extends TklPanel
-    implements LanguageListener {
+public class SharePanel extends TklPanel{
 
     private static final long serialVersionUID = 2359016777104153892L;
 
     private JPanel panelCenter;
     private DirectoryTree folderTree = new DirectoryTree();
-    private TitledBorder titledBorder1;
-    private TitledBorder titledBorder2;
+    private TitledBorder folderTreeBolder;
+    private TitledBorder mailPanelBolder;
     private JLabel dateien = new JLabel();
     private JButton neueListe = new JButton();
     private JButton neuLaden = new JButton();
@@ -153,6 +148,14 @@ public class SharePanel
     	return popup2;
     }
     
+    public TitledBorder getFolderTreeBolder(){
+    	return folderTreeBolder;
+    }
+
+    public TitledBorder getMainPanelBolder(){
+    	return mailPanelBolder;
+    }
+    
     public SharePanel(GuiController guiController) {
     	super(guiController);
         logger = Logger.getLogger(getClass());
@@ -210,11 +213,11 @@ public class SharePanel
             model.getColumn(i).setHeaderRenderer(renderer);
         }
 
-        titledBorder1 = new TitledBorder("Test");
-        titledBorder2 = new TitledBorder("Tester");
+        folderTreeBolder = new TitledBorder("Test");
+        mailPanelBolder = new TitledBorder("Tester");
         setLayout(new BorderLayout());
         panelCenter = new JPanel(new BorderLayout());
-        panelCenter.setBorder(titledBorder2);
+        panelCenter.setBorder(mailPanelBolder);
 
         neueListe.setIcon(IconManager.getInstance().getIcon("treeRoot"));
         neuLaden.setIcon(IconManager.getInstance().getIcon("erneuern"));
@@ -235,7 +238,7 @@ public class SharePanel
         panelCenter.add(dateien, BorderLayout.SOUTH);
 
         JScrollPane aScrollPane = new JScrollPane(folderTree);
-        aScrollPane.setBorder(titledBorder1);
+        aScrollPane.setBorder(folderTreeBolder);
         JPanel panelWest = new JPanel(new BorderLayout());
         panelWest.add(aScrollPane, BorderLayout.CENTER);
         panelWest.add(refresh, BorderLayout.SOUTH);
@@ -245,74 +248,6 @@ public class SharePanel
         splitPane.setRightComponent(panelCenter);
         splitPane.setBorder(null);
         add(splitPane, BorderLayout.CENTER);
-
-        LanguageSelector.getInstance().addLanguageListener(this);
-    }
-
-    public void fireLanguageChanged() {
-        try {
-            LanguageSelector languageSelector = LanguageSelector.getInstance();
-            titledBorder1.setTitle(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.dirssheet.caption")));
-            titledBorder2.setTitle(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.filessheet.caption")));
-            sharedwsub.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(".root.mainform.addwsubdirsbtn.caption")));
-            sharedwosub.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(".root.mainform.addosubdirsbtn.caption")));
-            notshared.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(".root.mainform.deldirbtn.caption")));
-            itemCopyToClipboard.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(".root.mainform.getlink1.caption")));
-            itemCopyToClipboardAsUBBCode.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.linkalsubbcode")));
-            itemCopyToClipboardWithSources.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.getlinkwithsources")));
-            itemOpenWithProgram.setText("VLC");
-            refresh.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.startsharecheck.caption")));
-            refresh.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.startsharecheck.hint")));
-            neueListe.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.newfilelist.caption")));
-            neueListe.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.newfilelist.hint")));
-            neuLaden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.sharereload.caption")));
-            neuLaden.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.sharereload.hint")));
-            prioritaetSetzen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.setprio.caption")));
-            prioritaetSetzen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(".root.mainform.setprio.hint")));
-            prioritaetAufheben.setText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(".root.mainform.clearprio.caption")));
-            prioritaetAufheben.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.getFirstAttrbuteByTagName(".root.mainform.clearprio.hint")));
-
-            String[] tableColumns = new String[3];
-            tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.sfiles.col0caption"));
-            tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.sfiles.col1caption"));
-            tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(
-                languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.sfiles.col2caption"));
-
-            TableColumnModel tcm = shareTable.getColumnModel();
-            for (int i = 0; i < 3; i++) {
-                tcm.getColumn(i).setHeaderValue(tableColumns[i]);
-            }
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
-        }
     }
 
     public int[] getColumnWidths() {

@@ -65,7 +65,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
  * Copyright: General Public License
  * </p>
  * 
- * @author: Maj0r [Maj0r@applejuicenet.de]
+ * @author: Maj0r [aj@tkl-soft.de]
  *  
  */
 

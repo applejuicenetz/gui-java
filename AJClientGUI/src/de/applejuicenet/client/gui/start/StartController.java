@@ -17,6 +17,17 @@ import de.applejuicenet.client.shared.NetworkInfo;
 import de.applejuicenet.client.shared.ZeichenErsetzer;
 import de.applejuicenet.client.shared.dac.ServerDO;
 
+/**
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.2 2004/10/15 13:34:47 maj0r Exp $
+ *
+ * <p>Titel: AppleJuice Client-GUI</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: General Public License</p>
+ *
+ * @author: Maj0r <aj@tkl-soft.de>
+ *
+ */
+
 public class StartController extends GuiController {
 
 	private static StartController instance = null;
@@ -167,6 +178,25 @@ public class StartController extends GuiController {
 			}
 		}
 		startPanel.getLblVerbindungen().setText(temp.toString());
+		startPanel.getLblNetzwerk().setText("<html><font><h2>"
+				+ ZeichenErsetzer.korrigiereUmlaute(languageSelector
+						.getFirstAttrbuteByTagName(".root.mainform.html7"))
+				+ "</h2></font></html>");
+		startPanel.getLblNeuigkeiten().setText("<html><font><h2>"
+						+ ZeichenErsetzer
+								.korrigiereUmlaute(languageSelector
+										.getFirstAttrbuteByTagName(".root.mainform.html13"))
+						+ "</h2></font></html>");
+		startPanel.getLblDeinClient().setText("<html><font><h2>"
+				+ ZeichenErsetzer.korrigiereUmlaute(languageSelector
+						.getFirstAttrbuteByTagName(".root.mainform.html1"))
+				+ "</h2></font></html>");
+		startPanel.getLblWarnung()
+				.setText("<html><font><h2>"
+						+ ZeichenErsetzer
+								.korrigiereUmlaute(languageSelector
+										.getFirstAttrbuteByTagName(".root.mainform.html15"))
+						+ "</h2></font></html>");
 	}
 
 	protected void contentChanged(int type, final Object content) {

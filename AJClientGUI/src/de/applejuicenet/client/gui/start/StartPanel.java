@@ -2,10 +2,8 @@ package de.applejuicenet.client.gui.start;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.LayoutManager;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,18 +11,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
-import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.controller.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.Information;
 import de.applejuicenet.client.shared.NetworkInfo;
-import de.applejuicenet.client.shared.ZeichenErsetzer;
 
 /**
  * $Header:
@@ -42,11 +36,11 @@ import de.applejuicenet.client.shared.ZeichenErsetzer;
  * Copyright: General Public License
  * </p>
  * 
- * @author: Maj0r [Maj0r@applejuicenet.de]
+ * @author: Maj0r [aj@tkl-soft.de]
  *  
  */
 
-public class StartPanel extends TklPanel implements LanguageListener, RegisterI{
+public class StartPanel extends TklPanel {
 
 	private static final long serialVersionUID = 3456825404472175660L;
 
@@ -56,7 +50,7 @@ public class StartPanel extends TklPanel implements LanguageListener, RegisterI{
 	private JLabel deinClient;
 	private JLabel firewallWarning;
 	private JTextPane nachrichten;
-	private JLabel label8;
+	private JLabel neuigkeiten;
 	private JLabel netzwerk;
 	private JLabel status;
 	private JLabel verbindungsNachricht;
@@ -65,15 +59,12 @@ public class StartPanel extends TklPanel implements LanguageListener, RegisterI{
 	private JTextPane faq;
 	private JLabel warnungIcon;
 	private JTextPane serverMessage;
-	private ImageIcon icon1;
-	private Logger logger;
 	private NetworkInfo netInfo;
 	private Information information;
 	private LanguageSelector languageSelector;
 	
 	public StartPanel(GuiController guiController) {
     	super(guiController);
-		logger = Logger.getLogger(getClass());
 		try {
 			init();
 		} catch (Exception e) {
@@ -122,6 +113,18 @@ public class StartPanel extends TklPanel implements LanguageListener, RegisterI{
 	public JLabel getLblVerbindungen(){
 		return verbindungen;
 	}
+
+	public JLabel getLblNetzwerk(){
+		return netzwerk;
+	}
+
+	public JLabel getLblDeinClient(){
+		return deinClient;
+	}
+
+	public JLabel getLblNeuigkeiten(){
+		return neuigkeiten;
+	}
 	
 	private void init() throws Exception {
 		setLayout(new BorderLayout());
@@ -135,17 +138,8 @@ public class StartPanel extends TklPanel implements LanguageListener, RegisterI{
 		panel4.setBackground(Color.WHITE);
 
 		IconManager im = IconManager.getInstance();
-		icon1 = im.getIcon("applejuicebanner");
-		JPanel panel1 = new NorthPanel(new BorderLayout());
+		JPanel panel1 = new NorthPanel(serverMessage);
 		panel1.setBackground(Color.WHITE);
-
-		JLabel label1 = new JLabel(icon1);
-		JScrollPane sp = new JScrollPane(serverMessage);
-		sp.setBorder(null);
-		sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		panel1.add(label1, BorderLayout.WEST);
-		panel1.add(sp, BorderLayout.CENTER);
 
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.NORTH;
@@ -204,9 +198,9 @@ public class StartPanel extends TklPanel implements LanguageListener, RegisterI{
 		panel3.add(label4, constraints);
 
 		constraints.gridx = 1;
-		label8 = new JLabel();
-		label8.setForeground(APFEL_ROT);
-		panel3.add(label8, constraints);
+		neuigkeiten = new JLabel();
+		neuigkeiten.setForeground(APFEL_ROT);
+		panel3.add(neuigkeiten, constraints);
 
 		constraints.gridy++;
 		constraints.insets.left = 15;
@@ -247,49 +241,5 @@ public class StartPanel extends TklPanel implements LanguageListener, RegisterI{
 		JScrollPane scrollPane = new JScrollPane(panel4);
 		scrollPane.setBorder(null);
 		add(scrollPane, BorderLayout.CENTER);
-		languageSelector = LanguageSelector.getInstance();
-		languageSelector.addLanguageListener(this);
-	}
-
-	public void fireLanguageChanged() {
-		try {
-			netzwerk.setText("<html><font><h2>"
-					+ ZeichenErsetzer.korrigiereUmlaute(languageSelector
-							.getFirstAttrbuteByTagName(".root.mainform.html7"))
-					+ "</h2></font></html>");
-			label8
-					.setText("<html><font><h2>"
-							+ ZeichenErsetzer
-									.korrigiereUmlaute(languageSelector
-											.getFirstAttrbuteByTagName(".root.mainform.html13"))
-							+ "</h2></font></html>");
-			deinClient.setText("<html><font><h2>"
-					+ ZeichenErsetzer.korrigiereUmlaute(languageSelector
-							.getFirstAttrbuteByTagName(".root.mainform.html1"))
-					+ "</h2></font></html>");
-			warnungen
-					.setText("<html><font><h2>"
-							+ ZeichenErsetzer
-									.korrigiereUmlaute(languageSelector
-											.getFirstAttrbuteByTagName(".root.mainform.html15"))
-							+ "</h2></font></html>");
-		} catch (Exception e) {
-			if (logger.isEnabledFor(Level.ERROR)) {
-				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-			}
-		}
-	}
-
-	private class NorthPanel extends JPanel {
-		private static final long serialVersionUID = 8611614870757239667L;
-
-		public NorthPanel(LayoutManager layoutManager) {
-			super(layoutManager);
-		}
-
-		public Dimension getPreferredSize() {
-			return new Dimension(super.getPreferredSize().width, icon1
-					.getIconHeight());
-		}
 	}
 }

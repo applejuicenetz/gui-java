@@ -1,9 +1,3 @@
-/*
- * Created on 15.10.2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package de.applejuicenet.client.gui.share;
 
 import java.awt.Point;
@@ -15,6 +9,17 @@ import javax.swing.SwingUtilities;
 
 import de.applejuicenet.client.gui.tables.share.ShareNode;
 import de.applejuicenet.client.gui.tables.share.ShareTable;
+
+/**
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareTableMouseAdapter.java,v 1.2 2004/10/15 13:34:48 maj0r Exp $
+ *
+ * <p>Titel: AppleJuice Client-GUI</p>
+ * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: General Public License</p>
+ *
+ * @author: Maj0r <aj@tkl-soft.de>
+ *
+ */
 
 public class ShareTableMouseAdapter extends MouseAdapter {
 	
