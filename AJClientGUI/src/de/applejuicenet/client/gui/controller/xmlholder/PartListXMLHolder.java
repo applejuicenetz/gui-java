@@ -22,7 +22,7 @@ import de.applejuicenet.client.shared.dac.PartListDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.11 2004/06/17 09:57:53 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/PartListXMLHolder.java,v 1.12 2004/12/08 14:21:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -78,7 +78,8 @@ public class PartListXMLHolder
     }
 
     private void checkInformationAttributes(Attributes attr){
-        for (int i = 0; i < attr.getLength(); i++) {
+    	int laenge = attr.getLength();
+        for (int i = 0; i < laenge; i++) {
             if (attr.getLocalName(i).equals("filesize")){
                 partListDO.setGroesse(Long.parseLong(attr.getValue(i)));
             }
@@ -88,7 +89,8 @@ public class PartListXMLHolder
     private void checkPartAttributes(Attributes attr){
         long startPosition = -1;
         int type = -1;
-        for (int i = 0; i < attr.getLength(); i++) {
+    	int laenge = attr.getLength();
+        for (int i = 0; i < laenge; i++) {
             if (attr.getLocalName(i).equals("fromposition")){
                 startPosition = Long.parseLong(attr.getValue(i));
             }

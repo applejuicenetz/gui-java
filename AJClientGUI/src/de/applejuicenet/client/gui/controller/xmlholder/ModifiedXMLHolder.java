@@ -39,7 +39,7 @@ import de.applejuicenet.client.shared.dac.UploadDO;
 import de.applejuicenet.client.shared.exception.WebSiteNotFoundException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.52 2004/12/03 17:31:35 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/xmlholder/Attic/ModifiedXMLHolder.java,v 1.53 2004/12/08 14:21:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -288,7 +288,8 @@ public class ModifiedXMLHolder
 
     private void checkServerAttributes(Attributes attr){
         attributes.clear();
-        for (int i = 0; i < attr.getLength(); i++) {
+    	int laenge = attr.getLength();
+        for (int i = 0; i < laenge; i++) {
             attributes.put(attr.getLocalName(i), attr.getValue(i));
         }
         int id = Integer.parseInt((String)attributes.get("id"));
@@ -329,7 +330,8 @@ public class ModifiedXMLHolder
 
     private void checkUploadAttributes(Attributes attr){
         attributes.clear();
-        for (int i = 0; i < attr.getLength(); i++) {
+    	int laenge = attr.getLength();
+        for (int i = 0; i < laenge; i++) {
             attributes.put(attr.getLocalName(i), attr.getValue(i));
         }
         int id = Integer.parseInt((String)attributes.get("id"));
@@ -381,7 +383,8 @@ public class ModifiedXMLHolder
 
     private void checkUserAttributes(Attributes attr){
         attributes.clear();
-        for (int i = 0; i < attr.getLength(); i++) {
+    	int laenge = attr.getLength();
+        for (int i = 0; i < laenge; i++) {
             attributes.put(attr.getLocalName(i), attr.getValue(i));
         }
         int id = Integer.parseInt((String)attributes.get("id"));
@@ -468,7 +471,8 @@ public class ModifiedXMLHolder
 
     private void checkDownloadAttributes(Attributes attr){
         attributes.clear();
-        for (int i = 0; i < attr.getLength(); i++) {
+    	int laenge = attr.getLength();
+        for (int i = 0; i < laenge; i++) {
             attributes.put(attr.getLocalName(i), attr.getValue(i));
         }
         int id = Integer.parseInt((String)attributes.get("id"));
@@ -514,7 +518,8 @@ public class ModifiedXMLHolder
     }
 
     private void checkRemovedAttributes(Attributes attr){
-        for (int i = 0; i < attr.getLength(); i++) {
+    	int laenge = attr.getLength();
+        for (int i = 0; i < laenge; i++) {
             if (attr.getLocalName(i).equals("id")){
                 String id = attr.getValue(i);
                 removeDownload(id);
@@ -547,7 +552,8 @@ public class ModifiedXMLHolder
 
     private void checkSearchAttributes(Attributes attr){
         attributes.clear();
-        for (int i = 0; i < attr.getLength(); i++) {
+    	int laenge = attr.getLength();
+        for (int i = 0; i < laenge; i++) {
             attributes.put(attr.getLocalName(i), attr.getValue(i));
         }
         int id = Integer.parseInt((String)attributes.get("id"));
@@ -572,7 +578,8 @@ public class ModifiedXMLHolder
         String checksum = "";
         long groesse = -1;
 
-        for (int i = 0; i < attr.getLength(); i++) {
+    	int laenge = attr.getLength();
+        for (int i = 0; i < laenge; i++) {
             if (attr.getLocalName(i).equals("id")) {
                 id = Integer.parseInt(attr.getValue(i));
             }
@@ -612,7 +619,8 @@ public class ModifiedXMLHolder
         int haeufigkeit = -1;
         String dateiName = "";
 
-        for (int i = 0; i < attr.getLength(); i++) {
+    	int laenge = attr.getLength();
+        for (int i = 0; i < laenge; i++) {
             if (attr.getLocalName(i).equals("name")) {
                 dateiName = attr.getValue(i);
             }
