@@ -537,10 +537,7 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 		if (downloads.size() == 0) {
 			return;
 		}
-		if (newDirectoryName == null || newDirectoryName.length() == 0
-				|| newDirectoryName.trim().length() == 0) {
-			throw new IllegalArgumentException("invalid directoryname");
-		}
+		newDirectoryName = processSubdir(newDirectoryName);
 		for(Download curDownload : downloads) {
 			HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder
 					.getCorePort(), HtmlLoader.POST,
@@ -712,17 +709,7 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 				+ priority.intValue(), false);
 	}	
 
-	public synchronized String processLink(final String link, String subdir)
-			throws IllegalArgumentException {
-		if (link == null || link.length() == 0) {
-			throw new IllegalArgumentException("invalid link");
-		}
-/*        if (isCoreAvailable() != 0){
-                if (links == null){
-                    links = new HashSet();
-                }
-                links.add(link);
-        }*/
+	private String processSubdir(String subdir){
 		if (subdir == null) {
 			subdir = "";
 		} else {
@@ -734,7 +721,15 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 			subdir = subdir.replaceAll("..", "_");
 			subdir = subdir.replaceAll(":", "_");
 		}
-
+		return subdir;
+	}
+	
+	public synchronized String processLink(final String link, String subdir)
+			throws IllegalArgumentException {
+		if (link == null || link.length() == 0) {
+			throw new IllegalArgumentException("invalid link");
+		}
+		subdir = processSubdir(subdir);
         String encodedLink = link;
         try {
             StringBuffer tempLink = new StringBuffer(link);
