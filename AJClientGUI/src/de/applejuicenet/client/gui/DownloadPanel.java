@@ -12,13 +12,14 @@ import de.applejuicenet.client.gui.listener.*;
 import de.applejuicenet.client.gui.tables.download.*;
 import de.applejuicenet.client.shared.*;
 import de.applejuicenet.client.shared.dac.DownloadDO;
+import de.applejuicenet.client.shared.dac.DownloadSourceDO;
 import de.applejuicenet.client.gui.tables.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.tables.JTreeTable;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.48 2003/10/02 15:01:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/Attic/DownloadPanel.java,v 1.49 2003/10/04 15:30:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,6 +28,10 @@ import org.apache.log4j.Level;
  * @author: Maj0r <AJCoreGUI@maj0r.de>
  *
  * $Log: DownloadPanel.java,v $
+ * Revision 1.49  2003/10/04 15:30:54  maj0r
+ * Userpartliste hinzugefuegt.
+ * Erste Version des Versteckens.
+ *
  * Revision 1.48  2003/10/02 15:01:00  maj0r
  * Erste Version den Versteckens eingebaut.
  *
@@ -260,7 +265,7 @@ public class DownloadPanel
                     DownloadRootNode root = (DownloadRootNode) downloadModel.getRoot();
                     for (int i = 0; i < selectedItems.length; i++) {
                         if (selectedItems[i].getClass() == DownloadMainNode.class) {
-                            root.verstecke((DownloadMainNode)selectedItems[i], true);
+                            root.alterVerstecke((DownloadMainNode)selectedItems[i]);
                         }
                     }
                     downloadTable.updateUI();
@@ -327,9 +332,14 @@ public class DownloadPanel
                         ((TreeTableModelAdapter) downloadTable.getModel()).expandOrCollapseRow(selectedRow);
                     }
                 }
-                if (node.getClass() == DownloadMainNode.class) {
+                if (node.getClass() == DownloadMainNode.class
+                    && ((DownloadMainNode)node).getType()==DownloadMainNode.ROOT_NODE) {
                     powerDownloadPanel.btnPdl.setEnabled(true);
                     downloadDOOverviewPanel.setDownloadDO(((DownloadMainNode)node).getDownloadDO());
+                }
+                else if (node.getClass() == DownloadSourceDO.class) {
+                    powerDownloadPanel.btnPdl.setEnabled(true);
+                    downloadDOOverviewPanel.setDownloadSourceDO((DownloadSourceDO)node);
                 }
                 else {
                     powerDownloadPanel.btnPdl.setEnabled(false);
