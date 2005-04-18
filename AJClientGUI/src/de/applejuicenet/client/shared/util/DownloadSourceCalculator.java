@@ -69,7 +69,7 @@ public abstract class DownloadSourceCalculator {
 	public static Component getProgressbarComponent(DownloadSource downloadSource) {
         if (downloadSource.getStatus() == DownloadSource.UEBERTRAGUNG) {
             String prozent = downloadSource.getDownloadPercentAsString();
-            int pos = prozent.indexOf('.');
+            int pos = prozent.indexOf(',');
             String balken = prozent;
             if (pos != -1) {
                 balken = balken.substring(0, pos);

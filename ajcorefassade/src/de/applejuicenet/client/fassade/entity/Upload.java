@@ -1,5 +1,7 @@
 package de.applejuicenet.client.fassade.entity;
 
+import java.text.DecimalFormat;
+
 
 public abstract class Upload {
 	public static final int AKTIVE_UEBERTRAGUNG = 1;
@@ -7,6 +9,8 @@ public abstract class Upload {
 	public static final int STATE_UNBEKANNT = 0;
 	public static final int STATE_DIREKT_VERBUNDEN = 1;
 	public static final int STATE_INDIREKT_VERBUNDEN = 2;
+	
+	private static DecimalFormat formatter = new DecimalFormat("###,##0.00");		
 
 	public abstract int getUploadID();
 
@@ -34,7 +38,7 @@ public abstract class Upload {
 
 	public abstract long getLastConnection();
 
-	public abstract int getLoaded();
+	public abstract double getLoaded();
 
 	public final String getUploadIDAsString() {
 		return Integer.toString(getUploadID());
@@ -57,13 +61,17 @@ public abstract class Upload {
 			return "0";
 		}
 		temp = temp * 100 / getSize();
-		String result = Double.toString(temp);
-		if (result.indexOf(".") + 3 < result.length()) {
-			result = result.substring(0, result.indexOf(".") + 3);
-		}
-		return result;
+		return formatter.format(temp);
 	}
 
+	public final String getLoadedPercentAsString() {
+		double loaded = getLoaded();
+		if (loaded == 0.0) {
+			return "0";
+		}
+		return formatter.format(loaded);
+	}
+	
 	public final long getSize() {
 		if (getUploadTo() == -1 || getUploadFrom() == -1) {
 			return 0;

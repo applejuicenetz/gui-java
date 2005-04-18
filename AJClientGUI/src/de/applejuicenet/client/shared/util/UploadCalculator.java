@@ -33,7 +33,7 @@ public abstract class UploadCalculator {
         if (upload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG) {
             String prozent = upload.getDownloadPercentAsString();
             progress.setString(prozent + " %");
-            int pos = prozent.indexOf('.');
+            int pos = prozent.indexOf(',');
             if (pos != -1) {
                 prozent = prozent.substring(0, pos);
             }
@@ -60,8 +60,13 @@ public abstract class UploadCalculator {
 
     public static Component getWholeLoadedProgressbarComponent(Upload upload) {
         if (upload.getLoaded() != -1) {
-            wholeLoadedProgress.setString(upload.getLoaded() + " %");
-            wholeLoadedProgress.setValue(upload.getLoaded());
+            String prozent = upload.getLoadedPercentAsString();
+            wholeLoadedProgress.setString(prozent + " %");
+            int pos = prozent.indexOf(',');
+            if (pos != -1) {
+                prozent = prozent.substring(0, pos);
+            }
+            wholeLoadedProgress.setValue(Integer.parseInt(prozent));
             return wholeLoadedProgress;
         }
         else {

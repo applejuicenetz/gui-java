@@ -1,5 +1,7 @@
 package de.applejuicenet.client.fassade.entity;
 
+import java.text.DecimalFormat;
+
 
 public abstract class DownloadSource {
 	// Status - IDs
@@ -32,6 +34,8 @@ public abstract class DownloadSource {
     public static final int SOURCE_LAST_START = 4;
     public static final int SOURCE_TEXTSEARCH = 5;
     public static final int SOURCE_SERVER_SOURCE_SEARCH = 6;
+	
+	private static DecimalFormat formatter = new DecimalFormat("###,##0.00");
 
 	public abstract int getStatus();
 
@@ -77,11 +81,7 @@ public abstract class DownloadSource {
 			}
 			double temp = getActualDownloadPosition() - getDownloadFrom();
 			temp = temp * 100 / getSize();
-			String result = Double.toString(temp);
-			if (result.indexOf(".") + 3 < result.length()) {
-				result = result.substring(0, result.indexOf(".") + 3);
-			}
-			return result;
+			return formatter.format(temp);
 		} catch (Exception e) {
 			return "";
 		}

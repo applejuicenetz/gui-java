@@ -18,7 +18,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.8 2005/02/28 14:58:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.9 2005/04/18 14:54:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -242,7 +242,7 @@ public class DownloadMainNode
             String prozent = download.getProzentGeladenAsString();
             String wert = null;
             int i;
-            if ( (i = prozent.indexOf(".")) != -1) {
+            if ( (i = prozent.indexOf(",")) != -1) {
                 wert = prozent.substring(0, i);
             }
             else {

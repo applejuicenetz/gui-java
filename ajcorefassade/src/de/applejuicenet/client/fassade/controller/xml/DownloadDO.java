@@ -1,5 +1,6 @@
 package de.applejuicenet.client.fassade.controller.xml;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -42,7 +43,8 @@ class DownloadDO implements Download {
 	private long oldSpeed;
 	private String speedAsString;
 	private Map<String, DownloadSourceDO> sourcen = new HashMap<String, DownloadSourceDO>();
-
+	private static DecimalFormat formatter = new DecimalFormat("###,##0.00");
+	
 	public DownloadDO(int id) {
 		this.id = id;
 	}
@@ -65,11 +67,7 @@ class DownloadDO implements Download {
 	public String getProzentGeladenAsString() {
 		try {
 			double temp = getProzentGeladen();
-			String result = Double.toString(temp);
-			if (result.indexOf(".") + 3 < result.length()) {
-				result = result.substring(0, result.indexOf(".") + 3);
-			}
-			return result;
+			return formatter.format(temp);
 		} catch (Exception e) {
 			return "";
 		}

@@ -40,7 +40,7 @@ class UploadDO extends Upload{
 	private boolean progressChanged = false;
 	private boolean wholeLoadedProgressChanged = false;
 	private boolean versionChanged = false;
-	private int loaded;
+	private double loaded;
 
 	public UploadDO(int uploadID) {
 		this.uploadID = uploadID;
@@ -163,7 +163,7 @@ class UploadDO extends Upload{
 		return lastConnection;
 	}
 
-	public int getLoaded() {
+	public double getLoaded() {
 		return loaded;
 	}
 
@@ -182,7 +182,7 @@ class UploadDO extends Upload{
 				loaded = -1;
 			}
 		} else {
-			int tmp = (int) (newValue * 100);
+			double tmp = newValue * 100;
 			if (tmp != loaded) {
 				wholeLoadedProgressChanged = true;
 				loaded = tmp;
