@@ -8,6 +8,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
@@ -35,7 +36,7 @@ import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.layout.Synchronizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.9 2005/03/07 14:41:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.10 2005/04/18 13:54:16 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -182,6 +183,7 @@ public class SharePanel extends TklPanel{
         popup2.add(itemCopyToClipboard);
         popup2.add(itemCopyToClipboardWithSources);
         popup2.add(itemCopyToClipboardAsUBBCode);
+        popup2.add(new JSeparator());
     	popup2.add(itemOpenWithProgram);
         itemOpenWithProgram.setIcon(im.getIcon("vlc"));
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));

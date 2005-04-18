@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.JTableHeader;
@@ -273,14 +274,18 @@ public class DownloadPanel extends TklPanel {
 		itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
 		einfuegen.setIcon(im.getIcon("clipboard"));
 
-		popup.add(abbrechen);
+        popup.add(fortsetzen);
 		popup.add(pause);
-		popup.add(fortsetzen);
+        popup.add(abbrechen);
+        popup.add(new JSeparator());
 		popup.add(umbenennen);
 		popup.add(zielordner);
+        popup.add(new JSeparator());
 		popup.add(fertigEntfernen);
+        popup.add(new JSeparator());
 		popup.add(itemCopyToClipboard);
 		popup.add(itemCopyToClipboardWithSources);
+        popup.add(new JSeparator());
 		popup.add(partlisteAnzeigen);
 		partlisteAnzeigen.setVisible(false);
     	popup.add(itemOpenWithProgram);
