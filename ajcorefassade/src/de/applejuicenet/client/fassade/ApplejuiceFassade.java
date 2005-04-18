@@ -5,10 +5,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.applejuicenet.client.fassade.listener.CoreStatusListener.STATUS;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.controller.DataPropertyChangeInformer;
 import de.applejuicenet.client.fassade.controller.DataUpdateInformer;
@@ -36,6 +38,7 @@ import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.exception.WrongPasswordException;
 import de.applejuicenet.client.fassade.listener.CoreConnectionSettingsListener;
+import de.applejuicenet.client.fassade.listener.CoreStatusListener;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
 import de.applejuicenet.client.fassade.shared.AJSettings;
@@ -64,7 +67,7 @@ import de.applejuicenet.client.fassade.tools.MD5Encoder;
  */
 
 public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
-	public static final String FASSADE_VERSION = "F-1.05";
+	public static final String FASSADE_VERSION = "F-1.06";
 	
 	public static final String MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
 	public static final String ERROR_MESSAGE = "Unbehandelte Exception";
@@ -72,7 +75,9 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 	public static String separator;
 
 	private final CoreConnectionSettingsHolder coreHolder;
-
+	
+	private static HashSet<CoreStatusListener> coreListener = new HashSet<CoreStatusListener>();
+	
 	private Map<DATALISTENER_TYPE, DataUpdateInformer> informer = 
 		new HashMap<DATALISTENER_TYPE, DataUpdateInformer>();
 	private ModifiedXMLHolder modifiedXML = null;
@@ -186,6 +191,20 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 		}
 	}
 
+	public static boolean addCoreStatusListener(CoreStatusListener listener) {
+		return coreListener.add(listener);
+	}
+
+	public static boolean removeCoreStatusListener(CoreStatusListener listener) {
+		return coreListener.remove(listener);
+	}
+	
+	private void informCoreStatusListener(STATUS newStatus){
+		for (CoreStatusListener curListener : coreListener){
+			curListener.fireStatusChanged(newStatus);
+		}
+	}
+	
 	public boolean isLocalhost() {
 		return coreHolder.isLocalhost();
 	}
@@ -225,6 +244,7 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 					coreVersion = informationXML.getCoreVersion();
 					checkForValidCoreversion();
 				}
+				informCoreStatusListener(STATUS.STARTED);
 				while (!isInterrupted()) {
 					try {
 						versuch = tryUpdate(versuch);
@@ -248,6 +268,7 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 		if (workerThread != null) {
 			workerThread.interrupt();
 			workerThread = null;
+			informCoreStatusListener(STATUS.CLOSED);
 		}
 	}
 
