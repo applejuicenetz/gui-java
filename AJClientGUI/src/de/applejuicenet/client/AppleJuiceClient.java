@@ -54,7 +54,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.96 2005/02/28 16:37:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.97 2005/04/18 13:28:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -142,7 +142,7 @@ public class AppleJuiceClient {
         boolean processLink = false;
         String link = "";
         boolean doubleInstance = false;
-        boolean linkListenerStartet = false;
+        LinkListener linkListener = null;
         if (args != null && args.length > 0) {
             try {
             	for (String curArg : args) {
@@ -168,10 +168,9 @@ public class AppleJuiceClient {
                         hilfeAusgegeben = true;
                     }
                     else if (curArg.indexOf("-command=") != -1) {
-                    	if (!linkListenerStartet){
-                    		linkListenerStartet = true;
+                    	if (linkListener == null){
 	                        try {
-	                            new LinkListener();
+                                linkListener = new LinkListener();
 	                        }
 	                        catch (IOException ex) {
 	                            //bereits ein GUI vorhanden, also GUI schliessen
@@ -203,10 +202,10 @@ public class AppleJuiceClient {
                     }
                     else if (curArg.indexOf("-link=") != -1
                     		&& curArg.length() > "-link=".length() + 1) {
-                    	if (!linkListenerStartet){
-                    		linkListenerStartet = true;
+                        link = curArg.substring(curArg.indexOf("-link=") + "-link=".length());
+                    	if (linkListener == null){
 	                        try {
-	                            new LinkListener();
+	                            linkListener = new LinkListener();
 	                        }
 	                        catch (IOException ex) {
 	                            //bereits ein GUI vorhanden, also GUI schliessen
@@ -227,7 +226,7 @@ public class AppleJuiceClient {
                             System.exit(1);
                         }
                         else{
-                        	getAjFassade().processLink(link, "");
+                            linkListener.processLink(link, "");
                         }
                     }
                 }
@@ -240,9 +239,9 @@ public class AppleJuiceClient {
                 System.exit(1);
             }
         }
-    	if (!linkListenerStartet){
+    	if (linkListener == null){
             try {
-                new LinkListener();
+                linkListener = new LinkListener();
             }
             catch (IOException ex) {
                 //bereits ein GUI vorhanden, also GUI schliessen
@@ -256,6 +255,9 @@ public class AppleJuiceClient {
                 "appleJuice Client",
                 JOptionPane.ERROR_MESSAGE);
             System.exit(1);
+        }
+        if (processLink) {
+            linkListener.processLink(link, "");
         }
         Logger rootLogger = Logger.getRootLogger();
 
@@ -442,9 +444,6 @@ public class AppleJuiceClient {
             }
             System.out.println(nachricht);
             splash.dispose();
-            if (processLink) {
-            	ajFassade.processLink(link, "");
-            }
             if (OptionsManagerImpl.getInstance().isErsterStart()) {
                 showConnectionWizard(theApp);
             }

@@ -5,19 +5,20 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashSet;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-
-import java.net.InetAddress;
+import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.listener.CoreStatusListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.13 2005/01/18 17:35:27 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.14 2005/04/18 13:28:39 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,13 +29,15 @@ import java.net.InetAddress;
  */
 
 public class LinkListener
-    implements Runnable {
+    implements Runnable, CoreStatusListener {
 
     private final int PORT;
 
     private static Logger logger;
     private ServerSocket listen;
     private Thread connect;
+    private ApplejuiceFassade applejuiceFassade = null;
+    private HashSet<Link> linkCache = null;
 
     public LinkListener() throws IOException{
         PORT = OptionsManagerImpl.getInstance().getLinkListenerPort();
@@ -43,14 +46,13 @@ public class LinkListener
             listen = new ServerSocket(PORT);
             connect = new Thread(this);
             connect.start();
+            ApplejuiceFassade.addCoreStatusListener(this);
         }
         catch (IOException ioE){
             throw ioE;
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -69,8 +71,16 @@ public class LinkListener
                         if (line.indexOf("-link=") != -1) {
                             String link = getLinkFromReadLine(line);
                             if (link != null) {
-                            	AppleJuiceClient.getAjFassade().processLink(
-                                    link, "");
+                                Link aLink = new Link(link, "");
+                                if (applejuiceFassade != null){
+                                    processLink(aLink);
+                                }
+                                else{
+                                    if (linkCache == null){
+                                        linkCache = new HashSet<Link>();
+                                    }
+                                    linkCache.add(aLink);
+                                }
                             }
                         }
                         //todo
@@ -91,9 +101,7 @@ public class LinkListener
                         }*/
                     }
                     catch (Exception e) {
-                        if (logger.isEnabledFor(Level.ERROR)) {
-                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                        }
+                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                         client.close();
                         return;
                     }
@@ -112,9 +120,7 @@ public class LinkListener
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -144,6 +150,66 @@ public class LinkListener
         }
         else {
             return line.substring(line.indexOf("ajfsp://"));
+        }
+    }
+
+    public void fireStatusChanged(STATUS newStatus) {
+        if (newStatus == STATUS.STARTED){
+            ApplejuiceFassade.removeCoreStatusListener(this);
+            applejuiceFassade = AppleJuiceClient.getAjFassade();
+            processCache();
+        }
+    }
+
+    private void processCache() {
+        if (linkCache == null){
+            return;
+        }
+        for (Link curLink : linkCache){
+            processLink(curLink);
+        }
+        linkCache.clear();
+        linkCache = null;
+    }
+
+    public void processLink(String link, String directory){
+        Link aLink = new Link(link, "");
+        if (applejuiceFassade == null){
+            if (linkCache == null){
+                linkCache = new HashSet<Link>();
+            }
+            linkCache.add(aLink);
+        }
+        else{
+            processLink(aLink);
+        }
+    }
+    
+    private void processLink(Link aLink){
+        try {
+			applejuiceFassade.processLink(aLink.getLink(), aLink.getDirectory());
+		} catch (IllegalArgumentException e) {
+			// an dieser Stelle unterbuttern
+            logger.warn(e);
+		}
+    }
+    
+    private class Link {
+        
+        private final String link; 
+        private final String directory;
+        
+        public Link(String link, String directory){
+            this.link = link; 
+            this.directory = directory;
+        }
+        
+        public String getDirectory() {
+            return directory;
+        }
+        
+        public String getLink() {
+            return link;
         }
     }
 }
