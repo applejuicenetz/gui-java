@@ -195,14 +195,11 @@ public class DownloadPartListPanel extends JPanel implements
 				savedMouseEvent = null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+            logger.debug(ApplejuiceFassade.ERROR_MESSAGE, e);
 			partList = null;
 			lineImage = null;
 			image = null;
 			savedMouseEvent = null;
-			if (logger.isEnabledFor(Level.DEBUG)) {
-				logger.debug(ApplejuiceFassade.ERROR_MESSAGE, e);
-			}
 		}
 		updatePanel();
 	}

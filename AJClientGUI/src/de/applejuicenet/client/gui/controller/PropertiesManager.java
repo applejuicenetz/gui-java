@@ -533,7 +533,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 				rootLogger.addAppender(fileAppender);
 			} catch (IOException ioe) {
 				rootLogger.addAppender(new ConsoleAppender());
-				ioe.printStackTrace();
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ioe);
 			}
 		} else {
 			rootLogger.addAppender(new ConsoleAppender());
@@ -793,7 +793,7 @@ public class PropertiesManager implements OptionsManager, PositionManager,
 			aPropertyHandler.save();
 		} catch (IllegalArgumentException e1) {
 			// sollte eigentlich nie passieren
-			e1.printStackTrace();
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e1);
 		}
 	}
 

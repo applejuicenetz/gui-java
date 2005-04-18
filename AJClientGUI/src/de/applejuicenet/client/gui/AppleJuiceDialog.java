@@ -1398,7 +1398,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 							SwingUtilities
 									.updateComponentTreeUI(AppleJuiceDialog.this);
 						} catch (Exception ex) {
-							ex.printStackTrace();
+                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
 						}
 					}
 				}
