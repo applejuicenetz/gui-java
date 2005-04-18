@@ -340,7 +340,7 @@ public class DownloadController extends GuiController {
 	
 	private void clearReadyDownloads(){
 		AppleJuiceClient.getAjFassade().cleanDownloadList();
-		downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
+		downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
 		downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(false);
 		downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
 		downloadPanel.getDownloadTable().getSelectionModel().clearSelection();
@@ -352,14 +352,14 @@ public class DownloadController extends GuiController {
 			Download download = ((DownloadMainNode) node)
 					.getDownload();
 			if (Settings.getSettings().isDownloadUebersicht()) {
-				downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
+				downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
 				tryGetPartList(false);
 			} else {
 				if ((download.getStatus() == Download.SUCHEN_LADEN || download
 						.getStatus() == Download.PAUSIERT)) {
-					downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(true);
+					downloadPanel.getDownloadOverviewPanel().enableHoleListButton(true);
 				} else {
-					downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
+					downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
 				}
 			}
 			if (!downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
@@ -369,17 +369,17 @@ public class DownloadController extends GuiController {
 					downloadPanel.getPowerDownloadPanel().setPwdlValue(download
 							.getPowerDownload());
 				} else {
-					downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
+					downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
 					downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(false);
 					downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
 				}
 			}
 		} else if (node instanceof DownloadSource) {
 			if (Settings.getSettings().isDownloadUebersicht()) {
-				downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
+				downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
 				tryGetPartList(false);
 			} else {
-				downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(true);
+				downloadPanel.getDownloadOverviewPanel().enableHoleListButton(true);
 			}
 			if (!downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
 				downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(true);
@@ -390,7 +390,7 @@ public class DownloadController extends GuiController {
 		} else {
 			downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(false);
 			downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
-			downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
+			downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
 		}
 		
 	}
@@ -884,7 +884,7 @@ public class DownloadController extends GuiController {
 
 	public void componentSelected() {
 		try {
-			downloadPanel.getDownloadDOOverviewPanel().enableHoleListButton(false);
+			downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
 			if (!initialized) {
 				initialized = true;
 		        firstUpdate = false;

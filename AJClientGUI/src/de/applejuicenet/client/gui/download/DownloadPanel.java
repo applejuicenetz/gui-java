@@ -80,7 +80,7 @@ import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
 
 public class DownloadPanel extends TklPanel {
 
-	private DownloadOverviewPanel downloadDOOverviewPanel;
+	private DownloadOverviewPanel downloadOverviewPanel;
 	private TKLTextField downloadLink = new TKLTextField();
 	private JButton btnStartDownload = new JButton();
 	private PowerDownloadPanel powerDownloadPanel;
@@ -133,8 +133,8 @@ public class DownloadPanel extends TklPanel {
 		return columnPopupItems;
 	}
 	
-	public DownloadOverviewPanel getDownloadDOOverviewPanel(){
-		return downloadDOOverviewPanel;
+	public DownloadOverviewPanel getDownloadOverviewPanel(){
+		return downloadOverviewPanel;
 	}
 	
 	public JScrollPane getScrollPane(){
@@ -226,13 +226,13 @@ public class DownloadPanel extends TklPanel {
 	}
 	
     public JButton getBtnHoleListe(){
-    	return downloadDOOverviewPanel.getBtnHoleListe();
+    	return downloadOverviewPanel.getBtnHoleListe();
     }
 	
 	public DownloadPanel(GuiController guiController) {
 		super(guiController);
 		try {
-			downloadDOOverviewPanel = new DownloadOverviewPanel(this);
+			downloadOverviewPanel = new DownloadOverviewPanel(this);
 			powerDownloadPanel = new PowerDownloadPanel((DownloadController)guiController);
 			init();
 		} catch (Exception e) {
@@ -488,7 +488,7 @@ public class DownloadPanel extends TklPanel {
 		constraints.weighty = 1;
 
 		bottomPanel.add(powerDownloadPanel, BorderLayout.WEST);
-		bottomPanel.add(downloadDOOverviewPanel, BorderLayout.CENTER);
+		bottomPanel.add(downloadOverviewPanel, BorderLayout.CENTER);
 
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel,
 				bottomPanel);

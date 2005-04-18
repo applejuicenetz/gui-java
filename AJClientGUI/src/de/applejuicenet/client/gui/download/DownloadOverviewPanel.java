@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.1 2005/01/19 16:22:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.2 2005/04/18 14:25:51 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +33,7 @@ import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+import de.applejuicenet.client.shared.IconManager;
 
 public class DownloadOverviewPanel
     extends JPanel
@@ -75,6 +76,7 @@ public class DownloadOverviewPanel
     }
 
     private void init() {
+        holeListe.setIcon(IconManager.getInstance().getIcon("partliste"));
         holeListe.setEnabled(false);
         setLayout(new BorderLayout());
         JPanel tempPanel1 = new JPanel();

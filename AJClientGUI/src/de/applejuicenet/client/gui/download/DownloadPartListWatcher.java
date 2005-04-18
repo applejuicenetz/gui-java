@@ -15,7 +15,7 @@ public class DownloadPartListWatcher {
 		nodeObject = node;
 		if (nodeObject == null) {
 			((DownloadPanel)downloadController.getComponent())
-				.getDownloadDOOverviewPanel()
+				.getDownloadOverviewPanel()
 					.setDownloadDO(null);
 			return;
 		}
@@ -23,7 +23,7 @@ public class DownloadPartListWatcher {
 				&& ((DownloadMainNode) nodeObject)
 						.getType() == DownloadMainNode.ROOT_NODE) {
 			((DownloadPanel)downloadController.getComponent())
-				.getDownloadDOOverviewPanel()
+				.getDownloadOverviewPanel()
 					.setDownloadDO(((DownloadMainNode) nodeObject)
 							.getDownload());
 		} else if (nodeObject instanceof DownloadSource) {
@@ -31,12 +31,12 @@ public class DownloadPartListWatcher {
 					&& ((DownloadSource) nodeObject)
 							.getQueuePosition() > 20) {
 				((DownloadPanel)downloadController.getComponent())
-				.getDownloadDOOverviewPanel()
+				.getDownloadOverviewPanel()
 					.setDownloadDO(null);
 			}
 			else{
 				((DownloadPanel)downloadController.getComponent())
-					.getDownloadDOOverviewPanel()
+					.getDownloadOverviewPanel()
 						.setDownloadSourceDO((DownloadSource) nodeObject);
 			}
 		}
