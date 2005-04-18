@@ -1441,10 +1441,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 							aktuelleVersion[i] = token2.nextToken();
 						}
 						if ((versionInternet[0].compareTo(aktuelleVersion[0]) > 0)
-								|| (versionInternet[1]
-										.compareTo(aktuelleVersion[1]) > 0)
-								|| (versionInternet[2]
-										.compareTo(aktuelleVersion[2]) > 0)) {
+								|| (versionInternet[0].compareTo(aktuelleVersion[0]) == 0 && versionInternet[1].compareTo(aktuelleVersion[1]) > 0)
+                                || (versionInternet[0].compareTo(aktuelleVersion[0]) == 0 && versionInternet[1].compareTo(aktuelleVersion[1]) == 0) && versionInternet[2].compareTo(aktuelleVersion[2]) > 0) 
+                        {
 							int pos2 = downloadData.lastIndexOf("|");
 							String winLink = downloadData.substring(pos1 + 1,
 									pos2);
