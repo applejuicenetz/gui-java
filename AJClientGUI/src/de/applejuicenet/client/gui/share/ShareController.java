@@ -5,6 +5,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,7 +39,7 @@ import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.17 2005/03/09 10:16:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.18 2005/04/22 14:36:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -64,10 +65,12 @@ public class ShareController extends GuiController {
 	private static final int OPEN_WITH_PROGRAM = 11;
 	
 	private static ShareController instance = null;
+    private static DecimalFormat formatter = new DecimalFormat("###,##0.00");
 	
 	private SharePanel sharePanel;
     private String dateiGroesse;
     private String eintraege;
+    private int prio = 0;
     private int anzahlDateien = 0;
     private boolean initialized = false;
     private boolean treeInitialisiert = false;
@@ -431,24 +434,29 @@ public class ShareController extends GuiController {
                         rootNode.removeAllChildren();
                     }
                     Map<String, Share> shares = AppleJuiceClient.getAjFassade().getShare(true);
-                    int anzahlDateien = 0;
+                    anzahlDateien = 0;
                     double size = 0;
+                    prio = 0;
                     for (Share curShare : shares.values()) {
                         rootNode.addChild(curShare);
                         size += curShare.getSize();
+                        if (curShare.getPrioritaet() > 1){
+                            prio += curShare.getPrioritaet(); 
+                        }
                         anzahlDateien++;
                     }
                     size = size / 1048576;
-                    dateiGroesse = Double.toString(size);
-                    if (dateiGroesse.indexOf(".") + 3 < dateiGroesse.length()) {
-                        dateiGroesse = dateiGroesse.substring(0,
-                            dateiGroesse.indexOf(".") + 3) + " MB";
-                    }
+                    
+                    dateiGroesse = formatter.format(size) + " MB";
                     String temp = eintraege;
                     temp = temp.replaceFirst("%i",
                                              Integer.toString(anzahlDateien));
                     temp = temp.replaceFirst("%s", dateiGroesse);
-                    sharePanel.getLblDateien().setText(temp);
+                    StringBuffer tmp = new StringBuffer(temp);
+                    tmp.append(" - Prio: ");
+                    tmp.append(prio);
+                    tmp.append("/1000");
+                    sharePanel.getLblDateien().setText(tmp.toString());
                 }
                 catch (Exception e) {
                     logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
@@ -601,7 +609,11 @@ public class ShareController extends GuiController {
             String temp = eintraege;
             temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
             temp = temp.replaceFirst("%s", dateiGroesse);
-            sharePanel.getLblDateien().setText(temp);
+            StringBuffer tmp = new StringBuffer(temp);
+            tmp.append(" - Prio: ");
+            tmp.append(prio);
+            tmp.append("/1000");
+            sharePanel.getLblDateien().setText(tmp.toString());
         }
         else {
         	sharePanel.getLblDateien().setText("");
