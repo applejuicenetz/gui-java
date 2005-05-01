@@ -320,4 +320,8 @@ class SearchDO extends Search {
 			}
 		}
 	}
+
+    public long getEntryCount() {
+        return entries.size();
+    }
 }

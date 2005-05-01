@@ -32,4 +32,6 @@ public abstract class Search {
 	public abstract boolean isRunning();	
 	
 	public abstract void setChanged(boolean changed);
+    
+    public abstract long getEntryCount();
 }
