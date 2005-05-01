@@ -18,6 +18,7 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.gui.debug.DebugController;
 import de.applejuicenet.client.gui.download.DownloadController;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
@@ -30,7 +31,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.55 2005/03/23 07:01:50 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.56 2005/05/01 19:48:18 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -126,6 +127,10 @@ public class RegisterPanel
 
         ImageIcon icon5 = im.getIcon("server");
         addTab("Server", icon5, serverPanel);
+        
+        if (Logger.getRootLogger().isEnabledFor(Level.DEBUG)){
+            addTab("Debug", icon5, DebugController.getInstance().getComponent());
+        }
 
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(90, "Lade Plugins...");
