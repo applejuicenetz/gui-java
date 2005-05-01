@@ -186,17 +186,18 @@ public class SearchController extends GuiController{
                             int id;
                             String searchKey;
                             for (int i = 0; i < searchPanels.length; i++) {
-                                id = ( (SearchResultPanel) searchPanels[i]).getSearch().
-                                    getId();
+                                aSearch = ((SearchResultPanel) searchPanels[i]).getSearch(); 
+                                id = aSearch.getId();
                                 searchKey = Integer.toString(id);
+                                int index = resultPanel.indexOfComponent((Component)searchPanels[i]);
+                                resultPanel.setTitleAt(index, aSearch.getSuchText() + " (" 
+                                        + aSearch.getEntryCount() + ")");
                                 if (! ( (HashMap) content).containsKey(searchKey)) {
-                                    int index = resultPanel.indexOfComponent((Component)searchPanels[i]);
                                     searchIds.remove(searchKey);
-                                    resultPanel.enableIconAt(index, ((SearchResultPanel) searchPanels[i]).getSearch());
+                                    resultPanel.enableIconAt(index, aSearch);
                                 }
-                                else if (!((SearchResultPanel) searchPanels[i]).getSearch().isRunning()){
-                                    int index = resultPanel.indexOfComponent((Component)searchPanels[i]);
-                                    resultPanel.enableIconAt(index, ((SearchResultPanel) searchPanels[i]).getSearch());
+                                else if (!aSearch.isRunning()){
+                                    resultPanel.enableIconAt(index, aSearch);
                                 }
                             }
                             searchPanel.getBearbeitungLbl().setText(bearbeitung.replaceAll("%d",

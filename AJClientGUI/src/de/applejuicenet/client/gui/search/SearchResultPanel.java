@@ -43,7 +43,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.10 2005/01/19 16:22:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.11 2005/05/01 17:54:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -78,7 +78,6 @@ public class SearchResultPanel
     private JLabel label3 = new JLabel();
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem item1 = new JMenuItem();
-    private int searchHitsCount;
     private JToggleButton[] filterButtons;
 
     private TableColumn[] tableColumns = new TableColumn[3];
@@ -90,9 +89,7 @@ public class SearchResultPanel
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -316,14 +313,10 @@ public class SearchResultPanel
 
     private void updateZahlen() {
         SearchEntry[] searchEntries = search.getAllSearchEntries();
-        searchHitsCount = 0;
-        for (int i = 0; i < searchEntries.length; i++) {
-            searchHitsCount += searchEntries[i].getFileNames().length;
-        }
         label1.setText(offeneSuchen.replaceFirst("%i",
-                                                 Integer.toString(search.getOffeneSuchen())));
+            Integer.toString(search.getOffeneSuchen())));
         label2.setText(gefundeneDateien.replaceFirst("%i",
-            Integer.toString(searchHitsCount)));
+            Integer.toString(searchEntries.length)));
         label3.setText(durchsuchteClients.replaceFirst("%i",
             Integer.toString(search.getDurchsuchteClients())));
     }
@@ -335,7 +328,7 @@ public class SearchResultPanel
             label1.setText(offeneSuchen.replaceFirst("%i",
                 Integer.toString(search.getOffeneSuchen())));
             label2.setText(gefundeneDateien.replaceFirst("%i",
-                Integer.toString(search.getGefundenDateien())));
+                Long.toString(search.getEntryCount())));
             label3.setText(durchsuchteClients.replaceFirst("%i",
                 Integer.toString(search.getDurchsuchteClients())));
             TableColumnModel tcm = searchResultTable.getColumnModel();
@@ -344,9 +337,7 @@ public class SearchResultPanel
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
