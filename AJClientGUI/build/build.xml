@@ -73,7 +73,7 @@
          </jar>
    </target>
 
-   <target name="build-plugin-jar" description="builds plugin - build.xml needs to be modified">
+   <target name="build-pluginjar-versionchecker" description="builds versionchecker.jar">
       <delete includeEmptyDirs="true">
          <fileset dir="${basedir}/plugins" casesensitive="false">
             <include name="**/versionchecker.jar"/>
@@ -90,6 +90,22 @@
       </jar>
    </target>
 
+   <target name="build-pluginjar-ircplugin" description="builds ircplugin.jar">
+      <delete includeEmptyDirs="true">
+         <fileset dir="${basedir}/plugins" casesensitive="false">
+            <include name="**/ircplugin.jar"/>
+         </fileset>
+      </delete>
+	  <jar destfile="${basedir}/plugins/ircplugin.jar">
+		<fileset dir="${basedir}/plugin_src/ircplugin" includes="*.xml"/>
+		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
+                excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+      </jar>
+	  <jar destfile="${basedir}/plugins/ircplugin.jar">
+		<fileset dir="${basedir}/plugins/" includes="ircplugin.jar.jar"/>
+      </jar>
+   </target>
+	
    <target name="build-pwdlPolicy-jar" description="builds pwdlPolicy - build.xml needs to be modified">
       <delete includeEmptyDirs="true">
          <fileset dir="${basedir}/pwdlpolicies" casesensitive="false">
