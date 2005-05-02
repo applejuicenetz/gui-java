@@ -24,7 +24,7 @@ import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserTreeMod
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODDirectoryChooser.java,v 1.4 2005/01/18 17:35:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODDirectoryChooser.java,v 1.5 2005/05/02 20:35:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -112,15 +112,12 @@ public class ODDirectoryChooser
                 change = true;
                 DirectoryChooserNode node = (DirectoryChooserNode)
                     folderTree.getLastSelectedPathComponent();
-                //todo
-                path = "";//node.getDO().getPath();
+                path = node.getDirectory().getPath();
             }
             dispose();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 }
