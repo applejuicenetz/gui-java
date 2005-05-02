@@ -1,6 +1,6 @@
 package de.applejuicenet.client.fassade.entity;
 
-public interface SearchEntry {
+public interface SearchEntry extends IdOwner{
 
 	public int getId();
 

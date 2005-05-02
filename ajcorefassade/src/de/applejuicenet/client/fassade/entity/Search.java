@@ -1,6 +1,6 @@
 package de.applejuicenet.client.fassade.entity;
 
-public abstract class Search {
+public abstract class Search implements IdOwner{
 	public static int currentSearchCount = 0;
 
 	public abstract long getCreationTime();

@@ -67,7 +67,7 @@ class UploadDO extends Upload{
 		versionChanged = true;
 	}
 
-	public int getUploadID() {
+	public int getId() {
 		return uploadID;
 	}
 

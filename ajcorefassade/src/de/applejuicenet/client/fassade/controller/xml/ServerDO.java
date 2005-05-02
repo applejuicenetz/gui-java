@@ -86,7 +86,7 @@ class ServerDO extends Server {
 		this.timeLastSeen = timeLastSeen;
 	}
 
-	public int getID() {
+	public int getId() {
 		return id;
 	}
 

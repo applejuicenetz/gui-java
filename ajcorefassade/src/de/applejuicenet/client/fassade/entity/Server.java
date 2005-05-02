@@ -3,7 +3,7 @@ package de.applejuicenet.client.fassade.entity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public abstract class Server {
+public abstract class Server implements IdOwner{
 
 	private static SimpleDateFormat formatter = new SimpleDateFormat(
 	"dd.MM.yyyy HH:mm:ss");
@@ -18,14 +18,14 @@ public abstract class Server {
 
 	public abstract int getVersuche();
 
-	public abstract int getID();
+	public abstract int getId();
 
 	public abstract boolean isConnected();
 
 	public abstract boolean isTryConnect();
 	
 	public final String getIDasString() {
-		return Integer.toString(getID());
+		return Integer.toString(getId());
 	}
 
 	public final String getTimeLastSeenAsString() {
@@ -40,6 +40,6 @@ public abstract class Server {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		return (getID() == ((Server) obj).getID());
+		return (getId() == ((Server) obj).getId());
 	}
 }

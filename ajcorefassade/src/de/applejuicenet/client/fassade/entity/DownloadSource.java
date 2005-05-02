@@ -3,7 +3,7 @@ package de.applejuicenet.client.fassade.entity;
 import java.text.DecimalFormat;
 
 
-public abstract class DownloadSource {
+public abstract class DownloadSource implements IdOwner{
 	// Status - IDs
 	public static final int UNGEFRAGT = 1;
 	public static final int VERSUCHE_ZU_VERBINDEN = 2;

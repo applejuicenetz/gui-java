@@ -668,7 +668,7 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 				.getCorePort(), HtmlLoader.POST,
 				"/function/serverlogin?password="
 						+ coreHolder.getCorePassword() + "&id="
-						+ server.getID(), false);
+						+ server.getId(), false);
 	}
 
 	public Object getObjectById(Integer id) throws IllegalArgumentException {
@@ -693,7 +693,7 @@ public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
 					.getCorePort(), HtmlLoader.POST,
 					"/function/removeserver?password="
 							+ coreHolder.getCorePassword() + "&id="
-							+ curServer.getID(), false);
+							+ curServer.getId(), false);
 		}
 	}
 

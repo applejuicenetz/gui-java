@@ -1,6 +1,6 @@
 package de.applejuicenet.client.fassade.entity;
 
-public interface Share {
+public interface Share extends IdOwner{
 
 	int getId();
 

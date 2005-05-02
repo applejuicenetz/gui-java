@@ -2,8 +2,7 @@ package de.applejuicenet.client.fassade.entity;
 
 import java.text.DecimalFormat;
 
-
-public abstract class Upload {
+public abstract class Upload implements IdOwner{
 	public static final int AKTIVE_UEBERTRAGUNG = 1;
 	public static final int WARTESCHLANGE = 2;
 	public static final int STATE_UNBEKANNT = 0;
@@ -12,7 +11,7 @@ public abstract class Upload {
 	
 	private static DecimalFormat formatter = new DecimalFormat("###,##0.00");		
 
-	public abstract int getUploadID();
+	public abstract int getId();
 
 	public abstract int getShareFileID();
 
@@ -41,7 +40,7 @@ public abstract class Upload {
 	public abstract double getLoaded();
 
 	public final String getUploadIDAsString() {
-		return Integer.toString(getUploadID());
+		return Integer.toString(getId());
 	}
 
 	public final String getShareFileIDAsString() {

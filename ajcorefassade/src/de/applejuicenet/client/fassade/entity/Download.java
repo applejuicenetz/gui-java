@@ -1,6 +1,6 @@
 package de.applejuicenet.client.fassade.entity;
 
-public interface Download {
+public interface Download extends IdOwner{
     
     // Status - IDs
     static final int SUCHEN_LADEN = 0;
