@@ -22,7 +22,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
@@ -37,13 +36,14 @@ import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.search.table.SearchNode;
+import de.applejuicenet.client.gui.search.table.SearchNodeComparator;
 import de.applejuicenet.client.gui.search.table.SearchResultTableModel;
 import de.applejuicenet.client.gui.search.table.SearchResultTreeTableCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.11 2005/05/01 17:54:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.12 2005/05/02 14:23:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -139,7 +139,7 @@ public class SearchResultPanel
                     filterButtons[i].setSelected(false);
                 }
                 search.clearFilter();
-                ( (SearchNode) tableModel.getRoot()).forceSort();
+                ((SearchNode) tableModel.getRoot()).updateFilter();
                 searchResultTable.updateUI();
             }
         });
@@ -300,14 +300,13 @@ public class SearchResultPanel
     public void updateSearchContent() {
         try {
             if (search.isChanged()) {
+                ( (SearchNode) tableModel.getRoot()).refresh();
                 searchResultTable.updateUI();
                 updateZahlen();
             }
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -350,6 +349,9 @@ public class SearchResultPanel
                                 SortButtonRenderer renderer) {
             this.header = header;
             this.renderer = renderer;
+            renderer.setSelectedColumn(0);
+            renderer.setSelectedColumn(0);
+            header.repaint();
         }
 
         public void mouseClicked(MouseEvent e) {
@@ -382,19 +384,19 @@ public class SearchResultPanel
                                    getRoot());
 
             if (pressedColumn == tableColumns[0]) {
-                rootNode.setSortCriteria(SearchNode.SORT_FILENAME,
-                                         isAscent);
+                rootNode.setSortCriteria(
+                        SearchNodeComparator.SORT_TYPE.SORT_FILENAME, isAscent);
             }
             else if (pressedColumn == tableColumns[1]) {
-                rootNode.setSortCriteria(SearchNode.SORT_GROESSE,
-                                         isAscent);
+                rootNode.setSortCriteria(
+                        SearchNodeComparator.SORT_TYPE.SORT_GROESSE, isAscent);
             }
             else if (pressedColumn == tableColumns[2]) {
-                rootNode.setSortCriteria(SearchNode.SORT_ANZAHL,
-                                         isAscent);
+                rootNode.setSortCriteria(
+                        SearchNodeComparator.SORT_TYPE.SORT_ANZAHL, isAscent);
             }
             searchResultTable.updateUI();
-            renderer.setPressedColumn( -1);
+            renderer.setPressedColumn( -1 );
             header.repaint();
         }
     }
@@ -414,7 +416,7 @@ public class SearchResultPanel
             else{
                 search.addFilter(filter);
             }
-            ((SearchNode)tableModel.getRoot()).forceSort();
+            ((SearchNode) tableModel.getRoot()).updateFilter();
             searchResultTable.updateUI();
         }
     }

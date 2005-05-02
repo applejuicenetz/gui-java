@@ -11,7 +11,7 @@ import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.7 2005/03/02 13:55:11 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.8 2005/05/02 14:23:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -105,7 +105,7 @@ public class ServerTableModel
         String suchKey = null;
         ArrayList<Server> toRemove = new ArrayList<Server>();
         for (Server curServer : servers ) {
-            suchKey = Integer.toString( curServer.getID());
+            suchKey = Integer.toString( curServer.getId());
             if (!changedContent.containsKey(suchKey)) {
                 toRemove.add(curServer);
             }
