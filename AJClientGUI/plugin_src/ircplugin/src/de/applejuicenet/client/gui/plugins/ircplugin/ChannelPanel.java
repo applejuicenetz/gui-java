@@ -72,7 +72,7 @@ public class ChannelPanel extends JPanel implements ActionListener {
 			.getStyledDocument();
 	private JTextField textField;
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
-	private ArrayList befehle = new ArrayList();
+	private ArrayList<String> befehle = new ArrayList<String>();
 	private int befehlPos = -1;
 	private JLabel counter = new JLabel("0 Ops, 0 Gesamt");
 	private JTextPane titleArea = new JTextPane();
@@ -121,7 +121,7 @@ public class ChannelPanel extends JPanel implements ActionListener {
 		textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		textArea.setBackground(Color.WHITE);
 		textField = new JTextField();
-		Set set = new HashSet(1);
+		Set<AWTKeyStroke> set = new HashSet<AWTKeyStroke>(1);
 		set.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_JAPANESE_HIRAGANA, 0));
 		textField.setFocusTraversalKeys(
 				KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, set);
@@ -183,7 +183,7 @@ public class ChannelPanel extends JPanel implements ActionListener {
 					}
 				} else if (befehlPos != -1) {
 					if (ke.getKeyCode() == KeyEvent.VK_UP) {
-						textField.setText((String) befehle.get(befehlPos));
+						textField.setText(befehle.get(befehlPos));
 						if (befehlPos > 0) {
 							befehlPos--;
 						}
@@ -191,7 +191,7 @@ public class ChannelPanel extends JPanel implements ActionListener {
 						if (befehlPos < befehle.size() - 1) {
 							befehlPos++;
 						}
-						textField.setText((String) befehle.get(befehlPos));
+						textField.setText(befehle.get(befehlPos));
 					}
 				}
 			}

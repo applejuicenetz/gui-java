@@ -6,7 +6,7 @@ import java.util.Comparator;
 import javax.swing.AbstractListModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.13 2004/12/06 11:29:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/SortedListModel.java,v 1.14 2005/05/02 14:59:28 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -18,7 +18,7 @@ import javax.swing.AbstractListModel;
 
 public class SortedListModel extends AbstractListModel {
 
-	private ArrayList model = new ArrayList();
+	private ArrayList<User> model = new ArrayList<User>();
 	private StringComparator comparator = new StringComparator();
 
     public SortedListModel() {
@@ -79,9 +79,9 @@ public class SortedListModel extends AbstractListModel {
     public int getOpCount(){
     	int ops = 0;
     	for (int i=0; i<model.size(); i++){
-    		if (((User)model.get(i)).isAdmin()
-    				|| ((User)model.get(i)).isOp()
-					|| ((User)model.get(i)).isHalfop()){
+    		if ((model.get(i)).isAdmin()
+    				|| (model.get(i)).isOp()
+					|| (model.get(i)).isHalfop()){
     			ops++;
     		}
     	}
@@ -97,7 +97,7 @@ public class SortedListModel extends AbstractListModel {
                     k = j;
                 }
             }
-            Object tmp = model.get(i);
+            User tmp = model.get(i);
             model.set(i, model.get(k));
             model.set(k, tmp);
         }
