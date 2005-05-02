@@ -31,7 +31,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.PluginJarClassLoader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.56 2005/05/01 19:48:18 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.57 2005/05/02 10:05:49 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -61,9 +61,7 @@ public class RegisterPanel
             init();
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -129,7 +127,8 @@ public class RegisterPanel
         addTab("Server", icon5, serverPanel);
         
         if (Logger.getRootLogger().isEnabledFor(Level.DEBUG)){
-            addTab("Debug", icon5, DebugController.getInstance().getComponent());
+            ImageIcon icon7 = im.getIcon("debug");
+            addTab("Debug", icon7, DebugController.getInstance().getComponent());
         }
 
         if (AppleJuiceClient.splash != null) {
@@ -208,10 +207,8 @@ public class RegisterPanel
                 }
                 catch (Exception e) {
                     //Von einem Plugin lassen wir uns nicht beirren! ;-)
-                    if (logger.isEnabledFor(Level.ERROR)) {
-                        logger.error(
-                            "Ein Plugin konnte nicht instanziert werden", e);
-                    }
+                    logger.error(
+                        "Ein Plugin konnte nicht instanziert werden", e);
                     continue;
                 }
             }
@@ -236,9 +233,7 @@ public class RegisterPanel
                 getFirstAttrbuteByTagName(".root.mainform.serversheet.caption")));
         }
         catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 }
