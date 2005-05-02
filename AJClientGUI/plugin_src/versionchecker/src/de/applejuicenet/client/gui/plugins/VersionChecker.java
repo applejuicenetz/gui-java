@@ -14,7 +14,7 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.panels.MainPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.10 2005/01/24 18:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.11 2005/05/02 14:47:37 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,9 +41,7 @@ public class VersionChecker extends PluginConnector {
             		DATALISTENER_TYPE.UPLOAD_CHANGED);
         }
         catch(Exception e){
-            if (logger.isEnabledFor(Level.ERROR)){
-                logger.error("Unbehandelte Exception", e);
-            }
+            logger.error("Unbehandelte Exception", e);
         }
     }
 
