@@ -24,7 +24,7 @@ import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.6 2005/02/18 11:10:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/MainPanel.java,v 1.7 2005/05/02 14:45:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -135,7 +135,7 @@ public class MainPanel
                     if (curUpload == null || curUpload.getVersion() == null) {
                         continue;
                     }
-                    key = Integer.toString(curUpload.getUploadID());
+                    key = Integer.toString(curUpload.getId());
                     if (!ids.contains(key)) {
                         updateView = true;
                         ids.add(key);
