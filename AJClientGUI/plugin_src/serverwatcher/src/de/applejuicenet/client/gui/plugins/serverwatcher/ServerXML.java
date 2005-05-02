@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
 import de.applejuicenet.client.fassade.shared.XMLDecoder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerXML.java,v 1.5 2005/01/21 16:28:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerXML.java,v 1.6 2005/05/02 15:13:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -62,7 +62,7 @@ public class ServerXML
             path = getXMLPath();
             ServerXML connectionXML = new ServerXML(path);
             Element e = null;
-            ArrayList serverConfigs = new ArrayList();
+            ArrayList<ServerConfig> serverConfigs = new ArrayList<ServerConfig>();
             String bezeichnung;
             String dyn;
             String port;

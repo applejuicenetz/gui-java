@@ -101,8 +101,24 @@
 		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
                 excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
       </jar>
-	  <jar destfile="${basedir}/plugins/ircplugin.jar">
-		<fileset dir="${basedir}/plugins/" includes="ircplugin.jar.jar"/>
+	  <jar destfile="${basedir}/plugins/ircplugin.zip">
+		<fileset dir="${basedir}/plugins/" includes="ircplugin.jar"/>
+      </jar>
+   </target>
+
+   <target name="build-pluginjar-serverwatcher" description="builds serverwatcher.jar">
+      <delete includeEmptyDirs="true">
+         <fileset dir="${basedir}/plugins" casesensitive="false">
+            <include name="**/serverwatcher.jar"/>
+         </fileset>
+      </delete>
+	  <jar destfile="${basedir}/plugins/serverwatcher.jar">
+		<fileset dir="${basedir}/plugin_src/serverwatcher" includes="*.xml"/>
+		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
+                excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+      </jar>
+	  <jar destfile="${basedir}/plugins/serverwatcher.zip">
+		<fileset dir="${basedir}/plugins/" includes="serverwatcher.jar"/>
       </jar>
    </target>
 	
