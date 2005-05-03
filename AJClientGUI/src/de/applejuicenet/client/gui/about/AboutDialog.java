@@ -34,7 +34,7 @@ import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.8 2005/03/04 08:53:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.9 2005/05/03 12:31:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -119,7 +119,7 @@ public class AboutDialog
         private void init() {
             credits.add(new CreditsEntry(true, "Programmierung"));
             credits.add(new CreditsEntry(false, "Maj0r"));
-            credits.add(new CreditsEntry(false, "(aj@tkl-soft.de)"));
+            credits.add(new CreditsEntry(false, "(tkrall@tkl-soft.de)"));
             credits.add(new CreditsEntry(false, "loevenwong"));
             credits.add(new CreditsEntry(false, "(timo@loevenwong.de)"));
             credits.add(new CreditsEntry(true, "Besonderen Dank an"));
