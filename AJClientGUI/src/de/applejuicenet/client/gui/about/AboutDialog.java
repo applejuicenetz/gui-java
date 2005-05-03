@@ -34,7 +34,7 @@ import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.9 2005/05/03 12:31:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.10 2005/05/03 12:37:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -219,11 +219,11 @@ public class AboutDialog
     private class WorkerThread extends Thread{
         private Image backgroundImage;
         private BackPanel backPanel;
-        private List credits;
+        private List<CreditsEntry> credits;
         private boolean run = true;
         private Logger logger;
 
-        public WorkerThread(Image backgroundImage, BackPanel backPanel, List credits){
+        public WorkerThread(Image backgroundImage, BackPanel backPanel, List<CreditsEntry> credits){
             logger = Logger.getLogger(getClass());
             this.backgroundImage = backgroundImage;
             this.backPanel = backPanel;
@@ -257,10 +257,11 @@ public class AboutDialog
                 sleep(1000);
                 Graphics g = backPanel.getGraphics();
                 g.setColor(Color.BLACK);
-                CreditsEntry entry;
                 Graphics toDrawGraphics;
                 FontMetrics fm;
                 int strWidth;
+                Font fontBold = new Font("Arial", Font.BOLD, 12);
+                Font fontPlain = new Font("Arial", Font.PLAIN, 12);
                 while (!isInterrupted()) {
                     try {
                         sleep(100);
@@ -274,23 +275,20 @@ public class AboutDialog
                         toDrawGraphics.drawImage(new_img, 0, 0, backPanel);
                         y--;
                         int abstand = -15;
-                        for (int i = 0; i < credits.size(); i++) {
-                            entry = (CreditsEntry) credits.get(i);
-                            if (entry.isUeberschrift()) {
+                        for (CreditsEntry curEntry : credits) {
+                            if (curEntry.isUeberschrift()) {
                                 abstand += 20;
-                                toDrawGraphics.setFont(new Font("Arial",
-                                    Font.BOLD, 12));
+                                toDrawGraphics.setFont(fontBold);
                                 toDrawGraphics.setColor(Color.BLUE);
                             }
                             else {
                                 abstand += 15;
-                                toDrawGraphics.setFont(new Font("Arial",
-                                    Font.PLAIN, 12));
+                                toDrawGraphics.setFont(fontPlain);
                                 toDrawGraphics.setColor(Color.BLACK);
                             }
                             fm = toDrawGraphics.getFontMetrics();
-                            strWidth = fm.stringWidth(entry.getAusgabetext());
-                            toDrawGraphics.drawString(entry.getAusgabetext(),
+                            strWidth = fm.stringWidth(curEntry.getAusgabetext());
+                            toDrawGraphics.drawString(curEntry.getAusgabetext(),
                                 (creditsBreite - strWidth) / 2, y + abstand);
                         }
                         g.drawImage(toDraw, imageX + 1, imageY - 11,
