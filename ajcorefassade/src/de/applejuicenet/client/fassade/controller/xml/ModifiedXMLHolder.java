@@ -509,10 +509,10 @@ public class ModifiedXMLHolder extends DefaultHandler {
 				sourcenZuDownloads.remove(Integer.toString(curDownloadSource
 						.getId()));
 			}
+            downloadMap.remove(id);
+            downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadMap,
+                    DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED, download, null));
 		}
-		downloadMap.remove(id);
-		downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadMap,
-				DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED, download, null));
 	}
 
 	private void checkRemovedAttributes(Attributes attr) {
