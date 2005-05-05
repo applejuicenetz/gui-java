@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
-import de.applejuicenet.client.gui.download.table.DownloadRootNode;
+import de.applejuicenet.client.gui.download.table.DownloadNode;
 
 public class DownloadTablePopupListener extends MouseAdapter{
 	
@@ -31,7 +31,7 @@ public class DownloadTablePopupListener extends MouseAdapter{
 	}
 
 	private void maybeShowPopup(MouseEvent e) {
-		if (!DownloadRootNode.isInitialized()) {
+		if (!DownloadNode.isInitialized()) {
 			return;
 		}
 		if (e.isPopupTrigger()) {

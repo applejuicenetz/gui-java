@@ -10,7 +10,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.7 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.8 2005/05/05 18:33:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -63,15 +63,19 @@ public class DownloadModel
         String.class, String.class, String.class, String.class, String.class};
 
     public DownloadModel() {
-        super(new DownloadRootNode());
+        super(new DownloadNode());
         LanguageSelector.getInstance().addLanguageListener(this);
     }
 
     protected Object[] getChildren(Object node) {
         if (!(node instanceof Download) &&
+            !(node instanceof DownloadMainNode) &&
             !(node instanceof DownloadSource)
             && node.getClass() != WaitNode.class) {
             return ( (DownloadNode) node).getChildren();
+        }
+        else if (node instanceof DownloadMainNode) {
+            return ( (DownloadMainNode) node).getChildren();
         }
         else if (node instanceof Download) {
             return ( (Download) node).getSources();
@@ -85,9 +89,13 @@ public class DownloadModel
 
     public int getChildCount(Object node) {
         if (!(node instanceof Download) &&
+            !(node instanceof DownloadMainNode) &&
             !(node instanceof DownloadSource)
             && node.getClass() != WaitNode.class) {
-            return ( (DownloadNode) node).getChildCount(sort);
+            return ( (DownloadNode) node).getChildCount();
+        }
+        else if (node instanceof DownloadMainNode) {
+            return ( (DownloadMainNode) node).getChildCount();
         }
         else if (node instanceof Download) {
             return ( (Download) node).getSources().length;

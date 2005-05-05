@@ -42,9 +42,8 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
-import de.applejuicenet.client.gui.download.table.DownloadDirectoryNode;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
-import de.applejuicenet.client.gui.download.table.DownloadRootNode;
+import de.applejuicenet.client.gui.download.table.DownloadNode;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.SoundPlayer;
@@ -265,36 +264,21 @@ public class DownloadController extends GuiController {
 		if (isFirstDownloadPropertyChanged){
 			isFirstDownloadPropertyChanged = false;
 			Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-			((DownloadRootNode) downloadPanel.getDownloadModel().
-                    getRoot()).setDownloadMap(downloads);
-			DownloadDirectoryNode.setDownloads(downloads);
+			DownloadNode.setDownloads(downloads);
 		}
-		boolean tmpSort = false;
 		if (evt.isEventContainer()){
 			DataPropertyChangeEvent[] events = evt.getNestedEvents();
 			for (int i = 0; i<events.length; i++){
-				if (handleDownloadDataPropertyChangeEvent(
-						(DownloadDataPropertyChangeEvent)events[i])){
-					tmpSort = true;
-				}
+				handleDownloadDataPropertyChangeEvent(
+						(DownloadDataPropertyChangeEvent)events[i]);
 			}
 		}
 		else{
-			if (handleDownloadDataPropertyChangeEvent((DownloadDataPropertyChangeEvent)evt)){
-				tmpSort = true;
-			}
+			handleDownloadDataPropertyChangeEvent((DownloadDataPropertyChangeEvent)evt);
 		}
-		final boolean sort = tmpSort;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-            	if (sort){
-	            	downloadPanel.getDownloadModel().sortNextRefresh(sort);
-	            	downloadPanel.getDownloadTable().updateUI();
-	            	downloadPanel.getDownloadModel().sortNextRefresh(false);
-            	}
-            	else{
-	            	downloadPanel.getDownloadTable().updateUI();
-            	}
+            	downloadPanel.getDownloadTable().updateUI();
             }
         });
 	}
@@ -333,6 +317,11 @@ public class DownloadController extends GuiController {
 					}
 				}
 			}
+            if (event.getName().equals(DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED) 
+                    || event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_ADDED)
+                    || event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED)){
+                DownloadNode.fireDownloadDataPropertyChangeEvent(event);
+            }
 			return true;
 		}
 		return false;
@@ -463,7 +452,7 @@ public class DownloadController extends GuiController {
 						pausiert = true;
 					}
 				}
-                if (selectedItems[0] instanceof DownloadDirectoryNode) {
+                if (selectedItems[0] instanceof DownloadNode) {
                     downloadPanel.getMnuZielordner().setVisible(true);
                 }
 			} else {
@@ -698,8 +687,8 @@ public class DownloadController extends GuiController {
 					toChange.add(download);
 				}
 			}
-            else if (selectedItems[i] instanceof DownloadDirectoryNode) {
-                Object[] children = ((DownloadDirectoryNode)selectedItems[i]).getChildren();
+            else if (selectedItems[i] instanceof DownloadNode) {
+                Object[] children = ((DownloadNode)selectedItems[i]).getChildren();
                 for (int x=0; x<children.length; x++){
                     if (children[x].getClass() == DownloadMainNode.class
                             && ((DownloadMainNode) children[x]).getType() 

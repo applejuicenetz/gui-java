@@ -45,7 +45,8 @@ import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.download.table.DownloadModel;
-import de.applejuicenet.client.gui.download.table.DownloadRootNode;
+import de.applejuicenet.client.gui.download.table.DownloadNode;
+import de.applejuicenet.client.gui.download.table.DownloadNodeComparator;
 import de.applejuicenet.client.gui.download.table.DownloadTableCellRenderer;
 import de.applejuicenet.client.gui.download.table.DownloadTablePercentCellRenderer;
 import de.applejuicenet.client.gui.download.table.DownloadTableVersionCellRenderer;
@@ -555,6 +556,9 @@ public class DownloadPanel extends TklPanel {
 		public SortMouseAdapter(JTableHeader header, SortButtonRenderer renderer) {
 			this.header = header;
 			this.renderer = renderer;
+            renderer.setSelectedColumn(0);
+            renderer.setSelectedColumn(0);
+            header.repaint();
 		}
 
 		public void mouseClicked(MouseEvent e) {
@@ -585,35 +589,31 @@ public class DownloadPanel extends TklPanel {
 				isAscent = false;
 			}
 
-			DownloadRootNode rootNode = ((DownloadRootNode) downloadModel
-					.getRoot());
-
 			if (pressedColumn == columns[0]) {
-				rootNode.setSortCriteria(DownloadRootNode.SORT_DOWNLOADNAME,
+                DownloadNode.setSortCriteria(DownloadNodeComparator.SORT_TYPE.SORT_DOWNLOADNAME,
 						isAscent);
 			} else if (pressedColumn == columns[1]) {
-				rootNode
-						.setSortCriteria(DownloadRootNode.SORT_STATUS, isAscent);
+                DownloadNode.setSortCriteria(DownloadNodeComparator.SORT_TYPE.SORT_STATUS, isAscent);
 			} else if (pressedColumn == columns[2]) {
-				rootNode.setSortCriteria(DownloadRootNode.SORT_GROESSE,
+                DownloadNode.setSortCriteria(DownloadNodeComparator.SORT_TYPE.SORT_GROESSE,
 						isAscent);
 			} else if (pressedColumn == columns[3]) {
-				rootNode.setSortCriteria(DownloadRootNode.SORT_BEREITS_GELADEN,
+                DownloadNode.setSortCriteria(DownloadNodeComparator.SORT_TYPE.SORT_BEREITS_GELADEN,
 						isAscent);
 			} else if (pressedColumn == columns[4]) {
-				rootNode.setSortCriteria(DownloadRootNode.SORT_GESCHWINDIGKEIT,
+                DownloadNode.setSortCriteria(DownloadNodeComparator.SORT_TYPE.SORT_GESCHWINDIGKEIT,
 						isAscent);
 			} else if (pressedColumn == columns[5]) {
-				rootNode.setSortCriteria(DownloadRootNode.SORT_RESTZEIT,
+                DownloadNode.setSortCriteria(DownloadNodeComparator.SORT_TYPE.SORT_RESTZEIT,
 						isAscent);
 			} else if (pressedColumn == columns[6]) {
-				rootNode.setSortCriteria(DownloadRootNode.SORT_PROZENT,
+                DownloadNode.setSortCriteria(DownloadNodeComparator.SORT_TYPE.SORT_PROZENT,
 						isAscent);
 			} else if (pressedColumn == columns[7]) {
-				rootNode.setSortCriteria(DownloadRootNode.SORT_REST_ZU_LADEN,
+                DownloadNode.setSortCriteria(DownloadNodeComparator.SORT_TYPE.SORT_REST_ZU_LADEN,
 						isAscent);
 			} else if (pressedColumn == columns[8]) {
-				rootNode.setSortCriteria(DownloadRootNode.SORT_PWDL, isAscent);
+                DownloadNode.setSortCriteria(DownloadNodeComparator.SORT_TYPE.SORT_PWDL, isAscent);
 			}
 			downloadTable.updateUI();
 			renderer.setPressedColumn(-1);

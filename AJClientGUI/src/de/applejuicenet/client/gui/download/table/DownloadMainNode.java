@@ -18,7 +18,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.9 2005/04/18 14:54:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.10 2005/05/05 18:33:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,7 +29,7 @@ import de.applejuicenet.client.shared.IconManager;
  */
 
 public class DownloadMainNode
-    implements Node, DownloadNode, LanguageListener, DownloadColumnComponent {
+    implements Node, LanguageListener, DownloadColumnComponent {
     public static final int ROOT_NODE = -1;
     public static final int LOADING_DOWNLOADS = 0;
     public static final int WAITING_DOWNLOADS = 1;
@@ -121,7 +121,7 @@ public class DownloadMainNode
         }
     }
 
-    public int getChildCount(boolean sort) {
+    public int getChildCount() {
         Object[] obj = getChildren();
         if (obj == null) {
             return 0;
@@ -132,7 +132,7 @@ public class DownloadMainNode
     }
 
     public boolean isLeaf() {
-        return (getChildCount(false) == 0) ? true : false;
+        return (getChildCount() == 0) ? true : false;
     }
 
     public Object[] getChildren() {
@@ -144,7 +144,7 @@ public class DownloadMainNode
                 else {
                     boolean childFound = false;
                     for (int i = 0; i < children.length; i++) {
-                        if (children[i].getChildCount(false) > 0) {
+                        if (children[i].getChildCount() > 0) {
                             childFound = true;
                             break;
                         }
@@ -211,7 +211,7 @@ public class DownloadMainNode
             return download.getFilename();
         }
         else {
-            return text + " (" + getChildCount(false) + ")";
+            return text + " (" + getChildCount() + ")";
         }
     }
 

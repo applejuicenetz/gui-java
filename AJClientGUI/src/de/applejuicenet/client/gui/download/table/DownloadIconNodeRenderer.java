@@ -41,9 +41,9 @@ public class DownloadIconNodeRenderer extends DefaultIconNodeRenderer
 		} else if (value.getClass() == DownloadMainNode.class) {
 			c = super.getTreeCellRendererComponent(tree, value.toString(), sel,
 					expanded, leaf, row, hasFocus);
-		} else if (value.getClass() == DownloadDirectoryNode.class) {
+		} else if (value.getClass() == DownloadNode.class) {
 			c = super.getTreeCellRendererComponent(tree,
-					((DownloadDirectoryNode) value).getVerzeichnis(), sel,
+					((DownloadNode) value).getPath(), sel,
 					expanded, leaf, row, hasFocus);
 		} else {
 			c = super.getTreeCellRendererComponent(tree, value, sel, expanded,

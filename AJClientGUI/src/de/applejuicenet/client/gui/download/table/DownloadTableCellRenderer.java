@@ -16,7 +16,7 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.Settings;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTableCellRenderer.java,v 1.7 2005/01/19 16:22:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTableCellRenderer.java,v 1.8 2005/05/05 18:33:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -71,8 +71,8 @@ public class DownloadTableCellRenderer
                                            value, isSelected, hasFocus, row,
                                            column);
         }
-        else if (node.getClass() == DownloadDirectoryNode.class) {
-            return getComponentForDirectory( (DownloadDirectoryNode) node,
+        else if (node.getClass() == DownloadNode.class) {
+            return getComponentForDirectory( (DownloadNode) node,
                                             table, value, isSelected, hasFocus,
                                             row, column);
         }
@@ -140,7 +140,7 @@ public class DownloadTableCellRenderer
         return this;
     }
 
-    public Component getComponentForDirectory(DownloadDirectoryNode node,
+    public Component getComponentForDirectory(DownloadNode node,
                                               JTable table,
                                               Object value,
                                               boolean isSelected,

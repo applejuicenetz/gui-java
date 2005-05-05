@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
-import de.applejuicenet.client.gui.download.table.DownloadRootNode;
+import de.applejuicenet.client.gui.download.table.DownloadNode;
 
 public class DownloadTableMouseListener extends MouseAdapter{
 	
@@ -24,7 +24,7 @@ public class DownloadTableMouseListener extends MouseAdapter{
 	
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
-		if (!DownloadRootNode.isInitialized()) {
+		if (!DownloadNode.isInitialized()) {
 			return;
 		}
 		Point p = e.getPoint();
