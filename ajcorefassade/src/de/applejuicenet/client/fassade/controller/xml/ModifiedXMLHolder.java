@@ -502,8 +502,7 @@ public class ModifiedXMLHolder extends DefaultHandler {
 	}
 
 	private void removeDownload(String id) {
-		Download download = downloadMap.get(sourcenZuDownloads
-				.get(id));
+		Download download = downloadMap.get(id);
 		if (download != null) {
 			for (DownloadSource curDownloadSource : download.getSources()) {
 				sourcenZuDownloads.remove(Integer.toString(curDownloadSource

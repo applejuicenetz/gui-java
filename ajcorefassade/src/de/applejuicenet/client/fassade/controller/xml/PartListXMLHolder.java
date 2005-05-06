@@ -112,8 +112,8 @@ public class PartListXMLHolder extends DefaultHandler {
 
 	public PartList getPartList(Object object)
 			throws WebSiteNotFoundException {
+		String xmlString = null;
 		try {
-			String xmlString;
 			if (object.getClass() == DownloadSourceDO.class) {
 				xmlCommand = "/xml/userpartlist.xml?";
 				xmlString = getXMLString("&id="
@@ -124,10 +124,17 @@ public class PartListXMLHolder extends DefaultHandler {
 				xmlString = getXMLString("&id=" + ((DownloadDO) object).getId());
 				partListDO = new PartListDO((Download) object);
 			}
+			// workaround fuer aktuellen core-bug #584
+			if (xmlString.indexOf("java.lang.ClassCastException") != -1
+					|| xmlString.indexOf("java.lang.NullPointerException") != -1){
+				throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR);
+			}
 			xr.parse(new InputSource(new StringReader(xmlString)));
 			PartList resultPartList = partListDO;
 			partListDO = null;
 			return resultPartList;
+		} catch (WebSiteNotFoundException wnfE) {
+			throw wnfE;
 		} catch (Exception e) {
 			return null;
 		}
