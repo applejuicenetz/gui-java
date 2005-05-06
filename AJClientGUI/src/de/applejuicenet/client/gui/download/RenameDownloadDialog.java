@@ -10,10 +10,8 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,9 +22,10 @@ import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.tklsoft.gui.controls.TKLComboBox;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/RenameDownloadDialog.java,v 1.6 2005/02/28 14:58:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/RenameDownloadDialog.java,v 1.7 2005/05/06 17:45:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,7 +40,7 @@ public class RenameDownloadDialog
 	
 	private Download download;
     private JButton schliessen = new JButton();
-    private JComboBox possibleNames = new JComboBox();
+    private TKLComboBox possibleNames = new TKLComboBox();
     private boolean somethingSelected = false;
 
     public RenameDownloadDialog(JFrame parentDialog,
@@ -66,19 +65,15 @@ public class RenameDownloadDialog
         JLabel label1 = new JLabel();
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.javagui.downloadform.neuerdateiname")));
-        DownloadSource[] sources = download.getSources();
         HashSet<String> set = new HashSet<String>();
         set.add(download.getFilename());
-        for (int i = 0; i < sources.length; i++) {
-            set.add(sources[i].getFilename());
+        for (DownloadSource curDownloadSource : download.getSources()) {
+            set.add(curDownloadSource.getFilename());
         }
-        Iterator it = set.iterator();
-        String name;
-        while (it.hasNext()){
-            name = (String) it.next();
-            possibleNames.addItem(name);
-            if (name.compareTo(download.getFilename()) == 0) {
-                possibleNames.setSelectedItem(name);
+        for (String curname : set){
+            possibleNames.addItem(curname);
+            if (curname.compareTo(download.getFilename()) == 0) {
+                possibleNames.setSelectedItem(curname);
             }
         }
         possibleNames.setEditable(true);
@@ -87,6 +82,7 @@ public class RenameDownloadDialog
                 schliessen.doClick();
             }
         });
+        possibleNames.confirmNewValue();
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel1.add(label1);
         panel1.add(possibleNames);
