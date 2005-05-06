@@ -78,6 +78,7 @@ public class DownloadController extends GuiController {
 	private DownloadPartListWatcher downloadPartListWatcher;
 	private boolean firstUpdate = true;
 	private boolean isFirstDownloadPropertyChanged = true;
+    private boolean selected = false;
 	
 	private String alreadyLoaded;
 	private String invalidLink;
@@ -276,11 +277,13 @@ public class DownloadController extends GuiController {
 		else{
 			handleDownloadDataPropertyChangeEvent((DownloadDataPropertyChangeEvent)evt);
 		}
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-            	downloadPanel.getDownloadTable().updateUI();
-            }
-        });
+        if (selected){
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                	downloadPanel.getDownloadTable().updateUI();
+                }
+            });
+        }
 	}
 	
 	private boolean handleDownloadDataPropertyChangeEvent(DownloadDataPropertyChangeEvent event){
@@ -878,6 +881,7 @@ public class DownloadController extends GuiController {
 
 	public void componentSelected() {
 		try {
+            selected = true;
 			downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
 			if (!initialized) {
 				initialized = true;
@@ -927,6 +931,7 @@ public class DownloadController extends GuiController {
 	}
 
 	public void componentLostSelection() {
+        selected = false;
 		downloadPartListWatcher.setDownloadNode(null);
 	}
 

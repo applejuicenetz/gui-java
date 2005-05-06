@@ -2,7 +2,6 @@ package de.applejuicenet.client.gui.search;
 
 import java.awt.Component;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.JComponent;
@@ -158,41 +157,39 @@ public class SearchController extends GuiController{
                             if (searchIds == null){
                                 searchIds = new HashMap<String, SearchResultPanel>();
                             }
-                            Iterator it = ( (HashMap) content).keySet().iterator();
+                            Map<String, Search> theContent = (Map<String, Search>) content;
                             String key;
                             Search aSearch;
                             SearchResultTabbedPane resultPanel = searchPanel.getSearchResultTabbedPane();
                             SearchResultPanel searchResultPanel;
-                            while (it.hasNext()) {
-                                key = (String)it.next();
-                                if (!searchIds.containsKey(key)) {
-                                    aSearch = (Search) ( (HashMap) content).get(key);
+                            for (String curKey : theContent.keySet()) {
+                                if (!searchIds.containsKey(curKey)) {
+                                    aSearch = theContent.get(curKey);
                                     searchResultPanel = new SearchResultPanel(aSearch);
                                     resultPanel.addTab(aSearch.getSuchText(),
                                                        searchResultPanel);
                                     searchResultPanel.aendereSprache();
                                     resultPanel.setSelectedComponent(searchResultPanel);
-                                    searchIds.put(key, searchResultPanel);
+                                    searchIds.put(curKey, searchResultPanel);
                                 }
                                 else {
-                                    searchResultPanel = searchIds.get(key);
-                                    aSearch = (Search) ( (HashMap) content).get(key);
+                                    searchResultPanel = searchIds.get(curKey);
+                                    aSearch = theContent.get(curKey);
                                     if (panelSelected) {
                                         searchResultPanel.updateSearchContent();
                                     }
                                 }
                             }
-                            Object[] searchPanels = resultPanel.getComponents();
                             int id;
                             String searchKey;
-                            for (int i = 0; i < searchPanels.length; i++) {
-                                aSearch = ((SearchResultPanel) searchPanels[i]).getSearch(); 
+                            for (Object curObj : resultPanel.getComponents()) {
+                                aSearch = ((SearchResultPanel) curObj).getSearch(); 
                                 id = aSearch.getId();
                                 searchKey = Integer.toString(id);
-                                int index = resultPanel.indexOfComponent((Component)searchPanels[i]);
+                                int index = resultPanel.indexOfComponent((Component)curObj);
                                 resultPanel.setTitleAt(index, aSearch.getSuchText() + " (" 
                                         + aSearch.getEntryCount() + ")");
-                                if (! ( (HashMap) content).containsKey(searchKey)) {
+                                if (! theContent.containsKey(searchKey)) {
                                     searchIds.remove(searchKey);
                                     resultPanel.enableIconAt(index, aSearch);
                                 }
@@ -213,10 +210,9 @@ public class SearchController extends GuiController{
     
     private synchronized void downloadPropertyChanged(DataPropertyChangeEvent evt){
         if (evt.isEventContainer()){
-            DataPropertyChangeEvent[] events = evt.getNestedEvents();
-            for (int i = 0; i<events.length; i++){
+            for (DataPropertyChangeEvent curEvent : evt.getNestedEvents()){
                 handleDownloadDataPropertyChangeEvent(
-                        (DownloadDataPropertyChangeEvent)events[i]);
+                        (DownloadDataPropertyChangeEvent)curEvent);
             }
         }
         else{
