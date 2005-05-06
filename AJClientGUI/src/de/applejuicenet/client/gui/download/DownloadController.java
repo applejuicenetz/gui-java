@@ -425,9 +425,9 @@ public class DownloadController extends GuiController {
 	
 	private void maybeShowPopup(MouseEvent e){
 		Object[] selectedItems = getSelectedDownloadItems();
-		downloadPanel.getMnuUmbenennen().setVisible(false);
-		downloadPanel.getMnuZielordner().setVisible(false);
-		downloadPanel.getMnuPartlisteAnzeigen().setVisible(false);
+		downloadPanel.getMnuUmbenennen().setEnabled(false);
+		downloadPanel.getMnuZielordner().setEnabled(false);
+		downloadPanel.getMnuPartlisteAnzeigen().setEnabled(false);
 		boolean pausiert = false;
 		boolean laufend = false;
 		if (selectedItems != null) {
@@ -435,13 +435,18 @@ public class DownloadController extends GuiController {
 				if ((selectedItems[0].getClass() == DownloadMainNode.class && ((DownloadMainNode) selectedItems[0])
 						.getType() == DownloadMainNode.ROOT_NODE)
 						|| (selectedItems[0] instanceof DownloadSource)) {
-					downloadPanel.getMnuPartlisteAnzeigen().setVisible(true);
-					downloadPanel.getMnuUmbenennen().setVisible(true);
-					downloadPanel.getMnuZielordner().setVisible(true);
+                    if (selectedItems[0].getClass() == DownloadMainNode.class){
+                        int status = ((DownloadMainNode)selectedItems[0]).getDownload().getStatus();
+                        if (status == Download.PAUSIERT || status == Download.SUCHEN_LADEN){
+                            downloadPanel.getMnuPartlisteAnzeigen().setEnabled(true);
+                        }
+                    }
+					downloadPanel.getMnuUmbenennen().setEnabled(true);
+					downloadPanel.getMnuZielordner().setEnabled(true);
 				}
 				if (selectedItems[0] instanceof DownloadSource) {
-					downloadPanel.getMnuUmbenennen().setVisible(true);
-					downloadPanel.getMnuZielordner().setVisible(true);
+					downloadPanel.getMnuUmbenennen().setEnabled(true);
+					downloadPanel.getMnuZielordner().setEnabled(true);
 				}
 				if (selectedItems[0].getClass() == DownloadMainNode.class) {
 					Download downloadDO = ((DownloadMainNode) selectedItems[0])
@@ -453,13 +458,13 @@ public class DownloadController extends GuiController {
 					}
 				}
                 if (selectedItems[0] instanceof DownloadNode) {
-                    downloadPanel.getMnuZielordner().setVisible(true);
+                    downloadPanel.getMnuZielordner().setEnabled(true);
                 }
 			} else {
 				for (int i = 0; i < selectedItems.length; i++) {
 					if ((selectedItems[i].getClass() == DownloadMainNode.class && ((DownloadMainNode) selectedItems[i])
 							.getType() == DownloadMainNode.ROOT_NODE)) {
-						downloadPanel.getMnuZielordner().setVisible(true);
+						downloadPanel.getMnuZielordner().setEnabled(true);
 					}
 					Download downloadDO;
 					if (selectedItems[i].getClass() == DownloadMainNode.class) {
@@ -720,11 +725,11 @@ public class DownloadController extends GuiController {
 						.getDownload();
 			} else if (selectedItems[0] instanceof DownloadSource) {
 				DownloadSource downloadSource = (DownloadSource) selectedItems[0];
-				Map downloads = AppleJuiceClient.getAjFassade()
+				Map<String, Download> downloads = AppleJuiceClient.getAjFassade()
 						.getDownloadsSnapshot();
 				String key = Integer.toString(downloadSource
 						.getDownloadId());
-				download = (Download) downloads.get(key);
+				download = downloads.get(key);
 			}
 			if (download != null) {
                 String programToExecute = OptionsManagerImpl.getInstance().getOpenProgram();

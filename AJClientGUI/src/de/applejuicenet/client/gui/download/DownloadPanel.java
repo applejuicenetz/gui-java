@@ -288,7 +288,7 @@ public class DownloadPanel extends TklPanel {
 		popup.add(itemCopyToClipboardWithSources);
         popup.add(new JSeparator());
 		popup.add(partlisteAnzeigen);
-		partlisteAnzeigen.setVisible(false);
+		partlisteAnzeigen.setEnabled(false);
     	popup.add(itemOpenWithProgram);
         itemOpenWithProgram.setIcon(im.getIcon("vlc"));
 

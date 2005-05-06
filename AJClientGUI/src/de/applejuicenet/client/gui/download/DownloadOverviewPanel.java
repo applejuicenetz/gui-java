@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.2 2005/04/18 14:25:51 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.3 2005/05/06 16:16:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -125,7 +125,7 @@ public class DownloadOverviewPanel
         add(panel1, BorderLayout.CENTER);
     }
 
-    public void setDownloadDO(Download download) {
+    public void setDownload(Download download) {
         try {
         	if (partListWorkerThread != null){
         		if (partListWorkerThread.isInterrupted()){
@@ -156,7 +156,7 @@ public class DownloadOverviewPanel
         }
     }
 
-    public void setDownloadSourceDO(DownloadSource downloadSource) {
+    public void setDownloadSource(DownloadSource downloadSource) {
         try {
         	if (partListWorkerThread != null){
         		if (partListWorkerThread.isInterrupted()){
@@ -219,7 +219,14 @@ public class DownloadOverviewPanel
             	}
             	boolean shortPause = false;
             	if (objectDO instanceof Download){
-            		shortPause = workDownloadDO((Download)objectDO);
+                    if (((Download)objectDO).getStatus() == Download.PAUSIERT
+                            || ((Download)objectDO).getStatus() == Download.SUCHEN_LADEN){
+                        shortPause = workDownloadDO((Download)objectDO);
+                    }
+                    else{
+                        objectDO = null;
+                        break;
+                    }
             	}
             	else{
             		shortPause = workDownloadSourceDO((DownloadSource)objectDO);

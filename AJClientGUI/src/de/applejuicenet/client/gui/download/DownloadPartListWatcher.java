@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.download;
 
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
 
@@ -16,28 +17,31 @@ public class DownloadPartListWatcher {
 		if (nodeObject == null) {
 			((DownloadPanel)downloadController.getComponent())
 				.getDownloadOverviewPanel()
-					.setDownloadDO(null);
+					.setDownload(null);
 			return;
 		}
 		if (nodeObject.getClass() == DownloadMainNode.class
 				&& ((DownloadMainNode) nodeObject)
 						.getType() == DownloadMainNode.ROOT_NODE) {
+            Download download = ((DownloadMainNode) nodeObject).getDownload();
+            if (download.getStatus() != Download.SUCHEN_LADEN
+                    && download.getStatus() != Download.PAUSIERT){
+                download = null;
+            }
 			((DownloadPanel)downloadController.getComponent())
-				.getDownloadOverviewPanel()
-					.setDownloadDO(((DownloadMainNode) nodeObject)
-							.getDownload());
+				.getDownloadOverviewPanel().setDownload(download);
 		} else if (nodeObject instanceof DownloadSource) {
 			if (((DownloadSource) nodeObject).getStatus() == DownloadSource.IN_WARTESCHLANGE
 					&& ((DownloadSource) nodeObject)
 							.getQueuePosition() > 20) {
 				((DownloadPanel)downloadController.getComponent())
 				.getDownloadOverviewPanel()
-					.setDownloadDO(null);
+					.setDownload(null);
 			}
 			else{
 				((DownloadPanel)downloadController.getComponent())
 					.getDownloadOverviewPanel()
-						.setDownloadSourceDO((DownloadSource) nodeObject);
+						.setDownloadSource((DownloadSource) nodeObject);
 			}
 		}
 	}
