@@ -6,8 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,9 +14,11 @@ import javax.swing.JPanel;
 
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.tklsoft.gui.controls.TKLButton;
+import de.tklsoft.gui.controls.TKLComboBox;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/IncomingDirSelectionDialog.java,v 1.3 2005/01/18 17:35:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/IncomingDirSelectionDialog.java,v 1.4 2005/05/07 11:28:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,18 +32,18 @@ public class IncomingDirSelectionDialog
     extends JDialog {
 
     private String[] selectionValues;
-    private JButton schliessen = new JButton();
-    private JComboBox incomingDirs = new JComboBox();
+    private TKLButton schliessen = new TKLButton();
+    private TKLComboBox incomingDirs = new TKLComboBox();
     private boolean somethingSelected = false;
 
     public IncomingDirSelectionDialog(JFrame parentDialog,
-                                      String[] selectionValues) {
+                                      String[] selectionValues, String selected) {
         super(parentDialog, true);
         this.selectionValues = selectionValues;
-        init();
+        init(selected);
     }
 
-    private void init() {
+    private void init(String selected) {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
             getFirstAttrbuteByTagName(".root.mainform.changetarget.caption")));
@@ -69,6 +70,10 @@ public class IncomingDirSelectionDialog
                 schliessen.doClick();
             }
         });
+        if (selected != null){
+            incomingDirs.setSelectedItem(selected);
+        }
+        incomingDirs.confirmNewValue();
         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel1.add(label1);
         panel1.add(incomingDirs);

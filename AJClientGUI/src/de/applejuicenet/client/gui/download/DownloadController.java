@@ -668,10 +668,17 @@ public class DownloadController extends GuiController {
 		if (selectedItems == null || selectedItems.length == 0) {
 			return;
 		}
+        String selectedDir = null;
+        for(Object curObj : selectedItems){
+            if (curObj.getClass() == DownloadMainNode.class){
+                selectedDir = ((DownloadMainNode)curObj).getDownload().getTargetDirectory();
+                break;
+            }
+        }
 		String[] dirs = AppleJuiceClient.getAjFassade()
 				.getCurrentIncomingDirs();
 		IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(
-				AppleJuiceDialog.getApp(), dirs);
+				AppleJuiceDialog.getApp(), dirs, selectedDir);
 		incomingDirSelectionDialog.setVisible(true);
 		String neuerName = incomingDirSelectionDialog.getSelectedIncomingDir();
 

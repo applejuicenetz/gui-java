@@ -903,7 +903,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 				String[] dirs = AppleJuiceClient.getAjFassade()
 					.getCurrentIncomingDirs();
 				IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(
-						AppleJuiceDialog.getApp(), dirs);
+						AppleJuiceDialog.getApp(), dirs, null);
 				incomingDirSelectionDialog.setVisible(true);
 				String directory = incomingDirSelectionDialog.getSelectedIncomingDir();		
 				if (directory != null) {

@@ -394,7 +394,6 @@ public class DownloadPanel extends TklPanel {
             }
         };
         targetDir.addInvalidRule(targetDirRule);
-        targetDir.addKeyListener(keyListener);
         
 		downloadLink.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
