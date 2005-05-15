@@ -1,0 +1,96 @@
+package de.applejuicenet.client.gui.plugins;
+
+import java.awt.BorderLayout;
+import java.io.File;
+import java.util.Map;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
+
+/**
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/Attic/LogViewerPlugin.java,v 1.1 2005/05/15 21:11:56 loevenwong Exp $
+ *
+ * <p>Titel: AppleJuice Core-GUI</p>
+ * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Copyright: GPL</p>
+ *
+ * @author: loevenwong <timo@loevenwong.de>
+ *
+ */
+
+public class LogViewerPlugin extends PluginConnector {
+    private static Logger logger;
+    private static String path = AppleJuiceClient.getPath() + File.separator + "logs";
+    private JSplitPane splitPane = null;
+    private JTextPane logPane = new JTextPane();
+    private Vector<String> logEntries = new Vector<String>();
+    private JList list = new JList(logEntries);
+    
+    public LogViewerPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon) {
+        super(pluginsPropertiesXMLHolder, languageFiles, icon);
+        logger = Logger.getLogger(getClass());
+        try {
+            setLayout(new BorderLayout());	    
+            logPane.setBackground(getBackground());
+            logPane.setContentType("text/html"); //$NON-NLS-1$
+            logPane.setEditable(false);
+            logPane.setBorder(null);
+            splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(list), new JScrollPane(logPane));
+            add(splitPane, BorderLayout.CENTER);            
+            readLogDir();
+            list.addListSelectionListener(new ListSelectionListener(){
+                public void valueChanged(ListSelectionEvent e) {
+                	doDisplayLogfile();
+                }});
+        }
+        catch (Exception e){
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    private void doDisplayLogfile() {
+        try {
+        	logPane.setPage("file://localhost/" + path + File.separator + (String) list.getSelectedValue());
+        }
+        catch (Exception e) {
+            if (logger.isEnabledFor(Level.ERROR))
+                logger.error("Unbehandelte Exception", e);
+        }
+    }
+
+    private void readLogDir() {
+    	logEntries.removeAllElements();
+        File logPath = new File(path);
+        if (!logPath.isDirectory()) {
+            return;
+        }
+        String[] tempListe = logPath.list();
+        for (int i = 0; i < tempListe.length; i++) {
+        	if (tempListe[i].endsWith(".html")) {
+        		logEntries.add(tempListe[i]);
+        	}
+        }
+    }
+
+    public void fireLanguageChanged() {
+    }
+
+    public void registerSelected() {
+    }
+
+    public void fireContentChanged(de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE arg0, Object arg1) {
+    }
+}

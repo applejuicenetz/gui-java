@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<general>
+		<title value="LogViewer"/>
+		<version value="1.0"/>
+		<author value="loevenwong"/>
+		<contact value="timo@loevenwong.de"/>
+		<description value="Mit dem Logviewer können Logs angezeigt werden."/>
+		<istab value="true"/>
+		<classname value="de.applejuicenet.client.gui.plugins.LogViewerPlugin"/>
+	</general>
+</root>

@@ -106,7 +106,23 @@
       </jar>
    </target>
 
-   <target name="build-pluginjar-serverwatcher" description="builds serverwatcher.jar">
+   <target name="build-pluginjar-logviewerplugin" description="builds logviewerplugin.jar">
+      <delete includeEmptyDirs="true">
+         <fileset dir="${basedir}/plugins" casesensitive="false">
+            <include name="**/logviewerplugin.jar"/>
+         </fileset>
+      </delete>
+	  <jar destfile="${basedir}/plugins/logviewerplugin.jar">
+		<fileset dir="${basedir}/plugin_src/logviewer" includes="*.xml"/>
+		<fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*"
+                excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+      </jar>
+	  <jar destfile="${basedir}/plugins/logviewerplugin.zip">
+		<fileset dir="${basedir}/plugins/" includes="logviewerplugin.jar"/>
+      </jar>
+	   </target>
+
+	<target name="build-pluginjar-serverwatcher" description="builds serverwatcher.jar">
       <delete includeEmptyDirs="true">
          <fileset dir="${basedir}/plugins" casesensitive="false">
             <include name="**/serverwatcher.jar"/>

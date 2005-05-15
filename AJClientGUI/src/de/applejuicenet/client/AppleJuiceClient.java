@@ -54,7 +54,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.97 2005/04/18 13:28:39 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.98 2005/05/15 21:11:56 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -72,6 +72,15 @@ public class AppleJuiceClient {
     private static HTMLLayout layout;
     private static ApplejuiceFassade ajFassade = null;
     private static CoreConnectionSettingsHolder conn = null;
+
+    private static String rootDirectory = null;
+    
+    /**
+     * @return Returns the path of the Client-GUI.
+     */
+    public static String getPath() {
+        return getRootDirectory();
+    }
     
     public static synchronized ApplejuiceFassade getAjFassade() {
     	if (ajFassade == null){
@@ -271,16 +280,7 @@ public class AppleJuiceClient {
         Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
         try {
             rootLogger.addAppender(new ConsoleAppender());
-            String path;
-            if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1) {
-                path = System.getProperty("user.home") + File.separator +
-                    "appleJuice" + File.separator +
-                    "gui" + File.separator + "logs";
-            }
-            else {
-                path = System.getProperty("user.dir") + File.separator +
-                    "logs";
-            }
+            String path = getRootDirectory() + File.separator + "logs"; 
             File aFile = new File(path);
             if (!aFile.exists()) {
                 aFile.mkdir();
@@ -544,6 +544,18 @@ public class AppleJuiceClient {
         }
     }
 
+    private static String getRootDirectory() {
+    	if (rootDirectory == null) {
+            if (System.getProperty("os.name").toLowerCase().indexOf("windows") == -1) {
+            	rootDirectory = System.getProperty("user.home") + File.separator
+                        + "appleJuice" + File.separator + "gui";
+            } else {
+            	rootDirectory = System.getProperty("user.dir");
+            }
+        }
+        return rootDirectory;
+    }
+
     public static void showConnectionWizard(JFrame frame) throws
         HeadlessException {
         WizardDialog wizardDialog = new WizardDialog(frame, true);
@@ -571,7 +583,8 @@ public class AppleJuiceClient {
         return wizardDialog.isRegularClosed();
     }
 
-    public static String getPropertiesPath(){
+    public static String getPropertiesPath() {
+    	
         if (System.getProperty("os.name").toLowerCase().indexOf("windows")==-1){
             String dir = System.getProperty("user.home") + File.separator +
                 "appleJuice";
