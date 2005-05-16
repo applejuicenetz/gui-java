@@ -20,7 +20,7 @@ import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/Attic/LogViewerPlugin.java,v 1.1 2005/05/15 21:11:56 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/Attic/LogViewerPlugin.java,v 1.2 2005/05/16 07:47:39 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -52,7 +52,9 @@ public class LogViewerPlugin extends PluginConnector {
             readLogDir();
             list.addListSelectionListener(new ListSelectionListener(){
                 public void valueChanged(ListSelectionEvent e) {
-                	doDisplayLogfile();
+                	if (!e.getValueIsAdjusting()) {
+                		doDisplayLogfile();
+                	}
                 }});
         }
         catch (Exception e){
