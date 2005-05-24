@@ -18,11 +18,12 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
+import de.applejuicenet.client.gui.plugins.FileNameListCellRenderer;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.plugins.SortedStringListModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/Attic/LogViewerPlugin.java,v 1.3 2005/05/24 15:06:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/Attic/LogViewerPlugin.java,v 1.4 2005/05/24 15:13:15 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -49,6 +50,7 @@ public class LogViewerPlugin extends PluginConnector {
             logPane.setContentType("text/html"); //$NON-NLS-1$
             logPane.setEditable(false);
             logPane.setBorder(null);
+            list.setCellRenderer(new FileNameListCellRenderer());
             splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(list), new JScrollPane(logPane));
             add(splitPane, BorderLayout.CENTER);            
             readLogDir();
