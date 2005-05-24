@@ -2,8 +2,8 @@ package de.applejuicenet.client.gui.plugins;
 
 import java.awt.BorderLayout;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
@@ -18,9 +18,11 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.gui.plugins.SortedStringListModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/Attic/LogViewerPlugin.java,v 1.2 2005/05/16 07:47:39 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/Attic/LogViewerPlugin.java,v 1.3 2005/05/24 15:06:54 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,8 +37,8 @@ public class LogViewerPlugin extends PluginConnector {
     private static String path = AppleJuiceClient.getPath() + File.separator + "logs";
     private JSplitPane splitPane = null;
     private JTextPane logPane = new JTextPane();
-    private Vector<String> logEntries = new Vector<String>();
-    private JList list = new JList(logEntries);
+    private SortedStringListModel listModel = new SortedStringListModel();
+    private JList list = new JList(listModel);
     
     public LogViewerPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon) {
         super(pluginsPropertiesXMLHolder, languageFiles, icon);
@@ -74,17 +76,18 @@ public class LogViewerPlugin extends PluginConnector {
     }
 
     private void readLogDir() {
-    	logEntries.removeAllElements();
         File logPath = new File(path);
         if (!logPath.isDirectory()) {
             return;
         }
         String[] tempListe = logPath.list();
+        ArrayList<String> htmlFiles = new ArrayList<String>();
         for (int i = 0; i < tempListe.length; i++) {
-        	if (tempListe[i].endsWith(".html")) {
-        		logEntries.add(tempListe[i]);
-        	}
+            if (tempListe[i].endsWith(".html")) {
+                htmlFiles.add(tempListe[i]);
+            }
         }
+        listModel.setData(htmlFiles.toArray(new String[htmlFiles.size()]));
     }
 
     public void fireLanguageChanged() {
