@@ -108,10 +108,5 @@ public class SecurerXMLHolder extends DefaultHandler {
 						.setOpenConnections(Long.parseLong(attr.getValue(i)));
 			}
 		}
-		// todo
-		/*
-		 * ApplejuiceFassade.getInstance().informDataUpdateListener(
-		 * DataUpdateListener.INFORMATION_CHANGED);
-		 */
 	}
 }

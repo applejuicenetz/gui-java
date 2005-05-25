@@ -797,7 +797,6 @@ public class ModifiedXMLHolder extends DefaultHandler {
 			if (!securer.isInterrupted()) {
 				securer.interrupt();
 			}
-			// todo ordentliche Exception werfen
 			throw new RuntimeException(
 					"Das Passwort wurde coreseitig geaendert.\r\nDas GUI wird beendet.");
 		}
