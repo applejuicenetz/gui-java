@@ -18,7 +18,7 @@ import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareNode.java,v 1.6 2005/04/18 12:32:32 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareNode.java,v 1.7 2005/05/25 09:58:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -140,13 +140,7 @@ public class ShareNode
         }
         else {
             String key = Integer.toString(shareToAdd.getId());
-            if (children.containsKey(key)) {
-                childNode = children.get(key);
-                Share tmpShare = childNode.getShare();
-                // todo
-//                tmpShare.setPrioritaet(shareToAdd.getPrioritaet());
-            }
-            else {
+            if (!children.containsKey(key)) {
                 childNode = new ShareNode(this, shareToAdd);
                 children.put(key, childNode);
                 sortedChildren = null;
