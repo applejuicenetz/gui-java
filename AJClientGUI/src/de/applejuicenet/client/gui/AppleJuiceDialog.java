@@ -124,7 +124,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 		DataUpdateListener {
 
 	//CVS-Beispiel 0.60.0-1-CVS
-    public static final String GUI_VERSION = "0.70.0-15-CVS";
+    public static final String GUI_VERSION = "0.70.0-16-CVS";
 	
 	private static Logger logger = Logger.getLogger(AppleJuiceDialog.class);
 	private static Map<String, Skin> themes = null;
@@ -875,9 +875,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener,
 				}
 			}
 		} catch (Exception e) {
-			if (logger.isEnabledFor(Level.ERROR)) {
-				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-			}
+			logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
 		}
 	}
 
