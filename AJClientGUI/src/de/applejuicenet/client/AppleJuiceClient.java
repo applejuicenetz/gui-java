@@ -47,6 +47,7 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
+import de.applejuicenet.client.gui.mobileproxy.MobileProxy;
 import de.applejuicenet.client.gui.wizard.WizardDialog;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
@@ -54,7 +55,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.98 2005/05/15 21:11:56 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.99 2005/08/21 20:20:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -119,7 +120,7 @@ public class AppleJuiceClient {
         Thread t = new Thread(tg, runnable, "appleJuiceCoreGUI");
         t.start();
     }
-
+    
     public static void runmain(String[] args) {
         String javaVersion = System.getProperty("java.version");
         StringBuffer version = new StringBuffer(javaVersion);
@@ -535,6 +536,7 @@ public class AppleJuiceClient {
                 }
             };
             versionWorker.start();
+            MobileProxy.getInstance();
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.FATAL)) {
