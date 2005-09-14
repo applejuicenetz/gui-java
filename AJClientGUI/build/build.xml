@@ -35,7 +35,7 @@
 
    <target name="gui-compile" description="compiles the appleJuice-gui">
       <mkdir dir="${gui.compiledir}"/>
-      <javac srcdir="${gui.srcdir}" destdir="${gui.compiledir}" debug="true">
+      <javac srcdir="${gui.srcdir}" encoding="cp1252" destdir="${gui.compiledir}" debug="true">
          <classpath>
           <path refid="lib.path"/>
          </classpath>

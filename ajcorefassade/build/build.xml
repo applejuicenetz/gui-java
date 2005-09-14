@@ -29,6 +29,7 @@
 
    <target name="compile" description="compiles ajcorefassade">
       <javac srcdir="${srcdir}" 
+			encoding="cp1252" 
       		destdir="${compiledir}" 
       		debug="true">      	
          <classpath>
