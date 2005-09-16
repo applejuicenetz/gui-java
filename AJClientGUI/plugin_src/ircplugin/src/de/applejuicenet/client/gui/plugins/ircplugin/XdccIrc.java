@@ -37,7 +37,7 @@ import de.applejuicenet.client.gui.plugins.IrcPlugin;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.31 2004/12/08 15:17:50 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.32 2005/09/16 11:44:33 loevenwong Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -55,7 +55,7 @@ public class XdccIrc
 
     private Thread ircWorker;
 
-    private String host = "irc.p2pchat.net";
+    private String host = "irc.devstaff.net";
     private int port = 6667;
     private final String STANDARD_CHANNEL = "test";
     private JTabbedPane tabbedPane;
