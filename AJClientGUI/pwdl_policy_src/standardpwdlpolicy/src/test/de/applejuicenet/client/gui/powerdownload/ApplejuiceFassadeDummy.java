@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import junit.framework.Assert;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 
@@ -19,18 +20,18 @@ import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 public class ApplejuiceFassadeDummy extends ApplejuiceFassade
 {
 	private Map<String, Download> snapshot = null;
-	private List<DownloadDummy> expected = new Vector();
+	private List<DownloadDummy> expected = new Vector<DownloadDummy>();
 
 	public ApplejuiceFassadeDummy(Map<String, Download> downloads) throws IllegalArgumentException
 	{
-		super("", new Integer(Integer.MIN_VALUE), "", true);
+		super(new CoreConnectionSettingsHolder("localhost", new Integer(80), "", true));
 		snapshot = downloads;
 	}	
 
 	public ApplejuiceFassadeDummy() throws IllegalArgumentException
 	{
-		super("", new Integer(Integer.MIN_VALUE), "", true);
-		snapshot = new HashMap();
+		super(new CoreConnectionSettingsHolder("localhost", new Integer(80), "", true));
+		snapshot = new HashMap<String,Download>();
 	}	
 
 	public Map<String, Download> getDownloadsSnapshot()

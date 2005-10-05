@@ -45,7 +45,7 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		fassade = new ApplejuiceFassadeDummy(new HashMap());
+		fassade = new ApplejuiceFassadeDummy();
 		policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3, PROZENT_SOURCEN_GROESSE);
 	}
 
@@ -72,7 +72,7 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 
 	public void testDoOneAction() throws IllegalArgumentException
 	{
-		Map<String,Download> downloads = new HashMap();
+		Map<String,Download> downloads = new HashMap<String,Download>();
 		downloads.put(Integer.toString(1), new DownloadDummy(new Integer(1), "bla1", 1.1, Download.SUCHEN_LADEN, 1));
 		fassade = new ApplejuiceFassadeDummy(downloads);
 		policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3, PROZENT_SOURCEN_GROESSE);
@@ -92,7 +92,7 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 
 	public void testDoFourAction() throws Exception
 	{
-		fassade = new ApplejuiceFassadeDummy(new HashMap());
+		fassade = new ApplejuiceFassadeDummy(new HashMap<String,Download>());
 		policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3, PROZENT_SOURCEN_GROESSE);
 
 		fassade.addDownload(new DownloadDummy(1, 0.0, Download.SUCHEN_LADEN, 1));
@@ -169,7 +169,7 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 	
 	public void testDoActionQuellen() throws Exception
 	{
-		fassade = new ApplejuiceFassadeDummy(new HashMap());
+		fassade = new ApplejuiceFassadeDummy();
 		policy = new StandardAutomaticPwdlPolicy(fassade, 2, 3, SOURCEN_PROZENT_GROESSE);
 
 		fassade.addDownload(new DownloadDummy(1, 90.0, Download.SUCHEN_LADEN, 1, 30, ZWEI_QUELLEN));
@@ -187,7 +187,7 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 
 	public void testDoAction() throws Exception
 	{
-			fassade = new ApplejuiceFassadeDummy(new HashMap());
+			fassade = new ApplejuiceFassadeDummy();
 			policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3, PROZENT_SOURCEN_GROESSE);
 
 			fassade.addDownload(new DownloadDummy(1, Download.SUCHEN_LADEN, 1, 10));
@@ -207,7 +207,7 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 	
 	public void testDoNextAction() throws Exception
 	{
-		Map<String,Download> downloads = new HashMap();
+		Map<String,Download> downloads = new HashMap<String,Download>();
 		downloads.put(Integer.toString(1), new DownloadDummy(new Integer(1), "bla1", 1.1, Download.SUCHEN_LADEN, 1));
 		downloads.put(Integer.toString(2), new DownloadDummy(new Integer(2), "bla2", 1.2, Download.SUCHEN_LADEN, 1));
 		downloads.put(Integer.toString(3), new DownloadDummy(new Integer(3), "bla3", 1.3, Download.PAUSIERT, 3));
@@ -228,7 +228,7 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 
 	public void testDoEndeAction() throws Exception
 	{
-		Map<String,Download> downloads = new HashMap();
+		Map<String,Download> downloads = new HashMap<String,Download>();
 		downloads.put(Integer.toString(1), new DownloadDummy(new Integer(1), "bla1", 1.1, Download.FERTIG, 1));
 		downloads.put(Integer.toString(2), new DownloadDummy(new Integer(2), "bla2", 1.2, Download.FERTIG, 1));
 		downloads.put(Integer.toString(3), new DownloadDummy(new Integer(3), "bla3", 1.3, Download.FERTIG, 3));
@@ -249,7 +249,7 @@ public class TestStandardAutomaticPwdlPolicy extends TestCase
 
 	public void testDoActionOneAdded() throws Exception
 	{
-		fassade = new ApplejuiceFassadeDummy(new HashMap());
+		fassade = new ApplejuiceFassadeDummy(new HashMap<String,Download>());
 		policy = new StandardAutomaticPwdlPolicy(fassade, 1, 3, PROZENT_SOURCEN_GROESSE);
 
 		fassade.addDownload(new DownloadDummy(1, 10.0, Download.SUCHEN_LADEN, 1));
