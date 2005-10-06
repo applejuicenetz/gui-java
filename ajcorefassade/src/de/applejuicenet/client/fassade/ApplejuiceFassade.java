@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.applejuicenet.client.fassade.listener.CoreStatusListener.STATUS;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.controller.DataPropertyChangeInformer;
 import de.applejuicenet.client.fassade.controller.DataUpdateInformer;
@@ -40,6 +39,7 @@ import de.applejuicenet.client.fassade.exception.WrongPasswordException;
 import de.applejuicenet.client.fassade.listener.CoreConnectionSettingsListener;
 import de.applejuicenet.client.fassade.listener.CoreStatusListener;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.listener.CoreStatusListener.STATUS;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
@@ -66,7 +66,7 @@ import de.applejuicenet.client.fassade.tools.MD5Encoder;
  * 
  */
 
-public final class ApplejuiceFassade implements CoreConnectionSettingsListener{
+public class ApplejuiceFassade implements CoreConnectionSettingsListener{
 	public static final String FASSADE_VERSION = "F-1.08";
 	
 	public static final String MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
