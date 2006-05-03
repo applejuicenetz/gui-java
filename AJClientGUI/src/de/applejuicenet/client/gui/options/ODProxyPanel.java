@@ -23,11 +23,12 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
+
 import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODProxyPanel.java,v 1.4 2005/03/07 14:23:13 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODProxyPanel.java,v 1.5 2006/05/03 14:52:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,174 +37,214 @@ import de.tklsoft.gui.controls.TKLTextField;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
+public class ODProxyPanel extends JPanel implements OptionsRegister
+{
+   private boolean        dirty = false;
+   private JLabel         label1;
+   private JLabel         label2;
+   private JLabel         label3;
+   private JLabel         label4;
+   private TKLTextField   host = new TKLTextField();
+   private TKLTextField   port = new TKLTextField();
+   private TKLTextField   user = new TKLTextField();
+   private JPasswordField passwort = new JPasswordField();
+   private TKLCheckBox    use = new TKLCheckBox();
+   private ProxySettings  proxySettings;
+   private Logger         logger;
+   private Icon           menuIcon;
+   private String         menuText;
 
-public class ODProxyPanel
-    extends JPanel
-    implements OptionsRegister {
-	
-	private boolean dirty = false;
-    private JLabel label1;
-    private JLabel label2;
-    private JLabel label3;
-    private JLabel label4;
-    private TKLTextField host = new TKLTextField();
-    private TKLTextField port = new TKLTextField();
-    private TKLTextField user = new TKLTextField();
-    private JPasswordField passwort = new JPasswordField();
-    private TKLCheckBox use = new TKLCheckBox();
-    private ProxySettings proxySettings;
-    private Logger logger;
-    private Icon menuIcon;
-    private String menuText;
+   public ODProxyPanel()
+   {
+      logger = Logger.getLogger(getClass());
+      try
+      {
+         init();
+      }
+      catch(Exception e)
+      {
+         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+      }
+   }
 
-    public ODProxyPanel() {
-        logger = Logger.getLogger(getClass());
-        try {
-            init();
-        }
-        catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-        }
-    }
+   private void init() throws Exception
+   {
+      IconManager im = IconManager.getInstance();
 
-    private void init() throws Exception {
-        IconManager im = IconManager.getInstance();
-        menuIcon = im.getIcon("opt_proxy");
-        setLayout(new BorderLayout());
-        JPanel panel1 = new JPanel(new GridBagLayout());
-        FlowLayout flowL = new FlowLayout();
-        flowL.setAlignment(FlowLayout.RIGHT);
-        JPanel panel2 = new JPanel(flowL);
+      menuIcon = im.getIcon("opt_proxy");
+      setLayout(new BorderLayout());
+      JPanel     panel1 = new JPanel(new GridBagLayout());
+      FlowLayout flowL = new FlowLayout();
 
-        LanguageSelector languageSelector = LanguageSelector.getInstance();
-        proxySettings = ProxyManagerImpl.getInstance().getProxySettings();
+      flowL.setAlignment(FlowLayout.RIGHT);
+      JPanel           panel2 = new JPanel(flowL);
 
-        label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.proxy.host")));
-        label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.proxy.port")));
-        label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.proxy.benutzername")));
-        label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.proxy.passwort")));
-        use.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.proxy.verwenden")));
-        menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.proxy.caption"));
-        host.setText(proxySettings.getHost());
-        host.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent e) {
-                if (proxySettings.getHost().compareTo(host.getText()) != 0) {
-                    dirty = true;
-                }
+      LanguageSelector languageSelector = LanguageSelector.getInstance();
+
+      proxySettings = ProxyManagerImpl.getInstance().getProxySettings();
+
+      label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+                  ".root.javagui.options.proxy.host")));
+      label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+                  ".root.javagui.options.proxy.port")));
+      label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+                  ".root.javagui.options.proxy.benutzername")));
+      label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+                  ".root.javagui.options.proxy.passwort")));
+      use.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+               ".root.javagui.options.proxy.verwenden")));
+      menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.proxy.caption"));
+      host.setText(proxySettings.getHost());
+      host.addFocusListener(new HostFocusListener());
+      port.setDocument(new NumberInputVerifier());
+      if(proxySettings.getPort() != -1)
+      {
+         port.setText(Integer.toString(proxySettings.getPort()));
+      }
+
+      port.addFocusListener(new PortFocusListener());
+      user.addFocusListener(new UserFocusListener());
+      passwort.addFocusListener(new PasswortFocusListener());
+      use.setSelected(proxySettings.isUse());
+      use.addChangeListener(new ChangeListener()
+         {
+            public void stateChanged(ChangeEvent e)
+            {
+               dirty = true;
             }
-        });
-        port.setDocument(new NumberInputVerifier());
-        if (proxySettings.getPort() != -1) {
-            port.setText(Integer.toString(proxySettings.getPort()));
-        }
-        port.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent e) {
-                if (Integer.toString(proxySettings.getPort()).compareTo(host.
-                    getText()) != 0) {
-                    dirty = true;
-                }
-            }
-        });
-        user.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent e) {
-                dirty = true;
-            }
-        });
-        passwort.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent e) {
-                dirty = true;
-            }
-        });
-        use.setSelected(proxySettings.isUse());
-        use.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                dirty = true;
-            }
-        });
+         });
 
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.insets.top = 5;
-        constraints.insets.left = 5;
+      GridBagConstraints constraints = new GridBagConstraints();
 
-        panel1.add(label1, constraints);
+      constraints.anchor = GridBagConstraints.NORTH;
+      constraints.fill = GridBagConstraints.BOTH;
+      constraints.gridx = 0;
+      constraints.gridy = 0;
+      constraints.insets.top = 5;
+      constraints.insets.left = 5;
 
-        constraints.gridy = 1;
-        panel1.add(label2, constraints);
+      panel1.add(label1, constraints);
 
-        constraints.gridy = 2;
-        panel1.add(label3, constraints);
+      constraints.gridy = 1;
+      panel1.add(label2, constraints);
 
-        constraints.gridy = 3;
-        panel1.add(label4, constraints);
+      constraints.gridy = 2;
+      panel1.add(label3, constraints);
 
-        constraints.insets.right = 5;
-        constraints.gridy = 0;
-        constraints.gridx = 1;
-        constraints.weightx = 1;
-        panel1.add(host, constraints);
+      constraints.gridy = 3;
+      panel1.add(label4, constraints);
 
-        constraints.gridy = 1;
-        panel1.add(port, constraints);
+      constraints.insets.right = 5;
+      constraints.gridy = 0;
+      constraints.gridx = 1;
+      constraints.weightx = 1;
+      panel1.add(host, constraints);
 
-        constraints.gridy = 2;
-        panel1.add(user, constraints);
+      constraints.gridy = 1;
+      panel1.add(port, constraints);
 
-        constraints.gridy = 3;
-        panel1.add(passwort, constraints);
+      constraints.gridy = 2;
+      panel1.add(user, constraints);
 
-        constraints.gridy = 4;
-        constraints.gridx = 0;
-        constraints.gridwidth = 2;
-        panel2.add(use);
-        panel1.add(panel2, constraints);
+      constraints.gridy = 3;
+      panel1.add(passwort, constraints);
 
-        add(panel1, BorderLayout.NORTH);
-        
-        host.confirmNewValue();
-        port.confirmNewValue();
-        user.confirmNewValue();
-        use.confirmNewValue();
-    }
+      constraints.gridy = 4;
+      constraints.gridx = 0;
+      constraints.gridwidth = 2;
+      panel2.add(use);
+      panel1.add(panel2, constraints);
 
-    public ProxySettings getProxySettings() {
-        if (dirty) {
-            proxySettings.setUse(use.isSelected());
-            proxySettings.setHost(host.getText());
-            String tmpPort = port.getText();
-            if (tmpPort.length() == 0) {
-                proxySettings.setPort( -1);
-            }
-            else {
-                proxySettings.setPort(Integer.parseInt(tmpPort));
-            }
-            proxySettings.setUserpass(user.getText(), new String(passwort.getPassword()));
-        }
-        return proxySettings;
-    }
+      add(panel1, BorderLayout.NORTH);
 
-    public boolean isDirty() {
-        return dirty;
-    }
+      host.confirmNewValue();
+      port.confirmNewValue();
+      user.confirmNewValue();
+      use.confirmNewValue();
+   }
 
-    public Icon getIcon() {
-        return menuIcon;
-    }
+   public ProxySettings getProxySettings()
+   {
+      if(dirty)
+      {
+         proxySettings.setUse(use.isSelected());
+         proxySettings.setHost(host.getText());
+         String tmpPort = port.getText();
 
-    public String getMenuText() {
-        return menuText;
-    }
+         if(tmpPort.length() == 0)
+         {
+            proxySettings.setPort(-1);
+         }
+         else
+         {
+            proxySettings.setPort(Integer.parseInt(tmpPort));
+         }
 
-    public void reloadSettings() {
-        // nothing to do...
-    }
+         proxySettings.setUserpass(user.getText(), new String(passwort.getPassword()));
+      }
+
+      return proxySettings;
+   }
+
+   public boolean isDirty()
+   {
+      return dirty;
+   }
+
+   public Icon getIcon()
+   {
+      return menuIcon;
+   }
+
+   public String getMenuText()
+   {
+      return menuText;
+   }
+
+   public void reloadSettings()
+   {
+
+      // nothing to do...
+   }
+
+   class PasswortFocusListener extends FocusAdapter
+   {
+      public void focusLost(FocusEvent e)
+      {
+         dirty = true;
+      }
+   }
+
+
+   class UserFocusListener extends FocusAdapter
+   {
+      public void focusLost(FocusEvent e)
+      {
+         dirty = true;
+      }
+   }
+
+
+   class PortFocusListener extends FocusAdapter
+   {
+      public void focusLost(FocusEvent e)
+      {
+         if(Integer.toString(proxySettings.getPort()).compareTo(host.getText()) != 0)
+         {
+            dirty = true;
+         }
+      }
+   }
+
+
+   class HostFocusListener extends FocusAdapter
+   {
+      public void focusLost(FocusEvent e)
+      {
+         if(proxySettings.getHost().compareTo(host.getText()) != 0)
+         {
+            dirty = true;
+         }
+      }
+   }
 }

@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.options.directorytree;
 
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.event.TreeModelEvent;
@@ -7,11 +8,8 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-
-import java.util.List;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/directorytree/DirectoryChooserTreeModel.java,v 1.2 2005/03/23 06:59:58 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/directorytree/DirectoryChooserTreeModel.java,v 1.3 2006/05/03 14:52:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,74 +18,94 @@ import java.util.List;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
+public class DirectoryChooserTreeModel implements TreeModel
+{
+   private DirectoryChooserNode    root;
+   private List<TreeModelListener> listener = new Vector<TreeModelListener>();
 
-public class DirectoryChooserTreeModel
-    implements TreeModel {
-    private DirectoryChooserNode root;
-    private List<TreeModelListener> listener = new Vector<TreeModelListener>();
+   public DirectoryChooserTreeModel()
+   {
+      root = new DirectoryChooserNode();
+   }
 
-    public DirectoryChooserTreeModel() {
-        root = new DirectoryChooserNode();
-    }
+   public Object getRoot()
+   {
+      return root;
+   }
 
-    public Object getRoot() {
-        return root;
-    }
+   public Object getChild(Object obj, int i)
+   {
+      DirectoryChooserNode ok = (DirectoryChooserNode) obj;
 
-    public Object getChild(Object obj, int i) {
-        DirectoryChooserNode ok = (DirectoryChooserNode) obj;
-        return ok.getChildren()[i];
-    }
+      return ok.getChildren()[i];
+   }
 
-    public int getChildCount(Object obj) {
-        DirectoryChooserNode ok = (DirectoryChooserNode) obj;
-        return ok.getChildCount();
-    }
+   public int getChildCount(Object obj)
+   {
+      DirectoryChooserNode ok = (DirectoryChooserNode) obj;
 
-    public boolean isLeaf(Object obj) {
-        DirectoryChooserNode ok = (DirectoryChooserNode) obj;
-        return ok.isLeaf();
-    }
+      return ok.getChildCount();
+   }
 
-    public void valueForPathChanged(TreePath path, Object obj) {
-        for (int i = 0; i < listener.size(); i++) {
-            TreeModelListener ml = (TreeModelListener) listener.get(i);
-            ml.treeNodesChanged(new TreeModelEvent(obj, path));
-        }
-    }
+   public boolean isLeaf(Object obj)
+   {
+      DirectoryChooserNode ok = (DirectoryChooserNode) obj;
 
-    public void fireStructureChangedEvent() {
-        for (int i = 0; i < listener.size(); i++) {
-            TreeModelListener ml = (TreeModelListener) listener.get(i);
-            ml.treeStructureChanged(new TreeModelEvent(this, new TreePath(root)));
-        }
-    }
+      return ok.isLeaf();
+   }
 
-    public void fireNodeInsertedEvent(TreePath path, Object obj, int ind,
-                                      Object child) {
-        for (int i = 0; i < listener.size(); i++) {
-            TreeModelListener ml = (TreeModelListener) listener.get(i);
-            ml.treeNodesInserted(new TreeModelEvent(obj, path, new int[] {ind}
-                , new Object[] {child}));
-        }
-    }
+   public void valueForPathChanged(TreePath path, Object obj)
+   {
+      for(int i = 0; i < listener.size(); i++)
+      {
+         TreeModelListener ml = (TreeModelListener) listener.get(i);
 
-    public int getIndexOfChild(Object parent, Object child) {
-        DirectoryChooserNode[] node = (DirectoryChooserNode[]) ( (
-            DirectoryChooserNode) parent).getChildren();
-        for (int i = 0; i < node.length; i++) {
-            if (node[i] == child) {
-                return i;
-            }
-        }
-        return -1;
-    }
+         ml.treeNodesChanged(new TreeModelEvent(obj, path));
+      }
+   }
 
-    public void addTreeModelListener(TreeModelListener modelListener) {
-        listener.add(modelListener);
-    }
+   public void fireStructureChangedEvent()
+   {
+      for(int i = 0; i < listener.size(); i++)
+      {
+         TreeModelListener ml = (TreeModelListener) listener.get(i);
 
-    public void removeTreeModelListener(TreeModelListener modelListener) {
-        listener.remove(modelListener);
-    }
+         ml.treeStructureChanged(new TreeModelEvent(this, new TreePath(root)));
+      }
+   }
+
+   public void fireNodeInsertedEvent(TreePath path, Object obj, int ind, Object child)
+   {
+      for(int i = 0; i < listener.size(); i++)
+      {
+         TreeModelListener ml = (TreeModelListener) listener.get(i);
+
+         ml.treeNodesInserted(new TreeModelEvent(obj, path, new int[] {ind}, new Object[] {child}));
+      }
+   }
+
+   public int getIndexOfChild(Object parent, Object child)
+   {
+      DirectoryChooserNode[] node = (DirectoryChooserNode[]) ((DirectoryChooserNode) parent).getChildren();
+
+      for(int i = 0; i < node.length; i++)
+      {
+         if(node[i] == child)
+         {
+            return i;
+         }
+      }
+
+      return -1;
+   }
+
+   public void addTreeModelListener(TreeModelListener modelListener)
+   {
+      listener.add(modelListener);
+   }
+
+   public void removeTreeModelListener(TreeModelListener modelListener)
+   {
+      listener.remove(modelListener);
+   }
 }

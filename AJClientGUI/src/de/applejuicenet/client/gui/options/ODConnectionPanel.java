@@ -23,10 +23,11 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
+
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODConnectionPanel.java,v 1.7 2005/03/07 14:25:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODConnectionPanel.java,v 1.8 2006/05/03 14:52:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,210 +36,256 @@ import de.tklsoft.gui.controls.TKLTextField;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
+public class ODConnectionPanel extends JPanel implements OptionsRegister
+{
+   private boolean                       dirty = false;
+   private JLabel                        label1;
+   private JLabel                        label3;
+   private JLabel                        label4;
+   private TKLTextField                  host = new TKLTextField();
+   private TKLTextField                  port = new TKLTextField();
+   private JPasswordField                passwortNeu = new JPasswordField();
+   private ConnectionSettings            remote;
+   private Logger                        logger;
+   private boolean                       showPort = false;
+   private QuickConnectionSettingsDialog quickConnectionSettingsDialog;
+   private Icon                          menuIcon;
+   private String                        menuText;
 
-public class ODConnectionPanel
-    extends JPanel
-    implements OptionsRegister {
-    
-	private boolean dirty = false;
-    private JLabel label1;
-    private JLabel label3;
-    private JLabel label4;
-    private TKLTextField host = new TKLTextField();
-    private TKLTextField port = new TKLTextField();
-    private JPasswordField passwortNeu = new JPasswordField();
-    private ConnectionSettings remote;
-    private Logger logger;
-    private boolean showPort = false;
-    private QuickConnectionSettingsDialog quickConnectionSettingsDialog;
-    private Icon menuIcon;
-    private String menuText;
+   public ODConnectionPanel(ConnectionSettings remote, QuickConnectionSettingsDialog quickConnectionSettingsDialog, boolean showPort)
+   {
+      logger = Logger.getLogger(getClass());
+      try
+      {
+         this.showPort = showPort;
+         this.quickConnectionSettingsDialog = quickConnectionSettingsDialog;
+         this.remote = remote;
+         init();
+      }
+      catch(Exception e)
+      {
+         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+      }
+   }
 
-    public ODConnectionPanel(ConnectionSettings remote,
-            QuickConnectionSettingsDialog
-            quickConnectionSettingsDialog,
-            boolean showPort) {
-        logger = Logger.getLogger(getClass());
-        try {
-            this.showPort = showPort;
-            this.quickConnectionSettingsDialog = quickConnectionSettingsDialog;
-            this.remote = remote;
-            init();
-        }
-        catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-        }
-    }
+   public ODConnectionPanel(ConnectionSettings remote, QuickConnectionSettingsDialog quickConnectionSettingsDialog)
+   {
+      this(remote, quickConnectionSettingsDialog, false);
+   }
 
-    public ODConnectionPanel(ConnectionSettings remote,
-                             QuickConnectionSettingsDialog
-                             quickConnectionSettingsDialog) {
-        this(remote, quickConnectionSettingsDialog, false);
-    }
+   private void init() throws Exception
+   {
+      setLayout(new BorderLayout());
+      IconManager im = IconManager.getInstance();
 
-    private void init() throws Exception {
-        setLayout(new BorderLayout());
-        IconManager im = IconManager.getInstance();
-        menuIcon = im.getIcon("opt_passwort");
-        JPanel panel1 = new JPanel(new GridBagLayout());
-        FlowLayout flowL = new FlowLayout();
-        flowL.setAlignment(FlowLayout.RIGHT);
-        JPanel panel2 = new JPanel(flowL);
+      menuIcon = im.getIcon("opt_passwort");
+      JPanel     panel1 = new JPanel(new GridBagLayout());
+      FlowLayout flowL = new FlowLayout();
 
-        LanguageSelector languageSelector = LanguageSelector.getInstance();
-        label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.remote.host")));
-        label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.remote.passwortNeu")));
-        menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.einstform.pwsheet.caption"));
-        label4 = new JLabel("Port");
+      flowL.setAlignment(FlowLayout.RIGHT);
+      JPanel           panel2 = new JPanel(flowL);
 
-        host.setText(remote.getHost());
-        host.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent e) {
-                if (remote.getHost().compareTo(host.getText()) != 0) {
-                    dirty = true;
-                    remote.setHost(host.getText());
-                }
-            }
-        });
-        passwortNeu.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent e) {
-                dirty = true;
-                remote.setNewPassword(new String(passwortNeu.getPassword()));
-            }
-        });
-        KeyAdapter keyAdapter = new KeyAdapter(){
-            public void keyPressed(KeyEvent ke) {
-                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-                    dirty = true;
-                    remote.setHost(host.getText());
-                    remote.setXmlPort(Integer.parseInt(port.getText()));
-                    remote.setNewPassword(new String(passwortNeu.
-                        getPassword()));
-                    quickConnectionSettingsDialog.pressOK();
-                }
-                else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                	quickConnectionSettingsDialog.pressAbbrechen();
-                }
-                else {
-                    super.keyPressed(ke);
-                }
-            }};
-        if (quickConnectionSettingsDialog != null) {
-        	host.addKeyListener(keyAdapter);
-        	port.addKeyListener(keyAdapter);
-            passwortNeu.addKeyListener(keyAdapter);
-        }
-        port.setDocument(new NumberInputVerifier());
-        port.setText(Integer.toString(remote.getXmlPort()));
-        port.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent e) {
-                dirty = true;
-                remote.setXmlPort(Integer.parseInt(port.getText()));
-            }
-        });
+      LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-        enableControls(true);
+      label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+                  ".root.javagui.options.remote.host")));
+      label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+                  ".root.javagui.options.remote.passwortNeu")));
+      menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.einstform.pwsheet.caption"));
+      label4 = new JLabel("Port");
 
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.insets.top = 5;
-        constraints.insets.left = 5;
+      host.setText(remote.getHost());
+      host.addFocusListener(new HostFocusListener());
+      passwortNeu.addFocusListener(new PasswortNeuFocusListener());
 
-        panel1.add(label1, constraints);
+      KeyAdapter keyAdapter = new ShortcutKeyListener();
 
-        int gridy = 1;
-        if (showPort) {
-            constraints.gridy = gridy;
-            gridy++;
-            panel1.add(label4, constraints);
-        }
-        constraints.gridy = gridy;
-        gridy++;
-        panel1.add(label3, constraints);
+      if(quickConnectionSettingsDialog != null)
+      {
+         host.addKeyListener(keyAdapter);
+         port.addKeyListener(keyAdapter);
+         passwortNeu.addKeyListener(keyAdapter);
+      }
 
-        constraints.insets.right = 5;
-        constraints.gridy = 0;
-        constraints.gridx = 1;
-        constraints.weightx = 1;
-        panel1.add(host, constraints);
+      port.setDocument(new NumberInputVerifier());
+      port.setText(Integer.toString(remote.getXmlPort()));
+      port.addFocusListener(new PortFocusListener());
 
-        gridy = 1;
-        if (showPort) {
-            constraints.gridy = gridy;
-            gridy++;
-            panel1.add(port, constraints);
-        }
-        constraints.gridy = gridy;
-        gridy++;
-        panel1.add(passwortNeu, constraints);
+      enableControls(true);
 
-        constraints.gridy = gridy;
-        gridy++;
-        constraints.gridx = 0;
-        constraints.gridwidth = 2;
-        panel1.add(panel2, constraints);
+      GridBagConstraints constraints = new GridBagConstraints();
 
-        add(panel1, BorderLayout.NORTH);
-        if (quickConnectionSettingsDialog != null) {
-            label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.einstform.pwsheet.caption")));
-        }
-        host.confirmNewValue();
-        port.confirmNewValue();
-    }
+      constraints.anchor = GridBagConstraints.NORTH;
+      constraints.fill = GridBagConstraints.BOTH;
+      constraints.gridx = 0;
+      constraints.gridy = 0;
+      constraints.insets.top = 5;
+      constraints.insets.left = 5;
 
-    public void setFocusOnPassword() {
-        this.passwortNeu.requestFocus();
-    }
+      panel1.add(label1, constraints);
 
-    public boolean isDirty() {
-        return dirty;
-    }
+      int gridy = 1;
 
-    public void enableControls(boolean enable) {
-        host.setEnabled(enable);
-        passwortNeu.setEnabled(enable);
-        label1.setEnabled(enable);
-        label3.setEnabled(enable);
-    }
+      if(showPort)
+      {
+         constraints.gridy = gridy;
+         gridy++;
+         panel1.add(label4, constraints);
+      }
 
-    public Icon getIcon() {
-        return menuIcon;
-    }
+      constraints.gridy = gridy;
+      gridy++;
+      panel1.add(label3, constraints);
 
-    public String getMenuText() {
-        return menuText;
-    }
+      constraints.insets.right = 5;
+      constraints.gridy = 0;
+      constraints.gridx = 1;
+      constraints.weightx = 1;
+      panel1.add(host, constraints);
 
-    public void setHost(String host) {
-        this.host.setText(host);
-        this.remote.setHost(host);
-    }
+      gridy = 1;
+      if(showPort)
+      {
+         constraints.gridy = gridy;
+         gridy++;
+         panel1.add(port, constraints);
+      }
 
-    public void setXMLPort(String port) {
-        this.port.setText(port);
-        this.remote.setXmlPort(Integer.parseInt(port));
-    }
+      constraints.gridy = gridy;
+      gridy++;
+      panel1.add(passwortNeu, constraints);
 
-    public void reloadSettings() {
-        // nothing to do...
-    }
-    
-    public String getPassword(){
-        return new String(passwortNeu.getPassword());
-    }
-    
-    public String getHost(){
-        return host.getText();      
-    }
+      constraints.gridy = gridy;
+      gridy++;
+      constraints.gridx = 0;
+      constraints.gridwidth = 2;
+      panel1.add(panel2, constraints);
 
-    public Integer getPort(){
-        return new Integer(port.getText());
-    }
+      add(panel1, BorderLayout.NORTH);
+      if(quickConnectionSettingsDialog != null)
+      {
+         label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+                  ".root.einstform.pwsheet.caption")));
+      }
+
+      host.confirmNewValue();
+      port.confirmNewValue();
+   }
+
+   public void setFocusOnPassword()
+   {
+      this.passwortNeu.requestFocus();
+   }
+
+   public boolean isDirty()
+   {
+      return dirty;
+   }
+
+   public void enableControls(boolean enable)
+   {
+      host.setEnabled(enable);
+      passwortNeu.setEnabled(enable);
+      label1.setEnabled(enable);
+      label3.setEnabled(enable);
+   }
+
+   public Icon getIcon()
+   {
+      return menuIcon;
+   }
+
+   public String getMenuText()
+   {
+      return menuText;
+   }
+
+   public void setHost(String host)
+   {
+      this.host.setText(host);
+      this.remote.setHost(host);
+   }
+
+   public void setXMLPort(String port)
+   {
+      this.port.setText(port);
+      this.remote.setXmlPort(Integer.parseInt(port));
+   }
+
+   public void reloadSettings()
+   {
+
+      // nothing to do...
+   }
+
+   public String getPassword()
+   {
+      return new String(passwortNeu.getPassword());
+   }
+
+   public String getHost()
+   {
+      return host.getText();
+   }
+
+   public Integer getPort()
+   {
+      return new Integer(port.getText());
+   }
+
+   class PortFocusListener extends FocusAdapter
+   {
+      public void focusLost(FocusEvent e)
+      {
+         dirty = true;
+         remote.setXmlPort(Integer.parseInt(port.getText()));
+      }
+   }
+
+
+   class ShortcutKeyListener extends KeyAdapter
+   {
+      public void keyPressed(KeyEvent ke)
+      {
+         if(ke.getKeyCode() == KeyEvent.VK_ENTER)
+         {
+            dirty = true;
+            remote.setHost(host.getText());
+            remote.setXmlPort(Integer.parseInt(port.getText()));
+            remote.setNewPassword(new String(passwortNeu.getPassword()));
+            quickConnectionSettingsDialog.pressOK();
+         }
+         else if(ke.getKeyCode() == KeyEvent.VK_ESCAPE)
+         {
+            quickConnectionSettingsDialog.pressAbbrechen();
+         }
+         else
+         {
+            super.keyPressed(ke);
+         }
+      }
+   }
+
+
+   class PasswortNeuFocusListener extends FocusAdapter
+   {
+      public void focusLost(FocusEvent e)
+      {
+         dirty = true;
+         remote.setNewPassword(new String(passwortNeu.getPassword()));
+      }
+   }
+
+
+   class HostFocusListener extends FocusAdapter
+   {
+      public void focusLost(FocusEvent e)
+      {
+         if(remote.getHost().compareTo(host.getText()) != 0)
+         {
+            dirty = true;
+            remote.setHost(host.getText());
+         }
+      }
+   }
 }

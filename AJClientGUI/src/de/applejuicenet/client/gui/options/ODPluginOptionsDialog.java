@@ -20,7 +20,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginOptionsDialog.java,v 1.3 2005/01/18 17:35:26 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginOptionsDialog.java,v 1.4 2006/05/03 14:52:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -29,57 +29,59 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
+public class ODPluginOptionsDialog extends JDialog
+{
+   private PluginConnector pluginConnector;
+   private JButton         schliessen = new JButton();
+   private Logger          logger;
 
-public class ODPluginOptionsDialog
-    extends JDialog {
-	
-	private PluginConnector pluginConnector;
-    private JButton schliessen = new JButton();
-    private Logger logger;
+   public ODPluginOptionsDialog(JDialog parent, PluginConnector pluginConnector)
+   {
+      super(parent, true);
+      try
+      {
+         this.pluginConnector = pluginConnector;
+         logger = Logger.getLogger(getClass());
+         init();
+      }
+      catch(Exception e)
+      {
+         if(logger.isEnabledFor(Level.ERROR))
+         {
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+         }
+      }
+   }
 
-    public ODPluginOptionsDialog(JDialog parent,
-                                 PluginConnector pluginConnector) {
-        super(parent, true);
-        try {
-            this.pluginConnector = pluginConnector;
-            logger = Logger.getLogger(getClass());
-            init();
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+   private void init()
+   {
+      LanguageSelector languageSelector = LanguageSelector.getInstance();
+
+      schliessen.addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent ae)
+            {
+               ODPluginOptionsDialog.this.dispose();
             }
-        }
-    }
+         });
 
-    private void init() {
-        LanguageSelector languageSelector = LanguageSelector.getInstance();
-        schliessen.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                ODPluginOptionsDialog.this.dispose();
-            }
-        });
-        String title = pluginConnector.getTitle() + " - ";
-        title += ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.plugins.einstellungen"));
-        schliessen.setText(ZeichenErsetzer.korrigiereUmlaute(
-            languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.options.plugins.schliessen")));
-        setTitle(title);
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(pluginConnector.getOptionPanel(),
-                             BorderLayout.CENTER);
-        JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        southPanel.add(schliessen);
-        getContentPane().add(southPanel, BorderLayout.SOUTH);
-        pack();
-        Dimension appDimension = getSize();
-        Dimension screenSize = Toolkit.getDefaultToolkit().
-            getScreenSize();
-        setLocation( (screenSize.width -
-                      appDimension.width) / 2,
-                    (screenSize.height -
-                     appDimension.height) / 2);
-    }
+      String title = pluginConnector.getTitle() + " - ";
+
+      title += ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+            ".root.javagui.options.plugins.einstellungen"));
+      schliessen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
+               ".root.javagui.options.plugins.schliessen")));
+      setTitle(title);
+      getContentPane().setLayout(new BorderLayout());
+      getContentPane().add(pluginConnector.getOptionPanel(), BorderLayout.CENTER);
+      JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+      southPanel.add(schliessen);
+      getContentPane().add(southPanel, BorderLayout.SOUTH);
+      pack();
+      Dimension appDimension = getSize();
+      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+      setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
+   }
 }
