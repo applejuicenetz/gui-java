@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<general>
+		<title value="JabberPlugin"/>
+		<version value="1.0"/>
+		<author value="Maj0r"/>
+		<contact value="tkrall@tkl-soft.de"/>
+		<description value="Jabber-Plugin"/>
+		<istab value="true"/>
+		<classname value="de.applejuicenet.client.gui.plugins.jabbe.JabberPlugin"/>
+	</general>
+</root>
