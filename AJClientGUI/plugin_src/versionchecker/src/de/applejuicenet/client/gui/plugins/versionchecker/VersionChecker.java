@@ -1,7 +1,6 @@
 package de.applejuicenet.client.gui.plugins.versionchecker;
 
 import java.awt.BorderLayout;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,11 +11,13 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
+import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.plugins.versionchecker.panels.MainPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/VersionChecker.java,v 1.1 2006/05/04 14:15:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/VersionChecker.java,v 1.2 2006/05/04 14:54:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -53,20 +54,20 @@ public class VersionChecker extends PluginConnector
    }
 
    /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
-     �ber den DataManger k�nnen diese abgerufen werden.*/
+     ueber den DataManger koennen diese abgerufen werden.*/
    public void fireContentChanged(DATALISTENER_TYPE type, Object content)
    {
       try
       {
          if(type == DATALISTENER_TYPE.DOWNLOAD_CHANGED)
          {
-            HashMap downloads = (HashMap) content;
+            HashMap<String, Download> downloads = (HashMap<String, Download>) content;
 
             mainPanel.updateByDownload(downloads);
          }
          else if(type == DATALISTENER_TYPE.UPLOAD_CHANGED)
          {
-            HashMap uploads = (HashMap) content;
+             HashMap<String, Upload> uploads = (HashMap<String, Upload>) content;
 
             mainPanel.updateByUploads(uploads);
          }
