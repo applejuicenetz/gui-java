@@ -18,19 +18,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.net.URL;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -56,14 +52,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import com.jeans.trayicon.SwingTrayPopup;
-import com.jeans.trayicon.WindowsTrayIcon;
-
-import com.l2fprod.gui.plaf.skin.Skin;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import com.jeans.trayicon.SwingTrayPopup;
+import com.jeans.trayicon.WindowsTrayIcon;
+import com.l2fprod.gui.plaf.skin.Skin;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
@@ -90,7 +85,6 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.memorymonitor.MemoryMonitorDialog;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.gui.options.OptionsDialog;
-import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.server.ServerPanel;
 import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.gui.share.SharePanel;
@@ -99,7 +93,6 @@ import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
-
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLFrame;
 import de.tklsoft.gui.controls.TKLLabel;
@@ -140,7 +133,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    private JMenu                    optionenMenu;
    private JMenu                    themesMenu = null;
    private JMenu                    coreMenu;
-   private Set<PluginConnector>     plugins;
    private JMenuItem                menuItemOptionen = new JMenuItem();
    private JMenuItem                menuItemDateiliste = new JMenuItem();
    private JMenuItem                menuItemCheckUpdate = new JMenuItem();
@@ -294,16 +286,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
    }
 
-   public void addPluginToHashSet(PluginConnector plugin)
-   {
-      plugins.add(plugin);
-   }
-
-   public PluginConnector[] getPlugins()
-   {
-      return (PluginConnector[]) plugins.toArray(new PluginConnector[plugins.size()]);
-   }
-
    public static AppleJuiceDialog getApp()
    {
       return theApp;
@@ -323,7 +305,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       setTitle(titel);
       String osName = System.getProperty("os.name");
 
-      plugins = new HashSet<PluginConnector>();
       setIconImage(image);
       menuItemOptionen.setIcon(im.getIcon("optionen"));
       menuItemUeber.setIcon(im.getIcon("info"));
@@ -809,7 +790,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
          for(String curSprachDatei : sprachDateien)
          {
-            String sprachText = LanguageSelector.getInstance(path + curSprachDatei)
+            String            sprachText = LanguageSelector.getInstance(path + curSprachDatei)
                .getFirstAttrbuteByTagName(".root.Languageinfo.name");
             JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
 

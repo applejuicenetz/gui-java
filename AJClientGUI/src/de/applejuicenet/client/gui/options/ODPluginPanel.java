@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.Icon;
@@ -26,11 +27,12 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.plugincontrol.PluginFactory;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginPanel.java,v 1.5 2006/05/03 14:52:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginPanel.java,v 1.6 2006/05/04 13:05:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -79,17 +81,14 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       IconManager im = IconManager.getInstance();
 
       menuIcon = im.getIcon("opt_plugins");
-      PluginConnector[] plugins = theApp.getPlugins();
+      Set<PluginConnector> plugins = PluginFactory.getPlugins();
 
       einstellungen.setVisible(false);
       Vector<PluginContainer> v = new Vector<PluginContainer>();
 
-      if(plugins.length != 0)
+      for(PluginConnector curPlugin : plugins)
       {
-         for(int i = 0; i < plugins.length; i++)
-         {
-            v.add(new PluginContainer(plugins[i]));
-         }
+         v.add(new PluginContainer(curPlugin));
       }
 
       Dimension parentSize = theApp.getSize();
