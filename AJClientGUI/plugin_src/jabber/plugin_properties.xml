@@ -7,6 +7,6 @@
 		<contact value="tkrall@tkl-soft.de"/>
 		<description value="Jabber-Plugin"/>
 		<istab value="true"/>
-		<classname value="de.applejuicenet.client.gui.plugins.jabbe.JabberPlugin"/>
+		<classname value="de.applejuicenet.client.gui.plugins.jabber.JabberPlugin"/>
 	</general>
 </root>
