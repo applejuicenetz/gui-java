@@ -1,9 +1,9 @@
-package de.applejuicenet.client.gui.plugins.panels;
+package de.applejuicenet.client.gui.plugins.versionchecker.panels;
 
 import de.applejuicenet.client.fassade.entity.Version;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/panels/Attic/VersionHolder.java,v 1.4 2005/02/18 11:10:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/panels/VersionHolder.java,v 1.1 2006/05/04 14:15:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

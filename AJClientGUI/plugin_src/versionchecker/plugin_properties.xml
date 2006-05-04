@@ -5,7 +5,7 @@
 		<version value="1.4"/>
 		<author value="Maj0r"/>
 		<contact value="tkrall@tkl-soft.de"/>
-		<description value="Welche Core-Versionen sind zurzeit im Einsatz? Welche Betriebssysteme werden eingesetzt? Dieses Plugin beantwortet Deine Fragen. GUI ab 0.70.0 wird benötigt."/><istab value="true"/>
-		<classname value="de.applejuicenet.client.gui.plugins.VersionChecker"/>
+		<description value="Welche Core-Versionen sind zurzeit im Einsatz? Welche Betriebssysteme werden eingesetzt? Dieses Plugin beantwortet Deine Fragen. GUI ab 0.70.0 wird benï¿½tigt."/><istab value="true"/>
+		<classname value="de.applejuicenet.client.gui.plugins.versionChecker.VersionChecker"/>
 	</general>
 </root>

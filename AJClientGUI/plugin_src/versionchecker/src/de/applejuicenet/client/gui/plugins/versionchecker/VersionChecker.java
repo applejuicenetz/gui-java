@@ -1,4 +1,4 @@
-package de.applejuicenet.client.gui.plugins;
+package de.applejuicenet.client.gui.plugins.versionchecker;
 
 import java.awt.BorderLayout;
 
@@ -12,10 +12,11 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
-import de.applejuicenet.client.gui.plugins.panels.MainPanel;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.gui.plugins.versionchecker.panels.MainPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.12 2006/05/04 12:39:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/VersionChecker.java,v 1.1 2006/05/04 14:15:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
