@@ -1,6 +1,7 @@
 package de.applejuicenet.client.gui.plugins;
 
 import java.awt.BorderLayout;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.panels.MainPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.11 2005/05/02 14:47:37 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/Attic/VersionChecker.java,v 1.12 2006/05/04 12:39:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -23,51 +24,62 @@ import de.applejuicenet.client.gui.plugins.panels.MainPanel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
+public class VersionChecker extends PluginConnector
+{
+   private MainPanel mainPanel;
+   private Logger    logger;
 
-public class VersionChecker extends PluginConnector {
-    private MainPanel mainPanel;
-    private Logger logger;
+   public VersionChecker(XMLValueHolder xMLValueHolder, Map languageFiles, ImageIcon icon)
+   {
+      super(xMLValueHolder, languageFiles, icon);
+      logger = Logger.getLogger(getClass());
+      try
+      {
+         setLayout(new BorderLayout());
+         mainPanel = new MainPanel();
+         add(mainPanel, BorderLayout.CENTER);
+         AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
+         AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.UPLOAD_CHANGED);
+      }
+      catch(Exception e)
+      {
+         logger.error("Unbehandelte Exception", e);
+      }
+   }
 
-    public VersionChecker(XMLValueHolder xMLValueHolder, Map languageFiles, ImageIcon icon) {
-        super(xMLValueHolder, languageFiles, icon);
-        logger = Logger.getLogger(getClass());
-        try{
-            setLayout(new BorderLayout());
-            mainPanel = new MainPanel();
-            add(mainPanel, BorderLayout.CENTER);
-            AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
-            		DATALISTENER_TYPE.DOWNLOAD_CHANGED);
-            AppleJuiceClient.getAjFassade().addDataUpdateListener(this,
-            		DATALISTENER_TYPE.UPLOAD_CHANGED);
-        }
-        catch(Exception e){
+   public void fireLanguageChanged()
+   {
+   }
+
+   /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
+     ï¿½ber den DataManger kï¿½nnen diese abgerufen werden.*/
+   public void fireContentChanged(DATALISTENER_TYPE type, Object content)
+   {
+      try
+      {
+         if(type == DATALISTENER_TYPE.DOWNLOAD_CHANGED)
+         {
+            HashMap downloads = (HashMap) content;
+
+            mainPanel.updateByDownload(downloads);
+         }
+         else if(type == DATALISTENER_TYPE.UPLOAD_CHANGED)
+         {
+            HashMap uploads = (HashMap) content;
+
+            mainPanel.updateByUploads(uploads);
+         }
+      }
+      catch(Exception e)
+      {
+         if(logger.isEnabledFor(Level.ERROR))
+         {
             logger.error("Unbehandelte Exception", e);
-        }
-    }
+         }
+      }
+   }
 
-    public void fireLanguageChanged() {
-    }
-
-    /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
-      Über den DataManger können diese abgerufen werden.*/
-    public void fireContentChanged(DATALISTENER_TYPE type, Object content) {
-        try {
-            if (type == DATALISTENER_TYPE.DOWNLOAD_CHANGED) {
-                HashMap downloads = (HashMap) content;
-                mainPanel.updateByDownload(downloads);
-            }
-            else if (type == DATALISTENER_TYPE.UPLOAD_CHANGED) {
-                HashMap uploads = (HashMap) content;
-                mainPanel.updateByUploads(uploads);
-            }
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error("Unbehandelte Exception", e);
-            }
-        }
-    }
-
-    public void registerSelected() {
-    }
+   public void registerSelected()
+   {
+   }
 }
