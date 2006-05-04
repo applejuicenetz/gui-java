@@ -22,6 +22,14 @@ public abstract class PluginFactory
    {
       if(null == plugins)
       {
+         boolean isDebugPlugins = System.getProperty("Plugins") != null;
+
+         if(isDebugPlugins)
+         {
+            plugins = loadPluginsFromClasspath();
+            return plugins;
+         }
+
          plugins = new HashSet<PluginConnector>();
 
          String path;
@@ -114,5 +122,55 @@ public abstract class PluginFactory
       }
 
       return plugins;
+   }
+
+   private static Set<PluginConnector> loadPluginsFromClasspath()
+   {
+      Set<PluginConnector> thePlugins = new HashSet<PluginConnector>();
+      String[]             which = new String[]
+         {
+            "de.applejuicenet.client.gui.plugins.jabber.JabberTestLoader",
+            "de.applejuicenet.client.gui.plugins.versionchecker.VersioncheckerTestLoader",
+            "de.applejuicenet.client.gui.plugins.serverwatcher.ServerWatcherTestLoader",
+            "de.applejuicenet.client.gui.plugins.logviewer.LogViewerTestLoader",
+            "de.applejuicenet.client.gui.plugins.ircplugin.IrcPluginTestLoader"
+         };
+
+      for(String curWhich : which)
+      {
+         PluginConnector plugin = loadPlugin(curWhich);
+
+         if(null != plugin)
+         {
+            thePlugins.add(plugin);
+            String nachricht = "Plugin " + plugin.getTitle() + " geladen...";
+
+            if(logger.isEnabledFor(Level.INFO))
+            {
+               logger.info(nachricht);
+            }
+         }
+      }
+
+      return thePlugins;
+   }
+
+   private static PluginConnector loadPlugin(String which)
+   {
+      try
+      {
+         Class           pluginClass = Class.forName(which);
+         TestLoader      testLoader = (TestLoader) pluginClass.newInstance();
+         PluginConnector pluginConnector = testLoader.getPlugin();
+
+         return pluginConnector;
+      }
+      catch(Exception e)
+      {
+         //Von einem Plugin lassen wir uns nicht beirren! ;-)
+         logger.error("Ein Plugin konnte nicht instanziert werden", e);
+      }
+
+      return null;
    }
 }
