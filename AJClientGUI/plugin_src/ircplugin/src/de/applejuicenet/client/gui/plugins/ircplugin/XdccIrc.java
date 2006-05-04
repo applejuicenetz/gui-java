@@ -33,11 +33,10 @@ import javax.swing.event.ChangeListener;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.gui.plugins.IrcPlugin;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.33 2005/09/16 12:31:27 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.34 2006/05/04 14:28:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -689,7 +688,7 @@ public class XdccIrc
                             }
 
                             userPanel.updateTextArea(
-                                formatNickname("••• ¢ CTCP " + ctcpCommand +
+                                formatNickname("ï¿½ï¿½ï¿½ ï¿½ CTCP " + ctcpCommand +
                                                " received from " +
                                                parser.getNick()));
                         } // if (trailing.indexOf(1) != -1)  //is this a CTCP
@@ -914,7 +913,7 @@ public class XdccIrc
                     whoMode = aToken;
                 }
                 else if (i == 5) {
-                    //à vérifier!!!!!!!!!!!!!!
+                    //ï¿½ vï¿½rifier!!!!!!!!!!!!!!
                     String paramsWhois = parser.getParams();
                     whoRealName = paramsWhois.substring(paramsWhois.indexOf(
                         aToken) + 1,
@@ -947,7 +946,7 @@ public class XdccIrc
                     whoServer = aToken;
                 }
                 else if (i == 3) {
-                    //à vérifier!!!!!!!!!!!!!! ainsi que whois realname
+                    //ï¿½ vï¿½rifier!!!!!!!!!!!!!! ainsi que whois realname
                     String paramsWhois = parser.getParams();
                     whoServerInfo = paramsWhois.substring(paramsWhois.indexOf(
                         aToken) + 1,

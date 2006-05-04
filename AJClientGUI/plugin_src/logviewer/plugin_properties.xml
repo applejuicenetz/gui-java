@@ -7,6 +7,6 @@
 		<contact value="timo@loevenwong.de"/>
 		<description value="Mit dem Logviewer können Logs angezeigt werden."/>
 		<istab value="true"/>
-		<classname value="de.applejuicenet.client.gui.plugins.LogViewerPlugin"/>
+		<classname value="de.applejuicenet.client.gui.plugins.logviewer.LogViewerPlugin"/>
 	</general>
 </root>
