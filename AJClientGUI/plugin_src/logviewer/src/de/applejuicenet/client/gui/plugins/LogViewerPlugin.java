@@ -18,12 +18,12 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
-import de.applejuicenet.client.gui.plugins.FileNameListCellRenderer;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
-import de.applejuicenet.client.gui.plugins.SortedStringListModel;
+import de.applejuicenet.client.gui.plugins.logviewer.FileNameListCellRenderer;
+import de.applejuicenet.client.gui.plugins.logviewer.SortedStringListModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/Attic/LogViewerPlugin.java,v 1.4 2005/05/24 15:13:15 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/Attic/LogViewerPlugin.java,v 1.5 2006/05/04 12:41:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>

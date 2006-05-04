@@ -1,4 +1,4 @@
-package de.applejuicenet.client.gui.plugins;
+package de.applejuicenet.client.gui.plugins.logviewer;
 
 import java.awt.Component;
 
