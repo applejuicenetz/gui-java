@@ -88,7 +88,7 @@
         <jar destfile="${basedir}/plugins/versionchecker.jar">
             <fileset dir="${basedir}/plugin_src/versionchecker" includes="*.xml" />
             <fileset dir="${basedir}/plugin_src/versionchecker/icons/" includes="*.gif" />
-            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/versionchecker/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
         </jar>
         <jar destfile="${basedir}/plugins/versionchecker.zip">
             <fileset dir="${basedir}/plugins/" includes="versionchecker.jar" />
@@ -135,7 +135,7 @@
         <jar destfile="${basedir}/plugins/ircplugin.jar">
             <fileset dir="${basedir}/plugin_src/ircplugin" includes="*.xml" />
             <fileset dir="${basedir}/plugin_src/ircplugin/icons/" includes="*.gif" />
-            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/ircplugin/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
         </jar>
         <jar destfile="${basedir}/plugins/ircplugin.zip">
             <fileset dir="${basedir}/plugins/" includes="ircplugin.jar" />
@@ -156,7 +156,7 @@
         <jar destfile="${basedir}/plugins/logviewerplugin.jar">
             <fileset dir="${basedir}/plugin_src/logviewer" includes="*.xml" />
             <fileset dir="${basedir}/plugin_src/logviewer/icons/" includes="*.gif" />
-            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/logviewer/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
         </jar>
         <jar destfile="${basedir}/plugins/logviewerplugin.zip">
             <fileset dir="${basedir}/plugins/" includes="logviewerplugin.jar" />
@@ -177,7 +177,7 @@
         <jar destfile="${basedir}/plugins/serverwatcher.jar">
             <fileset dir="${basedir}/plugin_src/serverwatcher" includes="*.xml" />
             <fileset dir="${basedir}/plugin_src/serverwatcher/icons/" includes="*.gif" />
-            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/serverwatcher/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
         </jar>
         <jar destfile="${basedir}/plugins/serverwatcher.zip">
             <fileset dir="${basedir}/plugins/" includes="serverwatcher.jar" />
