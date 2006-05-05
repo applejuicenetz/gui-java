@@ -1,38 +1,51 @@
 package de.applejuicenet.client.gui.plugins.jabber;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+
 import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
+
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.Form;
-import org.jivesoftware.smackx.FormField;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.gui.plugins.jabber.control.IdentityController;
+import de.applejuicenet.client.gui.plugins.jabber.control.MultiUserChatController;
+import de.applejuicenet.client.gui.plugins.jabber.view.IdentityPanel;
+
+import de.tklsoft.gui.controls.InvalidRule;
+import de.tklsoft.gui.controls.ModifyableComponent;
+import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
+import de.tklsoft.gui.controls.TKLPasswordField;
+import de.tklsoft.gui.controls.TKLTextField;
 
 public class JabberPlugin extends PluginConnector
 {
-   private Logger         logger;
-   private JButton        connectButton = new JButton("Verbinden");
-   private JTextField     user = new JTextField(15);
-   private JPasswordField passwort = new JPasswordField(15);
-   private JTextField     nickname = new JTextField(15);
+   private final String     CMD_VERBINDEN = "Verbinden";
+   private final String     CMD_TRENNEN = "Trennen";
+   private Logger           logger;
+   private JButton          connectButton = new JButton(CMD_VERBINDEN);
+   private TKLTextField     user = new TKLTextField(15);
+   private TKLPasswordField passwort = new TKLPasswordField();
+   private TKLTextField     nickname = new TKLTextField(15);
+   private JTabbedPane      tabbedPane = new JTabbedPane();
+   private CardLayout       registerLayout = new CardLayout();
+   private JPanel           registerPanel = new JPanel(registerLayout);
 
    public JabberPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon)
    {
@@ -43,6 +56,46 @@ public class JabberPlugin extends PluginConnector
 
    private void initGUI()
    {
+      user.addInvalidRule(InvalidRule.EmptyInvalidRule.getInstance());
+      user.addInvalidRule(new InvalidRule()
+         {
+            public boolean isInvalid(ModifyableComponent comp)
+            {
+               String text = user.getText().trim();
+
+               if(text.length() <= 2)
+               {
+                  return true;
+               }
+
+               if(text.indexOf("@") == -1)
+               {
+                  return true;
+               }
+
+               if(text.indexOf(".") == -1 || text.endsWith("."))
+               {
+                  return true;
+               }
+
+               return false;
+            }
+         });
+
+      passwort.setColumns(15);
+      //       passwort.addInvalidRule(InvalidRule.EmptyInvalidRule.getInstance());
+      nickname.addInvalidRule(InvalidRule.EmptyInvalidRule.getInstance());
+
+      user.ignoreInvalidRules(false);
+      nickname.ignoreInvalidRules(false);
+
+      user.ignoreStatus(STATUSFLAG.MODIFIED, true);
+      //      passwort.ignoreStatus(STATUSFLAG.MODIFIED, true);
+      nickname.ignoreStatus(STATUSFLAG.MODIFIED, true);
+
+      user.fireCheckRules();
+      nickname.fireCheckRules();
+
       setLayout(new BorderLayout());
       JPanel buttonpanel = new JPanel(new FlowLayout());
 
@@ -67,75 +120,116 @@ public class JabberPlugin extends PluginConnector
                doConnect();
             }
          });
+
+      IdentityPanel identityPanel = IdentityController.getInstance().getPanel();
+
+      JSplitPane    eastSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, identityPanel, registerPanel);
+
+      eastSplitPane.setOneTouchExpandable(true);
+
+      JSplitPane centerSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabbedPane, eastSplitPane);
+
+      centerSplitPane.setOneTouchExpandable(true);
+      centerSplitPane.setResizeWeight(1);
+      add(centerSplitPane, BorderLayout.CENTER);
    }
+
+   private boolean isInputValid()
+   {
+      user.fireCheckRules();
+      nickname.fireCheckRules();
+
+      //       password.fireCheckRules();
+      if(user.isInvalid())
+      {
+         return false;
+      }
+
+      if(nickname.isInvalid())
+      {
+         return false;
+      }
+
+      return true;
+   }
+
+   private XMPPConnection connection = null;
 
    protected void doConnect()
    {
-      String username = user.getText().trim();
-
-      if(username.length() == 0)
+      if(!isInputValid())
       {
          return;
       }
 
-      XMPPConnection connection;
-
-      try
+      connectButton.setEnabled(false);
+      if(CMD_VERBINDEN.equals(connectButton.getText()))
       {
-         connection = new XMPPConnection("debianforum.de");
-         String password = new String(passwort.getPassword());
+         user.setEnabled(false);
+         passwort.setEnabled(false);
+         nickname.setEnabled(false);
 
-         if(password.length() == 0)
-         {
-            connection.loginAnonymously();
-         }
-         else
-         {
-            connection.login(username, password);
-         }
+         // neue Verbindung aufbauen
+         String       tmp = user.getText().trim();
+         int          index = tmp.indexOf("@");
+         final String server = tmp.substring(index + 1);
 
-//         Roster      roster = connection.getRoster();
-//         Iterator    it = roster.getEntries();
-//         RosterEntry curEntry;
-//
-//         while(it.hasNext())
-//         {
-//            curEntry = (RosterEntry) it.next();
-//         }
+         final String username = tmp.substring(0, index);
+         final String nick = nickname.getText().trim();
 
-         MultiUserChat muc = new MultiUserChat(connection, "applejuice@chat.debianforum.de");
-         muc.create("applejuice");
+         new Thread(new Runnable()
+            {
+               public void run()
+               {
+                  try
+                  {
+                     connection = new XMPPConnection(server);
+                     String password = new String(passwort.getPassword());
 
-         // Get the the room's configuration form
-         Form form = muc.getConfigurationForm();
-         // Create a new form to submit based on the original form
-         Form submitForm = form.createAnswerForm();
-         // Add default answers to the form to submit
-         for (Iterator fields = form.getFields(); fields.hasNext();) {
-             FormField field = (FormField) fields.next();
-             System.out.println(field.getDescription());
-             if (!FormField.TYPE_HIDDEN.equals(field.getType()) && field.getVariable() != null) {
-                 // Sets the default value as the answer
-                 submitForm.setDefaultAnswer(field.getVariable());
-             }
-         }
-         // Sets the new owner of the room
-         List<String> owners = new ArrayList<String>();
-         owners.add("Maj0r@debianforum.de");
-         submitForm.setAnswer("muc#roomconfig_roomowners", owners);
-         // Send the completed form (with default values) to the server to configure the room
-         muc.sendConfigurationForm(submitForm);
+                     connection.login(username, password);
+                     IdentityController.getInstance().setConnection(connection);
+                     joinMultiUserChat("applejuice@chat.amessage.info", nick);
+                     connectButton.setText(CMD_TRENNEN);
+                     connectButton.setEnabled(true);
+                  }
+                  catch(XMPPException e)
+                  {
+                     e.printStackTrace();
+                     connectButton.setEnabled(true);
+                  }
+               }
+            }).start();
       }
-      catch(XMPPException e)
+      else
       {
-         e.printStackTrace();
+
+         //        neue Verbindung trennen
+         if(null != connection)
+         {
+            new Thread(new Runnable()
+               {
+                  public void run()
+                  {
+                     connection.close();
+                     connection = null;
+                     IdentityController.getInstance().setConnection(null);
+                     connectButton.setText(CMD_VERBINDEN);
+                     user.setEnabled(true);
+                     passwort.setEnabled(true);
+                     nickname.setEnabled(true);
+                     connectButton.setEnabled(true);
+                  }
+               }).start();
+         }
       }
    }
 
    private void initForTest()
    {
-      user.setText("Maj0r");
-      nickname.setText("Maj0r");
+      user.setText("ajtest2@jabber.org");
+      nickname.setText("ajtest2");
+      user.fireCheckRules();
+      nickname.fireCheckRules();
    }
 
    @Override
@@ -151,5 +245,21 @@ public class JabberPlugin extends PluginConnector
    @Override
    public void registerSelected()
    {
+   }
+
+   private void joinMultiUserChat(final String room, String nick)
+      throws XMPPException
+   {
+      MultiUserChat                 muc = new MultiUserChat(connection, room);
+      final MultiUserChatController multiUserChatController = new MultiUserChatController(muc, nick);
+
+      SwingUtilities.invokeLater(new Runnable()
+         {
+            public void run()
+            {
+               tabbedPane.addTab(room, multiUserChatController.getMultiUserChatPanel());
+               registerPanel.add(multiUserChatController.getRoomName(), multiUserChatController.getUserListPane());
+            }
+         });
    }
 }
