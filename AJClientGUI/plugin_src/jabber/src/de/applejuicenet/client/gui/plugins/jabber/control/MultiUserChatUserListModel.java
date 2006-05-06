@@ -7,7 +7,7 @@ import javax.swing.AbstractListModel;
 
 public class MultiUserChatUserListModel extends AbstractListModel
 {
-   private List<String> users = new ArrayList<String>();
+   private List<MutliUserChatUser> users = new ArrayList<MutliUserChatUser>();
 
    public Object getElementAt(int index)
    {
@@ -19,8 +19,26 @@ public class MultiUserChatUserListModel extends AbstractListModel
       return users.size();
    }
 
-   public void addParticipant(String participant)
+   public void addParticipant(MutliUserChatUser participant)
    {
       users.add(participant);
+   }
+
+   public MutliUserChatUser getMutliUserChatUserByName(String name)
+   {
+      for(MutliUserChatUser curMutliUserChatUser : users)
+      {
+         if(curMutliUserChatUser.getName().equals(name))
+         {
+            return curMutliUserChatUser;
+         }
+      }
+
+      return null;
+   }
+
+   public void removeParticipant(MutliUserChatUser participant)
+   {
+      users.remove(participant);
    }
 }

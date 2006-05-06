@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugins.jabber.control.rostertree;
 
 import java.util.ArrayList;
@@ -7,22 +11,25 @@ import java.util.List;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
+import org.jivesoftware.smack.packet.Presence;
+
 public class RosterTreeNode implements MutableTreeNode
 {
-   private List<RosterTreeNode> users = new ArrayList<RosterTreeNode>();
-   private RosterTreeNode       parent = null;
-   private String               text = "";
+   private List<RosterTreeNode> users    = new ArrayList<RosterTreeNode>();
+   private RosterTreeNode       parent   = null;
+   private String               text     = "";
+   private Presence             presence = null;
 
    public RosterTreeNode(String text)
    {
-       this.text = text;
+      this.text = text;
    }
 
    public RosterTreeNode()
    {
-       this("");
+      this("");
    }
-   
+
    public void removeAllChildren()
    {
       for(int i = users.size() - 1; i >= 0; i--)
@@ -131,5 +138,15 @@ public class RosterTreeNode implements MutableTreeNode
    public void setText(String text)
    {
       this.text = text;
+   }
+
+   public Presence getPresence()
+   {
+      return presence;
+   }
+
+   public void setPresence(Presence presence)
+   {
+      this.presence = presence;
    }
 }

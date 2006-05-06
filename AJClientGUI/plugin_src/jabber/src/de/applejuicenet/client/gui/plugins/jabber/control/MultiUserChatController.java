@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugins.jabber.control;
 
 import java.awt.Color;
@@ -5,13 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
 import java.net.URL;
-
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -24,38 +26,39 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import org.apache.log4j.Logger;
-
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.PacketExtension;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 import org.jivesoftware.smackx.muc.SubjectUpdatedListener;
+import org.jivesoftware.smackx.packet.DelayInformation;
 
 import de.applejuicenet.client.gui.plugins.jabber.view.MultiUserChatPanel;
 
 public class MultiUserChatController implements SubjectUpdatedListener, ActionListener
 {
+   private static final Color         JOIN_GREEN                 = new Color(0, 128, 0);
+   public static final String         HTTP_IDENTIFIER            = "http://";
+   public static final String         WWW_IDENTIFIER             = "www.";
    private final MultiUserChat        muc;
-   private MultiUserChatPanel         multiUserChatPanel = null;
-   private boolean                    selected = false;
-   private boolean                    marked = false;
-   private Logger                     logger = Logger.getLogger(MultiUserChatController.class);
-   private static final Color         JOIN_GREEN = new Color(0, 128, 0);
-   private SimpleDateFormat           dateFormatter = new SimpleDateFormat("HH:mm:ss");
-   public static final String         HTTP_IDENTIFIER = "http://";
-   public static final String         WWW_IDENTIFIER = "www.";
-   private ArrayList<String>          befehle = new ArrayList<String>();
-   private int                        befehlPos = -1;
-   private JScrollPane                userScrollPane = null;
+   private MultiUserChatPanel         multiUserChatPanel         = null;
+   private boolean                    selected                   = false;
+   private boolean                    marked                     = false;
+   private Logger                     logger                     = Logger.getLogger(MultiUserChatController.class);
+   private SimpleDateFormat           dateFormatter              = new SimpleDateFormat("HH:mm:ss");
+   private ArrayList<String>          befehle                    = new ArrayList<String>();
+   private int                        befehlPos                  = -1;
+   private JScrollPane                userScrollPane             = null;
    private MultiUserChatUserListModel multiUserChatUserListModel;
    private JList                      userList;
 
    public MultiUserChatController(MultiUserChat multiUserChat, String nick)
-      throws XMPPException
+                           throws XMPPException
    {
       muc = multiUserChat;
       DiscussionHistory history = new DiscussionHistory();
@@ -82,7 +85,7 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
                public void keyTyped(KeyEvent ke)
                {
                   getMultiUserChatPanel().getTextField().setText(getMultiUserChatPanel().getTextField().getText() +
-                     ke.getKeyChar());
+                                                                 ke.getKeyChar());
                   getMultiUserChatPanel().getTextField().requestFocus();
                }
             });
@@ -187,18 +190,18 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
       return multiUserChatPanel;
    }
 
-   public synchronized void updateTextArea(String message, boolean withTimeStamp)
+   public synchronized void updateTextArea(String message, boolean withTimeStamp, Date stamp)
    {
-      Document           doc = getMultiUserChatPanel().getTextArea().getDocument();
+      Document           doc              = getMultiUserChatPanel().getTextArea().getDocument();
       int                oldCaretPosition = getMultiUserChatPanel().getTextArea().getCaretPosition();
-      SimpleAttributeSet attributes = new SimpleAttributeSet();
+      SimpleAttributeSet attributes       = new SimpleAttributeSet();
 
       StyleConstants.setBackground(attributes, Color.WHITE);
       StyleConstants.setForeground(attributes, Color.BLACK);
-      int     index = message.indexOf('>');
+      int     index        = message.indexOf('>');
       String  compareValue;
       boolean eigenerName = false;
-      boolean doMark = false;
+      boolean doMark      = false;
 
       if(index != -1 && message.length() - 1 > index)
       {
@@ -217,41 +220,54 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
       //         eigenerName = true;
       //         doMark = true;
       //      }
-      if(message.indexOf("---> JOIN:") != -1)
-      {
-         StyleConstants.setForeground(attributes, JOIN_GREEN);
-      }
-      else if(message.indexOf("<--- PART:") != -1)
-      {
-         StyleConstants.setForeground(attributes, Color.RED);
-      }
-      else if(message.indexOf("<--- QUIT:") != -1)
-      {
-         StyleConstants.setForeground(attributes, Color.RED);
-      }
-      else if(message.indexOf('>') == 0)
-      {
-         StyleConstants.setForeground(attributes, Color.MAGENTA);
-      }
-      else if(message.startsWith("* "))
-      {
-         isAction = true;
-      }
-      else if(!withTimeStamp || index == -1)
-      {
-         StyleConstants.setForeground(attributes, Color.GRAY);
-      }
-      else
+      //      if(message.indexOf("---> JOIN:") != -1)
+      //      {
+      //         StyleConstants.setForeground(attributes, JOIN_GREEN);
+      //      }
+      //      else if(message.indexOf("<--- PART:") != -1)
+      //      {
+      //         StyleConstants.setForeground(attributes, Color.RED);
+      //      }
+      //      else if(message.indexOf("<--- QUIT:") != -1)
+      //      {
+      //         StyleConstants.setForeground(attributes, Color.RED);
+      //      }
+      //      else if(message.indexOf('>') == 0)
+      //      {
+      //         StyleConstants.setForeground(attributes, Color.MAGENTA);
+      //      }
+      //      else if(message.startsWith("* "))
+      //      {
+      //         isAction = true;
+      //      }
+      //      else if(!withTimeStamp || index == -1)
+      //      {
+      //         StyleConstants.setForeground(attributes, Color.GRAY);
+      //      }
+      if(withTimeStamp)
       {
          StyleConstants.setForeground(attributes, Color.BLACK);
          doMark = true;
+      }
+      else
+      {
+         StyleConstants.setForeground(attributes, Color.GRAY);
       }
 
       try
       {
          if(withTimeStamp)
          {
-            String zeit = dateFormatter.format(new Date(System.currentTimeMillis()));
+            String zeit;
+
+            if(null != stamp)
+            {
+               zeit = dateFormatter.format(stamp);
+            }
+            else
+            {
+               zeit = dateFormatter.format(new Date(System.currentTimeMillis()));
+            }
 
             doc.insertString(doc.getLength(), "[" + zeit + "]\t", attributes);
          }
@@ -322,18 +338,18 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
 
    public void updateTextArea(String message)
    {
-      updateTextArea(message, true);
+      updateTextArea(message, true, null);
    }
 
    private void parseLinks(SimpleAttributeSet attributes, Document doc, String message)
-      throws BadLocationException
+                    throws BadLocationException
    {
       while(message.toLowerCase().indexOf(MultiUserChatController.HTTP_IDENTIFIER) != -1 ||
-            message.toLowerCase().indexOf(MultiUserChatController.WWW_IDENTIFIER) != -1)
+               message.toLowerCase().indexOf(MultiUserChatController.WWW_IDENTIFIER) != -1)
       {
          String httpIdentifier;
          int    indexHttp = message.toLowerCase().indexOf(HTTP_IDENTIFIER);
-         int    indexWww = message.toLowerCase().indexOf(WWW_IDENTIFIER);
+         int    indexWww  = message.toLowerCase().indexOf(WWW_IDENTIFIER);
 
          if(indexHttp == -1)
          {
@@ -357,7 +373,7 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
 
          doc.insertString(doc.getLength(), message.substring(0, message.toLowerCase().indexOf(httpIdentifier)), attributes);
          message = message.substring(message.toLowerCase().indexOf(httpIdentifier));
-         int index = message.indexOf(" ");
+         int index  = message.indexOf(" ");
          int index2 = message.indexOf(">");
 
          if(index2 != -1 && index2 < index)
@@ -435,7 +451,7 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
          {
             public void run()
             {
-               StyledDocument     doc = getMultiUserChatPanel().getTitleArea().getStyledDocument();
+               StyledDocument     doc        = getMultiUserChatPanel().getTitleArea().getStyledDocument();
                SimpleAttributeSet attributes = new SimpleAttributeSet();
 
                StyleConstants.setBackground(attributes, Color.WHITE);
@@ -484,7 +500,7 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
    {
       boolean istNachkomma = false;
       boolean parsEnde = false;
-      int     index = 0;
+      int     index    = 0;
 
       if(toWrite.length() > 1)
       {
@@ -681,67 +697,6 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
       setTitle(subject);
    }
 
-   private class MyParticipantListener extends Thread implements PacketListener
-   {
-      public MyParticipantListener(MultiUserChat muc)
-      {
-         muc.addParticipantListener(this);
-      }
-
-      public void processPacket(Packet packet)
-      {
-         if(packet instanceof Presence)
-         {
-            Presence presence = (Presence) packet;
-
-            String   participant = presence.getFrom();
-
-            participant = participant.substring(participant.indexOf("/") + 1);
-            getMultiUserChatUserListModel().addParticipant(participant);
-            SwingUtilities.invokeLater(new Runnable()
-               {
-                  public void run()
-                  {
-                     getUserList().updateUI();
-                  }
-               });
-         }
-      }
-   }
-
-
-   private class MyMessageListener extends Thread implements PacketListener
-   {
-      public MyMessageListener(MultiUserChat muc)
-      {
-         muc.addMessageListener(this);
-      }
-
-      public void processPacket(Packet packet)
-      {
-         final Message message = (Message) packet;
-
-         SwingUtilities.invokeLater(new Runnable()
-            {
-               public void run()
-               {
-                  String from = message.getFrom();
-                  int    index = message.getFrom().indexOf("/");
-
-                  if(index != -1)
-                  {
-                     from = from.substring(index + 1);
-                     updateTextArea(from + ": " + message.getBody(), true);
-                  }
-                  else
-                  {
-                     updateTextArea(message.getBody(), false);
-                  }
-               }
-            });
-      }
-   }
-
    public JScrollPane getUserListPane()
    {
       if(null == userScrollPane)
@@ -772,5 +727,151 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
       }
 
       return userList;
+   }
+
+   private class MyParticipantListener extends Thread implements ParticipantStatusListener
+   {
+      public MyParticipantListener(MultiUserChat muc)
+      {
+         muc.addParticipantStatusListener(this);
+      }
+
+      public void adminGranted(String arg0)
+      {
+      }
+
+      public void adminRevoked(String arg0)
+      {
+      }
+
+      public void banned(String arg0, String arg1, String arg2)
+      {
+      }
+
+      public void joined(String participant)
+      {
+         participant = participant.substring(participant.indexOf("/") + 1);
+         getMultiUserChatUserListModel().addParticipant(new MutliUserChatUser(participant));
+         SwingUtilities.invokeLater(new Runnable()
+            {
+               public void run()
+               {
+                  getUserList().updateUI();
+               }
+            });
+      }
+
+      public void kicked(String participant, String arg1, String arg2)
+      {
+         removeParticipant(participant);
+      }
+
+      private void removeParticipant(String participant)
+      {
+         participant = participant.substring(participant.indexOf("/") + 1);
+         MutliUserChatUser user = getMultiUserChatUserListModel().getMutliUserChatUserByName(participant);
+
+         if(null == user)
+         {
+            return;
+         }
+
+         getMultiUserChatUserListModel().removeParticipant(user);
+         SwingUtilities.invokeLater(new Runnable()
+            {
+               public void run()
+               {
+                  getUserList().updateUI();
+               }
+            });
+      }
+
+      public void left(String participant)
+      {
+         removeParticipant(participant);
+      }
+
+      public void membershipGranted(String arg0)
+      {
+      }
+
+      public void membershipRevoked(String arg0)
+      {
+      }
+
+      public void moderatorGranted(String arg0)
+      {
+      }
+
+      public void moderatorRevoked(String arg0)
+      {
+      }
+
+      public void nicknameChanged(String arg0, String arg1)
+      {
+      }
+
+      public void ownershipGranted(String arg0)
+      {
+      }
+
+      public void ownershipRevoked(String arg0)
+      {
+      }
+
+      public void voiceGranted(String arg0)
+      {
+      }
+
+      public void voiceRevoked(String arg0)
+      {
+      }
+   }
+
+
+   private class MyMessageListener extends Thread implements PacketListener
+   {
+      public MyMessageListener(MultiUserChat muc)
+      {
+         muc.addMessageListener(this);
+      }
+
+      public void processPacket(Packet packet)
+      {
+         final Message message = (Message) packet;
+
+         SwingUtilities.invokeLater(new Runnable()
+            {
+               public void run()
+               {
+                  String from  = message.getFrom();
+                  int    index = message.getFrom().indexOf("/");
+
+                  if(index != -1)
+                  {
+                     from = from.substring(index + 1);
+                     Iterator it    = message.getExtensions();
+                     Date     stamp = null;
+
+                     while(it.hasNext())
+                     {
+                        PacketExtension ext = (PacketExtension) it.next();
+
+                        if(ext instanceof DelayInformation)
+                        {
+                           stamp = ((DelayInformation) ext).getStamp();
+                           break;
+                        }
+                     }
+
+                     updateTextArea(from + ": " + message.getBody(), true, stamp);
+                  }
+                  else
+                  {
+                     updateTextArea(message.getBody(), false, null);
+                  }
+               }
+            });
+      }
    }
 }

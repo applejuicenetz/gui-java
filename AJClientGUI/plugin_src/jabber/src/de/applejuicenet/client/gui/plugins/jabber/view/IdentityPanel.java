@@ -22,6 +22,7 @@ public class IdentityPanel extends JScrollPane
       if(null == knownUsersTree)
       {
          knownUsersTree = new JTree();
+         knownUsersTree.setRootVisible(false);
       }
 
       return knownUsersTree;
