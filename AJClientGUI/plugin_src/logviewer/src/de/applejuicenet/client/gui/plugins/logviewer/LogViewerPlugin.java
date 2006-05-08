@@ -23,7 +23,7 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/logviewer/LogViewerPlugin.java,v 1.1 2006/05/04 14:23:58 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/logviewer/LogViewerPlugin.java,v 1.2 2006/05/08 16:09:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,9 +41,10 @@ public class LogViewerPlugin extends PluginConnector
    private SortedStringListModel listModel = new SortedStringListModel();
    private JList                 list = new JList(listModel);
 
-   public LogViewerPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon)
+   public LogViewerPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles, ImageIcon icon,
+      Map<String, ImageIcon> availableIcons)
    {
-      super(pluginsPropertiesXMLHolder, languageFiles, icon);
+      super(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
       logger = Logger.getLogger(getClass());
       try
       {

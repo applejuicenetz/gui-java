@@ -38,7 +38,7 @@ import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerWatcherPlugin.java,v 1.1 2006/05/04 14:18:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerWatcherPlugin.java,v 1.2 2006/05/08 16:09:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -59,9 +59,10 @@ public class ServerWatcherPlugin extends PluginConnector
    private JLabel        statusText = new JLabel();
    private static Logger logger;
 
-   public ServerWatcherPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon)
+   public ServerWatcherPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles, ImageIcon icon,
+           Map<String, ImageIcon> availableIcons)
    {
-      super(pluginsPropertiesXMLHolder, languageFiles, icon);
+      super(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
       logger = Logger.getLogger(getClass());
       try
       {

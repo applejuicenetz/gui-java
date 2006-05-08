@@ -17,8 +17,9 @@ public class LogViewerTestLoader extends TestLoader
    }
 
    @Override
-   protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon)
+   protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles,
+      ImageIcon icon, Map<String, ImageIcon> availableIcons)
    {
-      return new LogViewerPlugin(pluginsPropertiesXMLHolder, languageFiles, icon);
+      return new LogViewerPlugin(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
    }
 }

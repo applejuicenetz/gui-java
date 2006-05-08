@@ -17,8 +17,9 @@ public class VersioncheckerTestLoader extends TestLoader
    }
 
    @Override
-   protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon)
+   protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles,
+      ImageIcon icon, Map<String, ImageIcon> availableIcons)
    {
-      return new VersionChecker(pluginsPropertiesXMLHolder, languageFiles, icon);
+      return new VersionChecker(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
    }
 }

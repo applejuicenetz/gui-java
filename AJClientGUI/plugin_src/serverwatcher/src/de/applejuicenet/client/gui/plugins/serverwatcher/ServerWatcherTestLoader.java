@@ -17,8 +17,9 @@ public class ServerWatcherTestLoader extends TestLoader
    }
 
    @Override
-   protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon)
+   protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles,
+      ImageIcon icon, Map<String, ImageIcon> availableIcons)
    {
-      return new ServerWatcherPlugin(pluginsPropertiesXMLHolder, languageFiles, icon);
+      return new ServerWatcherPlugin(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
    }
 }

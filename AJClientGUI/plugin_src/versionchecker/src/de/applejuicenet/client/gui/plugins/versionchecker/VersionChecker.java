@@ -1,6 +1,7 @@
 package de.applejuicenet.client.gui.plugins.versionchecker;
 
 import java.awt.BorderLayout;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.plugins.versionchecker.panels.MainPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/VersionChecker.java,v 1.2 2006/05/04 14:54:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/VersionChecker.java,v 1.3 2006/05/08 16:09:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -31,9 +32,10 @@ public class VersionChecker extends PluginConnector
    private MainPanel mainPanel;
    private Logger    logger;
 
-   public VersionChecker(XMLValueHolder xMLValueHolder, Map languageFiles, ImageIcon icon)
+   public VersionChecker(XMLValueHolder xMLValueHolder, Map<String, XMLValueHolder> languageFiles, ImageIcon icon,
+      Map<String, ImageIcon> availableIcons)
    {
-      super(xMLValueHolder, languageFiles, icon);
+      super(xMLValueHolder, languageFiles, icon, availableIcons);
       logger = Logger.getLogger(getClass());
       try
       {
@@ -67,7 +69,7 @@ public class VersionChecker extends PluginConnector
          }
          else if(type == DATALISTENER_TYPE.UPLOAD_CHANGED)
          {
-             HashMap<String, Upload> uploads = (HashMap<String, Upload>) content;
+            HashMap<String, Upload> uploads = (HashMap<String, Upload>) content;
 
             mainPanel.updateByUploads(uploads);
          }

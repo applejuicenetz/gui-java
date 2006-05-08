@@ -17,8 +17,9 @@ class IrcPluginTestLoader extends TestLoader
    }
 
    @Override
-   protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon)
+   protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles,
+      ImageIcon icon, Map<String, ImageIcon> availableIcons)
    {
-      return new IrcPlugin(pluginsPropertiesXMLHolder, languageFiles, icon);
+      return new IrcPlugin(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
    }
 }
