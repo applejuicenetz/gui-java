@@ -17,8 +17,9 @@ public class JabberTestLoader extends TestLoader
    }
 
    @Override
-   protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon)
+   protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles,
+      ImageIcon icon, Map<String, ImageIcon> availableIcons)
    {
-      return new JabberPlugin(pluginsPropertiesXMLHolder, languageFiles, icon);
+      return new JabberPlugin(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
    }
 }

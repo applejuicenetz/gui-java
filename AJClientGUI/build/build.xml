@@ -95,24 +95,32 @@
         </jar>
     </target>
 
+    <property name="smack.jar" location="${gui.pluginrootsrcdir}/jabber/lib/smack.jar" />
+    <property name="smackx.jar" location="${gui.pluginrootsrcdir}/jabber/lib/smackx.jar" />
+
+    <!-- classpath for compilation ... -->
+    <path id="lib_jabber.path">
+        <pathelement location="${smack.jar}" />
+        <pathelement location="${smackx.jar}" />
+    </path>
+
     <target name="build-pluginjar-jabber" depends="gui-rebuild" description="builds jabber.jar">
         <delete includeEmptyDirs="true">
             <fileset dir="${basedir}/plugins" casesensitive="false">
                 <include name="**/jabber.jar" />
+                <include name="**/jabber.zip" />
             </fileset>
         </delete>
         <javac srcdir="${gui.pluginrootsrcdir}/jabber/src" encoding="cp1252" destdir="${gui.compiledir}" debug="true">
             <classpath>
                 <path refid="lib.path" />
-                <fileset dir="${gui.pluginrootsrcdir}/jabber/lib">
-                    <filename name="smack.jar" />
-                    <filename name="smackx.jar" />
-                </fileset>
+                <path refid="lib_jabber.path" />
             </classpath>
         </javac>
         <jar destfile="${basedir}/plugins/jabber.jar">
             <fileset dir="${basedir}/plugin_src/jabber" includes="*.xml" />
             <fileset dir="${basedir}/plugin_src/jabber/icons/" includes="*.gif" />
+            <fileset dir="${basedir}/plugin_src/jabber/icons/" includes="*.png" />
             <fileset dir="${basedir}/plugin_src/jabber/lib/" includes="*.jar" />
             <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/jabber/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
         </jar>

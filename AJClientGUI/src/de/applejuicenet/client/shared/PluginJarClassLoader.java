@@ -2,9 +2,13 @@ package de.applejuicenet.client.shared;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+
 import java.lang.reflect.Constructor;
+
 import java.security.SecureClassLoader;
+
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +24,7 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.26 2006/05/04 13:05:21 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.27 2006/05/08 16:08:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,6 +39,7 @@ public class PluginJarClassLoader extends SecureClassLoader
    private XMLValueHolder              pluginsPropertiesXMLHolder = null;
    private ImageIcon                   pluginIcon = null;
    private Map<String, XMLValueHolder> languageXMLs = new HashMap<String, XMLValueHolder>();
+   private Map<String, ImageIcon>      availableIcons = new HashMap<String, ImageIcon>();
 
    public PluginJarClassLoader()
    {
@@ -50,11 +55,14 @@ public class PluginJarClassLoader extends SecureClassLoader
       try
       {
          loadClassBytesFromJar(pluginJar);
-         String      theClassName = pluginsPropertiesXMLHolder.getXMLAttributeByTagName(".root.general.classname.value");
-         Class       cl = loadClass(theClassName);
-         Class[]     constructorHelper = {XMLValueHolder.class, Map.class, ImageIcon.class};
-         Constructor con = cl.getConstructor(constructorHelper);
-         Object      aPlugin = con.newInstance(new Object[] {pluginsPropertiesXMLHolder, languageXMLs, pluginIcon});
+         String          theClassName = pluginsPropertiesXMLHolder.getXMLAttributeByTagName(".root.general.classname.value");
+         Class           cl = loadClass(theClassName);
+         Class[]         constructorHelper = {XMLValueHolder.class, Map.class, ImageIcon.class, Map.class};
+         Constructor     con = cl.getConstructor(constructorHelper);
+         PluginConnector aPlugin = (PluginConnector) con.newInstance(new Object[]
+               {
+                  pluginsPropertiesXMLHolder, languageXMLs, pluginIcon, availableIcons
+               });
 
          return (PluginConnector) aPlugin;
       }
@@ -76,31 +84,41 @@ public class PluginJarClassLoader extends SecureClassLoader
          return;
       }
 
-      JarFile jf = new JarFile(jar);
-      String  entryName;
+      JarFile                 jf = new JarFile(jar);
+      String                  entryName;
+      HashMap<String, byte[]> lazyLoad = new HashMap<String, byte[]>();
 
       for(Enumeration e = jf.entries(); e.hasMoreElements();)
       {
          ZipEntry entry = (ZipEntry) e.nextElement();
 
          entryName = entry.getName();
-         if(entryName.indexOf(".class") == -1 && !entryName.equals("plugin_properties.xml") && entryName.indexOf("icon.gif") == -1 &&
-               entryName.indexOf("language_xml_") == -1 && !entryName.endsWith(".jar"))
+         if(entryName.indexOf("$") == -1)
          {
             continue;
          }
 
-         InputStream is = jf.getInputStream(entry);
-         int         l = (int) entry.getSize();
-         byte[]      buf = new byte[l];
-         int         read = 0;
+         String name = entryName.replace('/', '.');
 
-         while(read < l)
+         name = name.replaceAll(".class", "");
+         byte[] buf = readEntry(jf, entry);
+
+         lazyLoad.put(name, buf);
+      }
+
+      for(Enumeration e = jf.entries(); e.hasMoreElements();)
+      {
+         ZipEntry entry = (ZipEntry) e.nextElement();
+
+         entryName = entry.getName();
+         if(entryName.indexOf(".class") == -1 && !entryName.equals("plugin_properties.xml") && !entryName.endsWith(".gif") &&
+               !entryName.endsWith(".png") && entryName.indexOf("language_xml_") == -1 && !entryName.endsWith(".jar") &&
+               entryName.indexOf("$") == -1)
          {
-            int incr = is.read(buf, read, l - read);
-
-            read += incr;
+            continue;
          }
+
+         byte[] buf = readEntry(jf, entry);
 
          if(entryName.equals("plugin_properties.xml"))
          {
@@ -112,6 +130,13 @@ public class PluginJarClassLoader extends SecureClassLoader
          else if(entryName.indexOf("icon.gif") != -1)
          {
             pluginIcon = new ImageIcon(buf);
+            availableIcons.put(entryName.substring(0, entryName.length() - 4), pluginIcon);
+         }
+         else if(entryName.endsWith(".gif") || entryName.endsWith(".png"))
+         {
+            ImageIcon icon = new ImageIcon(buf);
+
+            availableIcons.put(entryName.substring(0, entryName.length() - 4), icon);
          }
          else if(entryName.indexOf("language_xml_") != -1)
          {
@@ -138,16 +163,89 @@ public class PluginJarClassLoader extends SecureClassLoader
             String name = entryName.replace('/', '.');
 
             name = name.replaceAll(".class", "");
-            try
-            {
-               defineClass(name, buf, 0, buf.length);
-            }
-            catch(LinkageError lE)
-            {
+            defineMyClass(buf, name, jf);
+            String key = name + "$";
 
-               //Klasse wurde aus irgendeinem Grund bereits geladen
+            if(lazyLoad.containsKey(key + "1"))
+            {
+               int i = 1;
+
+               while(true)
+               {
+                  byte[] tmp = lazyLoad.get(key + i);
+
+                  if(null == tmp)
+                  {
+                     break;
+                  }
+
+                  defineMyClass(tmp, key + i, jf);
+                  i++;
+               }
             }
          }
+      }
+
+      lazyLoad.clear();
+   }
+
+   private byte[] readEntry(JarFile jf, ZipEntry entry)
+      throws IOException
+   {
+      InputStream is = jf.getInputStream(entry);
+      int         l = (int) entry.getSize();
+      byte[]      buf = new byte[l];
+      int         read = 0;
+
+      while(read < l)
+      {
+         int incr = is.read(buf, read, l - read);
+
+         read += incr;
+      }
+
+      return buf;
+   }
+
+   private void defineMyClass(byte[] buf, String name, JarFile jarFile)
+      throws IOException
+   {
+      try
+      {
+         Class clazz = findLoadedClass(name);
+
+         if(null != clazz)
+         {
+            return;
+         }
+
+         while(true)
+         {
+            try
+            {
+               clazz = defineClass(name, buf, 0, buf.length);
+               break;
+            }
+            catch(NoClassDefFoundError clfE)
+            {
+
+               // rekursiv probieren
+               String   className = clfE.getMessage();
+               ZipEntry entry = jarFile.getEntry(className + ".class");
+               byte[]   innerBuf = readEntry(jarFile, entry);
+
+               className = className.replace('/', '.');
+               defineMyClass(innerBuf, className, jarFile);
+            }
+         }
+
+         resolveClass(clazz);
+      }
+      catch(LinkageError lE)
+      {
+         logger.debug("Mist im Plugin", lE);
+
+         //Klasse wurde aus irgendeinem Grund bereits geladen
       }
    }
 }

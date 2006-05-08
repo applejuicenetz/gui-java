@@ -1,7 +1,6 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.gui.plugins.jabber.control;
 
 import java.util.Collection;
@@ -23,9 +22,9 @@ import de.applejuicenet.client.gui.plugins.jabber.view.RosterUserTreeCellRendere
 
 public class IdentityController
 {
-   private static IdentityController instance            = null;
+   private static IdentityController instance = null;
    private XMPPConnection            connection;
-   private IdentityPanel             identityPanel       = null;
+   private IdentityPanel             identityPanel = null;
    private KnownUsersTreeModel       knownUsersTreeModel = null;
 
    private IdentityController()
@@ -76,7 +75,7 @@ public class IdentityController
                   String          name;
 
                   HashSet<String> allUsers = new HashSet<String>();
-                  Iterator        it       = roster.getEntries();
+                  Iterator        it = roster.getEntries();
 
                   while(it.hasNext())
                   {
@@ -87,7 +86,7 @@ public class IdentityController
                   it = roster.getGroups();
                   while(it.hasNext())
                   {
-                     curGroup  = (RosterGroup) it.next();
+                     curGroup = (RosterGroup) it.next();
                      groupNode = new RosterTreeNode(curGroup.getName());
 
                      rootNode.insert(groupNode, 0);
@@ -95,8 +94,8 @@ public class IdentityController
 
                      while(it2.hasNext())
                      {
-                        curRosterEntry  = (RosterEntry) it2.next();
-                        name            = curRosterEntry.getName();
+                        curRosterEntry = (RosterEntry) it2.next();
+                        name = curRosterEntry.getName();
                         rosterEntryNode = new RosterTreeNode(name);
                         allUsers.remove(name);
                         groupNode.insert(rosterEntryNode, 0);
@@ -133,6 +132,7 @@ public class IdentityController
       {
          identityPanel = new IdentityPanel();
          identityPanel.getKnownUsersTree().setModel(getKnownUsersTreeModel());
+
          identityPanel.getKnownUsersTree().setCellRenderer(new RosterUserTreeCellRenderer());
       }
 
@@ -181,7 +181,8 @@ public class IdentityController
          nick = nick.substring(0, nick.indexOf("@"));
          RosterTreeNode rootNode = getKnownUsersTreeModel().getRootNode();
          int            count = rootNode.getChildCount();
-         boolean found = false;
+         boolean        found = false;
+
          for(int i = 0; i < count; i++)
          {
             RosterTreeNode child = (RosterTreeNode) rootNode.getChildAt(i);
@@ -210,9 +211,10 @@ public class IdentityController
                   }
                }
             }
-            if (found)
+
+            if(found)
             {
-                break;
+               break;
             }
          }
 
@@ -220,7 +222,7 @@ public class IdentityController
             {
                public void run()
                {
-                   identityPanel.getKnownUsersTree().updateUI();
+                  identityPanel.getKnownUsersTree().updateUI();
                }
             });
       }

@@ -25,11 +25,13 @@ public abstract class TestLoader
 
    protected abstract String getPath();
 
-   protected abstract PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map languageFiles, ImageIcon icon);
+   protected abstract PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder,
+      Map<String, XMLValueHolder> languageFiles, ImageIcon icon, Map<String, ImageIcon> availableIcons);
 
    public final PluginConnector getPlugin()
    {
-      PluginConnector plugin = getPlugin(new MyXMLValueHolder("plugin_properties.xml"), getLanguageXmls(), getIcon());
+      PluginConnector plugin = getPlugin(new MyXMLValueHolder("plugin_properties.xml"), getLanguageXmls(), getIcon(),
+            getAvailableIcons());
 
       return plugin;
    }
@@ -66,6 +68,28 @@ public abstract class TestLoader
       return icon;
    }
 
+   private Map<String, ImageIcon> getAvailableIcons()
+   {
+      Map<String, ImageIcon> availableIcons = new HashMap<String, ImageIcon>();
+      File                   aFile = new File(path + File.separator + "icons" + File.separator);
+      String[]               names = aFile.list(new FilenameFilter()
+            {
+               public boolean accept(File dir, String name)
+               {
+                  return name.endsWith(".gif") || name.endsWith(".png");
+               }
+            });
+
+      for(String curName : names)
+      {
+         String key = curName.substring(0, curName.length() - 4);
+
+         availableIcons.put(key, new ImageIcon(path + File.separator + "icons" + File.separator + curName));
+      }
+
+      return availableIcons;
+   }
+
    private class MyXMLValueHolder extends XMLValueHolder
    {
       public MyXMLValueHolder(String fileName)
@@ -85,6 +109,7 @@ public abstract class TestLoader
             {
                read.append(line);
             }
+
             reader.close();
             parse(read.toString());
          }
