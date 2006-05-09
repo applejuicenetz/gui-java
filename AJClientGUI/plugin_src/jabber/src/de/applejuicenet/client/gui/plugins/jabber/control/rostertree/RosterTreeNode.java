@@ -4,9 +4,10 @@
 
 package de.applejuicenet.client.gui.plugins.jabber.control.rostertree;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -15,10 +16,16 @@ import org.jivesoftware.smack.packet.Presence;
 
 public class RosterTreeNode implements MutableTreeNode
 {
-   private List<RosterTreeNode> users    = new ArrayList<RosterTreeNode>();
-   private RosterTreeNode       parent   = null;
-   private String               text     = "";
-   private Presence             presence = null;
+   private Set<RosterTreeNode> users = new TreeSet<RosterTreeNode>(new Comparator<RosterTreeNode>()
+      {
+         public int compare(RosterTreeNode o1, RosterTreeNode o2)
+         {
+            return o1.getText().compareToIgnoreCase(o2.getText());
+         }
+      });
+   private RosterTreeNode      parent   = null;
+   private String              text     = "";
+   private Presence            presence = null;
 
    public RosterTreeNode(String text)
    {
@@ -40,13 +47,13 @@ public class RosterTreeNode implements MutableTreeNode
 
    public void insert(MutableTreeNode child, int index)
    {
-      users.add(index, (RosterTreeNode) child);
+      users.add((RosterTreeNode) child);
       child.setParent(this);
    }
 
    public void remove(int index)
    {
-      remove(users.get(index));
+      remove(users.toArray(new RosterTreeNode[users.size()])[index]);
    }
 
    public void remove(MutableTreeNode node)
@@ -89,7 +96,7 @@ public class RosterTreeNode implements MutableTreeNode
             public Object nextElement()
             {
                index++;
-               return users.get(index);
+               return users.toArray(new RosterTreeNode[users.size()])[index];
             }
          };
    }
@@ -101,7 +108,7 @@ public class RosterTreeNode implements MutableTreeNode
 
    public TreeNode getChildAt(int childIndex)
    {
-      return users.get(childIndex);
+      return users.toArray(new RosterTreeNode[users.size()])[childIndex];
    }
 
    public int getChildCount()
@@ -111,7 +118,17 @@ public class RosterTreeNode implements MutableTreeNode
 
    public int getIndex(TreeNode node)
    {
-      return users.indexOf(node);
+      RosterTreeNode[] allNodes = users.toArray(new RosterTreeNode[users.size()]);
+
+      for(int i = 0; i < allNodes.length; i++)
+      {
+         if(allNodes[i] == node)
+         {
+            return i;
+         }
+      }
+
+      return -1;
    }
 
    public TreeNode getParent()

@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.plugins.jabber.control;
 
 import java.util.Collection;
@@ -22,9 +23,9 @@ import de.applejuicenet.client.gui.plugins.jabber.view.RosterUserTreeCellRendere
 
 public class IdentityController
 {
-   private static IdentityController instance = null;
+   private static IdentityController instance            = null;
    private XMPPConnection            connection;
-   private IdentityPanel             identityPanel = null;
+   private IdentityPanel             identityPanel       = null;
    private KnownUsersTreeModel       knownUsersTreeModel = null;
 
    private IdentityController()
@@ -75,7 +76,7 @@ public class IdentityController
                   String          name;
 
                   HashSet<String> allUsers = new HashSet<String>();
-                  Iterator        it = roster.getEntries();
+                  Iterator        it       = roster.getEntries();
 
                   while(it.hasNext())
                   {
@@ -86,7 +87,7 @@ public class IdentityController
                   it = roster.getGroups();
                   while(it.hasNext())
                   {
-                     curGroup = (RosterGroup) it.next();
+                     curGroup  = (RosterGroup) it.next();
                      groupNode = new RosterTreeNode(curGroup.getName());
 
                      rootNode.insert(groupNode, 0);
@@ -94,8 +95,8 @@ public class IdentityController
 
                      while(it2.hasNext())
                      {
-                        curRosterEntry = (RosterEntry) it2.next();
-                        name = curRosterEntry.getName();
+                        curRosterEntry  = (RosterEntry) it2.next();
+                        name            = curRosterEntry.getName();
                         rosterEntryNode = new RosterTreeNode(name);
                         allUsers.remove(name);
                         groupNode.insert(rosterEntryNode, 0);
@@ -105,7 +106,7 @@ public class IdentityController
                   if(allUsers.size() > 0)
                   {
                      groupNode = new RosterTreeNode("Sonstige");
-                     rootNode.insert(groupNode, 0);
+                     rootNode.insert(groupNode, rootNode.getChildCount());
                      for(String curUser : allUsers)
                      {
                         rosterEntryNode = new RosterTreeNode(curUser);
@@ -119,6 +120,12 @@ public class IdentityController
                         public void run()
                         {
                            getPanel().getKnownUsersTree().updateUI();
+                           int count = getKnownUsersTreeModel().getRootNode().getChildCount();
+
+                           for(int i = count - 1; i >= 0; i--)
+                           {
+                              getPanel().getKnownUsersTree().expandRow(i);
+                           }
                         }
                      });
                }

@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.plugins.jabber;
 
 import java.awt.BorderLayout;
@@ -8,7 +9,6 @@ import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -20,7 +20,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
-
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -31,36 +30,41 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.plugins.jabber.control.IdentityController;
 import de.applejuicenet.client.gui.plugins.jabber.control.MultiUserChatController;
 import de.applejuicenet.client.gui.plugins.jabber.view.IdentityPanel;
+import de.applejuicenet.client.gui.plugins.jabber.view.MultiUserChatListCellRenderer;
 import de.applejuicenet.client.gui.plugins.jabber.view.RosterUserTreeCellRenderer;
-
 import de.tklsoft.gui.controls.InvalidRule;
 import de.tklsoft.gui.controls.ModifyableComponent;
-import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
 import de.tklsoft.gui.controls.TKLPasswordField;
 import de.tklsoft.gui.controls.TKLTextField;
+import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
 
 public class JabberPlugin extends PluginConnector
 {
-   private final String     CMD_VERBINDEN = "Verbinden";
-   private final String     CMD_TRENNEN = "Trennen";
+   private final String     CMD_VERBINDEN  = "Verbinden";
+   private final String     CMD_TRENNEN    = "Trennen";
    private Logger           logger;
-   private JButton          connectButton = new JButton(CMD_VERBINDEN);
-   private TKLTextField     user = new TKLTextField(15);
-   private TKLPasswordField passwort = new TKLPasswordField();
-   private TKLTextField     nickname = new TKLTextField(15);
-   private JTabbedPane      tabbedPane = new JTabbedPane();
+   private JButton          connectButton  = new JButton(CMD_VERBINDEN);
+   private TKLTextField     user           = new TKLTextField(15);
+   private TKLPasswordField passwort       = new TKLPasswordField();
+   private TKLTextField     nickname       = new TKLTextField(15);
+   private JTabbedPane      tabbedPane     = new JTabbedPane();
    private CardLayout       registerLayout = new CardLayout();
-   private JPanel           registerPanel = new JPanel(registerLayout);
-   private XMPPConnection   connection = null;
+   private JPanel           registerPanel  = new JPanel(registerLayout);
+   private XMPPConnection   connection     = null;
 
    public JabberPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles, ImageIcon icon,
-      Map<String, ImageIcon> availableIcons)
+                       Map<String, ImageIcon> availableIcons)
    {
       super(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
       SmackConfiguration.setPacketReplyTimeout(20000);
       RosterUserTreeCellRenderer.available = getAvailableIcon("available");
-      RosterUserTreeCellRenderer.offline = getAvailableIcon("offline");
-      RosterUserTreeCellRenderer.awk = getAvailableIcon("awk");
+      RosterUserTreeCellRenderer.offline   = getAvailableIcon("offline");
+      RosterUserTreeCellRenderer.awk       = getAvailableIcon("awk");
+
+      MultiUserChatListCellRenderer.moderator = getAvailableIcon("available");
+      MultiUserChatListCellRenderer.voice     = getAvailableIcon("offline");
+      MultiUserChatListCellRenderer.owner     = getAvailableIcon("awk");
+      MultiUserChatListCellRenderer.member    = getAvailableIcon("awk");
 
       logger = Logger.getLogger(getClass());
       initGUI();
@@ -180,12 +184,12 @@ public class JabberPlugin extends PluginConnector
          nickname.setEnabled(false);
 
          // neue Verbindung aufbauen
-         String       tmp = user.getText().trim();
-         int          index = tmp.indexOf("@");
+         String       tmp    = user.getText().trim();
+         int          index  = tmp.indexOf("@");
          final String server = tmp.substring(index + 1);
 
          final String username = tmp.substring(0, index);
-         final String nick = nickname.getText().trim();
+         final String nick     = nickname.getText().trim();
 
          new Thread(new Runnable()
             {
@@ -258,9 +262,9 @@ public class JabberPlugin extends PluginConnector
    }
 
    private void joinMultiUserChat(final String room, String nick)
-      throws XMPPException
+                           throws XMPPException
    {
-      MultiUserChat                 muc = new MultiUserChat(connection, room);
+      MultiUserChat                 muc                     = new MultiUserChat(connection, room);
       final MultiUserChatController multiUserChatController = new MultiUserChatController(muc, nick);
 
       SwingUtilities.invokeLater(new Runnable()

@@ -9,9 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
 import java.net.URL;
+
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -26,18 +30,22 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import org.apache.log4j.Logger;
+
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.PacketExtension;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.muc.DefaultParticipantStatusListener;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
 import org.jivesoftware.smackx.muc.MultiUserChat;
-import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 import org.jivesoftware.smackx.muc.SubjectUpdatedListener;
 import org.jivesoftware.smackx.packet.DelayInformation;
+import org.jivesoftware.smackx.packet.MUCUser;
 
+import de.applejuicenet.client.gui.plugins.jabber.view.MultiUserChatListCellRenderer;
 import de.applejuicenet.client.gui.plugins.jabber.view.MultiUserChatPanel;
 
 public class MultiUserChatController implements SubjectUpdatedListener, ActionListener
@@ -56,18 +64,67 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
    private JScrollPane                userScrollPane             = null;
    private MultiUserChatUserListModel multiUserChatUserListModel;
    private JList                      userList;
+   private String                     nick;
+   private MyMessageListener          myMessageListener;
+   private MyParticipantListener      myParticipantListener;
 
    public MultiUserChatController(MultiUserChat multiUserChat, String nick)
                            throws XMPPException
    {
-      muc = multiUserChat;
+      this.nick = nick;
+      muc       = multiUserChat;
+      Calendar cal = Calendar.getInstance();
+
+      // Historie der letzten 2 Tage holen (wenns der Server zulaesst)
+      cal.add(Calendar.DATE, -2);
       DiscussionHistory history = new DiscussionHistory();
 
-      history.setMaxStanzas(150);
-      new MyMessageListener(muc).start();
-      new MyParticipantListener(muc).start();
+      history.setSince(cal.getTime());
+      myMessageListener     = new MyMessageListener(muc);
+      myParticipantListener = new MyParticipantListener(muc);
+      muc.addParticipantListener(new PacketListener()
+         {
+            public void processPacket(Packet packet)
+            {
+               Presence presence = (Presence) packet;
+               Iterator it = presence.getExtensions();
+
+               while(it.hasNext())
+               {
+                  Object obj = it.next();
+
+                  if(obj instanceof MUCUser)
+                  {
+                     MUCUser user = (MUCUser) obj;
+                     String  nick = user.getItem().getJid();
+
+                     if(null != nick && nick.indexOf("@") != -1)
+                     {
+                        String role       = user.getItem().getRole();
+                        String affilation = user.getItem().getAffiliation();
+
+                        nick = nick.substring(0, nick.indexOf("@"));
+                        System.out.println(role);
+                        MultiChatUserMode mode      = MultiChatUserMode.getByRole(role);
+                        MutliUserChatUser multiUser = getMultiUserChatUserListModel().getMutliUserChatUserByName(nick);
+
+                        if(null == multiUser)
+                        {
+                           multiUser = new MutliUserChatUser(nick);
+                           getMultiUserChatUserListModel().addParticipant(multiUser);
+                        }
+
+                        multiUser.setMode(mode);
+                        updateUserList();
+                     }
+                  }
+               }
+            }
+         });
       muc.addSubjectUpdatedListener(this);
       muc.join(nick, null, history, SmackConfiguration.getPacketReplyTimeout());
+      getMultiUserChatUserListModel().addParticipant(new MutliUserChatUser(nick));
+      updateUserList();
    }
 
    public String getRoomName()
@@ -723,25 +780,29 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
       if(null == userList)
       {
          userList = new JList(getMultiUserChatUserListModel());
+         userList.setCellRenderer(new MultiUserChatListCellRenderer());
 
       }
 
       return userList;
    }
 
-   private class MyParticipantListener extends Thread implements ParticipantStatusListener
+   private void updateUserList()
+   {
+      SwingUtilities.invokeLater(new Runnable()
+         {
+            public void run()
+            {
+               getUserList().updateUI();
+            }
+         });
+   }
+
+   private class MyParticipantListener extends DefaultParticipantStatusListener
    {
       public MyParticipantListener(MultiUserChat muc)
       {
          muc.addParticipantStatusListener(this);
-      }
-
-      public void adminGranted(String arg0)
-      {
-      }
-
-      public void adminRevoked(String arg0)
-      {
       }
 
       public void banned(String arg0, String arg1, String arg2)
@@ -777,13 +838,7 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
          }
 
          getMultiUserChatUserListModel().removeParticipant(user);
-         SwingUtilities.invokeLater(new Runnable()
-            {
-               public void run()
-               {
-                  getUserList().updateUI();
-               }
-            });
+         updateUserList();
       }
 
       public void left(String participant)
@@ -791,45 +846,13 @@ public class MultiUserChatController implements SubjectUpdatedListener, ActionLi
          removeParticipant(participant);
       }
 
-      public void membershipGranted(String arg0)
-      {
-      }
-
-      public void membershipRevoked(String arg0)
-      {
-      }
-
-      public void moderatorGranted(String arg0)
-      {
-      }
-
-      public void moderatorRevoked(String arg0)
-      {
-      }
-
       public void nicknameChanged(String arg0, String arg1)
-      {
-      }
-
-      public void ownershipGranted(String arg0)
-      {
-      }
-
-      public void ownershipRevoked(String arg0)
-      {
-      }
-
-      public void voiceGranted(String arg0)
-      {
-      }
-
-      public void voiceRevoked(String arg0)
       {
       }
    }
 
 
-   private class MyMessageListener extends Thread implements PacketListener
+   private class MyMessageListener implements PacketListener
    {
       public MyMessageListener(MultiUserChat muc)
       {

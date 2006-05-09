@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugins.jabber.view;
 
 import java.awt.AWTKeyStroke;
@@ -27,12 +31,12 @@ import de.tklsoft.gui.controls.TKLPanel;
 
 public class MultiUserChatPanel extends TKLPanel
 {
-   private JTextPane      textArea = new JTextPane();
-   private StyledDocument document = (StyledDocument) textArea.getStyledDocument();
+   private JTextPane      textArea    = new JTextPane();
+   private StyledDocument document    = (StyledDocument) textArea.getStyledDocument();
    private JTextField     textField;
-   private JTextPane      titleArea = new JTextPane();
+   private JTextPane      titleArea   = new JTextPane();
    private JButton        closeButton = new JButton("X");
-   private Logger         logger = Logger.getLogger(MultiUserChatPanel.class);
+   private Logger         logger      = Logger.getLogger(MultiUserChatPanel.class);
 
    public MultiUserChatPanel()
    {
@@ -54,7 +58,7 @@ public class MultiUserChatPanel extends TKLPanel
       set.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_JAPANESE_HIRAGANA, 0));
       textField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, set);
 
-      JScrollPane sp1 = new JScrollPane(textArea);
+      JScrollPane sp1    = new JScrollPane(textArea);
       JPanel      panel1 = new JPanel(new BorderLayout());
 
       sp1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);

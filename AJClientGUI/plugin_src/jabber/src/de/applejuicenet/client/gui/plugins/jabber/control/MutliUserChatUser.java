@@ -1,8 +1,13 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugins.jabber.control;
 
 public class MutliUserChatUser
 {
-   private String name;
+   private String            name;
+   private MultiChatUserMode mode = MultiChatUserMode.NOTHING;
 
    public MutliUserChatUser(String name)
    {
@@ -29,5 +34,15 @@ public class MutliUserChatUser
    public String toString()
    {
       return name;
+   }
+
+   public void setMode(MultiChatUserMode mode)
+   {
+      this.mode = mode;
+   }
+
+   public MultiChatUserMode getHighestMode()
+   {
+      return mode;
    }
 }

@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.plugins.jabber.view;
 
 import java.awt.Component;
@@ -21,7 +22,7 @@ public class RosterUserTreeCellRenderer extends DefaultTreeCellRenderer
    public static ImageIcon awk;
 
    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf,
-      int row, boolean hasFocus)
+                                                 int row, boolean hasFocus)
    {
       Component      comp = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
       RosterTreeNode node = (RosterTreeNode) value;
@@ -37,22 +38,22 @@ public class RosterUserTreeCellRenderer extends DefaultTreeCellRenderer
       {
          ImageIcon icon;
 
-         Presence  presence = node.getPresence();
+         Presence  presence    = node.getPresence();
          String    toolTipText;
 
          if(null == presence)
          {
-            icon = offline;
+            icon        = offline;
             toolTipText = "offline";
          }
          else if(presence.getMode() == Presence.Mode.AVAILABLE)
          {
-            icon = available;
+            icon        = available;
             toolTipText = presence.getMode().toString();
          }
          else
          {
-            icon = awk;
+            icon        = awk;
             toolTipText = presence.getMode().toString();
          }
 
