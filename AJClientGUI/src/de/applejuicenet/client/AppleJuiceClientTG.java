@@ -1,6 +1,11 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client;
 
 import java.awt.Frame;
+
 import javax.swing.JFrame;
 
 import org.apache.log4j.Level;
@@ -15,7 +20,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.8 2005/03/14 09:36:54 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.9 2006/10/11 09:23:38 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,50 +29,65 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
+public class AppleJuiceClientTG extends ThreadGroup
+{
+   private Logger logger;
 
-public class AppleJuiceClientTG
-        extends ThreadGroup {
-    
-    private Logger logger;
+   public AppleJuiceClientTG()
+   {
+      super("AppleJuiceClientThreadGroup");
+      logger = Logger.getLogger(getClass());
+   }
 
-    public AppleJuiceClientTG() {
-        super("AppleJuiceClientThreadGroup");
-        logger = Logger.getLogger(getClass());
-    }
+   public void uncaughtException(Thread t, Throwable e)
+   {
+      if(e.getClass() == ClassCastException.class &&
+            e.getMessage().equals("java.awt.TrayIcon cannot be cast to java.awt.Component"))
+      {
+         if(logger.isEnabledFor(Level.INFO))
+         {
+            logger.info("insignificantly error in java6 -> ignoring", e);
+         }
+      }
+      else if(e.getClass() == ArrayIndexOutOfBoundsException.class)
+      {
+         if(logger.isEnabledFor(Level.DEBUG))
+         {
+            logger.debug(ApplejuiceFassade.ERROR_MESSAGE, e);
+         }
+      }
+      else if(e.getClass() == WrongPasswordException.class)
+      {
+         AppleJuiceDialog.getApp().informWrongPassword();
+      }
+      else if(e.getClass() == CoreLostException.class)
+      {
+         LanguageSelector languageSelector = LanguageSelector.getInstance();
+         String           nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.startup.verbindungsfehler"));
 
-    public void uncaughtException(Thread t, Throwable e) {
-        if(e.getClass() == ArrayIndexOutOfBoundsException.class){
-            if (logger.isEnabledFor(Level.DEBUG)) {
-                logger.debug(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
-        }
-        else if(e.getClass() == WrongPasswordException.class){
-            AppleJuiceDialog.getApp().informWrongPassword();
-        }
-        else if(e.getClass() == CoreLostException.class){
-            LanguageSelector languageSelector = LanguageSelector.getInstance();
-            String nachricht = ZeichenErsetzer.korrigiereUmlaute(
-                    languageSelector.getFirstAttrbuteByTagName(
-                            ".root.javagui.startup.verbindungsfehler"));
-            nachricht = nachricht.replaceFirst("%s",
-                    OptionsManagerImpl.getInstance().
-                    getRemoteSettings().
-                    getHost());
-            AppleJuiceDialog.closeWithErrormessage(nachricht, true);
-        }
-        else {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-        }
-    }
+         nachricht = nachricht.replaceFirst("%s", OptionsManagerImpl.getInstance().getRemoteSettings().getHost());
+         AppleJuiceDialog.closeWithErrormessage(nachricht, true);
+      }
+      else
+      {
+         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+      }
+   }
 
-    private Frame findActiveFrame() {
-        Frame[] frames = JFrame.getFrames();
-        for (int i = 0; i < frames.length; i++) {
-            Frame frame = frames[i];
-            if (frame.isVisible()) {
-                return frame;
-            }
-        }
-        return null;
-    }
+   private Frame findActiveFrame()
+   {
+      Frame[] frames = JFrame.getFrames();
+
+      for(int i = 0; i < frames.length; i++)
+      {
+         Frame frame = frames[i];
+
+         if(frame.isVisible())
+         {
+            return frame;
+         }
+      }
+
+      return null;
+   }
 }

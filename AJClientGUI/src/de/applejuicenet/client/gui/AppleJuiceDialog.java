@@ -1,5 +1,10 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -7,7 +12,9 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.SystemTray;
 import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -16,14 +23,18 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.net.URL;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,6 +51,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
@@ -52,13 +64,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import com.jeans.trayicon.SwingTrayPopup;
-import com.jeans.trayicon.WindowsTrayIcon;
 import com.l2fprod.gui.plaf.skin.Skin;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
@@ -93,6 +103,7 @@ import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
+
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLFrame;
 import de.tklsoft.gui.controls.TKLLabel;
@@ -121,52 +132,51 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 {
 
    //CVS-Beispiel 0.60.0-1-CVS
-   public static final String       GUI_VERSION = "0.70.0-17-CVS";
-   private static Logger            logger = Logger.getLogger(AppleJuiceDialog.class);
-   private static Map<String, Skin> themes = null;
-   public static boolean            rewriteProperties = false;
+   public static final String       GUI_VERSION              = "0.70.1-0-CVS";
+   private static Logger            logger                   = Logger.getLogger(AppleJuiceDialog.class);
+   private static Map<String, Skin> themes                   = null;
+   public static boolean            rewriteProperties        = false;
    private static AppleJuiceDialog  theApp;
-   private Information              information = null;
+   private static boolean           themesInitialized        = false;
+   private static boolean           useTrayIcon              = false;
+   private Information              information              = null;
    private RegisterPanel            registerPane;
-   private TKLLabel[]               statusbar = new TKLLabel[6];
+   private TKLLabel[]               statusbar                = new TKLLabel[6];
    private JMenu                    sprachMenu;
    private JMenu                    optionenMenu;
-   private JMenu                    themesMenu = null;
+   private JMenu                    themesMenu               = null;
    private JMenu                    coreMenu;
-   private JMenuItem                menuItemOptionen = new JMenuItem();
-   private JMenuItem                menuItemDateiliste = new JMenuItem();
-   private JMenuItem                menuItemCheckUpdate = new JMenuItem();
-   private JMenuItem                menuItemCoreBeenden = new JMenuItem();
-   private JMenuItem                menuItemUeber = new JMenuItem();
-   private JMenuItem                menuItemDeaktivieren = new JMenuItem();
-   private JMenuItem                menuItemAktivieren = new JMenuItem();
-   private JMenuItem                popupOptionenMenuItem = new JMenuItem();
-   private JMenuItem                popupAboutMenuItem = new JMenuItem();
-   private JMenuItem                popupShowHideMenuItem = new JMenuItem();
+   private JMenuItem                menuItemOptionen         = new JMenuItem();
+   private JMenuItem                menuItemDateiliste       = new JMenuItem();
+   private JMenuItem                menuItemCheckUpdate      = new JMenuItem();
+   private JMenuItem                menuItemCoreBeenden      = new JMenuItem();
+   private JMenuItem                menuItemUeber            = new JMenuItem();
+   private JMenuItem                menuItemDeaktivieren     = new JMenuItem();
+   private JMenuItem                menuItemAktivieren       = new JMenuItem();
+   private JMenuItem                popupOptionenMenuItem    = new JMenuItem();
+   private JMenuItem                popupAboutMenuItem       = new JMenuItem();
+   private JMenuItem                popupShowHideMenuItem    = new JMenuItem();
    private JMenuItem                popupCheckUpdateMenuItem = new JMenuItem();
-   private TKLButton                sound = new TKLButton();
-   private TKLButton                memory = new TKLButton();
+   private TKLButton                sound                    = new TKLButton();
+   private TKLButton                memory                   = new TKLButton();
    private String                   keinServer;
-   private boolean                  firstChange = true;
+   private boolean                  firstChange              = true;
    private MemoryMonitorDialog      memoryMonitorDialog;
    private String                   themeSupportTitel;
    private String                   themeSupportNachricht;
-   private boolean                  automaticPwdlEnabled = false;
+   private boolean                  automaticPwdlEnabled     = false;
    private String                   titel;
-   private static boolean           themesInitialized = false;
    private String                   bestaetigung;
    private int                      desktopHeight;
    private int                      desktopWidth;
-   private boolean                  maximized = false;
+   private boolean                  maximized                = false;
    private Dimension                lastFrameSize;
    private Point                    lastFrameLocation;
-   private static boolean           useTrayIcon = false;
    private String                   zeigen;
    private String                   verstecken;
-   private WindowsTrayIcon          trayIcon;
-   private Icon                     versteckenIcon = null;
-   private Icon                     zeigenIcon = null;
-   private boolean                  firewalled = false;
+   private Icon                     versteckenIcon           = null;
+   private Icon                     zeigenIcon               = null;
+   private boolean                  firewalled               = false;
    private String                   firewallWarning;
    private String                   alreadyLoaded;
    private String                   invalidLink;
@@ -178,6 +188,24 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    private ImageIcon                firewallIcon;
    private ImageIcon                verbundenIcon;
    private ImageIcon                nichtVerbundenIcon;
+   private JPopupMenu               popup;
+
+   public AppleJuiceDialog()
+   {
+      super();
+      try
+      {
+         enableCloseWindowListener(false);
+         theApp = this;
+         init();
+         pack();
+         LanguageSelector.getInstance().addLanguageListener(this);
+      }
+      catch(Exception e)
+      {
+         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+      }
+   }
 
    public static void initThemes()
    {
@@ -197,7 +225,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                }
 
                closeWithErrormessage("Der Ordner" + " fuer die Themes zip-Dateien ist nicht vorhanden." +
-                  "\r\nappleJuice wird beendet.", false);
+                                     "\r\nappleJuice wird beendet.", false);
             }
 
             File[] themeFiles = themesPath.listFiles();
@@ -208,7 +236,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                {
 
                   //testen, ob es wirklich ein skinfile ist
-                  ZipFile  jf = new ZipFile(themeFiles[i]);
+                  ZipFile  jf    = new ZipFile(themeFiles[i]);
                   ZipEntry entry = jf.getEntry("skinlf-themepack.xml");
 
                   if(entry != null)
@@ -219,9 +247,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             }
 
             Skin   standardSkin = null;
-            Skin   aSkin = null;
+            Skin   aSkin        = null;
             String temp;
-            String shortName = "";
+            String shortName    = "";
             String defaultTheme = OptionsManagerImpl.getInstance().getDefaultTheme();
 
             themes = new HashMap<String, Skin>();
@@ -237,7 +265,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                }
 
                shortName = temp.substring(index1 + 1, index2);
-               aSkin = SkinLookAndFeel.loadThemePack(curSkinURL);
+               aSkin     = SkinLookAndFeel.loadThemePack(curSkinURL);
                themes.put(shortName, aSkin);
                if(shortName.compareToIgnoreCase(defaultTheme) == 0)
                {
@@ -269,23 +297,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
    }
 
-   public AppleJuiceDialog()
-   {
-      super();
-      try
-      {
-         enableCloseWindowListener(false);
-         theApp = this;
-         init();
-         pack();
-         LanguageSelector.getInstance().addLanguageListener(this);
-      }
-      catch(Exception e)
-      {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-      }
-   }
-
    public static AppleJuiceDialog getApp()
    {
       return theApp;
@@ -296,11 +307,11 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       titel = "appleJuice Client (GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION + ")";
       IconManager im = IconManager.getInstance();
 
-      firewallIcon = im.getIcon("firewall");
-      verbundenIcon = im.getIcon("serververbunden");
+      firewallIcon       = im.getIcon("firewall");
+      verbundenIcon      = im.getIcon("serververbunden");
       nichtVerbundenIcon = im.getIcon("serverversuche");
 
-      Image image = im.getIcon("applejuice").getImage();
+      Image image        = im.getIcon("applejuice").getImage();
 
       setTitle(titel);
       String osName = System.getProperty("os.name");
@@ -350,7 +361,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-      desktopWidth = screenSize.width;
+      desktopWidth  = screenSize.width;
       desktopHeight = screenSize.height;
       addComponentListener(new ComponentAdapter()
          {
@@ -374,7 +385,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                {
                   if(!maximized)
                   {
-                     lastFrameSize = getSize();
+                     lastFrameSize     = getSize();
                      lastFrameLocation = getLocation();
                   }
 
@@ -393,65 +404,104 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             }
          });
 
-      if(osName.toLowerCase().indexOf("win") != -1)
+      if(SystemTray.isSupported())
       {
+         useTrayIcon = true;
+         popup       = makeSwingPopup();
+         SystemTray     tray = SystemTray.getSystemTray();
+
+         final TrayIcon trayIcon = new TrayIcon(image, titel, null);
+
+         trayIcon.setImageAutoSize(true);
+         MouseListener[] listeners = trayIcon.getMouseListeners();
+         trayIcon.addMouseListener(new MouseAdapter()
+            {
+               public void mouseReleased(MouseEvent e)
+               {
+                  e.consume();
+                  if(!isVisible())
+                  {
+                     popupShowHideMenuItem.setText(zeigen);
+                     popupShowHideMenuItem.setIcon(zeigenIcon);
+                  }
+                  else
+                  {
+                     popupShowHideMenuItem.setText(verstecken);
+                     popupShowHideMenuItem.setIcon(versteckenIcon);
+                  }
+
+                  if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2)
+                  {
+                     AppleJuiceDialog dialog = AppleJuiceDialog.getApp();
+
+                     if(!isVisible())
+                     {
+                        dialog.setVisible(true);
+                        dialog.toFront();
+                     }
+                     else
+                     {
+                        setVisible(false);
+                     }
+                  }
+
+                  if(!popup.isVisible() && e.isPopupTrigger())
+                  {
+                     popup.setLocation(e.getX(), e.getY());
+                     popup.setInvoker(popup);
+                     popup.setVisible(true);
+                  }
+               }
+            });
+
          try
          {
-            if(!WindowsTrayIcon.isRunning(titel))
-            {
-               useTrayIcon = true;
-               WindowsTrayIcon.initTrayIcon(titel);
-               trayIcon = new WindowsTrayIcon(image, 16, 16);
-               trayIcon.setVisible(true);
-               trayIcon.setToolTipText(titel);
-               trayIcon.addMouseListener(new MouseAdapter()
-                  {
-                     public void mousePressed(MouseEvent evt)
-                     {
-                        if(!isVisible())
-                        {
-                           popupShowHideMenuItem.setText(zeigen);
-                           popupShowHideMenuItem.setIcon(zeigenIcon);
-                        }
-                        else
-                        {
-                           popupShowHideMenuItem.setText(verstecken);
-                           popupShowHideMenuItem.setIcon(versteckenIcon);
-                        }
-
-                        if((evt.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 && evt.getClickCount() == 2)
-                        {
-                           AppleJuiceDialog dialog = AppleJuiceDialog.getApp();
-
-                           if(!isVisible())
-                           {
-                              dialog.setVisible(true);
-                              dialog.toFront();
-                           }
-                           else
-                           {
-                              setVisible(false);
-                           }
-                        }
-                     }
-                  });
-
-               SwingTrayPopup popup = makeSwingPopup();
-
-               popup.setTrayIcon(trayIcon);
-            }
+            tray.add(trayIcon);
          }
-         catch(UnsatisfiedLinkError error)
+         catch(AWTException e)
          {
-            languageSelector = LanguageSelector.getInstance();
-            String fehlerTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                     ".root.mainform.caption"));
-
-            String fehlerNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                     ".root.javagui.startup.trayfehler"));
-
-            JOptionPane.showMessageDialog(this, fehlerNachricht, fehlerTitel, JOptionPane.ERROR_MESSAGE);
+            useTrayIcon = false;
          }
+
+         //               WindowsTrayIcon.initTrayIcon(titel);
+         //               trayIcon = new WindowsTrayIcon(image, 16, 16);
+         //               trayIcon.setVisible(true);
+         //               trayIcon.setToolTipText(titel);
+         //               trayIcon.addMouseListener(new MouseAdapter()
+         //                  {
+         //                     public void mousePressed(MouseEvent evt)
+         //                     {
+         //                        if(!isVisible())
+         //                        {
+         //                           popupShowHideMenuItem.setText(zeigen);
+         //                           popupShowHideMenuItem.setIcon(zeigenIcon);
+         //                        }
+         //                        else
+         //                        {
+         //                           popupShowHideMenuItem.setText(verstecken);
+         //                           popupShowHideMenuItem.setIcon(versteckenIcon);
+         //                        }
+         //
+         //                        if((evt.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 && evt.getClickCount() == 2)
+         //                        {
+         //                           AppleJuiceDialog dialog = AppleJuiceDialog.getApp();
+         //
+         //                           if(!isVisible())
+         //                           {
+         //                              dialog.setVisible(true);
+         //                              dialog.toFront();
+         //                           }
+         //                           else
+         //                           {
+         //                              setVisible(false);
+         //                           }
+         //                        }
+         //                     }
+         //                  });
+         //
+         //               SwingTrayPopup popup = makeSwingPopup();
+         //
+         //               popup.setTrayIcon(trayIcon);
       }
 
       getContentPane().setLayout(new BorderLayout());
@@ -530,15 +580,15 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       GridBagConstraints constraints = new GridBagConstraints();
 
       constraints.anchor = GridBagConstraints.NORTH;
-      constraints.fill = GridBagConstraints.BOTH;
-      constraints.gridx = 0;
-      constraints.gridy = 0;
+      constraints.fill   = GridBagConstraints.BOTH;
+      constraints.gridx  = 0;
+      constraints.gridy  = 0;
       panel.add(statusbar[0], constraints);
-      constraints.gridx = 1;
+      constraints.gridx   = 1;
       constraints.weightx = 1;
       panel.add(statusbar[1], constraints);
       constraints.weightx = 0;
-      constraints.gridx = 2;
+      constraints.gridx   = 2;
       panel.add(statusbar[2], constraints);
       constraints.gridx = 3;
       panel.add(statusbar[3], constraints);
@@ -572,9 +622,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
    private void maximize()
    {
-      Toolkit   tk = Toolkit.getDefaultToolkit();
+      Toolkit   tk         = Toolkit.getDefaultToolkit();
       Dimension screenSize = tk.getScreenSize();
-      Insets    insets = tk.getScreenInsets(getGraphicsConfiguration());
+      Insets    insets     = tk.getScreenInsets(getGraphicsConfiguration());
 
       screenSize.width -= (insets.left + insets.right);
       screenSize.height -= (insets.top + insets.bottom);
@@ -593,10 +643,10 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          int[]           downloadWidths = ((DownloadPanel) DownloadController.getInstance().getComponent()).getColumnWidths();
          int[]           uploadWidths = ((UploadPanel) UploadController.getInstance().getComponent()).getColumnWidths();
          int[]           serverWidths = ServerPanel.getInstance().getColumnWidths();
-         int[]           shareWidths = ((SharePanel) ShareController.getInstance().getComponent()).getColumnWidths();
-         Dimension       dim = AppleJuiceDialog.getApp().getSize();
-         Point           p = AppleJuiceDialog.getApp().getLocationOnScreen();
-         PositionManager pm = PositionManagerImpl.getInstance();
+         int[]           shareWidths  = ((SharePanel) ShareController.getInstance().getComponent()).getColumnWidths();
+         Dimension       dim          = AppleJuiceDialog.getApp().getSize();
+         Point           p            = AppleJuiceDialog.getApp().getLocationOnScreen();
+         PositionManager pm           = PositionManagerImpl.getInstance();
 
          pm.setMainXY(p);
          pm.setMainDimension(dim);
@@ -644,10 +694,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
 
       setVisible(false);
-      if(useTrayIcon)
-      {
-         WindowsTrayIcon.cleanUp();
-      }
 
       System.exit(0);
    }
@@ -679,10 +725,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
 
       System.out.println("Fehler: " + error);
-      if(useTrayIcon)
-      {
-         WindowsTrayIcon.cleanUp();
-      }
 
       System.exit(-1);
    }
@@ -696,7 +738,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             AppleJuiceDialog.initThemes();
          }
 
-         String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
+         String path         = System.getProperty("user.dir") + File.separator + "language" + File.separator;
          File   languagePath = new File(path);
 
          if(!languagePath.isDirectory())
@@ -704,14 +746,14 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             if(logger.isEnabledFor(Level.INFO))
             {
                logger.info("Der Ordner " + path + " fuer die Sprachauswahl xml-Dateien ist nicht vorhanden." +
-                  "\r\nappleJuice wird beendet.");
+                           "\r\nappleJuice wird beendet.");
             }
 
             closeWithErrormessage("Der Ordner " + path + " fuer die Sprachauswahl xml-Dateien ist nicht vorhanden." +
-               "\r\nappleJuice wird beendet.", false);
+                                  "\r\nappleJuice wird beendet.", false);
          }
 
-         String[]        tempListe = languagePath.list();
+         String[]        tempListe     = languagePath.list();
          HashSet<String> sprachDateien = new HashSet<String>();
 
          for(int i = 0; i < tempListe.length; i++)
@@ -727,11 +769,11 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             if(logger.isEnabledFor(Level.INFO))
             {
                logger.info("Es sind keine xml-Dateien fuer die Sprachauswahl im Ordner " + path + " vorhanden." +
-                  "\r\nappleJuice wird beendet.");
+                           "\r\nappleJuice wird beendet.");
             }
 
             closeWithErrormessage("Es sind keine xml-Dateien fuer die Sprachauswahl im Ordner " + path + " vorhanden." +
-               "\r\nappleJuice wird beendet.", false);
+                                  "\r\nappleJuice wird beendet.", false);
          }
 
          JMenuBar menuBar = new JMenuBar();
@@ -763,7 +805,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                public void actionPerformed(ActionEvent e)
                {
                   int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), bestaetigung, "appleJuice Client",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                                                             JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
                   if(result == JOptionPane.YES_OPTION)
                   {
@@ -791,7 +833,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          for(String curSprachDatei : sprachDateien)
          {
             String            sprachText = LanguageSelector.getInstance(path + curSprachDatei)
-               .getFirstAttrbuteByTagName(".root.Languageinfo.name");
+                                           .getFirstAttrbuteByTagName(".root.Languageinfo.name");
             JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
 
             if(OptionsManagerImpl.getInstance().getSprache().equalsIgnoreCase(sprachText))
@@ -799,7 +841,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                rb.setSelected(true);
             }
 
-            Image     img = Toolkit.getDefaultToolkit().getImage(path + sprachText.toLowerCase() + ".gif");
+            Image     img    = Toolkit.getDefaultToolkit().getImage(path + sprachText.toLowerCase() + ".gif");
             ImageIcon result = new ImageIcon();
 
             result.setImage(img);
@@ -814,7 +856,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
                      if(rb2.isSelected())
                      {
-                        String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
+                        String path      = System.getProperty("user.dir") + File.separator + "language" + File.separator;
                         String dateiName = path + rb2.getText().toLowerCase() + ".xml";
 
                         LanguageSelector.getInstance(dateiName);
@@ -835,11 +877,11 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                if(logger.isEnabledFor(Level.INFO))
                {
                   logger.info("Der Ordner " + path + " fuer die Themes zip-Dateien ist nicht vorhanden." +
-                     "\r\nappleJuice wird beendet.");
+                              "\r\nappleJuice wird beendet.");
                }
 
                closeWithErrormessage("Der Ordner " + path + " fuer die Themes zip-Dateien ist nicht vorhanden." +
-                  "\r\nappleJuice wird beendet.", false);
+                                     "\r\nappleJuice wird beendet.", false);
             }
 
             File[] themeFiles = themesPath.listFiles();
@@ -850,7 +892,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                {
 
                   //testen, ob es wirklich ein skinfile ist
-                  ZipFile  jf = new ZipFile(themeFiles[i]);
+                  ZipFile  jf    = new ZipFile(themeFiles[i]);
                   ZipEntry entry = jf.getEntry("skinlf-themepack.xml");
 
                   if(entry != null)
@@ -860,7 +902,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                }
             }
 
-            ButtonGroup lafGroup2 = new ButtonGroup();
+            ButtonGroup lafGroup2    = new ButtonGroup();
             String      temp;
             String      shortName;
             String      defaultTheme = OptionsManagerImpl.getInstance().getDefaultTheme();
@@ -910,9 +952,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          }
          else
          {
-            final LookAFeel[] feels = OptionsManagerImpl.getInstance().getLookAndFeels();
+            final LookAFeel[] feels              = OptionsManagerImpl.getInstance().getLookAndFeels();
             LookAFeel         defaultlookandfeel = OptionsManagerImpl.getInstance().getDefaultLookAndFeel();
-            ButtonGroup       lafGroup2 = new ButtonGroup();
+            ButtonGroup       lafGroup2          = new ButtonGroup();
 
             for(int i = 0; i < feels.length; i++)
             {
@@ -968,9 +1010,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
    private void showOptionsDialog()
    {
-      OptionsDialog od = new OptionsDialog(getApp());
+      OptionsDialog od           = new OptionsDialog(getApp());
       Dimension     optDimension = od.getSize();
-      Dimension     screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      Dimension     screenSize   = Toolkit.getDefaultToolkit().getScreenSize();
 
       od.setLocation((screenSize.width - optDimension.width) / 2, (screenSize.height - optDimension.height) / 2);
       od.setVisible(true);
@@ -978,9 +1020,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
    private void showAboutDialog()
    {
-      AboutDialog aboutDialog = new AboutDialog(getApp(), true);
+      AboutDialog aboutDialog  = new AboutDialog(getApp(), true);
       Dimension   appDimension = aboutDialog.getSize();
-      Dimension   screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      Dimension   screenSize   = Toolkit.getDefaultToolkit().getScreenSize();
 
       aboutDialog.setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
       aboutDialog.setVisible(true);
@@ -989,7 +1031,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    private void activateThemeSupport(boolean enable)
    {
       int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.this, themeSupportNachricht, themeSupportTitel,
-            JOptionPane.YES_NO_OPTION);
+                                                 JOptionPane.YES_NO_OPTION);
 
       if(result == JOptionPane.YES_OPTION)
       {
@@ -1068,9 +1110,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
          if(file.isFile())
          {
-            String[]                   dirs = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
+            String[]                   dirs                       = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
             IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(AppleJuiceDialog.getApp(), dirs,
-                  null);
+                                                                                                   null);
 
             incomingDirSelectionDialog.setVisible(true);
             String directory = incomingDirSelectionDialog.getSelectedIncomingDir();
@@ -1109,12 +1151,12 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                            }
                         }
 
-                        String             size = "";
-                        String             filename = "";
-                        String             checksum = "";
-                        String             link = "";
-                        ApplejuiceFassade  af = AppleJuiceClient.getAjFassade();
-                        final StringBuffer returnValues = new StringBuffer();
+                        String             size           = "";
+                        String             filename       = "";
+                        String             checksum       = "";
+                        String             link           = "";
+                        ApplejuiceFassade  af             = AppleJuiceClient.getAjFassade();
+                        final StringBuffer returnValues   = new StringBuffer();
                         boolean            somethingAdded = false;
 
                         while((line = reader.readLine()) != null)
@@ -1174,7 +1216,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                                     textArea.setBackground(new TKLLabel().getBackground());
                                     textArea.setText(returnValues.toString());
                                     JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), new JScrollPane(textArea),
-                                       dialogTitel, JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+                                                                  dialogTitel,
+                                                                  JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
                                  }
                               });
                         }
@@ -1203,56 +1246,34 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       {
          LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-         verbunden = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.verbunden");
-         verbinden = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.verbinden");
-         nichtVerbunden = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.nichtverbunden");
-         keinServer = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.mainform.keinserver"));
-         themeSupportTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
-         themeSupportNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.mainform.themesupportnachricht"));
-         sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.einstform.languagesheet.caption")));
-         menuItemOptionen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.mainform.optbtn.caption")));
-         menuItemOptionen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.mainform.optbtn.hint")));
-         menuItemCoreBeenden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.menu.corebeenden")));
-         menuItemCoreBeenden.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.menu.corebeendenhint")));
-         menuItemUeber.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.mainform.aboutbtn.caption")));
-         menuItemCheckUpdate.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.mainform.checkupdate.caption")));
-         menuItemCheckUpdate.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.mainform.checkupdate.hint")));
-         menuItemDeaktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.menu.deaktivieren")));
-         optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.menu.extras")));
-         menuItemDateiliste.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.menu.dateiliste")));
-         menuItemDateiliste.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.menu.dateilistehint")));
-         themesMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.menu.themes")));
-         bestaetigung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.menu.bestaetigung"));
-         menuItemAktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.menu.aktivieren")));
-         menuItemDeaktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.menu.deaktivieren")));
+         verbunden             = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.verbunden");
+         verbinden             = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.verbinden");
+         nichtVerbunden        = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.nichtverbunden");
+         keinServer            = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.keinserver"));
+         themeSupportTitel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
+         themeSupportNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.themesupportnachricht"));
+         sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.einstform.languagesheet.caption")));
+         menuItemOptionen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.optbtn.caption")));
+         menuItemOptionen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.optbtn.hint")));
+         menuItemCoreBeenden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.corebeenden")));
+         menuItemCoreBeenden.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.corebeendenhint")));
+         menuItemUeber.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.aboutbtn.caption")));
+         menuItemCheckUpdate.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.checkupdate.caption")));
+         menuItemCheckUpdate.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.checkupdate.hint")));
+         menuItemDeaktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.deaktivieren")));
+         optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.extras")));
+         menuItemDateiliste.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.dateiliste")));
+         menuItemDateiliste.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.dateilistehint")));
+         themesMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.themes")));
+         bestaetigung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.bestaetigung"));
+         menuItemAktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.aktivieren")));
+         menuItemDeaktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.deaktivieren")));
 
-         firewallWarning = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.mainform.firewallwarning.caption"));
-         alreadyLoaded = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.downloadform.bereitsgeladen"));
-         invalidLink = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.downloadform.falscherlink"));
-         linkFailure = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.downloadform.sonstigerlinkfehlerkurz"));
-         dialogTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
+         firewallWarning = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.firewallwarning.caption"));
+         alreadyLoaded   = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.bereitsgeladen"));
+         invalidLink     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.falscherlink"));
+         linkFailure     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.sonstigerlinkfehlerkurz"));
+         dialogTitel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
          if(firewalled)
          {
             statusbar[0].setToolTipText(firewallWarning);
@@ -1262,9 +1283,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          {
             popupAboutMenuItem.setText(menuItemUeber.getText());
             popupAboutMenuItem.setToolTipText(menuItemUeber.getToolTipText());
-            zeigen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.zeigen"));
-            verstecken = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                     ".root.javagui.menu.verstecken"));
+            zeigen     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.zeigen"));
+            verstecken = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.verstecken"));
             popupOptionenMenuItem.setText(menuItemOptionen.getText());
             popupOptionenMenuItem.setToolTipText(menuItemOptionen.getToolTipText());
          }
@@ -1325,12 +1345,14 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                         String versionsNr = AppleJuiceClient.getAjFassade().getCoreVersion().getVersion();
 
                         titel = ZeichenErsetzer.korrigiereUmlaute(LanguageSelector.getInstance()
-                              .getFirstAttrbuteByTagName(".root.mainform.caption")) + " (Core " + versionsNr + " - GUI " +
-                           AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION + ")";
+                                                                  .getFirstAttrbuteByTagName(".root.mainform.caption")) +
+                                " (Core " + versionsNr + " - GUI " + AppleJuiceDialog.GUI_VERSION + "/" +
+                                ApplejuiceFassade.FASSADE_VERSION + ")";
                         setTitle(titel);
                         if(useTrayIcon)
                         {
-                           trayIcon.setToolTipText(titel);
+
+                           //                           trayIcon.setToolTipText(titel);
                         }
 
                         repaint();
@@ -1393,9 +1415,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
    }
 
-   public SwingTrayPopup makeSwingPopup()
+   public JPopupMenu makeSwingPopup()
    {
-      final SwingTrayPopup popup = new SwingTrayPopup(this);
+      final JPopupMenu popup = new JPopupMenu();
 
       popupShowHideMenuItem.addActionListener(new ActionListener()
          {
@@ -1432,7 +1454,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       IconManager im = IconManager.getInstance();
 
       versteckenIcon = im.getIcon("hide");
-      zeigenIcon = im.getIcon("applejuice");
+      zeigenIcon     = im.getIcon("applejuice");
       Icon aboutIcon = im.getIcon("about");
 
       popupOptionenMenuItem.setIcon(im.getIcon("optionen"));
@@ -1469,7 +1491,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                   }
 
                   final JSlider downloadSlider = new JSlider(JSlider.VERTICAL, 0, (int) maxDownload,
-                        (int) ajSettings.getMaxDownloadInKB());
+                                                             (int) ajSettings.getMaxDownloadInKB());
 
                   uploadSlider.setPaintLabels(true);
                   uploadSlider.setPaintTicks(true);
@@ -1479,12 +1501,12 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                   downloadSlider.setPaintTicks(true);
                   downloadSlider.setPaintTrack(true);
                   downloadSlider.setSnapToTicks(true);
-                  final JMenu    uploadMenu = new JMenu("Upload");
-                  final JMenu    downloadMenu = new JMenu("Download");
-                  TKLPanel       uploadPanel = new TKLPanel(new BorderLayout());
+                  final JMenu    uploadMenu    = new JMenu("Upload");
+                  final JMenu    downloadMenu  = new JMenu("Download");
+                  TKLPanel       uploadPanel   = new TKLPanel(new BorderLayout());
                   TKLPanel       downloadPanel = new TKLPanel(new BorderLayout());
-                  final TKLLabel label1 = new TKLLabel("50 kb/s");
-                  final TKLLabel label2 = new TKLLabel("50 kb/s");
+                  final TKLLabel label1        = new TKLLabel("50 kb/s");
+                  final TKLLabel label2        = new TKLLabel("50 kb/s");
 
                   label1.setText(Long.toString(ajSettings.getMaxUploadInKB()) + " kb/s");
                   label2.setText(Long.toString(ajSettings.getMaxDownloadInKB()) + " kb/s");
@@ -1598,6 +1620,106 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
    }
 
+   private void checkAndDisplayUpdate()
+   {
+      Thread versionWorker = new Thread()
+      {
+         public void run()
+         {
+            if(logger.isEnabledFor(Level.DEBUG))
+            {
+               logger.debug("VersionWorkerThread gestartet. " + this);
+            }
+
+            try
+            {
+               ProxySettings proxy        = ProxyManagerImpl.getInstance().getProxySettings();
+               String        downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "http://www.tkl-soft.de", 80,
+                                                                                   "/applejuice/version.txt");
+
+               if(downloadData.length() > 0)
+               {
+                  int             pos1              = downloadData.indexOf("|");
+                  String          aktuellsteVersion = downloadData.substring(0, pos1);
+                  StringTokenizer token1            = new StringTokenizer(aktuellsteVersion, ".");
+                  String          guiVersion        = AppleJuiceDialog.GUI_VERSION;
+
+                  if(guiVersion.indexOf('-') != -1)
+                  {
+                     guiVersion = guiVersion.substring(0, guiVersion.indexOf('-'));
+                  }
+
+                  StringTokenizer token2 = new StringTokenizer(guiVersion, ".");
+
+                  if(token1.countTokens() != 3 || token2.countTokens() != 3)
+                  {
+                     return;
+                  }
+
+                  String[] versionInternet = new String[3];
+                  String[] aktuelleVersion = new String[3];
+
+                  for(int i = 0; i < 3; i++)
+                  {
+                     versionInternet[i] = token1.nextToken();
+                     aktuelleVersion[i] = token2.nextToken();
+                  }
+
+                  if((versionInternet[0].compareTo(aktuelleVersion[0]) > 0) ||
+                        (versionInternet[0].compareTo(aktuelleVersion[0]) == 0 &&
+                        versionInternet[1].compareTo(aktuelleVersion[1]) > 0) ||
+                        (versionInternet[0].compareTo(aktuelleVersion[0]) == 0 &&
+                        versionInternet[1].compareTo(aktuelleVersion[1]) == 0) &&
+                        versionInternet[2].compareTo(aktuelleVersion[2]) > 0)
+                  {
+                     int                     pos2                    = downloadData.lastIndexOf("|");
+                     String                  winLink                 = downloadData.substring(pos1 + 1, pos2);
+                     String                  sonstigeLink            = downloadData.substring(pos2 + 1);
+                     UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(AppleJuiceDialog.getApp(),
+                                                                                                   aktuellsteVersion, winLink,
+                                                                                                   sonstigeLink);
+
+                     updateInformationDialog.setVisible(true);
+                  }
+                  else
+                  {
+                     LanguageSelector languageSelector = LanguageSelector.getInstance();
+                     String           fehlerTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
+
+                     String           fehlerNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.checkupdate.keineNeueVersion"));
+
+                     JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), fehlerNachricht, fehlerTitel,
+                                                   JOptionPane.INFORMATION_MESSAGE);
+                  }
+               }
+            }
+            catch(Exception e)
+            {
+               if(logger.isEnabledFor(Level.INFO))
+               {
+                  logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
+               }
+            }
+
+            if(logger.isEnabledFor(Level.DEBUG))
+            {
+               logger.debug("VersionWorkerThread beendet. " + this);
+            }
+         }
+      };
+
+      versionWorker.start();
+   }
+
+   public void informWrongPassword()
+   {
+      LanguageSelector languageSelector = LanguageSelector.getInstance();
+      String           nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.msgdlgtext3"));
+
+      SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
+      closeWithErrormessage(nachricht, true);
+   }
+
    private class TxtFileFilter extends FileFilter
    {
       public boolean accept(File file)
@@ -1648,107 +1770,5 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                }
             });
       }
-   }
-
-   private void checkAndDisplayUpdate()
-   {
-      Thread versionWorker = new Thread()
-         {
-            public void run()
-            {
-               if(logger.isEnabledFor(Level.DEBUG))
-               {
-                  logger.debug("VersionWorkerThread gestartet. " + this);
-               }
-
-               try
-               {
-                  ProxySettings proxy = ProxyManagerImpl.getInstance().getProxySettings();
-                  String        downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "http://www.tkl-soft.de", 80,
-                        "/applejuice/version.txt");
-
-                  if(downloadData.length() > 0)
-                  {
-                     int             pos1 = downloadData.indexOf("|");
-                     String          aktuellsteVersion = downloadData.substring(0, pos1);
-                     StringTokenizer token1 = new StringTokenizer(aktuellsteVersion, ".");
-                     String          guiVersion = AppleJuiceDialog.GUI_VERSION;
-
-                     if(guiVersion.indexOf('-') != -1)
-                     {
-                        guiVersion = guiVersion.substring(0, guiVersion.indexOf('-'));
-                     }
-
-                     StringTokenizer token2 = new StringTokenizer(guiVersion, ".");
-
-                     if(token1.countTokens() != 3 || token2.countTokens() != 3)
-                     {
-                        return;
-                     }
-
-                     String[] versionInternet = new String[3];
-                     String[] aktuelleVersion = new String[3];
-
-                     for(int i = 0; i < 3; i++)
-                     {
-                        versionInternet[i] = token1.nextToken();
-                        aktuelleVersion[i] = token2.nextToken();
-                     }
-
-                     if((versionInternet[0].compareTo(aktuelleVersion[0]) > 0) ||
-                           (versionInternet[0].compareTo(aktuelleVersion[0]) == 0 &&
-                           versionInternet[1].compareTo(aktuelleVersion[1]) > 0) ||
-                           (versionInternet[0].compareTo(aktuelleVersion[0]) == 0 &&
-                           versionInternet[1].compareTo(aktuelleVersion[1]) == 0) &&
-                           versionInternet[2].compareTo(aktuelleVersion[2]) > 0)
-                     {
-                        int                     pos2 = downloadData.lastIndexOf("|");
-                        String                  winLink = downloadData.substring(pos1 + 1, pos2);
-                        String                  sonstigeLink = downloadData.substring(pos2 + 1);
-                        UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(AppleJuiceDialog.getApp(),
-                              aktuellsteVersion, winLink, sonstigeLink);
-
-                        updateInformationDialog.setVisible(true);
-                     }
-                     else
-                     {
-                        LanguageSelector languageSelector = LanguageSelector.getInstance();
-                        String           fehlerTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                                 ".root.mainform.caption"));
-
-                        String fehlerNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                                 ".root.javagui.checkupdate.keineNeueVersion"));
-
-                        JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), fehlerNachricht, fehlerTitel,
-                           JOptionPane.INFORMATION_MESSAGE);
-                     }
-                  }
-               }
-               catch(Exception e)
-               {
-                  if(logger.isEnabledFor(Level.INFO))
-                  {
-                     logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
-                  }
-               }
-
-               if(logger.isEnabledFor(Level.DEBUG))
-               {
-                  logger.debug("VersionWorkerThread beendet. " + this);
-               }
-            }
-         };
-
-      versionWorker.start();
-   }
-
-   public void informWrongPassword()
-   {
-      LanguageSelector languageSelector = LanguageSelector.getInstance();
-      String           nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.mainform.msgdlgtext3"));
-
-      SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
-      closeWithErrormessage(nachricht, true);
    }
 }
