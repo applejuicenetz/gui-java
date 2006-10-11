@@ -414,6 +414,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
          trayIcon.setImageAutoSize(true);
          MouseListener[] listeners = trayIcon.getMouseListeners();
+
          trayIcon.addMouseListener(new MouseAdapter()
             {
                public void mouseReleased(MouseEvent e)
@@ -445,11 +446,18 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                      }
                   }
 
-                  if(!popup.isVisible() && e.isPopupTrigger())
+                  if(e.isPopupTrigger())
                   {
-                     popup.setLocation(e.getX(), e.getY());
-                     popup.setInvoker(popup);
-                     popup.setVisible(true);
+                     if(popup.isVisible())
+                     {
+                        popup.setVisible(false);
+                     }
+                     else
+                     {
+                        popup.setLocation(e.getX(), e.getY());
+                        popup.setInvoker(popup);
+                        popup.setVisible(true);
+                     }
                   }
                }
             });
@@ -1349,12 +1357,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                                 " (Core " + versionsNr + " - GUI " + AppleJuiceDialog.GUI_VERSION + "/" +
                                 ApplejuiceFassade.FASSADE_VERSION + ")";
                         setTitle(titel);
-                        if(useTrayIcon)
-                        {
-
-                           //                           trayIcon.setToolTipText(titel);
-                        }
-
                         repaint();
                      }
 

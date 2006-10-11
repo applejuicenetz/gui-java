@@ -20,7 +20,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.9 2006/10/11 09:23:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.10 2006/10/11 09:34:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,10 +44,10 @@ public class AppleJuiceClientTG extends ThreadGroup
       if(e.getClass() == ClassCastException.class &&
             e.getMessage().equals("java.awt.TrayIcon cannot be cast to java.awt.Component"))
       {
-         if(logger.isEnabledFor(Level.INFO))
-         {
-            logger.info("insignificantly error in java6 -> ignoring", e);
-         }
+
+         /**
+          * "insignificantly error in java6 -> ignoring"
+          */
       }
       else if(e.getClass() == ArrayIndexOutOfBoundsException.class)
       {
