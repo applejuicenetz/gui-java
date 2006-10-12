@@ -446,7 +446,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                      }
                   }
 
-                  if(e.isPopupTrigger())
+                  if(e.getButton() == MouseEvent.BUTTON3)
                   {
                      if(popup.isVisible())
                      {
