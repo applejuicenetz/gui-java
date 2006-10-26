@@ -7,10 +7,11 @@ import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.8 2005/05/05 18:33:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.9 2006/10/26 13:34:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -126,7 +127,7 @@ public class DownloadModel
     public Object getValueAt(Object node, int column) {
         Object columnValue = null;
         if (node.getClass() == DownloadMainNode.class &&
-            ( (DownloadMainNode) node).getType() == DownloadMainNode.ROOT_NODE) {
+            ( (DownloadMainNode) node).getType() == MainNodeType.ROOT_NODE) {
             columnValue = ( (DownloadMainNode) node).getDownload();
         }
         else if (node instanceof DownloadSource) {

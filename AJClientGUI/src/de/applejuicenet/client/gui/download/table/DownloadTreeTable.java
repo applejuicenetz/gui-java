@@ -11,6 +11,7 @@ import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRend
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
+import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Settings;
 
@@ -45,7 +46,7 @@ public class DownloadTreeTable extends JTreeTable {
             else if (value.getClass() == DownloadMainNode.class
                 &&
                 ( (DownloadMainNode) value).getType() ==
-                DownloadMainNode.ROOT_NODE) {
+                    MainNodeType.ROOT_NODE) {
                 return getToolTipForDownloadDO(( (DownloadMainNode) value).getDownload());
             }
             else{

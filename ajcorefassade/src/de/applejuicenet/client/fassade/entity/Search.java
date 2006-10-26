@@ -1,37 +1,40 @@
 package de.applejuicenet.client.fassade.entity;
 
-public abstract class Search implements IdOwner{
-	public static int currentSearchCount = 0;
+import de.applejuicenet.client.fassade.shared.FileType;
 
-	public abstract long getCreationTime();
+public abstract class Search implements IdOwner
+{
+   public static int currentSearchCount = 0;
 
-	public abstract boolean isChanged();
+   public abstract long getCreationTime();
 
-	public abstract String getSuchText();
+   public abstract boolean isChanged();
 
-	public abstract int getOffeneSuchen();
+   public abstract String getSuchText();
 
-	public abstract int getGefundenDateien();
+   public abstract int getOffeneSuchen();
 
-	public abstract int getDurchsuchteClients();
+   public abstract int getGefundenDateien();
 
-	public abstract int getId();
+   public abstract int getDurchsuchteClients();
 
-	public abstract void addFilter(String newFilter);
+   public abstract int getId();
 
-	public abstract void removeFilter(String newFilter);
+   public abstract void addFilter(FileType newFilter);
 
-	public abstract void clearFilter();
+   public abstract void removeFilter(FileType newFilter);
 
-	public abstract SearchEntry[] getAllSearchEntries();
+   public abstract void clearFilter();
 
-	public abstract SearchEntry getSearchEntryById(int id);
+   public abstract SearchEntry[] getAllSearchEntries();
 
-	public abstract SearchEntry[] getSearchEntries();
-	
-	public abstract boolean isRunning();	
-	
-	public abstract void setChanged(boolean changed);
-    
-    public abstract long getEntryCount();
+   public abstract SearchEntry getSearchEntryById(int id);
+
+   public abstract SearchEntry[] getSearchEntries();
+
+   public abstract boolean isRunning();
+
+   public abstract void setChanged(boolean changed);
+
+   public abstract long getEntryCount();
 }

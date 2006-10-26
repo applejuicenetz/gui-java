@@ -12,11 +12,12 @@ import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.util.DownloadSourceCalculator;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTablePercentCellRenderer.java,v 1.7 2005/05/05 18:33:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadTablePercentCellRenderer.java,v 1.8 2006/10/26 13:34:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -84,7 +85,7 @@ public class DownloadTablePercentCellRenderer
             c.setBackground(selectionBackground);
         }
         else {
-            if (downloadMainNode.getType() == DownloadMainNode.ROOT_NODE &&
+            if (downloadMainNode.getType() == MainNodeType.ROOT_NODE &&
                 download.getStatus() == Download.FERTIG &&
                 settings.isFarbenAktiv()) {
                 c.setBackground(settings.

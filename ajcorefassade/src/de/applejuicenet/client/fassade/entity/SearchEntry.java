@@ -1,10 +1,12 @@
 package de.applejuicenet.client.fassade.entity;
 
+import de.applejuicenet.client.fassade.shared.FileType;
+
 public interface SearchEntry extends IdOwner{
 
 	public int getId();
 
-	public String getFileType();
+	public FileType getFileType();
 
 	public int getSearchId();
 

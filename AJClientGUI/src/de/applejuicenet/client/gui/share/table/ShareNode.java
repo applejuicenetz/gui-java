@@ -13,12 +13,12 @@ import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
-import de.applejuicenet.client.fassade.shared.FileTypeHelper;
+import de.applejuicenet.client.fassade.shared.FileType;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareNode.java,v 1.7 2005/05/25 09:58:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareNode.java,v 1.8 2006/10/26 13:34:06 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -104,8 +104,8 @@ public class ShareNode
     public Icon getConvenientIcon() {
         if (isLeaf()) {
         	if (leafIcon == null){
-        		String fileType = FileTypeHelper.calculatePossibleFileType(share.getShortfilename());
-        		leafIcon = IconManager.getInstance().getIcon(fileType);
+                FileType fileType = FileType.calculatePossibleFileType(share.getShortfilename());
+        		leafIcon = IconManager.getInstance().getIcon(fileType.toString());
         	}
             return leafIcon;
         }
