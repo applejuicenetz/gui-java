@@ -50,7 +50,7 @@
         <jar destfile="${basedir}/AJCoreGUI.jar">
             <manifest>
                 <attribute name="Built-by" value="${user.name}" />
-                <attribute name="Class-Path" value="./needed_jars/log4j-1.2.8.jar ./needed_jars/skinlf.jar ./needed_jars/looks-1.2.1.jar ./needed_jars/ajcorefassade.jar ./needed_jars/tklcontrols.jar" />
+                <attribute name="Class-Path" value="./needed_jars/log4j-1.2.8.jar ./needed_jars/skinlf.jar ./needed_jars/looks-1.2.1.jar ./needed_jars/ajcorefassade.jar ./needed_jars/tklcontrols.jar ./needed_jars/ajtray.jar" />
                 <attribute name="Main-Class" value="de.applejuicenet.client.AppleJuiceClient" />
             </manifest>
             <fileset dir="${basedir}/classes" includes="**/de/**/*.* **/com/jeans/**/*.*" />
