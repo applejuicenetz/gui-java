@@ -5,6 +5,7 @@
 	<classpathentry kind="lib" path="needed_jars/log4j-1.2.8.jar"/>
 	<classpathentry kind="lib" path="needed_jars/looks-1.2.1.jar"/>
 	<classpathentry kind="lib" path="needed_jars/skinlf.jar"/>
+	<classpathentry kind="lib" path="needed_jars/ajtray.jar"/>
 	<classpathentry kind="src" path="/ajcorefassade"/>
 	<classpathentry kind="lib" path="needed_jars/junit.jar"/>
 	<classpathentry kind="lib" path="needed_jars/tklcontrols.jar"/>

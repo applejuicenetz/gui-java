@@ -60,7 +60,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.101 2006/05/04 14:29:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.102 2009/01/04 15:17:21 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -141,8 +141,7 @@ public class AppleJuiceClient
 
    public static void runmain(String[] args)
    {
-      String       javaVersion = System.getProperty("java.version");
-      StringBuffer version = new StringBuffer(javaVersion);
+      StringBuffer version = new StringBuffer(System.getProperty("java.version"));
 
       for(int i = version.length() - 1; i >= 0; i--)
       {
@@ -152,18 +151,13 @@ public class AppleJuiceClient
          }
       }
 
-      if(javaVersion.length() > 2)
-      {
-         javaVersion = javaVersion.substring(0, 2);
-      }
-
       boolean gueltig = false;
 
       try
       {
          int versionsNr = Integer.parseInt(version.toString().substring(0, 2));
 
-         if(versionsNr >= 14)
+         if(versionsNr >= 15)
          {
             gueltig = true;
          }
@@ -177,8 +171,9 @@ public class AppleJuiceClient
 
       if(!gueltig)
       {
-         JOptionPane.showMessageDialog(new Frame(), "Es wird mindestens JRE 1.4 benoetigt!", "appleJuice Client",
+         JOptionPane.showMessageDialog(new Frame(), "Es wird mindestens JRE 5 benoetigt!", "appleJuice Client",
             JOptionPane.ERROR_MESSAGE);
+         System.exit(-1);
       }
 
       boolean      processLink = false;
