@@ -36,7 +36,7 @@ import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.11 2006/10/26 14:04:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.12 2009/01/05 09:31:10 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -140,7 +140,7 @@ public class AboutDialog extends JDialog
          credits.add(new CreditsEntry(false, "Maj0r"));
          credits.add(new CreditsEntry(false, "(tkrall@tkl-soft.de)"));
          credits.add(new CreditsEntry(false, "loevenwong"));
-         credits.add(new CreditsEntry(false, "(timo@loevenwong.de)"));
+         credits.add(new CreditsEntry(false, "(tloevenich@tkl-soft.de)"));
          credits.add(new CreditsEntry(true, "Besonderen Dank an"));
          credits.add(new CreditsEntry(false, "muhviehstarr"));
          credits.add(new CreditsEntry(true, "Banner & Bilder"));
@@ -149,7 +149,7 @@ public class AboutDialog extends JDialog
          credits.add(new CreditsEntry(false, "BlueTiger"));
          credits.add(new CreditsEntry(false, "nurseppel"));
          credits.add(new CreditsEntry(true, "Kontakt"));
-         credits.add(new CreditsEntry(false, "irc.p2pchat.net"));
+         credits.add(new CreditsEntry(false, "irc.devStaff.net:6667"));
          credits.add(new CreditsEntry(false, "#applejuice"));
          credits.add(new CreditsEntry(false, "www.applejuicenet.de"));
 

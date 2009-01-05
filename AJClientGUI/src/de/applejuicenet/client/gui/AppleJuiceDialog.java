@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui;
 
 import java.awt.BorderLayout;
@@ -27,8 +28,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
-import java.lang.reflect.Method;
 
 import java.net.URL;
 
@@ -95,6 +94,7 @@ import de.applejuicenet.client.gui.options.OptionsDialog;
 import de.applejuicenet.client.gui.server.ServerPanel;
 import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.gui.share.SharePanel;
+import de.applejuicenet.client.gui.tray.TrayIF;
 import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.IconManager;
@@ -129,7 +129,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 {
 
    //CVS-Beispiel 0.60.0-1-CVS
-   public static final String       GUI_VERSION              = "0.70.2-0-CVS";
+   public static final String       GUI_VERSION              = "0.70.2-3-CVS";
    private static Logger            logger                   = Logger.getLogger(AppleJuiceDialog.class);
    private static Map<String, Skin> themes                   = null;
    public static boolean            rewriteProperties        = false;
@@ -169,8 +169,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    private boolean                  maximized                = false;
    private Dimension                lastFrameSize;
    private Point                    lastFrameLocation;
-   private String                   zeigen;
-   private String                   verstecken;
    private Icon                     versteckenIcon           = null;
    private Icon                     zeigenIcon               = null;
    private boolean                  firewalled               = false;
@@ -186,6 +184,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    private ImageIcon                verbundenIcon;
    private ImageIcon                nichtVerbundenIcon;
    private JPopupMenu               popup;
+   private TrayIF                   trayLoader               = null;
 
    public AppleJuiceDialog()
    {
@@ -193,7 +192,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       try
       {
          enableCloseWindowListener(false);
-         theApp                                              = this;
+         theApp = this;
          init();
          pack();
          LanguageSelector.getInstance().addLanguageListener(this);
@@ -204,6 +203,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
    }
 
+   @SuppressWarnings("deprecation")
    public static void initThemes()
    {
       try
@@ -212,7 +212,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          if(OptionsManagerImpl.getInstance().isThemesSupported())
          {
             HashSet<URL> themesDateien = new HashSet<URL>();
-            File         themesPath    = new File(System.getProperty("user.dir") + File.separator + "themes");
+            File         themesPath = new File(System.getProperty("user.dir") + File.separator + "themes");
 
             if(!themesPath.isDirectory())
             {
@@ -249,7 +249,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             String shortName    = "";
             String defaultTheme = OptionsManagerImpl.getInstance().getDefaultTheme();
 
-            themes              = new HashMap<String, Skin>();
+            themes = new HashMap<String, Skin>();
             for(URL curSkinURL : themesDateien)
             {
                temp = curSkinURL.getFile();
@@ -405,34 +405,13 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       popup       = makeSwingPopup();
       try
       {
-         Class    trayLoaderClass = Class.forName("de.applejuicenet.client.gui.tray.TrayLoader");
-         Object   trayLoader      = trayLoaderClass.newInstance();
-         Object[] params          = new Object[]
-                                    {
-                                       image, titel, this, popupShowHideMenuItem, zeigen, zeigenIcon, verstecken, versteckenIcon,
-                                       popup
-                                    };
-         Class[]  paramClasses    = new Class[params.length];
+         Class trayLoaderClass = Class.forName("de.applejuicenet.client.gui.tray.TrayLoader");
 
-         paramClasses[0]          = Image.class;
-         paramClasses[1]          = String.class;
-         paramClasses[2]          = AppleJuiceDialog.class;
-         paramClasses[3]          = JMenuItem.class;
-         paramClasses[4]          = String.class;
-         paramClasses[5]          = Icon.class;
-         paramClasses[6]          = String.class;
-         paramClasses[7]          = Icon.class;
-         paramClasses[8]          = JPopupMenu.class;
+         trayLoader = (TrayIF) trayLoaderClass.newInstance();
 
-         Method method            = trayLoaderClass.getMethod("makeTray", paramClasses);
-
-         useTrayIcon              = (Boolean) method.invoke(trayLoader, params);
+         useTrayIcon = trayLoader.makeTray(image, titel, this, popupShowHideMenuItem, zeigenIcon, versteckenIcon, popup);
       }
-      catch(Exception e)
-      {
-         useTrayIcon = false;
-      }
-      catch(Error error)
+      catch(Throwable e)
       {
          useTrayIcon = false;
       }
@@ -574,12 +553,12 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
          OptionsManagerImpl.getInstance().setSprache(sprachText);
          int[]           downloadWidths = ((DownloadPanel) DownloadController.getInstance().getComponent()).getColumnWidths();
-         int[]           uploadWidths   = ((UploadPanel) UploadController.getInstance().getComponent()).getColumnWidths();
-         int[]           serverWidths   = ServerPanel.getInstance().getColumnWidths();
-         int[]           shareWidths    = ((SharePanel) ShareController.getInstance().getComponent()).getColumnWidths();
-         Dimension       dim            = AppleJuiceDialog.getApp().getSize();
-         Point           p              = AppleJuiceDialog.getApp().getLocationOnScreen();
-         PositionManager pm             = PositionManagerImpl.getInstance();
+         int[]           uploadWidths = ((UploadPanel) UploadController.getInstance().getComponent()).getColumnWidths();
+         int[]           serverWidths = ServerPanel.getInstance().getColumnWidths();
+         int[]           shareWidths  = ((SharePanel) ShareController.getInstance().getComponent()).getColumnWidths();
+         Dimension       dim          = AppleJuiceDialog.getApp().getSize();
+         Point           p            = AppleJuiceDialog.getApp().getLocationOnScreen();
+         PositionManager pm           = PositionManagerImpl.getInstance();
 
          pm.setMainXY(p);
          pm.setMainDimension(dim);
@@ -644,7 +623,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
 
       String nachricht = "appleJuice-Core-GUI wird beendet...";
-      Logger aLogger   = Logger.getLogger(AppleJuiceDialog.class.getName());
+      Logger aLogger = Logger.getLogger(AppleJuiceDialog.class.getName());
 
       if(aLogger.isEnabledFor(Level.INFO))
       {
@@ -767,7 +746,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          {
             String            sprachText = LanguageSelector.getInstance(path + curSprachDatei)
                                            .getFirstAttrbuteByTagName(".root.Languageinfo.name");
-            JCheckBoxMenuItem rb         = new JCheckBoxMenuItem(sprachText);
+            JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
 
             if(OptionsManagerImpl.getInstance().getSprache().equalsIgnoreCase(sprachText))
             {
@@ -803,7 +782,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          if(OptionsManagerImpl.getInstance().isThemesSupported())
          {
             HashSet<URL> themesDateien = new HashSet<URL>();
-            File         themesPath    = new File(System.getProperty("user.dir") + File.separator + "themes");
+            File         themesPath = new File(System.getProperty("user.dir") + File.separator + "themes");
 
             if(!themesPath.isDirectory())
             {
@@ -1212,12 +1191,12 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             statusbar[0].setToolTipText(firewallWarning);
          }
 
-         if(useTrayIcon)
+         if(useTrayIcon && null != trayLoader)
          {
+            trayLoader.setTextVerstecken(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.verstecken")));
+            trayLoader.setTextZeigen(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.zeigen")));
             popupAboutMenuItem.setText(menuItemUeber.getText());
             popupAboutMenuItem.setToolTipText(menuItemUeber.getToolTipText());
-            zeigen     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.zeigen"));
-            verstecken = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.menu.verstecken"));
             popupOptionenMenuItem.setText(menuItemOptionen.getText());
             popupOptionenMenuItem.setToolTipText(menuItemOptionen.getToolTipText());
          }
@@ -1410,7 +1389,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                   }
 
                   final JSlider uploadSlider = new JSlider(JSlider.VERTICAL, 0, (int) maxUpload, (int) ajSettings.getMaxUploadInKB());
-                  long          maxDownload  = 300;
+                  long          maxDownload = 300;
 
                   if(ajSettings.getMaxDownloadInKB() > maxDownload)
                   {
@@ -1468,7 +1447,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                            if(uploadSlider.getValue() < uploadSlider.getMaximum() && uploadSlider.getValue() > 0)
                            {
                               Long down = new Long(downloadSlider.getValue() * 1024);
-                              Long up   = new Long(uploadSlider.getValue() * 1024);
+                              Long up = new Long(uploadSlider.getValue() * 1024);
 
                               try
                               {
@@ -1492,7 +1471,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                            if(downloadSlider.getValue() < downloadSlider.getMaximum() && downloadSlider.getValue() > 0)
                            {
                               Long down = new Long(downloadSlider.getValue() * 1024);
-                              Long up   = new Long(uploadSlider.getValue() * 1024);
+                              Long up = new Long(uploadSlider.getValue() * 1024);
 
                               try
                               {
@@ -1594,9 +1573,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
                   if((versionInternet[0].compareTo(aktuelleVersion[0]) > 0) ||
                         (versionInternet[0].compareTo(aktuelleVersion[0]) == 0 &&
-                           versionInternet[1].compareTo(aktuelleVersion[1]) > 0) ||
+                        versionInternet[1].compareTo(aktuelleVersion[1]) > 0) ||
                         (versionInternet[0].compareTo(aktuelleVersion[0]) == 0 &&
-                           versionInternet[1].compareTo(aktuelleVersion[1]) == 0) &&
+                        versionInternet[1].compareTo(aktuelleVersion[1]) == 0) &&
                         versionInternet[2].compareTo(aktuelleVersion[2]) > 0)
                   {
                      int                     pos2                    = downloadData.lastIndexOf("|");
@@ -1611,9 +1590,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                   else
                   {
                      LanguageSelector languageSelector = LanguageSelector.getInstance();
-                     String           fehlerTitel      = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
+                     String           fehlerTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
 
-                     String           fehlerNachricht  = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.checkupdate.keineNeueVersion"));
+                     String           fehlerNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.checkupdate.keineNeueVersion"));
 
                      JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), fehlerNachricht, fehlerTitel,
                                                    JOptionPane.INFORMATION_MESSAGE);
@@ -1641,7 +1620,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    public void informWrongPassword()
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      String           nachricht        = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.msgdlgtext3"));
+      String           nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.msgdlgtext3"));
 
       SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
       closeWithErrormessage(nachricht, true);

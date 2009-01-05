@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.controller;
 
 import org.apache.log4j.Level;
@@ -10,89 +14,88 @@ import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.45 2005/01/18 17:35:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.46 2009/01/05 09:26:44 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: General Public License</p>
+ * <p>Copyright: General  License</p>
  *
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
+public interface OptionsManager
+{
+   void addSettingsListener(DataUpdateListener listener);
 
-public interface OptionsManager {
-    public void addSettingsListener(DataUpdateListener listener);
+   void addConnectionSettingsListener(DataUpdateListener listener);
 
-    public void addConnectionSettingsListener(DataUpdateListener listener);
+   String getSprache();
 
-    public String getSprache();
+   int getVersionsinfoModus();
 
-    public int getVersionsinfoModus();
+   void setVersionsinfoModus(int versionsinfoModus);
 
-    public void setVersionsinfoModus(int versionsinfoModus);
+   boolean isErsterStart();
 
-    public boolean isErsterStart();
+   void setErsterStart(boolean ersterStart);
 
-    public void setErsterStart(boolean ersterStart);
+   boolean isSoundEnabled();
 
-    public boolean isSoundEnabled();
+   void enableSound(boolean enable);
 
-    public void enableSound(boolean enable);
+   void setSprache(String sprache);
 
-    public void setSprache(String sprache);
+   Level getLogLevel();
 
-    public Level getLogLevel();
+   void setLogLevel(Level level);
 
-    public void setLogLevel(Level level);
+   Settings getSettings();
 
-    public Settings getSettings();
+   void saveSettings(Settings settings);
 
-    public void saveSettings(Settings settings);
+   ConnectionSettings getRemoteSettings();
 
-    public ConnectionSettings getRemoteSettings();
+   void saveRemote(ConnectionSettings remote) throws InvalidPasswordException;
 
-    public void saveRemote(ConnectionSettings remote) throws
-        InvalidPasswordException;
+   void onlySaveRemote(ConnectionSettings remote);
 
-    public void onlySaveRemote(ConnectionSettings remote);
+   void saveAJSettings(AJSettings ajSettings);
 
-    public void saveAJSettings(AJSettings ajSettings);
+   String getDefaultTheme();
 
-    public String getDefaultTheme();
+   void setDefaultTheme(String themeShortName);
 
-    public void setDefaultTheme(String themeShortName);
+   boolean isThemesSupported();
 
-    public boolean isThemesSupported();
+   void enableThemeSupport(boolean enable);
 
-    public void enableThemeSupport(boolean enable);
+   LookAFeel[] getLookAndFeels();
 
-    public LookAFeel[] getLookAndFeels();
+   LookAFeel getDefaultLookAndFeel();
 
-    public LookAFeel getDefaultLookAndFeel();
+   void setDefaultLookAndFeel(LookAFeel lookAFeel);
 
-    public void setDefaultLookAndFeel(LookAFeel lookAFeel);
+   int getLinkListenerPort();
 
-    public int getLinkListenerPort();
+   void setLinkListenerPort(int port);
 
-    public void setLinkListenerPort(int port);
+   String getStandardBrowser();
 
-    public String getStandardBrowser();
+   void setStandardBrowser(String browser);
 
-    public void setStandardBrowser(String browser);
+   void loadPluginsOnStartup(boolean loadPluginsOnStartup);
 
-    public void loadPluginsOnStartup(boolean loadPluginsOnStartup);
+   boolean shouldLoadPluginsOnStartup();
 
-    public boolean shouldLoadPluginsOnStartup();
+   boolean shouldShowConnectionDialogOnStartup();
 
-    public boolean shouldShowConnectionDialogOnStartup();
+   void showConnectionDialogOnStartup(boolean show);
 
-    public void showConnectionDialogOnStartup(boolean show);
+   ConnectionSettings[] getConnectionsSet();
 
-    public ConnectionSettings[] getConnectionsSet();
+   void setConnectionsSet(ConnectionSettings[] set);
 
-    public void setConnectionsSet(ConnectionSettings[] set);
+   void setOpenProgram(String path);
 
-    public void setOpenProgram(String path);
-
-    public String getOpenProgram();
+   String getOpenProgram();
 }

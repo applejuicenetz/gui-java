@@ -46,11 +46,11 @@
     <target name="gui-rebuild" depends="gui-clean, gui-compile" description="cleans and compiles the appleJuice-gui">
     </target>
 
-    <target name="create-jar" depends="gui-compile" description="builds appleJuice-jar">
+    <target name="create-jar" depends="gui-rebuild" description="builds appleJuice-jar">
         <jar destfile="${basedir}/AJCoreGUI.jar">
             <manifest>
                 <attribute name="Built-by" value="${user.name}" />
-                <attribute name="Class-Path" value="./needed_jars/log4j-1.2.8.jar ./needed_jars/skinlf.jar ./needed_jars/looks-1.2.1.jar ./needed_jars/ajcorefassade.jar ./needed_jars/tklcontrols.jar ./needed_jars/ajtray.jar" />
+                <attribute name="Class-Path" value="./needed_jars/log4j-1.2.15.jar ./needed_jars/skinlf.jar ./needed_jars/looks-2.2.1.jar ./needed_jars/ajcorefassade.jar ./needed_jars/tklcontrols.jar ./needed_jars/ajtray.jar" />
                 <attribute name="Main-Class" value="de.applejuicenet.client.AppleJuiceClient" />
             </manifest>
             <fileset dir="${basedir}/classes" includes="**/de/**/*.* **/com/jeans/**/*.*" />
@@ -70,7 +70,6 @@
             <fileset dir="${basedir}" includes="pwdlpolicies/*.jar pwdlpolicies/*.txt" />
             <fileset dir="${basedir}" includes="themes/*.zip themes/*.first" />
             <fileset dir="${basedir}" includes="sounds/*.wav sounds/*.first" />
-            <fileset dir="${basedir}" includes="needed_jars/*.jar" excludes="needed_jars/junit.jar" />
         </jar>
     </target>
 

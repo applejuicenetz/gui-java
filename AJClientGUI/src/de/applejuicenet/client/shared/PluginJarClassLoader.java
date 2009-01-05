@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.shared;
 
 import java.io.File;
@@ -24,7 +28,7 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.27 2006/05/08 16:08:38 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.28 2009/01/05 09:26:43 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -35,38 +39,40 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
  */
 public class PluginJarClassLoader extends SecureClassLoader
 {
-   private static Logger               logger = Logger.getLogger(PluginJarClassLoader.class);
+   private static Logger               logger                     = Logger.getLogger(PluginJarClassLoader.class);
    private XMLValueHolder              pluginsPropertiesXMLHolder = null;
-   private ImageIcon                   pluginIcon = null;
-   private Map<String, XMLValueHolder> languageXMLs = new HashMap<String, XMLValueHolder>();
-   private Map<String, ImageIcon>      availableIcons = new HashMap<String, ImageIcon>();
+   private ImageIcon                   pluginIcon                 = null;
+   private Map<String, XMLValueHolder> languageXMLs               = new HashMap<String, XMLValueHolder>();
+   private Map<String, ImageIcon>      availableIcons             = new HashMap<String, ImageIcon>();
 
    public PluginJarClassLoader()
    {
       super();
    }
 
+   @SuppressWarnings("unchecked")
    public PluginConnector getPlugin(File pluginJar) throws Exception
    {
       pluginsPropertiesXMLHolder = null;
-      pluginIcon = null;
+      pluginIcon                 = null;
       languageXMLs.clear();
 
       try
       {
          loadClassBytesFromJar(pluginJar);
-         String          theClassName = pluginsPropertiesXMLHolder.getXMLAttributeByTagName(".root.general.classname.value");
-         Class           cl = loadClass(theClassName);
+         String          theClassName      = pluginsPropertiesXMLHolder.getXMLAttributeByTagName(".root.general.classname.value");
+         Class           cl                = loadClass(theClassName);
          Class[]         constructorHelper = {XMLValueHolder.class, Map.class, ImageIcon.class, Map.class};
-         Constructor     con = cl.getConstructor(constructorHelper);
-         PluginConnector aPlugin = (PluginConnector) con.newInstance(new Object[]
-               {
-                  pluginsPropertiesXMLHolder, languageXMLs, pluginIcon, availableIcons
-               });
+         Constructor     con               = cl.getConstructor(constructorHelper);
+         PluginConnector aPlugin           = (PluginConnector) con.newInstance(new Object[]
+                                                                               {
+                                                                                  pluginsPropertiesXMLHolder, languageXMLs,
+                                                                                  pluginIcon, availableIcons
+                                                                               });
 
          return (PluginConnector) aPlugin;
       }
-      catch(Exception e)
+      catch(Throwable e)
       {
          if(logger.isEnabledFor(Level.INFO))
          {
@@ -77,6 +83,7 @@ public class PluginJarClassLoader extends SecureClassLoader
       }
    }
 
+   @SuppressWarnings("unchecked")
    private void loadClassBytesFromJar(File jar) throws Exception
    {
       if(!jar.isFile())
@@ -84,7 +91,7 @@ public class PluginJarClassLoader extends SecureClassLoader
          return;
       }
 
-      JarFile                 jf = new JarFile(jar);
+      JarFile                 jf        = new JarFile(jar);
       String                  entryName;
       HashMap<String, byte[]> lazyLoad = new HashMap<String, byte[]>();
 
@@ -140,7 +147,7 @@ public class PluginJarClassLoader extends SecureClassLoader
          }
          else if(entryName.indexOf("language_xml_") != -1)
          {
-            String         xmlString = new String(buf, 0, buf.length);
+            String         xmlString    = new String(buf, 0, buf.length);
             XMLValueHolder languageFile = new XMLValueHolder();
 
             languageFile.parse(xmlString);
@@ -190,11 +197,11 @@ public class PluginJarClassLoader extends SecureClassLoader
    }
 
    private byte[] readEntry(JarFile jf, ZipEntry entry)
-      throws IOException
+                     throws IOException
    {
-      InputStream is = jf.getInputStream(entry);
-      int         l = (int) entry.getSize();
-      byte[]      buf = new byte[l];
+      InputStream is   = jf.getInputStream(entry);
+      int         l    = (int) entry.getSize();
+      byte[]      buf  = new byte[l];
       int         read = 0;
 
       while(read < l)
@@ -207,8 +214,9 @@ public class PluginJarClassLoader extends SecureClassLoader
       return buf;
    }
 
+   @SuppressWarnings("unchecked")
    private void defineMyClass(byte[] buf, String name, JarFile jarFile)
-      throws IOException
+                       throws IOException
    {
       try
       {
@@ -231,7 +239,7 @@ public class PluginJarClassLoader extends SecureClassLoader
 
                // rekursiv probieren
                String   className = clfE.getMessage();
-               ZipEntry entry = jarFile.getEntry(className + ".class");
+               ZipEntry entry    = jarFile.getEntry(className + ".class");
                byte[]   innerBuf = readEntry(jarFile, entry);
 
                className = className.replace('/', '.');
