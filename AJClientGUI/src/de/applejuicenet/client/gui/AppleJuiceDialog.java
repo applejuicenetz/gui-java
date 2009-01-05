@@ -129,7 +129,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 {
 
    //CVS-Beispiel 0.60.0-1-CVS
-   public static final String       GUI_VERSION              = "0.70.2-4-CVS";
+   public static final String       GUI_VERSION              = "0.70.2-5-CVS";
    private static Logger            logger                   = Logger.getLogger(AppleJuiceDialog.class);
    private static Map<String, Skin> themes                   = null;
    public static boolean            rewriteProperties        = false;
