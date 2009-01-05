@@ -8,14 +8,14 @@
     <property name="gui.compiledir" location="${basedir}/classes" />
 
     <!-- other path settings, some items to be customized locally ...  -->
-    <property name="log4j-1.2.8.jar" location="${basedir}/needed_jars/log4j-1.2.8.jar" />
+    <property name="log4j.har" location="${basedir}/needed_jars/log4j-1.2.15.jar" />
     <property name="skinlf.jar" location="${basedir}/needed_jars/skinlf.jar" />
     <property name="ajcorefassade.jar" location="${basedir}/needed_jars/ajcorefassade.jar" />
     <property name="tklcontrols.jar" location="${basedir}/needed_jars/tklcontrols.jar" />
 
     <!-- classpath for compilation ... -->
     <path id="lib.path">
-        <pathelement location="${log4j-1.2.8.jar}" />
+        <pathelement location="${log4j.jar}" />
         <pathelement location="${skinlf.jar}" />
         <pathelement location="${ajcorefassade.jar}" />
         <pathelement location="${tklcontrols.jar}" />
@@ -46,7 +46,7 @@
     <target name="gui-rebuild" depends="gui-clean, gui-compile" description="cleans and compiles the appleJuice-gui">
     </target>
 
-    <target name="create-jar" depends="gui-compile" description="builds appleJuice-jar">
+    <target name="create-jar" depends="gui-rebuild" description="builds appleJuice-jar">
         <jar destfile="${basedir}/AJCoreGUI.jar">
             <manifest>
                 <attribute name="Built-by" value="${user.name}" />
