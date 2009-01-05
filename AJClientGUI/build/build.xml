@@ -8,7 +8,7 @@
     <property name="gui.compiledir" location="${basedir}/classes" />
 
     <!-- other path settings, some items to be customized locally ...  -->
-    <property name="log4j.har" location="${basedir}/needed_jars/log4j-1.2.15.jar" />
+    <property name="log4j.jar" location="${basedir}/needed_jars/log4j-1.2.15.jar" />
     <property name="skinlf.jar" location="${basedir}/needed_jars/skinlf.jar" />
     <property name="ajcorefassade.jar" location="${basedir}/needed_jars/ajcorefassade.jar" />
     <property name="tklcontrols.jar" location="${basedir}/needed_jars/tklcontrols.jar" />
