@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.tray;
 
 import java.awt.AWTException;
@@ -16,13 +17,15 @@ import javax.swing.JPopupMenu;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 
-public class TrayLoader
+public class TrayLoader implements TrayIF
 {
+   private String zeigen;
+   private String verstecken;
+
    public boolean makeTray(Image image, String title, final AppleJuiceDialog dialog, final JMenuItem popupShowHideMenuItem,
-                           final String zeigen, final Icon zeigenIcon, final String verstecken, final Icon versteckenIcon,
-                           final JPopupMenu popup)
+                           final Icon zeigenIcon, final Icon versteckenIcon, final JPopupMenu popup)
    {
-      SystemTray     tray     = SystemTray.getSystemTray();
+      SystemTray     tray = SystemTray.getSystemTray();
 
       final TrayIcon trayIcon = new TrayIcon(image, title, null);
 
@@ -84,5 +87,15 @@ public class TrayLoader
       }
 
       return true;
+   }
+
+   public void setTextZeigen(String zeigen)
+   {
+      this.zeigen = zeigen;
+   }
+
+   public void setTextVerstecken(String verstecken)
+   {
+      this.verstecken = verstecken;
    }
 }
