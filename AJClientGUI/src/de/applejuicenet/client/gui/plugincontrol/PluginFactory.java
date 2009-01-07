@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugincontrol;
 
 import java.io.File;
@@ -37,7 +41,7 @@ public abstract class PluginFactory
          if(System.getProperty("os.name").toLowerCase().indexOf("windows") == -1)
          {
             path = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui" + File.separator +
-               "plugins" + File.separator;
+                   "plugins" + File.separator;
          }
          else
          {
@@ -84,7 +88,7 @@ public abstract class PluginFactory
 
                   if(pluginFile.isFile())
                   {
-                     ZipFile  jf = new ZipFile(pluginFile);
+                     ZipFile  jf    = new ZipFile(pluginFile);
                      ZipEntry entry = jf.getEntry("plugin_properties.xml");
 
                      if(entry == null)
@@ -127,11 +131,10 @@ public abstract class PluginFactory
    private static Set<PluginConnector> loadPluginsFromClasspath()
    {
       Set<PluginConnector> thePlugins = new HashSet<PluginConnector>();
-      String[]             which = new String[] {//"de.applejuicenet.client.gui.plugins.jabber.JabberTestLoader",//            "de.applejuicenet.client.gui.plugins.versionchecker.VersioncheckerTestLoader",
-                     "de.applejuicenet.client.gui.plugins.serverwatcher.ServerWatcherTestLoader",
-                     "de.applejuicenet.client.gui.plugins.logviewer.LogViewerTestLoader"
-                     , "de.applejuicenet.client.gui.plugins.ircplugin.IrcPluginTestLoader"
-         };
+      String[]             which = new String[] { //"de.applejuicenet.client.gui.plugins.jabber.JabberTestLoader",//            "de.applejuicenet.client.gui.plugins.versionchecker.VersioncheckerTestLoader",
+                                                  //                     "de.applejuicenet.client.gui.plugins.serverwatcher.ServerWatcherTestLoader",
+                                                  //                     "de.applejuicenet.client.gui.plugins.logviewer.LogViewerTestLoader"
+         "de.applejuicenet.client.gui.plugins.ircplugin.IrcPluginTestLoader"};
 
       for(String curWhich : which)
       {
@@ -152,12 +155,13 @@ public abstract class PluginFactory
       return thePlugins;
    }
 
+   @SuppressWarnings("unchecked")
    private static PluginConnector loadPlugin(String which)
    {
       try
       {
-         Class           pluginClass = Class.forName(which);
-         TestLoader      testLoader = (TestLoader) pluginClass.newInstance();
+         Class           pluginClass     = Class.forName(which);
+         TestLoader      testLoader      = (TestLoader) pluginClass.newInstance();
          PluginConnector pluginConnector = testLoader.getPlugin();
 
          return pluginConnector;

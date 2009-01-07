@@ -8,11 +8,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.lang.reflect.Constructor;
-
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.SecureClassLoader;
-
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +27,7 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.28 2009/01/05 09:26:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.29 2009/01/07 15:21:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,6 +43,7 @@ public class PluginJarClassLoader extends SecureClassLoader
    private ImageIcon                   pluginIcon                 = null;
    private Map<String, XMLValueHolder> languageXMLs               = new HashMap<String, XMLValueHolder>();
    private Map<String, ImageIcon>      availableIcons             = new HashMap<String, ImageIcon>();
+   private Map<String, File>           availableIcons2File        = new HashMap<String, File>();
 
    public PluginJarClassLoader()
    {
@@ -138,12 +138,14 @@ public class PluginJarClassLoader extends SecureClassLoader
          {
             pluginIcon = new ImageIcon(buf);
             availableIcons.put(entryName.substring(0, entryName.length() - 4), pluginIcon);
+            availableIcons2File.put(entryName, jar);
          }
          else if(entryName.endsWith(".gif") || entryName.endsWith(".png"))
          {
             ImageIcon icon = new ImageIcon(buf);
 
             availableIcons.put(entryName.substring(0, entryName.length() - 4), icon);
+            availableIcons2File.put(entryName, jar);
          }
          else if(entryName.indexOf("language_xml_") != -1)
          {
@@ -255,5 +257,31 @@ public class PluginJarClassLoader extends SecureClassLoader
 
          //Klasse wurde aus irgendeinem Grund bereits geladen
       }
+   }
+
+   @Override
+   public URL getResource(String name)
+   {
+      File entry = availableIcons2File.get(name);
+
+      if(null == entry)
+      {
+         return null;
+      }
+
+      URL url = null;
+
+      try
+      {
+         url = new URL("jar:file:" + entry.getAbsolutePath() + "!/" + name);
+      }
+      catch(MalformedURLException e)
+      {
+
+         // bloed, aber nicht soooo schlimm
+         ;
+      }
+
+      return url;
    }
 }

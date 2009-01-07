@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugins.ircplugin;
 
 import java.util.Map;
@@ -8,8 +12,13 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugincontrol.TestLoader;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
-class IrcPluginTestLoader extends TestLoader
+public class IrcPluginTestLoader extends TestLoader
 {
+   public IrcPluginTestLoader()
+   {
+      super();
+   }
+
    @Override
    protected String getPath()
    {
@@ -18,7 +27,7 @@ class IrcPluginTestLoader extends TestLoader
 
    @Override
    protected PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles,
-      ImageIcon icon, Map<String, ImageIcon> availableIcons)
+                                       ImageIcon icon, Map<String, ImageIcon> availableIcons)
    {
       return new IrcPlugin(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
    }
