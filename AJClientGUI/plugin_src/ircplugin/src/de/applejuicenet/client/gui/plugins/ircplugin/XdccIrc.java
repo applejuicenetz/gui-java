@@ -44,7 +44,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.36 2009/01/07 15:23:42 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.35 2009/01/07 15:21:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -59,9 +59,9 @@ public class XdccIrc extends JPanel
    private JButton      cancelButton;
    private Logger       logger;
    private Thread       ircWorker;
-   private String       host             = "irc.devStaff.net";
+   private String       host             = "irc.bongster.eu";
    private int          port             = 6667;
-   private final String STANDARD_CHANNEL = "#applejuice";
+   private final String STANDARD_CHANNEL = "#aj.service-center";
    private JTabbedPane  tabbedPane;
    private String       nickname;
    private String       realname;
