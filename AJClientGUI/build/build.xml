@@ -149,6 +149,27 @@
             <fileset dir="${basedir}/plugins/" includes="ircplugin.jar" />
         </jar>
     </target>
+	
+    <target name="build-pluginjar-versioncheckerplugin" depends="gui-rebuild" description="builds versioncheckerplugin.jar">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${basedir}/plugins" casesensitive="false">
+                <include name="**/versioncheckerplugin.jar" />
+            </fileset>
+        </delete>
+        <javac srcdir="${gui.pluginrootsrcdir}/versionchecker/src" encoding="cp1252" destdir="${gui.compiledir}" debug="true">
+            <classpath>
+                <path refid="lib.path" />
+            </classpath>
+        </javac>
+        <jar destfile="${basedir}/plugins/versioncheckerplugin.jar">
+            <fileset dir="${basedir}/plugin_src/versionchecker" includes="*.xml" />
+            <fileset dir="${basedir}/plugin_src/versionchecker/icons/" includes="*.gif" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/versionchecker/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+        </jar>
+        <jar destfile="${basedir}/plugins/versionchecker.zip">
+            <fileset dir="${basedir}/plugins/" includes="versionchecker.jar" />
+        </jar>
+    </target>
 
     <target name="build-pluginjar-logviewerplugin" depends="gui-rebuild" description="builds logviewerplugin.jar">
         <delete includeEmptyDirs="true">
