@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugins.versionchecker;
 
 import java.awt.BorderLayout;
@@ -18,7 +22,7 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.plugins.versionchecker.panels.MainPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/VersionChecker.java,v 1.3 2006/05/08 16:09:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/VersionChecker.java,v 1.4 2009/01/07 15:29:22 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,7 +37,7 @@ public class VersionChecker extends PluginConnector
    private Logger    logger;
 
    public VersionChecker(XMLValueHolder xMLValueHolder, Map<String, XMLValueHolder> languageFiles, ImageIcon icon,
-      Map<String, ImageIcon> availableIcons)
+                         Map<String, ImageIcon> availableIcons)
    {
       super(xMLValueHolder, languageFiles, icon, availableIcons);
       logger = Logger.getLogger(getClass());
@@ -57,6 +61,7 @@ public class VersionChecker extends PluginConnector
 
    /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
      ueber den DataManger koennen diese abgerufen werden.*/
+   @SuppressWarnings("unchecked")
    public void fireContentChanged(DATALISTENER_TYPE type, Object content)
    {
       try

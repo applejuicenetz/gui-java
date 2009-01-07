@@ -2,10 +2,10 @@
 <root>
 	<general>
 		<title value="VersionChecker"/>
-		<version value="1.4"/>
+		<version value="1.5"/>
 		<author value="Maj0r"/>
 		<contact value="tkrall@tkl-soft.de"/>
-		<description value="Welche Core-Versionen sind zurzeit im Einsatz? Welche Betriebssysteme werden eingesetzt? Dieses Plugin beantwortet Deine Fragen. GUI ab 0.70.0 wird benï¿½tigt."/><istab value="true"/>
+		<description value="Welche Core-Versionen sind zurzeit im Einsatz? Welche Betriebssysteme werden eingesetzt? Dieses Plugin beantwortet Deine Fragen. GUI ab 0.70.2 wird benötigt."/><istab value="true"/>
 		<classname value="de.applejuicenet.client.gui.plugins.versionchecker.VersionChecker"/>
 	</general>
 </root>
