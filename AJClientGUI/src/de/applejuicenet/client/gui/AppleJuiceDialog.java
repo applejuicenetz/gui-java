@@ -592,7 +592,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          PropertiesManager.restoreProperties();
       }
 
-      String nachricht = "appleJuice-Core-GUI wird beendet...";
+      String nachricht = "appleJuice-GUI wird beendet...";
 
       if(logger.isEnabledFor(Level.INFO))
       {
@@ -622,7 +622,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          AppleJuiceClient.getAjFassade().stopXMLCheck();
       }
 
-      String nachricht = "appleJuice-Core-GUI wird beendet...";
+      String nachricht = "appleJuice-GUI wird beendet...";
       Logger aLogger = Logger.getLogger(AppleJuiceDialog.class.getName());
 
       if(aLogger.isEnabledFor(Level.INFO))

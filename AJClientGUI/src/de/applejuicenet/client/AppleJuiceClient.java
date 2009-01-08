@@ -64,7 +64,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.103 2009/01/05 12:07:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.104 2009/01/08 09:31:52 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -344,7 +344,7 @@ public class AppleJuiceClient
 
          dateiName = datum + ".html";
          layout    = new HTMLLayout();
-         layout.setTitle("appleJuice-Core-GUI-Log " + datum);
+         layout.setTitle("appleJuice-GUI-Log " + datum);
          layout.setLocationInfo(true);
          Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
 
@@ -377,8 +377,8 @@ public class AppleJuiceClient
 
       try
       {
-         String       nachricht = "appleJuice-Core-GUI Version " + AppleJuiceDialog.GUI_VERSION + "/" +
-                                  ApplejuiceFassade.FASSADE_VERSION + " wird gestartet...";
+         String       nachricht = "appleJuice-GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION +
+                                  " wird gestartet...";
          ConnectFrame connectFrame = new ConnectFrame();
 
          splash = new Splash(connectFrame, ((ImageIcon) IconManager.getInstance().getIcon("splashscreen")).getImage(), 0, 100);
@@ -521,7 +521,7 @@ public class AppleJuiceClient
          }
 
          theApp.setVisible(true);
-         nachricht = "appleJuice-Core-GUI laeuft...";
+         nachricht = "appleJuice-GUI gestartet...";
          if(logger.isEnabledFor(Level.INFO))
          {
             logger.info(nachricht);
