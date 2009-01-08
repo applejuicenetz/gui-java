@@ -2,9 +2,9 @@
 <root>
 	<general>
 		<title value="LogViewer"/>
-		<version value="1.1"/>
+		<version value="1.2"/>
 		<author value="loevenwong"/>
-		<contact value="timo@loevenwong.de"/>
+		<contact value="tloevenich@tkl-soft.de"/>
 		<description value="Mit dem Logviewer können die Logs angezeigt werden."/>
 		<istab value="true"/>
 		<classname value="de.applejuicenet.client.gui.plugins.logviewer.LogViewerPlugin"/>

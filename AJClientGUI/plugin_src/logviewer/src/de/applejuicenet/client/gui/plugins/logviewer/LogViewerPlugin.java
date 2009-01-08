@@ -1,10 +1,14 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugins.logviewer;
 
 import java.awt.BorderLayout;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -23,10 +27,10 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/logviewer/LogViewerPlugin.java,v 1.2 2006/05/08 16:09:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/logviewer/src/de/applejuicenet/client/gui/plugins/logviewer/LogViewerPlugin.java,v 1.3 2009/01/08 09:45:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
- * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Beschreibung: GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: GPL</p>
  *
  * @author: loevenwong <timo@loevenwong.de>
@@ -35,14 +39,14 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
 public class LogViewerPlugin extends PluginConnector
 {
    private static Logger         logger;
-   private static String         path = AppleJuiceClient.getPath() + File.separator + "logs";
+   private static String         path      = AppleJuiceClient.getPath() + File.separator + "logs";
    private JSplitPane            splitPane = null;
-   private JTextPane             logPane = new JTextPane();
+   private JTextPane             logPane   = new JTextPane();
    private SortedStringListModel listModel = new SortedStringListModel();
-   private JList                 list = new JList(listModel);
+   private JList                 list      = new JList(listModel);
 
    public LogViewerPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles, ImageIcon icon,
-      Map<String, ImageIcon> availableIcons)
+                          Map<String, ImageIcon> availableIcons)
    {
       super(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
       logger = Logger.getLogger(getClass());
@@ -50,7 +54,7 @@ public class LogViewerPlugin extends PluginConnector
       {
          setLayout(new BorderLayout());
          logPane.setBackground(getBackground());
-         logPane.setContentType("text/html"); //$NON-NLS-1$
+         logPane.setContentType("text/html");
          logPane.setEditable(false);
          logPane.setBorder(null);
          list.setCellRenderer(new FileNameListCellRenderer());
@@ -81,7 +85,9 @@ public class LogViewerPlugin extends PluginConnector
    {
       try
       {
-         logPane.setPage("file://localhost/" + path + File.separator + (String) list.getSelectedValue());
+         File selectedLog = (File) list.getSelectedValue();
+
+         logPane.setPage("file://localhost/" + selectedLog.getAbsolutePath());
       }
       catch(Exception e)
       {
@@ -101,18 +107,15 @@ public class LogViewerPlugin extends PluginConnector
          return;
       }
 
-      String[]          tempListe = logPath.list();
-      ArrayList<String> htmlFiles = new ArrayList<String>();
-
-      for(int i = 0; i < tempListe.length; i++)
-      {
-         if(tempListe[i].endsWith(".html"))
+      File[] htmlFiles = logPath.listFiles(new FilenameFilter()
          {
-            htmlFiles.add(tempListe[i]);
-         }
-      }
+            public boolean accept(File dir, String name)
+            {
+               return name.endsWith(".html");
+            }
+         });
 
-      listModel.setData(htmlFiles.toArray(new String[htmlFiles.size()]));
+      listModel.setData(htmlFiles);
    }
 
    public void fireLanguageChanged()

@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.plugins.logviewer;
 
+import java.io.File;
+
 import java.util.HashSet;
 import java.util.TreeSet;
 
@@ -12,14 +14,13 @@ import javax.swing.event.ListDataListener;
 
 public class SortedStringListModel implements ListModel
 {
-   @SuppressWarnings("unchecked")
-   private TreeSet<String>                               data = new TreeSet<String>(new StringComparator());
-   private HashSet<ListDataListener>                     listeners = new HashSet<ListDataListener>();
+   private TreeSet<File>             data      = new TreeSet<File>(new FileModificationDateComparator());
+   private HashSet<ListDataListener> listeners = new HashSet<ListDataListener>();
 
-   public void setData(String[] newData)
+   public void setData(File[] htmlFiles)
    {
       data.clear();
-      for(String curValue : newData)
+      for(File curValue : htmlFiles)
       {
          data.add(curValue);
       }
