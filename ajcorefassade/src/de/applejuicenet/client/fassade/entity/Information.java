@@ -30,9 +30,9 @@ public abstract class Information {
 
 	public final String getUpDownSessionAsString() {
 		StringBuffer result = new StringBuffer(" in: ");
-		result.append(getBytesSpeed(getSessionDownload()));
+		result.append(bytesUmrechnen(getSessionDownload()));
 		result.append(" out: ");
-		result.append(getBytesSpeed(getSessionUpload()));
+		result.append(bytesUmrechnen(getSessionUpload()));
 		return result.toString();
 	}
 
