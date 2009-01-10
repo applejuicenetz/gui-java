@@ -1,7 +1,6 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client;
 
 import java.awt.Dimension;
@@ -30,6 +29,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
@@ -56,7 +56,6 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
-import de.applejuicenet.client.gui.mobileproxy.MobileProxy;
 import de.applejuicenet.client.gui.wizard.WizardDialog;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
@@ -64,7 +63,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.104 2009/01/08 09:31:52 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.105 2009/01/10 13:37:05 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -138,7 +137,7 @@ public class AppleJuiceClient
          }
       };
 
-      Thread t = new Thread(tg, runnable, "appleJuiceCoreGUI");
+      Thread t                    = new Thread(tg, runnable, "appleJuiceCoreGUI");
 
       t.start();
    }
@@ -242,7 +241,7 @@ public class AppleJuiceClient
 
                      out.println(passwort + "|" + curArg);
                      BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                     String         line = reader.readLine();
+                     String         line   = reader.readLine();
 
                      System.out.println(line);
                      socket.close();
@@ -339,11 +338,11 @@ public class AppleJuiceClient
       {
          Logger rootLogger = Logger.getRootLogger();
 
-         String datum     = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date(System.currentTimeMillis()));
+         String datum      = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date(System.currentTimeMillis()));
          String dateiName;
 
-         dateiName = datum + ".html";
-         layout    = new HTMLLayout();
+         dateiName         = datum + ".html";
+         layout            = new HTMLLayout();
          layout.setTitle("appleJuice-GUI-Log " + datum);
          layout.setLocationInfo(true);
          Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
@@ -377,12 +376,13 @@ public class AppleJuiceClient
 
       try
       {
-         String       nachricht = "appleJuice-GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION +
-                                  " wird gestartet...";
+         String       nachricht    = "appleJuice-GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION +
+                                     " wird gestartet...";
          ConnectFrame connectFrame = new ConnectFrame();
 
-         splash = new Splash(connectFrame, ((ImageIcon) IconManager.getInstance().getIcon("splashscreen")).getImage(), 0, 100);
-         KeyStates ks = new KeyStates();
+         splash                    = new Splash(connectFrame,
+                                                ((ImageIcon) IconManager.getInstance().getIcon("splashscreen")).getImage(), 0, 100);
+         KeyStates ks              = new KeyStates();
 
          splash.addKeyListener(ks);
          splash.setVisible(true);
@@ -429,7 +429,7 @@ public class AppleJuiceClient
          AppleJuiceDialog.initThemes();
          splash.setProgress(10, "Teste Verbindung...");
          boolean showDialog = OptionsManagerImpl.getInstance().shouldShowConnectionDialogOnStartup();
-         boolean keyDown = ks.isKeyDown(KeyEvent.VK_SHIFT);
+         boolean keyDown    = ks.isKeyDown(KeyEvent.VK_SHIFT);
 
          if(!showDialog)
          {
@@ -490,153 +490,163 @@ public class AppleJuiceClient
          }
 
          SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
-         PositionManager lm = PositionManagerImpl.getInstance();
 
          splash.setProgress(20, "Lade Hauptdialog...");
-         final AppleJuiceDialog theApp = new AppleJuiceDialog();
-
-         splash.setProgress(100, "GUI geladen...");
-         if(lm.isLegal())
-         {
-            theApp.setLocation(lm.getMainXY());
-            theApp.setSize(lm.getMainDimension());
-         }
-         else
-         {
-            Toolkit   tk            = Toolkit.getDefaultToolkit();
-            Dimension screenSize    = tk.getScreenSize();
-            Dimension appScreenSize = new Dimension(screenSize.width, screenSize.height);
-            Insets    insets        = tk.getScreenInsets(theApp.getGraphicsConfiguration());
-
-            appScreenSize.width -= (insets.left + insets.right);
-            appScreenSize.width = appScreenSize.width / 5 * 4;
-            appScreenSize.height -= (insets.top + insets.bottom);
-            appScreenSize.height = appScreenSize.height / 5 * 4;
-            Point location = new Point((screenSize.width - appScreenSize.width) / 2, (screenSize.height - appScreenSize.height) / 2);
-
-            lm.setMainXY(location);
-            lm.setMainDimension(appScreenSize);
-            theApp.setSize(appScreenSize);
-            theApp.setLocation(location);
-         }
-
-         theApp.setVisible(true);
-         nachricht = "appleJuice-GUI gestartet...";
-         if(logger.isEnabledFor(Level.INFO))
-         {
-            logger.info(nachricht);
-         }
-
-         System.out.println(nachricht);
-         splash.dispose();
-         if(OptionsManagerImpl.getInstance().isErsterStart())
-         {
-            showConnectionWizard(theApp);
-         }
-
-         Thread versionWorker = new Thread()
-         {
-            public void run()
+         SwingUtilities.invokeLater(new Runnable()
             {
-               if(logger.isEnabledFor(Level.DEBUG))
+               public void run()
                {
-                  logger.debug("VersionWorkerThread gestartet. " + this);
-               }
+                  final AppleJuiceDialog theApp = new AppleJuiceDialog();
 
-               try
-               {
-                  ProxySettings proxy        = ProxyManagerImpl.getInstance().getProxySettings();
-                  String        downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "http://www.tkl-soft.de", 80,
-                                                                                      "/applejuice/version.txt");
+                  splash.setProgress(100, "GUI geladen...");
+                  PositionManager lm = PositionManagerImpl.getInstance();
 
-                  if(downloadData.length() > 0)
+                  if(lm.isLegal())
                   {
-                     int             pos1              = downloadData.indexOf("|");
-                     String          aktuellsteVersion = downloadData.substring(0, pos1);
-                     StringTokenizer token1            = new StringTokenizer(aktuellsteVersion, ".");
-                     String          guiVersion        = AppleJuiceDialog.GUI_VERSION;
-
-                     if(guiVersion.indexOf('-') != -1)
-                     {
-                        guiVersion = guiVersion.substring(0, guiVersion.indexOf('-'));
-                     }
-
-                     StringTokenizer token2 = new StringTokenizer(guiVersion, ".");
-
-                     if(token1.countTokens() != 3 || token2.countTokens() != 3)
-                     {
-                        return;
-                     }
-
-                     String[] versionInternet = new String[3];
-                     String[] aktuelleVersion = new String[3];
-
-                     for(int i = 0; i < 3; i++)
-                     {
-                        versionInternet[i] = token1.nextToken();
-                        aktuelleVersion[i] = token2.nextToken();
-                     }
-
-                     int     versionsInfoModus = OptionsManagerImpl.getInstance().getVersionsinfoModus();
-                     boolean showInfo        = false;
-                     boolean versionUpdate   = false;
-                     boolean importantUpdate = false;
-                     boolean cosmeticUpdate  = false;
-
-                     if(Integer.parseInt(versionInternet[0]) > Integer.parseInt(aktuelleVersion[0]))
-                     {
-                        versionUpdate = true;
-                     }
-                     else if(Integer.parseInt(versionInternet[1]) > Integer.parseInt(aktuelleVersion[1]))
-                     {
-                        importantUpdate = true;
-                     }
-                     else if(Integer.parseInt(versionInternet[2]) > Integer.parseInt(aktuelleVersion[2]))
-                     {
-                        cosmeticUpdate = true;
-                     }
-
-                     if(versionsInfoModus == 2 && (cosmeticUpdate || importantUpdate || versionUpdate))
-                     {
-                        showInfo = true;
-                     }
-                     else if(versionsInfoModus == 1 && (importantUpdate || versionUpdate))
-                     {
-                        showInfo = true;
-                     }
-                     else if(versionsInfoModus == 0 && versionUpdate)
-                     {
-                        showInfo = true;
-                     }
-
-                     if(showInfo)
-                     {
-                        int                     pos2                    = downloadData.lastIndexOf("|");
-                        String                  winLink                 = downloadData.substring(pos1 + 1, pos2);
-                        String                  sonstigeLink            = downloadData.substring(pos2 + 1);
-                        UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(theApp, aktuellsteVersion,
-                                                                                                      winLink, sonstigeLink);
-
-                        updateInformationDialog.setVisible(true);
-                     }
+                     theApp.setLocation(lm.getMainXY());
+                     theApp.setSize(lm.getMainDimension());
                   }
-               }
-               catch(Exception e)
-               {
+                  else
+                  {
+                     Toolkit   tk            = Toolkit.getDefaultToolkit();
+                     Dimension screenSize    = tk.getScreenSize();
+                     Dimension appScreenSize = new Dimension(screenSize.width, screenSize.height);
+                     Insets    insets        = tk.getScreenInsets(theApp.getGraphicsConfiguration());
+
+                     appScreenSize.width -= (insets.left + insets.right);
+                     appScreenSize.width = appScreenSize.width / 5 * 4;
+                     appScreenSize.height -= (insets.top + insets.bottom);
+                     appScreenSize.height = appScreenSize.height / 5 * 4;
+                     Point location = new Point((screenSize.width - appScreenSize.width) / 2,
+                                                (screenSize.height - appScreenSize.height) / 2);
+
+                     lm.setMainXY(location);
+                     lm.setMainDimension(appScreenSize);
+                     theApp.setSize(appScreenSize);
+                     theApp.setLocation(location);
+                  }
+
+                  theApp.setVisible(true);
+                  String nachricht = "appleJuice-GUI gestartet...";
+
                   if(logger.isEnabledFor(Level.INFO))
                   {
-                     logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
+                     logger.info(nachricht);
                   }
-               }
 
-               if(logger.isEnabledFor(Level.DEBUG))
-               {
-                  logger.debug("VersionWorkerThread beendet. " + this);
-               }
-            }
-         };
+                  System.out.println(nachricht);
+                  splash.dispose();
+                  if(OptionsManagerImpl.getInstance().isErsterStart())
+                  {
+                     showConnectionWizard(theApp);
+                  }
 
-         versionWorker.start();
+                  Thread versionWorker = new Thread()
+                  {
+                     public void run()
+                     {
+                        if(logger.isEnabledFor(Level.DEBUG))
+                        {
+                           logger.debug("VersionWorkerThread gestartet. " + this);
+                        }
+
+                        try
+                        {
+                           ProxySettings proxy        = ProxyManagerImpl.getInstance().getProxySettings();
+                           String        downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "http://www.tkl-soft.de", 80,
+                                                                                               "/applejuice/version.txt");
+
+                           if(downloadData.length() > 0)
+                           {
+                              int             pos1              = downloadData.indexOf("|");
+                              String          aktuellsteVersion = downloadData.substring(0, pos1);
+                              StringTokenizer token1            = new StringTokenizer(aktuellsteVersion, ".");
+                              String          guiVersion        = AppleJuiceDialog.GUI_VERSION;
+
+                              if(guiVersion.indexOf('-') != -1)
+                              {
+                                 guiVersion = guiVersion.substring(0, guiVersion.indexOf('-'));
+                              }
+
+                              StringTokenizer token2 = new StringTokenizer(guiVersion, ".");
+
+                              if(token1.countTokens() != 3 || token2.countTokens() != 3)
+                              {
+                                 return;
+                              }
+
+                              String[] versionInternet = new String[3];
+                              String[] aktuelleVersion = new String[3];
+
+                              for(int i = 0; i < 3; i++)
+                              {
+                                 versionInternet[i] = token1.nextToken();
+                                 aktuelleVersion[i] = token2.nextToken();
+                              }
+
+                              int     versionsInfoModus = OptionsManagerImpl.getInstance().getVersionsinfoModus();
+                              boolean showInfo          = false;
+                              boolean versionUpdate     = false;
+                              boolean importantUpdate   = false;
+                              boolean cosmeticUpdate    = false;
+
+                              if(Integer.parseInt(versionInternet[0]) > Integer.parseInt(aktuelleVersion[0]))
+                              {
+                                 versionUpdate = true;
+                              }
+                              else if(Integer.parseInt(versionInternet[1]) > Integer.parseInt(aktuelleVersion[1]))
+                              {
+                                 importantUpdate = true;
+                              }
+                              else if(Integer.parseInt(versionInternet[2]) > Integer.parseInt(aktuelleVersion[2]))
+                              {
+                                 cosmeticUpdate = true;
+                              }
+
+                              if(versionsInfoModus == 2 && (cosmeticUpdate || importantUpdate || versionUpdate))
+                              {
+                                 showInfo = true;
+                              }
+                              else if(versionsInfoModus == 1 && (importantUpdate || versionUpdate))
+                              {
+                                 showInfo = true;
+                              }
+                              else if(versionsInfoModus == 0 && versionUpdate)
+                              {
+                                 showInfo = true;
+                              }
+
+                              if(showInfo)
+                              {
+                                 int                     pos2                    = downloadData.lastIndexOf("|");
+                                 String                  winLink                 = downloadData.substring(pos1 + 1, pos2);
+                                 String                  sonstigeLink            = downloadData.substring(pos2 + 1);
+                                 UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(theApp,
+                                                                                                               aktuellsteVersion,
+                                                                                                               winLink, sonstigeLink);
+
+                                 updateInformationDialog.setVisible(true);
+                              }
+                           }
+                        }
+                        catch(Exception e)
+                        {
+                           if(logger.isEnabledFor(Level.INFO))
+                           {
+                              logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
+                           }
+                        }
+
+                        if(logger.isEnabledFor(Level.DEBUG))
+                        {
+                           logger.debug("VersionWorkerThread beendet. " + this);
+                        }
+                     }
+                  };
+
+                  versionWorker.start();
+               }
+            });
 
          /**
           * erstmal raus mit dem Mobile-Client
