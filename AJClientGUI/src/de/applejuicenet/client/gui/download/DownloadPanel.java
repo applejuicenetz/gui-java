@@ -99,6 +99,7 @@ public class DownloadPanel extends TklPanel {
 	private JMenuItem itemCopyToClipboard = new JMenuItem();
 	private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
     private JMenuItem itemOpenWithProgram = new JMenuItem();
+    private JMenuItem itemOpenWithDefaultProgram = new JMenuItem();
 	private JSplitPane splitPane;
 	private JMenuItem partlisteAnzeigen;
 	private Logger logger;
@@ -210,6 +211,10 @@ public class DownloadPanel extends TklPanel {
 		return itemOpenWithProgram;
 	}
 
+	   public JMenuItem getMnuOpenWithDefaultProgram(){
+	        return itemOpenWithDefaultProgram;
+	    }
+
 	public JMenuItem getMnuCopyToClipboard(){
 		return itemCopyToClipboard;
 	}
@@ -291,6 +296,7 @@ public class DownloadPanel extends TklPanel {
 		partlisteAnzeigen.setEnabled(false);
     	popup.add(itemOpenWithProgram);
         itemOpenWithProgram.setIcon(im.getIcon("vlc"));
+        popup.add(itemOpenWithDefaultProgram);
 
 		einfuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

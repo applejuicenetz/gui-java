@@ -1,3 +1,6 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
 package de.applejuicenet.client.gui.download;
 
 import java.awt.Toolkit;
@@ -48,16 +51,18 @@ import de.applejuicenet.client.gui.download.table.DownloadMainNode;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
 import de.applejuicenet.client.gui.download.table.DownloadNode;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
+import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.Settings;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 public class DownloadController extends GuiController
 {
-   private static DownloadController instance = null;
+   private static DownloadController instance                       = null;
    private static final int          ABBRECHEN                      = 0;
    private static final int          COPY_TO_CLIPBOARD              = 1;
    private static final int          COPY_TO_CLIPBOARD_WITH_SOURCES = 2;
    private static final int          OPEN_WITH_PROGRAM              = 3;
+   private static final int          OPEN_WITH_DEFAULT_PROGRAM      = 16;
    private static final int          PAUSE                          = 4;
    private static final int          FORTSETZEN                     = 5;
    private static final int          UMBENENNEN                     = 6;
@@ -85,7 +90,7 @@ public class DownloadController extends GuiController
    private DownloadController()
    {
       super();
-      downloadPanel = new DownloadPanel(this);
+      downloadPanel                                                 = new DownloadPanel(this);
       try
       {
          init();
@@ -124,10 +129,20 @@ public class DownloadController extends GuiController
       if(AppleJuiceClient.getAjFassade().isLocalhost())
       {
          downloadPanel.getMnuOpenWithProgram().addActionListener(new GuiControllerActionListener(this, OPEN_WITH_PROGRAM));
+         if(DesktopTools.isAdvancedSupported())
+         {
+            downloadPanel.getMnuOpenWithDefaultProgram()
+            .addActionListener(new GuiControllerActionListener(this, OPEN_WITH_DEFAULT_PROGRAM));
+         }
+         else
+         {
+            downloadPanel.getMnuOpenWithDefaultProgram().setEnabled(false);
+         }
       }
       else
       {
          downloadPanel.getMnuOpenWithProgram().setEnabled(false);
+         downloadPanel.getMnuOpenWithDefaultProgram().setEnabled(false);
       }
 
       downloadPanel.getDownloadTable().addKeyListener(new KeyAdapter()
@@ -176,7 +191,7 @@ public class DownloadController extends GuiController
       .addDataPropertyChangeListener(new DownloadPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
 
       JComboBox targetDirs = downloadPanel.getTargetDirField();
-      String[]  dirs = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
+      String[]  dirs       = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
 
       for(String curDir : dirs)
       {
@@ -221,6 +236,12 @@ public class DownloadController extends GuiController
          case OPEN_WITH_PROGRAM:
          {
             openWithProgram();
+            break;
+         }
+
+         case OPEN_WITH_DEFAULT_PROGRAM:
+         {
+            openWithDefaultProgram();
             break;
          }
 
@@ -370,7 +391,7 @@ public class DownloadController extends GuiController
             if(directory != null && directory.length() > 0)
             {
                JComboBox targetDirs = downloadPanel.getTargetDirField();
-               boolean   found = false;
+               boolean   found      = false;
 
                for(int i = 0; i < targetDirs.getItemCount(); i++)
                {
@@ -544,7 +565,7 @@ public class DownloadController extends GuiController
       downloadPanel.getMnuZielordner().setEnabled(false);
       downloadPanel.getMnuPartlisteAnzeigen().setEnabled(false);
       boolean pausiert = false;
-      boolean laufend = false;
+      boolean laufend  = false;
 
       if(selectedItems != null)
       {
@@ -695,7 +716,7 @@ public class DownloadController extends GuiController
          if(selectedItems[0].getClass() == DownloadMainNode.class &&
                ((DownloadMainNode) selectedItems[0]).getType() == MainNodeType.ROOT_NODE)
          {
-            Download             download = ((DownloadMainNode) selectedItems[0]).getDownload();
+            Download             download             = ((DownloadMainNode) selectedItems[0]).getDownload();
             RenameDownloadDialog renameDownloadDialog = new RenameDownloadDialog(AppleJuiceDialog.getApp(), download);
 
             renameDownloadDialog.setVisible(true);
@@ -813,12 +834,12 @@ public class DownloadController extends GuiController
       }
 
       final String link = downloadPanel.getDownloadLinkField().getText();
-      Object       sel = downloadPanel.getTargetDirField().getSelectedItem();
+      Object       sel  = downloadPanel.getTargetDirField().getSelectedItem();
       String       tmp;
 
       if(sel != null)
       {
-         tmp = (String) sel;
+         tmp            = (String) sel;
       }
       else
       {
@@ -900,7 +921,7 @@ public class DownloadController extends GuiController
          }
       }
 
-      String[]                   dirs = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
+      String[]                   dirs                       = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
       IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(AppleJuiceDialog.getApp(), dirs,
                                                                                              selectedDir);
 
@@ -982,10 +1003,10 @@ public class DownloadController extends GuiController
          else if(selectedItems[0] instanceof DownloadSource)
          {
             DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-            Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-            String                key = Integer.toString(downloadSource.getDownloadId());
+            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+            String                key            = Integer.toString(downloadSource.getDownloadId());
 
-            download = downloads.get(key);
+            download                             = downloads.get(key);
          }
 
          if(download != null)
@@ -1024,13 +1045,58 @@ public class DownloadController extends GuiController
       }
    }
 
+   private void openWithDefaultProgram()
+   {
+      Object[] selectedItems = getSelectedDownloadItems();
+
+      if(selectedItems != null && selectedItems.length == 1)
+      {
+         Download download = null;
+
+         if(selectedItems[0].getClass() == DownloadMainNode.class &&
+               ((DownloadMainNode) selectedItems[0]).getType() == MainNodeType.ROOT_NODE)
+         {
+            download = ((DownloadMainNode) selectedItems[0]).getDownload();
+         }
+         else if(selectedItems[0] instanceof DownloadSource)
+         {
+            DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
+            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+            String                key            = Integer.toString(downloadSource.getDownloadId());
+
+            download                             = downloads.get(key);
+         }
+
+         if(download != null)
+         {
+            Integer shareId = new Integer(download.getShareId());
+
+            try
+            {
+               Share share = (Share) AppleJuiceClient.getAjFassade().getObjectById(shareId);
+
+               if(share != null)
+               {
+                  String filename = share.getFilename();
+
+                  DesktopTools.open(new File(filename));
+               }
+            }
+            catch(IllegalArgumentException e)
+            {
+               logger.error(e);
+            }
+         }
+      }
+   }
+
    private void copyToClipboardWithSources()
    {
       Object[] selectedItems = getSelectedDownloadItems();
 
       if(selectedItems != null && selectedItems.length == 1)
       {
-         Clipboard    cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+         Clipboard    cb     = Toolkit.getDefaultToolkit().getSystemClipboard();
          StringBuffer toCopy = new StringBuffer();
 
          toCopy.append("ajfsp://file|");
@@ -1047,9 +1113,9 @@ public class DownloadController extends GuiController
          else if(selectedItems[0] instanceof DownloadSource)
          {
             DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-            Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-            String                key = Integer.toString(downloadSource.getDownloadId());
-            Download              download = downloads.get(key);
+            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+            String                key            = Integer.toString(downloadSource.getDownloadId());
+            Download              download       = downloads.get(key);
 
             if(download != null)
             {
@@ -1060,7 +1126,7 @@ public class DownloadController extends GuiController
 
          if(copyToClipboard)
          {
-            long        port = AppleJuiceClient.getAjFassade().getAJSettings().getPort();
+            long        port        = AppleJuiceClient.getAjFassade().getAJSettings().getPort();
             Information information = AppleJuiceClient.getAjFassade().getInformation();
 
             toCopy.append("|");
@@ -1094,7 +1160,7 @@ public class DownloadController extends GuiController
 
       if(selectedItems != null && selectedItems.length == 1)
       {
-         Clipboard    cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+         Clipboard    cb     = Toolkit.getDefaultToolkit().getSystemClipboard();
          StringBuffer toCopy = new StringBuffer();
 
          toCopy.append("ajfsp://file|");
@@ -1111,9 +1177,9 @@ public class DownloadController extends GuiController
          else if(selectedItems[0] instanceof DownloadSource)
          {
             DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-            Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-            String                key       = Integer.toString(downloadSource.getDownloadId());
-            Download              download = downloads.get(key);
+            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+            String                key            = Integer.toString(downloadSource.getDownloadId());
+            Download              download       = downloads.get(key);
 
             if(download != null)
             {
@@ -1182,7 +1248,7 @@ public class DownloadController extends GuiController
             initialized = true;
             firstUpdate = false;
             int             width = downloadPanel.getScrollPane().getWidth() - 18;
-            PositionManager pm      = PositionManagerImpl.getInstance();
+            PositionManager pm = PositionManagerImpl.getInstance();
             TableColumn[]   columns = downloadPanel.getDownloadTableColumns();
 
             if(pm.isLegal())
@@ -1249,10 +1315,10 @@ public class DownloadController extends GuiController
    protected void languageChanged()
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      String           text = languageSelector.getFirstAttrbuteByTagName(".root.mainform.Label14.caption");
+      String           text             = languageSelector.getFirstAttrbuteByTagName(".root.mainform.Label14.caption");
 
-      dialogTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
-      downloadAbbrechen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.msgdlgtext5"));
+      dialogTitel                       = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
+      downloadAbbrechen                 = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.msgdlgtext5"));
       downloadPanel.getLblLink().setText(ZeichenErsetzer.korrigiereUmlaute(text));
       downloadPanel.getBtnStartDownload()
       .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.downlajfsp.caption")));
@@ -1270,7 +1336,7 @@ public class DownloadController extends GuiController
       tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.queue.col7caption"));
       tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.queue.col8caption"));
       tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.queue.col9caption"));
-      TableColumn[]       columns          = downloadPanel.getDownloadTableColumns();
+      TableColumn[]       columns = downloadPanel.getDownloadTableColumns();
       JCheckBoxMenuItem[] columnPopupItems = downloadPanel.getColumnPopupItems();
 
       for(int i = 0; i < columns.length; i++)
@@ -1306,11 +1372,12 @@ public class DownloadController extends GuiController
       downloadPanel.getMnuEinfuegen()
       .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.einfuegen")));
       downloadPanel.getMnuOpenWithProgram().setText("VLC");
+      downloadPanel.getMnuOpenWithDefaultProgram().setText("Starte mit Standardprogramm");
       downloadPanel.getLblTargetDir()
       .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.zielverzeichnis")));
       alreadyLoaded = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.bereitsgeladen"));
-      invalidLink = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.falscherlink"));
-      linkFailure = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.sonstigerlinkfehlerlang"));
+      invalidLink   = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.falscherlink"));
+      linkFailure   = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.sonstigerlinkfehlerlang"));
    }
 
    protected void contentChanged(DATALISTENER_TYPE type, final Object content)
