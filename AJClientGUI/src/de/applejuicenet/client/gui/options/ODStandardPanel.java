@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -36,6 +40,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.ConnectionSettings;
+import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
@@ -45,7 +50,7 @@ import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODStandardPanel.java,v 1.6 2006/05/03 14:52:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODStandardPanel.java,v 1.7 2009/01/11 21:32:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -56,23 +61,23 @@ import de.tklsoft.gui.controls.TKLTextField;
  */
 public class ODStandardPanel extends JPanel implements OptionsRegister
 {
-   private boolean            dirty = false;
-   private boolean            xmlPortDirty = false;
-   private JLabel             label1 = new JLabel();
-   private JLabel             label2 = new JLabel();
-   private JLabel             label3 = new JLabel();
-   private JLabel             label4 = new JLabel();
-   private JLabel             label6 = new JLabel();
-   private JLabel             label7 = new JLabel();
+   private boolean            dirty                 = false;
+   private boolean            xmlPortDirty          = false;
+   private JLabel             label1                = new JLabel();
+   private JLabel             label2                = new JLabel();
+   private JLabel             label3                = new JLabel();
+   private JLabel             label4                = new JLabel();
+   private JLabel             label6                = new JLabel();
+   private JLabel             label7                = new JLabel();
    private JLabel             selectStandardBrowser;
    private JLabel             openTemp;
    private JLabel             openIncoming;
-   private TKLTextField       temp = new TKLTextField();
-   private TKLTextField       incoming = new TKLTextField();
-   private TKLTextField       port = new TKLTextField();
-   private TKLTextField       xmlPort = new TKLTextField();
-   private TKLTextField       nick = new TKLTextField();
-   private TKLTextField       browser = new TKLTextField();
+   private TKLTextField       temp                  = new TKLTextField();
+   private TKLTextField       incoming              = new TKLTextField();
+   private TKLTextField       port                  = new TKLTextField();
+   private TKLTextField       xmlPort               = new TKLTextField();
+   private TKLTextField       nick                  = new TKLTextField();
+   private TKLTextField       browser               = new TKLTextField();
    private JLabel             hint1;
    private JLabel             hint2;
    private JLabel             hint3;
@@ -83,7 +88,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
    private AJSettings         ajSettings;
    private TKLComboBox        cmbLog;
    private TKLComboBox        updateInfoModus;
-   private TKLCheckBox        loadPlugins = new TKLCheckBox();
+   private TKLCheckBox        loadPlugins           = new TKLCheckBox();
    private Logger             logger;
    private ConnectionSettings remote;
    private Icon               menuIcon;
@@ -91,11 +96,11 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
 
    public ODStandardPanel(JDialog parent, AJSettings ajSettings, ConnectionSettings remote)
    {
-      logger = Logger.getLogger(getClass());
+      logger                                        = Logger.getLogger(getClass());
       try
       {
-         this.remote = remote;
-         this.parent = parent;
+         this.remote     = remote;
+         this.parent     = parent;
          this.ajSettings = ajSettings;
          init();
       }
@@ -145,9 +150,9 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
    private void init() throws Exception
    {
       OptionsManager optionsManager = OptionsManagerImpl.getInstance();
-      IconManager    im = IconManager.getInstance();
+      IconManager    im             = IconManager.getInstance();
 
-      menuIcon = im.getIcon("opt_standard");
+      menuIcon                      = im.getIcon("opt_standard");
       port.setDocument(new NumberInputVerifier());
       xmlPort.setDocument(new NumberInputVerifier());
       temp.setEditable(false);
@@ -165,19 +170,18 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
 
       panel8.add(new JLabel("Logging: "));
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      Level            logLevel = optionsManager.getLogLevel();
+      Level            logLevel         = optionsManager.getLogLevel();
 
-      LevelItem[]      levelItems = new LevelItem[3]; //{ "Info", "Debug", "keins"};
+      LevelItem[]      levelItems       = new LevelItem[3]; //{ "Info", "Debug", "keins"};
 
-      levelItems[0] = new LevelItem(Level.INFO,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.info")));
-      levelItems[1] = new LevelItem(Level.DEBUG,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.debug")));
-      levelItems[2] = new LevelItem(Level.OFF,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.off")));
-      menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.einstform.standardsheet.caption"));
-      cmbLog = new TKLComboBox(levelItems);
+      levelItems[0]                     = new LevelItem(Level.INFO,
+                                                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.info")));
+      levelItems[1]                     = new LevelItem(Level.DEBUG,
+                                                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.debug")));
+      levelItems[2]                     = new LevelItem(Level.OFF,
+                                                        ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.off")));
+      menuText                          = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.einstform.standardsheet.caption"));
+      cmbLog                            = new TKLComboBox(levelItems);
       cmbLog.addItemListener(new ItemListener()
          {
             public void itemStateChanged(ItemEvent e)
@@ -207,14 +211,11 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
 
       updateInfoModus = new TKLComboBox();
       UpdateInfoItem item0 = new UpdateInfoItem(0,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.standard.updateinfo0")));
+                                                ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.updateinfo0")));
       UpdateInfoItem item1 = new UpdateInfoItem(1,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.standard.updateinfo1")));
+                                                ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.updateinfo1")));
       UpdateInfoItem item2 = new UpdateInfoItem(2,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.standard.updateinfo2")));
+                                                ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.updateinfo2")));
 
       updateInfoModus.addItem(item0);
       updateInfoModus.addItem(item1);
@@ -254,9 +255,8 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
             }
          });
 
-      JPanel panel9 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-      JLabel label10 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.standard.updateinfotext")));
+      JPanel panel9  = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      JLabel label10 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.updateinfotext")));
 
       panel9.add(label10);
       panel9.add(updateInfoModus);
@@ -271,12 +271,9 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.einstform.Label7.caption")));
       label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.einstform.Label3.caption")));
       label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.einstform.Label8.caption")));
-      label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.javagui.options.standard.xmlport")));
-      label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.javagui.options.standard.standardbrowser")));
-      loadPlugins.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.javagui.options.standard.ladeplugins")));
+      label6.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.xmlport")));
+      label7.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.standardbrowser")));
+      loadPlugins.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.ladeplugins")));
 
       loadPlugins.setSelected(optionsManager.shouldLoadPluginsOnStartup());
 
@@ -288,27 +285,22 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       hint4 = new HintLabel(icon);
       hint5 = new HintLabel(icon);
       hint6 = new HintLabel(icon);
-      hint1.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.javagui.options.standard.ttipp_temp")));
-      hint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.javagui.options.standard.ttipp_port")));
-      hint3.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.javagui.options.standard.ttipp_nick")));
-      hint4.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.einstform.Label1.caption")));
-      hint5.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.javagui.options.logging.ttip")));
-      hint6.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.javagui.options.standard.ttipp_xmlport")));
+      hint1.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.ttipp_temp")));
+      hint2.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.ttipp_port")));
+      hint3.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.ttipp_nick")));
+      hint4.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.einstform.Label1.caption")));
+      hint5.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.logging.ttip")));
+      hint6.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.ttipp_xmlport")));
 
-      Icon                         icon2 = im.getIcon("folderopen");
+      Icon                         icon2          = im.getIcon("folderopen");
       DirectoryChooserMouseAdapter dcMouseAdapter = new DirectoryChooserMouseAdapter();
 
-      openTemp = new JLabel(icon2);
+      openTemp                                    = new JLabel(icon2);
       openTemp.addMouseListener(dcMouseAdapter);
       openIncoming = new JLabel(icon2);
       openIncoming.addMouseListener(dcMouseAdapter);
       selectStandardBrowser = new JLabel(icon2);
+
       selectStandardBrowser.addMouseListener(new SelectBrowserMouseListener());
 
       loadPlugins.addChangeListener(new ChangeListener()
@@ -321,24 +313,24 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
 
       GridBagConstraints constraints = new GridBagConstraints();
 
-      constraints.anchor = GridBagConstraints.NORTH;
-      constraints.fill = GridBagConstraints.BOTH;
-      constraints.gridx = 0;
-      constraints.gridy = 0;
+      constraints.anchor     = GridBagConstraints.NORTH;
+      constraints.fill       = GridBagConstraints.BOTH;
+      constraints.gridx      = 0;
+      constraints.gridy      = 0;
       constraints.insets.top = 5;
 
-      JPanel panel1 = new JPanel(new GridBagLayout());
-      JPanel panel2 = new JPanel(new GridBagLayout());
-      JPanel panel3 = new JPanel(new GridBagLayout());
-      JPanel panel4 = new JPanel(new GridBagLayout());
-      JPanel panel7 = new JPanel(new GridBagLayout());
-      JPanel panel10 = new JPanel(new GridBagLayout());
-      JPanel panel11 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      JPanel panel1          = new JPanel(new GridBagLayout());
+      JPanel panel2          = new JPanel(new GridBagLayout());
+      JPanel panel3          = new JPanel(new GridBagLayout());
+      JPanel panel4          = new JPanel(new GridBagLayout());
+      JPanel panel7          = new JPanel(new GridBagLayout());
+      JPanel panel10         = new JPanel(new GridBagLayout());
+      JPanel panel11         = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
       panel11.add(loadPlugins);
 
       constraints.insets.right = 5;
-      constraints.insets.left = 4;
+      constraints.insets.left  = 4;
       panel1.add(label1, constraints);
       panel2.add(label2, constraints);
       panel3.add(label3, constraints);
@@ -346,24 +338,24 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       panel7.add(label6, constraints);
       panel10.add(label7, constraints);
 
-      constraints.insets.left = 0;
+      constraints.insets.left  = 0;
       constraints.insets.right = 2;
-      constraints.gridx = 1;
-      constraints.weightx = 1;
+      constraints.gridx        = 1;
+      constraints.weightx      = 1;
       panel1.add(temp, constraints);
       panel2.add(incoming, constraints);
       panel3.add(port, constraints);
       panel7.add(xmlPort, constraints);
       panel4.add(nick, constraints);
       panel10.add(browser, constraints);
-      constraints.gridx = 2;
+      constraints.gridx   = 2;
       constraints.weightx = 0;
       panel1.add(openTemp, constraints);
       panel2.add(openIncoming, constraints);
       panel10.add(selectStandardBrowser, constraints);
 
-      constraints.gridx = 0;
-      constraints.gridy = 0;
+      constraints.gridx   = 0;
+      constraints.gridy   = 0;
       constraints.weightx = 1;
       panel6.add(panel1, constraints);
       constraints.gridy = 1;
@@ -378,9 +370,9 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       panel6.add(panel10, constraints);
 
       constraints.insets.top = 10;
-      constraints.gridx = 1;
-      constraints.gridy = 0;
-      constraints.weightx = 0;
+      constraints.gridx      = 1;
+      constraints.gridy      = 0;
+      constraints.weightx    = 0;
       panel6.add(hint1, constraints);
       constraints.gridy = 2;
       panel6.add(hint2, constraints);
@@ -389,8 +381,8 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       constraints.gridy = 4;
       panel6.add(hint3, constraints);
 
-      constraints.gridy = 6;
-      constraints.gridx = 0;
+      constraints.gridy     = 6;
+      constraints.gridx     = 0;
       constraints.gridwidth = 1;
       panel6.add(panel8, constraints);
       constraints.gridx = 1;
@@ -413,6 +405,13 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       cmbLog.confirmNewValue();
       updateInfoModus.confirmNewValue();
       loadPlugins.confirmNewValue();
+
+      if(DesktopTools.isAdvancedSupported() && System.getProperty("os.name").toLowerCase().indexOf("linux") == -1)
+      {
+         selectStandardBrowser.setVisible(false);
+         browser.setVisible(false);
+         label7.setVisible(false);
+      }
    }
 
    public boolean isXmlPortDirty()
@@ -486,7 +485,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
          {
             if(xmlPortNr > 1024 && xmlPortNr <= 32000)
             {
-               dirty = true;
+               dirty        = true;
                xmlPortDirty = true;
                remote.setXmlPort(Integer.parseInt(xmlPort.getText()));
                ajSettings.setXMLPort(Long.parseLong(xmlPort.getText()));
@@ -528,7 +527,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
 
       public void mouseClicked(MouseEvent e)
       {
-         JLabel       source = (JLabel) e.getSource();
+         JLabel       source      = (JLabel) e.getSource();
          JFileChooser fileChooser = new JFileChooser();
 
          fileChooser.setDialogType(JFileChooser.FILES_ONLY);
@@ -579,7 +578,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       public void mouseClicked(MouseEvent e)
       {
          JLabel source = (JLabel) e.getSource();
-         String title = "";
+         String title  = "";
 
          if(source == openTemp)
          {
@@ -630,7 +629,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
 
       public LevelItem(Level level, String bezeichnung)
       {
-         this.level = level;
+         this.level       = level;
          this.bezeichnung = bezeichnung;
       }
 
@@ -653,7 +652,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
 
       public UpdateInfoItem(int modus, String bezeichnung)
       {
-         this.modus = modus;
+         this.modus       = modus;
          this.bezeichnung = bezeichnung;
       }
 

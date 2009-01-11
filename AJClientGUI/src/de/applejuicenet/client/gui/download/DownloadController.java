@@ -128,21 +128,22 @@ public class DownloadController extends GuiController
       downloadPanel.getBtnPowerDownload().addActionListener(new GuiControllerActionListener(this, START_POWERDOWNLOAD));
       if(AppleJuiceClient.getAjFassade().isLocalhost())
       {
-         downloadPanel.getMnuOpenWithProgram().addActionListener(new GuiControllerActionListener(this, OPEN_WITH_PROGRAM));
          if(DesktopTools.isAdvancedSupported())
          {
+            downloadPanel.getMnuOpenWithProgram().setVisible(false);
             downloadPanel.getMnuOpenWithDefaultProgram()
             .addActionListener(new GuiControllerActionListener(this, OPEN_WITH_DEFAULT_PROGRAM));
          }
          else
          {
-            downloadPanel.getMnuOpenWithDefaultProgram().setEnabled(false);
+            downloadPanel.getMnuOpenWithProgram().addActionListener(new GuiControllerActionListener(this, OPEN_WITH_PROGRAM));
+            downloadPanel.getMnuOpenWithDefaultProgram().setVisible(false);
          }
       }
       else
       {
          downloadPanel.getMnuOpenWithProgram().setEnabled(false);
-         downloadPanel.getMnuOpenWithDefaultProgram().setEnabled(false);
+         downloadPanel.getMnuOpenWithDefaultProgram().setVisible(false);
       }
 
       downloadPanel.getDownloadTable().addKeyListener(new KeyAdapter()
@@ -1372,7 +1373,8 @@ public class DownloadController extends GuiController
       downloadPanel.getMnuEinfuegen()
       .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.einfuegen")));
       downloadPanel.getMnuOpenWithProgram().setText("VLC");
-      downloadPanel.getMnuOpenWithDefaultProgram().setText("Starte mit Standardprogramm");
+      downloadPanel.getMnuOpenWithDefaultProgram()
+      .setText(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.startemitstandard"));
       downloadPanel.getLblTargetDir()
       .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.zielverzeichnis")));
       alreadyLoaded = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.bereitsgeladen"));

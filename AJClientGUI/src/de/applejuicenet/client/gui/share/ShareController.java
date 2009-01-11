@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.19 2009/01/11 17:52:02 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.20 2009/01/11 21:32:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -134,20 +134,21 @@ public class ShareController extends GuiController
 
       if(AppleJuiceClient.getAjFassade().isLocalhost())
       {
-         sharePanel.getMnuOpenWithProgram().addActionListener(new GuiControllerActionListener(this, OPEN_WITH_PROGRAM));
          if(DesktopTools.isAdvancedSupported())
          {
             sharePanel.getMnuOpenWithStandardProgram()
             .addActionListener(new GuiControllerActionListener(this, OPEN_WITH_STANDARD_PROGRAM));
+            sharePanel.getMnuOpenWithProgram().setVisible(false);
          }
          else
          {
-            sharePanel.getMnuOpenWithStandardProgram().setEnabled(false);
+            sharePanel.getMnuOpenWithStandardProgram().setVisible(false);
+            sharePanel.getMnuOpenWithProgram().addActionListener(new GuiControllerActionListener(this, OPEN_WITH_PROGRAM));
          }
       }
       else
       {
-         sharePanel.getMnuOpenWithProgram().setEnabled(false);
+         sharePanel.getMnuOpenWithProgram().setVisible(false);
       }
    }
 
@@ -718,7 +719,8 @@ public class ShareController extends GuiController
       sharePanel.getMnuCopyToClipboardWithSources()
       .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.getlinkwithsources")));
       sharePanel.getMnuOpenWithProgram().setText("VLC");
-      sharePanel.getMnuOpenWithStandardProgram().setText("mit Standardprogramm starten");
+      sharePanel.getMnuOpenWithStandardProgram()
+      .setText(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.startemitstandard"));
       sharePanel.getBtnRefresh()
       .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.startsharecheck.caption")));
       sharePanel.getBtnRefresh()
