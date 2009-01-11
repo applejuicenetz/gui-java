@@ -9,10 +9,11 @@ import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.6 2005/02/28 14:58:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.7 2009/01/11 09:28:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,7 +33,7 @@ public class UploadDataTableModel
 
     static protected Class[] cTypes = {
         TreeTableModel.class, String.class, String.class, String.class, String.class, String.class,
-        Integer.class, String.class};
+        String.class, String.class};
 
     private SimpleDateFormat formatter = new SimpleDateFormat(
         "HH:mm:ss");
@@ -110,7 +111,7 @@ public class UploadDataTableModel
                     return "";
                 }
                 case 6:
-                    return new Integer(upload.getPrioritaet());
+                    return DownloadModel.powerdownload(upload.getPrioritaet());
                 case 7:
                     return upload.getVersion().getVersion();
                 default:
