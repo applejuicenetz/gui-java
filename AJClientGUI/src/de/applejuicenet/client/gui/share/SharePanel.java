@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.share;
 
 import java.awt.BorderLayout;
@@ -31,12 +35,13 @@ import de.applejuicenet.client.gui.share.table.ShareTable;
 import de.applejuicenet.client.gui.share.tree.DirectoryTree;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
+
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.layout.Synchronizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.10 2005/04/18 13:54:16 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.11 2009/01/11 17:52:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,227 +50,271 @@ import de.tklsoft.gui.layout.Synchronizer;
  * @author: Maj0r [aj@tkl-soft.de]
  *
  */
+public class SharePanel extends TklPanel
+{
+   private JPanel        panelCenter;
+   private DirectoryTree folderTree                     = new DirectoryTree();
+   private TitledBorder  folderTreeBolder;
+   private TitledBorder  mailPanelBolder;
+   private JLabel        dateien                        = new JLabel();
+   private TKLButton     neueListe                      = new TKLButton();
+   private TKLButton     neuLaden                       = new TKLButton();
+   private TKLButton     refresh                        = new TKLButton();
+   private TKLButton     prioritaetSetzen               = new TKLButton();
+   private TKLButton     prioritaetAufheben             = new TKLButton();
+   private TKLComboBox   cmbPrio                        = new TKLComboBox();
+   private AJSettings    ajSettings;
+   private ShareTable    shareTable;
+   private ShareModel    shareModel;
+   private JPopupMenu    popup                          = new JPopupMenu();
+   private JMenuItem     sharedwsub;
+   private JMenuItem     sharedwosub;
+   private JMenuItem     notshared;
+   private JPopupMenu    popup2                         = new JPopupMenu();
+   private JMenuItem     itemCopyToClipboard            = new JMenuItem();
+   private JMenuItem     itemCopyToClipboardWithSources = new JMenuItem();
+   private JMenuItem     itemCopyToClipboardAsUBBCode   = new JMenuItem();
+   private JMenuItem     itemOpenWithProgram            = new JMenuItem();
+   private JMenuItem     itemOpenWithStandardProgramm   = new JMenuItem();
+   private Logger        logger;
 
-public class SharePanel extends TklPanel{
+   public SharePanel(GuiController guiController)
+   {
+      super(guiController);
+      logger                                            = Logger.getLogger(getClass());
+      try
+      {
+         init();
+      }
+      catch(Exception e)
+      {
+         if(logger.isEnabledFor(Level.ERROR))
+         {
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+         }
+      }
+   }
 
-    private JPanel panelCenter;
-    private DirectoryTree folderTree = new DirectoryTree();
-    private TitledBorder folderTreeBolder;
-    private TitledBorder mailPanelBolder;
-    private JLabel dateien = new JLabel();
-    private TKLButton neueListe = new TKLButton();
-    private TKLButton neuLaden = new TKLButton();
-    private TKLButton refresh = new TKLButton();
-    private TKLButton prioritaetSetzen = new TKLButton();
-    private TKLButton prioritaetAufheben = new TKLButton();
-    private TKLComboBox cmbPrio = new TKLComboBox();
-    private AJSettings ajSettings;
-    private ShareTable shareTable;
-    private ShareModel shareModel;
-    private JPopupMenu popup = new JPopupMenu();
-    private JMenuItem sharedwsub;
-    private JMenuItem sharedwosub;
-    private JMenuItem notshared;
-    private JPopupMenu popup2 = new JPopupMenu();
-    private JMenuItem itemCopyToClipboard = new JMenuItem();
-    private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
-    private JMenuItem itemCopyToClipboardAsUBBCode = new JMenuItem();
-    private JMenuItem itemOpenWithProgram = new JMenuItem();
-    private Logger logger;
-    
-    public TKLButton getBtnPrioritaetAufheben(){
-    	return prioritaetAufheben;
-    }
-    
-    public TKLButton getBtnPrioritaetSetzen(){
-    	return prioritaetSetzen;
-    }
+   public JMenuItem getMnuOpenWithStandardProgram()
+   {
+      return itemOpenWithStandardProgramm;
+   }
 
-    public TKLButton getBtnNeuLaden(){
-    	return neuLaden;
-    }
+   public TKLButton getBtnPrioritaetAufheben()
+   {
+      return prioritaetAufheben;
+   }
 
-    public TKLButton getBtnRefresh(){
-    	return refresh;
-    }
+   public TKLButton getBtnPrioritaetSetzen()
+   {
+      return prioritaetSetzen;
+   }
 
-    public TKLButton getBtnNeueListe(){
-    	return neueListe;
-    }
-    
-    public JMenuItem getMnuNotShared(){
-    	return notshared;
-    }
-    
-    public JMenuItem getMnuSharedWithoutSub(){
-    	return sharedwosub;
-    }
-    
-    public JMenuItem getMnuSharedWithSub(){
-    	return sharedwsub;
-    }    
-    
-    public JMenuItem getMnuCopyToClipboard(){
-    	return itemCopyToClipboard;
-    }
-    
-    public JMenuItem getMnuCopyToClipboardWithSources(){
-    	return itemCopyToClipboardWithSources;
-    }
+   public TKLButton getBtnNeuLaden()
+   {
+      return neuLaden;
+   }
 
-    public JMenuItem getMnuCopyToClipboardAsUBBCode(){
-    	return itemCopyToClipboardAsUBBCode;
-    }
+   public TKLButton getBtnRefresh()
+   {
+      return refresh;
+   }
 
-    public JMenuItem getMnuOpenWithProgram(){
-    	return itemOpenWithProgram;
-    }
-    
-    public ShareTable getShareTable(){
-    	return shareTable;
-    }
+   public TKLButton getBtnNeueListe()
+   {
+      return neueListe;
+   }
 
-    public ShareModel getShareModel(){
-    	return shareModel;
-    }
-    
-    public JLabel getLblDateien(){
-    	return dateien;
-    }
-    
-    public TKLComboBox getCmbPrioritaet(){
-    	return cmbPrio;
-    }
-    
-    public DirectoryTree getDirectoryTree(){
-    	return folderTree;
-    }
-    
-    public JPopupMenu getPopupMenu(){
-    	return popup;
-    }
+   public JMenuItem getMnuNotShared()
+   {
+      return notshared;
+   }
 
-    public JPopupMenu getPopupMenu2(){
-    	return popup2;
-    }
-    
-    public TitledBorder getFolderTreeBolder(){
-    	return folderTreeBolder;
-    }
+   public JMenuItem getMnuSharedWithoutSub()
+   {
+      return sharedwosub;
+   }
 
-    public TitledBorder getMainPanelBolder(){
-    	return mailPanelBolder;
-    }
-    
-    public SharePanel(GuiController guiController) {
-    	super(guiController);
-        logger = Logger.getLogger(getClass());
-        try {
-            init();
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
-        }
-    }
+   public JMenuItem getMnuSharedWithSub()
+   {
+      return sharedwsub;
+   }
 
-    private void init() throws Exception {
-        IconManager im = IconManager.getInstance();
-        itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
-        itemCopyToClipboardAsUBBCode.setIcon(im.getIcon("clipboard"));
-        itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
-        prioritaetAufheben.setEnabled(false);
-        prioritaetSetzen.setEnabled(false);
-        neuLaden.setEnabled(false);
-        refresh.setEnabled(false);
+   public JMenuItem getMnuCopyToClipboard()
+   {
+      return itemCopyToClipboard;
+   }
 
-        popup2.add(itemCopyToClipboard);
-        popup2.add(itemCopyToClipboardWithSources);
-        popup2.add(itemCopyToClipboardAsUBBCode);
-        popup2.add(new JSeparator());
-    	popup2.add(itemOpenWithProgram);
-        itemOpenWithProgram.setIcon(im.getIcon("vlc"));
-        folderTree.setModel(new DefaultTreeModel(new WaitNode()));
-        folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
+   public JMenuItem getMnuCopyToClipboardWithSources()
+   {
+      return itemCopyToClipboardWithSources;
+   }
 
-        cmbPrio.setEditable(false);
-        for (int i = 1; i < 251; i++) {
-            cmbPrio.addItem(new Integer(i));
-        }
+   public JMenuItem getMnuCopyToClipboardAsUBBCode()
+   {
+      return itemCopyToClipboardAsUBBCode;
+   }
 
-        sharedwsub = new JMenuItem();
-        sharedwsub.setIcon(im.getIcon("sharedwsub"));
-        sharedwosub = new JMenuItem();
-        sharedwosub.setIcon(im.getIcon("sharedwosub"));
-        notshared = new JMenuItem();
-        notshared.setIcon(im.getIcon("notshared"));
-        popup.add(sharedwsub);
-        popup.add(sharedwosub);
-        popup.add(notshared);
+   public JMenuItem getMnuOpenWithProgram()
+   {
+      return itemOpenWithProgram;
+   }
 
-        shareModel = new ShareModel(new ShareNode(null, null));
-        shareTable = new ShareTable(shareModel);
-        shareTable.setSelectionMode(ListSelectionModel.
-                                    MULTIPLE_INTERVAL_SELECTION);
-        TableColumnModel model = shareTable.getColumnModel();
-        int n = model.getColumnCount();
-        TableCellRenderer renderer = new NormalHeaderRenderer();
-        for (int i = 0; i < n; i++) {
-            model.getColumn(i).setHeaderRenderer(renderer);
-        }
+   public ShareTable getShareTable()
+   {
+      return shareTable;
+   }
 
-        folderTreeBolder = new TitledBorder("Test");
-        mailPanelBolder = new TitledBorder("Tester");
-        setLayout(new BorderLayout());
-        panelCenter = new JPanel(new BorderLayout());
-        panelCenter.setBorder(mailPanelBolder);
+   public ShareModel getShareModel()
+   {
+      return shareModel;
+   }
 
-        neueListe.setIcon(IconManager.getInstance().getIcon("treeRoot"));
-        neuLaden.setIcon(IconManager.getInstance().getIcon("erneuern"));
+   public JLabel getLblDateien()
+   {
+      return dateien;
+   }
 
-        JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        Synchronizer synchronizer = new Synchronizer(Synchronizer.METHOD.HEIGHT);
-        synchronizer.add(neuLaden);
-        synchronizer.add(neueListe);
-        synchronizer.add(cmbPrio);
-        synchronizer.add(prioritaetSetzen);
-        synchronizer.add(prioritaetAufheben);
-        panel1.add(neuLaden);
-        panel1.add(neueListe);
-        panel1.add(cmbPrio);
-        panel1.add(prioritaetSetzen);
-        panel1.add(prioritaetAufheben);
+   public TKLComboBox getCmbPrioritaet()
+   {
+      return cmbPrio;
+   }
 
-        panelCenter.add(panel1, BorderLayout.NORTH);
-        JScrollPane scrollPane = new JScrollPane(shareTable);
-        scrollPane.setBackground(shareTable.getBackground());
-        scrollPane.getViewport().setOpaque(false);
+   public DirectoryTree getDirectoryTree()
+   {
+      return folderTree;
+   }
 
-        panelCenter.add(scrollPane, BorderLayout.CENTER);
-        panelCenter.add(dateien, BorderLayout.SOUTH);
+   public JPopupMenu getPopupMenu()
+   {
+      return popup;
+   }
 
-        JScrollPane aScrollPane = new JScrollPane(folderTree);
-        aScrollPane.setBorder(folderTreeBolder);
-        JPanel panelWest = new JPanel(new BorderLayout());
-        panelWest.add(aScrollPane, BorderLayout.CENTER);
-        panelWest.add(refresh, BorderLayout.SOUTH);
-        JSplitPane splitPane = new JSplitPane();
-        splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setLeftComponent(panelWest);
-        splitPane.setRightComponent(panelCenter);
-        splitPane.setBorder(null);
-        add(splitPane, BorderLayout.CENTER);
-        
-        cmbPrio.disableDirtyComponent(true);
-    }
+   public JPopupMenu getPopupMenu2()
+   {
+      return popup2;
+   }
 
-    public int[] getColumnWidths() {
-        TableColumnModel tcm = shareTable.getColumnModel();
-        int[] widths = new int[tcm.getColumnCount()];
-        for (int i = 0; i < tcm.getColumnCount(); i++) {
-            widths[i] = tcm.getColumn(i).getWidth();
-        }
-        return widths;
-    }
+   public TitledBorder getFolderTreeBolder()
+   {
+      return folderTreeBolder;
+   }
+
+   public TitledBorder getMainPanelBolder()
+   {
+      return mailPanelBolder;
+   }
+
+   private void init() throws Exception
+   {
+      IconManager im = IconManager.getInstance();
+
+      itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
+      itemCopyToClipboardAsUBBCode.setIcon(im.getIcon("clipboard"));
+      itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
+      prioritaetAufheben.setEnabled(false);
+      prioritaetSetzen.setEnabled(false);
+      neuLaden.setEnabled(false);
+      refresh.setEnabled(false);
+
+      popup2.add(itemCopyToClipboard);
+      popup2.add(itemCopyToClipboardWithSources);
+      popup2.add(itemCopyToClipboardAsUBBCode);
+      popup2.add(new JSeparator());
+      popup2.add(itemOpenWithProgram);
+      popup2.add(itemOpenWithStandardProgramm);
+      itemOpenWithProgram.setIcon(im.getIcon("vlc"));
+      folderTree.setModel(new DefaultTreeModel(new WaitNode()));
+      folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
+
+      cmbPrio.setEditable(false);
+      for(int i = 1; i < 251; i++)
+      {
+         cmbPrio.addItem(new Integer(i));
+      }
+
+      sharedwsub = new JMenuItem();
+      sharedwsub.setIcon(im.getIcon("sharedwsub"));
+      sharedwosub = new JMenuItem();
+      sharedwosub.setIcon(im.getIcon("sharedwosub"));
+      notshared = new JMenuItem();
+      notshared.setIcon(im.getIcon("notshared"));
+      popup.add(sharedwsub);
+      popup.add(sharedwosub);
+      popup.add(notshared);
+
+      shareModel = new ShareModel(new ShareNode(null, null));
+      shareTable = new ShareTable(shareModel);
+      shareTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+      TableColumnModel  model    = shareTable.getColumnModel();
+      int               n        = model.getColumnCount();
+      TableCellRenderer renderer = new NormalHeaderRenderer();
+
+      for(int i = 0; i < n; i++)
+      {
+         model.getColumn(i).setHeaderRenderer(renderer);
+      }
+
+      folderTreeBolder = new TitledBorder("Test");
+      mailPanelBolder  = new TitledBorder("Tester");
+      setLayout(new BorderLayout());
+      panelCenter = new JPanel(new BorderLayout());
+      panelCenter.setBorder(mailPanelBolder);
+
+      neueListe.setIcon(IconManager.getInstance().getIcon("treeRoot"));
+      neuLaden.setIcon(IconManager.getInstance().getIcon("erneuern"));
+
+      JPanel       panel1       = new JPanel(new FlowLayout(FlowLayout.LEFT));
+      Synchronizer synchronizer = new Synchronizer(Synchronizer.METHOD.HEIGHT);
+
+      synchronizer.add(neuLaden);
+      synchronizer.add(neueListe);
+      synchronizer.add(cmbPrio);
+      synchronizer.add(prioritaetSetzen);
+      synchronizer.add(prioritaetAufheben);
+      panel1.add(neuLaden);
+      panel1.add(neueListe);
+      panel1.add(cmbPrio);
+      panel1.add(prioritaetSetzen);
+      panel1.add(prioritaetAufheben);
+
+      panelCenter.add(panel1, BorderLayout.NORTH);
+      JScrollPane scrollPane = new JScrollPane(shareTable);
+
+      scrollPane.setBackground(shareTable.getBackground());
+      scrollPane.getViewport().setOpaque(false);
+
+      panelCenter.add(scrollPane, BorderLayout.CENTER);
+      panelCenter.add(dateien, BorderLayout.SOUTH);
+
+      JScrollPane aScrollPane = new JScrollPane(folderTree);
+
+      aScrollPane.setBorder(folderTreeBolder);
+      JPanel panelWest = new JPanel(new BorderLayout());
+
+      panelWest.add(aScrollPane, BorderLayout.CENTER);
+      panelWest.add(refresh, BorderLayout.SOUTH);
+      JSplitPane splitPane = new JSplitPane();
+
+      splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+      splitPane.setLeftComponent(panelWest);
+      splitPane.setRightComponent(panelCenter);
+      splitPane.setBorder(null);
+      add(splitPane, BorderLayout.CENTER);
+
+      cmbPrio.disableDirtyComponent(true);
+   }
+
+   public int[] getColumnWidths()
+   {
+      TableColumnModel tcm    = shareTable.getColumnModel();
+      int[]            widths = new int[tcm.getColumnCount()];
+
+      for(int i = 0; i < tcm.getColumnCount(); i++)
+      {
+         widths[i] = tcm.getColumn(i).getWidth();
+      }
+
+      return widths;
+   }
 }
