@@ -1,3 +1,6 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
 package de.applejuicenet.client.gui;
 
 import java.util.Set;
@@ -25,7 +28,7 @@ import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.59 2006/05/04 13:05:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.60 2009/01/11 22:04:04 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -118,7 +121,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
 
       serverPanel = ServerPanel.getInstance();
 
-      IconManager im = IconManager.getInstance();
+      IconManager im   = IconManager.getInstance();
 
       ImageIcon   icon = im.getIcon("start");
 
@@ -163,9 +166,10 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
       {
          if(curPlugin.istReiter())
          {
-            ImageIcon icon = curPlugin.getIcon();
+            ImageIcon icon  = curPlugin.getIcon();
+            int       index = getTabCount() + 1;
 
-            addTab(curPlugin.getTitle(), icon, curPlugin);
+            addTab(curPlugin.getTitle() + " [Ctrl+" + index + "]", icon, curPlugin);
          }
       }
 
@@ -182,17 +186,23 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
          LanguageSelector languageSelector = LanguageSelector.getInstance();
 
          setTitleAt(0,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.homesheet.caption")));
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.homesheet.caption")) +
+                    " [Ctrl+1]");
          setTitleAt(1,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.sharesheet.caption")));
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.sharesheet.caption")) +
+                    " [Ctrl+2]");
          setTitleAt(2,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.seachsheet.caption")));
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.seachsheet.caption")) +
+                    " [Ctrl+3]");
          setTitleAt(3,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.queuesheet.caption")));
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.queuesheet.caption")) +
+                    " [Ctrl+4]");
          setTitleAt(4,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploadsheet.caption")));
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploadsheet.caption")) +
+                    " [Ctrl+5]");
          setTitleAt(5,
-            ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.serversheet.caption")));
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.serversheet.caption")) +
+                    " [Ctrl+6]");
       }
       catch(Exception e)
       {
