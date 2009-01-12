@@ -19,6 +19,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -215,7 +216,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
       for(int i = 0; i < tabCount; i++)
       {
-         KeyStroke      stroke = KeyStroke.getKeyStroke(0x31 + i, InputEvent.CTRL_DOWN_MASK);
+         int            event  = i < 9 ? KeyEvent.VK_1 + i : KeyEvent.VK_A + i - 9;
+         KeyStroke      stroke = KeyStroke.getKeyStroke(event, InputEvent.CTRL_DOWN_MASK);
          final int      index  = i;
          AbstractAction action = new AbstractAction()
          {
@@ -225,9 +227,11 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             }
          };
 
-         ((JComponent) getContentPane()).getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(stroke, "ctrl_" + i);
-         ((JComponent) getContentPane()).getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, "ctrl_" + i);
-         ((JComponent) getContentPane()).getActionMap().put("ctrl_" + i, action);
+         String commandName = "ctrl_" + ((char) event);
+
+         ((JComponent) getContentPane()).getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(stroke, commandName);
+         ((JComponent) getContentPane()).getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, commandName);
+         ((JComponent) getContentPane()).getActionMap().put(commandName, action);
       }
    }
 

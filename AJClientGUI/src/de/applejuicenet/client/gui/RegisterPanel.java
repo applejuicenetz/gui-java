@@ -1,7 +1,10 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui;
+
+import java.awt.event.KeyEvent;
 
 import java.util.Set;
 
@@ -28,7 +31,7 @@ import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.60 2009/01/11 22:04:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.61 2009/01/12 08:07:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -50,6 +53,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
 
    public RegisterPanel(AppleJuiceDialog parent)
    {
+      super(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
       logger = Logger.getLogger(getClass());
       try
       {
@@ -121,7 +125,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
 
       serverPanel = ServerPanel.getInstance();
 
-      IconManager im   = IconManager.getInstance();
+      IconManager im = IconManager.getInstance();
 
       ImageIcon   icon = im.getIcon("start");
 
@@ -168,8 +172,9 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
          {
             ImageIcon icon  = curPlugin.getIcon();
             int       index = getTabCount() + 1;
+            int       event = index < 10 ? KeyEvent.VK_1 + index - 1 : KeyEvent.VK_A + index - 10;
 
-            addTab(curPlugin.getTitle() + " [Ctrl+" + index + "]", icon, curPlugin);
+            addTab(curPlugin.getTitle() + " [Ctrl+" + ((char) event) + "]", icon, curPlugin);
          }
       }
 
