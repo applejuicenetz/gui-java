@@ -32,7 +32,7 @@ import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODVerbindungPanel.java,v 1.5 2006/05/03 14:52:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODVerbindungPanel.java,v 1.6 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -129,21 +129,21 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
       label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.einstform.Label4.caption")));
+                  "einstform.Label4.caption")));
       label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.einstform.Label5.caption")));
+                  "einstform.Label5.caption")));
       label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.verbindung.label3")));
+                  "javagui.options.verbindung.label3")));
       label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.einstform.Label13.caption")));
+                  "einstform.Label13.caption")));
       label5 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.verbindung.label5")));
+                  "javagui.options.verbindung.label5")));
       label6 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.verbindung.label6")));
+                  "javagui.options.verbindung.label6")));
       menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.einstform.connectionsheet.caption"));
+               "einstform.connectionsheet.caption"));
       wizzard.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.javagui.options.verbindung.labelwizard")));
+               "javagui.options.verbindung.labelwizard")));
       kbSlot = new JLabel();
 
       int untereGrenze = (int) Math.pow((double) ajSettings.getMaxUploadInKB(), 0.2);
@@ -165,7 +165,7 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister
             }
          });
       automaticConnect = new TKLCheckBox(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.einstform.autoconn.caption")));
+                  "einstform.autoconn.caption")));
       automaticConnect.addChangeListener(new ChangeListener()
          {
             public void stateChanged(ChangeEvent e)

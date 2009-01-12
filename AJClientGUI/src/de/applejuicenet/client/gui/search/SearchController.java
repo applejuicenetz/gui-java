@@ -143,10 +143,10 @@ public class SearchController extends GuiController
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      bearbeitung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.opensearches.caption"));
+      bearbeitung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.opensearches.caption"));
       searchPanel.getBearbeitungLbl().setText(bearbeitung.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
       searchPanel.getMnuEinfuegen()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.einfuegen")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.einfuegen")));
    }
 
    protected void startFirstSearch()

@@ -28,7 +28,7 @@ import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODProxyPanel.java,v 1.5 2006/05/03 14:52:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODProxyPanel.java,v 1.6 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -84,16 +84,16 @@ public class ODProxyPanel extends JPanel implements OptionsRegister
       proxySettings = ProxyManagerImpl.getInstance().getProxySettings();
 
       label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.proxy.host")));
+                  "javagui.options.proxy.host")));
       label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.proxy.port")));
+                  "javagui.options.proxy.port")));
       label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.proxy.benutzername")));
+                  "javagui.options.proxy.benutzername")));
       label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.proxy.passwort")));
+                  "javagui.options.proxy.passwort")));
       use.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.javagui.options.proxy.verwenden")));
-      menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.proxy.caption"));
+               "javagui.options.proxy.verwenden")));
+      menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.caption"));
       host.setText(proxySettings.getHost());
       host.addFocusListener(new HostFocusListener());
       port.setDocument(new NumberInputVerifier());

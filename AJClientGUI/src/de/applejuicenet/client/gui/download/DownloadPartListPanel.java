@@ -440,19 +440,19 @@ public class DownloadPartListPanel extends JPanel implements
 			LanguageSelector languageSelector = LanguageSelector.getInstance();
 			vorhanden = ZeichenErsetzer
 					.korrigiereUmlaute(languageSelector
-							.getFirstAttrbuteByTagName(".root.mainform.Label4.caption"));
+							.getFirstAttrbuteByTagName("mainform.Label4.caption"));
 			nichtVorhanden = ZeichenErsetzer
 					.korrigiereUmlaute(languageSelector
-							.getFirstAttrbuteByTagName(".root.mainform.Label3.caption"));
+							.getFirstAttrbuteByTagName("mainform.Label3.caption"));
 			ueberprueft = ZeichenErsetzer
 					.korrigiereUmlaute(languageSelector
-							.getFirstAttrbuteByTagName(".root.mainform.Label1.caption"));
+							.getFirstAttrbuteByTagName("mainform.Label1.caption"));
 			quellen = ZeichenErsetzer
 					.korrigiereUmlaute(languageSelector
-							.getFirstAttrbuteByTagName(".root.javagui.downloadform.quellen"));
+							.getFirstAttrbuteByTagName("javagui.downloadform.quellen"));
 			uebertragen = ZeichenErsetzer
 					.korrigiereUmlaute(languageSelector
-							.getFirstAttrbuteByTagName(".root.javagui.downloadform.uebertragen"));
+							.getFirstAttrbuteByTagName("javagui.downloadform.uebertragen"));
 		} catch (Exception e) {
 			if (logger.isEnabledFor(Level.ERROR)) {
 				logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);

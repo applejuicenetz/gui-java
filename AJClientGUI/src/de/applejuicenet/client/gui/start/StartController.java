@@ -22,7 +22,7 @@ import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.10 2009/01/12 07:45:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.11 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -117,8 +117,8 @@ public class StartController extends GuiController
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      keinServer  = languageSelector.getFirstAttrbuteByTagName(".root.javagui.mainform.keinserver");
-      status2Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.status.status2"));
+      keinServer  = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.keinserver");
+      status2Text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.status.status2"));
       StringBuffer temp = new StringBuffer(status2Text);
       int          pos;
 
@@ -164,7 +164,7 @@ public class StartController extends GuiController
       }
 
       startPanel.getLblStatus().setText(temp.toString());
-      firewallWarningText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.firewallwarning.caption"));
+      firewallWarningText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.firewallwarning.caption"));
       if(firewalled)
       {
          startPanel.getLblWarnung().setVisible(true);
@@ -178,7 +178,7 @@ public class StartController extends GuiController
          startPanel.getLblFirewallWarning().setText("");
       }
 
-      verbindungNachrichtText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.html10"));
+      verbindungNachrichtText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.html10"));
       temp                    = new StringBuffer(verbindungNachrichtText);
       pos                     = temp.indexOf("%s");
       if(pos != -1)
@@ -205,7 +205,7 @@ public class StartController extends GuiController
       }
 
       startPanel.getLblVerbindungsnachricht().setText(temp.toString());
-      verbindungenText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.status.status0"));
+      verbindungenText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.status.status0"));
       temp             = new StringBuffer(verbindungenText);
       pos              = temp.indexOf("%d");
       if(pos != -1)
@@ -223,19 +223,19 @@ public class StartController extends GuiController
       startPanel.getLblVerbindungen().setText(temp.toString());
       startPanel.getLblNetzwerk()
       .setText("<html><font><h2>" +
-               ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.html7")) +
+               ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.html7")) +
                "</h2></font></html>");
       startPanel.getLblNeuigkeiten()
       .setText("<html><font><h2>" +
-               ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.html13")) +
+               ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.html13")) +
                "</h2></font></html>");
       startPanel.getLblDeinClient()
       .setText("<html><font><h2>" +
-               ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.html1")) +
+               ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.html1")) +
                "</h2></font></html>");
       startPanel.getLblWarnung()
       .setText("<html><font><h2>" +
-               ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.html15")) +
+               ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.html15")) +
                "</h2></font></html>");
    }
 

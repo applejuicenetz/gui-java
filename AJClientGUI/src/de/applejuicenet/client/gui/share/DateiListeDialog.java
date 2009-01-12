@@ -47,7 +47,7 @@ import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/DateiListeDialog.java,v 1.6 2005/01/19 11:03:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/DateiListeDialog.java,v 1.7 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -166,14 +166,14 @@ public class DateiListeDialog
     public void initLanguage() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.linklist.caption")));
+            getFirstAttrbuteByTagName("linklist.caption")));
         text.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.linklist.Label1.caption")));
+            getFirstAttrbuteByTagName("linklist.Label1.caption")));
         String[] tableColumns = new String[2];
         tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.linklist.files.col0caption"));
+            getFirstAttrbuteByTagName("linklist.files.col0caption"));
         tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.linklist.files.col1caption"));
+            getFirstAttrbuteByTagName("linklist.files.col1caption"));
         TableColumnModel tcm = table.getColumnModel();
         for (int i = 0; i < tableColumns.length; i++) {
             tcm.getColumn(i).setHeaderValue(tableColumns[i]);

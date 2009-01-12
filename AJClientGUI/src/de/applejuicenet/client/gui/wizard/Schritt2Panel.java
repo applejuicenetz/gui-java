@@ -11,7 +11,7 @@ import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextArea;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt2Panel.java,v 1.12 2005/02/22 09:21:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt2Panel.java,v 1.13 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -67,11 +67,11 @@ public class Schritt2Panel
 
     public void fireLanguageChanged() {
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.wizard.schritt2.label1")));
+            getFirstAttrbuteByTagName("javagui.wizard.schritt2.label1")));
         textArea1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.wizard.schritt2.label2")));
+            getFirstAttrbuteByTagName("javagui.wizard.schritt2.label2")));
         textArea2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.wizard.schritt2.label3")));
+            getFirstAttrbuteByTagName("javagui.wizard.schritt2.label3")));
     }
 
 }

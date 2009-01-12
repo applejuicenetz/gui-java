@@ -16,7 +16,7 @@ import de.tklsoft.gui.controls.TKLTextArea;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.16 2005/03/07 14:30:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.17 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -104,7 +104,7 @@ public class Schritt3Panel
 
     public void fireLanguageChanged() {
         erlaeuterung.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.javagui.wizard.schritt3.label1")));
+            getFirstAttrbuteByTagName("javagui.wizard.schritt3.label1")));
     }
 
     public String getNickname() {

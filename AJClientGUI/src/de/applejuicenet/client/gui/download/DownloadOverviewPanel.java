@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.3 2005/05/06 16:16:06 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.4 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -186,20 +186,20 @@ public class DownloadOverviewPanel
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             label5.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.javagui.downloadform.aktiveuebertragung")));
+                getFirstAttrbuteByTagName("javagui.downloadform.aktiveuebertragung")));
             label4.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.Label4.caption")));
+                getFirstAttrbuteByTagName("mainform.Label4.caption")));
             label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.Label3.caption")));
+                getFirstAttrbuteByTagName("mainform.Label3.caption")));
             label2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.Label2.caption")));
+                getFirstAttrbuteByTagName("mainform.Label2.caption")));
             label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.mainform.Label1.caption")));
+                getFirstAttrbuteByTagName("mainform.Label1.caption")));
             holeListe.setText(ZeichenErsetzer.korrigiereUmlaute(
                 languageSelector.
-                getFirstAttrbuteByTagName(".root.javagui.downloadform.partlisteanzeigen")));
+                getFirstAttrbuteByTagName("javagui.downloadform.partlisteanzeigen")));
             verfuegbar = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                    getFirstAttrbuteByTagName(".root.javagui.downloadform.verfuegbar"));
+                    getFirstAttrbuteByTagName("javagui.downloadform.verfuegbar"));
         }
         catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {

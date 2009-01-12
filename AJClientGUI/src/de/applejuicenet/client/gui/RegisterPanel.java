@@ -31,7 +31,7 @@ import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.61 2009/01/12 08:07:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.62 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -191,22 +191,22 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
          LanguageSelector languageSelector = LanguageSelector.getInstance();
 
          setTitleAt(0,
-                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.homesheet.caption")) +
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.homesheet.caption")) +
                     " [Ctrl+1]");
          setTitleAt(1,
-                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.sharesheet.caption")) +
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.sharesheet.caption")) +
                     " [Ctrl+2]");
          setTitleAt(2,
-                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.seachsheet.caption")) +
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.seachsheet.caption")) +
                     " [Ctrl+3]");
          setTitleAt(3,
-                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.queuesheet.caption")) +
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queuesheet.caption")) +
                     " [Ctrl+4]");
          setTitleAt(4,
-                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploadsheet.caption")) +
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploadsheet.caption")) +
                     " [Ctrl+5]");
          setTitleAt(5,
-                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.serversheet.caption")) +
+                    ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.serversheet.caption")) +
                     " [Ctrl+6]");
       }
       catch(Exception e)

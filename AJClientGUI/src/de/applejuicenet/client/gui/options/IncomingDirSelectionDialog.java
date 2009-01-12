@@ -22,7 +22,7 @@ import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLComboBox;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/IncomingDirSelectionDialog.java,v 1.5 2006/10/26 13:50:28 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/IncomingDirSelectionDialog.java,v 1.6 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,8 +65,8 @@ public class IncomingDirSelectionDialog extends JDialog
       addKeyListener(disposeKeyAdapter);
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.changetarget.caption")));
-      schliessen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.einstform.Button1.caption")));
+      setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.changetarget.caption")));
+      schliessen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption")));
       schliessen.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent ae)
@@ -78,7 +78,7 @@ public class IncomingDirSelectionDialog extends JDialog
 
       JLabel label1 = new JLabel();
 
-      label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.neuesverzeichnis")));
+      label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.neuesverzeichnis")));
       for(int i = 0; i < selectionValues.length; i++)
       {
          incomingDirs.addItem(selectionValues[i]);

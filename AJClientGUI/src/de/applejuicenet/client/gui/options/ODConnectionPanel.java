@@ -27,7 +27,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODConnectionPanel.java,v 1.8 2006/05/03 14:52:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODConnectionPanel.java,v 1.9 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -88,10 +88,10 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
       label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.remote.host")));
+                  "javagui.options.remote.host")));
       label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.javagui.options.remote.passwortNeu")));
-      menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.einstform.pwsheet.caption"));
+                  "javagui.options.remote.passwortNeu")));
+      menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("einstform.pwsheet.caption"));
       label4 = new JLabel("Port");
 
       host.setText(remote.getHost());
@@ -165,7 +165,7 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
       if(quickConnectionSettingsDialog != null)
       {
          label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.einstform.pwsheet.caption")));
+                  "einstform.pwsheet.caption")));
       }
 
       host.confirmNewValue();

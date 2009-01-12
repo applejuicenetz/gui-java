@@ -318,18 +318,18 @@ public class UploadController extends GuiController
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      clientText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.uplcounttext"));
+      clientText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uplcounttext"));
       uploadPanel.getUploadListeLabel().setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
       String[] columnsText = new String[8];
 
-      columnsText[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploads.col0caption"));
-      columnsText[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploads.col3caption"));
-      columnsText[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploads.col1caption"));
-      columnsText[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploads.col2caption"));
-      columnsText[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.queue.col6caption"));
-      columnsText[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.uploadform.columnwasserstand"));
-      columnsText[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploads.col4caption"));
-      columnsText[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.uploads.col5caption"));
+      columnsText[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col0caption"));
+      columnsText[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col3caption"));
+      columnsText[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col1caption"));
+      columnsText[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col2caption"));
+      columnsText[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption"));
+      columnsText[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.uploadform.columnwasserstand"));
+      columnsText[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col4caption"));
+      columnsText[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col5caption"));
       TableColumn[] columns = uploadPanel.getTableColumns();
 
       for(int i = 0; i < columns.length; i++)
@@ -338,9 +338,9 @@ public class UploadController extends GuiController
       }
 
       columns[0].setPreferredWidth(100);
-      warteschlangeVoll = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.warteschlangevoll"));
+      warteschlangeVoll = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.warteschlangevoll"));
       uploadPanel.getMnuCopyToClipboard()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.getlink1.caption")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption")));
    }
 
    protected void contentChanged(DATALISTENER_TYPE type, final Object content)

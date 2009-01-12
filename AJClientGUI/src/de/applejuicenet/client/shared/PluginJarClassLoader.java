@@ -27,7 +27,7 @@ import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.29 2009/01/07 15:21:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.30 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -60,7 +60,7 @@ public class PluginJarClassLoader extends SecureClassLoader
       try
       {
          loadClassBytesFromJar(pluginJar);
-         String          theClassName      = pluginsPropertiesXMLHolder.getXMLAttributeByTagName(".root.general.classname.value");
+         String          theClassName      = pluginsPropertiesXMLHolder.getXMLAttributeByTagName("general.classname.value");
          Class           cl                = loadClass(theClassName);
          Class[]         constructorHelper = {XMLValueHolder.class, Map.class, ImageIcon.class, Map.class};
          Constructor     con               = cl.getConstructor(constructorHelper);
@@ -153,7 +153,7 @@ public class PluginJarClassLoader extends SecureClassLoader
             XMLValueHolder languageFile = new XMLValueHolder();
 
             languageFile.parse(xmlString);
-            String sprache = languageFile.getXMLAttributeByTagName(".root.language.value");
+            String sprache = languageFile.getXMLAttributeByTagName("language.value");
 
             languageXMLs.put(sprache, languageFile);
          }

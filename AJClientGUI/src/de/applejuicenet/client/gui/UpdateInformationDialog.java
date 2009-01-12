@@ -28,7 +28,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/UpdateInformationDialog.java,v 1.9 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/UpdateInformationDialog.java,v 1.10 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -72,12 +72,12 @@ public class UpdateInformationDialog
             }
         });
         String titel = ZeichenErsetzer.korrigiereUmlaute(ls.
-            getFirstAttrbuteByTagName(".root.javagui.startup.newversiontitel"));
+            getFirstAttrbuteByTagName("javagui.startup.newversiontitel"));
         String nachricht = ZeichenErsetzer.korrigiereUmlaute(ls.
-            getFirstAttrbuteByTagName(".root.javagui.startup.newversionnachricht"));
+            getFirstAttrbuteByTagName("javagui.startup.newversionnachricht"));
         nachricht = nachricht.replaceFirst("%s", aktuellsteVersion);
         schliessen.setText(ZeichenErsetzer.korrigiereUmlaute(
-            ls.getFirstAttrbuteByTagName(".root.javagui.options.plugins.schliessen")));
+            ls.getFirstAttrbuteByTagName("javagui.options.plugins.schliessen")));
         setTitle(titel);
         JPanel panel1 = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -95,7 +95,7 @@ public class UpdateInformationDialog
         constraints.gridy = 1;
         JLabel label1 = new JLabel();
         label1.setText(ZeichenErsetzer.korrigiereUmlaute(ls.
-            getFirstAttrbuteByTagName(".root.javagui.startup.windowsversion")) + ": ");
+            getFirstAttrbuteByTagName("javagui.startup.windowsversion")) + ": ");
         JLabel linkWin = new JLabel("<html><font><u>" + windowsLink +
                                     "</u></font></html>");
         panel1.add(label1, constraints);
@@ -112,7 +112,7 @@ public class UpdateInformationDialog
         constraints.insets.bottom = 5;
         JLabel label2 = new JLabel();
         label2.setText(ZeichenErsetzer.korrigiereUmlaute(ls.
-            getFirstAttrbuteByTagName(".root.javagui.startup.sonstigeversionen")) + ": ");
+            getFirstAttrbuteByTagName("javagui.startup.sonstigeversionen")) + ": ");
         JLabel linkSonstige = new JLabel("<html><font><u>" + sonstigeLink +
                                          "</u></font></html>");
         panel1.add(label2, constraints);
@@ -181,9 +181,9 @@ public class UpdateInformationDialog
                 LanguageSelector ls = LanguageSelector.
                     getInstance();
                 String nachricht = ZeichenErsetzer.korrigiereUmlaute(ls.
-                    getFirstAttrbuteByTagName(".root.javagui.startup.updatefehlernachricht"));
+                    getFirstAttrbuteByTagName("javagui.startup.updatefehlernachricht"));
                 String titel = ZeichenErsetzer.korrigiereUmlaute(ls.
-                    getFirstAttrbuteByTagName(".root.mainform.caption"));
+                    getFirstAttrbuteByTagName("mainform.caption"));
                 setVisible(false);
                 JOptionPane.showMessageDialog(this, nachricht,
                                               titel, JOptionPane.INFORMATION_MESSAGE);

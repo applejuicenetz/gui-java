@@ -40,7 +40,7 @@ import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.6 2009/01/11 21:32:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.7 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -88,10 +88,10 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       IconManager      im               = IconManager.getInstance();
 
       menuIcon                          = im.getIcon("opt_ansicht");
-      cmbDownloadUebersicht.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.ansicht.downloadansicht")));
-      cmbAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.ansicht.aktiv")));
-      cmbStartscreenZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.ansicht.zeigestartscreen")));
-      enableToolTip.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.ansicht.zeigetooltipps")));
+      cmbDownloadUebersicht.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.downloadansicht")));
+      cmbAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.aktiv")));
+      cmbStartscreenZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigestartscreen")));
+      enableToolTip.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigetooltipps")));
 
       setLayout(new BorderLayout());
       farbeFertigerDownload.setOpaque(true);
@@ -156,7 +156,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
          }
       };
 
-      String tooltipp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.ansicht.ttipp_farbewaehlen"));
+      String tooltipp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.ttipp_farbewaehlen"));
 
       hint1.setToolTipText(tooltipp);
       hint2.setToolTipText(tooltipp);
@@ -243,17 +243,17 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       constraints.gridx = 0;
       constraints.gridy = 0;
       panel1.setLayout(new GridBagLayout());
-      panel1.setBorder(BorderFactory.createTitledBorder(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.ansicht.hintergrundfarben"))));
+      panel1.setBorder(BorderFactory.createTitledBorder(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarben"))));
       panel1.add(cmbAktiv, constraints);
       constraints.gridy        = 1;
       constraints.insets.left  = 5;
       constraints.insets.right = 5;
-      panel1.add(new TKLLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.ansicht.fertigerdownload"))),
+      panel1.add(new TKLLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.fertigerdownload"))),
                  constraints);
       constraints.gridy = 2;
-      panel1.add(new TKLLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.ansicht.quelle"))),
+      panel1.add(new TKLLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.quelle"))),
                  constraints);
-      menuText          = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.ansicht.caption"));
+      menuText          = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.caption"));
       constraints.gridx = 1;
       constraints.gridy = 1;
       panel1.add(farbeFertigerDownload, constraints);
@@ -386,7 +386,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
          LanguageSelector languageSelector = LanguageSelector.getInstance();
          TKLLabel         source           = (TKLLabel) e.getSource();
          Color            newColor         = JColorChooser.showDialog(null,
-                                                                      ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.ansicht.hintergrundfarbewaehlen")),
+                                                                      ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarbewaehlen")),
                                                                       source.getBackground());
 
          if(newColor != null && newColor.getRGB() != source.getBackground().getRGB())

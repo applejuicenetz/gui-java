@@ -37,7 +37,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/OptionsDialog.java,v 1.7 2006/05/03 14:52:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/OptionsDialog.java,v 1.8 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -81,7 +81,7 @@ public class OptionsDialog extends JDialog
 
       remote = OptionsManagerImpl.getInstance().getRemoteSettings();
 
-      setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.einstform.caption")));
+      setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("einstform.caption")));
       optionPanels = new OptionsRegister[]
          {
             new ODStandardPanel(this, ajSettings, remote), new ODVerbindungPanel(this, ajSettings),
@@ -107,9 +107,9 @@ public class OptionsDialog extends JDialog
          });
       menuList.setSelectedValue(optionPanels[0], true);
       speichern = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.einstform.Button1.caption")));
+                  "einstform.Button1.caption")));
       abbrechen = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  ".root.einstform.Button2.caption")));
+                  "einstform.Button2.caption")));
       abbrechen.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent e)
@@ -177,9 +177,9 @@ public class OptionsDialog extends JDialog
             {
                LanguageSelector languageSelector = LanguageSelector.getInstance();
                String           titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                        ".root.javagui.eingabefehler"));
+                        "javagui.eingabefehler"));
                String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                        ".root.javagui.options.remote.fehlertext"));
+                        "javagui.options.remote.fehlertext"));
 
                JOptionPane.showMessageDialog(parent, nachricht, titel, JOptionPane.OK_OPTION);
             }

@@ -28,7 +28,7 @@ import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/NewServerDialog.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/NewServerDialog.java,v 1.4 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -69,9 +69,9 @@ public class NewServerDialog
         });
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.addserverform.caption")));
+            getFirstAttrbuteByTagName("addserverform.caption")));
         ok.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-            getFirstAttrbuteByTagName(".root.addserverform.okbtn.caption")));
+            getFirstAttrbuteByTagName("addserverform.okbtn.caption")));
         dyn.setColumns(15);
         port.setColumns(5);
         port.setDocument(new NumberInputVerifier());
@@ -85,11 +85,11 @@ public class NewServerDialog
         constraints.insets.left = 5;
         panel2.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
-            getFirstAttrbuteByTagName(".root.addserverform.serverlbl.caption")) + ": "), constraints);
+            getFirstAttrbuteByTagName("addserverform.serverlbl.caption")) + ": "), constraints);
         constraints.gridy = 1;
         panel2.add(new JLabel(ZeichenErsetzer.korrigiereUmlaute(
             languageSelector.
-            getFirstAttrbuteByTagName(".root.addserverform.portlbl.caption")) + ": "), constraints);
+            getFirstAttrbuteByTagName("addserverform.portlbl.caption")) + ": "), constraints);
         constraints.insets.left = 0;
         constraints.gridx = 1;
         constraints.gridy = 0;

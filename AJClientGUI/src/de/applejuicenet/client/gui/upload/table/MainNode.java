@@ -13,7 +13,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/MainNode.java,v 1.5 2005/02/28 14:58:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/MainNode.java,v 1.6 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -129,11 +129,11 @@ public class MainNode
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         if (type == LOADING_UPLOADS) {
             text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.javagui.uploadform.ladendeuploads"));
+                getFirstAttrbuteByTagName("javagui.uploadform.ladendeuploads"));
         }
         else if (type == WAITING_UPLOADS) {
             text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.
-                getFirstAttrbuteByTagName(".root.javagui.uploadform.wartendeuploads"));
+                getFirstAttrbuteByTagName("javagui.uploadform.wartendeuploads"));
         }
     }
 }

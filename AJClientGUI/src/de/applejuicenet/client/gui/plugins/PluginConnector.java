@@ -84,7 +84,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     */
    public final String getTitle()
    {
-      return getGeneralXMLAttributeByTagName(".root.general.title.value");
+      return getGeneralXMLAttributeByTagName("general.title.value");
    }
 
    /**
@@ -93,7 +93,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     */
    public final String getVersion()
    {
-      return getGeneralXMLAttributeByTagName(".root.general.version.value");
+      return getGeneralXMLAttributeByTagName("general.version.value");
    }
 
    /**
@@ -102,7 +102,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     */
    public final String getAutor()
    {
-      return getGeneralXMLAttributeByTagName(".root.general.author.value");
+      return getGeneralXMLAttributeByTagName("general.author.value");
    }
 
    /**
@@ -111,7 +111,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     */
    public final String getContact()
    {
-      return getGeneralXMLAttributeByTagName(".root.general.contact.value");
+      return getGeneralXMLAttributeByTagName("general.contact.value");
    }
 
    /**
@@ -120,7 +120,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     */
    public final boolean istReiter()
    {
-      return getGeneralXMLAttributeByTagName(".root.general.istab.value").toLowerCase().equals("true");
+      return getGeneralXMLAttributeByTagName("general.istab.value").toLowerCase().equals("true");
    }
 
    /**
@@ -133,12 +133,12 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
 
       if(currentLanguageFile != null)
       {
-         result = currentLanguageFile.getXMLAttributeByTagName(".root.language.description.value");
+         result = currentLanguageFile.getXMLAttributeByTagName("language.description.value");
       }
 
       if(result.length() == 0)
       {
-         return getGeneralXMLAttributeByTagName(".root.general.description.value");
+         return getGeneralXMLAttributeByTagName("general.description.value");
       }
       else
       {

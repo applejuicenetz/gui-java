@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.20 2009/01/11 21:32:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.21 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -703,53 +703,53 @@ public class ShareController extends GuiController
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
       sharePanel.getFolderTreeBolder()
-      .setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.dirssheet.caption")));
+      .setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.dirssheet.caption")));
       sharePanel.getMainPanelBolder()
-      .setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.filessheet.caption")));
+      .setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.filessheet.caption")));
       sharePanel.getMnuSharedWithSub()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.addwsubdirsbtn.caption")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.addwsubdirsbtn.caption")));
       sharePanel.getMnuSharedWithoutSub()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.addosubdirsbtn.caption")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.addosubdirsbtn.caption")));
       sharePanel.getMnuNotShared()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.deldirbtn.caption")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.deldirbtn.caption")));
       sharePanel.getMnuCopyToClipboard()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.getlink1.caption")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption")));
       sharePanel.getMnuCopyToClipboardAsUBBCode()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.linkalsubbcode")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.shareform.linkalsubbcode")));
       sharePanel.getMnuCopyToClipboardWithSources()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.downloadform.getlinkwithsources")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.getlinkwithsources")));
       sharePanel.getMnuOpenWithProgram().setText("VLC");
       sharePanel.getMnuOpenWithStandardProgram()
-      .setText(languageSelector.getFirstAttrbuteByTagName(".root.javagui.options.standard.startemitstandard"));
+      .setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.startemitstandard"));
       sharePanel.getBtnRefresh()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.startsharecheck.caption")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.startsharecheck.caption")));
       sharePanel.getBtnRefresh()
-      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.startsharecheck.hint")));
+      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.startsharecheck.hint")));
       sharePanel.getBtnNeueListe()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.newfilelist.caption")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.newfilelist.caption")));
       sharePanel.getBtnNeueListe()
-      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.newfilelist.hint")));
+      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.newfilelist.hint")));
       sharePanel.getBtnNeuLaden()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.sharereload.caption")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.sharereload.caption")));
       sharePanel.getBtnNeuLaden()
-      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.sharereload.hint")));
+      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.sharereload.hint")));
       sharePanel.getBtnPrioritaetSetzen()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.setprio.caption")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.setprio.caption")));
       sharePanel.getBtnPrioritaetSetzen()
-      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.setprio.hint")));
+      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.setprio.hint")));
       sharePanel.getBtnPrioritaetAufheben()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.clearprio.caption")));
+      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.clearprio.caption")));
       sharePanel.getBtnPrioritaetAufheben()
-      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.clearprio.hint")));
+      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.clearprio.hint")));
 
       String[] tableColumns = new String[6];
 
-      tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.sfiles.col0caption"));
-      tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.sfiles.col1caption"));
-      tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.sfiles.col2caption"));
-      tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.letzteanfrage"));
-      tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.downloadanfragen"));
-      tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.suchanfragen"));
+      tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.sfiles.col0caption"));
+      tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.sfiles.col1caption"));
+      tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.sfiles.col2caption"));
+      tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.shareform.letzteanfrage"));
+      tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.shareform.downloadanfragen"));
+      tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.shareform.suchanfragen"));
 
       TableColumnModel tcm = sharePanel.getShareTable().getColumnModel();
 
@@ -758,7 +758,7 @@ public class ShareController extends GuiController
          tcm.getColumn(i).setHeaderValue(tableColumns[i]);
       }
 
-      eintraege = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.shareform.anzahlShare"));
+      eintraege = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.shareform.anzahlShare"));
       if(anzahlDateien > 0)
       {
          String temp = eintraege;

@@ -21,7 +21,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.29 2009/01/07 15:21:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.30 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,20 +32,20 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
  */
 public class LanguageSelector extends XMLValueHolder
 {
-   private static LanguageSelector instance = null;
-   private static Logger           logger           = Logger.getLogger(LanguageSelector.class);
-   private Set<LanguageListener>   languageListener = new HashSet<LanguageListener>();
-   private CharArrayWriter         contents         = new CharArrayWriter();
-   private StringBuffer            key                      = new StringBuffer();
+   private static LanguageSelector           instance         = null;
+   private static Logger                     logger           = Logger.getLogger(LanguageSelector.class);
+   private Set<LanguageListener>             languageListener = new HashSet<LanguageListener>();
+   private CharArrayWriter                   contents         = new CharArrayWriter();
+   private StringBuffer                      key              = new StringBuffer();
    @SuppressWarnings("unchecked")
-   private Set                     pluginsToWatch           = null;
+   private Set                               pluginsToWatch   = null;
 
    private LanguageSelector(String path)
    {
       super();
       try
       {
-         parse(new File(path));
+         parseProperties(new File(path));
       }
       catch(Exception ex)
       {
@@ -60,11 +60,16 @@ public class LanguageSelector extends XMLValueHolder
    {
       if(instance == null)
       {
-         String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
-         OptionsManager om = OptionsManagerImpl.getInstance();
-         String datei = om.getSprache();
+         String         path  = System.getProperty("user.dir") + File.separator + "language" + File.separator;
+         OptionsManager om    = OptionsManagerImpl.getInstance();
+         String         datei = om.getSprache();
 
-         path += datei + ".xml";
+         if(null == datei || datei.length() == 0)
+         {
+            datei = "deutsch";
+         }
+
+         path += datei + ".properties";
 
          //zZ werden die Header der TableModel nicht aktualisiert, deshalb hier schon
          return new LanguageSelector(path);
@@ -88,7 +93,7 @@ public class LanguageSelector extends XMLValueHolder
             key.delete(0, key.length() - 1);
          }
 
-         parse(languageFile);
+         parseProperties(languageFile);
       }
       catch(Exception e)
       {
@@ -166,9 +171,9 @@ public class LanguageSelector extends XMLValueHolder
 
    public String getFirstAttrbuteByTagName(String identifier)
    {
-      if(xmlContents.containsKey(identifier))
+      if(values.containsKey(identifier))
       {
-         return xmlContents.get(identifier);
+         return values.getProperty(identifier);
       }
       else
       {
@@ -189,7 +194,7 @@ public class LanguageSelector extends XMLValueHolder
       if(pluginsToWatch != null)
       {
          it = pluginsToWatch.iterator();
-         String language = getFirstAttrbuteByTagName(".root.Languageinfo.name").toLowerCase();
+         String language = getFirstAttrbuteByTagName("Languageinfo.name").toLowerCase();
 
          while(it.hasNext())
          {

@@ -59,7 +59,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.106 2009/01/12 07:45:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.107 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -446,15 +446,15 @@ public class AppleJuiceClient
             {
                if(erreichbarkeit == 2)
                {
-                  titel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
-                  nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.startup.fehlversuch"));
+                  titel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.caption"));
+                  nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.startup.fehlversuch"));
                   SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
                   JOptionPane.showMessageDialog(connectFrame, nachricht, titel, JOptionPane.ERROR_MESSAGE);
                }
                else
                {
-                  titel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.caption"));
-                  nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.mainform.msgdlgtext3"));
+                  titel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.caption"));
+                  nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext3"));
                   SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
                   JOptionPane.showMessageDialog(connectFrame, nachricht, titel, JOptionPane.ERROR_MESSAGE);
                }
@@ -473,7 +473,7 @@ public class AppleJuiceClient
                remoteDialog.setVisible(true);
                if(remoteDialog.getResult() == QuickConnectionSettingsDialog.ABGEBROCHEN)
                {
-                  nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(".root.javagui.startup.verbindungsfehler"));
+                  nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.startup.verbindungsfehler"));
                   nachricht = nachricht.replaceFirst("%s", OptionsManagerImpl.getInstance().getRemoteSettings().getHost());
                   JOptionPane.showMessageDialog(connectFrame, nachricht, titel, JOptionPane.OK_OPTION);
                   logger.fatal(nachricht);

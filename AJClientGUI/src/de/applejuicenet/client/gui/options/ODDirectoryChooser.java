@@ -25,7 +25,7 @@ import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserTreeMod
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODDirectoryChooser.java,v 1.6 2006/05/03 14:52:00 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODDirectoryChooser.java,v 1.7 2009/01/12 09:02:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -89,7 +89,7 @@ public class ODDirectoryChooser extends JDialog
       aPanel.add(uebernehmen);
       aPanel.add(abbrechen);
       uebernehmen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.einstform.Button1.caption")));
+               "einstform.Button1.caption")));
       uebernehmen.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent e)
@@ -98,7 +98,7 @@ public class ODDirectoryChooser extends JDialog
             }
          });
       abbrechen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               ".root.einstform.Button2.caption")));
+               "einstform.Button2.caption")));
       abbrechen.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent e)

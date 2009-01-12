@@ -52,7 +52,7 @@ public abstract class TestLoader
          for(String curFilename : filenames)
          {
             MyXMLValueHolder languageFile = new MyXMLValueHolder(curFilename);
-            String           sprache = languageFile.getXMLAttributeByTagName(".root.language.value");
+            String           sprache = languageFile.getXMLAttributeByTagName("language.value");
 
             languageXMLs.put(sprache, languageFile);
          }
