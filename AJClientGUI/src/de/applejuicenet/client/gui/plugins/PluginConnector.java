@@ -1,14 +1,18 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugins;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
-import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.RegisterI;
 
@@ -27,19 +31,19 @@ import de.applejuicenet.client.gui.RegisterI;
  */
 public abstract class PluginConnector extends JPanel implements DataUpdateListener, RegisterI
 {
-   private final ImageIcon                   pluginIcon;
-   private final XMLValueHolder              xMLValueHolder;
-   private final Map<String, XMLValueHolder> languageFiles;
-   private XMLValueHolder                    currentLanguageFile;
-   private Map<String, ImageIcon>            availableIcons;
-   private final Logger                      logger = Logger.getLogger(getClass());
+   private final ImageIcon               pluginIcon;
+   private final Properties              properties;
+   private final Map<String, Properties> languageFiles;
+   private Properties                    currentLanguageFile;
+   private Map<String, ImageIcon>        availableIcons;
+   private final Logger                  logger = Logger.getLogger(getClass());
 
-   protected PluginConnector(XMLValueHolder xMLValueHolder, Map<String, XMLValueHolder> languageFiles, ImageIcon icon,
-      Map<String, ImageIcon> availableIcons)
+   protected PluginConnector(Properties properties, Map<String, Properties> languageFiles, ImageIcon icon,
+                             Map<String, ImageIcon> availableIcons)
    {
-      if(null == xMLValueHolder)
+      if(null == properties)
       {
-         throw new RuntimeException("XMLValueHolder nicht uebergeben");
+         throw new RuntimeException("properties nicht uebergeben");
       }
 
       if(null == icon)
@@ -58,10 +62,10 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
          availableIcons = new HashMap<String, ImageIcon>();
       }
 
-      this.xMLValueHolder = xMLValueHolder;
-      this.languageFiles = languageFiles;
+      this.properties     = properties;
+      this.languageFiles  = languageFiles;
       this.availableIcons = availableIcons;
-      pluginIcon = icon;
+      pluginIcon          = icon;
    }
 
    public final void setLanguage(String language)
@@ -75,7 +79,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
 
    public final String getGeneralXMLAttributeByTagName(String identifier)
    {
-      return xMLValueHolder.getXMLAttributeByTagName(identifier);
+      return properties.getProperty(identifier);
    }
 
    /**
@@ -84,7 +88,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     */
    public final String getTitle()
    {
-      return getGeneralXMLAttributeByTagName("general.title.value");
+      return getGeneralXMLAttributeByTagName("general.title");
    }
 
    /**
@@ -93,7 +97,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     */
    public final String getVersion()
    {
-      return getGeneralXMLAttributeByTagName("general.version.value");
+      return getGeneralXMLAttributeByTagName("general.version");
    }
 
    /**
@@ -102,7 +106,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     */
    public final String getAutor()
    {
-      return getGeneralXMLAttributeByTagName("general.author.value");
+      return getGeneralXMLAttributeByTagName("general.author");
    }
 
    /**
@@ -111,7 +115,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     */
    public final String getContact()
    {
-      return getGeneralXMLAttributeByTagName("general.contact.value");
+      return getGeneralXMLAttributeByTagName("general.contact");
    }
 
    /**
@@ -120,7 +124,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     */
    public final boolean istReiter()
    {
-      return getGeneralXMLAttributeByTagName("general.istab.value").toLowerCase().equals("true");
+      return getGeneralXMLAttributeByTagName("general.istab").toLowerCase().equals("true");
    }
 
    /**
@@ -133,12 +137,12 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
 
       if(currentLanguageFile != null)
       {
-         result = currentLanguageFile.getXMLAttributeByTagName("language.description.value");
+         result = currentLanguageFile.getProperty("language.description");
       }
 
       if(result.length() == 0)
       {
-         return getGeneralXMLAttributeByTagName("general.description.value");
+         return getGeneralXMLAttributeByTagName("general.description");
       }
       else
       {
@@ -188,7 +192,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
    {
       if(currentLanguageFile != null)
       {
-         return currentLanguageFile.getXMLAttributeByTagName(identifier);
+         return currentLanguageFile.getProperty(identifier);
       }
       else
       {

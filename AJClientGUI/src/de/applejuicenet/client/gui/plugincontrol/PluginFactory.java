@@ -89,7 +89,7 @@ public abstract class PluginFactory
                   if(pluginFile.isFile())
                   {
                      ZipFile  jf    = new ZipFile(pluginFile);
-                     ZipEntry entry = jf.getEntry("plugin_properties.xml");
+                     ZipEntry entry = jf.getEntry("plugin.properties");
 
                      if(entry == null)
                      {
@@ -132,11 +132,11 @@ public abstract class PluginFactory
    {
       Set<PluginConnector> thePlugins = new HashSet<PluginConnector>();
       String[]             which = new String[] { //"de.applejuicenet.client.gui.plugins.jabber.JabberTestLoader",//            
-//              "de.applejuicenet.client.gui.plugins.versionchecker.VersioncheckerTestLoader"
+              "de.applejuicenet.client.gui.plugins.versionchecker.VersioncheckerTestLoader"
 //                                                                       "de.applejuicenet.client.gui.plugins.serverwatcher.ServerWatcherTestLoader"
 //                                                                       "de.applejuicenet.client.gui.plugins.logviewer.LogViewerTestLoader"
-              "de.applejuicenet.client.gui.plugins.speedgraph.SpeedGraphPluginTestLoader"
-         //"de.applejuicenet.client.gui.plugins.ircplugin.IrcPluginTestLoader"
+//              "de.applejuicenet.client.gui.plugins.speedgraph.SpeedGraphPluginTestLoader"
+//         "de.applejuicenet.client.gui.plugins.ircplugin.IrcPluginTestLoader"
               };
 
       for(String curWhich : which)
@@ -169,7 +169,7 @@ public abstract class PluginFactory
 
          return pluginConnector;
       }
-      catch(Exception e)
+      catch(Throwable e)
       {
          //Von einem Plugin lassen wir uns nicht beirren! ;-)
          logger.error("Ein Plugin konnte nicht instanziert werden", e);

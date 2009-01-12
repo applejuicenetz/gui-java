@@ -8,13 +8,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.lang.reflect.Constructor;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.security.SecureClassLoader;
+
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -23,11 +28,10 @@ import javax.swing.ImageIcon;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.30 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.31 2009/01/12 10:33:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -38,12 +42,12 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
  */
 public class PluginJarClassLoader extends SecureClassLoader
 {
-   private static Logger               logger                     = Logger.getLogger(PluginJarClassLoader.class);
-   private XMLValueHolder              pluginsPropertiesXMLHolder = null;
-   private ImageIcon                   pluginIcon                 = null;
-   private Map<String, XMLValueHolder> languageXMLs               = new HashMap<String, XMLValueHolder>();
-   private Map<String, ImageIcon>      availableIcons             = new HashMap<String, ImageIcon>();
-   private Map<String, File>           availableIcons2File        = new HashMap<String, File>();
+   private static Logger           logger              = Logger.getLogger(PluginJarClassLoader.class);
+   private Properties              pluginProperties    = null;
+   private ImageIcon               pluginIcon          = null;
+   private Map<String, Properties> languageFiles       = new HashMap<String, Properties>();
+   private Map<String, ImageIcon>  availableIcons      = new HashMap<String, ImageIcon>();
+   private Map<String, File>       availableIcons2File = new HashMap<String, File>();
 
    public PluginJarClassLoader()
    {
@@ -53,21 +57,21 @@ public class PluginJarClassLoader extends SecureClassLoader
    @SuppressWarnings("unchecked")
    public PluginConnector getPlugin(File pluginJar) throws Exception
    {
-      pluginsPropertiesXMLHolder = null;
-      pluginIcon                 = null;
-      languageXMLs.clear();
+      pluginProperties = null;
+      pluginIcon       = null;
+      languageFiles.clear();
 
       try
       {
          loadClassBytesFromJar(pluginJar);
-         String          theClassName      = pluginsPropertiesXMLHolder.getXMLAttributeByTagName("general.classname.value");
+         String          theClassName      = pluginProperties.getProperty("general.classname");
          Class           cl                = loadClass(theClassName);
-         Class[]         constructorHelper = {XMLValueHolder.class, Map.class, ImageIcon.class, Map.class};
+         Class[]         constructorHelper = {Properties.class, Map.class, ImageIcon.class, Map.class};
          Constructor     con               = cl.getConstructor(constructorHelper);
          PluginConnector aPlugin           = (PluginConnector) con.newInstance(new Object[]
                                                                                {
-                                                                                  pluginsPropertiesXMLHolder, languageXMLs,
-                                                                                  pluginIcon, availableIcons
+                                                                                  pluginProperties, languageFiles, pluginIcon,
+                                                                                  availableIcons
                                                                                });
 
          return (PluginConnector) aPlugin;
@@ -118,8 +122,8 @@ public class PluginJarClassLoader extends SecureClassLoader
          ZipEntry entry = (ZipEntry) e.nextElement();
 
          entryName = entry.getName();
-         if(entryName.indexOf(".class") == -1 && !entryName.equals("plugin_properties.xml") && !entryName.endsWith(".gif") &&
-               !entryName.endsWith(".png") && entryName.indexOf("language_xml_") == -1 && !entryName.endsWith(".jar") &&
+         if(entryName.indexOf(".class") == -1 && !entryName.equals("plugin.properties") && !entryName.endsWith(".gif") &&
+               !entryName.endsWith(".png") && !entryName.startsWith("language_") && !entryName.endsWith(".jar") &&
                entryName.indexOf("$") == -1)
          {
             continue;
@@ -127,12 +131,12 @@ public class PluginJarClassLoader extends SecureClassLoader
 
          byte[] buf = readEntry(jf, entry);
 
-         if(entryName.equals("plugin_properties.xml"))
+         if(entryName.equals("plugin.properties"))
          {
-            String xmlString = new String(buf, 0, buf.length);
+            InputStream iS = jf.getInputStream(entry);
 
-            pluginsPropertiesXMLHolder = new XMLValueHolder();
-            pluginsPropertiesXMLHolder.parse(xmlString);
+            pluginProperties = new Properties();
+            pluginProperties.load(iS);
          }
          else if(entryName.indexOf("icon.gif") != -1)
          {
@@ -147,15 +151,17 @@ public class PluginJarClassLoader extends SecureClassLoader
             availableIcons.put(entryName.substring(0, entryName.length() - 4), icon);
             availableIcons2File.put(entryName, jar);
          }
-         else if(entryName.indexOf("language_xml_") != -1)
+         else if(entryName.startsWith("language_") && entryName.endsWith(".properties"))
          {
-            String         xmlString    = new String(buf, 0, buf.length);
-            XMLValueHolder languageFile = new XMLValueHolder();
+            InputStream iS = jf.getInputStream(entry);
 
-            languageFile.parse(xmlString);
-            String sprache = languageFile.getXMLAttributeByTagName("language.value");
+            Properties  curLanguageProperties = new Properties();
 
-            languageXMLs.put(sprache, languageFile);
+            curLanguageProperties.load(iS);
+
+            String sprache = curLanguageProperties.getProperty("language");
+
+            languageFiles.put(sprache, curLanguageProperties);
          }
          else if(entryName.endsWith(".jar"))
          {

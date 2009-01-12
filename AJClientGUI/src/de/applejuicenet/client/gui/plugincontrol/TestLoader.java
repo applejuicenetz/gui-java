@@ -1,7 +1,12 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugincontrol;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -9,6 +14,7 @@ import java.io.IOException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 
@@ -25,40 +31,52 @@ public abstract class TestLoader
 
    protected abstract String getPath();
 
-   protected abstract PluginConnector getPlugin(XMLValueHolder pluginsPropertiesXMLHolder,
-      Map<String, XMLValueHolder> languageFiles, ImageIcon icon, Map<String, ImageIcon> availableIcons);
+   protected abstract PluginConnector getPlugin(Properties properties, Map<String, Properties> languageFiles, ImageIcon icon,
+                                                Map<String, ImageIcon> availableIcons);
 
-   public final PluginConnector getPlugin()
+   public final PluginConnector getPlugin() throws IOException
    {
-      PluginConnector plugin = getPlugin(new MyXMLValueHolder("plugin_properties.xml"), getLanguageXmls(), getIcon(),
-            getAvailableIcons());
+      Properties      props = new Properties();
+      FileInputStream fiS = new FileInputStream(path + File.separator + "plugin.properties");
+
+      props.load(fiS);
+      fiS.close();
+      PluginConnector plugin = getPlugin(props, getLanguageFiles(), getIcon(), getAvailableIcons());
 
       return plugin;
    }
 
-   private Map<String, XMLValueHolder> getLanguageXmls()
+   private Map<String, Properties> getLanguageFiles() throws IOException
    {
-      Map<String, XMLValueHolder> languageXMLs = new HashMap<String, XMLValueHolder>();
-      String[]                    filenames = new File(path).list(new FilenameFilter()
+      Map<String, Properties> languageProperties = new HashMap<String, Properties>();
+      String[]                filenames = new File(path).list(new FilenameFilter()
+         {
+            public boolean accept(File dir, String name)
             {
-               public boolean accept(File dir, String name)
-               {
-                  return name.indexOf("language_xml_") != -1;
-               }
-            });
+               return name.startsWith("language_") && name.endsWith(".properties");
+            }
+         });
 
       if(null != filenames)
       {
+         Properties      props;
+         FileInputStream fiS;
+         String          sprache;
+
          for(String curFilename : filenames)
          {
-            MyXMLValueHolder languageFile = new MyXMLValueHolder(curFilename);
-            String           sprache = languageFile.getXMLAttributeByTagName("language.value");
+            props = new Properties();
+            fiS   = new FileInputStream(path + File.separator + curFilename);
 
-            languageXMLs.put(sprache, languageFile);
+            props.load(fiS);
+            fiS.close();
+            sprache = props.getProperty("language");
+
+            languageProperties.put(sprache, props);
          }
       }
 
-      return languageXMLs;
+      return languageProperties;
    }
 
    private ImageIcon getIcon()
@@ -73,12 +91,12 @@ public abstract class TestLoader
       Map<String, ImageIcon> availableIcons = new HashMap<String, ImageIcon>();
       File                   aFile = new File(path + File.separator + "icons" + File.separator);
       String[]               names = aFile.list(new FilenameFilter()
+         {
+            public boolean accept(File dir, String name)
             {
-               public boolean accept(File dir, String name)
-               {
-                  return name.endsWith(".gif") || name.endsWith(".png");
-               }
-            });
+               return name.endsWith(".gif") || name.endsWith(".png");
+            }
+         });
 
       for(String curName : names)
       {
