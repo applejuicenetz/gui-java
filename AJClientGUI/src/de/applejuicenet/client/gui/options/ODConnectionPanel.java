@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -17,17 +21,15 @@ import javax.swing.JPasswordField;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.connect.QuickConnectionSettingsDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODConnectionPanel.java,v 1.9 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODConnectionPanel.java,v 1.10 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -38,16 +40,16 @@ import de.tklsoft.gui.controls.TKLTextField;
  */
 public class ODConnectionPanel extends JPanel implements OptionsRegister
 {
-   private boolean                       dirty = false;
+   private boolean                       dirty                         = false;
    private JLabel                        label1;
    private JLabel                        label3;
    private JLabel                        label4;
-   private TKLTextField                  host = new TKLTextField();
-   private TKLTextField                  port = new TKLTextField();
-   private JPasswordField                passwortNeu = new JPasswordField();
+   private TKLTextField                  host                          = new TKLTextField();
+   private TKLTextField                  port                          = new TKLTextField();
+   private JPasswordField                passwortNeu                   = new JPasswordField();
    private ConnectionSettings            remote;
    private Logger                        logger;
-   private boolean                       showPort = false;
+   private boolean                       showPort                      = false;
    private QuickConnectionSettingsDialog quickConnectionSettingsDialog;
    private Icon                          menuIcon;
    private String                        menuText;
@@ -57,9 +59,9 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
       logger = Logger.getLogger(getClass());
       try
       {
-         this.showPort = showPort;
+         this.showPort                      = showPort;
          this.quickConnectionSettingsDialog = quickConnectionSettingsDialog;
-         this.remote = remote;
+         this.remote                        = remote;
          init();
       }
       catch(Exception e)
@@ -87,12 +89,10 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
 
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  "javagui.options.remote.host")));
-      label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  "javagui.options.remote.passwortNeu")));
-      menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("einstform.pwsheet.caption"));
-      label4 = new JLabel("Port");
+      label1 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.remote.host"));
+      label3 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.remote.passwortNeu"));
+      menuText = languageSelector.getFirstAttrbuteByTagName("einstform.pwsheet.caption");
+      label4   = new JLabel("Port");
 
       host.setText(remote.getHost());
       host.addFocusListener(new HostFocusListener());
@@ -115,11 +115,11 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
 
       GridBagConstraints constraints = new GridBagConstraints();
 
-      constraints.anchor = GridBagConstraints.NORTH;
-      constraints.fill = GridBagConstraints.BOTH;
-      constraints.gridx = 0;
-      constraints.gridy = 0;
-      constraints.insets.top = 5;
+      constraints.anchor      = GridBagConstraints.NORTH;
+      constraints.fill        = GridBagConstraints.BOTH;
+      constraints.gridx       = 0;
+      constraints.gridy       = 0;
+      constraints.insets.top  = 5;
       constraints.insets.left = 5;
 
       panel1.add(label1, constraints);
@@ -138,9 +138,9 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
       panel1.add(label3, constraints);
 
       constraints.insets.right = 5;
-      constraints.gridy = 0;
-      constraints.gridx = 1;
-      constraints.weightx = 1;
+      constraints.gridy        = 0;
+      constraints.gridx        = 1;
+      constraints.weightx      = 1;
       panel1.add(host, constraints);
 
       gridy = 1;
@@ -157,15 +157,14 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
 
       constraints.gridy = gridy;
       gridy++;
-      constraints.gridx = 0;
+      constraints.gridx     = 0;
       constraints.gridwidth = 2;
       panel1.add(panel2, constraints);
 
       add(panel1, BorderLayout.NORTH);
       if(quickConnectionSettingsDialog != null)
       {
-         label3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  "einstform.pwsheet.caption")));
+         label3.setText(languageSelector.getFirstAttrbuteByTagName("einstform.pwsheet.caption"));
       }
 
       host.confirmNewValue();

@@ -5,12 +5,10 @@
 package de.applejuicenet.client.gui.upload.table;
 
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
 import java.util.Map;
 
 import de.applejuicenet.client.fassade.entity.Upload;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -18,7 +16,7 @@ import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.9 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.10 2009/01/12 09:19:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -40,7 +38,7 @@ public class UploadDataTableModel extends AbstractTreeTableModel implements Lang
                                                                       TreeTableModel.class, String.class, String.class, String.class,
                                                                       String.class, String.class, String.class, String.class
                                                                    };
-   private SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+   private SimpleDateFormat    formatter                   = new SimpleDateFormat("HH:mm:ss");
    private String              uebertragung;
    private String              keineVerbindungMoeglich;
    private String              versucheIndirekteVerbindung;
@@ -211,11 +209,11 @@ public class UploadDataTableModel extends AbstractTreeTableModel implements Lang
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      uebertragung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat1"));
-      keineVerbindungMoeglich = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat8"));
-      versucheIndirekteVerbindung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat7"));
-      versucheZuVerbinden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat6"));
-      warteschlange = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat3"));
+      uebertragung                = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat1");
+      keineVerbindungMoeglich     = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat8");
+      versucheIndirekteVerbindung = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat7");
+      versucheZuVerbinden         = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat6");
+      warteschlange               = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat3");
    }
 
    public Object getChild(Object parent, int index)

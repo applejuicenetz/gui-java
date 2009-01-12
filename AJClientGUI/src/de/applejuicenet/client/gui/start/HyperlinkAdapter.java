@@ -16,14 +16,13 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.DesktopTools;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/HyperlinkAdapter.java,v 1.7 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/HyperlinkAdapter.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -89,8 +88,8 @@ public class HyperlinkAdapter implements HyperlinkListener
             catch(Exception ex)
             {
                LanguageSelector ls        = LanguageSelector.getInstance();
-               String           nachricht = ZeichenErsetzer.korrigiereUmlaute(ls.getFirstAttrbuteByTagName("javagui.startup.updatefehlernachricht"));
-               String           titel     = ZeichenErsetzer.korrigiereUmlaute(ls.getFirstAttrbuteByTagName("mainform.caption"));
+               String           nachricht = ls.getFirstAttrbuteByTagName("javagui.startup.updatefehlernachricht");
+               String           titel     = ls.getFirstAttrbuteByTagName("mainform.caption");
 
                JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), nachricht, titel, JOptionPane.INFORMATION_MESSAGE);
             }

@@ -5,7 +5,6 @@
 package de.applejuicenet.client.gui.search;
 
 import java.awt.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.event.DataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.util.Value;
@@ -28,7 +26,6 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.download.DownloadPropertyChangeListener;
 import de.applejuicenet.client.gui.search.table.SearchResultIconNodeRenderer;
 import de.applejuicenet.client.shared.SoundPlayer;
-
 import de.tklsoft.gui.controls.TKLTextField;
 
 public class SearchController extends GuiController
@@ -143,10 +140,9 @@ public class SearchController extends GuiController
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      bearbeitung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.opensearches.caption"));
+      bearbeitung = languageSelector.getFirstAttrbuteByTagName("mainform.opensearches.caption");
       searchPanel.getBearbeitungLbl().setText(bearbeitung.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
-      searchPanel.getMnuEinfuegen()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.einfuegen")));
+      searchPanel.getMnuEinfuegen().setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.einfuegen"));
    }
 
    protected void startFirstSearch()

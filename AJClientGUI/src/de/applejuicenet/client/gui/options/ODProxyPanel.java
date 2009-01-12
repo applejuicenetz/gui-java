@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -18,17 +22,15 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.shared.ProxySettings;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-
 import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODProxyPanel.java,v 1.6 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODProxyPanel.java,v 1.7 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,16 +41,16 @@ import de.tklsoft.gui.controls.TKLTextField;
  */
 public class ODProxyPanel extends JPanel implements OptionsRegister
 {
-   private boolean        dirty = false;
+   private boolean        dirty         = false;
    private JLabel         label1;
    private JLabel         label2;
    private JLabel         label3;
    private JLabel         label4;
-   private TKLTextField   host = new TKLTextField();
-   private TKLTextField   port = new TKLTextField();
-   private TKLTextField   user = new TKLTextField();
-   private JPasswordField passwort = new JPasswordField();
-   private TKLCheckBox    use = new TKLCheckBox();
+   private TKLTextField   host          = new TKLTextField();
+   private TKLTextField   port          = new TKLTextField();
+   private TKLTextField   user          = new TKLTextField();
+   private JPasswordField passwort      = new JPasswordField();
+   private TKLCheckBox    use           = new TKLCheckBox();
    private ProxySettings  proxySettings;
    private Logger         logger;
    private Icon           menuIcon;
@@ -83,17 +85,12 @@ public class ODProxyPanel extends JPanel implements OptionsRegister
 
       proxySettings = ProxyManagerImpl.getInstance().getProxySettings();
 
-      label1 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  "javagui.options.proxy.host")));
-      label2 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  "javagui.options.proxy.port")));
-      label3 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  "javagui.options.proxy.benutzername")));
-      label4 = new JLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  "javagui.options.proxy.passwort")));
-      use.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               "javagui.options.proxy.verwenden")));
-      menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.caption"));
+      label1 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.host"));
+      label2 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.port"));
+      label3 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.benutzername"));
+      label4 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.passwort"));
+      use.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.verwenden"));
+      menuText = languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.caption");
       host.setText(proxySettings.getHost());
       host.addFocusListener(new HostFocusListener());
       port.setDocument(new NumberInputVerifier());
@@ -116,11 +113,11 @@ public class ODProxyPanel extends JPanel implements OptionsRegister
 
       GridBagConstraints constraints = new GridBagConstraints();
 
-      constraints.anchor = GridBagConstraints.NORTH;
-      constraints.fill = GridBagConstraints.BOTH;
-      constraints.gridx = 0;
-      constraints.gridy = 0;
-      constraints.insets.top = 5;
+      constraints.anchor      = GridBagConstraints.NORTH;
+      constraints.fill        = GridBagConstraints.BOTH;
+      constraints.gridx       = 0;
+      constraints.gridy       = 0;
+      constraints.insets.top  = 5;
       constraints.insets.left = 5;
 
       panel1.add(label1, constraints);
@@ -135,9 +132,9 @@ public class ODProxyPanel extends JPanel implements OptionsRegister
       panel1.add(label4, constraints);
 
       constraints.insets.right = 5;
-      constraints.gridy = 0;
-      constraints.gridx = 1;
-      constraints.weightx = 1;
+      constraints.gridy        = 0;
+      constraints.gridx        = 1;
+      constraints.weightx      = 1;
       panel1.add(host, constraints);
 
       constraints.gridy = 1;
@@ -149,8 +146,8 @@ public class ODProxyPanel extends JPanel implements OptionsRegister
       constraints.gridy = 3;
       panel1.add(passwort, constraints);
 
-      constraints.gridy = 4;
-      constraints.gridx = 0;
+      constraints.gridy     = 4;
+      constraints.gridx     = 0;
       constraints.gridwidth = 2;
       panel2.add(use);
       panel1.add(panel2, constraints);

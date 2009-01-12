@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.about;
 
 import java.awt.BorderLayout;
@@ -17,7 +21,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.CropImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,16 +30,14 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
-
 import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.13 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.14 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -93,7 +94,7 @@ public class AboutDialog extends JDialog
       setResizable(false);
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.aboutbtn.caption")));
+      setTitle(languageSelector.getFirstAttrbuteByTagName("mainform.aboutbtn.caption"));
       getContentPane().setLayout(new BorderLayout());
       getContentPane().add(backPanel, BorderLayout.CENTER);
       pack();

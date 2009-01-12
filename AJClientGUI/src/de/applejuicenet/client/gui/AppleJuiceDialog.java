@@ -24,15 +24,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.net.URL;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -65,11 +62,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import com.l2fprod.gui.plaf.skin.Skin;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import com.l2fprod.gui.plaf.skin.Skin;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
@@ -81,7 +78,6 @@ import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
 import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.about.AboutDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
@@ -105,7 +101,6 @@ import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
-
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLFrame;
 import de.tklsoft.gui.controls.TKLLabel;
@@ -359,13 +354,15 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
       }
 
-      String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
+      String path    = System.getProperty("user.dir") + File.separator + "language" + File.separator;
       String sprache = OptionsManagerImpl.getInstance().getSprache();
-      if (null == sprache || sprache.trim().length() == 0)
+
+      if(null == sprache || sprache.trim().length() == 0)
       {
-          sprache = "deutsch";
+         sprache = "deutsch";
       }
-      path +=  sprache + ".properties";
+
+      path += sprache + ".properties";
       if(AppleJuiceClient.splash != null)
       {
          AppleJuiceClient.splash.setProgress(25, "Initialisiere Sprache...");
@@ -1197,31 +1194,31 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          verbunden             = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.verbunden");
          verbinden             = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.verbinden");
          nichtVerbunden        = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.nichtverbunden");
-         keinServer            = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.mainform.keinserver"));
-         themeSupportTitel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.caption"));
-         themeSupportNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.mainform.themesupportnachricht"));
-         sprachMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("einstform.languagesheet.caption")));
-         menuItemOptionen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.optbtn.caption")));
-         menuItemOptionen.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.optbtn.hint")));
-         menuItemCoreBeenden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.corebeenden")));
-         menuItemCoreBeenden.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.corebeendenhint")));
-         menuItemUeber.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.aboutbtn.caption")));
-         menuItemCheckUpdate.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.checkupdate.caption")));
-         menuItemCheckUpdate.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.checkupdate.hint")));
-         menuItemDeaktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.deaktivieren")));
-         optionenMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.extras")));
-         menuItemDateiliste.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.dateiliste")));
-         menuItemDateiliste.setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.dateilistehint")));
-         themesMenu.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.themes")));
-         bestaetigung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.bestaetigung"));
-         menuItemAktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.aktivieren")));
-         menuItemDeaktivieren.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.deaktivieren")));
+         keinServer            = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.keinserver");
+         themeSupportTitel     = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
+         themeSupportNachricht = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.themesupportnachricht");
+         sprachMenu.setText(languageSelector.getFirstAttrbuteByTagName("einstform.languagesheet.caption"));
+         menuItemOptionen.setText(languageSelector.getFirstAttrbuteByTagName("mainform.optbtn.caption"));
+         menuItemOptionen.setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.optbtn.hint"));
+         menuItemCoreBeenden.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.corebeenden"));
+         menuItemCoreBeenden.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.corebeendenhint"));
+         menuItemUeber.setText(languageSelector.getFirstAttrbuteByTagName("mainform.aboutbtn.caption"));
+         menuItemCheckUpdate.setText(languageSelector.getFirstAttrbuteByTagName("mainform.checkupdate.caption"));
+         menuItemCheckUpdate.setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.checkupdate.hint"));
+         menuItemDeaktivieren.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.deaktivieren"));
+         optionenMenu.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.extras"));
+         menuItemDateiliste.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.dateiliste"));
+         menuItemDateiliste.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.dateilistehint"));
+         themesMenu.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.themes"));
+         bestaetigung = languageSelector.getFirstAttrbuteByTagName("javagui.menu.bestaetigung");
+         menuItemAktivieren.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.aktivieren"));
+         menuItemDeaktivieren.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.deaktivieren"));
 
-         firewallWarning = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.firewallwarning.caption"));
-         alreadyLoaded   = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen"));
-         invalidLink     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink"));
-         linkFailure     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerkurz"));
-         dialogTitel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.caption"));
+         firewallWarning = languageSelector.getFirstAttrbuteByTagName("mainform.firewallwarning.caption");
+         alreadyLoaded   = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen");
+         invalidLink     = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");
+         linkFailure     = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerkurz");
+         dialogTitel     = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
          if(firewalled)
          {
             statusbar[0].setToolTipText(firewallWarning);
@@ -1229,8 +1226,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
          if(useTrayIcon && null != trayLoader)
          {
-            trayLoader.setTextVerstecken(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.verstecken")));
-            trayLoader.setTextZeigen(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.menu.zeigen")));
+            trayLoader.setTextVerstecken(languageSelector.getFirstAttrbuteByTagName("javagui.menu.verstecken"));
+            trayLoader.setTextZeigen(languageSelector.getFirstAttrbuteByTagName("javagui.menu.zeigen"));
             popupAboutMenuItem.setText(menuItemUeber.getText());
             popupAboutMenuItem.setToolTipText(menuItemUeber.getToolTipText());
             popupOptionenMenuItem.setText(menuItemOptionen.getText());
@@ -1292,10 +1289,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                         SoundPlayer.getInstance().playSound(SoundPlayer.GESTARTET);
                         String versionsNr = AppleJuiceClient.getAjFassade().getCoreVersion().getVersion();
 
-                        titel = ZeichenErsetzer.korrigiereUmlaute(LanguageSelector.getInstance()
-                                                                  .getFirstAttrbuteByTagName("mainform.caption")) +
-                                " (Core " + versionsNr + " - GUI " + AppleJuiceDialog.GUI_VERSION + "/" +
-                                ApplejuiceFassade.FASSADE_VERSION + ")";
+                        titel = LanguageSelector.getInstance().getFirstAttrbuteByTagName("mainform.caption") + " (Core " +
+                                versionsNr + " - GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION +
+                                ")";
                         setTitle(titel);
                         repaint();
                      }
@@ -1626,9 +1622,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                   else
                   {
                      LanguageSelector languageSelector = LanguageSelector.getInstance();
-                     String           fehlerTitel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.caption"));
+                     String           fehlerTitel = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
 
-                     String           fehlerNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.checkupdate.keineNeueVersion"));
+                     String           fehlerNachricht = languageSelector.getFirstAttrbuteByTagName("javagui.checkupdate.keineNeueVersion");
 
                      JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), fehlerNachricht, fehlerTitel,
                                                    JOptionPane.INFORMATION_MESSAGE);
@@ -1656,7 +1652,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    public void informWrongPassword()
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      String           nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext3"));
+      String           nachricht = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext3");
 
       SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
       closeWithErrormessage(nachricht, true);

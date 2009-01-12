@@ -9,7 +9,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -26,7 +25,6 @@ import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.entity.Upload;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
@@ -318,18 +316,18 @@ public class UploadController extends GuiController
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      clientText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uplcounttext"));
+      clientText = languageSelector.getFirstAttrbuteByTagName("mainform.uplcounttext");
       uploadPanel.getUploadListeLabel().setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
       String[] columnsText = new String[8];
 
-      columnsText[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col0caption"));
-      columnsText[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col3caption"));
-      columnsText[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col1caption"));
-      columnsText[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col2caption"));
-      columnsText[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption"));
-      columnsText[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.uploadform.columnwasserstand"));
-      columnsText[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col4caption"));
-      columnsText[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col5caption"));
+      columnsText[0] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col0caption");
+      columnsText[1] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col3caption");
+      columnsText[2] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col1caption");
+      columnsText[3] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col2caption");
+      columnsText[4] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
+      columnsText[5] = languageSelector.getFirstAttrbuteByTagName("javagui.uploadform.columnwasserstand");
+      columnsText[6] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col4caption");
+      columnsText[7] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col5caption");
       TableColumn[] columns = uploadPanel.getTableColumns();
 
       for(int i = 0; i < columns.length; i++)
@@ -338,9 +336,8 @@ public class UploadController extends GuiController
       }
 
       columns[0].setPreferredWidth(100);
-      warteschlangeVoll = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.warteschlangevoll"));
-      uploadPanel.getMnuCopyToClipboard()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption")));
+      warteschlangeVoll = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.warteschlangevoll");
+      uploadPanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
    }
 
    protected void contentChanged(DATALISTENER_TYPE type, final Object content)

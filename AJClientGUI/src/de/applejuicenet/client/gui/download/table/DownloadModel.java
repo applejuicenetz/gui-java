@@ -8,7 +8,6 @@ import java.util.Set;
 
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.components.treetable.Node;
@@ -18,7 +17,7 @@ import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.11 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.12 2009/01/12 09:19:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -324,30 +323,30 @@ public class DownloadModel extends AbstractTreeTableModel implements LanguageLis
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      ungefragt                    = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat1"));
-      versucheZuVerbinden          = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat2"));
-      ggstZuAlteVersion            = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat3"));
-      kannDateiNichtOeffnen        = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat4"));
-      warteschlange                = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat5"));
-      keineBrauchbarenParts        = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat6"));
-      uebertragung                 = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat7"));
-      nichtGenugPlatz              = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat8"));
-      fertiggestellt               = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat14"));
-      keineVerbindungMoeglich      = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.verbindungunmoeglich"));
-      pausiert                     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat13"));
-      position                     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat51"));
-      versucheIndirekt             = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat10"));
-      eigenesLimitErreicht         = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.eigeneslimiterreicht"));
-      indirekteVerbindungAbgelehnt = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.indverbindungabgelehnt"));
-      suchen                       = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestatlook"));
-      laden                        = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestattransfer"));
-      keinPlatz                    = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat1"));
-      fertigstellen                = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat12"));
-      fertig                       = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat14"));
-      abbrechen                    = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat15"));
-      abgebrochen                  = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat17"));
-      warteschlangeVoll            = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.warteschlangevoll"));
-      fehlerBeimFertigstellen      = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.fehlerbeimfertigstellen"));
-      dataWirdErstellt             = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.datawirderstellt"));
+      ungefragt                    = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat1");
+      versucheZuVerbinden          = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat2");
+      ggstZuAlteVersion            = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat3");
+      kannDateiNichtOeffnen        = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat4");
+      warteschlange                = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat5");
+      keineBrauchbarenParts        = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat6");
+      uebertragung                 = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat7");
+      nichtGenugPlatz              = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat8");
+      fertiggestellt               = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat14");
+      keineVerbindungMoeglich      = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.verbindungunmoeglich");
+      pausiert                     = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat13");
+      position                     = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat51");
+      versucheIndirekt             = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat10");
+      eigenesLimitErreicht         = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.eigeneslimiterreicht");
+      indirekteVerbindungAbgelehnt = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.indverbindungabgelehnt");
+      suchen                       = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestatlook");
+      laden                        = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestattransfer");
+      keinPlatz                    = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat1");
+      fertigstellen                = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat12");
+      fertig                       = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat14");
+      abbrechen                    = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat15");
+      abgebrochen                  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat17");
+      warteschlangeVoll            = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.warteschlangevoll");
+      fehlerBeimFertigstellen      = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.fehlerbeimfertigstellen");
+      dataWirdErstellt             = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.datawirderstellt");
    }
 }

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -27,7 +31,6 @@ import org.apache.log4j.Logger;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.shared.AJSettings;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -37,7 +40,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/OptionsDialog.java,v 1.8 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/OptionsDialog.java,v 1.9 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -57,7 +60,7 @@ public class OptionsDialog extends JDialog
    private JList              menuList;
    private OptionsRegister[]  optionPanels;
    private CardLayout         registerLayout = new CardLayout();
-   private JPanel             registerPanel = new JPanel(registerLayout);
+   private JPanel             registerPanel  = new JPanel(registerLayout);
 
    public OptionsDialog(JFrame parent) throws HeadlessException
    {
@@ -66,7 +69,7 @@ public class OptionsDialog extends JDialog
       try
       {
          this.parent = parent;
-         ajSettings = AppleJuiceClient.getAjFassade().getAJSettings();
+         ajSettings  = AppleJuiceClient.getAjFassade().getAJSettings();
          init();
       }
       catch(Exception e)
@@ -81,12 +84,12 @@ public class OptionsDialog extends JDialog
 
       remote = OptionsManagerImpl.getInstance().getRemoteSettings();
 
-      setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("einstform.caption")));
+      setTitle(languageSelector.getFirstAttrbuteByTagName("einstform.caption"));
       optionPanels = new OptionsRegister[]
-         {
-            new ODStandardPanel(this, ajSettings, remote), new ODVerbindungPanel(this, ajSettings),
-            new ODConnectionPanel(remote, null), new ODProxyPanel(), new ODAnsichtPanel(), new ODPluginPanel(this)
-         };
+                     {
+                        new ODStandardPanel(this, ajSettings, remote), new ODVerbindungPanel(this, ajSettings),
+                        new ODConnectionPanel(remote, null), new ODProxyPanel(), new ODAnsichtPanel(), new ODPluginPanel(this)
+                     };
 
       menuList = new JList(optionPanels);
       menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -106,10 +109,8 @@ public class OptionsDialog extends JDialog
             }
          });
       menuList.setSelectedValue(optionPanels[0], true);
-      speichern = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  "einstform.Button1.caption")));
-      abbrechen = new JButton(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                  "einstform.Button2.caption")));
+      speichern = new JButton(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
+      abbrechen = new JButton(languageSelector.getFirstAttrbuteByTagName("einstform.Button2.caption"));
       abbrechen.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent e)
@@ -143,7 +144,7 @@ public class OptionsDialog extends JDialog
    {
       try
       {
-         OptionsManager om = OptionsManagerImpl.getInstance();
+         OptionsManager om             = OptionsManagerImpl.getInstance();
          boolean        etwasGeaendert = false;
 
          if(((ODAnsichtPanel) optionPanels[4]).isDirty())
@@ -176,10 +177,8 @@ public class OptionsDialog extends JDialog
             catch(InvalidPasswordException ex)
             {
                LanguageSelector languageSelector = LanguageSelector.getInstance();
-               String           titel = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                        "javagui.eingabefehler"));
-               String nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-                        "javagui.options.remote.fehlertext"));
+               String           titel = languageSelector.getFirstAttrbuteByTagName("javagui.eingabefehler");
+               String           nachricht = languageSelector.getFirstAttrbuteByTagName("javagui.options.remote.fehlertext");
 
                JOptionPane.showMessageDialog(parent, nachricht, titel, JOptionPane.OK_OPTION);
             }

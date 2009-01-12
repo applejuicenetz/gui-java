@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -15,12 +19,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginOptionsDialog.java,v 1.5 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginOptionsDialog.java,v 1.6 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -41,7 +44,7 @@ public class ODPluginOptionsDialog extends JDialog
       try
       {
          this.pluginConnector = pluginConnector;
-         logger = Logger.getLogger(getClass());
+         logger               = Logger.getLogger(getClass());
          init();
       }
       catch(Exception e)
@@ -67,10 +70,8 @@ public class ODPluginOptionsDialog extends JDialog
 
       String title = pluginConnector.getTitle() + " - ";
 
-      title += ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-            "javagui.options.plugins.einstellungen"));
-      schliessen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               "javagui.options.plugins.schliessen")));
+      title += languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.einstellungen");
+      schliessen.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.schliessen"));
       setTitle(title);
       getContentPane().setLayout(new BorderLayout());
       getContentPane().add(pluginConnector.getOptionPanel(), BorderLayout.CENTER);

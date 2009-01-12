@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -5,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Set;
 import java.util.Vector;
 
@@ -24,7 +27,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.plugincontrol.PluginFactory;
@@ -32,7 +34,7 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginPanel.java,v 1.7 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginPanel.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -44,10 +46,10 @@ import de.applejuicenet.client.shared.IconManager;
 public class ODPluginPanel extends JPanel implements OptionsRegister
 {
    private JList            pluginList;
-   private JTextArea        beschreibung = new JTextArea();
-   private JLabel           label1 = new JLabel();
+   private JTextArea        beschreibung            = new JTextArea();
+   private JLabel           label1                  = new JLabel();
    private AppleJuiceDialog theApp;
-   private JButton          einstellungen = new JButton();
+   private JButton          einstellungen           = new JButton();
    private String           name;
    private String           version;
    private String           autor;
@@ -63,7 +65,7 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       logger = Logger.getLogger(getClass());
       try
       {
-         theApp = AppleJuiceDialog.getApp();
+         theApp       = AppleJuiceDialog.getApp();
          parentDialog = parent;
          init();
       }
@@ -110,17 +112,13 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       setLayout(new BorderLayout());
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("einstform.Label11.caption")) +
-         ":");
-      name = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.name"));
-      version = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               "javagui.options.plugins.version"));
-      erlaeuterung = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               "javagui.options.plugins.beschreibung"));
-      autor = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.autor"));
-      einstellungen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               "javagui.options.plugins.einstellungen")));
-      menuText = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("einstform.TabSheet1.caption"));
+      label1.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Label11.caption") + ":");
+      name    = languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.name");
+      version = languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.version");
+      erlaeuterung = languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.beschreibung");
+      autor = languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.autor");
+      einstellungen.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.einstellungen"));
+      menuText = languageSelector.getFirstAttrbuteByTagName("einstform.TabSheet1.caption");
 
       add(label1, BorderLayout.NORTH);
       add(pluginList, BorderLayout.WEST);
@@ -146,41 +144,6 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
                }
             }
          });
-   }
-
-   class PluginContainer
-   {
-      private PluginConnector plugin;
-
-      public PluginContainer(PluginConnector plugin)
-      {
-         this.plugin = plugin;
-      }
-
-      public String toString()
-      {
-         return plugin.getTitle();
-      }
-
-      public PluginConnector getPlugin()
-      {
-         return plugin;
-      }
-
-      public String getBeschreibung()
-      {
-         String text;
-
-         text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + autor + ":\r\n" + plugin.getAutor() + " [" + plugin.getContact() +
-            "]" + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion() + "\r\n\r\n" + erlaeuterung + ":\r\n" +
-            plugin.getBeschreibung();
-         return text;
-      }
-
-      public JPanel getPluginOptionPanel()
-      {
-         return plugin.getOptionPanel();
-      }
    }
 
    void pluginList_valueChanged(ListSelectionEvent e)
@@ -213,5 +176,40 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
    {
 
       // nothing to do...
+   }
+
+   class PluginContainer
+   {
+      private PluginConnector plugin;
+
+      public PluginContainer(PluginConnector plugin)
+      {
+         this.plugin = plugin;
+      }
+
+      public String toString()
+      {
+         return plugin.getTitle();
+      }
+
+      public PluginConnector getPlugin()
+      {
+         return plugin;
+      }
+
+      public String getBeschreibung()
+      {
+         String text;
+
+         text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + autor + ":\r\n" + plugin.getAutor() + " [" + plugin.getContact() +
+                "]" + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion() + "\r\n\r\n" + erlaeuterung + ":\r\n" +
+                plugin.getBeschreibung();
+         return text;
+      }
+
+      public JPanel getPluginOptionPanel()
+      {
+         return plugin.getOptionPanel();
+      }
    }
 }

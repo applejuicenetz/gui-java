@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -9,7 +10,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -26,7 +26,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -34,13 +33,12 @@ import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Settings;
-
 import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.7 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -85,13 +83,13 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
    private void init()
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      IconManager      im               = IconManager.getInstance();
+      IconManager      im = IconManager.getInstance();
 
-      menuIcon                          = im.getIcon("opt_ansicht");
-      cmbDownloadUebersicht.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.downloadansicht")));
-      cmbAktiv.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.aktiv")));
-      cmbStartscreenZeigen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigestartscreen")));
-      enableToolTip.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigetooltipps")));
+      menuIcon = im.getIcon("opt_ansicht");
+      cmbDownloadUebersicht.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.downloadansicht"));
+      cmbAktiv.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.aktiv"));
+      cmbStartscreenZeigen.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigestartscreen"));
+      enableToolTip.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigetooltipps"));
 
       setLayout(new BorderLayout());
       farbeFertigerDownload.setOpaque(true);
@@ -133,8 +131,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
             }
          });
 
-      ImageIcon icon     = im.getIcon("hint");
-      TKLLabel  hint1    = new TKLLabel(icon)
+      ImageIcon icon  = im.getIcon("hint");
+      TKLLabel  hint1 = new TKLLabel(icon)
       {
          public JToolTip createToolTip()
          {
@@ -145,7 +143,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
          }
       };
 
-      TKLLabel hint2    = new TKLLabel(icon)
+      TKLLabel hint2 = new TKLLabel(icon)
       {
          public JToolTip createToolTip()
          {
@@ -156,7 +154,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
          }
       };
 
-      String tooltipp = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.ttipp_farbewaehlen"));
+      String tooltipp = languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.ttipp_farbewaehlen");
 
       hint1.setToolTipText(tooltipp);
       hint2.setToolTipText(tooltipp);
@@ -243,17 +241,15 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       constraints.gridx = 0;
       constraints.gridy = 0;
       panel1.setLayout(new GridBagLayout());
-      panel1.setBorder(BorderFactory.createTitledBorder(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarben"))));
+      panel1.setBorder(BorderFactory.createTitledBorder(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarben")));
       panel1.add(cmbAktiv, constraints);
       constraints.gridy        = 1;
       constraints.insets.left  = 5;
       constraints.insets.right = 5;
-      panel1.add(new TKLLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.fertigerdownload"))),
-                 constraints);
+      panel1.add(new TKLLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.fertigerdownload")), constraints);
       constraints.gridy = 2;
-      panel1.add(new TKLLabel(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.quelle"))),
-                 constraints);
-      menuText          = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.caption"));
+      panel1.add(new TKLLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.quelle")), constraints);
+      menuText          = languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.caption");
       constraints.gridx = 1;
       constraints.gridy = 1;
       panel1.add(farbeFertigerDownload, constraints);
@@ -305,7 +301,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       try
       {
          boolean        bRet = false;
-         OptionsManager om   = OptionsManagerImpl.getInstance();
+         OptionsManager om = OptionsManagerImpl.getInstance();
 
          if(om.shouldShowConnectionDialogOnStartup() != shouldShowStartcreen())
          {
@@ -384,10 +380,10 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       public void mouseClicked(MouseEvent e)
       {
          LanguageSelector languageSelector = LanguageSelector.getInstance();
-         TKLLabel         source           = (TKLLabel) e.getSource();
-         Color            newColor         = JColorChooser.showDialog(null,
-                                                                      ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarbewaehlen")),
-                                                                      source.getBackground());
+         TKLLabel         source   = (TKLLabel) e.getSource();
+         Color            newColor = JColorChooser.showDialog(null,
+                                                              languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarbewaehlen"),
+                                                              source.getBackground());
 
          if(newColor != null && newColor.getRGB() != source.getBackground().getRGB())
          {

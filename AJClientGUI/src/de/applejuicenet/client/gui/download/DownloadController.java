@@ -10,9 +10,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-
 import java.io.File;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +37,6 @@ import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.event.DataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
@@ -51,8 +48,8 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
-import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
 import de.applejuicenet.client.gui.download.table.DownloadNode;
+import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.Settings;
@@ -1320,25 +1317,23 @@ public class DownloadController extends GuiController
       LanguageSelector languageSelector = LanguageSelector.getInstance();
       String           text = languageSelector.getFirstAttrbuteByTagName("mainform.Label14.caption");
 
-      dialogTitel       = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.caption"));
-      downloadAbbrechen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext5"));
-      downloadPanel.getLblLink().setText(ZeichenErsetzer.korrigiereUmlaute(text));
-      downloadPanel.getBtnStartDownload()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.downlajfsp.caption")));
-      downloadPanel.getBtnStartDownload()
-      .setToolTipText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.downlajfsp.hint")));
+      dialogTitel       = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
+      downloadAbbrechen = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext5");
+      downloadPanel.getLblLink().setText(text);
+      downloadPanel.getBtnStartDownload().setText(languageSelector.getFirstAttrbuteByTagName("mainform.downlajfsp.caption"));
+      downloadPanel.getBtnStartDownload().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.downlajfsp.hint"));
       String[] tableColumns = new String[10];
 
-      tableColumns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption"));
-      tableColumns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption"));
-      tableColumns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption"));
-      tableColumns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption"));
-      tableColumns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption"));
-      tableColumns[5] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption"));
-      tableColumns[6] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption"));
-      tableColumns[7] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption"));
-      tableColumns[8] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption"));
-      tableColumns[9] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption"));
+      tableColumns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
+      tableColumns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
+      tableColumns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption");
+      tableColumns[3] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption");
+      tableColumns[4] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption");
+      tableColumns[5] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption");
+      tableColumns[6] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
+      tableColumns[7] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption");
+      tableColumns[8] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
+      tableColumns[9] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption");
       TableColumn[]       columns = downloadPanel.getDownloadTableColumns();
       JCheckBoxMenuItem[] columnPopupItems = downloadPanel.getColumnPopupItems();
 
@@ -1350,38 +1345,27 @@ public class DownloadController extends GuiController
 
       DownloadMainNode.setColumnTitles(tableColumns);
 
-      downloadPanel.getMnuAbbrechen()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.canceldown.caption")));
-      downloadPanel.getMnuPause()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.pausedown.caption")) +
-               " [F5]");
-      downloadPanel.getMnuFortsetzen()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.resumedown.caption")) +
-               " [F6]");
-      downloadPanel.getMnuUmbenennen()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.renamefile.caption")) +
-               " [F2]");
-      downloadPanel.getMnuZielordner()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.changetarget.caption")) +
-               " [F3]");
+      downloadPanel.getMnuAbbrechen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.canceldown.caption"));
+      downloadPanel.getMnuPause().setText(languageSelector.getFirstAttrbuteByTagName("mainform.pausedown.caption") + " [F5]");
+      downloadPanel.getMnuFortsetzen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.resumedown.caption") + " [F6]");
+      downloadPanel.getMnuUmbenennen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.renamefile.caption") + " [F2]");
+      downloadPanel.getMnuZielordner().setText(languageSelector.getFirstAttrbuteByTagName("mainform.changetarget.caption") +
+                                               " [F3]");
       downloadPanel.getMnuFertigeEntfernen()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.Clearfinishedentries1.caption")));
+      .setText(languageSelector.getFirstAttrbuteByTagName("mainform.Clearfinishedentries1.caption"));
       downloadPanel.getMnuPartlisteAnzeigen()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.partlisteanzeigen")));
-      downloadPanel.getMnuCopyToClipboard()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption")));
+      .setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.partlisteanzeigen"));
+      downloadPanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
       downloadPanel.getMnuCopyToClipboardWithSources()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.getlinkwithsources")));
-      downloadPanel.getMnuEinfuegen()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.einfuegen")));
+      .setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.getlinkwithsources"));
+      downloadPanel.getMnuEinfuegen().setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.einfuegen"));
       downloadPanel.getMnuOpenWithProgram().setText("VLC");
       downloadPanel.getMnuOpenWithDefaultProgram()
       .setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.startemitstandard"));
-      downloadPanel.getLblTargetDir()
-      .setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.zielverzeichnis")));
-      alreadyLoaded = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen"));
-      invalidLink   = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink"));
-      linkFailure   = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerlang"));
+      downloadPanel.getLblTargetDir().setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.zielverzeichnis"));
+      alreadyLoaded = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen");
+      invalidLink   = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");
+      linkFailure   = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerlang");
    }
 
    protected void contentChanged(DATALISTENER_TYPE type, final Object content)

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -15,14 +19,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLComboBox;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/IncomingDirSelectionDialog.java,v 1.6 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/IncomingDirSelectionDialog.java,v 1.7 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,8 +67,8 @@ public class IncomingDirSelectionDialog extends JDialog
       addKeyListener(disposeKeyAdapter);
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      setTitle(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.changetarget.caption")));
-      schliessen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption")));
+      setTitle(languageSelector.getFirstAttrbuteByTagName("mainform.changetarget.caption"));
+      schliessen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
       schliessen.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent ae)
@@ -78,7 +80,7 @@ public class IncomingDirSelectionDialog extends JDialog
 
       JLabel label1 = new JLabel();
 
-      label1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.neuesverzeichnis")));
+      label1.setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.neuesverzeichnis"));
       for(int i = 0; i < selectionValues.length; i++)
       {
          incomingDirs.addItem(selectionValues[i]);

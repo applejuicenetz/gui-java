@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client;
 
 import java.awt.Dimension;
@@ -40,7 +41,6 @@ import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.UpdateInformationDialog;
 import de.applejuicenet.client.gui.components.listener.KeyStates;
@@ -59,7 +59,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.107 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.108 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -133,7 +133,7 @@ public class AppleJuiceClient
          }
       };
 
-      Thread t                    = new Thread(tg, runnable, "appleJuiceCoreGUI");
+      Thread t = new Thread(tg, runnable, "appleJuiceCoreGUI");
 
       t.start();
    }
@@ -237,7 +237,7 @@ public class AppleJuiceClient
 
                      out.println(passwort + "|" + curArg);
                      BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                     String         line   = reader.readLine();
+                     String         line = reader.readLine();
 
                      System.out.println(line);
                      socket.close();
@@ -334,11 +334,11 @@ public class AppleJuiceClient
       {
          Logger rootLogger = Logger.getRootLogger();
 
-         String datum      = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date(System.currentTimeMillis()));
+         String datum     = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date(System.currentTimeMillis()));
          String dateiName;
 
-         dateiName         = datum + ".html";
-         layout            = new HTMLLayout();
+         dateiName = datum + ".html";
+         layout    = new HTMLLayout();
          layout.setTitle("appleJuice-GUI-Log " + datum);
          layout.setLocationInfo(true);
          Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
@@ -372,13 +372,12 @@ public class AppleJuiceClient
 
       try
       {
-         String       nachricht    = "appleJuice-GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION +
-                                     " wird gestartet...";
+         String       nachricht = "appleJuice-GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION +
+                                  " wird gestartet...";
          ConnectFrame connectFrame = new ConnectFrame();
 
-         splash                    = new Splash(connectFrame,
-                                                ((ImageIcon) IconManager.getInstance().getIcon("splashscreen")).getImage(), 0, 100);
-         KeyStates ks              = new KeyStates();
+         splash = new Splash(connectFrame, ((ImageIcon) IconManager.getInstance().getIcon("splashscreen")).getImage(), 0, 100);
+         KeyStates ks = new KeyStates();
 
          splash.addKeyListener(ks);
          splash.setVisible(true);
@@ -425,7 +424,7 @@ public class AppleJuiceClient
          AppleJuiceDialog.initThemes();
          splash.setProgress(10, "Teste Verbindung...");
          boolean showDialog = OptionsManagerImpl.getInstance().shouldShowConnectionDialogOnStartup();
-         boolean keyDown    = ks.isKeyDown(KeyEvent.VK_SHIFT);
+         boolean keyDown = ks.isKeyDown(KeyEvent.VK_SHIFT);
 
          if(!showDialog)
          {
@@ -446,15 +445,15 @@ public class AppleJuiceClient
             {
                if(erreichbarkeit == 2)
                {
-                  titel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.caption"));
-                  nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.startup.fehlversuch"));
+                  titel     = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
+                  nachricht = languageSelector.getFirstAttrbuteByTagName("javagui.startup.fehlversuch");
                   SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
                   JOptionPane.showMessageDialog(connectFrame, nachricht, titel, JOptionPane.ERROR_MESSAGE);
                }
                else
                {
-                  titel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.caption"));
-                  nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext3"));
+                  titel     = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
+                  nachricht = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext3");
                   SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
                   JOptionPane.showMessageDialog(connectFrame, nachricht, titel, JOptionPane.ERROR_MESSAGE);
                }
@@ -473,7 +472,7 @@ public class AppleJuiceClient
                remoteDialog.setVisible(true);
                if(remoteDialog.getResult() == QuickConnectionSettingsDialog.ABGEBROCHEN)
                {
-                  nachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.startup.verbindungsfehler"));
+                  nachricht = languageSelector.getFirstAttrbuteByTagName("javagui.startup.verbindungsfehler");
                   nachricht = nachricht.replaceFirst("%s", OptionsManagerImpl.getInstance().getRemoteSettings().getHost());
                   JOptionPane.showMessageDialog(connectFrame, nachricht, titel, JOptionPane.OK_OPTION);
                   logger.fatal(nachricht);
@@ -581,10 +580,10 @@ public class AppleJuiceClient
                               }
 
                               int     versionsInfoModus = OptionsManagerImpl.getInstance().getVersionsinfoModus();
-                              boolean showInfo          = false;
-                              boolean versionUpdate     = false;
-                              boolean importantUpdate   = false;
-                              boolean cosmeticUpdate    = false;
+                              boolean showInfo        = false;
+                              boolean versionUpdate   = false;
+                              boolean importantUpdate = false;
+                              boolean cosmeticUpdate  = false;
 
                               if(Integer.parseInt(versionInternet[0]) > Integer.parseInt(aktuelleVersion[0]))
                               {

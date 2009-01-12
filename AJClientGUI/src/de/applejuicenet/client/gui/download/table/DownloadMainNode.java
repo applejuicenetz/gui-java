@@ -1,7 +1,10 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.download.table;
 
 import java.awt.Component;
-
 import java.util.ArrayList;
 
 import javax.swing.Icon;
@@ -12,14 +15,13 @@ import javax.swing.JTable;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.shared.FileType;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.12 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadMainNode.java,v 1.13 2009/01/12 09:19:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -266,15 +268,15 @@ public class DownloadMainNode implements Node, LanguageListener, DownloadColumnC
 
       if(type == MainNodeType.LOADING_DOWNLOADS)
       {
-         text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.ladendedownloads"));
+         text = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.ladendedownloads");
       }
       else if(type == MainNodeType.WAITING_DOWNLOADS)
       {
-         text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.wartendedownloads"));
+         text = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.wartendedownloads");
       }
       else if(type == MainNodeType.REST_DOWNLOADS)
       {
-         text = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.dreckigerrest"));
+         text = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.dreckigerrest");
       }
    }
 

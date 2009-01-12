@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -16,7 +20,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserNode;
@@ -25,7 +28,7 @@ import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserTreeMod
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODDirectoryChooser.java,v 1.7 2009/01/12 09:02:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODDirectoryChooser.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,10 +39,10 @@ import de.applejuicenet.client.shared.SwingWorker;
  */
 public class ODDirectoryChooser extends JDialog
 {
-   private JTree   folderTree = new JTree();
+   private JTree   folderTree  = new JTree();
    private JButton uebernehmen = new JButton();
-   private JButton abbrechen = new JButton();
-   private boolean change = false;
+   private JButton abbrechen   = new JButton();
+   private boolean change      = false;
    private String  path;
    private Logger  logger;
 
@@ -71,25 +74,24 @@ public class ODDirectoryChooser extends JDialog
       folderTree.setCellRenderer(new DirectoryChooserTreeCellRenderer());
       uebernehmen.setEnabled(false);
       final SwingWorker worker = new SwingWorker()
+      {
+         public Object construct()
          {
-            public Object construct()
-            {
-               DirectoryChooserTreeModel treeModel = new DirectoryChooserTreeModel();
+            DirectoryChooserTreeModel treeModel = new DirectoryChooserTreeModel();
 
-               folderTree.setModel(treeModel);
-               folderTree.setRootVisible(false);
-               uebernehmen.setEnabled(true);
-               return null;
-            }
-         };
+            folderTree.setModel(treeModel);
+            folderTree.setRootVisible(false);
+            uebernehmen.setEnabled(true);
+            return null;
+         }
+      };
 
       worker.start();
       JPanel aPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
       aPanel.add(uebernehmen);
       aPanel.add(abbrechen);
-      uebernehmen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               "einstform.Button1.caption")));
+      uebernehmen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
       uebernehmen.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent e)
@@ -97,8 +99,7 @@ public class ODDirectoryChooser extends JDialog
                uebernehmen();
             }
          });
-      abbrechen.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName(
-               "einstform.Button2.caption")));
+      abbrechen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button2.caption"));
       abbrechen.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent e)

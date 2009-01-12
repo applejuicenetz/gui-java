@@ -17,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -47,7 +46,6 @@ import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
@@ -553,27 +551,27 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
       {
          LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-         sucheServer.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.Label11.caption")));
+         sucheServer.setText(languageSelector.getFirstAttrbuteByTagName("mainform.Label11.caption"));
          String[] columns = new String[5];
 
-         columns[0] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col0caption"));
-         columns[1] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col1caption"));
-         columns[2] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col3caption"));
-         columns[3] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.col4caption"));
-         columns[4] = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col5caption"));
-         verbinden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.connserv.caption")));
-         loeschen1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.delserv.caption")));
-         hinzufuegen2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.addserv.caption")));
-         hinzufuegen3.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.addserv.caption")));
-         hinzufuegen1.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.addserv.caption")));
-         loeschen2.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.delserv.caption")));
-         verbunden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.verbunden")));
-         versucheZuVerbinden.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.verbinden")));
-         aelter24h.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.aelter24h")));
-         juenger24h.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.juenger24h")));
-         warnungTitel     = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.caption"));
-         warnungNachricht = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.warnungnachricht"));
-         itemCopyToClipboard.setText(ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption")));
+         columns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col0caption");
+         columns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col1caption");
+         columns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col3caption");
+         columns[3] = languageSelector.getFirstAttrbuteByTagName("javagui.serverform.col4caption");
+         columns[4] = languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col5caption");
+         verbinden.setText(languageSelector.getFirstAttrbuteByTagName("mainform.connserv.caption"));
+         loeschen1.setText(languageSelector.getFirstAttrbuteByTagName("mainform.delserv.caption"));
+         hinzufuegen2.setText(languageSelector.getFirstAttrbuteByTagName("mainform.addserv.caption"));
+         hinzufuegen3.setText(languageSelector.getFirstAttrbuteByTagName("mainform.addserv.caption"));
+         hinzufuegen1.setText(languageSelector.getFirstAttrbuteByTagName("mainform.addserv.caption"));
+         loeschen2.setText(languageSelector.getFirstAttrbuteByTagName("mainform.delserv.caption"));
+         verbunden.setText(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.verbunden"));
+         versucheZuVerbinden.setText(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.verbinden"));
+         aelter24h.setText(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.aelter24h"));
+         juenger24h.setText(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.juenger24h"));
+         warnungTitel     = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
+         warnungNachricht = languageSelector.getFirstAttrbuteByTagName("javagui.serverform.warnungnachricht");
+         itemCopyToClipboard.setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
 
          TableColumnModel tcm = serverTable.getColumnModel();
 
