@@ -24,12 +24,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.net.URL;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -62,11 +65,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import com.l2fprod.gui.plaf.skin.Skin;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
@@ -101,6 +104,7 @@ import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
+
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLFrame;
 import de.tklsoft.gui.controls.TKLLabel;
@@ -690,11 +694,11 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          {
             if(logger.isEnabledFor(Level.INFO))
             {
-               logger.info("Der Ordner " + path + " fuer die Sprachauswahl xml-Dateien ist nicht vorhanden." +
+               logger.info("Der Ordner " + path + " fuer die Sprachauswahl properties-Dateien ist nicht vorhanden." +
                            "\r\nappleJuice wird beendet.");
             }
 
-            closeWithErrormessage("Der Ordner " + path + " fuer die Sprachauswahl xml-Dateien ist nicht vorhanden." +
+            closeWithErrormessage("Der Ordner " + path + " fuer die Sprachauswahl properties-Dateien ist nicht vorhanden." +
                                   "\r\nappleJuice wird beendet.", false);
          }
 
@@ -713,11 +717,11 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          {
             if(logger.isEnabledFor(Level.INFO))
             {
-               logger.info("Es sind keine xml-Dateien fuer die Sprachauswahl im Ordner " + path + " vorhanden." +
+               logger.info("Es sind keine properties-Dateien fuer die Sprachauswahl im Ordner " + path + " vorhanden." +
                            "\r\nappleJuice wird beendet.");
             }
 
-            closeWithErrormessage("Es sind keine xml-Dateien fuer die Sprachauswahl im Ordner " + path + " vorhanden." +
+            closeWithErrormessage("Es sind keine properties-Dateien fuer die Sprachauswahl im Ordner " + path + " vorhanden." +
                                   "\r\nappleJuice wird beendet.", false);
          }
 
@@ -802,7 +806,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                      if(rb2.isSelected())
                      {
                         String path      = System.getProperty("user.dir") + File.separator + "language" + File.separator;
-                        String dateiName = path + rb2.getText().toLowerCase() + ".xml";
+                        String dateiName = path + rb2.getText().toLowerCase() + ".properties";
 
                         LanguageSelector.getInstance(dateiName);
                      }
