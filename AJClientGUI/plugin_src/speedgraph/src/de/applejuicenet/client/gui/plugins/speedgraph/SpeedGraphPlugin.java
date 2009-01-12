@@ -6,9 +6,9 @@ package de.applejuicenet.client.gui.plugins.speedgraph;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
@@ -17,11 +17,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/SpeedGraphPlugin.java,v 1.2 2009/01/09 14:21:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/SpeedGraphPlugin.java,v 1.3 2009/01/12 10:00:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -34,12 +33,11 @@ public class SpeedGraphPlugin extends PluginConnector
 {
    private static Logger logger;
    private GraphPanel    graphPanel = new GraphPanel();
-   
 
-   public SpeedGraphPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles, ImageIcon icon,
+   public SpeedGraphPlugin(Properties properties, Map<String, Properties> languageFiles, ImageIcon icon,
                            Map<String, ImageIcon> availableIcons)
    {
-      super(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
+      super(properties, languageFiles, icon, availableIcons);
       logger = Logger.getLogger(getClass());
       try
       {
