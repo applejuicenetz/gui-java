@@ -6,6 +6,7 @@ package de.applejuicenet.client.gui.plugins.speedgraph;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -20,7 +21,7 @@ import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/SpeedGraphPlugin.java,v 1.3 2009/01/12 10:00:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/SpeedGraphPlugin.java,v 1.4 2009/01/12 11:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -33,6 +34,7 @@ public class SpeedGraphPlugin extends PluginConnector
 {
    private static Logger logger;
    private GraphPanel    graphPanel = new GraphPanel();
+   public static boolean doPaint    = false;
 
    public SpeedGraphPlugin(Properties properties, Map<String, Properties> languageFiles, ImageIcon icon,
                            Map<String, ImageIcon> availableIcons)
@@ -73,5 +75,12 @@ public class SpeedGraphPlugin extends PluginConnector
 
    public void registerSelected()
    {
+      doPaint = true;
+   }
+
+   @Override
+   public void lostSelection()
+   {
+      doPaint = false;
    }
 }

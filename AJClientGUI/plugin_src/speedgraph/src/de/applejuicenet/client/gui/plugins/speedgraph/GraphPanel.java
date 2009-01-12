@@ -11,7 +11,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +24,7 @@ import javax.swing.SwingUtilities;
 import de.applejuicenet.client.AppleJuiceClient;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/GraphPanel.java,v 1.7 2009/01/09 14:21:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/speedgraph/src/de/applejuicenet/client/gui/plugins/speedgraph/GraphPanel.java,v 1.8 2009/01/12 11:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -51,7 +53,7 @@ public class GraphPanel extends JPanel
    private double                pxPerKb;
    private int                   lastUploadY;
    private int                   lastDownloadY;
-   private Integer               curX = 0;
+   private Integer               curX                  = 0;
 
    public GraphPanel()
    {
@@ -267,14 +269,16 @@ public class GraphPanel extends JPanel
                time = curTime;
             }
 
-            SwingUtilities.invokeLater(new Runnable()
-               {
-                  public void run()
+            if(SpeedGraphPlugin.doPaint)
+            {
+               SwingUtilities.invokeLater(new Runnable()
                   {
-                     repaint();
-                     System.out.println("paint");
-                  }
-               });
+                     public void run()
+                     {
+                        repaint();
+                     }
+                  });
+            }
          }
       }
    }

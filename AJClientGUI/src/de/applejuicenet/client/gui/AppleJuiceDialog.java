@@ -454,15 +454,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
 
       getContentPane().setLayout(new BorderLayout());
-      registerPane.addChangeListener(new ChangeListener()
-         {
-            public void stateChanged(ChangeEvent e)
-            {
-               RegisterI register = (RegisterI) registerPane.getSelectedComponent();
-
-               register.registerSelected();
-            }
-         });
       getContentPane().add(registerPane, BorderLayout.CENTER);
 
       TKLPanel panel = new TKLPanel(new GridBagLayout());

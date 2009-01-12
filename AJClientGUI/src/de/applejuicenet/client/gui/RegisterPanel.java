@@ -5,6 +5,7 @@
 package de.applejuicenet.client.gui;
 
 import java.awt.event.KeyEvent;
+
 import java.util.Set;
 
 import javax.swing.DefaultSingleSelectionModel;
@@ -29,7 +30,7 @@ import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.63 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.64 2009/01/12 11:59:59 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -74,6 +75,16 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
       }
    }
 
+   private void tabFocusGained(int index)
+   {
+      RegisterI register = (RegisterI) getComponentAt(index);
+
+      if(register != null)
+      {
+         register.registerSelected();
+      }
+   }
+
    private void init()
    {
       LanguageSelector.getInstance().addLanguageListener(this);
@@ -88,7 +99,11 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
                   tabFocusLost(oldIndex);
                }
 
-               super.setSelectedIndex(index);
+               if(oldIndex != index)
+               {
+                  super.setSelectedIndex(index);
+                  tabFocusGained(index);
+               }
             }
          });
       startController = StartController.getInstance();
