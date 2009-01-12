@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.fassade.controller.xml;
 
 import java.util.HashSet;
@@ -9,12 +13,13 @@ import org.w3c.dom.NodeList;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.entity.ShareEntry;
 import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.fassade.shared.StringConstants;
 
 /**
  * $Header:
  * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xmlholder/SettingsXMLHolder.java,v
  * 1.1 2004/12/03 07:57:12 maj0r Exp $
- * 
+ *
  * <p>
  * Titel: AppleJuice Client-GUI
  * </p>
@@ -25,88 +30,100 @@ import de.applejuicenet.client.fassade.shared.AJSettings;
  * <p>
  * Copyright: General Public License
  * </p>
- * 
+ *
  * @author: Maj0r <aj@tkl-soft.de>
- * 
+ *
  */
+public class SettingsXMLHolder extends WebXMLParser
+{
+   private AJSettings settings;
 
-public class SettingsXMLHolder extends WebXMLParser {
+   public SettingsXMLHolder(CoreConnectionSettingsHolder coreHolder)
+   {
+      super(coreHolder, "/xml/settings.xml", "");
+   }
 
-	private AJSettings settings;
+   public void update()
+   {
+      try
+      {
+         reload("", false);
+      }
+      catch(Exception e1)
+      {
+         throw new RuntimeException(e1);
+      }
 
-	public SettingsXMLHolder(CoreConnectionSettingsHolder coreHolder) {
-		super(coreHolder, "/xml/settings.xml", "");
-	}
+      NodeList nodes = document.getElementsByTagName(StringConstants.NICK);
+      String   nick = nodes.item(0).getFirstChild().getNodeValue();
 
-	public void update() {
-		try {
-			reload("", false);
-		} catch (Exception e1) {
-			throw new RuntimeException(e1);
-		}
-		NodeList nodes = document.getElementsByTagName("nick");
-		String nick = nodes.item(0).getFirstChild().getNodeValue();
-		nodes = document.getElementsByTagName("port");
-		long port = Long
-				.parseLong(nodes.item(0).getFirstChild().getNodeValue());
-		nodes = document.getElementsByTagName("xmlport");
-		long xmlPort = Long.parseLong(nodes.item(0).getFirstChild()
-				.getNodeValue());
-		nodes = document.getElementsByTagName("maxupload");
-		long maxUpload = Long.parseLong(nodes.item(0).getFirstChild()
-				.getNodeValue());
-		nodes = document.getElementsByTagName("maxdownload");
-		long maxDownload = Long.parseLong(nodes.item(0).getFirstChild()
-				.getNodeValue());
-		nodes = document.getElementsByTagName("maxconnections");
-		long maxConnections = Long.parseLong(nodes.item(0).getFirstChild()
-				.getNodeValue());
-		nodes = document.getElementsByTagName("maxsourcesperfile");
-		long maxSourcesPerFile = Long.parseLong(nodes.item(0).getFirstChild()
-				.getNodeValue());
-		nodes = document.getElementsByTagName("autoconnect");
-		boolean autoConnect = new Boolean(nodes.item(0).getFirstChild()
-				.getNodeValue()).booleanValue();
-		nodes = document.getElementsByTagName("speedperslot");
-		int speedPerSlot = Integer.parseInt(nodes.item(0).getFirstChild()
-				.getNodeValue());
-		nodes = document.getElementsByTagName("maxnewconnectionsperturn");
-		long maxNewConnectionsPerTurn = Long.parseLong(nodes.item(0)
-				.getFirstChild().getNodeValue());
-		nodes = document.getElementsByTagName("incomingdirectory");
-		String incomingDir = nodes.item(0).getFirstChild().getNodeValue();
-		nodes = document.getElementsByTagName("temporarydirectory");
-		String tempDir = nodes.item(0).getFirstChild().getNodeValue();
-		Set<ShareEntry> shareEntries = new HashSet<ShareEntry>();
-		nodes = document.getElementsByTagName("directory");
-		Element e = null;
-		String dir = null;
-		String shareMode = null;
-		ShareEntryDO entry = null;
-		int nodesSize = nodes.getLength();
-		for (int i = 0; i < nodesSize; i++) {
-			e = (Element) nodes.item(i);
-			dir = e.getAttribute("name");
-			shareMode = e.getAttribute("sharemode");
-			entry = new ShareEntryDO(dir, shareMode);
-			shareEntries.add(entry);
-		}
-		settings = new AJSettings(nick, port, xmlPort, maxUpload, maxDownload,
-				speedPerSlot, incomingDir, tempDir, shareEntries,
-				maxConnections, autoConnect, maxNewConnectionsPerTurn,
-				maxSourcesPerFile);
-	}
+      nodes = document.getElementsByTagName(StringConstants.PORT);
+      long port = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
 
-	public AJSettings getAJSettings() {
-		update();
-		return settings;
-	}
+      nodes = document.getElementsByTagName(StringConstants.XMLPORT);
+      long xmlPort = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
 
-	public AJSettings getCurrentAJSettings() {
-		if (settings == null) {
-			update();
-		}
-		return settings;
-	}
+      nodes = document.getElementsByTagName(StringConstants.MAXUPLOAD);
+      long maxUpload = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
 
+      nodes = document.getElementsByTagName(StringConstants.MAXDOWNLOAD);
+      long maxDownload = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
+
+      nodes = document.getElementsByTagName(StringConstants.MAXCONNECTIONS);
+      long maxConnections = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
+
+      nodes = document.getElementsByTagName(StringConstants.MAXSOURCESPERFILE);
+      long maxSourcesPerFile = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
+
+      nodes = document.getElementsByTagName(StringConstants.AUTOCONNECT);
+      boolean autoConnect = new Boolean(nodes.item(0).getFirstChild().getNodeValue()).booleanValue();
+
+      nodes = document.getElementsByTagName(StringConstants.SPEEDPERSLOT);
+      int speedPerSlot = Integer.parseInt(nodes.item(0).getFirstChild().getNodeValue());
+
+      nodes = document.getElementsByTagName(StringConstants.MAXNEWCONNECTIONSPERTURN);
+      long maxNewConnectionsPerTurn = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
+
+      nodes = document.getElementsByTagName(StringConstants.INCOMINGDIRECTORY);
+      String incomingDir = nodes.item(0).getFirstChild().getNodeValue();
+
+      nodes = document.getElementsByTagName(StringConstants.TEMPORARYDIRECTORY);
+      String          tempDir      = nodes.item(0).getFirstChild().getNodeValue();
+      Set<ShareEntry> shareEntries = new HashSet<ShareEntry>();
+
+      nodes = document.getElementsByTagName(StringConstants.DIRECTORY);
+      Element      e         = null;
+      String       dir       = null;
+      String       shareMode = null;
+      ShareEntryDO entry     = null;
+      int          nodesSize = nodes.getLength();
+
+      for(int i = 0; i < nodesSize; i++)
+      {
+         e         = (Element) nodes.item(i);
+         dir       = e.getAttribute(StringConstants.NAME);
+         shareMode = e.getAttribute(StringConstants.SHAREMODE);
+         entry     = new ShareEntryDO(dir, shareMode);
+         shareEntries.add(entry);
+      }
+
+      settings = new AJSettings(nick, port, xmlPort, maxUpload, maxDownload, speedPerSlot, incomingDir, tempDir, shareEntries,
+                                maxConnections, autoConnect, maxNewConnectionsPerTurn, maxSourcesPerFile);
+   }
+
+   public AJSettings getAJSettings()
+   {
+      update();
+      return settings;
+   }
+
+   public AJSettings getCurrentAJSettings()
+   {
+      if(settings == null)
+      {
+         update();
+      }
+
+      return settings;
+   }
 }

@@ -7,6 +7,7 @@ package de.applejuicenet.client.fassade.entity;
 import java.util.StringTokenizer;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.shared.StringConstants;
 
 public abstract class Version
 {
@@ -29,11 +30,11 @@ public abstract class Version
 
       if(getBetriebsSystem() == LINUX)
       {
-         result = "Linux";
+         result = StringConstants.LINUX;
       }
       else if(getBetriebsSystem() == WIN32)
       {
-         result = "Win32";
+         result = StringConstants.WIN32;
       }
 
       return result;
@@ -43,11 +44,11 @@ public abstract class Version
    {
       int result = -1;
 
-      if(OSName.compareToIgnoreCase("Windows NT") == 0)
+      if(OSName.compareToIgnoreCase(StringConstants.WINDOWS_NT) == 0)
       {
          result = WIN32;
       }
-      else if(OSName.compareToIgnoreCase("Linux") == 0)
+      else if(OSName.compareToIgnoreCase(StringConstants.LINUX) == 0)
       {
          result = LINUX;
       }
@@ -62,8 +63,8 @@ public abstract class Version
          return 0;
       }
 
-      StringTokenizer token1 = new StringTokenizer(getVersion(), ".");
-      StringTokenizer token2 = new StringTokenizer(versionNr, ".");
+      StringTokenizer token1 = new StringTokenizer(getVersion(), StringConstants.POINT);
+      StringTokenizer token2 = new StringTokenizer(versionNr, StringConstants.POINT);
 
       if(token1.countTokens() != 4 || token2.countTokens() != 4)
       {

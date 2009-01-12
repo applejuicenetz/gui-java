@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.fassade.controller.xml;
 
 import de.applejuicenet.client.fassade.entity.Information;
@@ -7,7 +11,7 @@ import de.applejuicenet.client.fassade.entity.Server;
  * $Header:
  * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/InformationDO.java,v
  * 1.1 2004/12/03 07:57:12 maj0r Exp $
- * 
+ *
  * <p>
  * Titel: AppleJuice Client-GUI
  * </p>
@@ -18,131 +22,153 @@ import de.applejuicenet.client.fassade.entity.Server;
  * <p>
  * Copyright: General Public License
  * </p>
- * 
+ *
  * @author: Maj0r <aj@tkl-soft.de>
- * 
+ *
  */
+class InformationDO extends Information
+{
+   private int    verbindungsStatus = NICHT_VERBUNDEN;
+   private int    id;
+   private long   sessionUpload;
+   private long   sessionDownload;
+   private long   credits;
+   private long   uploadSpeed;
+   private long   downloadSpeed;
+   private long   openConnections;
+   private long   maxUploadPositions;
+   private String serverName;
+   private String externeIP;
+   private Server server;
 
-class InformationDO extends Information{
+   public InformationDO()
+   {
+   }
 
-	private int verbindungsStatus = NICHT_VERBUNDEN;
+   public InformationDO(int id, long sessionUpload, long sessionDownload, long credits, long uploadSpeed, long downloadSpeed,
+                        long openConnections, long maxUploadPositions)
+   {
+      this.id                 = id;
+      this.sessionUpload      = sessionUpload;
+      this.sessionDownload    = sessionDownload;
+      this.credits            = credits;
+      this.uploadSpeed        = uploadSpeed;
+      this.downloadSpeed      = downloadSpeed;
+      this.openConnections    = openConnections;
+      this.maxUploadPositions = maxUploadPositions;
+   }
 
-	private int id;
-	private long sessionUpload;
-	private long sessionDownload;
-	private long credits;
-	private long uploadSpeed;
-	private long downloadSpeed;
-	private long openConnections;
-	private long maxUploadPositions;
+   public int getId()
+   {
+      return id;
+   }
 
-	private String serverName;
-	private String externeIP;
-	private Server server;
-	
-	public InformationDO() {}
-	
-	public InformationDO(int id, long sessionUpload, long sessionDownload,
-			long credits, long uploadSpeed, long downloadSpeed,
-			long openConnections, long maxUploadPositions) {
-		this.id = id;
-		this.sessionUpload = sessionUpload;
-		this.sessionDownload = sessionDownload;
-		this.credits = credits;
-		this.uploadSpeed = uploadSpeed;
-		this.downloadSpeed = downloadSpeed;
-		this.openConnections = openConnections;
-		this.maxUploadPositions = maxUploadPositions;
-	}
+   public long getSessionUpload()
+   {
+      return sessionUpload;
+   }
 
-	public int getId() {
-		return id;
-	}
+   public long getSessionDownload()
+   {
+      return sessionDownload;
+   }
 
-	public long getSessionUpload() {
-		return sessionUpload;
-	}
+   public long getCredits()
+   {
+      return credits;
+   }
 
-	public long getSessionDownload() {
-		return sessionDownload;
-	}
+   public long getUploadSpeed()
+   {
+      return uploadSpeed;
+   }
 
-	public long getCredits() {
-		return credits;
-	}
+   public long getDownloadSpeed()
+   {
+      return downloadSpeed;
+   }
 
-	public long getUploadSpeed() {
-		return uploadSpeed;
-	}
+   public long getOpenConnections()
+   {
+      return openConnections;
+   }
 
-	public long getDownloadSpeed() {
-		return downloadSpeed;
-	}
+   public void setExterneIP(String externeIP)
+   {
+      this.externeIP = externeIP;
+   }
 
-	public long getOpenConnections() {
-		return openConnections;
-	}
+   public void setSessionUpload(long sessionUpload)
+   {
+      this.sessionUpload = sessionUpload;
+   }
 
-	public void setExterneIP(String externeIP) {
-		this.externeIP = externeIP;
-	}
+   public void setSessionDownload(long sessionDownload)
+   {
+      this.sessionDownload = sessionDownload;
+   }
 
-	public void setSessionUpload(long sessionUpload) {
-		this.sessionUpload = sessionUpload;
-	}
+   public void setCredits(long credits)
+   {
+      this.credits = credits;
+   }
 
-	public void setSessionDownload(long sessionDownload) {
-		this.sessionDownload = sessionDownload;
-	}
+   public void setServer(Server server)
+   {
+      this.server = server;
+   }
 
-	public void setCredits(long credits) {
-		this.credits = credits;
-	}
+   public Server getServer()
+   {
+      return server;
+   }
 
-	public void setServer(Server server) {
-		this.server = server;
-	}
+   public void setVerbindungsStatus(int verbindungsStatus)
+   {
+      this.verbindungsStatus = verbindungsStatus;
+      if(verbindungsStatus == NICHT_VERBUNDEN)
+      {
+         this.serverName = "";
+      }
+   }
 
-	public Server getServer() {
-		return server;
-	}
+   public void setUploadSpeed(long uploadSpeed)
+   {
+      this.uploadSpeed = uploadSpeed;
+   }
 
-	public void setVerbindungsStatus(int verbindungsStatus) {
-		this.verbindungsStatus = verbindungsStatus;
-		if (verbindungsStatus == NICHT_VERBUNDEN) {
-			this.serverName = "";
-		}
-	}
+   public void setDownloadSpeed(long downloadSpeed)
+   {
+      this.downloadSpeed = downloadSpeed;
+   }
 
-	public void setUploadSpeed(long uploadSpeed) {
-		this.uploadSpeed = uploadSpeed;
-	}
+   public void setOpenConnections(long openConnections)
+   {
+      this.openConnections = openConnections;
+   }
 
-	public void setDownloadSpeed(long downloadSpeed) {
-		this.downloadSpeed = downloadSpeed;
-	}
+   public void setMaxUploadPositions(long maxUploadPositions)
+   {
+      this.maxUploadPositions = maxUploadPositions;
+   }
 
-	public void setOpenConnections(long openConnections) {
-		this.openConnections = openConnections;
-	}
+   public String getServerName()
+   {
+      return serverName;
+   }
 
-	public void setMaxUploadPositions(long maxUploadPositions) {
-		this.maxUploadPositions = maxUploadPositions;
-	}
+   public int getVerbindungsStatus()
+   {
+      return verbindungsStatus;
+   }
 
-	public String getServerName() {
-		return serverName;
-	}
+   public String getExterneIP()
+   {
+      return externeIP;
+   }
 
-	public int getVerbindungsStatus() {
-		return verbindungsStatus;
-	}
-
-	public String getExterneIP() {
-		return externeIP;
-	}
-
-	public long getMaxUploadPositions() {
-		return maxUploadPositions;
-	}
+   public long getMaxUploadPositions()
+   {
+      return maxUploadPositions;
+   }
 }

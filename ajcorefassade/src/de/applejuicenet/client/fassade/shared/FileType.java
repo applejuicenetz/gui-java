@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.fassade.shared;
 
 import java.util.HashMap;
@@ -111,7 +115,7 @@ public enum FileType
       }
 
       String tmp   = dateiname.toLowerCase();
-      int    index = tmp.lastIndexOf(".");
+      int    index = tmp.lastIndexOf(StringConstants.POINT);
 
       if(index == -1 || index == tmp.length() - 1)
       {

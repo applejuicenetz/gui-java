@@ -1,8 +1,13 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.fassade.controller.xml;
 
 import java.io.StringReader;
 
 import org.apache.xerces.parsers.SAXParser;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -13,12 +18,13 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.exception.CoreLostException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
+import de.applejuicenet.client.fassade.shared.StringConstants;
 
 /**
  * $Header:
  * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xmlholder/SessionXMLHolder.java,v
  * 1.1 2004/12/03 07:57:12 maj0r Exp $
- * 
+ *
  * <p>
  * Titel: AppleJuice Client-GUI
  * </p>
@@ -29,65 +35,82 @@ import de.applejuicenet.client.fassade.shared.HtmlLoader;
  * <p>
  * Copyright: General Public License
  * </p>
- * 
+ *
  * @author: Maj0r <aj@tkl-soft.de>
- * 
+ *
  */
+public class SessionXMLHolder extends DefaultHandler
+{
+   private final CoreConnectionSettingsHolder coreHolder;
+   private String                             xmlCommand;
+   private XMLReader                          xr        = null;
+   private String                             sessionId = "";
 
-public class SessionXMLHolder extends DefaultHandler {
+   @SuppressWarnings("unchecked")
+   public SessionXMLHolder(CoreConnectionSettingsHolder coreHolder)
+   {
+      this.coreHolder = coreHolder;
+      try
+      {
+         xmlCommand = "/xml/getsession.xml?password=";
+         Class parser = SAXParser.class;
 
-	private final CoreConnectionSettingsHolder coreHolder;
+         xr = XMLReaderFactory.createXMLReader(parser.getName());
+         xr.setContentHandler(this);
+      }
+      catch(Exception ex)
+      {
+         throw new RuntimeException(ex);
+      }
+   }
 
-	private String xmlCommand;
+   private void checkSessionAttributes(Attributes attr)
+   {
+      int length = attr.getLength();
 
-	private XMLReader xr = null;
+      for(int i = 0; i < length; i++)
+      {
+         if(attr.getLocalName(i).equals(StringConstants.ID))
+         {
+            sessionId = attr.getValue(i);
+         }
+      }
+   }
 
-	private String sessionId = "";
+   public void startElement(String namespaceURI, String localName, String qName, Attributes attr)
+                     throws SAXException
+   {
+      if(localName.equals(StringConstants.SESSION))
+      {
+         checkSessionAttributes(attr);
+      }
+   }
 
-	public SessionXMLHolder(CoreConnectionSettingsHolder coreHolder) {
-		this.coreHolder = coreHolder;
-		try {
-			xmlCommand = "/xml/getsession.xml?password=";
-			Class parser = SAXParser.class;
-			xr = XMLReaderFactory.createXMLReader(parser.getName());
-			xr.setContentHandler(this);
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+   private String getXMLString() throws Exception
+   {
+      String xmlData = HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
+                                                    xmlCommand + coreHolder.getCorePassword());
 
-	private void checkSessionAttributes(Attributes attr) {
-		for (int i = 0; i < attr.getLength(); i++) {
-			if (attr.getLocalName(i).equals("id")) {
-				sessionId = attr.getValue(i);
-			}
-		}
-	}
+      if(xmlData.length() == 0)
+      {
+         throw new IllegalArgumentException();
+      }
 
-	public void startElement(String namespaceURI, String localName,
-			String qName, Attributes attr) throws SAXException {
-		if (localName.equals("session")) {
-			checkSessionAttributes(attr);
-		}
-	}
+      return xmlData;
+   }
 
-	private String getXMLString() throws Exception {
-		String xmlData = HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(),
-				coreHolder.getCorePort(), HtmlLoader.GET, xmlCommand
-						+ coreHolder.getCorePassword());
-		if (xmlData.length() == 0) {
-			throw new IllegalArgumentException();
-		}
-		return xmlData;
-	}
+   public String getNewSessionId()
+   {
+      try
+      {
+         String xmlString = getXMLString();
 
-	public String getNewSessionId() {
-		try {
-			String xmlString = getXMLString();
-			xr.parse(new InputSource(new StringReader(xmlString)));
-			return sessionId;
-		} catch (Exception ex) {
-			throw new CoreLostException(ex);
-		}
-	}
+         xr.parse(new InputSource(new StringReader(xmlString)));
+         return sessionId;
+      }
+      catch(Exception ex)
+      {
+         throw new CoreLostException(ex);
+      }
+   }
 }

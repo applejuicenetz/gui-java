@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.fassade;
 
 import java.io.File;
@@ -46,6 +50,7 @@ import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
+import de.applejuicenet.client.fassade.shared.StringConstants;
 import de.applejuicenet.client.fassade.tools.MD5Encoder;
 
 /**
@@ -69,22 +74,22 @@ import de.applejuicenet.client.fassade.tools.MD5Encoder;
  */
 public class ApplejuiceFassade implements CoreConnectionSettingsListener
 {
-   public static final String FASSADE_VERSION = "F-1.13";
-   public static final String MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
-   public static final String ERROR_MESSAGE           = "Unbehandelte Exception";
-   public static String       separator;
-   private static HashSet<CoreStatusListener> coreListener = new HashSet<CoreStatusListener>();
-   private final CoreConnectionSettingsHolder coreHolder;
-   private Map<DATALISTENER_TYPE, DataUpdateInformer> informer = new HashMap<DATALISTENER_TYPE, DataUpdateInformer>();
-   private ModifiedXMLHolder                          modifiedXML    = null;
-   private InformationXMLHolder                       informationXML = null;
-   private ShareXMLHolder                             shareXML       = null;
-   private SettingsXMLHolder                          settingsXML    = null;
-   private DirectoryXMLHolder                         directoryXML   = null;
+   public static final String                         FASSADE_VERSION         = "F-1.14";
+   public static final String                         MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
+   public static final String                         ERROR_MESSAGE           = "Unbehandelte Exception";
+   public static String                               separator;
+   private static HashSet<CoreStatusListener>         coreListener            = new HashSet<CoreStatusListener>();
+   private final CoreConnectionSettingsHolder         coreHolder;
+   private Map<DATALISTENER_TYPE, DataUpdateInformer> informer                = new HashMap<DATALISTENER_TYPE, DataUpdateInformer>();
+   private ModifiedXMLHolder                          modifiedXML             = null;
+   private InformationXMLHolder                       informationXML          = null;
+   private ShareXMLHolder                             shareXML                = null;
+   private SettingsXMLHolder                          settingsXML             = null;
+   private DirectoryXMLHolder                         directoryXML            = null;
    private Version                                    coreVersion;
-   private Map<String, Share>                         share          = null;
-   private PartListXMLHolder                          partlistXML    = null;
-   private long                                       sleepTime = 2000;
+   private Map<String, Share>                         share                   = null;
+   private PartListXMLHolder                          partlistXML             = null;
+   private long                                       sleepTime               = 2000;
 
    // Thread
    private Thread workerThread;
@@ -264,7 +269,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
 
    public void startXMLCheck()
    {
-      workerThread = new Thread()
+      workerThread = new Thread("ApplejuiceFassadeXMLCheckThread")
          {
             public void run()
             {
@@ -291,7 +296,9 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
                   }
                   catch(InterruptedException e)
                   {
-                     interrupt();
+
+                     // nicht zu tun
+                     ;
                   }
                }
             }
@@ -438,23 +445,23 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
 
    public void saveAJSettings(AJSettings ajSettings)
    {
-      String parameters = "";
+      StringBuilder parameters = new StringBuilder();
 
       try
       {
-         parameters = "Nickname=" + URLEncoder.encode(ajSettings.getNick(), "UTF-8");
-         parameters += "&XMLPort=" + Long.toString(ajSettings.getXMLPort());
-         parameters += "&Port=" + Long.toString(ajSettings.getPort());
-         parameters += "&MaxUpload=" + Long.toString(ajSettings.getMaxUpload());
-         parameters += "&MaxDownload=" + Long.toString(ajSettings.getMaxDownload());
-         parameters += "&Speedperslot=" + Integer.toString(ajSettings.getSpeedPerSlot());
-         parameters += "&Incomingdirectory=" + URLEncoder.encode(ajSettings.getIncomingDir(), "UTF-8");
-         parameters += "&Temporarydirectory=" + URLEncoder.encode(ajSettings.getTempDir(), "UTF-8");
-         parameters += "&maxconnections=" + URLEncoder.encode(Long.toString(ajSettings.getMaxConnections()), "UTF-8");
-         parameters += "&maxsourcesperfile=" + URLEncoder.encode(Long.toString(ajSettings.getMaxSourcesPerFile()), "UTF-8");
-         parameters += "&autoconnect=" + URLEncoder.encode(Boolean.toString(ajSettings.isAutoConnect()), "UTF-8");
-         parameters += "&maxnewconnectionsperturn=" +
-         URLEncoder.encode(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()), "UTF-8");
+         parameters.append("Nickname=" + URLEncoder.encode(ajSettings.getNick(), "UTF-8"));
+         parameters.append("&XMLPort=" + Long.toString(ajSettings.getXMLPort()));
+         parameters.append("&Port=" + Long.toString(ajSettings.getPort()));
+         parameters.append("&MaxUpload=" + Long.toString(ajSettings.getMaxUpload()));
+         parameters.append("&MaxDownload=" + Long.toString(ajSettings.getMaxDownload()));
+         parameters.append("&Speedperslot=" + Integer.toString(ajSettings.getSpeedPerSlot()));
+         parameters.append("&Incomingdirectory=" + URLEncoder.encode(ajSettings.getIncomingDir(), "UTF-8"));
+         parameters.append("&Temporarydirectory=" + URLEncoder.encode(ajSettings.getTempDir(), "UTF-8"));
+         parameters.append("&maxconnections=" + URLEncoder.encode(Long.toString(ajSettings.getMaxConnections()), "UTF-8"));
+         parameters.append("&maxsourcesperfile=" + URLEncoder.encode(Long.toString(ajSettings.getMaxSourcesPerFile()), "UTF-8"));
+         parameters.append("&autoconnect=" + URLEncoder.encode(Boolean.toString(ajSettings.isAutoConnect()), "UTF-8"));
+         parameters.append("&maxnewconnectionsperturn=" +
+                           URLEncoder.encode(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()), "UTF-8"));
       }
       catch(UnsupportedEncodingException ex)
       {
@@ -462,7 +469,8 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
       }
 
       HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
-                                   "/function/setsettings?password=" + coreHolder.getCorePassword() + "&" + parameters, false);
+                                   "/function/setsettings?password=" + coreHolder.getCorePassword() + "&" + parameters.toString(),
+                                   false);
    }
 
    public Map<String, Server> getAllServer()
@@ -475,7 +483,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
       return null;
    }
 
-   public synchronized boolean updateModifiedXML()
+   public boolean updateModifiedXML()
    {
       try
       {
@@ -916,7 +924,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
          throw new IllegalArgumentException("invalid priority: has to be 1<= x <=490");
       }
 
-      StringBuffer parameters = new StringBuffer("&powerdownload=" + powerDownload);
+      StringBuffer parameters = new StringBuffer(StringConstants.AND_PWDL + powerDownload);
       int          index = 0;
 
       for(Download curDownload : downloads)
@@ -932,7 +940,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
       }
 
       HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.POST,
-                                   "/function/setpowerdownload?password=" + coreHolder.getCorePassword() + parameters, false);
+                                   StringConstants.SET_PWDL_URL + coreHolder.getCorePassword() + parameters, false);
    }
 
    /**
@@ -945,7 +953,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
       try
       {
          String result = HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
-                                                      "/xml/information.xml?password=" + coreHolder.getCorePassword());
+                                                      StringConstants.GET_INFORMATION_URL + coreHolder.getCorePassword());
 
          if(result.indexOf("<applejuice>") == -1)
          {
@@ -997,21 +1005,29 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
    public void addShareEntry(List<String> paths, SHAREMODE shareMode)
    {
       Set<ShareEntry> shareDirs  = getAJSettings().getShareDirs();
-      String          parameters = "countshares=" + shareDirs.size() + paths.size();
-      int             i          = 1;
+      StringBuilder   parameters = new StringBuilder();
+
+      parameters.append("countshares=" + shareDirs.size() + paths.size());
+      int i = 1;
 
       for(ShareEntry curShareEntry : shareDirs)
       {
          try
          {
-            parameters += "&sharedirectory" + i + "=" + URLEncoder.encode(curShareEntry.getDir(), "UTF-8");
+            parameters.append(StringConstants.AND_SHAREDDIRECTORY);
+            parameters.append(i);
+            parameters.append(StringConstants.GLEICH);
+            parameters.append(URLEncoder.encode(curShareEntry.getDir(), StringConstants.UTF_8));
          }
          catch(UnsupportedEncodingException e)
          {
             throw new RuntimeException(e);
          }
 
-         parameters += "&sharesub" + i + "=" + (curShareEntry.getShareMode() == SHAREMODE.SUBDIRECTORY ? "true" : "false");
+         parameters.append(StringConstants.AND_SHARESUB);
+         parameters.append(i);
+         parameters.append(StringConstants.GLEICH);
+         parameters.append(curShareEntry.getShareMode() == SHAREMODE.SUBDIRECTORY ? StringConstants.TRUE : StringConstants.FALSE);
          i++;
       }
 
@@ -1019,19 +1035,27 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
       {
          try
          {
-            parameters += "&sharedirectory" + i + "=" + URLEncoder.encode(curPath, "UTF-8");
+            parameters.append(StringConstants.AND_SHAREDDIRECTORY);
+            parameters.append(i);
+            parameters.append(StringConstants.GLEICH);
+            parameters.append(URLEncoder.encode(curPath, StringConstants.UTF_8));
          }
          catch(UnsupportedEncodingException e)
          {
             throw new RuntimeException(e);
          }
 
-         parameters += "&sharesub" + i + "=" + (shareMode == SHAREMODE.SUBDIRECTORY ? "true" : "false");
+         parameters.append(StringConstants.AND_SHARESUB);
+         parameters.append(i);
+         parameters.append(StringConstants.GLEICH);
+         parameters.append(shareMode == SHAREMODE.SUBDIRECTORY ? StringConstants.TRUE : StringConstants.FALSE);
+
          i++;
       }
 
       HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
-                                   "/function/setsettings?password=" + coreHolder.getCorePassword() + "&" + parameters, false);
+                                   StringConstants.SET_SETTINGS_URL + coreHolder.getCorePassword() +
+                                   StringConstants.AND_SHAREDDIRECTORY + parameters.toString(), false);
    }
 
    public void removeShareEntry(List<String> paths)
