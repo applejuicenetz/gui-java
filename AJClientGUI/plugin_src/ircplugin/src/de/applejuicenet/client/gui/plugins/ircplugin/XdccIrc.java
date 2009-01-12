@@ -44,7 +44,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.35 2009/01/07 15:21:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/ircplugin/src/de/applejuicenet/client/gui/plugins/ircplugin/XdccIrc.java,v 1.37 2009/01/12 10:09:19 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -59,9 +59,9 @@ public class XdccIrc extends JPanel
    private JButton      cancelButton;
    private Logger       logger;
    private Thread       ircWorker;
-   private String       host             = "irc.bongster.eu";
+   private String       host             = "irc.devStaff.net";
    private int          port             = 6667;
-   private final String STANDARD_CHANNEL = "#aj.service-center";
+   private final String STANDARD_CHANNEL = "#applejuice";
    private JTabbedPane  tabbedPane;
    private String       nickname;
    private String       realname;
@@ -199,8 +199,8 @@ public class XdccIrc extends JPanel
 
    public void fireLanguageChanged()
    {
-      verbinden = parent.getLanguageString(".root.language.buttons.connect");
-      trennen   = parent.getLanguageString(".root.language.buttons.disconnect");
+      verbinden = parent.getLanguageString("language.buttons.connect");
+      trennen   = parent.getLanguageString("language.buttons.disconnect");
       createConnection.removeActionListener(disconnectActionListener);
       ActionListener[] listener = createConnection.getActionListeners();
       boolean          found = false;
@@ -220,14 +220,14 @@ public class XdccIrc extends JPanel
          createConnection.setText(trennen);
       }
 
-      newUserAction.setText(parent.getLanguageString(".root.language.buttons.private"));
-      joinChannelAction.setText(parent.getLanguageString(".root.language.buttons.join"));
-      changeNickAction.setText(parent.getLanguageString(".root.language.buttons.nick"));
-      connectButton.setText(parent.getLanguageString(".root.language.buttons.connect"));
-      cancelButton.setText(parent.getLanguageString(".root.language.buttons.cancel"));
-      connectionInfo    = parent.getLanguageString(".root.language.title.newconnection");
-      nicknameString    = parent.getLanguageString(".root.language.nick.newnick");
-      channelNameString = parent.getLanguageString(".root.language.channel.newchannel");
+      newUserAction.setText(parent.getLanguageString("language.buttons.private"));
+      joinChannelAction.setText(parent.getLanguageString("language.buttons.join"));
+      changeNickAction.setText(parent.getLanguageString("language.buttons.nick"));
+      connectButton.setText(parent.getLanguageString("language.buttons.connect"));
+      cancelButton.setText(parent.getLanguageString("language.buttons.cancel"));
+      connectionInfo    = parent.getLanguageString("language.title.newconnection");
+      nicknameString    = parent.getLanguageString("language.nick.newnick");
+      channelNameString = parent.getLanguageString("language.channel.newchannel");
       for(int i = 0; i < tabbedPane.getComponentCount(); i++)
       {
          Object obj = tabbedPane.getComponent(i);

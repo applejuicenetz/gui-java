@@ -1,7 +1,12 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugins.serverwatcher;
 
+
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerConfig.java,v 1.2 2004/10/14 08:57:55 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerConfig.java,v 1.3 2009/01/12 10:19:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -10,51 +15,62 @@ package de.applejuicenet.client.gui.plugins.serverwatcher;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
+public class ServerConfig
+{
+   private String bezeichnung;
+   private String dyn;
+   private String port;
+   private String userpass;
 
-public class ServerConfig {
-    private String bezeichnung;
-    private String dyn;
-    private String port;
-    private String userpass;
+   public ServerConfig(String bezeichnung, String dyn, String port, String userpass)
+   {
+      this.bezeichnung = bezeichnung;
+      this.dyn         = dyn;
+      this.port        = port;
+      this.userpass    = userpass;
+   }
 
-    public ServerConfig(String bezeichnung, String dyn, String port, String userpass) {
-        this.bezeichnung = bezeichnung;
-        this.dyn = dyn;
-        this.port = port;
-        this.userpass = userpass;
-    }
+   public ServerConfig(String dyn, String port, String userpass)
+   {
+      this.dyn      = dyn;
+      bezeichnung   = "a";
+      int value;
 
-    public ServerConfig(String dyn, String port, String userpass) {
-        this.dyn = dyn;
-        bezeichnung = "a";
-        int value;
-        for (int i=0; i<dyn.length(); i++){
-            value = (int) dyn.charAt(i);
-            if (value>96 && value<123){
-                bezeichnung += dyn.charAt(i);
-            }
-        }
-        this.port = port;
-        this.userpass = new sun.misc.BASE64Encoder().encode(userpass.getBytes());
-    }
+      for(int i = 0; i < dyn.length(); i++)
+      {
+         value = (int) dyn.charAt(i);
+         if(value > 96 && value < 123)
+         {
+            bezeichnung += dyn.charAt(i);
+         }
+      }
 
-    public String getBezeichnung() {
-        return bezeichnung;
-    }
+      this.port     = port;
+      this.userpass = new sun.misc.BASE64Encoder().encode(userpass.getBytes());
+   }
 
-    public String getDyn() {
-        return dyn;
-    }
+   public String getBezeichnung()
+   {
+      return bezeichnung;
+   }
 
-    public String getPort() {
-        return port;
-    }
+   public String getDyn()
+   {
+      return dyn;
+   }
 
-    public String getUserPass() {
-        return userpass;
-    }
+   public String getPort()
+   {
+      return port;
+   }
 
-    public String toString(){
-        return dyn + ":" + port;
-    }
+   public String getUserPass()
+   {
+      return userpass;
+   }
+
+   public String toString()
+   {
+      return dyn + ":" + port;
+   }
 }

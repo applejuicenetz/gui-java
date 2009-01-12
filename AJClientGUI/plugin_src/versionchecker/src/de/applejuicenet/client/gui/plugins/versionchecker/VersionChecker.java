@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 
@@ -15,14 +16,13 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.plugins.versionchecker.panels.MainPanel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/VersionChecker.java,v 1.4 2009/01/07 15:29:22 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/VersionChecker.java,v 1.5 2009/01/12 10:18:00 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -36,10 +36,10 @@ public class VersionChecker extends PluginConnector
    private MainPanel mainPanel;
    private Logger    logger;
 
-   public VersionChecker(XMLValueHolder xMLValueHolder, Map<String, XMLValueHolder> languageFiles, ImageIcon icon,
+   public VersionChecker(Properties pluginProperties, Map<String, Properties> languageFiles, ImageIcon icon,
                          Map<String, ImageIcon> availableIcons)
    {
-      super(xMLValueHolder, languageFiles, icon, availableIcons);
+      super(pluginProperties, languageFiles, icon, availableIcons);
       logger = Logger.getLogger(getClass());
       try
       {

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.plugins.serverwatcher;
 
 import java.awt.BorderLayout;
@@ -19,6 +23,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,14 +36,13 @@ import javax.swing.JScrollPane;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerWatcherPlugin.java,v 1.2 2006/05/08 16:09:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/serverwatcher/src/de/applejuicenet/client/gui/plugins/serverwatcher/ServerWatcherPlugin.java,v 1.3 2009/01/12 10:19:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Core-GUI</p>
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -49,20 +53,20 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
  */
 public class ServerWatcherPlugin extends PluginConnector
 {
-   private JPanel        topPanel = new JPanel(new GridBagLayout());
-   private JEditorPane   editorPane = new JEditorPane();
-   private JComboBox     ip = new JComboBox();
-   private JButton       status = new JButton("Status");
-   private JButton       serverliste = new JButton("Serverliste");
-   private JButton       neu = new JButton("Neu");
-   private JButton       entfernen = new JButton("Entfernen");
-   private JLabel        statusText = new JLabel();
    private static Logger logger;
+   private JPanel        topPanel    = new JPanel(new GridBagLayout());
+   private JEditorPane   editorPane  = new JEditorPane();
+   private JComboBox     ip          = new JComboBox();
+   private JButton       status      = new JButton("Status");
+   private JButton       serverliste = new JButton("Serverliste");
+   private JButton       neu         = new JButton("Neu");
+   private JButton       entfernen   = new JButton("Entfernen");
+   private JLabel        statusText  = new JLabel();
 
-   public ServerWatcherPlugin(XMLValueHolder pluginsPropertiesXMLHolder, Map<String, XMLValueHolder> languageFiles, ImageIcon icon,
-           Map<String, ImageIcon> availableIcons)
+   public ServerWatcherPlugin(Properties pluginsProperties, Map<String, Properties> languageFiles, ImageIcon icon,
+                              Map<String, ImageIcon> availableIcons)
    {
-      super(pluginsPropertiesXMLHolder, languageFiles, icon, availableIcons);
+      super(pluginsProperties, languageFiles, icon, availableIcons);
       logger = Logger.getLogger(getClass());
       try
       {
@@ -76,10 +80,10 @@ public class ServerWatcherPlugin extends PluginConnector
          GridBagConstraints constraints = new GridBagConstraints();
 
          constraints.anchor = GridBagConstraints.NORTH;
-         constraints.fill = GridBagConstraints.BOTH;
-         constraints.gridx = 0;
-         constraints.gridy = 0;
-         JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+         constraints.fill   = GridBagConstraints.BOTH;
+         constraints.gridx  = 0;
+         constraints.gridy  = 0;
+         JPanel panel1      = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
          panel1.add(new JLabel("Server "));
          panel1.add(ip);
@@ -93,7 +97,7 @@ public class ServerWatcherPlugin extends PluginConnector
          topPanel.add(panel1, constraints);
          constraints.gridy = 1;
          topPanel.add(panel2, constraints);
-         constraints.gridx = 1;
+         constraints.gridx   = 1;
          constraints.weightx = 1;
          topPanel.add(new JLabel(), constraints);
 
@@ -123,10 +127,10 @@ public class ServerWatcherPlugin extends PluginConnector
                {
                   NewServerDialog newServerDialog = new NewServerDialog(AppleJuiceDialog.getApp(), true);
                   Dimension       appDimension = newServerDialog.getSize();
-                  Dimension       screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                  Dimension       screenSize   = Toolkit.getDefaultToolkit().getScreenSize();
 
                   newServerDialog.setLocation((screenSize.width - appDimension.width) / 2,
-                     (screenSize.height - appDimension.height) / 2);
+                                              (screenSize.height - appDimension.height) / 2);
                   newServerDialog.setVisible(true);
                   if(newServerDialog.isSave())
                   {
@@ -176,93 +180,93 @@ public class ServerWatcherPlugin extends PluginConnector
    private void getHtmlContent(final boolean serverList)
    {
       Thread serverWatcherWorker = new Thread()
+      {
+         public void run()
          {
-            public void run()
+            if(logger.isEnabledFor(Level.DEBUG))
             {
-               if(logger.isEnabledFor(Level.DEBUG))
+               logger.debug("ServerWatcherWorkerthread gestartet. " + this);
+            }
+
+            serverliste.setEnabled(false);
+            status.setEnabled(false);
+            StringBuffer htmlContent = new StringBuffer();
+
+            try
+            {
+               ServerConfig server = (ServerConfig) ip.getSelectedItem();
+               String       tmpUrl = "http://" + server.getDyn() + ":" + server.getPort();
+
+               if(serverList)
                {
-                  logger.debug("ServerWatcherWorkerthread gestartet. " + this);
+                  tmpUrl += "/serverlist.htm";
+               }
+               else
+               {
+                  tmpUrl += "/status.htm";
                }
 
-               serverliste.setEnabled(false);
-               status.setEnabled(false);
-               StringBuffer htmlContent = new StringBuffer();
+               URL           url           = new URL(tmpUrl);
+               ProxySettings proxySettings = ProxyManagerImpl.getInstance().getProxySettings();
 
-               try
+               if(proxySettings.isUse())
                {
-                  ServerConfig server = (ServerConfig) ip.getSelectedItem();
-                  String       tmpUrl = "http://" + server.getDyn() + ":" + server.getPort();
-
-                  if(serverList)
-                  {
-                     tmpUrl += "/serverlist.htm";
-                  }
-                  else
-                  {
-                     tmpUrl += "/status.htm";
-                  }
-
-                  URL           url = new URL(tmpUrl);
-                  ProxySettings proxySettings = ProxyManagerImpl.getInstance().getProxySettings();
-
-                  if(proxySettings.isUse())
-                  {
-                     System.getProperties().put("proxyHost", proxySettings.getHost());
-                     System.getProperties().put("proxyPort", Integer.toString(proxySettings.getPort()));
-                  }
-
-                  URLConnection uc = url.openConnection();
-
-                  if(proxySettings.isUse())
-                  {
-                     uc.setRequestProperty("Proxy-Authorization", "Basic " + proxySettings.getUserpass());
-                  }
-
-                  uc.setRequestProperty("Authorization", "Basic " + server.getUserPass());
-                  InputStream    content = uc.getInputStream();
-                  BufferedReader in = new BufferedReader(new InputStreamReader(content));
-                  String         line;
-
-                  while((line = in.readLine()) != null)
-                  {
-                     htmlContent.append(line);
-                  }
-
-                  if(proxySettings.isUse())
-                  {
-                     System.getProperties().remove("proxyHost");
-                     System.getProperties().remove("proxyPort");
-                  }
-
-                  statusText.setText("");
-               }
-               catch(MalformedURLException e)
-               {
-                  editorPane.setText("");
-                  statusText.setText("Ungueltige URL");
-               }
-               catch(IOException e)
-               {
-                  editorPane.setText("");
-                  statusText.setText("Zugang verweigert");
-               }
-               catch(Exception e)
-               {
-                  if(logger.isEnabledFor(Level.ERROR))
-                  {
-                     logger.error("Unbehandelte Exception", e);
-                  }
+                  System.getProperties().put("proxyHost", proxySettings.getHost());
+                  System.getProperties().put("proxyPort", Integer.toString(proxySettings.getPort()));
                }
 
-               editorPane.setText(htmlContent.toString());
-               serverliste.setEnabled(true);
-               status.setEnabled(true);
-               if(logger.isEnabledFor(Level.DEBUG))
+               URLConnection uc = url.openConnection();
+
+               if(proxySettings.isUse())
                {
-                  logger.debug("ServerWatcherWorkerthread beendet. " + this);
+                  uc.setRequestProperty("Proxy-Authorization", "Basic " + proxySettings.getUserpass());
+               }
+
+               uc.setRequestProperty("Authorization", "Basic " + server.getUserPass());
+               InputStream    content = uc.getInputStream();
+               BufferedReader in   = new BufferedReader(new InputStreamReader(content));
+               String         line;
+
+               while((line = in.readLine()) != null)
+               {
+                  htmlContent.append(line);
+               }
+
+               if(proxySettings.isUse())
+               {
+                  System.getProperties().remove("proxyHost");
+                  System.getProperties().remove("proxyPort");
+               }
+
+               statusText.setText("");
+            }
+            catch(MalformedURLException e)
+            {
+               editorPane.setText("");
+               statusText.setText("Ungueltige URL");
+            }
+            catch(IOException e)
+            {
+               editorPane.setText("");
+               statusText.setText("Zugang verweigert");
+            }
+            catch(Exception e)
+            {
+               if(logger.isEnabledFor(Level.ERROR))
+               {
+                  logger.error("Unbehandelte Exception", e);
                }
             }
-         };
+
+            editorPane.setText(htmlContent.toString());
+            serverliste.setEnabled(true);
+            status.setEnabled(true);
+            if(logger.isEnabledFor(Level.DEBUG))
+            {
+               logger.debug("ServerWatcherWorkerthread beendet. " + this);
+            }
+         }
+      };
 
       serverWatcherWorker.start();
    }
@@ -272,7 +276,7 @@ public class ServerWatcherPlugin extends PluginConnector
    }
 
    /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
-     �ber den DataManger k�nnen diese abgerufen werden.*/
+     ueber den DataManger koennen diese abgerufen werden.*/
    public void fireContentChanged(DATALISTENER_TYPE type, Object content)
    {
    }
