@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.search;
 
 import java.awt.Component;
@@ -29,13 +33,13 @@ import de.tklsoft.gui.controls.TKLTextField;
 
 public class SearchController extends GuiController
 {
-   private static SearchController        instance = null;
+   private static SearchController        instance                       = null;
    private final int                      DOWNLOAD_PROPERTY_CHANGE_EVENT = 1;
    private final int                      START_STOP                     = 2;
-   private Map<String, SearchResultPanel> searchIds     = null;
+   private Map<String, SearchResultPanel> searchIds                      = null;
    private SearchPanel                    searchPanel;
-   private boolean                        panelSelected = false;
-   private boolean                        firstSearch   = true;
+   private boolean                        panelSelected                  = false;
+   private boolean                        firstSearch                    = true;
    private String                         bearbeitung;
 
    private SearchController()
@@ -177,6 +181,7 @@ public class SearchController extends GuiController
          startFirstSearch();
          SwingUtilities.invokeLater(new Runnable()
             {
+               @SuppressWarnings("unchecked")
                public void run()
                {
                   try

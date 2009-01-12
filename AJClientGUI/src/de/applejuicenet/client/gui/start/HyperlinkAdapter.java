@@ -1,12 +1,11 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.start;
 
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Desktop;
-
 import java.net.URI;
 
 import javax.swing.JOptionPane;
@@ -24,7 +23,7 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.DesktopTools;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/HyperlinkAdapter.java,v 1.5 2009/01/11 21:32:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/HyperlinkAdapter.java,v 1.6 2009/01/12 07:43:42 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -77,7 +76,7 @@ public class HyperlinkAdapter implements HyperlinkListener
       {
          if(DesktopTools.isAdvancedSupported() && System.getProperty("os.name").toLowerCase().indexOf("linux") == -1)
          {
-            Desktop.getDesktop().browse(new URI("http://www.orf.at"));
+            DesktopTools.browse(new URI(link));
          }
          else
          {

@@ -1,24 +1,20 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.download.table;
 
 import java.util.Comparator;
 
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.util.DownloadCalculator;
 
-public class DownloadNodeComparator implements Comparator
+public class DownloadNodeComparator implements Comparator<Node>
 {
    public static enum SORT_TYPE
-   {SORT_NO_SORT,
-      SORT_DOWNLOADNAME,
-      SORT_GROESSE,
-      SORT_BEREITS_GELADEN,
-      SORT_RESTZEIT,
-      SORT_PROZENT,
-      SORT_PWDL,
-      SORT_REST_ZU_LADEN,
-      SORT_GESCHWINDIGKEIT,
-      SORT_STATUS;
-   }
+   {SORT_NO_SORT, SORT_DOWNLOADNAME, SORT_GROESSE, SORT_BEREITS_GELADEN, SORT_RESTZEIT, SORT_PROZENT, SORT_PWDL, SORT_REST_ZU_LADEN, 
+      SORT_GESCHWINDIGKEIT, SORT_STATUS;}
    private boolean   isAscending = true;
    private SORT_TYPE sort = SORT_TYPE.SORT_DOWNLOADNAME;
 
@@ -28,31 +24,32 @@ public class DownloadNodeComparator implements Comparator
 
    void setSortCriteria(SORT_TYPE sortType, boolean ascending)
    {
-      this.sort = sortType;
+      this.sort   = sortType;
       isAscending = ascending;
    }
 
-   public int compare(Object o1, Object o2)
+   public int compare(Node node1, Node node2)
    {
       int result;
-
-      if(o1.getClass() == DownloadNode.class && o2.getClass() == DownloadMainNode.class)
+      if(node1.getClass() == DownloadNode.class && node2.getClass() == DownloadMainNode.class)
       {
          return -1;
       }
-      else if(o1.getClass() == DownloadMainNode.class && o2.getClass() == DownloadNode.class)
+      else if(node1.getClass() == DownloadMainNode.class && node2.getClass() == DownloadNode.class)
       {
          return 1;
       }
-      else if(o1.getClass() == DownloadNode.class && o2.getClass() == DownloadNode.class)
+      else if(node1.getClass() == DownloadNode.class && node2.getClass() == DownloadNode.class)
       {
-         result = ((DownloadNode) o1).getPath().compareToIgnoreCase(((DownloadNode) o2).getPath());
+         result = ((DownloadNode) node1).getPath().compareToIgnoreCase(((DownloadNode) node2).getPath());
          return isAscending ? result : result * -1;
       }
       else
       {
-         Download download1 = ((DownloadMainNode) o1).getDownload();
-         Download download2 = ((DownloadMainNode) o2).getDownload();
+         Download download1 = ((DownloadMainNode) node1).getDownload();
+         Download download2 = ((DownloadMainNode) node2).getDownload();
+         Object o1 = null;
+         Object o2 = null;
 
          if(sort == SORT_TYPE.SORT_DOWNLOADNAME)
          {

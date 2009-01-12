@@ -133,9 +133,9 @@ public abstract class PluginFactory
       Set<PluginConnector> thePlugins = new HashSet<PluginConnector>();
       String[]             which = new String[] { //"de.applejuicenet.client.gui.plugins.jabber.JabberTestLoader",//            
 //              "de.applejuicenet.client.gui.plugins.versionchecker.VersioncheckerTestLoader"
-                                                                       "de.applejuicenet.client.gui.plugins.serverwatcher.ServerWatcherTestLoader"
+//                                                                       "de.applejuicenet.client.gui.plugins.serverwatcher.ServerWatcherTestLoader"
 //                                                                       "de.applejuicenet.client.gui.plugins.logviewer.LogViewerTestLoader"
-//              "de.applejuicenet.client.gui.plugins.speedgraph.SpeedGraphPluginTestLoader"
+              "de.applejuicenet.client.gui.plugins.speedgraph.SpeedGraphPluginTestLoader"
          //"de.applejuicenet.client.gui.plugins.ircplugin.IrcPluginTestLoader"
               };
 

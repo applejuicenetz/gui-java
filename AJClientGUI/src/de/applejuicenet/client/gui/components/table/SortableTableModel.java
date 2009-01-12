@@ -1,9 +1,13 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.components.table;
 
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/SortableTableModel.java,v 1.1 2004/10/29 11:58:43 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/SortableTableModel.java,v 1.2 2009/01/12 07:45:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -12,15 +16,16 @@ import java.util.List;
  * @author: Maj0r [aj@tkl-soft.de]
  *
  */
+public interface SortableTableModel<T>
+{
+   int getRowCount();
 
-public interface SortableTableModel {
-    public int getRowCount();
+   List<T> getContent();
 
-    public List getContent();
+   Object getValueForSortAt(int row, int column);
 
-    public Object getValueForSortAt(int row, int column);
+   @SuppressWarnings("unchecked")
+   Class getColumnClass(int column);
 
-    public Class getColumnClass(int column);
-
-    public void sortByColumn(int column, boolean isAscent);
+   void sortByColumn(int column, boolean isAscent);
 }
