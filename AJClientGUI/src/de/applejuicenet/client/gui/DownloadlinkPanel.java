@@ -44,8 +44,6 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
                             {5, p}
                          };
 
-      //      targetDir.setMinimumSize(new Dimension(120, targetDir.getMinimumSize().height));
-      //      targetDir.setPreferredSize(new Dimension(120, targetDir.getPreferredSize().height));
       KeyListener keyListener = new KeyAdapter()
       {
          public void keyPressed(KeyEvent ke)
