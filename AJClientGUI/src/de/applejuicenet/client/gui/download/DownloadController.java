@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -123,7 +122,6 @@ public class DownloadController extends GuiController
       downloadPanel.getMnuZielordner().addActionListener(new GuiControllerActionListener(this, ZIELORDNER_AENDERN));
       downloadPanel.getMnuFertigeEntfernen().addActionListener(new GuiControllerActionListener(this, FERTIGE_ENTFERNEN));
       downloadPanel.getMnuPartlisteAnzeigen().addActionListener(new GuiControllerActionListener(this, PARTLISTE_ANZEIGEN));
-      downloadPanel.getBtnStartDownload().addActionListener(new GuiControllerActionListener(this, START_DOWNLOAD));
       downloadPanel.getBtnHoleListe().addActionListener(new GuiControllerActionListener(this, PARTLISTE_ANZEIGEN_PER_BUTTON));
       downloadPanel.getBtnPowerDownload().addActionListener(new GuiControllerActionListener(this, START_POWERDOWNLOAD));
       if(AppleJuiceClient.getAjFassade().isLocalhost())
@@ -190,20 +188,6 @@ public class DownloadController extends GuiController
       LanguageSelector.getInstance().addLanguageListener(this);
       AppleJuiceClient.getAjFassade().getDownloadPropertyChangeInformer()
       .addDataPropertyChangeListener(new DownloadPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
-
-      JComboBox targetDirs = downloadPanel.getTargetDirField();
-      String[]  dirs = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
-
-      for(String curDir : dirs)
-      {
-         targetDirs.addItem(curDir);
-         if(curDir.equals(""))
-         {
-            targetDirs.setSelectedItem(curDir);
-         }
-      }
-
-      targetDirs.setEditable(true);
    }
 
    public Value[] getCustomizedValues()
@@ -279,12 +263,6 @@ public class DownloadController extends GuiController
          case PARTLISTE_ANZEIGEN:
          {
             tryGetPartList(false);
-            break;
-         }
-
-         case START_DOWNLOAD:
-         {
-            startDownload();
             break;
          }
 
@@ -391,26 +369,27 @@ public class DownloadController extends GuiController
 
             if(directory != null && directory.length() > 0)
             {
-               JComboBox targetDirs = downloadPanel.getTargetDirField();
-               boolean   found = false;
-
-               for(int i = 0; i < targetDirs.getItemCount(); i++)
-               {
-                  if(!((String) targetDirs.getItemAt(i)).equalsIgnoreCase(directory))
-                  {
-                     continue;
-                  }
-                  else
-                  {
-                     found = true;
-                     break;
-                  }
-               }
-
-               if(!found)
-               {
-                  targetDirs.addItem(directory);
-               }
+                //todo
+//               JComboBox targetDirs = downloadPanel.getTargetDirField();
+//               boolean   found = false;
+//
+//               for(int i = 0; i < targetDirs.getItemCount(); i++)
+//               {
+//                  if(!((String) targetDirs.getItemAt(i)).equalsIgnoreCase(directory))
+//                  {
+//                     continue;
+//                  }
+//                  else
+//                  {
+//                     found = true;
+//                     break;
+//                  }
+//               }
+//
+//               if(!found)
+//               {
+//                  targetDirs.addItem(directory);
+//               }
             }
          }
 
@@ -824,81 +803,6 @@ public class DownloadController extends GuiController
                   }
                }.start();
          }
-      }
-   }
-
-   private void startDownload()
-   {
-      if(downloadPanel.getDownloadLinkField().isInvalid())
-      {
-         return;
-      }
-
-      final String link = downloadPanel.getDownloadLinkField().getText();
-      Object       sel = downloadPanel.getTargetDirField().getSelectedItem();
-      String       tmp;
-
-      if(sel != null)
-      {
-         tmp = (String) sel;
-      }
-      else
-      {
-         tmp = "";
-      }
-
-      final String targetDir = tmp;
-
-      if(link.length() != 0)
-      {
-         downloadPanel.getDownloadLinkField().setText("");
-         Thread linkThread = new Thread()
-         {
-            public void run()
-            {
-               try
-               {
-                  final String result = AppleJuiceClient.getAjFassade().processLink(link, targetDir);
-
-                  SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
-                  if(result.indexOf("ok") != 0)
-                  {
-                     SwingUtilities.invokeLater(new Runnable()
-                        {
-                           public void run()
-                           {
-                              String message = null;
-
-                              if(result.indexOf("already downloaded") != -1)
-                              {
-                                 message = alreadyLoaded.replaceAll("%s", link);
-                              }
-                              else if(result.indexOf("incorrect link") != -1)
-                              {
-                                 message = invalidLink.replaceAll("%s", link);
-                              }
-                              else if(result.indexOf("failure") != -1)
-                              {
-                                 message = linkFailure;
-                              }
-
-                              if(message != null)
-                              {
-                                 JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message, dialogTitel,
-                                                               JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-                              }
-                           }
-                        });
-                  }
-               }
-               catch(IllegalArgumentException e)
-               {
-                  logger.error(e);
-               }
-            }
-         };
-
-         linkThread.start();
       }
    }
 
@@ -1319,9 +1223,6 @@ public class DownloadController extends GuiController
 
       dialogTitel       = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
       downloadAbbrechen = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext5");
-      downloadPanel.getLblLink().setText(text);
-      downloadPanel.getBtnStartDownload().setText(languageSelector.getFirstAttrbuteByTagName("mainform.downlajfsp.caption"));
-      downloadPanel.getBtnStartDownload().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.downlajfsp.hint"));
       String[] tableColumns = new String[10];
 
       tableColumns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
@@ -1358,11 +1259,9 @@ public class DownloadController extends GuiController
       downloadPanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
       downloadPanel.getMnuCopyToClipboardWithSources()
       .setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.getlinkwithsources"));
-      downloadPanel.getMnuEinfuegen().setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.einfuegen"));
       downloadPanel.getMnuOpenWithProgram().setText("VLC");
       downloadPanel.getMnuOpenWithDefaultProgram()
       .setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.startemitstandard"));
-      downloadPanel.getLblTargetDir().setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.zielverzeichnis"));
       alreadyLoaded = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen");
       invalidLink   = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");
       linkFailure   = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerlang");

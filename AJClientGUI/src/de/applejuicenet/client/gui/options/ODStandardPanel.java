@@ -6,6 +6,7 @@ package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -49,7 +50,7 @@ import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODStandardPanel.java,v 1.9 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODStandardPanel.java,v 1.10 2009/01/14 15:54:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -292,10 +293,13 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       DirectoryChooserMouseAdapter dcMouseAdapter = new DirectoryChooserMouseAdapter();
 
       openTemp = new JLabel(icon2);
+      openTemp.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       openTemp.addMouseListener(dcMouseAdapter);
       openIncoming = new JLabel(icon2);
+      openIncoming.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       openIncoming.addMouseListener(dcMouseAdapter);
       selectStandardBrowser = new JLabel(icon2);
+      selectStandardBrowser.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
       selectStandardBrowser.addMouseListener(new SelectBrowserMouseListener());
 

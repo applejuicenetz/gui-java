@@ -24,15 +24,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.net.URL;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -45,6 +42,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -65,11 +63,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import com.l2fprod.gui.plaf.skin.Skin;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import com.l2fprod.gui.plaf.skin.Skin;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
@@ -104,7 +102,6 @@ import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
-
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLFrame;
 import de.tklsoft.gui.controls.TKLLabel;
@@ -189,6 +186,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    private ImageIcon                nichtVerbundenIcon;
    private JPopupMenu               popup;
    private TrayIF                   trayLoader               = null;
+   private DownloadlinkPanel        linkPane                 = new DownloadlinkPanel();
 
    public AppleJuiceDialog()
    {
@@ -454,6 +452,30 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
 
       getContentPane().setLayout(new BorderLayout());
+      linkPane.getBtnStartDownload().addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent e)
+            {
+               uebernehmeLink();
+            }
+         });
+      
+      JComboBox targetDirs = linkPane.getCmbTargetDir();
+      String[]  dirs = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
+
+      for(String curDir : dirs)
+      {
+         targetDirs.addItem(curDir);
+         if(curDir.equals(""))
+         {
+            targetDirs.setSelectedItem(curDir);
+         }
+      }
+
+      targetDirs.setEditable(true);
+
+      
+      getContentPane().add(linkPane, BorderLayout.NORTH);
       getContentPane().add(registerPane, BorderLayout.CENTER);
 
       TKLPanel panel = new TKLPanel(new GridBagLayout());
@@ -545,12 +567,88 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       //Tooltipps einstellen
       ToolTipManager.sharedInstance().setInitialDelay(1);
       ToolTipManager.sharedInstance().setDismissDelay(50000);
+      LanguageSelector.getInstance().addLanguageListener(linkPane);
       fireLanguageChanged();
       ApplejuiceFassade dm = AppleJuiceClient.getAjFassade();
 
       dm.addDataUpdateListener(this, DATALISTENER_TYPE.INFORMATION_CHANGED);
       dm.addDataUpdateListener(this, DATALISTENER_TYPE.NETINFO_CHANGED);
       dm.startXMLCheck();
+   }
+
+   protected void uebernehmeLink()
+   {
+      if(linkPane.getTxtDownloadLink().isInvalid())
+      {
+         return;
+      }
+
+      final String link = linkPane.getTxtDownloadLink().getText();
+      Object       sel = linkPane.getCmbTargetDir().getSelectedItem();
+      String       tmp;
+
+      if(sel != null)
+      {
+         tmp = (String) sel;
+      }
+      else
+      {
+         tmp = "";
+      }
+
+      final String targetDir = tmp;
+
+      if(link.length() != 0)
+      {
+         linkPane.getTxtDownloadLink().setText("");
+         Thread linkThread = new Thread()
+         {
+            public void run()
+            {
+               try
+               {
+                  final String result = AppleJuiceClient.getAjFassade().processLink(link, targetDir);
+
+                  SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
+                  if(result.indexOf("ok") != 0)
+                  {
+                     SwingUtilities.invokeLater(new Runnable()
+                        {
+                           public void run()
+                           {
+                              String message = null;
+
+                              if(result.indexOf("already downloaded") != -1)
+                              {
+                                 message = alreadyLoaded.replaceAll("%s", link);
+                              }
+                              else if(result.indexOf("incorrect link") != -1)
+                              {
+                                 message = invalidLink.replaceAll("%s", link);
+                              }
+                              else if(result.indexOf("failure") != -1)
+                              {
+                                 message = linkFailure;
+                              }
+
+                              if(message != null)
+                              {
+                                 JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message, dialogTitel,
+                                                               JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+                              }
+                           }
+                        });
+                  }
+               }
+               catch(IllegalArgumentException e)
+               {
+                  logger.error(e);
+               }
+            }
+         };
+
+         linkThread.start();
+      }
    }
 
    private void demaximize()
@@ -669,7 +767,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       System.exit(-1);
    }
 
-   protected JMenuBar createMenuBar()
+   @SuppressWarnings("deprecation")
+protected JMenuBar createMenuBar()
    {
       try
       {

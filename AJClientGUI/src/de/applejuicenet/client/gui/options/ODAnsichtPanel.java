@@ -6,10 +6,12 @@ package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -19,6 +21,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -33,12 +36,13 @@ import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Settings;
+
 import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.9 2009/01/14 15:54:31 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -62,6 +66,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
    private boolean      dirty                 = false;
    private TKLTextField openProgram           = new TKLTextField();
    private TKLLabel     program               = new TKLLabel("VLC ");
+   private Border emptyBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1);
 
    public ODAnsichtPanel()
    {
@@ -93,8 +98,12 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
 
       setLayout(new BorderLayout());
       farbeFertigerDownload.setOpaque(true);
+      farbeFertigerDownload.setBorder(emptyBorder);
+      farbeFertigerDownload.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       farbeFertigerDownload.addMouseListener(new ColorChooserMouseAdapter());
       farbeQuelle.setOpaque(true);
+      farbeQuelle.setBorder(emptyBorder);
+      farbeQuelle.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       farbeQuelle.addMouseListener(new ColorChooserMouseAdapter());
       OptionsManager om = OptionsManagerImpl.getInstance();
 
@@ -168,7 +177,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
 
       program.setIcon(icon3);
       TKLLabel selectProgram = new TKLLabel(icon2);
-
+      selectProgram.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       selectProgram.addMouseListener(new MouseAdapter()
          {
             public void mouseEntered(MouseEvent e)
@@ -403,7 +412,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       {
          TKLLabel source = (TKLLabel) e.getSource();
 
-         source.setBorder(null);
+         source.setBorder(emptyBorder);
       }
    }
 }

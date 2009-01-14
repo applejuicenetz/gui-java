@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry combineaccessrules="false" kind="src" path="/ajcorefassade"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.5.0_11"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="needed_jars/skinlf.jar"/>
 	<classpathentry kind="lib" path="needed_jars/ajtray.jar"/>
 	<classpathentry kind="lib" path="needed_jars/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="needed_jars/looks-2.2.1.jar"/>
-	<classpathentry kind="lib" path="needed_jars/ajcorefassade.jar"/>
 	<classpathentry kind="lib" path="needed_jars/tklcontrols.jar"/>
+	<classpathentry kind="lib" path="needed_jars/ajcorefassade.jar"/>
+	<classpathentry kind="lib" path="needed_jars/TableLayout-20050920.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
