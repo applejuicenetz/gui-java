@@ -30,7 +30,7 @@ import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.64 2009/01/12 11:59:59 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.65 2009/01/14 17:05:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -187,7 +187,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
             int       index = getTabCount() + 1;
             int       event = index < 10 ? KeyEvent.VK_1 + index - 1 : KeyEvent.VK_A + index - 10;
 
-            addTab(curPlugin.getTitle() + " [Ctrl+" + ((char) event) + "]", icon, curPlugin);
+            addTab(curPlugin.getTitle() + " [" + ((char) event) + "]", icon, curPlugin);
          }
       }
 
@@ -204,11 +204,11 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
          LanguageSelector languageSelector = LanguageSelector.getInstance();
 
          setTitleAt(0, languageSelector.getFirstAttrbuteByTagName("mainform.homesheet.caption") + " [Ctrl+1]");
-         setTitleAt(1, languageSelector.getFirstAttrbuteByTagName("mainform.sharesheet.caption") + " [Ctrl+2]");
-         setTitleAt(2, languageSelector.getFirstAttrbuteByTagName("mainform.seachsheet.caption") + " [Ctrl+3]");
-         setTitleAt(3, languageSelector.getFirstAttrbuteByTagName("mainform.queuesheet.caption") + " [Ctrl+4]");
-         setTitleAt(4, languageSelector.getFirstAttrbuteByTagName("mainform.uploadsheet.caption") + " [Ctrl+5]");
-         setTitleAt(5, languageSelector.getFirstAttrbuteByTagName("mainform.serversheet.caption") + " [Ctrl+6]");
+         setTitleAt(1, languageSelector.getFirstAttrbuteByTagName("mainform.sharesheet.caption") + " [2]");
+         setTitleAt(2, languageSelector.getFirstAttrbuteByTagName("mainform.seachsheet.caption") + " [3]");
+         setTitleAt(3, languageSelector.getFirstAttrbuteByTagName("mainform.queuesheet.caption") + " [4]");
+         setTitleAt(4, languageSelector.getFirstAttrbuteByTagName("mainform.uploadsheet.caption") + " [5]");
+         setTitleAt(5, languageSelector.getFirstAttrbuteByTagName("mainform.serversheet.caption") + " [6]");
       }
       catch(Exception e)
       {
