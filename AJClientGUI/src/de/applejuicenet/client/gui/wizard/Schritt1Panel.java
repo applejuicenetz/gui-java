@@ -9,16 +9,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
 import java.io.File;
 
 import javax.swing.JLabel;
 
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+
 import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.controls.TKLTextArea;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt1Panel.java,v 1.15 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt1Panel.java,v 1.16 2009/01/14 13:20:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -45,7 +47,7 @@ public class Schritt1Panel extends WizardPanel
       erlaeuterung.setEditable(false);
       erlaeuterung.setBackground(Color.WHITE);
 
-      String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
+      String path         = System.getProperty("user.dir") + File.separator + "language" + File.separator;
       File   languagePath = new File(path);
 
       if(languagePath.isDirectory())
@@ -54,7 +56,7 @@ public class Schritt1Panel extends WizardPanel
 
          for(int i = 0; i < tempListe.length; i++)
          {
-            int pos = tempListe[i].indexOf(".xml");
+            int pos = tempListe[i].indexOf(".properties");
 
             if(pos != -1)
             {
@@ -73,8 +75,8 @@ public class Schritt1Panel extends WizardPanel
 
                if(selected != null)
                {
-                  String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
-                  String dateiName = path + (String) selected + ".xml";
+                  String path      = System.getProperty("user.dir") + File.separator + "language" + File.separator;
+                  String dateiName = path + (String) selected + ".properties";
 
                   LanguageSelector.getInstance(dateiName);
                }
