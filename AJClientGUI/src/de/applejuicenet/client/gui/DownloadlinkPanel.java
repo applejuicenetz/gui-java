@@ -143,6 +143,7 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
       add(lblTargetDir, "5, 1");
       add(cmbTargetDir, "7, 1");
       add(btnStartDownload, "9, 1");
+      fireLanguageChanged();
    }
 
    public TKLTextField getTxtDownloadLink()
