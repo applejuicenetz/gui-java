@@ -1,7 +1,6 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.gui.download;
 
 import java.awt.Toolkit;
@@ -10,7 +9,9 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+
 import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,8 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
-import de.applejuicenet.client.gui.download.table.DownloadNode;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
+import de.applejuicenet.client.gui.download.table.DownloadNode;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.Settings;
@@ -89,7 +90,7 @@ public class DownloadController extends GuiController
    private DownloadController()
    {
       super();
-      downloadPanel = new DownloadPanel(this);
+      downloadPanel                                                 = new DownloadPanel(this);
       try
       {
          init();
@@ -126,15 +127,15 @@ public class DownloadController extends GuiController
       downloadPanel.getBtnPowerDownload().addActionListener(new GuiControllerActionListener(this, START_POWERDOWNLOAD));
       if(AppleJuiceClient.getAjFassade().isLocalhost())
       {
+         downloadPanel.getMnuOpenWithProgram().addActionListener(new GuiControllerActionListener(this, OPEN_WITH_PROGRAM));
+         downloadPanel.getMnuOpenWithProgram().setVisible(true);
          if(DesktopTools.isAdvancedSupported())
          {
-            downloadPanel.getMnuOpenWithProgram().setVisible(false);
             downloadPanel.getMnuOpenWithDefaultProgram()
             .addActionListener(new GuiControllerActionListener(this, OPEN_WITH_DEFAULT_PROGRAM));
          }
          else
          {
-            downloadPanel.getMnuOpenWithProgram().addActionListener(new GuiControllerActionListener(this, OPEN_WITH_PROGRAM));
             downloadPanel.getMnuOpenWithDefaultProgram().setVisible(false);
          }
       }
@@ -369,27 +370,28 @@ public class DownloadController extends GuiController
 
             if(directory != null && directory.length() > 0)
             {
-                //todo
-//               JComboBox targetDirs = downloadPanel.getTargetDirField();
-//               boolean   found = false;
-//
-//               for(int i = 0; i < targetDirs.getItemCount(); i++)
-//               {
-//                  if(!((String) targetDirs.getItemAt(i)).equalsIgnoreCase(directory))
-//                  {
-//                     continue;
-//                  }
-//                  else
-//                  {
-//                     found = true;
-//                     break;
-//                  }
-//               }
-//
-//               if(!found)
-//               {
-//                  targetDirs.addItem(directory);
-//               }
+
+               //todo
+               //               JComboBox targetDirs = downloadPanel.getTargetDirField();
+               //               boolean   found = false;
+               //
+               //               for(int i = 0; i < targetDirs.getItemCount(); i++)
+               //               {
+               //                  if(!((String) targetDirs.getItemAt(i)).equalsIgnoreCase(directory))
+               //                  {
+               //                     continue;
+               //                  }
+               //                  else
+               //                  {
+               //                     found = true;
+               //                     break;
+               //                  }
+               //               }
+               //
+               //               if(!found)
+               //               {
+               //                  targetDirs.addItem(directory);
+               //               }
             }
          }
 
@@ -545,7 +547,7 @@ public class DownloadController extends GuiController
       downloadPanel.getMnuZielordner().setEnabled(false);
       downloadPanel.getMnuPartlisteAnzeigen().setEnabled(false);
       boolean pausiert = false;
-      boolean laufend = false;
+      boolean laufend  = false;
 
       if(selectedItems != null)
       {
@@ -907,10 +909,10 @@ public class DownloadController extends GuiController
          else if(selectedItems[0] instanceof DownloadSource)
          {
             DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-            Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-            String                key       = Integer.toString(downloadSource.getDownloadId());
+            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+            String                key            = Integer.toString(downloadSource.getDownloadId());
 
-            download = downloads.get(key);
+            download                             = downloads.get(key);
          }
 
          if(download != null)
@@ -965,10 +967,10 @@ public class DownloadController extends GuiController
          else if(selectedItems[0] instanceof DownloadSource)
          {
             DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-            Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-            String                key       = Integer.toString(downloadSource.getDownloadId());
+            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+            String                key            = Integer.toString(downloadSource.getDownloadId());
 
-            download = downloads.get(key);
+            download                             = downloads.get(key);
          }
 
          if(download != null)
@@ -1017,9 +1019,9 @@ public class DownloadController extends GuiController
          else if(selectedItems[0] instanceof DownloadSource)
          {
             DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-            Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-            String                key       = Integer.toString(downloadSource.getDownloadId());
-            Download              download  = downloads.get(key);
+            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+            String                key            = Integer.toString(downloadSource.getDownloadId());
+            Download              download       = downloads.get(key);
 
             if(download != null)
             {
@@ -1081,9 +1083,9 @@ public class DownloadController extends GuiController
          else if(selectedItems[0] instanceof DownloadSource)
          {
             DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-            Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-            String                key       = Integer.toString(downloadSource.getDownloadId());
-            Download              download  = downloads.get(key);
+            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+            String                key            = Integer.toString(downloadSource.getDownloadId());
+            Download              download       = downloads.get(key);
 
             if(download != null)
             {
@@ -1152,7 +1154,7 @@ public class DownloadController extends GuiController
             initialized = true;
             firstUpdate = false;
             int             width = downloadPanel.getScrollPane().getWidth() - 18;
-            PositionManager pm      = PositionManagerImpl.getInstance();
+            PositionManager pm = PositionManagerImpl.getInstance();
             TableColumn[]   columns = downloadPanel.getDownloadTableColumns();
 
             if(pm.isLegal())
@@ -1219,23 +1221,23 @@ public class DownloadController extends GuiController
    protected void languageChanged()
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      String           text = languageSelector.getFirstAttrbuteByTagName("mainform.Label14.caption");
+      String           text             = languageSelector.getFirstAttrbuteByTagName("mainform.Label14.caption");
 
-      dialogTitel       = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
-      downloadAbbrechen = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext5");
-      String[] tableColumns = new String[10];
+      dialogTitel                       = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
+      downloadAbbrechen                 = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext5");
+      String[] tableColumns             = new String[10];
 
-      tableColumns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
-      tableColumns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
-      tableColumns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption");
-      tableColumns[3] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption");
-      tableColumns[4] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption");
-      tableColumns[5] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption");
-      tableColumns[6] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
-      tableColumns[7] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption");
-      tableColumns[8] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
-      tableColumns[9] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption");
-      TableColumn[]       columns = downloadPanel.getDownloadTableColumns();
+      tableColumns[0]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
+      tableColumns[1]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
+      tableColumns[2]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption");
+      tableColumns[3]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption");
+      tableColumns[4]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption");
+      tableColumns[5]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption");
+      tableColumns[6]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
+      tableColumns[7]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption");
+      tableColumns[8]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
+      tableColumns[9]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption");
+      TableColumn[]       columns       = downloadPanel.getDownloadTableColumns();
       JCheckBoxMenuItem[] columnPopupItems = downloadPanel.getColumnPopupItems();
 
       for(int i = 0; i < columns.length; i++)

@@ -1,7 +1,6 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -42,7 +41,7 @@ import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.9 2009/01/14 15:54:31 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.10 2009/01/14 19:52:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -66,7 +65,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
    private boolean      dirty                 = false;
    private TKLTextField openProgram           = new TKLTextField();
    private TKLLabel     program               = new TKLLabel("VLC ");
-   private Border emptyBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1);
+   private Border       emptyBorder           = BorderFactory.createEmptyBorder(1, 1, 1, 1);
 
    public ODAnsichtPanel()
    {
@@ -88,9 +87,9 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
    private void init()
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      IconManager      im = IconManager.getInstance();
+      IconManager      im               = IconManager.getInstance();
 
-      menuIcon = im.getIcon("opt_ansicht");
+      menuIcon                          = im.getIcon("opt_ansicht");
       cmbDownloadUebersicht.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.downloadansicht"));
       cmbAktiv.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.aktiv"));
       cmbStartscreenZeigen.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigestartscreen"));
@@ -140,8 +139,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
             }
          });
 
-      ImageIcon icon  = im.getIcon("hint");
-      TKLLabel  hint1 = new TKLLabel(icon)
+      ImageIcon icon     = im.getIcon("hint");
+      TKLLabel  hint1    = new TKLLabel(icon)
       {
          public JToolTip createToolTip()
          {
@@ -152,7 +151,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
          }
       };
 
-      TKLLabel hint2 = new TKLLabel(icon)
+      TKLLabel hint2    = new TKLLabel(icon)
       {
          public JToolTip createToolTip()
          {
@@ -177,6 +176,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
 
       program.setIcon(icon3);
       TKLLabel selectProgram = new TKLLabel(icon2);
+
       selectProgram.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       selectProgram.addMouseListener(new MouseAdapter()
          {
@@ -296,13 +296,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       cmbDownloadUebersicht.confirmNewValue();
       enableToolTip.confirmNewValue();
       cmbStartscreenZeigen.confirmNewValue();
-
-      if(DesktopTools.isAdvancedSupported())
-      {
-         openProgram.setVisible(false);
-         program.setVisible(false);
-         selectProgram.setVisible(false);
-      }
    }
 
    public boolean save()
@@ -310,7 +303,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       try
       {
          boolean        bRet = false;
-         OptionsManager om = OptionsManagerImpl.getInstance();
+         OptionsManager om   = OptionsManagerImpl.getInstance();
 
          if(om.shouldShowConnectionDialogOnStartup() != shouldShowStartcreen())
          {
@@ -389,10 +382,10 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       public void mouseClicked(MouseEvent e)
       {
          LanguageSelector languageSelector = LanguageSelector.getInstance();
-         TKLLabel         source   = (TKLLabel) e.getSource();
-         Color            newColor = JColorChooser.showDialog(null,
-                                                              languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarbewaehlen"),
-                                                              source.getBackground());
+         TKLLabel         source           = (TKLLabel) e.getSource();
+         Color            newColor         = JColorChooser.showDialog(null,
+                                                                      languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarbewaehlen"),
+                                                                      source.getBackground());
 
          if(newColor != null && newColor.getRGB() != source.getBackground().getRGB())
          {
