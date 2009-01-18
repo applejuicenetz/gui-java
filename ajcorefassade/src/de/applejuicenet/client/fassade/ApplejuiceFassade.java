@@ -1055,7 +1055,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
 
       HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
                                    StringConstants.SET_SETTINGS_URL + coreHolder.getCorePassword() +
-                                   StringConstants.AND_SHAREDDIRECTORY + parameters.toString(), false);
+                                   StringConstants.AND + parameters.toString(), false);
    }
 
    public void removeShareEntry(List<String> paths)

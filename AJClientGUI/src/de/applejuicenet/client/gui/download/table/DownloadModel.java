@@ -1,23 +1,19 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.gui.download.table;
-
-import java.util.Set;
 
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
-import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.12 2009/01/12 09:19:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadModel.java,v 1.13 2009/01/18 22:57:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -79,9 +75,7 @@ public class DownloadModel extends AbstractTreeTableModel implements LanguageLis
       if(!(node instanceof Download) && !(node instanceof DownloadMainNode) && !(node instanceof DownloadSource) &&
             node.getClass() != WaitNode.class)
       {
-         Set<Node> children = ((DownloadNode) node).getChildren();
-
-         return (Node[]) children.toArray(new Node[children.size()]);
+         return ((DownloadNode) node).getChildren();
       }
       else if(node instanceof DownloadMainNode)
       {
@@ -235,7 +229,7 @@ public class DownloadModel extends AbstractTreeTableModel implements LanguageLis
       }
       else if(share / 1024 < 1024)
       {
-         faktor = 1024;
+         faktor     = 1024;
       }
       else if(share / 1048576 < 1024)
       {

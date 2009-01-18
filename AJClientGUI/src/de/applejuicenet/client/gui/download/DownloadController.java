@@ -9,13 +9,10 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-
 import java.io.File;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -40,7 +37,6 @@ import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
-import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -48,8 +44,8 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.download.table.DownloadMainNode;
-import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
 import de.applejuicenet.client.gui.download.table.DownloadNode;
+import de.applejuicenet.client.gui.download.table.DownloadMainNode.MainNodeType;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.Settings;
@@ -864,9 +860,9 @@ public class DownloadController extends GuiController
          }
          else if(selectedItems[i] instanceof DownloadNode)
          {
-            Set<Node> children = ((DownloadNode) selectedItems[i]).getChildren();
+            Object[] children = ((DownloadNode) selectedItems[i]).getChildren();
 
-            for(Node curNode : children)
+            for(Object curNode : children)
             {
                if(curNode.getClass() == DownloadMainNode.class && ((DownloadMainNode) curNode).getType() == MainNodeType.ROOT_NODE)
                {

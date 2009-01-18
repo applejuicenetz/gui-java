@@ -1,11 +1,11 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.fassade.shared;
 
 public interface StringConstants
 {
+   String AND                                 = "&";
    String AND_SHAREDDIRECTORY                 = "&sharedirectory";
    String AND_SHARESUB                        = "&sharesub";
    String GLEICH                              = "=";

@@ -5,9 +5,7 @@
 package de.applejuicenet.client.gui.download.table;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.Icon;
@@ -19,7 +17,7 @@ import de.applejuicenet.client.gui.download.table.DownloadNodeComparator.SORT_TY
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadNode.java,v 1.4 2009/01/12 07:45:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/table/Attic/DownloadNode.java,v 1.5 2009/01/18 22:57:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -30,12 +28,12 @@ import de.applejuicenet.client.shared.IconManager;
  */
 public class DownloadNode implements Node
 {
-   private static Map<String, Download>  downloads   = null;
-   private static DownloadNodeComparator comparator  = new DownloadNodeComparator();
-   private static HashMap<String, Node>  allChildren = new HashMap<String, Node>();
-   private static boolean                initialized = false;
-   private final String                  path;
-   private TreeSet<Node>                 children    = new TreeSet<Node>();
+   private static Map<String, Download>   downloads   = null;
+   private static DownloadNodeComparator  comparator  = new DownloadNodeComparator();
+   private static HashMap<String, Object> allChildren = new HashMap<String, Object>();
+   private static boolean                 initialized = false;
+   private final String                   path;
+   private TreeSet<Object>                children    = new TreeSet<Object>();
 
    DownloadNode(String path)
    {
@@ -93,12 +91,13 @@ public class DownloadNode implements Node
       return IconManager.getInstance().getIcon("tree");
    }
 
+   @SuppressWarnings("unchecked")
    public void refresh()
    {
-      children = new TreeSet<Node>(comparator);
+      children = new TreeSet<Object>(comparator);
       if(downloads != null)
       {
-         for(Node curObject : allChildren.values())
+         for(Object curObject : allChildren.values())
          {
             if(curObject.getClass() == DownloadNode.class)
             {
@@ -116,12 +115,9 @@ public class DownloadNode implements Node
       }
    }
 
-   public Set<Node> getChildren()
+   public Object[] getChildren()
    {
-      HashSet<Node> copyChildren = new HashSet<Node>();
-
-      copyChildren.addAll(children);
-      return copyChildren;
+      return (Object[]) children.toArray(new Object[children.size()]);
    }
 
    public int getChildCount()
@@ -162,7 +158,7 @@ public class DownloadNode implements Node
    public static void setSortCriteria(SORT_TYPE sort_status, boolean isAscent)
    {
       comparator.setSortCriteria(sort_status, isAscent);
-      for(Node curObject : allChildren.values())
+      for(Object curObject : allChildren.values())
       {
          if(curObject.getClass() == DownloadNode.class)
          {
@@ -189,7 +185,7 @@ public class DownloadNode implements Node
          }
          else
          {
-            test = oldNode.removeChild(mainNode);
+            test                   = oldNode.removeChild(mainNode);
          }
 
          if(oldNode.getPath().length() > 0 && oldNode.getChildCount() == 0)
@@ -216,8 +212,8 @@ public class DownloadNode implements Node
       else if(event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_ADDED))
       {
          Download     download = (Download) event.getNewValue();
-         String       thePath = download.getTargetDirectory();
-         DownloadNode node    = (DownloadNode) allChildren.get(thePath);
+         String       thePath  = download.getTargetDirectory();
+         DownloadNode node     = (DownloadNode) allChildren.get(thePath);
 
          if(node == null)
          {
@@ -236,9 +232,9 @@ public class DownloadNode implements Node
       else if(event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED))
       {
          Download     download = (Download) event.getOldValue();
-         String       key     = Integer.toString(download.getId());
-         String       thePath = download.getTargetDirectory();
-         DownloadNode node    = (DownloadNode) allChildren.get(thePath);
+         String       key      = Integer.toString(download.getId());
+         String       thePath  = download.getTargetDirectory();
+         DownloadNode node     = (DownloadNode) allChildren.get(thePath);
 
          if(node == null)
          {

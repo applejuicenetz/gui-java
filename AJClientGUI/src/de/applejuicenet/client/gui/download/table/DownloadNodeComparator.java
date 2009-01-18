@@ -1,22 +1,22 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.gui.download.table;
 
 import java.util.Comparator;
 
 import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.util.DownloadCalculator;
 
-public class DownloadNodeComparator implements Comparator<Node>
+@SuppressWarnings("unchecked")
+public class DownloadNodeComparator implements Comparator
 {
    public static enum SORT_TYPE
    {SORT_NO_SORT, SORT_DOWNLOADNAME, SORT_GROESSE, SORT_BEREITS_GELADEN, SORT_RESTZEIT, SORT_PROZENT, SORT_PWDL, SORT_REST_ZU_LADEN, 
-      SORT_GESCHWINDIGKEIT, SORT_STATUS;}
+      SORT_GESCHWINDIGKEIT, SORT_STATUS;
+   }
    private boolean   isAscending = true;
-   private SORT_TYPE sort = SORT_TYPE.SORT_DOWNLOADNAME;
+   private SORT_TYPE sort        = SORT_TYPE.SORT_DOWNLOADNAME;
 
    public DownloadNodeComparator()
    {
@@ -28,28 +28,27 @@ public class DownloadNodeComparator implements Comparator<Node>
       isAscending = ascending;
    }
 
-   public int compare(Node node1, Node node2)
+   public int compare(Object o1, Object o2)
    {
       int result;
-      if(node1.getClass() == DownloadNode.class && node2.getClass() == DownloadMainNode.class)
+
+      if(o1.getClass() == DownloadNode.class && o2.getClass() == DownloadMainNode.class)
       {
          return -1;
       }
-      else if(node1.getClass() == DownloadMainNode.class && node2.getClass() == DownloadNode.class)
+      else if(o1.getClass() == DownloadMainNode.class && o2.getClass() == DownloadNode.class)
       {
          return 1;
       }
-      else if(node1.getClass() == DownloadNode.class && node2.getClass() == DownloadNode.class)
+      else if(o1.getClass() == DownloadNode.class && o2.getClass() == DownloadNode.class)
       {
-         result = ((DownloadNode) node1).getPath().compareToIgnoreCase(((DownloadNode) node2).getPath());
+         result = ((DownloadNode) o1).getPath().compareToIgnoreCase(((DownloadNode) o2).getPath());
          return isAscending ? result : result * -1;
       }
       else
       {
-         Download download1 = ((DownloadMainNode) node1).getDownload();
-         Download download2 = ((DownloadMainNode) node2).getDownload();
-         Object o1 = null;
-         Object o2 = null;
+         Download download1 = ((DownloadMainNode) o1).getDownload();
+         Download download2 = ((DownloadMainNode) o2).getDownload();
 
          if(sort == SORT_TYPE.SORT_DOWNLOADNAME)
          {
@@ -129,7 +128,7 @@ public class DownloadNodeComparator implements Comparator<Node>
                Integer id1 = new Integer(download1.getId());
                Integer id2 = new Integer(download2.getId());
 
-               result = id1.compareTo(id2);
+               result      = id1.compareTo(id2);
             }
          }
       }

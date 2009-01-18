@@ -1,7 +1,6 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.gui.share.table;
 
 import java.util.HashMap;
@@ -12,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
 import de.applejuicenet.client.fassade.entity.Share;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DateiListeTableModel.java,v 1.6 2009/01/12 07:45:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DateiListeTableModel.java,v 1.7 2009/01/18 22:57:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -39,9 +38,9 @@ public class DateiListeTableModel extends AbstractTableModel
 
    private Share[] sortChildren()
    {
-      Share[] children = dateien.values().toArray(new Share[dateien.size()]);
+      Share[] children                       = dateien.values().toArray(new Share[dateien.size()]);
       Share   tmp;
-      int     n = children.length;
+      int     n                              = children.length;
 
       for(int i = 0; i < n - 1; i++)
       {
@@ -121,9 +120,9 @@ public class DateiListeTableModel extends AbstractTableModel
       }
       else
       {
-         for(ShareNode curShareNode : shareNode.getChildrenMap().values())
+         for(Object curShareNode : shareNode.getChildrenMap().values())
          {
-            addNodes(curShareNode);
+            addNodes((ShareNode) curShareNode);
          }
       }
 

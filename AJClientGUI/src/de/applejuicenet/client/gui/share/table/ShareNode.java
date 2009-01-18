@@ -5,6 +5,7 @@
 package de.applejuicenet.client.gui.share.table;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.Icon;
@@ -21,7 +22,7 @@ import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareNode.java,v 1.9 2009/01/12 07:45:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareNode.java,v 1.10 2009/01/18 22:57:48 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -47,7 +48,7 @@ public class ShareNode implements Node
    private Map<String, ShareNode> children       = new HashMap<String, ShareNode>();
    private ShareNode              parent;
    private String                 path;
-   private ShareNode[]            sortedChildren = null;
+   private Object[]               sortedChildren = null;
 
    public ShareNode(ShareNode parent, Share share)
    {
@@ -56,7 +57,7 @@ public class ShareNode implements Node
       if(parent != null)
       {
          String bisherigerPath = getCompletePath();
-         String restPath = share.getFilename();
+         String restPath       = share.getFilename();
 
          while(restPath.indexOf(ApplejuiceFassade.separator) == 0)
          {
@@ -142,7 +143,7 @@ public class ShareNode implements Node
    public ShareNode addChild(Share shareToAdd)
    {
       String bisherigerPath = getCompletePath();
-      String restPath = shareToAdd.getFilename();
+      String restPath       = shareToAdd.getFilename();
 
       while(restPath.indexOf(ApplejuiceFassade.separator) == 0)
       {
@@ -163,7 +164,7 @@ public class ShareNode implements Node
       if(pos != -1)
       {
          String tmpPath = restPath.substring(0, pos);
-         String aKey = tmpPath;
+         String aKey    = tmpPath;
 
          if(children.containsKey(aKey))
          {
@@ -218,7 +219,8 @@ public class ShareNode implements Node
       }
    }
 
-   public Map<String, ShareNode> getChildrenMap()
+   @SuppressWarnings("unchecked")
+   public Map getChildrenMap()
    {
       return children;
    }
@@ -229,7 +231,7 @@ public class ShareNode implements Node
       sortedChildren = null;
    }
 
-   protected ShareNode[] getChildren()
+   protected Object[] getChildren()
    {
       if(sortedChildren == null)
       {
@@ -241,7 +243,7 @@ public class ShareNode implements Node
       return sortedChildren;
    }
 
-   private ShareNode[] sort(ShareNode[] childNodes)
+   private Object[] sort(ShareNode[] childNodes)
    {
       int       n   = childNodes.length;
       ShareNode tmp;
@@ -282,6 +284,7 @@ public class ShareNode implements Node
       }
    }
 
+   @SuppressWarnings("unchecked")
    public void setPriority(int prio)
    {
       if(isLeaf())
@@ -297,9 +300,11 @@ public class ShareNode implements Node
       }
       else
       {
-         for(ShareNode curShareNode : children.values())
+         Iterator it = children.values().iterator();
+
+         while(it.hasNext())
          {
-            curShareNode.setPriority(prio);
+            ((ShareNode) it.next()).setPriority(prio);
          }
       }
    }
