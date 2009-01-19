@@ -5,6 +5,7 @@
 package de.applejuicenet.client.gui.upload.table;
 
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import de.applejuicenet.client.gui.download.table.DownloadModel;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.10 2009/01/12 09:19:19 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/upload/table/Attic/UploadDataTableModel.java,v 1.11 2009/01/19 08:50:27 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -136,7 +137,9 @@ public class UploadDataTableModel extends AbstractTreeTableModel implements Lang
                return "";
 
             case 6:
-               return DownloadModel.powerdownload(upload.getPrioritaet());
+               int prio = upload.getPrioritaet();
+
+               return DownloadModel.powerdownload(prio) + " (" + prio + ")";
 
             case 7:
                return upload.getVersion().getVersion();
