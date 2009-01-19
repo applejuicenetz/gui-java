@@ -5,6 +5,7 @@
 package de.applejuicenet.client.gui.search;
 
 import java.awt.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +25,9 @@ import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.download.DownloadPropertyChangeListener;
-import de.applejuicenet.client.gui.search.table.SearchResultIconNodeRenderer;
+import de.applejuicenet.client.gui.search.table.SearchEntryIconRenderer;
 import de.applejuicenet.client.shared.SoundPlayer;
+
 import de.tklsoft.gui.controls.TKLTextField;
 
 public class SearchController extends GuiController
@@ -159,14 +161,14 @@ public class SearchController extends GuiController
 
       for(Share curShare : shares.values())
       {
-         SearchResultIconNodeRenderer.addMd5Sum(curShare.getCheckSum());
+         SearchEntryIconRenderer.addMd5Sum(curShare.getCheckSum());
       }
 
       Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
 
       for(Download curDownload : downloads.values())
       {
-         SearchResultIconNodeRenderer.addMd5Sum(curDownload.getHash());
+         SearchEntryIconRenderer.addMd5Sum(curDownload.getHash());
       }
    }
 
@@ -210,7 +212,7 @@ public class SearchController extends GuiController
                            {
                               searchResultPanel = searchIds.get(curKey);
                               aSearch = theContent.get(curKey);
-                              if(panelSelected)
+                              if(aSearch.isChanged() && panelSelected)
                               {
                                  searchResultPanel.updateSearchContent();
                               }
@@ -275,13 +277,13 @@ public class SearchController extends GuiController
       }
       else if(event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_ADDED))
       {
-         SearchResultIconNodeRenderer.addMd5Sum(((Download) event.getNewValue()).getHash());
+         SearchEntryIconRenderer.addMd5Sum(((Download) event.getNewValue()).getHash());
       }
       else if(event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED))
       {
          if((Download) event.getOldValue() != null)
          {
-            SearchResultIconNodeRenderer.removeMd5Sum(((Download) event.getOldValue()).getHash());
+            SearchEntryIconRenderer.removeMd5Sum(((Download) event.getOldValue()).getHash());
          }
       }
    }

@@ -24,12 +24,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.net.URL;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -63,11 +66,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import com.l2fprod.gui.plaf.skin.Skin;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
@@ -102,6 +105,7 @@ import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
+
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLFrame;
 import de.tklsoft.gui.controls.TKLLabel;
@@ -459,7 +463,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                uebernehmeLink();
             }
          });
-      
+
       JComboBox targetDirs = linkPane.getCmbTargetDir();
       String[]  dirs = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
 
@@ -474,7 +478,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
       targetDirs.setEditable(true);
 
-      
       getContentPane().add(linkPane, BorderLayout.NORTH);
       getContentPane().add(registerPane, BorderLayout.CENTER);
 
@@ -767,8 +770,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       System.exit(-1);
    }
 
-   @SuppressWarnings("deprecation")
-protected JMenuBar createMenuBar()
+   protected JMenuBar createMenuBar()
    {
       try
       {

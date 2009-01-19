@@ -7,6 +7,7 @@ package de.applejuicenet.client.shared;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -17,7 +18,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.plaf.metal.MetalToolTipUI;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.13 2009/01/12 07:45:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.14 2009/01/19 15:45:29 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
