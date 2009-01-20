@@ -1,5 +1,7 @@
 package de.applejuicenet.client.fassade.entity;
 
+import java.util.List;
+
 import de.applejuicenet.client.fassade.shared.FileType;
 
 public abstract class Search implements IdOwner
@@ -26,11 +28,11 @@ public abstract class Search implements IdOwner
 
    public abstract void clearFilter();
 
-   public abstract SearchEntry[] getAllSearchEntries();
+   public abstract List<SearchEntry> getAllSearchEntries();
 
    public abstract SearchEntry getSearchEntryById(int id);
 
-   public abstract SearchEntry[] getSearchEntries();
+   public abstract List<SearchEntry> getSearchEntries();
 
    public abstract boolean isRunning();
 

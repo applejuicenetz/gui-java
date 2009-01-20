@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.fassade.controller.xml;
 
 import de.applejuicenet.client.fassade.entity.ShareEntry;
@@ -6,7 +10,7 @@ import de.applejuicenet.client.fassade.entity.ShareEntry;
  * $Header:
  * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/shared/ShareEntryDO.java,v
  * 1.1 2004/12/03 07:57:12 maj0r Exp $
- * 
+ *
  * <p>
  * Titel: AppleJuice Client-GUI
  * </p>
@@ -17,55 +21,67 @@ import de.applejuicenet.client.fassade.entity.ShareEntry;
  * <p>
  * Copyright: General Public License
  * </p>
- * 
+ *
  * @author: Maj0r <aj@tkl-soft.de>
- * 
+ *
  */
+class ShareEntryDO implements ShareEntry
+{
+   private static final String sSUBDIRECTORY    = "subdirectory";
+   private static final String sSINGLEDIRECTORY = "singledirectory";
+   private String              dir;
+   private SHAREMODE           shareMode;
 
-class ShareEntryDO implements ShareEntry{
-	private static final String sSUBDIRECTORY = "subdirectory";
-	private static final String sSINGLEDIRECTORY = "singledirectory";
+   public ShareEntryDO(String dir, SHAREMODE shareMode)
+   {
+      this.dir       = dir;
+      this.shareMode = shareMode;
+   }
 
-	private String dir;
-	private SHAREMODE shareMode;
+   public ShareEntryDO(String dir, String shareMode)
+   {
+      this.dir = dir;
+      setShareMode(shareMode);
+   }
 
-	public ShareEntryDO(String dir, SHAREMODE shareMode) {
-		this.dir = dir;
-		this.shareMode = shareMode;
-	}
+   public String toString()
+   {
+      return dir;
+   }
 
-	public ShareEntryDO(String dir, String shareMode) {
-		this.dir = dir;
-		setShareMode(shareMode);
-	}
+   public void setDir(String dir)
+   {
+      this.dir = dir;
+   }
 
-	public String toString() {
-		return dir;
-	}
+   public void setShareMode(SHAREMODE shareMode)
+   {
+      this.shareMode = shareMode;
+   }
 
-	public void setDir(String dir) {
-		this.dir = dir;
-	}
+   private void setShareMode(String shareMode)
+   {
+      if(shareMode.compareToIgnoreCase(sSUBDIRECTORY) == 0)
+      {
+         this.shareMode = SHAREMODE.SUBDIRECTORY;
+      }
+      else if(shareMode.compareToIgnoreCase(sSINGLEDIRECTORY) == 0)
+      {
+         this.shareMode = SHAREMODE.SINGLEDIRECTORY;
+      }
+      else
+      {
+         this.shareMode = SHAREMODE.NOT_SHARED;
+      }
+   }
 
-	public void setShareMode(SHAREMODE shareMode) {
-		this.shareMode = shareMode;
-	}
+   public String getDir()
+   {
+      return dir;
+   }
 
-	private void setShareMode(String shareMode) {
-		if (shareMode.compareToIgnoreCase(sSUBDIRECTORY) == 0) {
-			this.shareMode = SHAREMODE.SUBDIRECTORY;
-		} else if (shareMode.compareToIgnoreCase(sSINGLEDIRECTORY) == 0) {
-			this.shareMode = SHAREMODE.SINGLEDIRECTORY;
-		} else {
-			this.shareMode = SHAREMODE.NOT_SHARED;
-		}
-	}
-
-	public String getDir() {
-		return dir;
-	}
-
-	public SHAREMODE getShareMode() {
-		return shareMode;
-	}
+   public SHAREMODE getShareMode()
+   {
+      return shareMode;
+   }
 }

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.fassade.controller.xml;
 
 import de.applejuicenet.client.fassade.entity.DownloadSource;
@@ -6,7 +10,7 @@ import de.applejuicenet.client.fassade.entity.DownloadSource;
  * $Header:
  * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/DownloadSourceDO.java,v
  * 1.1 2004/12/03 07:57:12 maj0r Exp $
- * 
+ *
  * <p>
  * Titel: AppleJuice Client-GUI
  * </p>
@@ -17,179 +21,208 @@ import de.applejuicenet.client.fassade.entity.DownloadSource;
  * <p>
  * Copyright: General Public License
  * </p>
- * 
+ *
  * @author: Maj0r [aj@tkl-soft.de]
- * 
+ *
  */
+class DownloadSourceDO extends DownloadSource
+{
+   private final int id;
+   private int       status;
+   private int       directstate;
+   private int       downloadFrom;
+   private int       downloadTo;
+   private int       actualDownloadPosition;
+   private int       speed;
+   private VersionDO version                = null;
+   private int       queuePosition;
+   private int       powerDownload;
+   private String    filename;
+   private String    nickname;
+   private int       downloadId;
+   private int       oldSize;
+   private String    sizeAsString;
+   private int       oldBereitsGeladen;
+   private String    bereitsGeladenAsString;
+   private int       oldNochZuLaden;
+   private String    nochZuLadenAsString;
+   private boolean   progressChanged        = false;
+   private boolean   versionChanged         = false;
+   private int       herkunft;
 
-class DownloadSourceDO extends DownloadSource{
+   public DownloadSourceDO(int id)
+   {
+      this.id = id;
+   }
 
-    private final int id;
+   public DownloadSourceDO(int id, int status, int directstate, int downloadFrom, int downloadTo, int actualDownloadPosition,
+                           int speed, VersionDO version, int queuePosition, int powerDownload, String filename, String nickname,
+                           int downloadId, int herkunft)
+   {
+      this.id                     = id;
+      this.status                 = status;
+      this.directstate            = directstate;
+      this.downloadFrom           = downloadFrom;
+      this.downloadTo             = downloadTo;
+      this.actualDownloadPosition = actualDownloadPosition;
+      this.speed                  = speed;
+      this.version                = version;
+      this.queuePosition          = queuePosition;
+      this.powerDownload          = powerDownload;
+      this.filename               = filename;
+      this.nickname               = nickname;
+      this.downloadId             = downloadId;
+      progressChanged             = true;
+      versionChanged              = true;
+      this.herkunft               = herkunft;
+   }
 
-	private int status;
-	private int directstate;
-	private int downloadFrom;
-	private int downloadTo;
-	private int actualDownloadPosition;
-	private int speed;
-	private VersionDO version = null;
-	private int queuePosition;
-	private int powerDownload;
-	private String filename;
-	private String nickname;
-	private int downloadId;
-	private int oldSize;
-	private String sizeAsString;
-	private int oldBereitsGeladen;
-	private String bereitsGeladenAsString;
-	private int oldNochZuLaden;
-	private String nochZuLadenAsString;
-	private boolean progressChanged = false;
-	private boolean versionChanged = false;
-    private int herkunft;
+   public int getStatus()
+   {
+      return status;
+   }
 
-	public DownloadSourceDO(int id) {
-		this.id = id;
-	}
+   public int getSize()
+   {
+      if(downloadTo == -1 || downloadFrom == -1)
+      {
+         return 0;
+      }
 
-	public DownloadSourceDO(int id, int status, int directstate,
-			int downloadFrom, int downloadTo, int actualDownloadPosition,
-			int speed, VersionDO version, int queuePosition, int powerDownload,
-			String filename, String nickname, int downloadId, int herkunft) {
-		this.id = id;
-		this.status = status;
-		this.directstate = directstate;
-		this.downloadFrom = downloadFrom;
-		this.downloadTo = downloadTo;
-		this.actualDownloadPosition = actualDownloadPosition;
-		this.speed = speed;
-		this.version = version;
-		this.queuePosition = queuePosition;
-		this.powerDownload = powerDownload;
-		this.filename = filename;
-		this.nickname = nickname;
-		this.downloadId = downloadId;
-		progressChanged = true;
-		versionChanged = true;
-		this.herkunft = herkunft;
-	}
+      return downloadTo - downloadFrom;
+   }
 
-	public int getStatus() {
-		return status;
-	}
+   public void setStatus(int status)
+   {
+      this.status = status;
+   }
 
-	public int getSize() {
-		if (downloadTo == -1 || downloadFrom == -1) {
-			return 0;
-		}
-		return downloadTo - downloadFrom;
-	}
+   public int getHerkunft()
+   {
+      return herkunft;
+   }
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+   public void setHerkunft(int herkunft)
+   {
+      this.herkunft = herkunft;
+   }
 
-    public int getHerkunft() {
-        return herkunft;
-    }
+   public int getDirectstate()
+   {
+      return directstate;
+   }
 
-    public void setHerkunft(int herkunft) {
-        this.herkunft = herkunft;
-    }
+   public void setDirectstate(int directstate)
+   {
+      this.directstate = directstate;
+   }
 
-	public int getDirectstate() {
-		return directstate;
-	}
+   public int getDownloadFrom()
+   {
+      return downloadFrom;
+   }
 
-	public void setDirectstate(int directstate) {
-		this.directstate = directstate;
-	}
+   public void setDownloadFrom(int downloadFrom)
+   {
+      this.downloadFrom = downloadFrom;
+      progressChanged   = true;
+   }
 
-	public int getDownloadFrom() {
-		return downloadFrom;
-	}
+   public int getDownloadTo()
+   {
+      return downloadTo;
+   }
 
-	public void setDownloadFrom(int downloadFrom) {
-		this.downloadFrom = downloadFrom;
-		progressChanged = true;
-	}
+   public void setDownloadTo(int downloadTo)
+   {
+      this.downloadTo = downloadTo;
+      progressChanged = true;
+   }
 
-	public int getDownloadTo() {
-		return downloadTo;
-	}
+   public int getActualDownloadPosition()
+   {
+      return actualDownloadPosition;
+   }
 
-	public void setDownloadTo(int downloadTo) {
-		this.downloadTo = downloadTo;
-		progressChanged = true;
-	}
+   public void setActualDownloadPosition(int actualDownloadPosition)
+   {
+      this.actualDownloadPosition = actualDownloadPosition;
+      progressChanged             = true;
+   }
 
-	public int getActualDownloadPosition() {
-		return actualDownloadPosition;
-	}
+   public int getSpeed()
+   {
+      return speed;
+   }
 
-	public void setActualDownloadPosition(int actualDownloadPosition) {
-		this.actualDownloadPosition = actualDownloadPosition;
-		progressChanged = true;
-	}
+   public void setSpeed(int speed)
+   {
+      this.speed = speed;
+   }
 
-	public int getSpeed() {
-		return speed;
-	}
+   public VersionDO getVersion()
+   {
+      return version;
+   }
 
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
+   public void setVersion(VersionDO version)
+   {
+      this.version   = version;
+      versionChanged = true;
+   }
 
-	public VersionDO getVersion() {
-		return version;
-	}
+   public int getQueuePosition()
+   {
+      return queuePosition;
+   }
 
-	public void setVersion(VersionDO version) {
-		this.version = version;
-		versionChanged = true;
-	}
+   public void setQueuePosition(int queuePosition)
+   {
+      this.queuePosition = queuePosition;
+   }
 
-	public int getQueuePosition() {
-		return queuePosition;
-	}
+   public int getPowerDownload()
+   {
+      return powerDownload;
+   }
 
-	public void setQueuePosition(int queuePosition) {
-		this.queuePosition = queuePosition;
-	}
+   public void setPowerDownload(int powerDownload)
+   {
+      this.powerDownload = powerDownload;
+   }
 
-	public int getPowerDownload() {
-		return powerDownload;
-	}
+   public String getFilename()
+   {
+      return filename;
+   }
 
-	public void setPowerDownload(int powerDownload) {
-		this.powerDownload = powerDownload;
-	}
+   public void setFilename(String filename)
+   {
+      this.filename = filename;
+   }
 
-	public String getFilename() {
-		return filename;
-	}
+   public String getNickname()
+   {
+      return nickname;
+   }
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
+   public void setNickname(String nickname)
+   {
+      this.nickname = nickname;
+   }
 
-	public String getNickname() {
-		return nickname;
-	}
+   public int getId()
+   {
+      return id;
+   }
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
+   public int getDownloadId()
+   {
+      return downloadId;
+   }
 
-	public int getId() {
-		return id;
-	}
-
-	public int getDownloadId() {
-		return downloadId;
-	}
-
-	public void setDownloadId(int downloadId) {
-		this.downloadId = downloadId;
-	}
+   public void setDownloadId(int downloadId)
+   {
+      this.downloadId = downloadId;
+   }
 }

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.fassade.controller.xml;
 
 import java.util.ArrayList;
@@ -39,12 +43,14 @@ class SearchDO extends Search
    private int                        offeneSuchen;
    private int                        gefundenDateien;
    private int                        durchsuchteClients;
-   private Map<String, SearchEntryDO> mapping      = new HashMap<String, SearchEntryDO>();
-   private List<SearchEntryDO>        entries      = new ArrayList<SearchEntryDO>();
-   private boolean                    changed      = true;
+   private Map<String, SearchEntryDO> mapping         = new HashMap<String, SearchEntryDO>();
+   private List<SearchEntry>          entries         = new ArrayList<SearchEntry>();
+   private boolean                    changed         = false;
    private long                       creationTime;
    private boolean                    running;
-   private Set<FileType>              filter       = new HashSet<FileType>();
+   private Set<FileType>              filter          = new HashSet<FileType>();
+   private boolean                    doFilter        = true;
+   private List<SearchEntry>          filteredEntries = null;
 
    public SearchDO(int id)
    {
@@ -119,6 +125,8 @@ class SearchDO extends Search
       {
          clearFilter();
       }
+
+      doFilter = true;
    }
 
    public void removeFilter(FileType newFilter)
@@ -132,11 +140,13 @@ class SearchDO extends Search
       }
 
       filter.remove(newFilter);
+      doFilter = true;
    }
 
    public void clearFilter()
    {
       filter.clear();
+      doFilter = true;
    }
 
    public void addSearchEntry(SearchEntryDO searchEntry)
@@ -148,6 +158,7 @@ class SearchDO extends Search
          mapping.put(key, searchEntry);
          entries.add(searchEntry);
          setChanged(true);
+         doFilter = true;
       }
       else
       {
@@ -160,14 +171,14 @@ class SearchDO extends Search
       }
    }
 
-   public SearchEntry[] getAllSearchEntries()
+   public List<SearchEntry> getAllSearchEntries()
    {
-      return (SearchEntry[]) entries.toArray(new SearchEntry[entries.size()]);
+      return entries;
    }
 
    public SearchEntry getSearchEntryById(int id)
    {
-      for(SearchEntryDO curSearchEntry : entries)
+      for(SearchEntry curSearchEntry : entries)
       {
          if(curSearchEntry.getId() == id)
          {
@@ -178,24 +189,28 @@ class SearchDO extends Search
       return null;
    }
 
-   public SearchEntry[] getSearchEntries()
+   public List<SearchEntry> getSearchEntries()
    {
       if(filter.size() == 0)
       {
-         return (SearchEntry[]) entries.toArray(new SearchEntry[entries.size()]);
+         return entries;
       }
 
-      ArrayList<SearchEntryDO> neededEntries = new ArrayList<SearchEntryDO>();
-
-      for(SearchEntryDO curSearchEntry : entries)
+      if(doFilter || null == filteredEntries)
       {
-         if(!filter.contains(curSearchEntry.getFileType()))
+         doFilter        = false;
+         filteredEntries = new ArrayList<SearchEntry>();
+
+         for(SearchEntry curSearchEntry : entries)
          {
-            neededEntries.add(curSearchEntry);
+            if(!filter.contains(curSearchEntry.getFileType()))
+            {
+               filteredEntries.add(curSearchEntry);
+            }
          }
       }
 
-      return (SearchEntry[]) neededEntries.toArray(new SearchEntry[neededEntries.size()]);
+      return filteredEntries;
    }
 
    public void setRunning(boolean running)

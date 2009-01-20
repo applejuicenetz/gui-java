@@ -1,8 +1,11 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.fassade.controller.xml;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import de.applejuicenet.client.fassade.entity.Download;
@@ -11,7 +14,7 @@ import de.applejuicenet.client.fassade.entity.Download;
  * $Header:
  * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/DownloadDO.java,v
  * 1.1 2004/12/03 07:57:12 maj0r Exp $
- * 
+ *
  * <p>
  * Titel: AppleJuice Client-GUI
  * </p>
@@ -22,252 +25,327 @@ import de.applejuicenet.client.fassade.entity.Download;
  * <p>
  * Copyright: General Public License
  * </p>
- * 
+ *
  * @author: Maj0r [aj@tkl-soft.de]
- * 
+ *
  */
+class DownloadDO implements Download
+{
+   private static DecimalFormat          formatter           = new DecimalFormat("###,##0.00");
+   private final int                     id;
+   private int                           shareId;
+   private String                        hash;
+   private long                          groesse;
+   private long                          ready;
+   private int                           status;
+   private String                        filename;
+   private String                        targetDirectory;
+   private int                           powerDownload;
+   private int                           temporaryFileNumber;
+   private long                          oldSpeed;
+   private String                        speedAsString;
+   private Map<String, DownloadSourceDO> sourcen = new HashMap<String, DownloadSourceDO>();
 
-class DownloadDO implements Download {
+   public DownloadDO(int id)
+   {
+      this.id = id;
+   }
 
-	private final int id;
+   public DownloadDO(int id, int shareId, String hash, long groesse, long ready, int status, String filename,
+                     String targetDirectory, int powerDownload, int temporaryFileNumber)
+   {
+      this.id                  = id;
+      this.shareId             = shareId;
+      this.hash                = hash;
+      this.groesse             = groesse;
+      this.ready               = ready;
+      this.status              = status;
+      this.filename            = filename;
+      this.targetDirectory     = targetDirectory;
+      this.powerDownload       = powerDownload;
+      this.temporaryFileNumber = temporaryFileNumber;
+   }
 
-	private int shareId;
-	private String hash;
-	private long groesse;
-	private long ready;
-	private int status;
-	private String filename;
-	private String targetDirectory;
-	private int powerDownload;
-	private int temporaryFileNumber;
-	private long oldSpeed;
-	private String speedAsString;
-	private Map<String, DownloadSourceDO> sourcen = new HashMap<String, DownloadSourceDO>();
-	private static DecimalFormat formatter = new DecimalFormat("###,##0.00");
-	
-	public DownloadDO(int id) {
-		this.id = id;
-	}
+   public String getProzentGeladenAsString()
+   {
+      try
+      {
+         double temp = getProzentGeladen();
 
-	public DownloadDO(int id, int shareId, String hash, long groesse,
-			long ready, int status, String filename, String targetDirectory,
-			int powerDownload, int temporaryFileNumber) {
-		this.id = id;
-		this.shareId = shareId;
-		this.hash = hash;
-		this.groesse = groesse;
-		this.ready = ready;
-		this.status = status;
-		this.filename = filename;
-		this.targetDirectory = targetDirectory;
-		this.powerDownload = powerDownload;
-		this.temporaryFileNumber = temporaryFileNumber;
-	}
+         return formatter.format(temp);
+      }
+      catch(Exception e)
+      {
+         return "";
+      }
+   }
 
-	public String getProzentGeladenAsString() {
-		try {
-			double temp = getProzentGeladen();
-			return formatter.format(temp);
-		} catch (Exception e) {
-			return "";
-		}
-	}
+   public double getProzentGeladen()
+   {
+      return (double) ready * 100 / groesse;
+   }
 
-	public double getProzentGeladen() {
-		return (double) ready * 100 / groesse;
-	}
+   public DownloadSourceDO getSourceById(int sourceId)
+   {
+      String key = Integer.toString(sourceId);
 
-	public DownloadSourceDO getSourceById(int sourceId) {
-		String key = Integer.toString(sourceId);
-		if (sourcen.containsKey(key)) {
-			return (DownloadSourceDO) sourcen.get(key);
-		} else {
-			return null;
-		}
-	}
+      if(sourcen.containsKey(key))
+      {
+         return (DownloadSourceDO) sourcen.get(key);
+      }
+      else
+      {
+         return null;
+      }
+   }
 
-	public void addSource(DownloadSourceDO downloadSourceDO) {
-		String key = Integer.toString(downloadSourceDO.getId());
-		if (!sourcen.containsKey(key)) {
-			sourcen.put(key, downloadSourceDO);
-		}
-	}
+   public void addSource(DownloadSourceDO downloadSourceDO)
+   {
+      String key = Integer.toString(downloadSourceDO.getId());
 
-	public DownloadSourceDO[] getSources() {
-		DownloadSourceDO[] sources = null;
-		synchronized (sourcen) {
-			sources = (DownloadSourceDO[]) sourcen.values().toArray(
-					new DownloadSourceDO[sourcen.size()]);
-		}
-		return sources;
-	}
+      if(!sourcen.containsKey(key))
+      {
+         sourcen.put(key, downloadSourceDO);
+      }
+   }
 
-	public void removeSource(String id) {
-		String key = id;
-		if (sourcen.containsKey(key)) {
-			sourcen.remove(key);
-		}
-	}
+   public DownloadSourceDO[] getSources()
+   {
+      DownloadSourceDO[] sources = null;
 
-	public int getShareId() {
-		return shareId;
-	}
+      synchronized(sourcen)
+      {
+         sources = (DownloadSourceDO[]) sourcen.values().toArray(new DownloadSourceDO[sourcen.size()]);
+      }
 
-	public void setShareId(int shareId) {
-		this.shareId = shareId;
-	}
+      return sources;
+   }
 
-	public String getHash() {
-		return hash;
-	}
+   public void removeSource(String id)
+   {
+      String key = id;
 
-	public void setHash(String hash) {
-		this.hash = hash;
-	}
+      if(sourcen.containsKey(key))
+      {
+         sourcen.remove(key);
+      }
+   }
 
-	public long getGroesse() {
-		return groesse;
-	}
+   public int getShareId()
+   {
+      return shareId;
+   }
 
-	public void setGroesse(long groesse) {
-		this.groesse = groesse;
-	}
+   public void setShareId(int shareId)
+   {
+      this.shareId = shareId;
+   }
 
-	public int getStatus() {
-		return status;
-	}
+   public String getHash()
+   {
+      return hash;
+   }
 
-	public void setStatus(int newStatus) {
-		if (status != newStatus) {
-			status = newStatus;
-		}
-	}
+   public void setHash(String hash)
+   {
+      this.hash = hash;
+   }
 
-	public String getFilename() {
-		return filename;
-	}
+   public long getGroesse()
+   {
+      return groesse;
+   }
 
-	public void setFilename(String newFilename) {
-		if (filename == null || !filename.equals(newFilename)) {
-			filename = newFilename;
-		}
-	}
+   public void setGroesse(long groesse)
+   {
+      this.groesse = groesse;
+   }
 
-	public String getTargetDirectory() {
-		return targetDirectory;
-	}
+   public int getStatus()
+   {
+      return status;
+   }
 
-	public void setTargetDirectory(String newTargetDirectory) {
-		if (targetDirectory == null
-				|| !targetDirectory.equals(newTargetDirectory)) {
-			targetDirectory = newTargetDirectory;
-		}
-	}
+   public void setStatus(int newStatus)
+   {
+      if(status != newStatus)
+      {
+         status = newStatus;
+      }
+   }
 
-	public int getPowerDownload() {
-		return powerDownload;
-	}
+   public String getFilename()
+   {
+      return filename;
+   }
 
-	public void setPowerDownload(int newPowerDownload) {
-		if (powerDownload != newPowerDownload) {
-			powerDownload = newPowerDownload;
-		}
-	}
+   public void setFilename(String newFilename)
+   {
+      if(filename == null || !filename.equals(newFilename))
+      {
+         filename = newFilename;
+      }
+   }
 
-	public int getId() {
-		return id;
-	}
+   public String getTargetDirectory()
+   {
+      return targetDirectory;
+   }
 
-	public int getTemporaryFileNumber() {
-		return temporaryFileNumber;
-	}
+   public void setTargetDirectory(String newTargetDirectory)
+   {
+      if(targetDirectory == null || !targetDirectory.equals(newTargetDirectory))
+      {
+         targetDirectory = newTargetDirectory;
+      }
+   }
 
-	public void setTemporaryFileNumber(int temporaryFileNumber) {
-		this.temporaryFileNumber = temporaryFileNumber;
-	}
+   public int getPowerDownload()
+   {
+      return powerDownload;
+   }
 
-	public long getReady() {
-		return ready;
-	}
+   public void setPowerDownload(int newPowerDownload)
+   {
+      if(powerDownload != newPowerDownload)
+      {
+         powerDownload = newPowerDownload;
+      }
+   }
 
-	public void setReady(long newReady) {
-		if (ready != newReady) {
-			ready = newReady;
-		}
-	}
+   public int getId()
+   {
+      return id;
+   }
 
-	public long getRestZeit() {
-		long speed = getSpeedInBytes();
-		if (speed == 0) {
-			return Long.MAX_VALUE;
-		}
-		return ((groesse - ready) / speed);
-	}
+   public int getTemporaryFileNumber()
+   {
+      return temporaryFileNumber;
+   }
 
-	public String getRestZeitAsString() {
-		try {
-			long speed = getSpeedInBytes();
-			if (speed == 0) {
-				return "";
-			}
-			if (speed == oldSpeed) {
-				return speedAsString;
-			}
-			oldSpeed = speed;
-			int restZeit = (int) ((groesse - ready) / speed);
-			int tage = restZeit / 86400;
-			restZeit -= tage * 86400;
-			int stunden = restZeit / 3600;
-			restZeit -= stunden * 3600;
-			int minuten = restZeit / 60;
-			restZeit -= minuten * 60;
+   public void setTemporaryFileNumber(int temporaryFileNumber)
+   {
+      this.temporaryFileNumber = temporaryFileNumber;
+   }
 
-			StringBuffer temp = new StringBuffer();
-			if (tage < 10) {
-				temp.append('0');
-			}
-			temp.append(Integer.toString(tage));
-			temp.append(':');
-			if (stunden < 10) {
-				temp.append('0');
-			}
-			temp.append(Integer.toString(stunden));
-			temp.append(':');
-			if (minuten < 10) {
-				temp.append('0');
-			}
-			temp.append(Integer.toString(minuten));
-			temp.append(':');
-			if (restZeit < 10) {
-				temp.append('0');
-			}
-			temp.append(Integer.toString(restZeit));
-			speedAsString = temp.toString();
-			return speedAsString;
-		} catch (Exception e) {
-			return "";
-		}
-	}
+   public long getReady()
+   {
+      return ready;
+   }
 
-	public long getSpeedInBytes() {
-		long speed = 0;
-		synchronized (sourcen) {
-			Iterator it = sourcen.values().iterator();
-			while (it.hasNext()) {
-				speed += ((DownloadSourceDO) it.next()).getSpeed();
-			}
-		}
-		return speed;
-	}
+   public void setReady(long newReady)
+   {
+      if(ready != newReady)
+      {
+         ready = newReady;
+      }
+   }
 
-	public long getBereitsGeladen() {
-		long geladen = ready;
-		synchronized (sourcen) {
-			Iterator it = sourcen.values().iterator();
-			while (it.hasNext()) {
-				geladen += ((DownloadSourceDO) it.next()).getBereitsGeladen();
-			}
-		}
-		return geladen;
-	}
+   public long getRestZeit()
+   {
+      long speed = getSpeedInBytes();
+
+      if(speed == 0)
+      {
+         return Long.MAX_VALUE;
+      }
+
+      return ((groesse - ready) / speed);
+   }
+
+   public String getRestZeitAsString()
+   {
+      try
+      {
+         long speed = getSpeedInBytes();
+
+         if(speed == 0)
+         {
+            return "";
+         }
+
+         if(speed == oldSpeed)
+         {
+            return speedAsString;
+         }
+
+         oldSpeed = speed;
+         int restZeit = (int) ((groesse - ready) / speed);
+         int tage = restZeit / 86400;
+
+         restZeit -= tage * 86400;
+         int stunden = restZeit / 3600;
+
+         restZeit -= stunden * 3600;
+         int minuten = restZeit / 60;
+
+         restZeit -= minuten * 60;
+
+         StringBuilder temp = new StringBuilder();
+
+         if(tage < 10)
+         {
+            temp.append('0');
+         }
+
+         temp.append(tage);
+         temp.append(':');
+         if(stunden < 10)
+         {
+            temp.append('0');
+         }
+
+         temp.append(stunden);
+         temp.append(':');
+         if(minuten < 10)
+         {
+            temp.append('0');
+         }
+
+         temp.append(minuten);
+         temp.append(':');
+         if(restZeit < 10)
+         {
+            temp.append('0');
+         }
+
+         temp.append(restZeit);
+         speedAsString = temp.toString();
+         return speedAsString;
+      }
+      catch(Exception e)
+      {
+         return "";
+      }
+   }
+
+   public long getSpeedInBytes()
+   {
+      long speed = 0;
+
+      synchronized(sourcen)
+      {
+         for(DownloadSourceDO curDownloadSourceDO : sourcen.values())
+         {
+            speed += curDownloadSourceDO.getSpeed();
+         }
+      }
+
+      return speed;
+   }
+
+   public long getBereitsGeladen()
+   {
+      long geladen = ready;
+
+      synchronized(sourcen)
+      {
+         for(DownloadSourceDO curDownloadSourceDO : sourcen.values())
+         {
+            geladen += curDownloadSourceDO.getBereitsGeladen();
+         }
+      }
+
+      return geladen;
+   }
 }

@@ -75,25 +75,23 @@ public class ModifiedXMLHolder extends DefaultHandler
    private int                                count              = 0;
    private String                             filter             = "";
    private String                             sessionKontext     = null;
-
-   //   private SecurerXMLHolder                        securerHolder;
-   private int                             connectedWithServerId          = -1;
-   private int                             tryConnectToServer             = -1;
-   private boolean                         reloadInProgress               = false;
-   private String                          zipMode                        = "";
-   private String                          xmlCommand;
-   private long                            timestamp                      = 0;
-   private int                             checkCount                     = 0;
-   private CharArrayWriter                 contents                       = new CharArrayWriter();
-   private Map<String, String>             attributes                     = new HashMap<String, String>();
-   private Vector<DataPropertyChangeEvent> downloadEvents                 = new Vector<DataPropertyChangeEvent>();
-   private boolean                         downloadSourceEvent;
-   private DataPropertyChangeInformer      downloadPropertyChangeInformer;
-   private ApplejuiceFassade               ajFassade;
-   private Map<String, Share>              shareMap                       = null;
-   private SearchEntryDO                   tmpSearchEntry                 = null;
-   private Set<SearchEntryDO>              searchEntriesToDo              = new HashSet<SearchEntryDO>();
-   private Set<DownloadSourceDO>           downloadSourcesToDo            = new HashSet<DownloadSourceDO>();
+   private int                                connectedWithServerId          = -1;
+   private int                                tryConnectToServer             = -1;
+   private boolean                            reloadInProgress               = false;
+   private String                             zipMode                        = "";
+   private String                             xmlCommand;
+   private long                               timestamp                      = 0;
+   private int                                checkCount                     = 0;
+   private CharArrayWriter                    contents                       = new CharArrayWriter();
+   private Map<String, String>                attributes                     = new HashMap<String, String>();
+   private Vector<DataPropertyChangeEvent>    downloadEvents                 = new Vector<DataPropertyChangeEvent>();
+   private boolean                            downloadSourceEvent;
+   private DataPropertyChangeInformer         downloadPropertyChangeInformer;
+   private ApplejuiceFassade                  ajFassade;
+   private Map<String, Share>                 shareMap                       = null;
+   private SearchEntryDO                      tmpSearchEntry                 = null;
+   private Set<SearchEntryDO>                 searchEntriesToDo              = new HashSet<SearchEntryDO>();
+   private Set<DownloadSourceDO>              downloadSourcesToDo            = new HashSet<DownloadSourceDO>();
 
    @SuppressWarnings("unchecked")
    public ModifiedXMLHolder(CoreConnectionSettingsHolder coreHolder, ApplejuiceFassade ajFassade)
@@ -102,7 +100,6 @@ public class ModifiedXMLHolder extends DefaultHandler
       this.ajFassade  = ajFassade;
       try
       {
-         //         securerHolder = new SecurerXMLHolder(coreHolder);
          init();
          xmlCommand = "/xml/modified.xml";
          Class parser = SAXParser.class;
@@ -657,6 +654,7 @@ public class ModifiedXMLHolder extends DefaultHandler
       if(searchMap.containsKey(key))
       {
          aSearch = searchMap.get(key);
+         aSearch.setChanged(false);
       }
       else
       {
@@ -1016,24 +1014,19 @@ public class ModifiedXMLHolder extends DefaultHandler
          }
 
          downloadSourceEvent = false;
+         for(Search curSearch : searchMap.values())
+         {
+            curSearch.setChanged(false);
+         }
+
          xr.parse(new InputSource(new StringReader(xmlString)));
          parseRest();
 
-         //         if(!securer.isInterrupted())
-         //         {
-         //            securer.interrupt();
-         //         }
-         //
-         //         if(!securer.isOK())
-         //         {
-         //            checkForValidSession();
-         //         }
          if(checkCount < 2)
          {
             checkCount++;
          }
 
-         //         securer = null;
          if(downloadSourceEvent)
          {
             downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadMap, DownloadDataPropertyChangeEvent.A_SOURCE_CHANGED,

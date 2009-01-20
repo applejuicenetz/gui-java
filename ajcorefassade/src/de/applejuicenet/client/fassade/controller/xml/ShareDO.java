@@ -1,3 +1,7 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.fassade.controller.xml;
 
 import de.applejuicenet.client.fassade.entity.Share;
@@ -6,7 +10,7 @@ import de.applejuicenet.client.fassade.entity.Share;
  * $Header:
  * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/ShareDO.java,v
  * 1.1 2004/12/03 07:57:12 maj0r Exp $
- * 
+ *
  * <p>
  * Titel: AppleJuice Client-GUI
  * </p>
@@ -17,106 +21,123 @@ import de.applejuicenet.client.fassade.entity.Share;
  * <p>
  * Copyright: General Public License
  * </p>
- * 
+ *
  * @author: Maj0r <aj@tkl-soft.de>
- * 
+ *
  */
+class ShareDO implements Share
+{
+   private final int id;
+   private String    filename;
+   private String    shortfilename;
+   private long      size;
+   private String    checksum;
+   private int       prioritaet;
+   private long      lastAsked;
+   private long      askCount;
+   private long      searchCount;
 
-class ShareDO implements Share{
-	private final int id;
+   public ShareDO(int id)
+   {
+      this.id = id;
+   }
 
-	private String filename;
-	private String shortfilename;
-	private long size;
-	private String checksum;
-	private int prioritaet;
-    private long lastAsked;
-    private long askCount;
-    private long searchCount;
+   public ShareDO(int id, String filename, String shortfilename, long size, String checksum, int prioritaet, long lastAsked,
+                  long askCount, long searchCount)
+   {
+      this.id            = id;
+      this.filename      = filename;
+      this.shortfilename = shortfilename;
+      this.size          = size;
+      this.checksum      = checksum;
+      this.prioritaet    = prioritaet;
+      this.lastAsked     = lastAsked;
+      this.askCount      = askCount;
+      this.searchCount   = searchCount;
+   }
 
-	public ShareDO(int id) {
-		this.id = id;
-	}
+   public void setFilename(String filename)
+   {
+      this.filename = filename;
+   }
 
-	public ShareDO(int id, String filename, String shortfilename, long size,
-			String checksum, int prioritaet, long lastAsked, long askCount, 
-			   long searchCount) {
-		this.id = id;
-		this.filename = filename;
-		this.shortfilename = shortfilename;
-		this.size = size;
-		this.checksum = checksum;
-		this.prioritaet = prioritaet;
-        this.lastAsked = lastAsked;
-        this.askCount = askCount;
-        this.searchCount = searchCount;
-	}
+   public void setSize(long size)
+   {
+      this.size = size;
+   }
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
+   public void setChecksum(String checksum)
+   {
+      this.checksum = checksum;
+   }
 
-	public void setSize(long size) {
-		this.size = size;
-	}
+   public int getId()
+   {
+      return id;
+   }
 
-	public void setChecksum(String checksum) {
-		this.checksum = checksum;
-	}
+   public String getFilename()
+   {
+      return filename;
+   }
 
-	public int getId() {
-		return id;
-	}
+   public long getSize()
+   {
+      return size;
+   }
 
-	public String getFilename() {
-		return filename;
-	}
+   public String getCheckSum()
+   {
+      return checksum;
+   }
 
-	public long getSize() {
-		return size;
-	}
+   public String getShortfilename()
+   {
+      return shortfilename;
+   }
 
-	public String getCheckSum() {
-		return checksum;
-	}
+   public void setShortfilename(String shortfilename)
+   {
+      this.shortfilename = shortfilename;
+   }
 
-	public String getShortfilename() {
-		return shortfilename;
-	}
+   public int getPrioritaet()
+   {
+      return prioritaet;
+   }
 
-	public void setShortfilename(String shortfilename) {
-		this.shortfilename = shortfilename;
-	}
+   public void setPrioritaet(int prioritaet)
+   {
+      this.prioritaet = prioritaet;
+   }
 
-	public int getPrioritaet() {
-		return prioritaet;
-	}
+   public long getAskCount()
+   {
+      return askCount;
+   }
 
-	public void setPrioritaet(int prioritaet) {
-		this.prioritaet = prioritaet;
-	}
+   public void setAskCount(long askCount)
+   {
+      this.askCount = askCount;
+   }
 
-	public long getAskCount() {
-		return askCount;
-	}
-	
-	public void setAskCount(long askCount) {
-		this.askCount = askCount;
-	}
-	
-	public long getLastAsked() {
-		return lastAsked;
-	}
-	
-	public void setLastAsked(long lastAsked) {
-		this.lastAsked = lastAsked;
-	}
-	
-	public long getSearchCount() {
-		return searchCount;
-	}
+   public long getLastAsked()
+   {
+      return lastAsked;
+   }
 
-	public void setSearchCount(long searchCount) {
-		this.searchCount = searchCount;
-	}
+   public void setLastAsked(long lastAsked)
+   {
+      this.lastAsked = lastAsked;
+   }
+
+   public long getSearchCount()
+   {
+      return searchCount;
+   }
+
+   public void setSearchCount(long searchCount)
+   {
+      this.searchCount = searchCount;
+   }
 }
