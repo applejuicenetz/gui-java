@@ -1089,7 +1089,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             downloadIndex[i] = propertyHandler.getAsInt("options_columns_download_column" + i + "_index").intValue();
          }
 
-         uploadIndex = new int[8];
+         uploadIndex = new int[7];
          for(int i = 1; i < uploadIndex.length; i++)
          {
             uploadIndex[i] = propertyHandler.getAsInt("options_columns_upload_column" + i + "_index").intValue();

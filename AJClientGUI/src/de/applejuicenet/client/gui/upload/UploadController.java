@@ -345,11 +345,6 @@ public class UploadController extends GuiController
 
    protected void contentChanged(DATALISTENER_TYPE type, final Object content)
    {
-      if(!componentSelected)
-      {
-         return;
-      }
-
       if(type == DATALISTENER_TYPE.UPLOAD_CHANGED)
       {
          SwingUtilities.invokeLater(new Runnable()
