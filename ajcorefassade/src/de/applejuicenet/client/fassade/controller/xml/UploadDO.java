@@ -1,7 +1,6 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.fassade.controller.xml;
 
 import de.applejuicenet.client.fassade.entity.Upload;
@@ -47,7 +46,7 @@ class UploadDO extends Upload
 
    public UploadDO(int uploadID)
    {
-      this.uploadID = uploadID;
+      this.uploadID                             = uploadID;
    }
 
    public UploadDO(int uploadID, int shareFileID, VersionDO version, String status, String nick, long uploadFrom, long uploadTo,
@@ -191,7 +190,7 @@ class UploadDO extends Upload
 
    public double getLoaded()
    {
-      return loaded;
+      return loaded < 0 ? 0 : loaded;
    }
 
    public void setDateiName(String dateiName)
