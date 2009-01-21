@@ -56,7 +56,7 @@ public class SearchEntryIconRenderer extends DefaultTableCellRenderer
       tooltipp.append("</table>");
       if(wirdBereitsGeladen)
       {
-         tooltipp.append("<div align=\"center\" color=\"green\">wird herunter geladen...</div>");
+         tooltipp.append("<div align=\"center\" color=\"green\">wird herunter geladen bzw. bereits im Share...</div>");
       }
       else
       {
