@@ -100,6 +100,12 @@ public abstract class Version
       return 1;
    }
 
+   @Override
+   public String toString()
+   {
+      return getVersion();
+   }
+
    public final int checkForValidCoreVersion()
    {
       return compareTo(ApplejuiceFassade.MIN_NEEDED_CORE_VERSION);
