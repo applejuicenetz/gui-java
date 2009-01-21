@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/TableSorter.java,v 1.2 2009/01/12 07:45:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/TableSorter.java,v 1.3 2009/01/21 15:14:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,14 +20,37 @@ import java.util.List;
 public class TableSorter<T>
 {
    private SortableTableModel<T> model;
+   private int                   lastColumn = -1;
+   private boolean               lastAscent = true;
 
    public TableSorter(SortableTableModel<T> model)
    {
       this.model = model;
    }
 
+   public void forceResort()
+   {
+      if(lastColumn == -1)
+      {
+         return;
+      }
+
+      int     curColumn = lastColumn;
+      boolean curAscent = lastAscent;
+
+      lastColumn = -1;
+      sort(curColumn, curAscent);
+   }
+
    public void sort(int column, boolean isAscent)
    {
+      if(lastColumn != -1 && lastColumn == column && lastAscent == isAscent)
+      {
+         return;
+      }
+
+      lastColumn = column;
+      lastAscent = isAscent;
       List<T> content = model.getContent();
       int     n = content.size();
 
@@ -97,7 +120,7 @@ public class TableSorter<T>
          }
          else
          {
-            return ((String) o1).compareToIgnoreCase((String) o2);
+            return o1.toString().compareToIgnoreCase(o2.toString());
          }
       }
    }

@@ -9,10 +9,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.table.JTableHeader;
 
-import de.applejuicenet.client.gui.server.table.ServerTableModel;
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/HeaderListener.java,v 1.3 2009/01/19 15:45:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/HeaderListener.java,v 1.4 2009/01/21 15:14:30 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -32,6 +30,7 @@ public class HeaderListener extends MouseAdapter
       this.renderer = renderer;
    }
 
+   @SuppressWarnings("unchecked")
    public void mouseClicked(MouseEvent e)
    {
       int col     = header.columnAtPoint(e.getPoint());
@@ -57,7 +56,7 @@ public class HeaderListener extends MouseAdapter
          isAscent = false;
       }
 
-      ((ServerTableModel) header.getTable().getModel()).sortByColumn(sortCol, isAscent);
+      ((SortableTableModel) header.getTable().getModel()).sortByColumn(sortCol, isAscent);
       renderer.setPressedColumn(-1);
       header.repaint();
    }

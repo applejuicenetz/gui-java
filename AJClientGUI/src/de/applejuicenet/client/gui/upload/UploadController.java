@@ -316,11 +316,11 @@ public class UploadController extends GuiController
             TableColumnModel headerModelActive  = uploadPanel.getUploadActiveTable().getTableHeader().getColumnModel();
             TableColumnModel headerModelWaiting = uploadPanel.getUploadWaitingTable().getTableHeader().getColumnModel();
 
-            TableColumn[]   columnsActive      = uploadPanel.getTableActiveColumns();
-            int             columnCountActive  = headerModelActive.getColumnCount();
-            TableColumn[]   columnsWaiting     = uploadPanel.getTableWaitingColumns();
-            int             columnCountWaiting = headerModelWaiting.getColumnCount();
-            PositionManager pm                 = PositionManagerImpl.getInstance();
+            TableColumn[]    columnsActive      = uploadPanel.getTableActiveColumns();
+            int              columnCountActive  = headerModelActive.getColumnCount();
+            TableColumn[]    columnsWaiting     = uploadPanel.getTableWaitingColumns();
+            int              columnCountWaiting = headerModelWaiting.getColumnCount();
+            PositionManager  pm                 = PositionManagerImpl.getInstance();
 
             if(pm.isLegal())
             {
@@ -496,7 +496,9 @@ public class UploadController extends GuiController
                      uploadPanel.getUploadListeLabel().setText(tmp);
                      if(componentSelected && change)
                      {
+                        uploadPanel.getUploadActiveTableModel().forceResort();
                         uploadPanel.getUploadActiveTable().updateUI();
+                        uploadPanel.getUploadWaitingTableModel().forceResort();
                         uploadPanel.getUploadWaitingTable().updateUI();
                      }
                   }

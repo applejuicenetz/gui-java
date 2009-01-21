@@ -5,6 +5,7 @@
 package de.applejuicenet.client.gui.upload.table;
 
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,15 +15,17 @@ import javax.swing.table.AbstractTableModel;
 
 import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.fassade.entity.Version;
+import de.applejuicenet.client.gui.components.table.SortableTableModel;
+import de.applejuicenet.client.gui.components.table.TableSorter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
-public class UploadWaitingTableModel extends AbstractTableModel implements LanguageListener
+public class UploadWaitingTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<Upload>
 {
    final static String[]                                  COL_NAMES = 
                                                                       {
-                                                                         "Dateiname", "Status", "Wer", "Wasserstand", "Prioritaet",
-                                                                         "letzte Verbindung", "Client"
+                                                                         "Dateiname", "Status", "Nickname", "Wasserstand",
+                                                                         "Prioritaet", "letzte Verbindung", "Client"
                                                                       };
    @SuppressWarnings("unchecked")
    static protected Class[]                               cTypes = 
@@ -30,13 +33,22 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
                                                                       String.class, Integer.class, String.class, Integer.class,
                                                                       String.class, Date.class, Version.class
                                                                    };
-   private List<Upload>     uploads      = new ArrayList<Upload>();
-   private SimpleDateFormat formatter    = new SimpleDateFormat("HH:mm:ss");
-   private String           uebertragung;
+   private List<Upload>        uploads      = new ArrayList<Upload>();
+   private SimpleDateFormat    formatter    = new SimpleDateFormat("HH:mm:ss");
+   private String              uebertragung;
+   private TableSorter<Upload> sorter       = null;
 
    public UploadWaitingTableModel()
    {
       LanguageSelector.getInstance().addLanguageListener(this);
+   }
+
+   public void forceResort()
+   {
+      if(null != sorter)
+      {
+         sorter.forceResort();
+      }
    }
 
    public boolean setUploads(Map<String, Upload> uploadMap)
@@ -141,5 +153,26 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
    public Upload getRow(int selected)
    {
       return uploads.get(selected);
+   }
+
+   public List<Upload> getContent()
+   {
+      return uploads;
+   }
+
+   public Object getValueForSortAt(int row, int column)
+   {
+      return getValueAt(row, column);
+   }
+
+   public void sortByColumn(int column, boolean isAscent)
+   {
+      if(sorter == null)
+      {
+         sorter = new TableSorter<Upload>(this);
+      }
+
+      sorter.sort(column, isAscent);
+      fireTableDataChanged();
    }
 }

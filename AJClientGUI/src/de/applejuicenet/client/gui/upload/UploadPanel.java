@@ -15,7 +15,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
@@ -27,7 +27,8 @@ import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
-import de.applejuicenet.client.gui.components.table.NormalHeaderRenderer;
+import de.applejuicenet.client.gui.components.table.HeaderListener;
+import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.upload.table.UploadActiveTableModel;
 import de.applejuicenet.client.gui.upload.table.UploadTableDateCellRenderer;
@@ -166,9 +167,19 @@ public class UploadPanel extends TklPanel implements RegisterI
       columnPopupItemsActiveUploads[0].setEnabled(false);
       columnPopupItemsActiveUploads[0].setSelected(true);
 
-      TableCellRenderer renderer = new NormalHeaderRenderer();
+      SortButtonRenderer renderer = new SortButtonRenderer();
+      TableColumnModel   model = uploadActiveTable.getColumnModel();
+      int                n     = model.getColumnCount();
 
-      uploadActiveTable.getTableHeader().setDefaultRenderer(renderer);
+      for(int i = 0; i < n; i++)
+      {
+         model.getColumn(i).setHeaderRenderer(renderer);
+         model.getColumn(i).setPreferredWidth(model.getColumn(i).getWidth());
+      }
+
+      JTableHeader header = uploadActiveTable.getTableHeader();
+
+      header.addMouseListener(new HeaderListener(header, renderer));
 
       uploadWaitingTableModel = new UploadWaitingTableModel();
       uploadWaitingTable      = new JTable(uploadWaitingTableModel);
@@ -180,7 +191,18 @@ public class UploadPanel extends TklPanel implements RegisterI
       uploadWaitingTable.setDefaultRenderer(Version.class, new UploadTableVersionCellRenderer());
       uploadWaitingTable.setDefaultRenderer(Date.class, new UploadTableDateCellRenderer());
 
-      uploadWaitingTable.getTableHeader().setDefaultRenderer(renderer);
+      model    = uploadWaitingTable.getColumnModel();
+      n        = model.getColumnCount();
+      renderer = new SortButtonRenderer();
+      for(int i = 0; i < n; i++)
+      {
+         model.getColumn(i).setHeaderRenderer(renderer);
+         model.getColumn(i).setPreferredWidth(model.getColumn(i).getWidth());
+      }
+
+      header = uploadWaitingTable.getTableHeader();
+
+      header.addMouseListener(new HeaderListener(header, renderer));
 
       TableColumnModel modelWaiting = uploadWaitingTable.getColumnModel();
 
