@@ -8,7 +8,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManagerImpl.java,v 1.2 2009/01/20 21:47:07 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManagerImpl.java,v 1.3 2009/01/21 14:45:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -24,7 +24,7 @@ public class PositionManagerImpl implements PositionManager
 
    private PositionManagerImpl()
    {
-      propertiesManager                             = PropertiesManager.getInstance();
+      propertiesManager = PropertiesManager.getInstance();
    }
 
    public static synchronized PositionManager getInstance()
@@ -145,5 +145,36 @@ public class PositionManagerImpl implements PositionManager
    public int[] getUploadColumnIndizes()
    {
       return propertiesManager.getUploadColumnIndizes();
+   }
+
+   public int[] getUploadWaitingWidths()
+   {
+      return propertiesManager.getUploadWaitingWidths();
+   }
+
+   public void setUploadWaitingWidths(int[] uploadWaitingWidths)
+   {
+      propertiesManager.setUploadWaitingWidths(uploadWaitingWidths);
+
+   }
+
+   public int[] getUploadWaitingColumnIndizes()
+   {
+      return propertiesManager.getUploadWaitingColumnIndizes();
+   }
+
+   public boolean[] getUploadWaitingColumnVisibilities()
+   {
+      return propertiesManager.getUploadWaitingColumnVisibilities();
+   }
+
+   public void setUploadWaitingColumnIndex(int column, int index)
+   {
+      propertiesManager.setUploadWaitingColumnIndex(column, index);
+   }
+
+   public void setUploadWaitingColumnVisible(int column, boolean visible)
+   {
+      propertiesManager.setUploadWaitingColumnVisible(column, visible);
    }
 }

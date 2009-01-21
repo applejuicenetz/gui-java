@@ -1,10 +1,14 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
 package de.applejuicenet.client.gui.controller;
 
 import java.awt.Dimension;
 import java.awt.Point;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManager.java,v 1.9 2004/10/15 13:34:47 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManager.java,v 1.10 2009/01/21 14:45:12 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -13,50 +17,61 @@ import java.awt.Point;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
+public interface PositionManager
+{
+   public void save();
 
-public interface PositionManager {
+   public void setMainXY(Point p);
 
-    public void save();
+   public Point getMainXY();
 
-    public void setMainXY(Point p);
+   public void setMainDimension(Dimension dimension);
 
-    public Point getMainXY();
+   public Dimension getMainDimension();
 
-    public void setMainDimension(Dimension dimension);
+   public void setDownloadWidths(int[] widths);
 
-    public Dimension getMainDimension();
+   public boolean isLegal();
 
-    public void setDownloadWidths(int[] widths);
+   public int[] getDownloadWidths();
 
-    public boolean isLegal();
+   public int[] getUploadWidths();
 
-    public int[] getDownloadWidths();
+   public void setUploadWidths(int[] uploadWidths);
 
-    public int[] getUploadWidths();
+   public int[] getUploadWaitingWidths();
 
-    public void setUploadWidths(int[] uploadWidths);
+   public void setUploadWaitingWidths(int[] uploadWidths);
 
-    public int[] getServerWidths();
+   public int[] getServerWidths();
 
-    public void setServerWidths(int[] serverWidths);
+   public void setServerWidths(int[] serverWidths);
 
-    public int[] getShareWidths();
+   public int[] getShareWidths();
 
-    public void setShareWidths(int[] shareWidths);
+   public void setShareWidths(int[] shareWidths);
 
-    public void setDownloadColumnVisible(int column, boolean visible);
+   public void setDownloadColumnVisible(int column, boolean visible);
 
-    public boolean[] getDownloadColumnVisibilities();
+   public boolean[] getDownloadColumnVisibilities();
 
-    public void setUploadColumnVisible(int column, boolean visible);
+   public void setUploadColumnVisible(int column, boolean visible);
 
-    public boolean[] getUploadColumnVisibilities();
+   public boolean[] getUploadColumnVisibilities();
 
-    public void setDownloadColumnIndex(int column, int index);
+   public void setUploadWaitingColumnVisible(int column, boolean visible);
 
-    public int[] getDownloadColumnIndizes();
+   public boolean[] getUploadWaitingColumnVisibilities();
 
-    public void setUploadColumnIndex(int column, int index);
+   public void setDownloadColumnIndex(int column, int index);
 
-    public int[] getUploadColumnIndizes();
+   public int[] getDownloadColumnIndizes();
+
+   public void setUploadColumnIndex(int column, int index);
+
+   public int[] getUploadColumnIndizes();
+
+   public void setUploadWaitingColumnIndex(int column, int index);
+
+   public int[] getUploadWaitingColumnIndizes();
 }

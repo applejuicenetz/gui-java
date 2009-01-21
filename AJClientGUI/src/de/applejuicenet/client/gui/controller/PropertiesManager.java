@@ -57,30 +57,33 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  */
 public class PropertiesManager implements OptionsManager, PositionManager, ProxyManager
 {
-   private static PropertiesManager instance = null;
+   private static PropertiesManager instance         = null;
    private static final String      PROPERTIES_ERROR = "Fehler beim Zugriff auf die ajgui.properties. " +
                                                        "Die Datei wird neu erstellt.";
-   private static final String PROPERTIES_ERROR_MESSAGE = "ajgui.properties neu erstellt";
-   private static Logger       logger;
-   private static String           path;
-   private Set<DataUpdateListener> settingsListener = new HashSet<DataUpdateListener>();
-   private Set<DataUpdateListener> connectionSettingsListener = new HashSet<DataUpdateListener>();
-   private Point                   mainXY;
-   private Dimension               mainDimension;
-   private ProxySettings           proxySettings;
-   private ConnectionSettings      connectionSettings = null;
-   private int[]                   downloadWidths;
-   private int[]                   uploadWidths;
-   private int[]                   serverWidths;
-   private int[]                   shareWidths;
-   private boolean[]               downloadVisibilities;
-   private boolean[]               uploadVisibilities;
-   private int[]                   downloadIndex;
-   private int[]                   uploadIndex;
-   private Settings                settings = null;
-   private boolean         firstReadError = true;
-   private boolean         legal = false;
-   private PropertyHandler propertyHandler;
+   private static final String      PROPERTIES_ERROR_MESSAGE   = "ajgui.properties neu erstellt";
+   private static Logger            logger;
+   private static String            path;
+   private Set<DataUpdateListener>  settingsListener           = new HashSet<DataUpdateListener>();
+   private Set<DataUpdateListener>  connectionSettingsListener = new HashSet<DataUpdateListener>();
+   private Point                    mainXY;
+   private Dimension                mainDimension;
+   private ProxySettings            proxySettings;
+   private ConnectionSettings       connectionSettings         = null;
+   private int[]                    downloadWidths;
+   private int[]                    uploadWidths;
+   private int[]                    serverWidths;
+   private int[]                    shareWidths;
+   private boolean[]                downloadVisibilities;
+   private boolean[]                uploadVisibilities;
+   private boolean[]                uploadWaitingVisibilities;
+   private int[]                    downloadIndex;
+   private int[]                    uploadIndex;
+   private int[]                    uploadWaitingIndex;
+   private Settings                 settings                   = null;
+   private boolean                  firstReadError             = true;
+   private boolean                  legal                      = false;
+   private PropertyHandler          propertyHandler;
+   private int[]                    uploadWaitingWidths;
 
    private PropertiesManager(String propertiesPath)
    {
@@ -734,8 +737,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
          boolean enableToolTip;
          String  temp;
 
-         farbenAktiv = (propertyHandler.get("options_farben_aktiv")).equals("true");
-         temp = propertyHandler.get("options_farben_hintergrund_downloadFertig");
+         farbenAktiv        = (propertyHandler.get("options_farben_aktiv")).equals("true");
+         temp               = propertyHandler.get("options_farben_hintergrund_downloadFertig");
          if(temp.length() != 0)
          {
             downloadFertigHintergrundColor = new Color(Integer.parseInt(temp));
@@ -748,8 +751,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
          }
 
          downloadUebersicht = propertyHandler.getAsBoolean("options_download_uebersicht").booleanValue();
-         loadPlugins = propertyHandler.getAsBoolean("options_loadplugins").booleanValue();
-         enableToolTip = propertyHandler.getAsBoolean("options_enableToolTip").booleanValue();
+         loadPlugins        = propertyHandler.getAsBoolean("options_loadplugins").booleanValue();
+         enableToolTip      = propertyHandler.getAsBoolean("options_enableToolTip").booleanValue();
          settings.setFarbenAktiv(farbenAktiv);
          settings.setDownloadFertigHintergrundColor(downloadFertigHintergrundColor);
          settings.setQuelleHintergrundColor(quelleHintergrundColor);
@@ -954,6 +957,15 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             aPropertyHandler.put("options_columns_upload_column" + i + "_index", i);
          }
 
+         aPropertyHandler.put("options_columns_uploadwaiting_column0_width", 90);
+         aPropertyHandler.put("options_columns_uploadwaiting_column0_index", 0);
+         for(int i = 1; i < 8; i++)
+         {
+            aPropertyHandler.put("options_columns_uploadwaiting_column" + i + "_width", 90);
+            aPropertyHandler.put("options_columns_uploadwaiting_column" + i + "_visibility", true);
+            aPropertyHandler.put("options_columns_uploadwaiting_column" + i + "_index", i);
+         }
+
          aPropertyHandler.put("options_columns_server_column0_width", 175);
          aPropertyHandler.put("options_columns_server_column0_index", 0);
          for(int i = 1; i < 5; i++)
@@ -1016,7 +1028,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             int mainY = propertyHandler.getAsInt("options_location_y").intValue();
 
             mainXY = new Point(mainX, mainY);
-            int mainWidth = propertyHandler.getAsInt("options_location_width").intValue();
+            int mainWidth  = propertyHandler.getAsInt("options_location_width").intValue();
             int mainHeight = propertyHandler.getAsInt("options_location_height").intValue();
 
             mainDimension = new Dimension(mainWidth, mainHeight);
@@ -1029,8 +1041,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             throw new Exception("Properties.xml hat altes Format. Wird neu erstellt.");
          }
 
-         downloadWidths          = new int[10];
-         downloadWidths[0]       = Integer.parseInt(xmlTest);
+         downloadWidths               = new int[10];
+         downloadWidths[0]            = Integer.parseInt(xmlTest);
          for(int i = 1; i < downloadWidths.length; i++)
          {
             downloadWidths[i] = propertyHandler.getAsInt("options_columns_download_column" + i + "_width").intValue();
@@ -1040,6 +1052,26 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
          for(int i = 0; i < uploadWidths.length; i++)
          {
             uploadWidths[i] = propertyHandler.getAsInt("options_columns_upload_column" + i + "_width").intValue();
+         }
+
+         xmlTest = propertyHandler.get("options_columns_uploadwaiting_column" + 0 + "_width");
+         if(xmlTest.length() == 0)
+         {
+            throw new Exception("Properties.xml hat altes Format. Wird neu erstellt.");
+         }
+
+         uploadWaitingWidths = new int[8];
+         for(int i = 0; i < uploadWaitingWidths.length; i++)
+         {
+            uploadWaitingWidths[i] = propertyHandler.getAsInt("options_columns_uploadwaiting_column" + i + "_width").intValue();
+         }
+
+         uploadWaitingVisibilities    = new boolean[8];
+         uploadWaitingVisibilities[0] = true;
+         for(int i = 1; i < uploadWaitingVisibilities.length; i++)
+         {
+            uploadWaitingVisibilities[i] = propertyHandler.getAsBoolean("options_columns_uploadwaiting_column" + i + "_visibility")
+                                           .booleanValue();
          }
 
          serverWidths = new int[5];
@@ -1076,8 +1108,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             uploadVisibilities[i] = propertyHandler.getAsBoolean("options_columns_upload_column" + i + "_visibility").booleanValue();
          }
 
-         downloadIndex = new int[10];
-         xmlTest       = propertyHandler.get("options_columns_download_column0_index");
+         downloadIndex      = new int[10];
+         xmlTest            = propertyHandler.get("options_columns_download_column0_index");
          if(xmlTest.length() == 0)
          {
             throw new Exception("Properties.xml hat altes Format. Wird neu erstellt.");
@@ -1095,7 +1127,13 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             uploadIndex[i] = propertyHandler.getAsInt("options_columns_upload_column" + i + "_index").intValue();
          }
 
-         boolean use = propertyHandler.getAsBoolean("options_proxy_use").booleanValue();
+         uploadWaitingIndex = new int[7];
+         for(int i = 1; i < uploadWaitingIndex.length; i++)
+         {
+            uploadWaitingIndex[i] = propertyHandler.getAsInt("options_columns_uploadwaiting_column" + i + "_index").intValue();
+         }
+
+         boolean use  = propertyHandler.getAsBoolean("options_proxy_use").booleanValue();
          int     port;
          Integer tmp = propertyHandler.getAsInt("options_proxy_port");
 
@@ -1154,6 +1192,11 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             propertyHandler.put("options_columns_upload_column" + i + "_width", uploadWidths[i]);
          }
 
+         for(int i = 0; i < uploadWaitingWidths.length; i++)
+         {
+            propertyHandler.put("options_columns_uploadwaiting_column" + i + "_width", uploadWaitingWidths[i]);
+         }
+
          for(int i = 0; i < serverWidths.length; i++)
          {
             propertyHandler.put("options_columns_server_column" + i + "_width", serverWidths[i]);
@@ -1174,14 +1217,19 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             propertyHandler.put("options_columns_upload_column" + i + "_visibility", uploadVisibilities[i]);
          }
 
+         for(int i = 0; i < uploadWaitingVisibilities.length; i++)
+         {
+            propertyHandler.put("options_columns_uploadwaiting_column" + i + "_visibility", uploadWaitingVisibilities[i]);
+         }
+
          for(int i = 0; i < downloadIndex.length; i++)
          {
             propertyHandler.put("options_columns_download_column" + i + "_index", downloadIndex[i]);
          }
 
-         for(int i = 0; i < uploadIndex.length; i++)
+         for(int i = 0; i < uploadWaitingIndex.length; i++)
          {
-            propertyHandler.put("options_columns_upload_column" + i + "_index", uploadIndex[i]);
+            propertyHandler.put("options_columns_uploadwaiting_column" + i + "_index", uploadWaitingIndex[i]);
          }
 
          saveFile();
@@ -1238,6 +1286,16 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
    public void setUploadWidths(int[] uploadWidths)
    {
       this.uploadWidths = uploadWidths;
+   }
+
+   public int[] getUploadWaitingWidths()
+   {
+      return uploadWaitingWidths;
+   }
+
+   public void setUploadWaitingWidths(int[] uploadWaitingWidths)
+   {
+      this.uploadWaitingWidths = uploadWaitingWidths;
    }
 
    public int[] getServerWidths()
@@ -1351,6 +1409,29 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             propertyHandler.put("options_remote" + i + "_host", set[i].getHost());
             propertyHandler.put("options_remote" + i + "_port", set[i].getXmlPort());
          }
+      }
+   }
+
+   public int[] getUploadWaitingColumnIndizes()
+   {
+      return uploadWaitingIndex;
+   }
+
+   public boolean[] getUploadWaitingColumnVisibilities()
+   {
+      return uploadWaitingVisibilities;
+   }
+
+   public void setUploadWaitingColumnIndex(int column, int index)
+   {
+      uploadWaitingIndex[column] = index;
+   }
+
+   public void setUploadWaitingColumnVisible(int column, boolean visible)
+   {
+      if(column != 0)
+      {
+         uploadWaitingVisibilities[column] = visible;
       }
    }
 }

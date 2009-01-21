@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.upload.table;
 
 import java.awt.Component;
@@ -19,7 +20,7 @@ public class UploadTableFilenameCellRenderer extends DefaultTableCellRenderer
                                                   int column)
    {
       Upload upload = (Upload) value;
-      JLabel label  = (JLabel) super.getTableCellRendererComponent(table, upload.getDateiName(), isSelected, hasFocus, row, column);
+      JLabel label = (JLabel) super.getTableCellRendererComponent(table, upload.getDateiName(), isSelected, hasFocus, row, column);
 
       label.setIcon(IconManager.getInstance().getIcon("treeUebertrage"));
       return label;

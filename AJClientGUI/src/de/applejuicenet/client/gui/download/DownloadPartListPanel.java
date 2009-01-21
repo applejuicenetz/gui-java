@@ -190,7 +190,7 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
          partList = newPartList;
          height   = getSize().height;
          width    = getSize().width;
-         if(partList != null && partList.getParts().length > 0)
+         if(partList != null && partList.getGroesse() > 0 && partList.getParts().length > 0)
          {
             Part[] parts = partList.getParts();
 

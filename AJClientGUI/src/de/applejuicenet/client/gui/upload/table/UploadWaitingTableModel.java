@@ -6,6 +6,7 @@ package de.applejuicenet.client.gui.upload.table;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,24 +17,24 @@ import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
-public class UploadActiveTableModel extends AbstractTableModel implements LanguageListener
+public class UploadWaitingTableModel extends AbstractTableModel implements LanguageListener
 {
-   final static String[] COL_NAMES = 
-                                     {
-                                        "Dateiname", "Wer", "Geschwindigkeit", "Prozent geladen", "Gesamt geladen", "Prioritaet",
-                                        "Client"
-                                     };
+   final static String[]                                  COL_NAMES = 
+                                                                      {
+                                                                         "Dateiname", "Status", "Wer", "Wasserstand", "Prioritaet",
+                                                                         "letzte Verbindung", "Client"
+                                                                      };
    @SuppressWarnings("unchecked")
-   static protected Class[] cTypes                               = 
+   static protected Class[]                               cTypes = 
                                                                    {
-                                                                      Upload.class, String.class, Integer.class, Double.class,
-                                                                      Double.class, Integer.class, Version.class
+                                                                      String.class, Integer.class, String.class, Integer.class,
+                                                                      String.class, Date.class, Version.class
                                                                    };
    private List<Upload>     uploads      = new ArrayList<Upload>();
    private SimpleDateFormat formatter    = new SimpleDateFormat("HH:mm:ss");
    private String           uebertragung;
 
-   public UploadActiveTableModel()
+   public UploadWaitingTableModel()
    {
       LanguageSelector.getInstance().addLanguageListener(this);
    }
@@ -44,7 +45,7 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
 
       for(Upload curUpload : uploadMap.values())
       {
-         if(!(curUpload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG))
+         if(curUpload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG)
          {
             continue;
          }
@@ -64,7 +65,7 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
          for(int x = count - 1; x >= 0; x--)
          {
             anUpload = uploads.get(x);
-            if(anUpload.getStatus() != Upload.AKTIVE_UEBERTRAGUNG || !uploadMap.containsKey(anUpload.getId() + ""))
+            if(anUpload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG || !uploadMap.containsKey(anUpload.getId() + ""))
             {
                uploads.remove(x);
                change = true;
@@ -105,22 +106,22 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
       {
 
          case 0:
-            return upload;
+            return upload.getDateiName();
 
          case 1:
-            return upload.getNick();
+            return upload.getDirectState();
 
          case 2:
-            return upload.getSpeed();
+            return upload.getNick();
 
          case 3:
-            return upload.getDownloadPercent();
-
-         case 4:
             return upload.getLoaded();
 
-         case 5:
+         case 4:
             return upload.getPrioritaet();
+
+         case 5:
+            return upload.getLastConnection() > 0 ? new Date(upload.getLastConnection()) : null;
 
          case 6:
             return upload.getVersion();
@@ -128,46 +129,6 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
          default:
             return "Fehler";
       }
-   }
-
-   private String getSpeedAsString(long speed)
-   {
-      if(speed == 0)
-      {
-         return "0 Bytes/s";
-      }
-
-      double size   = speed;
-      int    faktor = 1;
-
-      if(size < 1024)
-      {
-         faktor = 1;
-      }
-      else
-      {
-         faktor = 1024;
-
-      }
-
-      size = size / faktor;
-      String s = Double.toString(size);
-
-      if(s.indexOf(".") + 3 < s.length())
-      {
-         s = s.substring(0, s.indexOf(".") + 3);
-      }
-
-      if(faktor == 1)
-      {
-         s += " Bytes/s";
-      }
-      else
-      {
-         s += " kb/s";
-      }
-
-      return s;
    }
 
    public void fireLanguageChanged()
