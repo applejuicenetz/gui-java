@@ -1,10 +1,10 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.gui.server.table;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.9 2009/01/12 07:45:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.10 2009/01/22 22:18:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,7 +26,17 @@ import de.applejuicenet.client.gui.components.table.TableSorter;
  */
 public class ServerTableModel extends AbstractTableModel implements SortableTableModel<Server>
 {
-   final static String[]       COL_NAMES = {"Name", "DynIP", "Port", "Verbindungsversuche", "Letztes mal online"};
+   final static String[]                              COL_NAMES   = 
+                                                                    {
+                                                                       "Name", "DynIP", "Port", "Verbindungsversuche",
+                                                                       "Letztes mal online"
+                                                                    };
+   @SuppressWarnings("unchecked")
+   final static Class[]                               COL_CLASSES = 
+                                                                    {
+                                                                       Server.class, String.class, Integer.class, Integer.class,
+                                                                       Date.class
+                                                                    };
    private TableSorter<Server> sorter;
    private List<Server>        servers = new ArrayList<Server>();
 
@@ -35,7 +45,13 @@ public class ServerTableModel extends AbstractTableModel implements SortableTabl
       return servers;
    }
 
-   public Object getRow(int row)
+   @Override
+   public Class<?> getColumnClass(int columnIndex)
+   {
+      return COL_CLASSES[columnIndex];
+   }
+
+   public Server getRow(int row)
    {
       if((servers != null) && (row < servers.size()))
       {
@@ -74,19 +90,19 @@ public class ServerTableModel extends AbstractTableModel implements SortableTabl
       {
 
          case 0:
-            return server.getName();
+            return server;
 
          case 1:
             return server.getHost();
 
          case 2:
-            return server.getPort();
+            return Integer.parseInt(server.getPort());
 
          case 3:
-            return new Integer(server.getVersuche());
+            return server.getVersuche();
 
          case 4:
-            return server.getTimeLastSeenAsString();
+            return new Date(server.getTimeLastSeen());
 
          default:
             return "";
@@ -126,60 +142,59 @@ public class ServerTableModel extends AbstractTableModel implements SortableTabl
       }
    }
 
-   public void setTable(Map<String, Server> changedContent)
+   public void forceResort()
    {
+      if(null != sorter)
+      {
+         sorter.forceResort();
+      }
+   }
+
+   public boolean setTable(Map<String, Server> changedContent)
+   {
+      boolean changed = changedContent.size() > 0;
 
       //alte Server entfernen
       String            suchKey  = null;
       ArrayList<Server> toRemove = new ArrayList<Server>();
+      int               count    = servers.size();
 
-      for(Server curServer : servers)
+      if(count > 0)
       {
-         if(!changedContent.containsKey(Integer.toString(curServer.getId())))
+         Server curServer;
+
+         for(int x = count - 1; x >= 0; x--)
          {
-            toRemove.add(curServer);
+            curServer = servers.get(x);
+            if(!changedContent.containsKey(Integer.toString(curServer.getId())))
+            {
+               servers.remove(x);
+               changed = true;
+            }
          }
-      }
-
-      for(Server curServer : toRemove)
-      {
-         servers.remove(curServer);
       }
 
       for(Server curServer : changedContent.values())
       {
-         int index = servers.indexOf(curServer);
-
-         if(index == -1)
+         if(servers.indexOf(curServer) == -1)
          { // Der Server ist neu
             servers.add(curServer);
+            changed = true;
          }
       }
 
-      this.fireTableDataChanged();
+      return changed;
    }
 
    public Object getValueForSortAt(int row, int column)
    {
-      if(column != 4)
+      if(column == 0)
       {
-         return getValueAt(row, column);
+         return servers.get(row).getName();
       }
       else
       {
-         if(servers == null || row >= servers.size())
-         {
-            return "";
-         }
-
-         Server server = servers.get(row);
-
-         if(server == null)
-         {
-            return "";
-         }
-
-         return new Long(server.getTimeLastSeen());
+         return getValueAt(row, column);
       }
    }
 }

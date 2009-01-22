@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/TableSorter.java,v 1.3 2009/01/21 15:14:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/TableSorter.java,v 1.4 2009/01/22 22:18:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -108,7 +108,7 @@ public class TableSorter<T>
          }
          else if(o1.getClass() == String.class)
          {
-            return ((String) o1).compareTo((String) o2);
+            return ((String) o1).compareToIgnoreCase((String) o2);
          }
          else if(o1.getClass() == Date.class)
          {

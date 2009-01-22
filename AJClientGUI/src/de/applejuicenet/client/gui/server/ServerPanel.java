@@ -1,7 +1,6 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.gui.server;
 
 import java.awt.BorderLayout;
@@ -17,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -33,7 +33,6 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import org.apache.log4j.Level;
@@ -50,11 +49,13 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.server.table.ServerTableCellRenderer;
+import de.applejuicenet.client.gui.server.table.ServerTableDateCellRenderer;
 import de.applejuicenet.client.gui.server.table.ServerTableModel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
@@ -101,10 +102,11 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
    private boolean            initialized         = false;
    private String             warnungTitel;
    private String             warnungNachricht;
+   private boolean            tabSelected;
 
    private ServerPanel()
    {
-      logger = Logger.getLogger(getClass());
+      logger                                      = Logger.getLogger(getClass());
       try
       {
          init();
@@ -163,8 +165,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
             public void actionPerformed(ActionEvent ae)
             {
                int               selected = serverTable.getSelectedRow();
-               Server            server = (Server) ((ServerTableModel) serverTable.getModel()).getRow(selected);
-               ApplejuiceFassade af     = AppleJuiceClient.getAjFassade();
+               Server            server   = (Server) ((ServerTableModel) serverTable.getModel()).getRow(selected);
+               ApplejuiceFassade af       = AppleJuiceClient.getAjFassade();
 
                if(af.getInformation().getVerbindungsStatus() == Information.VERBUNDEN)
                {
@@ -182,7 +184,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                   }
 
                   long timeDiff = timestamp - netInfo.getConnectionTime();
-                  int  minuten = (int) (timeDiff / 60000);
+                  int  minuten  = (int) (timeDiff / 60000);
 
                   if(minuten < 0)
                   {
@@ -279,8 +281,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
          public void actionPerformed(ActionEvent ae)
          {
             NewServerDialog newServerDialog = new NewServerDialog(AppleJuiceDialog.getApp(), true);
-            Dimension       appDimension = newServerDialog.getSize();
-            Dimension       screenSize   = Toolkit.getDefaultToolkit().getScreenSize();
+            Dimension       appDimension    = newServerDialog.getSize();
+            Dimension       screenSize      = Toolkit.getDefaultToolkit().getScreenSize();
 
             newServerDialog.setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
             newServerDialog.setVisible(true);
@@ -363,8 +365,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
       serverTable.setShowGrid(false);
       serverTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
       SortButtonRenderer renderer = new SortButtonRenderer();
-      TableColumnModel   model = serverTable.getColumnModel();
-      int                n     = model.getColumnCount();
+      TableColumnModel   model    = serverTable.getColumnModel();
+      int                n        = model.getColumnCount();
 
       for(int i = 0; i < n; i++)
       {
@@ -376,9 +378,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
       header.addMouseListener(new HeaderListener(header, renderer));
 
-      TableColumn tc = serverTable.getColumnModel().getColumn(0);
-
-      tc.setCellRenderer(new ServerTableCellRenderer());
+      serverTable.setDefaultRenderer(Server.class, new ServerTableCellRenderer());
+      serverTable.setDefaultRenderer(Date.class, new ServerTableDateCellRenderer());
       final JScrollPane aScrollPane = new JScrollPane(serverTable);
 
       aScrollPane.setBackground(serverTable.getBackground());
@@ -450,14 +451,14 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
       serverTable.addMouseListener(popupMouseAdapter);
       add(aScrollPane, BorderLayout.CENTER);
       JPanel    legende = new JPanel(new FlowLayout());
-      ImageIcon icon1  = im.getIcon("serververbunden");
-      ImageIcon icon2  = im.getIcon("serverversuche");
-      ImageIcon icon3  = im.getIcon("aelter24h");
-      ImageIcon icon4  = im.getIcon("juenger24h");
-      JLabel    label1 = new JLabel(icon1);
-      JLabel    label2 = new JLabel(icon2);
-      JLabel    label3 = new JLabel(icon3);
-      JLabel    label4 = new JLabel(icon4);
+      ImageIcon icon1   = im.getIcon("serververbunden");
+      ImageIcon icon2   = im.getIcon("serverversuche");
+      ImageIcon icon3   = im.getIcon("aelter24h");
+      ImageIcon icon4   = im.getIcon("juenger24h");
+      JLabel    label1  = new JLabel(icon1);
+      JLabel    label2  = new JLabel(icon2);
+      JLabel    label3  = new JLabel(icon3);
+      JLabel    label4  = new JLabel(icon4);
 
       legende.add(label1);
       legende.add(verbunden);
@@ -473,6 +474,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
    public void registerSelected()
    {
+      tabSelected = true;
       try
       {
          if(!initialized)
@@ -511,37 +513,25 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
       }
    }
 
+   @SuppressWarnings("unchecked")
    public void fireContentChanged(DATALISTENER_TYPE type, final Object content)
    {
       if(type == DATALISTENER_TYPE.SERVER_CHANGED)
       {
-         SwingUtilities.invokeLater(new Runnable()
-            {
-               @SuppressWarnings("unchecked")
-               public void run()
-               {
-                  try
-                  {
-                     int[] selected = serverTable.getSelectedRows();
+         boolean changed = ((ServerTableModel) serverTable.getModel()).setTable((HashMap<String, Server>) content);
 
-                     ((ServerTableModel) serverTable.getModel()).setTable((HashMap) content);
-                     if(selected.length != 0)
-                     {
-                        for(int i = 0; i < selected.length; i++)
-                        {
-                           serverTable.getSelectionModel().addSelectionInterval(selected[i], selected[i]);
-                        }
-                     }
-                  }
-                  catch(Exception e)
+         if(changed && tabSelected)
+         {
+            ((SortableTableModel) serverTable.getModel()).forceResort();
+            SwingUtilities.invokeLater(new Runnable()
+               {
+                  public void run()
                   {
-                     if(logger.isEnabledFor(Level.ERROR))
-                     {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                     }
+                     serverTable.updateUI();
+
                   }
-               }
-            });
+               });
+         }
       }
    }
 
@@ -604,5 +594,6 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
    public void lostSelection()
    {
+      tabSelected = false;
    }
 }

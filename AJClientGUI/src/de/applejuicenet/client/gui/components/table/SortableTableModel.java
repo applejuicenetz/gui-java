@@ -7,7 +7,7 @@ package de.applejuicenet.client.gui.components.table;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/SortableTableModel.java,v 1.2 2009/01/12 07:45:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/SortableTableModel.java,v 1.3 2009/01/22 22:18:23 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -28,4 +28,6 @@ public interface SortableTableModel<T>
    Class getColumnClass(int column);
 
    void sortByColumn(int column, boolean isAscent);
+   
+   void forceResort();
 }
