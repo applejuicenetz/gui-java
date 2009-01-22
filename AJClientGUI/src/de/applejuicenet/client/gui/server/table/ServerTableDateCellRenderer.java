@@ -10,11 +10,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class ServerTableDateCellRenderer extends DefaultTableCellRenderer
 {
    private static final SimpleDateFormat FORMATER_LONG = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+
+   public ServerTableDateCellRenderer()
+   {
+      super();
+      setHorizontalAlignment(SwingConstants.RIGHT);
+   }
 
    @Override
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
