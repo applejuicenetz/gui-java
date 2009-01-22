@@ -432,15 +432,15 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
                if(serverTable.getSelectedRowCount() == 1)
                {
-                  popup.show(aScrollPane, e.getX(), e.getY());
+                  popup.show(serverTable, e.getX(), e.getY());
                }
                else if(serverTable.getSelectedRowCount() > 1)
                {
-                  popup3.show(aScrollPane, e.getX(), e.getY());
+                  popup3.show(serverTable, e.getX(), e.getY());
                }
                else
                {
-                  popup2.show(aScrollPane, e.getX(), e.getY());
+                  popup2.show(serverTable, e.getX(), e.getY());
                }
             }
          }
