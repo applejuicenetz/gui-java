@@ -772,8 +772,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       System.exit(-1);
    }
 
-   @SuppressWarnings("deprecation")
-protected JMenuBar createMenuBar()
+   protected JMenuBar createMenuBar()
    {
       try
       {
