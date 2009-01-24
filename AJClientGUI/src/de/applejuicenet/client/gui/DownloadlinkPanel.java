@@ -40,7 +40,7 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
       double     f     = TableLayout.FILL;
       double[][] sizes = 
                          {
-                            {5, p, 5, f, 5, p, 5, p, 5, p, 5},
+                            {5, p, 5, f, 5, p, 5},
                             {5, p}
                          };
 
@@ -138,9 +138,9 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
       setLayout(new TableLayout(sizes));
       add(lblLink, "1, 1");
       add(txtDownloadLink, "3, 1");
-      add(lblTargetDir, "5, 1");
-      add(cmbTargetDir, "7, 1");
-      add(btnStartDownload, "9, 1");
+//      add(lblTargetDir, "5, 1");
+//      add(cmbTargetDir, "7, 1");
+      add(btnStartDownload, "5, 1");
       fireLanguageChanged();
    }
 
