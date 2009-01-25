@@ -33,10 +33,10 @@ import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.upload.table.UploadActiveTableModel;
 import de.applejuicenet.client.gui.upload.table.UploadTableDateCellRenderer;
 import de.applejuicenet.client.gui.upload.table.UploadTableFilenameCellRenderer;
-import de.applejuicenet.client.gui.upload.table.UploadTablePercentCellRenderer;
+import de.applejuicenet.client.gui.upload.table.TablePercentCellRenderer;
 import de.applejuicenet.client.gui.upload.table.UploadTablePrioCellRenderer;
 import de.applejuicenet.client.gui.upload.table.UploadTableSpeedCellRenderer;
-import de.applejuicenet.client.gui.upload.table.UploadTableVersionCellRenderer;
+import de.applejuicenet.client.gui.upload.table.TableVersionCellRenderer;
 import de.applejuicenet.client.gui.upload.table.UploadTableWaitingStatusCellRenderer;
 import de.applejuicenet.client.gui.upload.table.UploadWaitingTableModel;
 import de.applejuicenet.client.shared.IconManager;
@@ -111,11 +111,11 @@ public class UploadPanel extends TklPanel implements RegisterI
       uploadActiveTable      = new JTable(uploadActiveTableModel);
 
       uploadActiveTable.getColumnModel().getColumn(2).setCellRenderer(new UploadTableSpeedCellRenderer());
-      uploadActiveTable.getColumnModel().getColumn(3).setCellRenderer(new UploadTablePercentCellRenderer());
-      uploadActiveTable.getColumnModel().getColumn(4).setCellRenderer(new UploadTablePercentCellRenderer());
+      uploadActiveTable.getColumnModel().getColumn(3).setCellRenderer(new TablePercentCellRenderer());
+      uploadActiveTable.getColumnModel().getColumn(4).setCellRenderer(new TablePercentCellRenderer());
       uploadActiveTable.getColumnModel().getColumn(5).setCellRenderer(new UploadTablePrioCellRenderer());
 
-      uploadActiveTable.setDefaultRenderer(Version.class, new UploadTableVersionCellRenderer());
+      uploadActiveTable.setDefaultRenderer(Version.class, new TableVersionCellRenderer());
       uploadActiveTable.setDefaultRenderer(Upload.class, new UploadTableFilenameCellRenderer());
 
       TableColumnModel modelActive = uploadActiveTable.getColumnModel();
@@ -185,10 +185,10 @@ public class UploadPanel extends TklPanel implements RegisterI
       uploadWaitingTable      = new JTable(uploadWaitingTableModel);
 
       uploadWaitingTable.getColumnModel().getColumn(1).setCellRenderer(new UploadTableWaitingStatusCellRenderer());
-      uploadWaitingTable.getColumnModel().getColumn(3).setCellRenderer(new UploadTablePercentCellRenderer());
+      uploadWaitingTable.getColumnModel().getColumn(3).setCellRenderer(new TablePercentCellRenderer());
       uploadWaitingTable.getColumnModel().getColumn(4).setCellRenderer(new UploadTablePrioCellRenderer());
 
-      uploadWaitingTable.setDefaultRenderer(Version.class, new UploadTableVersionCellRenderer());
+      uploadWaitingTable.setDefaultRenderer(Version.class, new TableVersionCellRenderer());
       uploadWaitingTable.setDefaultRenderer(Date.class, new UploadTableDateCellRenderer());
 
       model    = uploadWaitingTable.getColumnModel();

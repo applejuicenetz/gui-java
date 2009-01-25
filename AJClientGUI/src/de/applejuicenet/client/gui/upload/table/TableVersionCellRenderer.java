@@ -13,14 +13,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.shared.IconManager;
 
-public class UploadTableVersionCellRenderer extends DefaultTableCellRenderer
+public class TableVersionCellRenderer extends DefaultTableCellRenderer
 {
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
                                                   int column)
    {
       Version version      = (Version) value;
 
-      String  text         = null == version ? "" : version.getVersion();
+      String  text         = null == version ? null : version.getVersion();
       JLabel  versionLabel = (JLabel) super.getTableCellRendererComponent(table, text, isSelected, hasFocus, row, column);
 
       versionLabel.setFont(table.getFont());

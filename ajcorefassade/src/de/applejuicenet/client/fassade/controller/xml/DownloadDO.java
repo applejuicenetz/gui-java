@@ -1,7 +1,6 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.fassade.controller.xml;
 
 import java.text.DecimalFormat;
@@ -9,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
 
 /**
  * $Header:
@@ -31,20 +31,20 @@ import de.applejuicenet.client.fassade.entity.Download;
  */
 class DownloadDO implements Download
 {
-   private static DecimalFormat          formatter           = new DecimalFormat("###,##0.00");
-   private final int                     id;
-   private int                           shareId;
-   private String                        hash;
-   private long                          groesse;
-   private long                          ready;
-   private int                           status;
-   private String                        filename;
-   private String                        targetDirectory;
-   private int                           powerDownload;
-   private int                           temporaryFileNumber;
-   private long                          oldSpeed;
-   private String                        speedAsString;
-   private Map<String, DownloadSourceDO> sourcen = new HashMap<String, DownloadSourceDO>();
+   private static DecimalFormat        formatter           = new DecimalFormat("###,##0.00");
+   private final int                   id;
+   private int                         shareId;
+   private String                      hash;
+   private long                        groesse;
+   private long                        ready;
+   private int                         status;
+   private String                      filename;
+   private String                      targetDirectory;
+   private int                         powerDownload;
+   private int                         temporaryFileNumber;
+   private long                        oldSpeed;
+   private String                      speedAsString;
+   private Map<String, DownloadSource> sourcen             = new HashMap<String, DownloadSource>();
 
    public DownloadDO(int id)
    {
@@ -109,13 +109,18 @@ class DownloadDO implements Download
       }
    }
 
-   public DownloadSourceDO[] getSources()
+   public Map<String, DownloadSource> getSourcesMap()
    {
-      DownloadSourceDO[] sources = null;
+      return sourcen;
+   }
+
+   public DownloadSource[] getSources()
+   {
+      DownloadSource[] sources = null;
 
       synchronized(sourcen)
       {
-         sources = (DownloadSourceDO[]) sourcen.values().toArray(new DownloadSourceDO[sourcen.size()]);
+         sources = (DownloadSource[]) sourcen.values().toArray(new DownloadSource[sourcen.size()]);
       }
 
       return sources;
@@ -271,7 +276,7 @@ class DownloadDO implements Download
 
          oldSpeed = speed;
          int restZeit = (int) ((groesse - ready) / speed);
-         int tage = restZeit / 86400;
+         int tage     = restZeit / 86400;
 
          restZeit -= tage * 86400;
          int stunden = restZeit / 3600;
@@ -325,7 +330,7 @@ class DownloadDO implements Download
 
       synchronized(sourcen)
       {
-         for(DownloadSourceDO curDownloadSourceDO : sourcen.values())
+         for(DownloadSource curDownloadSourceDO : sourcen.values())
          {
             speed += curDownloadSourceDO.getSpeed();
          }
@@ -340,12 +345,23 @@ class DownloadDO implements Download
 
       synchronized(sourcen)
       {
-         for(DownloadSourceDO curDownloadSourceDO : sourcen.values())
+         for(DownloadSource curDownloadSourceDO : sourcen.values())
          {
             geladen += curDownloadSourceDO.getBereitsGeladen();
          }
       }
 
       return geladen;
+   }
+
+   @Override
+   public final boolean equals(Object obj)
+   {
+      if(!(obj instanceof Download))
+      {
+         return false;
+      }
+
+      return getId() == ((Download) obj).getId();
    }
 }

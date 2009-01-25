@@ -1,5 +1,7 @@
 package de.applejuicenet.client.fassade.entity;
 
+import java.util.Map;
+
 public interface Download extends IdOwner{
     
     // Status - IDs
@@ -20,6 +22,8 @@ public interface Download extends IdOwner{
     DownloadSource getSourceById(int sourceId);
 
     DownloadSource[] getSources();
+    
+    Map<String, DownloadSource> getSourcesMap();
 
     int getShareId();
 
