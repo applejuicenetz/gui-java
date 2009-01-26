@@ -478,7 +478,7 @@ public class ModifiedXMLHolder extends DefaultHandler
    private void checkDownloadMap(DownloadDO downloadDO, Map userAttributes, boolean newDownload)
    {
       downloadDO.setShareId(Integer.parseInt((String) userAttributes.get(StringConstants.SHAREID)));
-      downloadDO.setGroesse(Long.parseLong((String) userAttributes.get(StringConstants.SIZE)));
+      downloadDO.setGroesse(Integer.parseInt((String) userAttributes.get(StringConstants.SIZE)));
       downloadDO.setHash((String) userAttributes.get(StringConstants.HASH));
       downloadDO.setTemporaryFileNumber(Integer.parseInt((String) userAttributes.get(StringConstants.TEMPORARYFILENUMBER)));
       if(newDownload)
@@ -487,7 +487,7 @@ public class ModifiedXMLHolder extends DefaultHandler
          downloadDO.setFilename((String) userAttributes.get(StringConstants.FILENAME));
          downloadDO.setTargetDirectory((String) userAttributes.get(StringConstants.TARGETDIRECTORY));
          downloadDO.setPowerDownload(Integer.parseInt((String) userAttributes.get(StringConstants.POWERDOWNLOAD)));
-         downloadDO.setReady(Long.parseLong((String) userAttributes.get(StringConstants.READY)));
+         downloadDO.setReady(Integer.parseInt((String) userAttributes.get(StringConstants.READY)));
       }
       else
       {
@@ -530,11 +530,11 @@ public class ModifiedXMLHolder extends DefaultHandler
                                                                    Integer.toString(tmpInt)));
          }
 
-         long tmpLong = Long.parseLong((String) userAttributes.get(StringConstants.READY));
+         int tmpLong = Integer.parseInt((String) userAttributes.get(StringConstants.READY));
 
          if(tmpLong != downloadDO.getReady())
          {
-            old = Long.toString(downloadDO.getReady());
+            old = Integer.toString(downloadDO.getReady());
             downloadDO.setReady(tmpLong);
             downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadDO, DownloadDataPropertyChangeEvent.READY_CHANGED, old,
                                                                    Long.toString(tmpLong)));

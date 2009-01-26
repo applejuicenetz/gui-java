@@ -32,8 +32,8 @@ class UploadDO extends Upload
    private VersionDO version                    = null;
    private int       status;
    private String    nick;
-   private long      uploadFrom;
-   private long      uploadTo;
+   private int      uploadFrom;
+   private int      uploadTo;
    private long      actualUploadPosition;
    private int       speed;
    private int       prioritaet;
@@ -49,7 +49,7 @@ class UploadDO extends Upload
       this.uploadID                             = uploadID;
    }
 
-   public UploadDO(int uploadID, int shareFileID, VersionDO version, String status, String nick, long uploadFrom, long uploadTo,
+   public UploadDO(int uploadID, int shareFileID, VersionDO version, String status, String nick, int uploadFrom, int uploadTo,
                    long actualUploadPosition, int speed, int prioritaet, int directstate, long lastConnection, double loaded)
    {
       this.uploadID             = uploadID;
@@ -125,23 +125,23 @@ class UploadDO extends Upload
       this.nick = nick;
    }
 
-   public long getUploadFrom()
+   public int getUploadFrom()
    {
       return uploadFrom;
    }
 
-   public void setUploadFrom(long uploadFrom)
+   public void setUploadFrom(int uploadFrom)
    {
       this.uploadFrom = uploadFrom;
       progressChanged = true;
    }
 
-   public long getUploadTo()
+   public int getUploadTo()
    {
       return uploadTo;
    }
 
-   public void setUploadTo(long uploadTo)
+   public void setUploadTo(int uploadTo)
    {
       this.uploadTo   = uploadTo;
       progressChanged = true;

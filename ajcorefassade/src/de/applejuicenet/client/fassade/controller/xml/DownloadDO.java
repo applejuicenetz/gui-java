@@ -35,8 +35,8 @@ class DownloadDO implements Download
    private final int                   id;
    private int                         shareId;
    private String                      hash;
-   private long                        groesse;
-   private long                        ready;
+   private int                        groesse;
+   private int                        ready;
    private int                         status;
    private String                      filename;
    private String                      targetDirectory;
@@ -51,7 +51,7 @@ class DownloadDO implements Download
       this.id = id;
    }
 
-   public DownloadDO(int id, int shareId, String hash, long groesse, long ready, int status, String filename,
+   public DownloadDO(int id, int shareId, String hash, int groesse, int ready, int status, String filename,
                      String targetDirectory, int powerDownload, int temporaryFileNumber)
    {
       this.id                  = id;
@@ -156,12 +156,12 @@ class DownloadDO implements Download
       this.hash = hash;
    }
 
-   public long getGroesse()
+   public int getGroesse()
    {
       return groesse;
    }
 
-   public void setGroesse(long groesse)
+   public void setGroesse(int groesse)
    {
       this.groesse = groesse;
    }
@@ -233,12 +233,12 @@ class DownloadDO implements Download
       this.temporaryFileNumber = temporaryFileNumber;
    }
 
-   public long getReady()
+   public int getReady()
    {
       return ready;
    }
 
-   public void setReady(long newReady)
+   public void setReady(int newReady)
    {
       if(ready != newReady)
       {
@@ -324,9 +324,9 @@ class DownloadDO implements Download
       }
    }
 
-   public long getSpeedInBytes()
+   public int getSpeedInBytes()
    {
-      long speed = 0;
+      int speed = 0;
 
       synchronized(sourcen)
       {
@@ -339,9 +339,9 @@ class DownloadDO implements Download
       return speed;
    }
 
-   public long getBereitsGeladen()
+   public int getBereitsGeladen()
    {
-      long geladen = ready;
+      int geladen = ready;
 
       synchronized(sourcen)
       {

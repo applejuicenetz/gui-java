@@ -26,9 +26,9 @@ public abstract class Upload implements IdOwner
 
    public abstract String getNick();
 
-   public abstract long getUploadFrom();
+   public abstract int getUploadFrom();
 
-   public abstract long getUploadTo();
+   public abstract int getUploadTo();
 
    public abstract long getActualUploadPosition();
 
@@ -83,7 +83,7 @@ public abstract class Upload implements IdOwner
       return formatter.format( getLoaded());
    }
 
-   public final long getSize()
+   public final int getSize()
    {
       if(getUploadTo() == -1 || getUploadFrom() == -1)
       {
