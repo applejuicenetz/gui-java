@@ -20,9 +20,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.io.File;
+
 import java.lang.reflect.Constructor;
+
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,10 +59,11 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.PolicyJarClassLoader;
+
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.19 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/PowerDownloadPanel.java,v 1.20 2009/01/26 13:31:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -83,7 +88,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
    public TKLTextField                  ratio                    = new TKLTextField("2.2");
    private TKLTextField                 autoAb                   = new TKLTextField();
    private TKLTextField                 autoBis                  = new TKLTextField();
-   public JButton                       btnPdl                   = new JButton();
+   private JButton                      btnPdl                   = new JButton();
    private JButton                      btnAutoPdl               = new JButton();
    private JLabel                       powerdownload            = new JLabel();
    private JLabel                       label6                   = new JLabel();
@@ -779,6 +784,11 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
       {
          logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
       }
+   }
+
+   public JButton getBtnPdl()
+   {
+      return btnPdl;
    }
 
    private class RatioFocusAdapter extends FocusAdapter

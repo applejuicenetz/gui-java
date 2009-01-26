@@ -1,15 +1,23 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-package de.applejuicenet.client.gui.upload.table;
+
+package de.applejuicenet.client.shared.tablecellrenderer;
 
 import java.awt.Component;
 
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class UploadTableSpeedCellRenderer extends DefaultTableCellRenderer
+public class SpeedTableCellRenderer extends DefaultTableCellRenderer
 {
+   public SpeedTableCellRenderer()
+   {
+      super();
+      setHorizontalAlignment(SwingConstants.RIGHT);
+   }
+
    @Override
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
                                                   int column)
@@ -21,7 +29,7 @@ public class UploadTableSpeedCellRenderer extends DefaultTableCellRenderer
    {
       if(speed == 0)
       {
-         return "0 Bytes/s";
+         return "";
       }
 
       double size   = speed;

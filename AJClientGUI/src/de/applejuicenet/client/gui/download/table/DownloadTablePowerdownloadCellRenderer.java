@@ -2,7 +2,7 @@
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
 
-package de.applejuicenet.client.gui.upload.table;
+package de.applejuicenet.client.gui.download.table;
 
 import java.awt.Component;
 
@@ -10,9 +10,9 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class UploadTablePrioCellRenderer extends DefaultTableCellRenderer
+public class DownloadTablePowerdownloadCellRenderer extends DefaultTableCellRenderer
 {
-   public UploadTablePrioCellRenderer()
+   public DownloadTablePowerdownloadCellRenderer()
    {
       super();
       setHorizontalAlignment(SwingConstants.RIGHT);
@@ -22,13 +22,10 @@ public class UploadTablePrioCellRenderer extends DefaultTableCellRenderer
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
                                                   int column)
    {
-      Integer prio = (Integer) value;
-      String  text = prio + "";
-
-      return super.getTableCellRendererComponent(table, text, isSelected, hasFocus, row, column);
+      return super.getTableCellRendererComponent(table, powerdownload((Integer) value), isSelected, hasFocus, row, column);
    }
 
-   public static String powerdownload(int pwdl)
+   public String powerdownload(int pwdl)
    {
       if(pwdl == 0)
       {

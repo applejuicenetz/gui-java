@@ -1,7 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-package de.applejuicenet.client.gui.upload.table;
+package de.applejuicenet.client.shared.tablecellrenderer;
 
 import java.awt.Component;
 
@@ -11,11 +11,11 @@ import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-public class TablePercentCellRenderer extends JProgressBar implements TableCellRenderer
+public class ProgressTableCellRenderer extends JProgressBar implements TableCellRenderer
 {
    private static DecimalFormat formatter = new DecimalFormat("###,##0.00");
 
-   public TablePercentCellRenderer()
+   public ProgressTableCellRenderer()
    {
       super(JProgressBar.HORIZONTAL, 0, 100);
       setStringPainted(true);

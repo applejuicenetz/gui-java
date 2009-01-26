@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.download.table;
 
 import java.util.ArrayList;
@@ -11,34 +12,37 @@ import javax.swing.table.AbstractTableModel;
 
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.gui.components.table.SortableTableModel;
+import de.applejuicenet.client.gui.components.table.TableSorter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
-public class DownloadActiveTableModel extends AbstractTableModel implements LanguageListener
+public class DownloadsTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<Download>
 {
    static protected String[]                              cNames = {"", "", "", "", "", "", "", "", "", ""};
    @SuppressWarnings("unchecked")
    static protected Class[]                               cTypes = 
                                                                    {
-                                                                      String.class, String.class, String.class, String.class,
-                                                                      String.class, String.class, Double.class, String.class,
-                                                                      String.class, String.class
+                                                                      Download.class, String.class, Integer.class, Integer.class,
+                                                                      Integer.class, String.class, Double.class, Integer.class,
+                                                                      Integer.class, String.class
                                                                    };
 
    //Download-Stati
-   public static String   suchen                  = "";
-   public static String   laden                   = "";
-   public static String   keinPlatz               = "";
-   public static String   fertigstellen           = "";
-   public static String   fehlerBeimFertigstellen = "";
-   public static String   fertig                  = "";
-   public static String   abbrechen               = "";
-   public static String   abgebrochen             = "";
-   public static String   dataWirdErstellt        = "";
-   public static String   pausiert                = "";
-   private List<Download> downloads               = new ArrayList<Download>();
+   public static String          suchen                  = "";
+   public static String          laden                   = "";
+   public static String          keinPlatz               = "";
+   public static String          fertigstellen           = "";
+   public static String          fehlerBeimFertigstellen = "";
+   public static String          fertig                  = "";
+   public static String          abbrechen               = "";
+   public static String          abgebrochen             = "";
+   public static String          dataWirdErstellt        = "";
+   public static String          pausiert                = "";
+   private TableSorter<Download> sorter;
+   private List<Download>        downloads               = new ArrayList<Download>();
 
-   public DownloadActiveTableModel()
+   public DownloadsTableModel()
    {
       super();
       LanguageSelector.getInstance().addLanguageListener(this);
@@ -50,7 +54,7 @@ public class DownloadActiveTableModel extends AbstractTableModel implements Lang
    }
 
    @Override
-   public Class<?> getColumnClass(int columnIndex)
+   public Class<? > getColumnClass(int columnIndex)
    {
       return cTypes[columnIndex];
    }
@@ -73,19 +77,19 @@ public class DownloadActiveTableModel extends AbstractTableModel implements Lang
       {
 
          case 0:
-            return download.getFilename();
+            return download;
 
          case 1:
             return getStatusAsString(download);
 
          case 2:
-            return parseGroesse(download.getGroesse());
+            return download.getGroesse();
 
          case 3:
-            return parseGroesse(download.getBereitsGeladen());
+            return download.getBereitsGeladen();
 
          case 4:
-            return getSpeedAsString(download.getSpeedInBytes());
+            return download.getSpeedInBytes();
 
          case 5:
             return download.getRestZeitAsString();
@@ -94,10 +98,10 @@ public class DownloadActiveTableModel extends AbstractTableModel implements Lang
             return download.getProzentGeladen();
 
          case 7:
-            return parseGroesse(download.getGroesse() - download.getBereitsGeladen());
+            return download.getGroesse() - download.getBereitsGeladen();
 
          case 8:
-            return powerdownload(download.getPowerDownload());
+            return download.getPowerDownload();
 
          case 9:
             return download.getTargetDirectory();
@@ -139,22 +143,6 @@ public class DownloadActiveTableModel extends AbstractTableModel implements Lang
       return change;
    }
 
-   public static String powerdownload(int pwdl)
-   {
-      if(pwdl == 0)
-      {
-         return "1:1,0";
-      }
-
-      double power = pwdl;
-
-      power = power / 10 + 1;
-      String temp = Double.toString(power);
-
-      temp = temp.replace('.', ',');
-      return "1:" + temp;
-   }
-
    public static String parseGroesse(long groesse)
    {
       double share  = Double.parseDouble(Long.toString(groesse));
@@ -171,7 +159,7 @@ public class DownloadActiveTableModel extends AbstractTableModel implements Lang
       }
       else if(share / 1024 < 1024)
       {
-         faktor     = 1024;
+         faktor = 1024;
       }
       else if(share / 1048576 < 1024)
       {
@@ -213,46 +201,6 @@ public class DownloadActiveTableModel extends AbstractTableModel implements Lang
       }
 
       return result;
-   }
-
-   public static String getSpeedAsString(long speed)
-   {
-      if(speed == 0)
-      {
-         return "0 Bytes/s";
-      }
-
-      double size   = speed;
-      int    faktor = 1;
-
-      if(size < 1024)
-      {
-         faktor = 1;
-      }
-      else
-      {
-         faktor = 1024;
-
-      }
-
-      size = size / faktor;
-      String s = Double.toString(size);
-
-      if(s.indexOf(".") + 3 < s.length())
-      {
-         s = s.substring(0, s.indexOf(".") + 3);
-      }
-
-      if(faktor == 1)
-      {
-         s += " Bytes/s";
-      }
-      else
-      {
-         s += " kb/s";
-      }
-
-      return s;
    }
 
    public void fireLanguageChanged()
@@ -315,7 +263,7 @@ public class DownloadActiveTableModel extends AbstractTableModel implements Lang
                      uebertragung++;
                      result = laden;
                   }
-                  else if(status == DownloadSource.IN_WARTESCHLANGE || status == DownloadSource.WARTESCHLANGE_VOLL)
+                  else if(status == DownloadSource.IN_WARTESCHLANGE)
                   {
                      warteschlange++;
                   }
@@ -340,5 +288,39 @@ public class DownloadActiveTableModel extends AbstractTableModel implements Lang
       {
          return "";
       }
+   }
+
+   public void forceResort()
+   {
+      if(null != sorter)
+      {
+         sorter.forceResort();
+      }
+   }
+
+   public List<Download> getContent()
+   {
+      return downloads;
+   }
+
+   public Object getValueForSortAt(int row, int column)
+   {
+      if(column == 0)
+      {
+         return ((Download) getValueAt(row, column)).getFilename();
+      }
+
+      return getValueAt(row, column);
+   }
+
+   public void sortByColumn(int column, boolean isAscent)
+   {
+      if(sorter == null)
+      {
+         sorter = new TableSorter<Download>(this);
+      }
+
+      sorter.sort(column, isAscent);
+      fireTableDataChanged();
    }
 }

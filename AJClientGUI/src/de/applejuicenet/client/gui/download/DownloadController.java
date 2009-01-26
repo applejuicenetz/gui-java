@@ -1,65 +1,86 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.download;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import java.io.File;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import org.apache.log4j.Level;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.fassade.entity.Information;
+import de.applejuicenet.client.fassade.entity.Server;
+import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
+import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
-import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
+import de.applejuicenet.client.gui.upload.HeaderPopupListener;
+import de.applejuicenet.client.gui.upload.UploadMouseMotionListener;
 import de.applejuicenet.client.shared.DesktopTools;
+import de.applejuicenet.client.shared.SoundPlayer;
 
 public class DownloadController extends GuiController
 {
-   private static DownloadController instance                       = null;
-   private static final int          ABBRECHEN                      = 0;
-   private static final int          COPY_TO_CLIPBOARD              = 1;
-   private static final int          COPY_TO_CLIPBOARD_WITH_SOURCES = 2;
-   private static final int          OPEN_WITH_PROGRAM              = 3;
-   private static final int          OPEN_WITH_DEFAULT_PROGRAM      = 16;
-   private static final int          PAUSE                          = 4;
-   private static final int          FORTSETZEN                     = 5;
-   private static final int          UMBENENNEN                     = 6;
-   private static final int          ZIELORDNER_AENDERN             = 7;
-   private static final int          FERTIGE_ENTFERNEN              = 8;
-   private static final int          PARTLISTE_ANZEIGEN             = 9;
-   private static final int          START_DOWNLOAD                 = 10;
-   private static final int          PARTLISTE_ANZEIGEN_PER_BUTTON  = 11;
-   private static final int          START_POWERDOWNLOAD            = 12;
-   private static final int          NODE_ITEM_CLICKED              = 13;
-   private static final int          MAYBE_SHOW_POPUP               = 14;
+   private static DownloadController instance                        = null;
+   private static final int          ABBRECHEN                       = 0;
+   private static final int          COPY_TO_CLIPBOARD               = 1;
+   private static final int          COPY_TO_CLIPBOARD_WITH_SOURCES  = 2;
+   private static final int          OPEN_WITH_PROGRAM               = 3;
+   private static final int          OPEN_WITH_DEFAULT_PROGRAM       = 16;
+   private static final int          PAUSE                           = 4;
+   private static final int          FORTSETZEN                      = 5;
+   private static final int          UMBENENNEN                      = 6;
+   private static final int          ZIELORDNER_AENDERN              = 7;
+   private static final int          FERTIGE_ENTFERNEN               = 8;
+   private static final int          PARTLISTE_ANZEIGEN              = 9;
+   private static final int          START_DOWNLOAD                  = 10;
+   private static final int          PARTLISTE_ANZEIGEN_PER_BUTTON   = 11;
+   private static final int          START_POWERDOWNLOAD             = 12;
+   private static final int          HEADER_DOWNLOAD_POPUP           = 13;
+   private static final int          HEADER_DOWNLOAD_SOURCES_POPUP   = 14;
+   private static final int          HEADER_DOWNLOAD_DRAGGED         = 15;
+   private static final int          HEADER_DOWNLOAD_SOURCES_DRAGGED = 17;
    private DownloadPanel             downloadPanel;
-   private boolean                   initialized                    = false;
+   private boolean                   initialized                     = false;
    private String                    dialogTitel;
    private String                    downloadAbbrechen;
    private DownloadPartListWatcher   downloadPartListWatcher;
-   private boolean                   firstUpdate                    = true;
-   private boolean                   isFirstDownloadPropertyChanged = true;
-   private boolean                   selected                       = false;
+   private boolean                   firstUpdate                     = true;
+   private boolean                   isFirstDownloadPropertyChanged  = true;
+   private boolean                   selected                        = false;
    private String                    alreadyLoaded;
    private String                    invalidLink;
    private String                    linkFailure;
@@ -67,7 +88,7 @@ public class DownloadController extends GuiController
    private DownloadController()
    {
       super();
-      downloadPanel                                                 = new DownloadPanel(this);
+      downloadPanel = new DownloadPanel(this);
       try
       {
          init();
@@ -101,8 +122,6 @@ public class DownloadController extends GuiController
       downloadPanel.getMnuUmbenennen().addActionListener(new GuiControllerActionListener(this, UMBENENNEN));
       downloadPanel.getMnuZielordner().addActionListener(new GuiControllerActionListener(this, ZIELORDNER_AENDERN));
       downloadPanel.getMnuFertigeEntfernen().addActionListener(new GuiControllerActionListener(this, FERTIGE_ENTFERNEN));
-      downloadPanel.getMnuPartlisteAnzeigen().addActionListener(new GuiControllerActionListener(this, PARTLISTE_ANZEIGEN));
-      downloadPanel.getBtnHoleListe().addActionListener(new GuiControllerActionListener(this, PARTLISTE_ANZEIGEN_PER_BUTTON));
       downloadPanel.getBtnPowerDownload().addActionListener(new GuiControllerActionListener(this, START_POWERDOWNLOAD));
       if(AppleJuiceClient.getAjFassade().isLocalhost())
       {
@@ -140,11 +159,53 @@ public class DownloadController extends GuiController
 
                   Download download = downloadPanel.getDownloadTableModel().getRow(selected);
 
+                  downloadClicked(download);
                   if(downloadPanel.getDownloadSourcesTableModel().setDownload(download))
                   {
                      downloadPanel.getDownloadSourcesTableModel().fireTableDataChanged();
                   }
                }
+               else if(SwingUtilities.isRightMouseButton(e))
+               {
+                  int row = downloadPanel.getDownloadTable().rowAtPoint(e.getPoint());
+
+                  if(!downloadPanel.getDownloadTable().getSelectionModel().isSelectedIndex(row))
+                  {
+                     downloadPanel.getDownloadTable().getSelectionModel().setSelectionInterval(row, row);
+                  }
+
+                  maybeShowDownloadPopup(e);
+               }
+
+               //               else
+               //               {
+               //                  boolean sourcesTableVisible = downloadPanel.getDownloadSourcesScrollPane().isVisible();
+               //
+               //                  if(sourcesTableVisible)
+               //                  {
+               //                     downloadPanel.getDownloadSourcesTableModel().setDownload(null);
+               //                  }
+               //                  else
+               //                  {
+               //                     int selected = downloadPanel.getDownloadTable().getSelectedRow();
+               //
+               //                     if(selected == -1)
+               //                     {
+               //                        return;
+               //                     }
+               //
+               //                     Download download = downloadPanel.getDownloadTableModel().getRow(selected);
+               //
+               //                     if(downloadPanel.getDownloadSourcesTableModel().setDownload(download))
+               //                     {
+               //                        downloadPanel.getDownloadSourcesTableModel().fireTableDataChanged();
+               //                     }
+               //                  }
+               //
+               //                  downloadPanel.getDownloadSourcesScrollPane().setVisible(!downloadPanel.getDownloadSourcesScrollPane().isVisible());
+               //                  downloadPanel.doLayout();
+               //                  downloadPanel.updateUI();
+               //               }
             }
          });
       downloadPanel.getDownloadTable().addKeyListener(new KeyAdapter()
@@ -183,11 +244,38 @@ public class DownloadController extends GuiController
                }
             }
          });
+      downloadPanel.getDownloadSourceTable().addMouseListener(new MouseAdapter()
+         {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+               if(SwingUtilities.isLeftMouseButton(e))
+               {
+                  int selected = downloadPanel.getDownloadSourceTable().getSelectedRow();
+
+                  if(selected == -1)
+                  {
+                     return;
+                  }
+
+                  DownloadSource downloadSource = downloadPanel.getDownloadSourcesTableModel().getRow(selected);
+
+                  downloadSourceClicked(downloadSource);
+               }
+            }
+         });
       downloadPartListWatcher = new DownloadPartListWatcher(this);
-      //      downloadPanel.getDownloadTable()
-      //      .addMouseListener(new DownloadTableMouseListener(this, downloadPanel.getDownloadTable(), NODE_ITEM_CLICKED));
-      //      downloadPanel.getDownloadTable()
-      //      .addMouseListener(new DownloadTablePopupListener(this, downloadPanel.getDownloadTable(), MAYBE_SHOW_POPUP));
+
+      JTableHeader header = downloadPanel.getDownloadTable().getTableHeader();
+
+      header.addMouseListener(new HeaderPopupListener(this, HEADER_DOWNLOAD_POPUP));
+      header.addMouseMotionListener(new UploadMouseMotionListener(this, HEADER_DOWNLOAD_DRAGGED));
+
+      header = downloadPanel.getDownloadSourceTable().getTableHeader();
+
+      header.addMouseListener(new HeaderPopupListener(this, HEADER_DOWNLOAD_SOURCES_POPUP));
+      header.addMouseMotionListener(new UploadMouseMotionListener(this, HEADER_DOWNLOAD_SOURCES_DRAGGED));
+
       LanguageSelector.getInstance().addLanguageListener(this);
    }
 
@@ -201,6 +289,30 @@ public class DownloadController extends GuiController
       switch(actionId)
       {
 
+         case HEADER_DOWNLOAD_DRAGGED:
+         {
+            headerDownloadsDragged();
+            break;
+         }
+
+         case HEADER_DOWNLOAD_SOURCES_DRAGGED:
+         {
+            headerDownloadSourcesDragged();
+            break;
+         }
+
+         case HEADER_DOWNLOAD_POPUP:
+         {
+            headerDownloadsPopup((MouseEvent) source);
+            break;
+         }
+
+         case HEADER_DOWNLOAD_SOURCES_POPUP:
+         {
+            headerDownloadSourcesPopup((MouseEvent) source);
+            break;
+         }
+
          case ABBRECHEN:
          {
             downloadAbbrechen();
@@ -209,13 +321,13 @@ public class DownloadController extends GuiController
 
          case COPY_TO_CLIPBOARD:
          {
-            copyToClipboard();
+            copyDownloadLinkToClipboard();
             break;
          }
 
          case COPY_TO_CLIPBOARD_WITH_SOURCES:
          {
-            copyToClipboardWithSources();
+            copyDownloadLinkToClipboardWithSources();
             break;
          }
 
@@ -261,37 +373,83 @@ public class DownloadController extends GuiController
             break;
          }
 
-         case PARTLISTE_ANZEIGEN:
-         {
-            tryGetPartList(false);
-            break;
-         }
-
-         case PARTLISTE_ANZEIGEN_PER_BUTTON:
-         {
-            tryGetPartList(true);
-            break;
-         }
-
          case START_POWERDOWNLOAD:
          {
             startPowerDownload();
             break;
          }
 
-         case NODE_ITEM_CLICKED:
-
-            //            nodeItemClicked(source);
-            break;
-
-         case MAYBE_SHOW_POPUP:
-
-            //            maybeShowPopup((MouseEvent) source);
-            break;
-
          default:
             logger.error("Unregistrierte EventId " + actionId);
       }
+   }
+
+   private void headerDownloadsDragged()
+   {
+      PositionManager  pm          = PositionManagerImpl.getInstance();
+      TableColumnModel columnModel = downloadPanel.getDownloadTable().getColumnModel();
+      TableColumn[]    columns     = downloadPanel.getDownloadTableColumns();
+
+      for(int i = 0; i < columns.length; i++)
+      {
+         pm.setDownloadColumnIndex(i, columnModel.getColumnIndex(columns[i].getIdentifier()));
+      }
+   }
+
+   private void headerDownloadSourcesDragged()
+   {
+      PositionManager  pm          = PositionManagerImpl.getInstance();
+      TableColumnModel columnModel = downloadPanel.getDownloadSourceTable().getColumnModel();
+      TableColumn[]    columns     = downloadPanel.getDownloadSourcesTableColumns();
+
+      for(int i = 0; i < columns.length; i++)
+      {
+         pm.setDownloadSourcesColumnIndex(i, columnModel.getColumnIndex(columns[i].getIdentifier()));
+      }
+   }
+
+   private void headerDownloadsPopup(MouseEvent e)
+   {
+      TableColumn[]       columns          = downloadPanel.getDownloadTableColumns();
+      JCheckBoxMenuItem[] columnPopupItems = downloadPanel.getColumnDownloadPopupItems();
+      TableColumnModel    tableColumnModel = downloadPanel.getDownloadTable().getColumnModel();
+
+      for(int i = 1; i < columns.length; i++)
+      {
+         try
+         {
+            tableColumnModel.getColumnIndex(columns[i].getIdentifier());
+            columnPopupItems[i].setSelected(true);
+         }
+         catch(java.lang.IllegalArgumentException iaE)
+         {
+            columnPopupItems[i].setSelected(false);
+         }
+      }
+
+      downloadPanel.getColumnDownloadPopup().show(downloadPanel.getDownloadTable().getTableHeader(), e.getX(), e.getY());
+   }
+
+   private void headerDownloadSourcesPopup(MouseEvent e)
+   {
+      TableColumn[]       columns          = downloadPanel.getDownloadSourcesTableColumns();
+      JCheckBoxMenuItem[] columnPopupItems = downloadPanel.getColumnDownloadSourcesPopupItems();
+      TableColumnModel    tableColumnModel = downloadPanel.getDownloadSourceTable().getColumnModel();
+
+      for(int i = 1; i < columns.length; i++)
+      {
+         try
+         {
+            tableColumnModel.getColumnIndex(columns[i].getIdentifier());
+            columnPopupItems[i].setSelected(true);
+         }
+         catch(java.lang.IllegalArgumentException iaE)
+         {
+            columnPopupItems[i].setSelected(false);
+         }
+      }
+
+      downloadPanel.getColumnDownloadSourcesPopup().show(downloadPanel.getDownloadSourceTable().getTableHeader(), e.getX(), e.getY());
    }
 
    public JComponent getComponent()
@@ -301,148 +459,73 @@ public class DownloadController extends GuiController
 
    private boolean handleDownloadDataPropertyChangeEvent(DownloadDataPropertyChangeEvent event)
    {
-
-      //      if(event.getName() == null)
-      //      {
-      //         return false;
-      //      }
-      //      else if(event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_ADDED) ||
-      //                 event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED) ||
-      //                 event.getName().equals(DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED) ||
-      //                 event.getName().equals(DownloadDataPropertyChangeEvent.FILENAME_CHANGED))
-      //      {
-      //         if(event.getName().equals(DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED) ||
-      //               event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_ADDED))
-      //         {
-      //            String directory;
-      //
-      //            if(event.getNewValue() instanceof Download)
-      //            {
-      //               directory = ((Download) event.getNewValue()).getTargetDirectory();
-      //            }
-      //            else
-      //            {
-      //               directory = (String) event.getNewValue();
-      //            }
-      //
-      //            if(directory != null && directory.length() > 0)
-      //            {
-      //
-      //               todo
-      //                              JComboBox targetDirs = downloadPanel.getTargetDirField();
-      //                              boolean   found = false;
-      //               
-      //                              for(int i = 0; i < targetDirs.getItemCount(); i++)
-      //                              {
-      //                                 if(!((String) targetDirs.getItemAt(i)).equalsIgnoreCase(directory))
-      //                                 {
-      //                                    continue;
-      //                                 }
-      //                                 else
-      //                                 {
-      //                                    found = true;
-      //                                    break;
-      //                                 }
-      //                              }
-      //               
-      //                              if(!found)
-      //                              {
-      //                                 targetDirs.addItem(directory);
-      //                              }
-      //            }
-      //         }
-      //
-      //         if(event.getName().equals(DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED) ||
-      //               event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_ADDED) ||
-      //               event.getName().equals(DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED))
-      //         {
-      ////            DownloadNode.fireDownloadDataPropertyChangeEvent(event);
-      //         }
-      //
-      //         return true;
-      //      }
       return false;
    }
 
    private void clearReadyDownloads()
    {
       AppleJuiceClient.getAjFassade().cleanDownloadList();
-      downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
-      downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(false);
+      downloadPanel.getPowerDownloadPanel().getBtnPdl().setEnabled(false);
       downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
       downloadPanel.getDownloadTable().getSelectionModel().clearSelection();
    }
 
-   //   private void nodeItemClicked(Object node)
-   //   {
-   //      if(node.getClass() == DownloadMainNode.class && ((DownloadMainNode) node).getType() == MainNodeType.ROOT_NODE)
-   //      {
-   //         Download download = ((DownloadMainNode) node).getDownload();
-   //
-   //         if(Settings.getSettings().isDownloadUebersicht())
-   //         {
-   //            downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
-   //            tryGetPartList(false);
-   //         }
-   //         else
-   //         {
-   //            if((download.getStatus() == Download.SUCHEN_LADEN || download.getStatus() == Download.PAUSIERT))
-   //            {
-   //               downloadPanel.getDownloadOverviewPanel().enableHoleListButton(true);
-   //            }
-   //            else
-   //            {
-   //               downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
-   //            }
-   //         }
-   //
-   //         if(!downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive())
-   //         {
-   //            downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(true);
-   //            if(download.getStatus() == Download.SUCHEN_LADEN || download.getStatus() == Download.PAUSIERT)
-   //            {
-   //               downloadPanel.getPowerDownloadPanel().setPwdlValue(download.getPowerDownload());
-   //            }
-   //            else
-   //            {
-   //               downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
-   //               downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(false);
-   //               downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
-   //            }
-   //         }
-   //      }
-   //      else if(node instanceof DownloadSource)
-   //      {
-   //         if(Settings.getSettings().isDownloadUebersicht())
-   //         {
-   //            downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
-   //            tryGetPartList(false);
-   //         }
-   //         else
-   //         {
-   //            downloadPanel.getDownloadOverviewPanel().enableHoleListButton(true);
-   //         }
-   //
-   //         if(!downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive())
-   //         {
-   //            downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(true);
-   //            downloadPanel.getPowerDownloadPanel().setPwdlValue(((DownloadSource) node).getPowerDownload());
-   //         }
-   //      }
-   //      else
-   //      {
-   //         downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(false);
-   //         downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
-   //         downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
-   //      }
-   //   }
+   private void downloadSourceClicked(DownloadSource downloadSource)
+   {
+      tryGetPartList(downloadSource);
+   }
+
+   private void downloadClicked(Download download)
+   {
+      tryGetPartList(download);
+
+      if(!downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive())
+      {
+         downloadPanel.getPowerDownloadPanel().getBtnPdl().setEnabled(true);
+         if(download.getStatus() == Download.SUCHEN_LADEN || download.getStatus() == Download.PAUSIERT)
+         {
+            downloadPanel.getPowerDownloadPanel().setPwdlValue(download.getPowerDownload());
+         }
+         else
+         {
+            downloadPanel.getPowerDownloadPanel().getBtnPdl().setEnabled(false);
+            downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
+         }
+      }
+
+      //         else if(node instanceof DownloadSource)
+      //         {
+      //            if(Settings.getSettings().isDownloadUebersicht())
+      //            {
+      //               downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
+      //               tryGetPartList(false);
+      //            }
+      //            else
+      //            {
+      //               downloadPanel.getDownloadOverviewPanel().enableHoleListButton(true);
+      //            }
+      //   
+      //            if(!downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive())
+      //            {
+      //               downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(true);
+      //               downloadPanel.getPowerDownloadPanel().setPwdlValue(((DownloadSource) node).getPowerDownload());
+      //            }
+      //         }
+      //         else
+      //         {
+      //            downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(false);
+      //            downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
+      //            downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
+      //         }
+   }
+
    private void startPowerDownload()
    {
       try
       {
-         Object[] selectedItems = getSelectedDownloadItems();
+         Download[] selectedDownloads = getSelectedDownloads();
 
-         if(selectedItems != null && selectedItems.length != 0)
+         if(selectedDownloads != null && selectedDownloads.length != 0)
          {
             int powerDownload = 0;
 
@@ -468,21 +551,21 @@ public class DownloadController extends GuiController
                powerDownload = (int) (power * 10 - 10);
             }
 
-            List<Download> temp = new Vector<Download>();
+            List<Download> temp = new ArrayList<Download>();
 
-            //            for(int i = 0; i < selectedItems.length; i++)
-            //            {
-            //               if(selectedItems[i].getClass() == DownloadMainNode.class)
-            //               {
-            //                  temp.add(((DownloadMainNode) selectedItems[i]).getDownload());
-            //               }
-            //            }
-            //
-            //            AppleJuiceClient.getAjFassade().setPowerDownload(temp, new Integer(powerDownload));
-            //            if(downloadPanel.getBtnPowerDownloadAktiv().isSelected())
-            //            {
-            //               SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
-            //            }
+            for(Download curDownload : selectedDownloads)
+            {
+               if(curDownload.getStatus() == Download.PAUSIERT || curDownload.getStatus() == Download.SUCHEN_LADEN)
+               {
+                  temp.add(curDownload);
+               }
+            }
+
+            AppleJuiceClient.getAjFassade().setPowerDownload(temp, new Integer(powerDownload));
+            if(downloadPanel.getBtnPowerDownloadAktiv().isSelected())
+            {
+               SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
+            }
          }
       }
       catch(Exception ex)
@@ -492,6 +575,46 @@ public class DownloadController extends GuiController
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
          }
       }
+   }
+
+   private void maybeShowDownloadPopup(MouseEvent e)
+   {
+      int[] selected = downloadPanel.getDownloadTable().getSelectedRows();
+
+      if(null == selected || selected.length == 0)
+      {
+         return;
+      }
+
+      Download[] selectedDownloads = new Download[selected.length];
+
+      for(int i = 0; i < selected.length; i++)
+      {
+         selectedDownloads[i] = downloadPanel.getDownloadTableModel().getRow(selected[i]);
+      }
+
+      boolean pausiert = false;
+      boolean laufend = false;
+
+      downloadPanel.getMnuZielordner().setEnabled(true);
+      for(Download curDownload : selectedDownloads)
+      {
+         if(curDownload.getStatus() == Download.SUCHEN_LADEN)
+         {
+            laufend = true;
+         }
+         else if(curDownload.getStatus() == Download.PAUSIERT)
+         {
+            pausiert = true;
+         }
+      }
+
+      downloadPanel.getMnuUmbenennen().setEnabled(selected.length == 1);
+      downloadPanel.getMnuCopyToClipboard().setEnabled(selected.length == 1);
+      downloadPanel.getMnuCopyToClipboardWithSources().setEnabled(selected.length == 1);
+      downloadPanel.getMnuPause().setEnabled(laufend);
+      downloadPanel.getMnuFortsetzen().setEnabled(pausiert);
+      downloadPanel.getPopup().show(downloadPanel.getDownloadTable(), e.getX(), e.getY());
    }
 
    //   private void maybeShowPopup(MouseEvent e)
@@ -583,54 +706,35 @@ public class DownloadController extends GuiController
    //      downloadPanel.getMnuFortsetzen().setEnabled(pausiert);
    //      downloadPanel.getPopup().show(downloadPanel.getDownloadTable(), e.getX(), e.getY());
    //   }
-   private void tryGetPartList(boolean disableButton)
+   private void tryGetPartList(DownloadSource downloadSource)
    {
-      if(disableButton)
-      {
-         downloadPanel.getBtnHoleListe().setEnabled(false);
-      }
-
-      Object[] selectedItems = getSelectedDownloadItems();
-
-      //      if(selectedItems != null && selectedItems.length == 1)
-      //      {
-      //         if(selectedItems[0].getClass() == DownloadMainNode.class &&
-      //               ((DownloadMainNode) selectedItems[0]).getType() == MainNodeType.ROOT_NODE)
-      //         {
-      //            downloadPartListWatcher.setDownloadNode(selectedItems[0]);
-      //         }
-      //         else if(selectedItems[0] instanceof DownloadSource)
-      //         {
-      //            downloadPartListWatcher.setDownloadNode(selectedItems[0]);
-      //         }
-      //      }
+      downloadPartListWatcher.setDownloadNode(downloadSource);
    }
 
-   private Object[] getSelectedDownloadItems()
+   private void tryGetPartList(Download download)
+   {
+      downloadPartListWatcher.setDownloadNode(download);
+   }
+
+   private Download[] getSelectedDownloads()
    {
       try
       {
-         int      count  = downloadPanel.getDownloadTable().getSelectedRowCount();
-         Object[] result = null;
+         int[] selected = downloadPanel.getDownloadTable().getSelectedRows();
 
-         if(count == 1)
+         if(null == selected || selected.length == 0)
          {
-            result    = new Object[count];
-            result[0] = ((TreeTableModelAdapter) downloadPanel.getDownloadTable().getModel()).nodeForRow(downloadPanel.getDownloadTable()
-                                                                                                         .getSelectedRow());
-         }
-         else if(count > 1)
-         {
-            result = new Object[count];
-            int[] indizes = downloadPanel.getDownloadTable().getSelectedRows();
-
-            for(int i = 0; i < indizes.length; i++)
-            {
-               result[i] = ((TreeTableModelAdapter) downloadPanel.getDownloadTable().getModel()).nodeForRow(indizes[i]);
-            }
+            return new Download[0];
          }
 
-         return result;
+         Download[] selectedDownloads = new Download[selected.length];
+
+         for(int i = 0; i < selected.length; i++)
+         {
+            selectedDownloads[i] = downloadPanel.getDownloadTableModel().getRow(selected[i]);
+         }
+
+         return selectedDownloads;
       }
       catch(Exception e)
       {
@@ -639,469 +743,352 @@ public class DownloadController extends GuiController
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
          }
 
-         return new Object[0];
+         return new Download[0];
       }
    }
 
    private void renameDownload()
    {
-      Object[] selectedItems = getSelectedDownloadItems();
+      Download[] selectedItems = getSelectedDownloads();
 
       if(selectedItems != null && selectedItems.length == 1)
       {
+         Download             curDownload          = selectedItems[0];
+         RenameDownloadDialog renameDownloadDialog = new RenameDownloadDialog(AppleJuiceDialog.getApp(), curDownload);
 
-         //         if(selectedItems[0].getClass() == DownloadMainNode.class &&
-         //               ((DownloadMainNode) selectedItems[0]).getType() == MainNodeType.ROOT_NODE)
-         //         {
-         //            Download             download             = ((DownloadMainNode) selectedItems[0]).getDownload();
-         //            RenameDownloadDialog renameDownloadDialog = new RenameDownloadDialog(AppleJuiceDialog.getApp(), download);
-         //
-         //            renameDownloadDialog.setVisible(true);
-         //            String neuerName = renameDownloadDialog.getNewName();
-         //
-         //            if(neuerName == null)
-         //            {
-         //               return;
-         //            }
-         //            else
-         //            {
-         //               if(download.getFilename().compareTo(neuerName) != 0)
-         //               {
-         //                  try
-         //                  {
-         //                     AppleJuiceClient.getAjFassade().renameDownload(download, neuerName);
-         //                  }
-         //                  catch(IllegalArgumentException e)
-         //                  {
-         //                     logger.error(e);
-         //                  }
-         //               }
-         //            }
-         //         }
+         renameDownloadDialog.setVisible(true);
+         String neuerName = renameDownloadDialog.getNewName();
+
+         if(neuerName == null)
+         {
+            return;
+         }
+         else
+         {
+            if(curDownload.getFilename().compareTo(neuerName) != 0)
+            {
+               try
+               {
+                  AppleJuiceClient.getAjFassade().renameDownload(curDownload, neuerName);
+               }
+               catch(IllegalArgumentException e)
+               {
+                  logger.error(e);
+               }
+            }
+         }
       }
    }
 
    private void pausieren()
    {
-      Object[] selectedItems = getSelectedDownloadItems();
+      Download[] selectedDownloads = getSelectedDownloads();
 
-      if(selectedItems != null && selectedItems.length != 0 && !downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive())
+      if(selectedDownloads != null && selectedDownloads.length != 0 &&
+            !downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive())
       {
+         final List<Download> pausieren = new ArrayList<Download>();
 
-         //         final List<Download> pausieren = new Vector<Download>();
-         //
-         //         for(int i = 0; i < selectedItems.length; i++)
-         //         {
-         //            if(selectedItems[i].getClass() == DownloadMainNode.class)
-         //            {
-         //               Download download = ((DownloadMainNode) selectedItems[i]).getDownload();
-         //
-         //               if(download.getStatus() == Download.SUCHEN_LADEN)
-         //               {
-         //                  pausieren.add(download);
-         //               }
-         //            }
-         //         }
-         //
-         //         if(pausieren.size() > 0)
-         //         {
-         //            new Thread()
-         //               {
-         //                  public void run()
-         //                  {
-         //                     try
-         //                     {
-         //                        AppleJuiceClient.getAjFassade().pauseDownload(pausieren);
-         //                     }
-         //                     catch(IllegalArgumentException e)
-         //                     {
-         //                        logger.error(e);
-         //                     }
-         //                  }
-         //               }.start();
-         //         }
+         for(Download curDownload : selectedDownloads)
+         {
+            if(curDownload.getStatus() == Download.SUCHEN_LADEN)
+            {
+               pausieren.add(curDownload);
+            }
+         }
+
+         if(pausieren.size() > 0)
+         {
+            new Thread()
+               {
+                  public void run()
+                  {
+                     try
+                     {
+                        AppleJuiceClient.getAjFassade().pauseDownload(pausieren);
+                     }
+                     catch(IllegalArgumentException e)
+                     {
+                        logger.error(e);
+                     }
+                  }
+               }.start();
+         }
       }
    }
 
    private void fortsetzen()
    {
-      Object[] selectedItems = getSelectedDownloadItems();
+      Download[] selectedDownloads = getSelectedDownloads();
 
-      if(selectedItems != null && selectedItems.length != 0 && !downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive())
+      if(selectedDownloads != null && selectedDownloads.length != 0 &&
+            !downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive())
       {
+         final List<Download> fortsetzen = new ArrayList<Download>();
 
-         //         final List<Download> fortsetzen = new Vector<Download>();
-         //
-         //         for(int i = 0; i < selectedItems.length; i++)
-         //         {
-         //            if(selectedItems[i].getClass() == DownloadMainNode.class)
-         //            {
-         //               Download download = ((DownloadMainNode) selectedItems[i]).getDownload();
-         //
-         //               if(download.getStatus() == Download.PAUSIERT)
-         //               {
-         //                  fortsetzen.add(download);
-         //               }
-         //            }
-         //         }
-         //
-         //         if(fortsetzen.size() > 0)
-         //         {
-         //            new Thread()
-         //               {
-         //                  public void run()
-         //                  {
-         //                     try
-         //                     {
-         //                        AppleJuiceClient.getAjFassade().resumeDownload(fortsetzen);
-         //                     }
-         //                     catch(IllegalArgumentException e)
-         //                     {
-         //                        logger.error(e);
-         //                     }
-         //                  }
-         //               }.start();
-         //         }
+         for(Download curDownload : selectedDownloads)
+         {
+            if(curDownload.getStatus() == Download.PAUSIERT)
+            {
+               fortsetzen.add(curDownload);
+            }
+         }
+
+         if(fortsetzen.size() > 0)
+         {
+            new Thread()
+               {
+                  public void run()
+                  {
+                     try
+                     {
+                        AppleJuiceClient.getAjFassade().resumeDownload(fortsetzen);
+                     }
+                     catch(IllegalArgumentException e)
+                     {
+                        logger.error(e);
+                     }
+                  }
+               }.start();
+         }
       }
    }
 
    private void changeTargetDir()
    {
-      Object[] selectedItems = getSelectedDownloadItems();
+      Download[] selectedDownloads = getSelectedDownloads();
 
-      if(selectedItems == null || selectedItems.length == 0)
+      if(selectedDownloads == null || selectedDownloads.length == 0)
       {
          return;
       }
 
       String selectedDir = null;
 
-      //      for(Object curObj : selectedItems)
-      //      {
-      //         if(curObj.getClass() == DownloadMainNode.class)
-      //         {
-      //            selectedDir = ((DownloadMainNode) curObj).getDownload().getTargetDirectory();
-      //            break;
-      //         }
-      //      }
-      //
-      //      String[]                   dirs                       = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
-      //      IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(AppleJuiceDialog.getApp(), dirs,
-      //                                                                                             selectedDir);
-      //
-      //      incomingDirSelectionDialog.setVisible(true);
-      //      String neuerName = incomingDirSelectionDialog.getSelectedIncomingDir();
-      //
-      //      if(neuerName == null)
-      //      {
-      //         return;
-      //      }
-      //      else
-      //      {
-      //         neuerName = neuerName.trim();
-      //         if(neuerName.indexOf(File.separator) == 0 || neuerName.indexOf(ApplejuiceFassade.separator) == 0)
-      //         {
-      //            neuerName = neuerName.substring(1);
-      //         }
-      //      }
-      //
-      //      List<Download> toChange = new Vector<Download>();
-      //      Download       download;
-      //
-      //      for(int i = 0; i < selectedItems.length; i++)
-      //      {
-      //         if(selectedItems[i].getClass() == DownloadMainNode.class &&
-      //               ((DownloadMainNode) selectedItems[i]).getType() == MainNodeType.ROOT_NODE)
-      //         {
-      //            download = ((DownloadMainNode) selectedItems[i]).getDownload();
-      //            if(download.getTargetDirectory().compareTo(neuerName) != 0)
-      //            {
-      //               toChange.add(download);
-      //            }
-      //         }
-      //         else if(selectedItems[i] instanceof DownloadNode)
-      //         {
-      //            Object[] children = ((DownloadNode) selectedItems[i]).getChildren();
-      //
-      //            for(Object curNode : children)
-      //            {
-      //               if(curNode.getClass() == DownloadMainNode.class && ((DownloadMainNode) curNode).getType() == MainNodeType.ROOT_NODE)
-      //               {
-      //                  download = ((DownloadMainNode) curNode).getDownload();
-      //                  if(download.getTargetDirectory().compareTo(neuerName) != 0)
-      //                  {
-      //                     toChange.add(download);
-      //                  }
-      //               }
-      //            }
-      //         }
-      //      }
-      //
-      //      if(toChange.size() > 0)
-      //      {
-      //         try
-      //         {
-      //            AppleJuiceClient.getAjFassade().setTargetDir(toChange, neuerName);
-      //         }
-      //         catch(IllegalArgumentException e)
-      //         {
-      //            logger.error(e);
-      //         }
-      //      }
+      for(Download curDownload : selectedDownloads)
+      {
+         selectedDir = curDownload.getTargetDirectory();
+         if(null != selectedDir && selectedDir.trim().length() > 0)
+         {
+            break;
+         }
+      }
+
+      String[]                   dirs                       = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
+      IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(AppleJuiceDialog.getApp(), dirs,
+                                                                                             selectedDir);
+
+      incomingDirSelectionDialog.setVisible(true);
+      String neuerName = incomingDirSelectionDialog.getSelectedIncomingDir();
+
+      if(neuerName == null)
+      {
+         return;
+      }
+      else
+      {
+         neuerName = neuerName.trim();
+         if(neuerName.indexOf(File.separator) == 0 || neuerName.indexOf(ApplejuiceFassade.separator) == 0)
+         {
+            neuerName = neuerName.substring(1);
+         }
+      }
+
+      List<Download> toChange = new ArrayList<Download>();
+
+      for(Download curDownload : selectedDownloads)
+      {
+         if(!neuerName.equals(curDownload.getTargetDirectory()))
+         {
+            toChange.add(curDownload);
+         }
+      }
+
+      if(toChange.size() > 0)
+      {
+         try
+         {
+            AppleJuiceClient.getAjFassade().setTargetDir(toChange, neuerName);
+         }
+         catch(IllegalArgumentException e)
+         {
+            logger.error(e);
+         }
+      }
    }
 
    private void openWithProgram()
    {
-      Object[] selectedItems = getSelectedDownloadItems();
+      Download[] selectedDownloads = getSelectedDownloads();
 
-      if(selectedItems != null && selectedItems.length == 1)
+      if(selectedDownloads != null && selectedDownloads.length == 1)
       {
+         String programToExecute = OptionsManagerImpl.getInstance().getOpenProgram();
 
-         //         Download download = null;
-         //
-         //         if(selectedItems[0].getClass() == DownloadMainNode.class &&
-         //               ((DownloadMainNode) selectedItems[0]).getType() == MainNodeType.ROOT_NODE)
-         //         {
-         //            download = ((DownloadMainNode) selectedItems[0]).getDownload();
-         //         }
-         //         else if(selectedItems[0] instanceof DownloadSource)
-         //         {
-         //            DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-         //            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-         //            String                key            = Integer.toString(downloadSource.getDownloadId());
-         //
-         //            download                             = downloads.get(key);
-         //         }
-         //
-         //         if(download != null)
-         //         {
-         //            String programToExecute = OptionsManagerImpl.getInstance().getOpenProgram();
-         //
-         //            if(programToExecute.length() != 0)
-         //            {
-         //               Integer shareId = new Integer(download.getShareId());
-         //
-         //               try
-         //               {
-         //                  Share share = (Share) AppleJuiceClient.getAjFassade().getObjectById(shareId);
-         //
-         //                  if(share != null)
-         //                  {
-         //                     String filename = share.getFilename();
-         //
-         //                     try
-         //                     {
-         //                        Runtime.getRuntime().exec(new String[] {programToExecute, filename});
-         //                     }
-         //                     catch(Exception ex)
-         //                     {
-         //
-         //                        //nix zu tun
-         //                     }
-         //                  }
-         //               }
-         //               catch(IllegalArgumentException e)
-         //               {
-         //                  logger.error(e);
-         //               }
-         //            }
-         //         }
+         if(programToExecute.length() != 0)
+         {
+            for(Download curDownload : selectedDownloads)
+            {
+               Integer shareId = new Integer(curDownload.getShareId());
+
+               try
+               {
+                  Share share = (Share) AppleJuiceClient.getAjFassade().getObjectById(shareId);
+
+                  if(share != null)
+                  {
+                     String filename = share.getFilename();
+
+                     try
+                     {
+                        Runtime.getRuntime().exec(new String[] {programToExecute, filename});
+                     }
+                     catch(Exception ex)
+                     {
+
+                        //nix zu tun
+                     }
+                  }
+               }
+               catch(IllegalArgumentException e)
+               {
+                  logger.error(e);
+               }
+            }
+         }
       }
    }
 
    private void openWithDefaultProgram()
    {
-      Object[] selectedItems = getSelectedDownloadItems();
+      Download[] selectedDownloads = getSelectedDownloads();
 
-      if(selectedItems != null && selectedItems.length == 1)
+      if(selectedDownloads != null && selectedDownloads.length == 1)
       {
+         for(Download curDownload : selectedDownloads)
+         {
+            Integer shareId = new Integer(curDownload.getShareId());
 
-         //         Download download = null;
-         //
-         //         if(selectedItems[0].getClass() == DownloadMainNode.class &&
-         //               ((DownloadMainNode) selectedItems[0]).getType() == MainNodeType.ROOT_NODE)
-         //         {
-         //            download = ((DownloadMainNode) selectedItems[0]).getDownload();
-         //         }
-         //         else if(selectedItems[0] instanceof DownloadSource)
-         //         {
-         //            DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-         //            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-         //            String                key            = Integer.toString(downloadSource.getDownloadId());
-         //
-         //            download                             = downloads.get(key);
-         //         }
-         //
-         //         if(download != null)
-         //         {
-         //            Integer shareId = new Integer(download.getShareId());
-         //
-         //            try
-         //            {
-         //               Share share = (Share) AppleJuiceClient.getAjFassade().getObjectById(shareId);
-         //
-         //               if(share != null)
-         //               {
-         //                  String filename = share.getFilename();
-         //
-         //                  DesktopTools.open(new File(filename));
-         //               }
-         //            }
-         //            catch(IllegalArgumentException e)
-         //            {
-         //               logger.error(e);
-         //            }
-         //         }
+            try
+            {
+               Share share = (Share) AppleJuiceClient.getAjFassade().getObjectById(shareId);
+
+               if(share != null)
+               {
+                  String filename = share.getFilename();
+
+                  DesktopTools.open(new File(filename));
+               }
+            }
+            catch(IllegalArgumentException e)
+            {
+               logger.error(e);
+            }
+         }
       }
    }
 
-   private void copyToClipboardWithSources()
+   private void copyDownloadLinkToClipboardWithSources()
    {
-      Object[] selectedItems = getSelectedDownloadItems();
+      Download[] selectedDownloads = getSelectedDownloads();
 
-      if(selectedItems != null && selectedItems.length == 1)
+      if(selectedDownloads != null && selectedDownloads.length == 1)
       {
+         Download     curDownload = selectedDownloads[0];
+         Clipboard    cb     = Toolkit.getDefaultToolkit().getSystemClipboard();
+         StringBuffer toCopy = new StringBuffer();
 
-         //         Clipboard    cb     = Toolkit.getDefaultToolkit().getSystemClipboard();
-         //         StringBuffer toCopy = new StringBuffer();
-         //
-         //         toCopy.append("ajfsp://file|");
-         //         boolean copyToClipboard = false;
-         //
-         //         if(selectedItems[0].getClass() == DownloadMainNode.class &&
-         //               ((DownloadMainNode) selectedItems[0]).getType() == MainNodeType.ROOT_NODE)
-         //         {
-         //            Download downloadDO = ((DownloadMainNode) selectedItems[0]).getDownload();
-         //
-         //            toCopy.append(downloadDO.getFilename() + "|" + downloadDO.getHash() + "|" + downloadDO.getGroesse());
-         //            copyToClipboard = true;
-         //         }
-         //         else if(selectedItems[0] instanceof DownloadSource)
-         //         {
-         //            DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-         //            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-         //            String                key            = Integer.toString(downloadSource.getDownloadId());
-         //            Download              download       = downloads.get(key);
-         //
-         //            if(download != null)
-         //            {
-         //               toCopy.append(downloadSource.getFilename() + "|" + download.getHash() + "|" + download.getGroesse());
-         //               copyToClipboard = true;
-         //            }
-         //         }
-         //
-         //         if(copyToClipboard)
-         //         {
-         //            long        port        = AppleJuiceClient.getAjFassade().getAJSettings().getPort();
-         //            Information information = AppleJuiceClient.getAjFassade().getInformation();
-         //
-         //            toCopy.append("|");
-         //            toCopy.append(information.getExterneIP());
-         //            toCopy.append(":");
-         //            toCopy.append(port);
-         //            if(information.getVerbindungsStatus() == Information.VERBUNDEN)
-         //            {
-         //               Server server = information.getServer();
-         //
-         //               if(server != null)
-         //               {
-         //                  toCopy.append(":");
-         //                  toCopy.append(server.getHost());
-         //                  toCopy.append(":");
-         //                  toCopy.append(server.getPort());
-         //               }
-         //            }
-         //
-         //            toCopy.append("/");
-         //            StringSelection contents = new StringSelection(toCopy.toString());
-         //
-         //            cb.setContents(contents, null);
-         //         }
+         toCopy.append("ajfsp://file|");
+         boolean copyToClipboard = false;
+
+         toCopy.append(curDownload.getFilename() + "|" + curDownload.getHash() + "|" + curDownload.getGroesse());
+         copyToClipboard = true;
+
+         if(copyToClipboard)
+         {
+            long        port        = AppleJuiceClient.getAjFassade().getAJSettings().getPort();
+            Information information = AppleJuiceClient.getAjFassade().getInformation();
+
+            toCopy.append("|");
+            toCopy.append(information.getExterneIP());
+            toCopy.append(":");
+            toCopy.append(port);
+            if(information.getVerbindungsStatus() == Information.VERBUNDEN)
+            {
+               Server server = information.getServer();
+
+               if(server != null)
+               {
+                  toCopy.append(":");
+                  toCopy.append(server.getHost());
+                  toCopy.append(":");
+                  toCopy.append(server.getPort());
+               }
+            }
+
+            toCopy.append("/");
+            StringSelection contents = new StringSelection(toCopy.toString());
+
+            cb.setContents(contents, null);
+         }
       }
    }
 
-   private void copyToClipboard()
+   private void copyDownloadLinkToClipboard()
    {
-      Object[] selectedItems = getSelectedDownloadItems();
+      Download[] selectedDownloads = getSelectedDownloads();
 
-      if(selectedItems != null && selectedItems.length == 1)
+      if(selectedDownloads != null && selectedDownloads.length == 1)
       {
+         Download     curDownload = selectedDownloads[0];
+         Clipboard    cb     = Toolkit.getDefaultToolkit().getSystemClipboard();
+         StringBuffer toCopy = new StringBuffer();
 
-         //         Clipboard    cb     = Toolkit.getDefaultToolkit().getSystemClipboard();
-         //         StringBuffer toCopy = new StringBuffer();
-         //
-         //         toCopy.append("ajfsp://file|");
-         //         if(selectedItems[0].getClass() == DownloadMainNode.class &&
-         //               ((DownloadMainNode) selectedItems[0]).getType() == MainNodeType.ROOT_NODE)
-         //         {
-         //            Download download = ((DownloadMainNode) selectedItems[0]).getDownload();
-         //
-         //            toCopy.append(download.getFilename() + "|" + download.getHash() + "|" + download.getGroesse() + "/");
-         //            StringSelection contents = new StringSelection(toCopy.toString());
-         //
-         //            cb.setContents(contents, null);
-         //         }
-         //         else if(selectedItems[0] instanceof DownloadSource)
-         //         {
-         //            DownloadSource        downloadSource = (DownloadSource) selectedItems[0];
-         //            Map<String, Download> downloads      = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
-         //            String                key            = Integer.toString(downloadSource.getDownloadId());
-         //            Download              download       = downloads.get(key);
-         //
-         //            if(download != null)
-         //            {
-         //               toCopy.append(downloadSource.getFilename() + "|" + download.getHash() + "|" + download.getGroesse() + "/");
-         //               StringSelection contents = new StringSelection(toCopy.toString());
-         //
-         //               cb.setContents(contents, null);
-         //            }
-         //         }
+         toCopy.append("ajfsp://file|");
+         toCopy.append(curDownload.getFilename() + "|" + curDownload.getHash() + "|" + curDownload.getGroesse() + "/");
+         StringSelection contents = new StringSelection(toCopy.toString());
+
+         cb.setContents(contents, null);
       }
    }
 
    private void downloadAbbrechen()
    {
-      Object[] selectedItems = getSelectedDownloadItems();
+      Download[] selectedDownloads = getSelectedDownloads();
 
-      if(selectedItems != null && selectedItems.length != 0)
+      if(selectedDownloads != null && selectedDownloads.length != 0)
       {
+         int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), downloadAbbrechen, dialogTitel,
+                                                    JOptionPane.YES_NO_OPTION);
 
-         //         int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), downloadAbbrechen, dialogTitel,
-         //                                                    JOptionPane.YES_NO_OPTION);
-         //
-         //         if(result == JOptionPane.YES_OPTION)
-         //         {
-         //            final List<Download> abbrechen = new Vector<Download>();
-         //
-         //            for(int i = 0; i < selectedItems.length; i++)
-         //            {
-         //               if(selectedItems[i].getClass() == DownloadMainNode.class)
-         //               {
-         //                  Download download = ((DownloadMainNode) selectedItems[i]).getDownload();
-         //
-         //                  abbrechen.add(download);
-         //               }
-         //            }
-         //
-         //            if(abbrechen.size() > 0)
-         //            {
-         //               new Thread()
-         //                  {
-         //                     public void run()
-         //                     {
-         //                        try
-         //                        {
-         //                           AppleJuiceClient.getAjFassade().cancelDownload(abbrechen);
-         //                           SoundPlayer.getInstance().playSound(SoundPlayer.ABGEBROCHEN);
-         //                        }
-         //                        catch(IllegalArgumentException e)
-         //                        {
-         //                           logger.error(e);
-         //                        }
-         //                     }
-         //                  }.start();
-         //            }
-         //         }
+         if(result == JOptionPane.YES_OPTION)
+         {
+            final List<Download> abbrechen = new ArrayList<Download>();
+
+            for(Download curDownload : selectedDownloads)
+            {
+               abbrechen.add(curDownload);
+            }
+
+            if(abbrechen.size() > 0)
+            {
+               new Thread()
+                  {
+                     public void run()
+                     {
+                        try
+                        {
+                           AppleJuiceClient.getAjFassade().cancelDownload(abbrechen);
+                           SoundPlayer.getInstance().playSound(SoundPlayer.ABGEBROCHEN);
+                        }
+                        catch(IllegalArgumentException e)
+                        {
+                           logger.error(e);
+                        }
+                     }
+                  }.start();
+            }
+         }
       }
    }
 
@@ -1110,7 +1097,6 @@ public class DownloadController extends GuiController
       try
       {
          selected = true;
-         downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
          if(!initialized)
          {
             initialized = true;
@@ -1118,48 +1104,86 @@ public class DownloadController extends GuiController
             int             width = downloadPanel.getScrollPane().getWidth() - 18;
             PositionManager pm = PositionManagerImpl.getInstance();
 
-            //            TableColumn[]   columns = downloadPanel.getDownloadTableColumns();
-            //
-            //            if(pm.isLegal())
-            //            {
-            //               int[]                  widths         = pm.getDownloadWidths();
-            //               boolean[]              visibilies     = pm.getDownloadColumnVisibilities();
-            //               int[]                  indizes        = pm.getDownloadColumnIndizes();
-            //               ArrayList<TableColumn> visibleColumns = new ArrayList<TableColumn>();
-            //
-            //               for(int i = 0; i < columns.length; i++)
-            //               {
-            //                  columns[i].setPreferredWidth(widths[i]);
-            //                  downloadPanel.getDownloadTable().removeColumn(columns[i]);
-            //                  if(visibilies[i])
-            //                  {
-            //                     visibleColumns.add(columns[i]);
-            //                  }
-            //               }
-            //
-            //               int pos = -1;
-            //
-            //               for(int i = 0; i < visibleColumns.size(); i++)
-            //               {
-            //                  for(int x = 0; x < columns.length; x++)
-            //                  {
-            //                     if(visibleColumns.contains(columns[x]) && indizes[x] == pos + 1)
-            //                     {
-            //                        downloadPanel.getDownloadTable().addColumn(columns[x]);
-            //                        pos++;
-            //                        break;
-            //                     }
-            //                  }
-            //               }
-            //            }
-            //            else
-            //            {
-            //               for(int i = 0; i < columns.length; i++)
-            //               {
-            //                  columns[i].setPreferredWidth(width / columns.length);
-            //               }
-            //            }
+            TableColumn[]   columnsDownload        = downloadPanel.getDownloadTableColumns();
+            TableColumn[]   columnsDownloadSources = downloadPanel.getDownloadSourcesTableColumns();
+
+            if(pm.isLegal())
+            {
+               int[]                  widths         = pm.getDownloadWidths();
+               boolean[]              visibilies     = pm.getDownloadColumnVisibilities();
+               int[]                  indizes        = pm.getDownloadColumnIndizes();
+               ArrayList<TableColumn> visibleColumns = new ArrayList<TableColumn>();
+
+               for(int i = 0; i < columnsDownload.length; i++)
+               {
+                  columnsDownload[i].setPreferredWidth(widths[i]);
+                  downloadPanel.getDownloadTable().removeColumn(columnsDownload[i]);
+                  if(visibilies[i])
+                  {
+                     visibleColumns.add(columnsDownload[i]);
+                  }
+               }
+
+               int pos = -1;
+
+               for(int i = 0; i < visibleColumns.size(); i++)
+               {
+                  for(int x = 0; x < columnsDownload.length; x++)
+                  {
+                     if(visibleColumns.contains(columnsDownload[x]) && indizes[x] == pos + 1)
+                     {
+                        downloadPanel.getDownloadTable().addColumn(columnsDownload[x]);
+                        pos++;
+                        break;
+                     }
+                  }
+               }
+
+               widths         = pm.getDownloadSourcesWidths();
+               visibilies     = pm.getDownloadSourcesColumnVisibilities();
+               indizes        = pm.getDownloadSourcesColumnIndizes();
+               visibleColumns = new ArrayList<TableColumn>();
+
+               for(int i = 0; i < columnsDownloadSources.length; i++)
+               {
+                  columnsDownloadSources[i].setPreferredWidth(widths[i]);
+                  downloadPanel.getDownloadSourceTable().removeColumn(columnsDownloadSources[i]);
+                  if(visibilies[i])
+                  {
+                     visibleColumns.add(columnsDownloadSources[i]);
+                  }
+               }
+
+               pos = -1;
+
+               for(int i = 0; i < visibleColumns.size(); i++)
+               {
+                  for(int x = 0; x < columnsDownloadSources.length; x++)
+                  {
+                     if(visibleColumns.contains(columnsDownloadSources[x]) && indizes[x] == pos + 1)
+                     {
+                        downloadPanel.getDownloadSourceTable().addColumn(columnsDownloadSources[x]);
+                        pos++;
+                        break;
+                     }
+                  }
+               }
+            }
+            else
+            {
+               for(int i = 0; i < columnsDownload.length; i++)
+               {
+                  columnsDownload[i].setPreferredWidth(width / columnsDownload.length);
+               }
+
+               for(int i = 0; i < columnsDownloadSources.length; i++)
+               {
+                  columnsDownloadSources[i].setPreferredWidth(width / columnsDownloadSources.length);
+               }
+            }
+
             downloadPanel.getDownloadTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            downloadPanel.getDownloadSourceTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             int loc = (int) ((downloadPanel.getSplitPane().getHeight() - downloadPanel.getSplitPane().getDividerSize() -
                       downloadPanel.getPowerDownloadPanel().getPreferredSize().height));
 
@@ -1177,29 +1201,29 @@ public class DownloadController extends GuiController
    public void componentLostSelection()
    {
       selected = false;
-      downloadPartListWatcher.setDownloadNode(null);
+      downloadPartListWatcher.setDownloadNode((Download) null);
    }
 
    protected void languageChanged()
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      String           text             = languageSelector.getFirstAttrbuteByTagName("mainform.Label14.caption");
+      String           text = languageSelector.getFirstAttrbuteByTagName("mainform.Label14.caption");
 
-      dialogTitel                       = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
-      downloadAbbrechen                 = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext5");
-      String[] tableColumns             = new String[10];
+      dialogTitel       = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
+      downloadAbbrechen = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext5");
+      String[] tableColumns = new String[10];
 
-      tableColumns[0]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
-      tableColumns[1]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
-      tableColumns[2]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption");
-      tableColumns[3]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption");
-      tableColumns[4]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption");
-      tableColumns[5]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption");
-      tableColumns[6]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
-      tableColumns[7]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption");
-      tableColumns[8]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
-      tableColumns[9]                   = "Zielverzeichnis";
-      TableColumn[]       columns       = downloadPanel.getDownloadTableColumns();
+      tableColumns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
+      tableColumns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
+      tableColumns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption");
+      tableColumns[3] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption");
+      tableColumns[4] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption");
+      tableColumns[5] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption");
+      tableColumns[6] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
+      tableColumns[7] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption");
+      tableColumns[8] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
+      tableColumns[9] = "Zielverzeichnis";
+      TableColumn[]       columns = downloadPanel.getDownloadTableColumns();
       JCheckBoxMenuItem[] columnPopupItems = downloadPanel.getColumnPopupItems();
 
       for(int i = 0; i < columns.length; i++)
@@ -1208,15 +1232,14 @@ public class DownloadController extends GuiController
          columnPopupItems[i].setText(tableColumns[i]);
       }
 
-      tableColumns[9]                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption");
-      columns = downloadPanel.getDownloadSourcesTableColumns();
+      tableColumns[9] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption");
+      columns         = downloadPanel.getDownloadSourcesTableColumns();
 
       for(int i = 0; i < columns.length; i++)
       {
          columns[i].setHeaderValue(tableColumns[i]);
       }
 
-      //      DownloadMainNode.setColumnTitles(tableColumns);
       downloadPanel.getMnuAbbrechen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.canceldown.caption"));
       downloadPanel.getMnuPause().setText(languageSelector.getFirstAttrbuteByTagName("mainform.pausedown.caption") + " [F5]");
       downloadPanel.getMnuFortsetzen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.resumedown.caption") + " [F6]");
@@ -1225,8 +1248,6 @@ public class DownloadController extends GuiController
                                                " [F3]");
       downloadPanel.getMnuFertigeEntfernen()
       .setText(languageSelector.getFirstAttrbuteByTagName("mainform.Clearfinishedentries1.caption"));
-      downloadPanel.getMnuPartlisteAnzeigen()
-      .setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.partlisteanzeigen"));
       downloadPanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
       downloadPanel.getMnuCopyToClipboardWithSources()
       .setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.getlinkwithsources"));
@@ -1243,24 +1264,37 @@ public class DownloadController extends GuiController
    {
       Map<String, Download> downloads = (Map<String, Download>) content;
 
-      downloadPanel.getDownloadTableModel().setDownloads(downloads);
-      Download curDownload = downloadPanel.getDownloadSourcesTableModel().getDownload();
+      final boolean         downloadChanged = downloadPanel.getDownloadTableModel().setDownloads(downloads);
+      Download              curDownload     = downloadPanel.getDownloadSourcesTableModel().getDownload();
+
+      boolean               sourcesChangedTmp = false;
 
       if(null != curDownload)
       {
          Download freshDownload = downloads.get(curDownload.getId() + "");
 
-         downloadPanel.getDownloadSourcesTableModel().setDownload(freshDownload);
+         sourcesChangedTmp = downloadPanel.getDownloadSourcesTableModel().setDownload(freshDownload);
       }
 
-      if(selected)
+      final boolean sourcesChanged = sourcesChangedTmp;
+
+      if(selected && (downloadChanged || sourcesChanged))
       {
          SwingUtilities.invokeLater(new Runnable()
             {
                public void run()
                {
-                  downloadPanel.getDownloadTable().updateUI();
-                  downloadPanel.getDownloadSourceTable().updateUI();
+                  if(downloadChanged)
+                  {
+                     downloadPanel.getDownloadTableModel().forceResort();
+                     downloadPanel.getDownloadTable().updateUI();
+                  }
+
+                  if(sourcesChanged)
+                  {
+                     downloadPanel.getDownloadSourcesTableModel().forceResort();
+                     downloadPanel.getDownloadSourceTable().updateUI();
+                  }
                }
             });
       }

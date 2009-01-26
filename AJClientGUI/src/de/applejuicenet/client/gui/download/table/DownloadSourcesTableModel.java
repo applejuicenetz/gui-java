@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.download.table;
 
 import java.util.ArrayList;
@@ -12,41 +13,44 @@ import javax.swing.table.AbstractTableModel;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.entity.Version;
+import de.applejuicenet.client.gui.components.table.SortableTableModel;
+import de.applejuicenet.client.gui.components.table.TableSorter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
-public class DownloadSourceTableModel extends AbstractTableModel implements LanguageListener
+public class DownloadSourcesTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<DownloadSource>
 {
    static protected String[]                              cNames = {"", "", "", "", "", "", "", "", "", ""};
    @SuppressWarnings("unchecked")
    static protected Class[]                               cTypes = 
                                                                    {
-                                                                      String.class, String.class, String.class, String.class,
-                                                                      String.class, String.class, Double.class, String.class,
-                                                                      String.class, Version.class
+                                                                      String.class, String.class, Integer.class, Integer.class,
+                                                                      Integer.class, String.class, Double.class, Integer.class,
+                                                                      Integer.class, Version.class
                                                                    };
 
    //Source-Stati
-   public static String         ungefragt                    = "";
-   public static String         versucheZuVerbinden          = "";
-   public static String         ggstZuAlteVersion            = "";
-   public static String         kannDateiNichtOeffnen        = "";
-   public static String         warteschlange                = "";
-   public static String         keineBrauchbarenParts        = "";
-   public static String         uebertragung                 = "";
-   public static String         nichtGenugPlatz              = "";
-   public static String         fertiggestellt               = "";
-   public static String         keineVerbindungMoeglich      = "";
-   public static String         pausiert                     = "";
-   public static String         position                     = "";
-   public static String         versucheIndirekt             = "";
-   public static String         warteschlangeVoll            = "";
-   public static String         eigenesLimitErreicht         = "";
-   public static String         indirekteVerbindungAbgelehnt = "";
-   private List<DownloadSource> sources                      = new ArrayList<DownloadSource>();
-   private Download             curDownload                  = null;
+   public static String                ungefragt                    = "";
+   public static String                versucheZuVerbinden          = "";
+   public static String                ggstZuAlteVersion            = "";
+   public static String                kannDateiNichtOeffnen        = "";
+   public static String                warteschlange                = "";
+   public static String                keineBrauchbarenParts        = "";
+   public static String                uebertragung                 = "";
+   public static String                nichtGenugPlatz              = "";
+   public static String                fertiggestellt               = "";
+   public static String                keineVerbindungMoeglich      = "";
+   public static String                pausiert                     = "";
+   public static String                position                     = "";
+   public static String                versucheIndirekt             = "";
+   public static String                warteschlangeVoll            = "";
+   public static String                eigenesLimitErreicht         = "";
+   public static String                indirekteVerbindungAbgelehnt = "";
+   private TableSorter<DownloadSource> sorter;
+   private List<DownloadSource>        sources                      = new ArrayList<DownloadSource>();
+   private Download                    curDownload                  = null;
 
-   public DownloadSourceTableModel()
+   public DownloadSourcesTableModel()
    {
       super();
       LanguageSelector.getInstance().addLanguageListener(this);
@@ -58,7 +62,7 @@ public class DownloadSourceTableModel extends AbstractTableModel implements Lang
    }
 
    @Override
-   public Class<?> getColumnClass(int columnIndex)
+   public Class<? > getColumnClass(int columnIndex)
    {
       return cTypes[columnIndex];
    }
@@ -87,24 +91,13 @@ public class DownloadSourceTableModel extends AbstractTableModel implements Lang
             return getStatusAsString(source);
 
          case 2:
-            int size = source.getSize();
-
-            return parseGroesse(size);
+            return source.getSize();
 
          case 3:
-            int bereitsGeladen = source.getBereitsGeladen();
-
-            return parseGroesse(bereitsGeladen);
+            return source.getBereitsGeladen();
 
          case 4:
-            if(source.getStatus() == DownloadSource.UEBERTRAGUNG)
-            {
-               return getSpeedAsString((long) source.getSpeed());
-            }
-            else
-            {
-               return null;
-            }
+            return source.getSpeed();
 
          case 5:
             return source.getRestZeitAsString();
@@ -113,12 +106,10 @@ public class DownloadSourceTableModel extends AbstractTableModel implements Lang
             return source.getReadyPercent();
 
          case 7:
-            int nochZuLaden = source.getNochZuLaden();
-
-            return parseGroesse(nochZuLaden);
+            return source.getNochZuLaden();
 
          case 8:
-            return powerdownload(source.getPowerDownload());
+            return source.getPowerDownload();
 
          case 9:
             return source.getVersion();
@@ -188,121 +179,6 @@ public class DownloadSourceTableModel extends AbstractTableModel implements Lang
       }
 
       return change;
-   }
-
-   public static String powerdownload(int pwdl)
-   {
-      if(pwdl == 0)
-      {
-         return "1:1,0";
-      }
-
-      double power = pwdl;
-
-      power = power / 10 + 1;
-      String temp = Double.toString(power);
-
-      return "1:" + temp.replace('.', ',');
-   }
-
-   public static String parseGroesse(long groesse)
-   {
-      double share  = Double.parseDouble(Long.toString(groesse));
-      int    faktor;
-
-      if(share == 0)
-      {
-         return "";
-      }
-
-      if(share < 1024)
-      {
-         return groesse + " Bytes";
-      }
-      else if(share / 1024 < 1024)
-      {
-         faktor     = 1024;
-      }
-      else if(share / 1048576 < 1024)
-      {
-         faktor = 1048576;
-      }
-      else if(share / 1073741824 < 1024)
-      {
-         faktor = 1073741824;
-      }
-      else
-      {
-         faktor = 1;
-      }
-
-      share = share / faktor;
-      String result = Double.toString(share);
-
-      if(result.indexOf('.') != -1 && (result.indexOf('.') + 3 < result.length()))
-      {
-         result = result.substring(0, result.indexOf('.') + 3);
-      }
-
-      result = result.replace('.', ',');
-      if(faktor == 1024)
-      {
-         result += " KB";
-      }
-      else if(faktor == 1048576)
-      {
-         result += " MB";
-      }
-      else if(faktor == 1073741824)
-      {
-         result += " GB";
-      }
-      else
-      {
-         result += " ??";
-      }
-
-      return result;
-   }
-
-   public static String getSpeedAsString(long speed)
-   {
-      if(speed == 0)
-      {
-         return "0 Bytes/s";
-      }
-
-      double size   = speed;
-      int    faktor = 1;
-
-      if(size < 1024)
-      {
-         faktor = 1;
-      }
-      else
-      {
-         faktor = 1024;
-
-      }
-
-      size = size / faktor;
-      String s = Double.toString(size);
-
-      if(s.indexOf(".") + 3 < s.length())
-      {
-         s = s.substring(0, s.indexOf(".") + 3);
-      }
-
-      if(faktor == 1)
-      {
-         s += " Bytes/s";
-      }
-      else
-      {
-         s += " kb/s";
-      }
-
-      return s;
    }
 
    public String getStatusAsString(DownloadSource downloadSource)
@@ -380,5 +256,34 @@ public class DownloadSourceTableModel extends AbstractTableModel implements Lang
       eigenesLimitErreicht         = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.eigeneslimiterreicht");
       indirekteVerbindungAbgelehnt = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.indverbindungabgelehnt");
       warteschlangeVoll            = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.warteschlangevoll");
+   }
+
+   public void forceResort()
+   {
+      if(null != sorter)
+      {
+         sorter.forceResort();
+      }
+   }
+
+   public List<DownloadSource> getContent()
+   {
+      return sources;
+   }
+
+   public Object getValueForSortAt(int row, int column)
+   {
+      return getValueAt(row, column);
+   }
+
+   public void sortByColumn(int column, boolean isAscent)
+   {
+      if(sorter == null)
+      {
+         sorter = new TableSorter<DownloadSource>(this);
+      }
+
+      sorter.sort(column, isAscent);
+      fireTableDataChanged();
    }
 }

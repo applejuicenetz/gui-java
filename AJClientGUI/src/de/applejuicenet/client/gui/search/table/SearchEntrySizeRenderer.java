@@ -11,7 +11,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import de.applejuicenet.client.gui.download.table.DownloadModel;
+import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 
 public class SearchEntrySizeRenderer extends DefaultTableCellRenderer
 {
@@ -19,7 +19,7 @@ public class SearchEntrySizeRenderer extends DefaultTableCellRenderer
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
                                                   int column)
    {
-      JLabel comp = (JLabel) super.getTableCellRendererComponent(table, DownloadModel.parseGroesse((Long) value), isSelected,
+      JLabel comp = (JLabel) super.getTableCellRendererComponent(table, DownloadsTableModel.parseGroesse((Long) value), isSelected,
                                                                  hasFocus, row, column);
 
       comp.setHorizontalAlignment(SwingConstants.RIGHT);

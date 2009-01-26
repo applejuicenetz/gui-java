@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.options;
 
 import java.awt.BorderLayout;
@@ -10,6 +11,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -33,12 +35,13 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Settings;
+
 import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.11 2009/01/19 08:48:04 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODAnsichtPanel.java,v 1.12 2009/01/26 13:31:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -50,19 +53,18 @@ import de.tklsoft.gui.controls.TKLTextField;
 public class ODAnsichtPanel extends JPanel implements OptionsRegister
 {
    private TKLLabel     farbeFertigerDownload = new TKLLabel("      ");
-   private TKLLabel     farbeQuelle           = new TKLLabel("      ");
+   private TKLLabel     farbeQuelle          = new TKLLabel("      ");
    private Settings     settings;
-   private TKLCheckBox  cmbAktiv              = new TKLCheckBox();
-   private TKLCheckBox  cmbDownloadUebersicht = new TKLCheckBox();
-   private TKLCheckBox  enableToolTip         = new TKLCheckBox();
-   private TKLCheckBox  cmbStartscreenZeigen  = new TKLCheckBox();
+   private TKLCheckBox  cmbAktiv             = new TKLCheckBox();
+   private TKLCheckBox  enableToolTip        = new TKLCheckBox();
+   private TKLCheckBox  cmbStartscreenZeigen = new TKLCheckBox();
    private Logger       logger;
    private Icon         menuIcon;
    private String       menuText;
-   private boolean      dirty                 = false;
-   private TKLTextField openProgram           = new TKLTextField();
-   private TKLLabel     program               = new TKLLabel("VLC ");
-   private Border       emptyBorder           = BorderFactory.createEmptyBorder(1, 1, 1, 1);
+   private boolean      dirty                = false;
+   private TKLTextField openProgram          = new TKLTextField();
+   private TKLLabel     program              = new TKLLabel("VLC ");
+   private Border       emptyBorder          = BorderFactory.createEmptyBorder(1, 1, 1, 1);
 
    public ODAnsichtPanel()
    {
@@ -84,10 +86,9 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
    private void init()
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      IconManager      im               = IconManager.getInstance();
+      IconManager      im = IconManager.getInstance();
 
-      menuIcon                          = im.getIcon("opt_ansicht");
-      cmbDownloadUebersicht.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.downloadansicht"));
+      menuIcon = im.getIcon("opt_ansicht");
       cmbAktiv.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.aktiv"));
       cmbStartscreenZeigen.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigestartscreen"));
       enableToolTip.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigetooltipps"));
@@ -103,14 +104,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       farbeQuelle.addMouseListener(new ColorChooserMouseAdapter());
       OptionsManager om = OptionsManagerImpl.getInstance();
 
-      cmbDownloadUebersicht.addChangeListener(new ChangeListener()
-         {
-            public void stateChanged(ChangeEvent ce)
-            {
-               settings.setDownloadUebersicht(cmbDownloadUebersicht.isSelected());
-               dirty = true;
-            }
-         });
       cmbStartscreenZeigen.setSelected(om.shouldShowConnectionDialogOnStartup());
       cmbStartscreenZeigen.addChangeListener(new ChangeListener()
          {
@@ -136,8 +129,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
             }
          });
 
-      ImageIcon icon     = im.getIcon("hint");
-      TKLLabel  hint1    = new TKLLabel(icon)
+      ImageIcon icon  = im.getIcon("hint");
+      TKLLabel  hint1 = new TKLLabel(icon)
       {
          public JToolTip createToolTip()
          {
@@ -148,7 +141,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
          }
       };
 
-      TKLLabel hint2    = new TKLLabel(icon)
+      TKLLabel hint2 = new TKLLabel(icon)
       {
          public JToolTip createToolTip()
          {
@@ -280,8 +273,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       constraints.gridy = 1;
       panel3.add(cmbStartscreenZeigen, constraints);
       constraints.gridy = 2;
-      panel3.add(cmbDownloadUebersicht, constraints);
-      constraints.gridy = 3;
       panel3.add(enableToolTip, constraints);
       panel2.add(panel3, BorderLayout.SOUTH);
 
@@ -290,7 +281,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       reloadSettings();
 
       cmbAktiv.confirmNewValue();
-      cmbDownloadUebersicht.confirmNewValue();
       enableToolTip.confirmNewValue();
       cmbStartscreenZeigen.confirmNewValue();
    }
@@ -300,7 +290,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       try
       {
          boolean        bRet = false;
-         OptionsManager om   = OptionsManagerImpl.getInstance();
+         OptionsManager om = OptionsManagerImpl.getInstance();
 
          if(om.shouldShowConnectionDialogOnStartup() != shouldShowStartcreen())
          {
@@ -363,7 +353,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       farbeQuelle.setBackground(settings.getQuelleHintergrundColor());
       farbeFertigerDownload.setBackground(settings.getDownloadFertigHintergrundColor());
       cmbAktiv.setSelected(settings.isFarbenAktiv());
-      cmbDownloadUebersicht.setSelected(settings.isDownloadUebersicht());
       enableToolTip.setSelected(settings.isToolTipEnabled());
    }
 
@@ -379,10 +368,10 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister
       public void mouseClicked(MouseEvent e)
       {
          LanguageSelector languageSelector = LanguageSelector.getInstance();
-         TKLLabel         source           = (TKLLabel) e.getSource();
-         Color            newColor         = JColorChooser.showDialog(null,
-                                                                      languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarbewaehlen"),
-                                                                      source.getBackground());
+         TKLLabel         source   = (TKLLabel) e.getSource();
+         Color            newColor = JColorChooser.showDialog(null,
+                                                              languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarbewaehlen"),
+                                                              source.getBackground());
 
          if(newColor != null && newColor.getRGB() != source.getBackground().getRGB())
          {

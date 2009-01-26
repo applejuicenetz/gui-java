@@ -142,46 +142,6 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
       }
    }
 
-   private String getSpeedAsString(long speed)
-   {
-      if(speed == 0)
-      {
-         return "0 Bytes/s";
-      }
-
-      double size   = speed;
-      int    faktor = 1;
-
-      if(size < 1024)
-      {
-         faktor = 1;
-      }
-      else
-      {
-         faktor = 1024;
-
-      }
-
-      size = size / faktor;
-      String s = Double.toString(size);
-
-      if(s.indexOf(".") + 3 < s.length())
-      {
-         s = s.substring(0, s.indexOf(".") + 3);
-      }
-
-      if(faktor == 1)
-      {
-         s += " Bytes/s";
-      }
-      else
-      {
-         s += " kb/s";
-      }
-
-      return s;
-   }
-
    public void fireLanguageChanged()
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();

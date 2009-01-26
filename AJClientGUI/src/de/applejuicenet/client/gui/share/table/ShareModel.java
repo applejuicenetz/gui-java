@@ -5,15 +5,14 @@
 package de.applejuicenet.client.gui.share.table;
 
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
 
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
-import de.applejuicenet.client.gui.download.table.DownloadModel;
+import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/Attic/ShareModel.java,v 1.6 2009/01/12 07:45:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/Attic/ShareModel.java,v 1.7 2009/01/26 13:31:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -105,7 +104,7 @@ public class ShareModel extends AbstractTreeTableModel
             {
                if(shareNode.isLeaf() && shareNode != getRoot())
                {
-                  return DownloadModel.parseGroesse(shareNode.getShare().getSize());
+                  return DownloadsTableModel.parseGroesse(shareNode.getShare().getSize());
                }
                else
                {

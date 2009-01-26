@@ -681,18 +681,20 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          String sprachText = LanguageSelector.getInstance().getFirstAttrbuteByTagName("Languageinfo.name");
 
          OptionsManagerImpl.getInstance().setSprache(sprachText);
-         int[]           downloadWidths      = ((DownloadPanel) DownloadController.getInstance().getComponent()).getColumnWidths();
-         int[]           uploadWidths        = ((UploadPanel) UploadController.getInstance().getComponent()).getColumnActiveWidths();
-         int[]           uploadWaitingWidths = ((UploadPanel) UploadController.getInstance().getComponent()).getColumnWaitingWidths();
-         int[]           serverWidths        = ServerPanel.getInstance().getColumnWidths();
-         int[]           shareWidths         = ((SharePanel) ShareController.getInstance().getComponent()).getColumnWidths();
-         Dimension       dim                 = AppleJuiceDialog.getApp().getSize();
-         Point           p                   = AppleJuiceDialog.getApp().getLocationOnScreen();
-         PositionManager pm                  = PositionManagerImpl.getInstance();
+         int[]           downloadWidths        = ((DownloadPanel) DownloadController.getInstance().getComponent()).getDownloadColumnWidths();
+         int[]           downloadSourcesWidths = ((DownloadPanel) DownloadController.getInstance().getComponent()).getDownloadSourcesColumnWidths();
+         int[]           uploadWidths          = ((UploadPanel) UploadController.getInstance().getComponent()).getColumnActiveWidths();
+         int[]           uploadWaitingWidths   = ((UploadPanel) UploadController.getInstance().getComponent()).getColumnWaitingWidths();
+         int[]           serverWidths          = ServerPanel.getInstance().getColumnWidths();
+         int[]           shareWidths           = ((SharePanel) ShareController.getInstance().getComponent()).getColumnWidths();
+         Dimension       dim                   = AppleJuiceDialog.getApp().getSize();
+         Point           p                     = AppleJuiceDialog.getApp().getLocationOnScreen();
+         PositionManager pm                    = PositionManagerImpl.getInstance();
 
          pm.setMainXY(p);
          pm.setMainDimension(dim);
          pm.setDownloadWidths(downloadWidths);
+         pm.setDownloadSourcesWidths(downloadSourcesWidths);
          pm.setUploadWidths(uploadWidths);
          pm.setUploadWaitingWidths(uploadWaitingWidths);
          pm.setServerWidths(serverWidths);

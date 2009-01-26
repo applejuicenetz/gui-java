@@ -1,24 +1,32 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-package de.applejuicenet.client.gui.upload.table;
+
+package de.applejuicenet.client.shared.tablecellrenderer;
 
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.shared.IconManager;
 
-public class TableVersionCellRenderer extends DefaultTableCellRenderer
+public class VersionTableCellRenderer extends DefaultTableCellRenderer
 {
+   public VersionTableCellRenderer()
+   {
+      super();
+      setHorizontalAlignment(SwingConstants.RIGHT);
+   }
+
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
                                                   int column)
    {
-      Version version      = (Version) value;
+      Version version = (Version) value;
 
       String  text         = null == version ? null : version.getVersion();
       JLabel  versionLabel = (JLabel) super.getTableCellRendererComponent(table, text, isSelected, hasFocus, row, column);

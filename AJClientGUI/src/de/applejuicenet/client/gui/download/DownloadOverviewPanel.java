@@ -6,7 +6,7 @@ package de.applejuicenet.client.gui.download;
 
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.5 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.6 2009/01/26 13:31:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,7 +21,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.text.DecimalFormat;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -36,7 +35,6 @@ import de.applejuicenet.client.fassade.entity.PartList;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.shared.IconManager;
 
 public class DownloadOverviewPanel extends JPanel implements LanguageListener
 {
@@ -48,7 +46,6 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener
    private JLabel                label2               = new JLabel();
    private JLabel                label1               = new JLabel();
    private Logger                logger;
-   private JButton               holeListe            = new JButton();
    private PartListWorkerThread  partListWorkerThread = null;
    private DownloadPanel         downloadPanel;
    private String                verfuegbar;
@@ -73,20 +70,8 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener
       }
    }
 
-   public void enableHoleListButton(boolean enable)
-   {
-      holeListe.setEnabled(enable);
-   }
-
-   public JButton getBtnHoleListe()
-   {
-      return holeListe;
-   }
-
    private void init()
    {
-      holeListe.setIcon(IconManager.getInstance().getIcon("partliste"));
-      holeListe.setEnabled(false);
       setLayout(new BorderLayout());
       JPanel tempPanel1 = new JPanel();
 
@@ -129,7 +114,6 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener
 
       JPanel panel3 = new JPanel(new BorderLayout());
 
-      panel3.add(holeListe, BorderLayout.WEST);
       panel3.add(tempPanel1, BorderLayout.CENTER);
 
       add(panel3, BorderLayout.NORTH);
@@ -231,7 +215,6 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener
          label3.setText(languageSelector.getFirstAttrbuteByTagName("mainform.Label3.caption"));
          label2.setText(languageSelector.getFirstAttrbuteByTagName("mainform.Label2.caption"));
          label1.setText(languageSelector.getFirstAttrbuteByTagName("mainform.Label1.caption"));
-         holeListe.setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.partlisteanzeigen"));
          verfuegbar = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.verfuegbar");
       }
       catch(Exception e)

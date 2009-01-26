@@ -8,7 +8,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManagerImpl.java,v 1.3 2009/01/21 14:45:12 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManagerImpl.java,v 1.4 2009/01/26 13:31:36 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -176,5 +176,38 @@ public class PositionManagerImpl implements PositionManager
    public void setUploadWaitingColumnVisible(int column, boolean visible)
    {
       propertiesManager.setUploadWaitingColumnVisible(column, visible);
+   }
+
+   public int[] getDownloadSourcesColumnIndizes()
+   {
+      return propertiesManager.getDownloadSourcesColumnIndizes();
+   }
+
+   public int[] getDownloadSourcesWidths()
+   {
+      return propertiesManager.getDownloadSourcesWidths();
+   }
+
+   public void setDownloadSourcesColumnIndex(int column, int index)
+   {
+      propertiesManager.setDownloadSourcesColumnIndex(column, index);
+
+   }
+
+   public void setDownloadSourcesWidths(int[] widths)
+   {
+      propertiesManager.setDownloadSourcesWidths(widths);
+
+   }
+
+   public boolean[] getDownloadSourcesColumnVisibilities()
+   {
+      return propertiesManager.getDownloadSourcesColumnVisibilities();
+   }
+
+   public void setDownloadSourcesColumnVisible(int column, boolean visible)
+   {
+      propertiesManager.setDownloadSourcesColumnVisible(column, visible);
+
    }
 }
