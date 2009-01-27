@@ -261,6 +261,12 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
          String               temp2;
          int                  i     = 1;
 
+         String               test = propertyHandler.get("options_lookandfeels_laf" + 1 + "_value", null);
+
+         if(null == test)
+         {
+            initLookAndFeels(propertyHandler);
+         }
          while(temp != null && temp.length() > 0)
          {
             temp = propertyHandler.get("options_lookandfeels_laf" + i + "_value", "");
@@ -288,6 +294,53 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
       }
 
       return null;
+   }
+
+   private static void initLookAndFeels(PropertyHandler propertyHandler2)
+   {
+      propertyHandler2.put("options_lookandfeels_laf1_name", "JGoodies Plastic");
+      propertyHandler2.put("options_lookandfeels_laf1_value", "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+      int index = 2;
+
+      if(System.getProperty("os.name").toLowerCase().indexOf("win") != -1)
+      {
+         propertyHandler2.put("options_lookandfeels_laf" + index + "_name", "JGoodies Windows");
+         propertyHandler2.put("options_lookandfeels_laf" + index + "_value", "com.jgoodies.looks.windows.WindowsLookAndFeel");
+         index++;
+      }
+
+      LookAndFeelInfo[] feels       = UIManager.getInstalledLookAndFeels();
+      LookAndFeel       currentFeel = UIManager.getLookAndFeel();
+
+      for(int i = 0; i < feels.length; i++)
+      {
+         try
+         {
+            UIManager.setLookAndFeel(feels[i].getClassName());
+            propertyHandler2.put("options_lookandfeels_laf" + index + "_name", feels[i].getName());
+            propertyHandler2.put("options_lookandfeels_laf" + index + "_value", feels[i].getClassName());
+            index++;
+         }
+         catch(Exception e)
+         {
+
+            //unsupported
+         }
+      }
+
+      try
+      {
+         UIManager.setLookAndFeel(currentFeel);
+      }
+      catch(Exception ex)
+      {
+
+         //muss klappen
+         if(logger.isEnabledFor(Level.ERROR))
+         {
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+         }
+      }
    }
 
    public LookAFeel getDefaultLookAndFeel()
@@ -836,49 +889,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
          aPropertyHandler.put("options_farben_hintergrund_downloadFertig", -13382656);
          aPropertyHandler.put("options_farben_hintergrund_quelle", -205);
 
-         aPropertyHandler.put("options_lookandfeels_laf1_name", "JGoodies Plastic");
-         aPropertyHandler.put("options_lookandfeels_laf1_value", "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-         int index = 2;
-
-         if(System.getProperty("os.name").toLowerCase().indexOf("win") != -1)
-         {
-            aPropertyHandler.put("options_lookandfeels_laf" + index + "_name", "JGoodies Windows");
-            aPropertyHandler.put("options_lookandfeels_laf" + index + "_value", "com.jgoodies.looks.windows.WindowsLookAndFeel");
-            index++;
-         }
-
-         LookAndFeelInfo[] feels       = UIManager.getInstalledLookAndFeels();
-         LookAndFeel       currentFeel = UIManager.getLookAndFeel();
-
-         for(int i = 0; i < feels.length; i++)
-         {
-            try
-            {
-               UIManager.setLookAndFeel(feels[i].getClassName());
-               aPropertyHandler.put("options_lookandfeels_laf" + index + "_name", feels[i].getName());
-               aPropertyHandler.put("options_lookandfeels_laf" + index + "_value", feels[i].getClassName());
-               index++;
-            }
-            catch(Exception e)
-            {
-
-               //unsupported
-            }
-         }
-
-         try
-         {
-            UIManager.setLookAndFeel(currentFeel);
-         }
-         catch(Exception ex)
-         {
-
-            //muss klappen
-            if(logger.isEnabledFor(Level.ERROR))
-            {
-               logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            }
-         }
+         initLookAndFeels(aPropertyHandler);
 
          aPropertyHandler.put("options_lookandfeels_default_name", "JGoodies Plastic");
          aPropertyHandler.put("options_location_height", "");
