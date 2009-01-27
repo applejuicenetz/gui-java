@@ -22,17 +22,13 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 
 public class UploadWaitingTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<Upload>
 {
-   final static String[]                                  COL_NAMES = 
-                                                                      {
-                                                                         "Dateiname", "Status", "Nickname", "Wasserstand",
-                                                                         "Prioritaet", "letzte Verbindung", "Client"
-                                                                      };
+   final static String[] COL_NAMES = {"Dateiname", "Status", "Nickname", "Wasserstand", "Prioritaet", "letzte Verbindung", "Client"};
    @SuppressWarnings("unchecked")
-   static protected Class[]                               cTypes = 
-                                                                   {
-                                                                      String.class, Integer.class, String.class, Integer.class,
-                                                                      String.class, Date.class, Version.class
-                                                                   };
+   public static final Class[] CLASS_TYPES                               = 
+                                                                           {
+                                                                              String.class, Integer.class, String.class,
+                                                                              Integer.class, String.class, Date.class, Version.class
+                                                                           };
    private List<Upload>        uploads      = new ArrayList<Upload>();
    private SimpleDateFormat    formatter    = new SimpleDateFormat("HH:mm:ss");
    private String              uebertragung;
@@ -97,7 +93,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
    @Override
    public Class<? > getColumnClass(int columnIndex)
    {
-      return cTypes[columnIndex];
+      return CLASS_TYPES[columnIndex];
    }
 
    public int getColumnCount()

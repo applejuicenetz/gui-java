@@ -16,7 +16,7 @@ public class ShareTable
 	private static DragSource dragSource = DragSource.getDefaultDragSource();
     private boolean dragEnabled = false;
 
-    public ShareTable(ShareModel treeTableModel) {
+    public ShareTable(ShareTableModel treeTableModel) {
         super(treeTableModel, new DefaultTreeTableCellRenderer(treeTableModel));
         dragSource.createDefaultDragGestureRecognizer(this,
             DnDConstants.ACTION_COPY_OR_MOVE,

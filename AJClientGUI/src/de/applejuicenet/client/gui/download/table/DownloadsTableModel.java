@@ -19,14 +19,16 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 
 public class DownloadsTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<Download>
 {
-   static protected String[]                              cNames = {"", "", "", "", "", "", "", "", "", ""};
+
+   //   public static String[]                                    cNames = {"", "", "", "", "", "", "", "", "", ""};
    @SuppressWarnings("unchecked")
-   static protected Class[]                               cTypes = 
-                                                                   {
-                                                                      Download.class, String.class, Integer.class, Integer.class,
-                                                                      Integer.class, String.class, Double.class, Integer.class,
-                                                                      Integer.class, String.class
-                                                                   };
+   public static final Class[]                               CLASS_TYPES = 
+                                                                           {
+                                                                              Download.class, String.class, Integer.class,
+                                                                              Integer.class, Integer.class, String.class,
+                                                                              Double.class, Integer.class, Integer.class,
+                                                                              String.class
+                                                                           };
 
    //Download-Stati
    public static String          suchen                  = "";
@@ -50,13 +52,13 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
 
    public int getColumnCount()
    {
-      return cNames.length;
+      return CLASS_TYPES.length;
    }
 
    @Override
    public Class<? > getColumnClass(int columnIndex)
    {
-      return cTypes[columnIndex];
+      return CLASS_TYPES[columnIndex];
    }
 
    public int getRowCount()

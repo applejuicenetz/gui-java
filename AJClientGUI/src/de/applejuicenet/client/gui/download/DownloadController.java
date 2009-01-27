@@ -46,6 +46,8 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.download.table.DownloadSourcesTableModel;
+import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.gui.upload.HeaderPopupListener;
 import de.applejuicenet.client.gui.upload.UploadMouseMotionListener;
@@ -1211,7 +1213,7 @@ public class DownloadController extends GuiController
 
       dialogTitel       = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
       downloadAbbrechen = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext5");
-      String[] tableColumns = new String[10];
+      String[] tableColumns = new String[DownloadsTableModel.CLASS_TYPES.length];
 
       tableColumns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
       tableColumns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
@@ -1232,7 +1234,20 @@ public class DownloadController extends GuiController
          columnPopupItems[i].setText(tableColumns[i]);
       }
 
-      tableColumns[9] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption");
+      tableColumns = new String[DownloadSourcesTableModel.CLASS_TYPES.length];
+
+      tableColumns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
+      tableColumns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
+      tableColumns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col1caption");
+      tableColumns[3] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption");
+      tableColumns[4] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption");
+      tableColumns[5] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption");
+      tableColumns[6] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption");
+      tableColumns[7] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
+      tableColumns[8] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption");
+      tableColumns[9] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
+      tableColumns[10] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption");
+      
       columns         = downloadPanel.getDownloadSourcesTableColumns();
 
       for(int i = 0; i < columns.length; i++)

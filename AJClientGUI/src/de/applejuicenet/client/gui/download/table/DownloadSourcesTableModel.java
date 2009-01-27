@@ -20,14 +20,16 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 
 public class DownloadSourcesTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<DownloadSource>
 {
-   static protected String[]                              cNames = {"", "", "", "", "", "", "", "", "", ""};
+
+   //   public static String[]                                    cNames = {"", "", "", "", "", "", "", "", "", "", ""};
    @SuppressWarnings("unchecked")
-   static protected Class[]                               cTypes = 
-                                                                   {
-                                                                      String.class, String.class, Integer.class, Integer.class,
-                                                                      Integer.class, String.class, Double.class, Integer.class,
-                                                                      Integer.class, Version.class
-                                                                   };
+   public static final Class[]                               CLASS_TYPES = 
+                                                                           {
+                                                                              String.class, String.class, String.class,
+                                                                              Integer.class, Integer.class, Integer.class,
+                                                                              String.class, Double.class, Integer.class,
+                                                                              Integer.class, Version.class
+                                                                           };
 
    //Source-Stati
    public static String                ungefragt                    = "";
@@ -58,13 +60,13 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
 
    public int getColumnCount()
    {
-      return cNames.length;
+      return CLASS_TYPES.length;
    }
 
    @Override
    public Class<? > getColumnClass(int columnIndex)
    {
-      return cTypes[columnIndex];
+      return CLASS_TYPES[columnIndex];
    }
 
    public int getRowCount()
@@ -91,27 +93,30 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
             return getStatusAsString(source);
 
          case 2:
-            return source.getSize();
+            return source.getNickname();
 
          case 3:
-            return source.getBereitsGeladen();
+            return source.getSize();
 
          case 4:
-            return source.getSpeed();
+            return source.getBereitsGeladen();
 
          case 5:
-            return source.getRestZeitAsString();
+            return source.getSpeed();
 
          case 6:
-            return source.getReadyPercent();
+            return source.getRestZeitAsString();
 
          case 7:
-            return source.getNochZuLaden();
+            return source.getReadyPercent();
 
          case 8:
-            return source.getPowerDownload();
+            return source.getNochZuLaden();
 
          case 9:
+            return source.getPowerDownload();
+
+         case 10:
             return source.getVersion();
 
          default:

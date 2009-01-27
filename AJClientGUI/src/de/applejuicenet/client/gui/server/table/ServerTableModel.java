@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.server.table;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.10 2009/01/22 22:18:23 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.11 2009/01/27 07:55:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -26,17 +27,13 @@ import de.applejuicenet.client.gui.components.table.TableSorter;
  */
 public class ServerTableModel extends AbstractTableModel implements SortableTableModel<Server>
 {
-   final static String[]                              COL_NAMES   = 
-                                                                    {
-                                                                       "Name", "DynIP", "Port", "Verbindungsversuche",
-                                                                       "Letztes mal online"
-                                                                    };
+   final static String[] COL_NAMES = {"Name", "DynIP", "Port", "Verbindungsversuche", "Letztes mal online"};
    @SuppressWarnings("unchecked")
-   final static Class[]                               COL_CLASSES = 
-                                                                    {
-                                                                       Server.class, String.class, Integer.class, Integer.class,
-                                                                       Date.class
-                                                                    };
+   public static final Class[] CLASS_TYPES                               = 
+                                                                           {
+                                                                              Server.class, String.class, Integer.class,
+                                                                              Integer.class, Date.class
+                                                                           };
    private TableSorter<Server> sorter;
    private List<Server>        servers = new ArrayList<Server>();
 
@@ -46,9 +43,9 @@ public class ServerTableModel extends AbstractTableModel implements SortableTabl
    }
 
    @Override
-   public Class<?> getColumnClass(int columnIndex)
+   public Class<? > getColumnClass(int columnIndex)
    {
-      return COL_CLASSES[columnIndex];
+      return CLASS_TYPES[columnIndex];
    }
 
    public Server getRow(int row)

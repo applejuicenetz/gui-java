@@ -5,6 +5,7 @@
 package de.applejuicenet.client.gui.share.table;
 
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
@@ -12,7 +13,7 @@ import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/Attic/ShareModel.java,v 1.7 2009/01/26 13:31:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareTableModel.java,v 1.1 2009/01/27 07:55:55 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,22 +22,18 @@ import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
-public class ShareModel extends AbstractTreeTableModel
+public class ShareTableModel extends AbstractTreeTableModel
 {
-   static protected String[]                              cNames = 
-                                                                   {
-                                                                      "Name", "Size", "Type", "Last asked", "downloadrequests",
-                                                                      "searchrequests"
-                                                                   };
+   static protected String[] cNames = {"Name", "Size", "Type", "Last asked", "downloadrequests", "searchrequests"};
    @SuppressWarnings("unchecked")
-   static protected Class[]                               cTypes = 
-                                                                   {
-                                                                      TreeTableModel.class, String.class, Integer.class,
-                                                                      String.class, Long.class, Long.class
-                                                                   };
-   private SimpleDateFormat                               formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+   public static final Class[] CLASS_TYPES                               = 
+                                                                            {
+                                                                               TreeTableModel.class, String.class, Integer.class,
+                                                                               String.class, Long.class, Long.class
+                                                                            };
+   private SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-   public ShareModel(ShareNode rootNode)
+   public ShareTableModel(ShareNode rootNode)
    {
       super(rootNode);
    }
@@ -76,7 +73,7 @@ public class ShareModel extends AbstractTreeTableModel
    @SuppressWarnings("unchecked")
    public Class getColumnClass(int column)
    {
-      return cTypes[column];
+      return CLASS_TYPES[column];
    }
 
    public Object getValueAt(Object node, int column)

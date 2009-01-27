@@ -88,8 +88,8 @@ public class DownloadPanel extends TklPanel
    private JMenuItem                itemOpenWithDefaultProgram      = new JMenuItem();
    private JSplitPane               splitPane;
    private Logger                   logger;
-   private TableColumn[]            downloadColumns                 = new TableColumn[10];
-   private TableColumn[]            downloadSourceColumns           = new TableColumn[10];
+   private TableColumn[]            downloadColumns                 = new TableColumn[DownloadsTableModel.CLASS_TYPES.length];
+   private TableColumn[]            downloadSourceColumns           = new TableColumn[DownloadSourcesTableModel.CLASS_TYPES.length];
    private JPopupMenu               columnDownloadPopup             = new JPopupMenu();
    private JCheckBoxMenuItem[]      columnDownloadPopupItems        = new JCheckBoxMenuItem[downloadColumns.length];
    private JPopupMenu               columnDownloadSourcesPopup      = new JPopupMenu();
@@ -331,7 +331,7 @@ public class DownloadPanel extends TklPanel
 
       header.setDefaultRenderer(renderer);
       header.addMouseListener(new HeaderListener(header, renderer));
-      for(int i = 0; i < downloadColumns.length; i++)
+      for(int i = 0; i < model.getColumnCount(); i++)
       {
          downloadColumns[i]          = model.getColumn(i);
          columnDownloadPopupItems[i] = new JCheckBoxMenuItem((String) downloadColumns[i].getHeaderValue());
@@ -387,13 +387,13 @@ public class DownloadPanel extends TklPanel
       downloadSourceTable      = new JTable(downloadSourceTableModel);
       downloadSourceTable.setDefaultRenderer(String.class, new StringTableCellRenderer());
       downloadSourceTable.getColumnModel().getColumn(0).setCellRenderer(new DownloadTableFilenameCellRenderer());
-      downloadSourceTable.getColumnModel().getColumn(2).setCellRenderer(new SizeTableCellRenderer());
       downloadSourceTable.getColumnModel().getColumn(3).setCellRenderer(new SizeTableCellRenderer());
-      downloadSourceTable.getColumnModel().getColumn(4).setCellRenderer(new SpeedTableCellRenderer());
-      downloadSourceTable.getColumnModel().getColumn(6).setCellRenderer(new ProgressTableCellRenderer());
-      downloadSourceTable.getColumnModel().getColumn(7).setCellRenderer(new SizeTableCellRenderer());
-      downloadSourceTable.getColumnModel().getColumn(8).setCellRenderer(new DownloadTablePowerdownloadCellRenderer());
-      downloadSourceTable.getColumnModel().getColumn(9).setCellRenderer(new VersionTableCellRenderer());
+      downloadSourceTable.getColumnModel().getColumn(4).setCellRenderer(new SizeTableCellRenderer());
+      downloadSourceTable.getColumnModel().getColumn(5).setCellRenderer(new SpeedTableCellRenderer());
+      downloadSourceTable.getColumnModel().getColumn(7).setCellRenderer(new ProgressTableCellRenderer());
+      downloadSourceTable.getColumnModel().getColumn(8).setCellRenderer(new SizeTableCellRenderer());
+      downloadSourceTable.getColumnModel().getColumn(9).setCellRenderer(new DownloadTablePowerdownloadCellRenderer());
+      downloadSourceTable.getColumnModel().getColumn(10).setCellRenderer(new VersionTableCellRenderer());
 
       renderer = new SortButtonRenderer();
 
@@ -402,7 +402,7 @@ public class DownloadPanel extends TklPanel
       header.setDefaultRenderer(renderer);
       header.addMouseListener(new HeaderListener(header, renderer));
       model = downloadSourceTable.getColumnModel();
-      for(int i = 0; i < downloadSourceColumns.length; i++)
+      for(int i = 0; i < model.getColumnCount(); i++)
       {
          downloadSourceColumns[i]           = model.getColumn(i);
          columnDownloadSourcesPopupItems[i] = new JCheckBoxMenuItem((String) downloadSourceColumns[i].getHeaderValue());

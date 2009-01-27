@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.search.table;
 
 import java.util.List;
@@ -17,16 +18,16 @@ import de.applejuicenet.client.gui.components.table.TableSorter;
 
 public class SearchTableModel extends AbstractTableModel implements SortableTableModel<SearchEntry>
 {
-   final static String[]                                  COL_NAMES = {"Dateiname", "Groesze", "Anzahl"};
+   final static String[]                                     COL_NAMES   = {"Dateiname", "Groesze", "Anzahl"};
    @SuppressWarnings("unchecked")
-   static protected Class[]                               cTypes    = {SearchEntry.class, Long.class, Integer.class};
-   private Logger                                         logger;
-   private final Search                                   search;
-   private TableSorter<SearchEntry>                       sorter;
+   public static final Class[]                               CLASS_TYPES = {SearchEntry.class, Long.class, Integer.class};
+   private Logger                                            logger;
+   private final Search                                      search;
+   private TableSorter<SearchEntry>                          sorter;
 
    public SearchTableModel(Search search)
    {
-      this.search                                                   = search;
+      this.search = search;
    }
 
    public int getColumnCount()
@@ -38,7 +39,7 @@ public class SearchTableModel extends AbstractTableModel implements SortableTabl
    @Override
    public Class getColumnClass(int column)
    {
-      return cTypes[column];
+      return CLASS_TYPES[column];
    }
 
    public int getRowCount()

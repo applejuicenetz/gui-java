@@ -29,7 +29,7 @@ import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.components.table.NormalHeaderRenderer;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
-import de.applejuicenet.client.gui.share.table.ShareModel;
+import de.applejuicenet.client.gui.share.table.ShareTableModel;
 import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.gui.share.table.ShareTable;
 import de.applejuicenet.client.gui.share.tree.DirectoryTree;
@@ -41,7 +41,7 @@ import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.layout.Synchronizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.11 2009/01/11 17:52:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.12 2009/01/27 07:55:56 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -65,7 +65,7 @@ public class SharePanel extends TklPanel
    private TKLComboBox   cmbPrio                        = new TKLComboBox();
    private AJSettings    ajSettings;
    private ShareTable    shareTable;
-   private ShareModel    shareModel;
+   private ShareTableModel    shareModel;
    private JPopupMenu    popup                          = new JPopupMenu();
    private JMenuItem     sharedwsub;
    private JMenuItem     sharedwosub;
@@ -165,7 +165,7 @@ public class SharePanel extends TklPanel
       return shareTable;
    }
 
-   public ShareModel getShareModel()
+   public ShareTableModel getShareModel()
    {
       return shareModel;
    }
@@ -243,7 +243,7 @@ public class SharePanel extends TklPanel
       popup.add(sharedwosub);
       popup.add(notshared);
 
-      shareModel = new ShareModel(new ShareNode(null, null));
+      shareModel = new ShareTableModel(new ShareNode(null, null));
       shareTable = new ShareTable(shareModel);
       shareTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
       TableColumnModel  model    = shareTable.getColumnModel();

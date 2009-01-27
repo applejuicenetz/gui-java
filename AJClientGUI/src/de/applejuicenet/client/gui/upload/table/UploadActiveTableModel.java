@@ -27,11 +27,12 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
                                         "Prioritaet", "Client"
                                      };
    @SuppressWarnings("unchecked")
-   static protected Class[] cTypes                               = 
-                                                                   {
-                                                                      Upload.class, String.class, Integer.class, Double.class,
-                                                                      Double.class, Integer.class, Version.class
-                                                                   };
+   public static final Class[] CLASS_TYPES                               = 
+                                                                           {
+                                                                              Upload.class, String.class, Integer.class,
+                                                                              Double.class, Double.class, Integer.class,
+                                                                              Version.class
+                                                                           };
    private List<Upload>        uploads      = new ArrayList<Upload>();
    private SimpleDateFormat    formatter    = new SimpleDateFormat("HH:mm:ss");
    private String              uebertragung;
@@ -96,7 +97,7 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
    @Override
    public Class<? > getColumnClass(int columnIndex)
    {
-      return cTypes[columnIndex];
+      return CLASS_TYPES[columnIndex];
    }
 
    public int getColumnCount()

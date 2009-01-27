@@ -86,7 +86,7 @@ public class PropertyHandler
    {
       try
       {
-         String oldValue = get(identifier);
+         String oldValue = get(identifier, null);
 
          props.put(identifier, value);
          informListener(identifier, oldValue, value);
@@ -110,33 +110,40 @@ public class PropertyHandler
       put(identifier, Boolean.toString(value));
    }
 
-   public String get(String identifier)
+   public String get(String identifier, String defaultValue)
    {
       Object obj = props.get(identifier);
 
       if(obj == null)
       {
-         return "";
+         return defaultValue;
       }
       else
       {
-         return (String) obj;
+         return obj.toString();
       }
    }
 
-   public Boolean getAsBoolean(String identifier)
+   public Boolean getAsBoolean(String identifier, Boolean defaultValue)
    {
       String obj = (String) props.get(identifier);
 
-      if(obj == null)
+      if(null == obj)
       {
-         return null;
+         return defaultValue;
       }
 
-      return Boolean.valueOf(obj);
+      if("true".equalsIgnoreCase(obj) || "false".equalsIgnoreCase(obj))
+      {
+         return Boolean.valueOf(obj);
+      }
+      else
+      {
+         return defaultValue;
+      }
    }
 
-   public Integer getAsInt(String identifier)
+   public Integer getAsInt(String identifier, int defaultValue)
    {
       String obj = (String) props.get(identifier);
 
@@ -146,7 +153,7 @@ public class PropertyHandler
       }
       catch(NumberFormatException nfE)
       {
-         return null;
+         return defaultValue;
       }
    }
 
