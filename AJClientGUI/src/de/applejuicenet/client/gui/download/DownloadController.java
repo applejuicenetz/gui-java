@@ -1193,6 +1193,10 @@ public class DownloadController extends GuiController
          }
 
          downloadPanel.getDownloadTable().updateUI();
+         if(downloadPanel.getDownloadSourcesScrollPane().isVisible())
+         {
+            downloadPanel.getDownloadSourceTable().updateUI();
+         }
       }
       catch(Exception e)
       {
@@ -1236,19 +1240,19 @@ public class DownloadController extends GuiController
 
       tableColumns = new String[DownloadSourcesTableModel.CLASS_TYPES.length];
 
-      tableColumns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
-      tableColumns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
-      tableColumns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col1caption");
-      tableColumns[3] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption");
-      tableColumns[4] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption");
-      tableColumns[5] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption");
-      tableColumns[6] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption");
-      tableColumns[7] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
-      tableColumns[8] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption");
-      tableColumns[9] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
+      tableColumns[0]  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
+      tableColumns[1]  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
+      tableColumns[2]  = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col1caption");
+      tableColumns[3]  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption");
+      tableColumns[4]  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption");
+      tableColumns[5]  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption");
+      tableColumns[6]  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption");
+      tableColumns[7]  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
+      tableColumns[8]  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption");
+      tableColumns[9]  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
       tableColumns[10] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption");
-      
-      columns         = downloadPanel.getDownloadSourcesTableColumns();
+
+      columns = downloadPanel.getDownloadSourcesTableColumns();
 
       for(int i = 0; i < columns.length; i++)
       {
