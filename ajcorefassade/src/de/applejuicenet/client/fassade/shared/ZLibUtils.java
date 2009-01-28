@@ -19,19 +19,17 @@ public abstract class ZLibUtils
 
       defl.setInput(s.getBytes());
       defl.finish();
-      boolean               done   = false;
-      ByteArrayOutputStream bos    = new ByteArrayOutputStream();
-      byte[]                buf;
-      int                   bufnum;
+      ByteArrayOutputStream bos             = new ByteArrayOutputStream();
+      byte[]                buf             = new byte[256];
+      int                   countCompressed;
 
-      while(!done)
+      while(true)
       {
-         buf    = new byte[256];
-         bufnum = defl.deflate(buf);
-         bos.write(buf, 0, bufnum);
-         if(bufnum < buf.length)
+         countCompressed = defl.deflate(buf);
+         bos.write(buf, 0, countCompressed);
+         if(countCompressed < buf.length)
          {
-            done = true;
+            break;
          }
       }
 
@@ -45,7 +43,8 @@ public abstract class ZLibUtils
          throw new RuntimeException(e);
       }
 
-      return (bos.toByteArray());
+      defl.end();
+      return bos.toByteArray();
    }
 
    public static StringBuffer uncompress(byte[] b)
@@ -54,35 +53,32 @@ public abstract class ZLibUtils
       Inflater     infl = new Inflater();
 
       infl.setInput(b);
-      boolean done   = false;
-      int     bufnum;
-      byte[]  buf;
+      int    countUncompressed;
+      byte[] buf = new byte[256];
 
-      while(!done)
+      while(true)
       {
-         buf = new byte[256];
          try
          {
-            bufnum = infl.inflate(buf);
-            char[] tmp = new char[bufnum];
+            countUncompressed = infl.inflate(buf);
 
-            for(int i = 0; i < bufnum; i++)
+            for(int i = 0; i < countUncompressed; i++)
             {
-               tmp[i] = (char) buf[i];
+               retval.append((char) buf[i]);
             }
 
-            retval.append(tmp);
-            if(bufnum < buf.length)
+            if(countUncompressed < buf.length)
             {
-               done = true;
+               break;
             }
          }
          catch(DataFormatException dfe)
          {
-            done = true;
+            break;
          }
       }
 
+      infl.end();
       return retval;
    }
 }

@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.fassade.controller.xml;
 
 import java.text.DecimalFormat;
@@ -31,28 +32,28 @@ import de.applejuicenet.client.fassade.entity.DownloadSource;
  */
 class DownloadDO implements Download
 {
-   private static DecimalFormat        formatter           = new DecimalFormat("###,##0.00");
-   private final int                   id;
-   private int                         shareId;
-   private String                      hash;
-   private int                        groesse;
-   private int                        ready;
-   private int                         status;
-   private String                      filename;
-   private String                      targetDirectory;
-   private int                         powerDownload;
-   private int                         temporaryFileNumber;
-   private long                        oldSpeed;
-   private String                      speedAsString;
-   private Map<String, DownloadSource> sourcen             = new HashMap<String, DownloadSource>();
+   private static DecimalFormat         formatter           = new DecimalFormat("###,##0.00");
+   private final int                    id;
+   private int                          shareId;
+   private String                       hash;
+   private int                          groesse;
+   private int                          ready;
+   private int                          status;
+   private String                       filename;
+   private String                       targetDirectory;
+   private int                          powerDownload;
+   private int                          temporaryFileNumber;
+   private long                         oldSpeed;
+   private String                       speedAsString;
+   private Map<Integer, DownloadSource> sourcen = new HashMap<Integer, DownloadSource>();
 
    public DownloadDO(int id)
    {
       this.id = id;
    }
 
-   public DownloadDO(int id, int shareId, String hash, int groesse, int ready, int status, String filename,
-                     String targetDirectory, int powerDownload, int temporaryFileNumber)
+   public DownloadDO(int id, int shareId, String hash, int groesse, int ready, int status, String filename, String targetDirectory,
+                     int powerDownload, int temporaryFileNumber)
    {
       this.id                  = id;
       this.shareId             = shareId;
@@ -87,11 +88,9 @@ class DownloadDO implements Download
 
    public DownloadSourceDO getSourceById(int sourceId)
    {
-      String key = Integer.toString(sourceId);
-
-      if(sourcen.containsKey(key))
+      if(sourcen.containsKey(sourceId))
       {
-         return (DownloadSourceDO) sourcen.get(key);
+         return (DownloadSourceDO) sourcen.get(sourceId);
       }
       else
       {
@@ -99,17 +98,15 @@ class DownloadDO implements Download
       }
    }
 
-   public void addSource(DownloadSourceDO downloadSourceDO)
+   public void addSource(DownloadSource downloadSource)
    {
-      String key = Integer.toString(downloadSourceDO.getId());
-
-      if(!sourcen.containsKey(key))
+      if(!sourcen.containsKey(downloadSource.getId()))
       {
-         sourcen.put(key, downloadSourceDO);
+         sourcen.put(downloadSource.getId(), downloadSource);
       }
    }
 
-   public Map<String, DownloadSource> getSourcesMap()
+   public Map<Integer, DownloadSource> getSourcesMap()
    {
       return sourcen;
    }
@@ -126,13 +123,11 @@ class DownloadDO implements Download
       return sources;
    }
 
-   public void removeSource(String id)
+   public void removeSource(Integer id)
    {
-      String key = id;
-
-      if(sourcen.containsKey(key))
+      if(sourcen.containsKey(id))
       {
-         sourcen.remove(key);
+         sourcen.remove(id);
       }
    }
 
@@ -276,7 +271,7 @@ class DownloadDO implements Download
 
          oldSpeed = speed;
          int restZeit = (int) ((groesse - ready) / speed);
-         int tage     = restZeit / 86400;
+         int tage = restZeit / 86400;
 
          restZeit -= tage * 86400;
          int stunden = restZeit / 3600;

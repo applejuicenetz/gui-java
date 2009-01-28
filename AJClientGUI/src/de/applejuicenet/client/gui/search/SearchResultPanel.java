@@ -45,7 +45,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.14 2009/01/19 15:45:29 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.15 2009/01/28 09:44:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -321,13 +321,24 @@ public class SearchResultPanel extends JPanel
 
    public void updateSearchContent()
    {
+      if(!SwingUtilities.isEventDispatchThread())
+      {
+         SwingUtilities.invokeLater(new Runnable()
+            {
+               public void run()
+               {
+                  updateSearchContent();
+
+               }
+            });
+         return;
+      }
+
       try
       {
-         if(search.isChanged())
-         {
-            searchResultTableModel.fireTableDataChanged();
-            updateZahlen();
-         }
+         searchResultTableModel.forceResort();
+         searchResultTable.updateUI();
+         updateZahlen();
       }
       catch(Exception e)
       {
@@ -335,8 +346,21 @@ public class SearchResultPanel extends JPanel
       }
    }
 
-   private void updateZahlen()
+   public void updateZahlen()
    {
+      if(!SwingUtilities.isEventDispatchThread())
+      {
+         SwingUtilities.invokeLater(new Runnable()
+            {
+               public void run()
+               {
+                  updateZahlen();
+
+               }
+            });
+         return;
+      }
+
       List<SearchEntry> searchEntries = search.getAllSearchEntries();
 
       label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));

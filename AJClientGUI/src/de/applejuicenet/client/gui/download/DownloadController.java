@@ -1281,16 +1281,16 @@ public class DownloadController extends GuiController
    @SuppressWarnings("unchecked")
    protected void contentChanged(DATALISTENER_TYPE type, final Object content)
    {
-      Map<String, Download> downloads = (Map<String, Download>) content;
+      Map<Integer, Download> downloads = (Map<Integer, Download>) content;
 
-      final boolean         downloadChanged = downloadPanel.getDownloadTableModel().setDownloads(downloads);
-      Download              curDownload     = downloadPanel.getDownloadSourcesTableModel().getDownload();
+      final boolean          downloadChanged = downloadPanel.getDownloadTableModel().setDownloads(downloads);
+      Download               curDownload     = downloadPanel.getDownloadSourcesTableModel().getDownload();
 
-      boolean               sourcesChangedTmp = false;
+      boolean                sourcesChangedTmp = false;
 
       if(null != curDownload)
       {
-         Download freshDownload = downloads.get(curDownload.getId() + "");
+         Download freshDownload = downloads.get(curDownload.getId());
 
          sourcesChangedTmp = downloadPanel.getDownloadSourcesTableModel().setDownload(freshDownload);
       }

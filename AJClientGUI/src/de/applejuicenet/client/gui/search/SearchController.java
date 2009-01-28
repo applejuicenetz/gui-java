@@ -32,14 +32,14 @@ import de.tklsoft.gui.controls.TKLTextField;
 
 public class SearchController extends GuiController
 {
-   private static SearchController        instance                       = null;
-   private final int                      DOWNLOAD_PROPERTY_CHANGE_EVENT = 1;
-   private final int                      START_STOP                     = 2;
-   private Map<String, SearchResultPanel> searchIds                      = null;
-   private SearchPanel                    searchPanel;
-   private boolean                        panelSelected                  = false;
-   private boolean                        firstSearch                    = true;
-   private String                         bearbeitung;
+   private static SearchController         instance                       = null;
+   private final int                       DOWNLOAD_PROPERTY_CHANGE_EVENT = 1;
+   private final int                       START_STOP                     = 2;
+   private Map<Integer, SearchResultPanel> searchIds                      = null;
+   private SearchPanel                     searchPanel;
+   private boolean                         panelSelected                  = false;
+   private boolean                         firstSearch                    = true;
+   private String                          bearbeitung;
 
    private SearchController()
    {
@@ -157,14 +157,14 @@ public class SearchController extends GuiController
       firstSearch = false;
       AppleJuiceClient.getAjFassade().getDownloadPropertyChangeInformer()
       .addDataPropertyChangeListener(new DownloadPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
-      Map<String, Share> shares = AppleJuiceClient.getAjFassade().getShare(false);
+      Map<Integer, Share> shares = AppleJuiceClient.getAjFassade().getShare(false);
 
       for(Share curShare : shares.values())
       {
          SearchEntryIconRenderer.addMd5Sum(curShare.getCheckSum());
       }
 
-      Map<String, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+      Map<Integer, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
 
       for(Download curDownload : downloads.values())
       {
@@ -184,25 +184,24 @@ public class SearchController extends GuiController
                {
                   try
                   {
+                     if(searchIds == null)
+                     {
+                        searchIds = new HashMap<Integer, SearchResultPanel>();
+                     }
+
+                     Map<Integer, Search>   theContent  = (Map<Integer, Search>) content;
+                     Search                 aSearch;
+                     SearchResultTabbedPane resultPanel = searchPanel.getSearchResultTabbedPane();
+
                      synchronized(content)
                      {
-                        if(searchIds == null)
-                        {
-                           searchIds = new HashMap<String, SearchResultPanel>();
-                        }
-
-                        Map<String, Search>    theContent        = (Map<String, Search>) content;
-                        String                 key;
-                        Search                 aSearch;
-                        SearchResultTabbedPane resultPanel       = searchPanel.getSearchResultTabbedPane();
-                        SearchResultPanel      searchResultPanel;
-
-                        for(String curKey : theContent.keySet())
+                        for(Integer curKey : theContent.keySet())
                         {
                            if(!searchIds.containsKey(curKey))
                            {
-                              aSearch           = theContent.get(curKey);
-                              searchResultPanel = new SearchResultPanel(aSearch);
+                              aSearch = theContent.get(curKey);
+                              SearchResultPanel searchResultPanel = new SearchResultPanel(aSearch);
+
                               resultPanel.addTab(aSearch.getSuchText(), searchResultPanel);
                               searchResultPanel.aendereSprache();
                               resultPanel.setSelectedComponent(searchResultPanel);
@@ -210,29 +209,38 @@ public class SearchController extends GuiController
                            }
                            else
                            {
-                              searchResultPanel = searchIds.get(curKey);
                               aSearch = theContent.get(curKey);
                               if(aSearch.isChanged() && panelSelected)
                               {
-                                 searchResultPanel.updateSearchContent();
+                                 SearchResultPanel curSelectedsearchResultPanel = (SearchResultPanel) searchPanel.getSearchResultTabbedPane()
+                                                                                  .getSelectedComponent();
+
+                                 SearchResultPanel searchResultPanel = searchIds.get(curKey);
+
+                                 if(curSelectedsearchResultPanel != null && curSelectedsearchResultPanel == searchResultPanel)
+                                 {
+                                    searchResultPanel.updateSearchContent();
+                                 }
+                                 else
+                                 {
+                                    searchResultPanel.updateZahlen();
+                                 }
                               }
                            }
                         }
 
-                        int    id;
-                        String searchKey;
+                        int id;
 
                         for(Object curObj : resultPanel.getComponents())
                         {
-                           aSearch   = ((SearchResultPanel) curObj).getSearch();
-                           id        = aSearch.getId();
-                           searchKey = Integer.toString(id);
+                           aSearch = ((SearchResultPanel) curObj).getSearch();
+                           id = aSearch.getId();
                            int index = resultPanel.indexOfComponent((Component) curObj);
 
                            resultPanel.setTitleAt(index, aSearch.getSuchText() + " (" + aSearch.getEntryCount() + ")");
-                           if(!theContent.containsKey(searchKey))
+                           if(!theContent.containsKey(id))
                            {
-                              searchIds.remove(searchKey);
+                              searchIds.remove(id);
                               resultPanel.enableIconAt(index, aSearch);
                            }
                            else if(!aSearch.isRunning())

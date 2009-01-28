@@ -5,6 +5,7 @@
 package de.applejuicenet.client.fassade.shared;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -74,7 +75,7 @@ public abstract class HtmlLoader
                while(inputLine.indexOf(StringConstants.CONTENT_LENGTH) == -1)
                {
                   inputLine = readLn(in);
-                  if(inputLine == null)
+                  if(inputLine == null || inputLine.length() == 0)
                   {
                      throw new WebSiteNotFoundException(WebSiteNotFoundException.UNKNOWN_HOST);
                   }
@@ -97,17 +98,17 @@ public abstract class HtmlLoader
                   DataInputStream in_data = new DataInputStream(socket.getInputStream());
 
                   in_data.skip(1);
-                  byte[] allRead = new byte[(int) laenge];
-                  byte[] toRead = new byte[1];
-                  int    pos    = 0;
+                  ByteArrayOutputStream baoS   = new ByteArrayOutputStream();
+                  byte[]                toRead = new byte[2048];
+                  int                   read;
 
-                  while(in_data.read(toRead) != -1)
+                  while((read = in_data.read(toRead)) > 0)
                   {
-                     allRead[pos] = toRead[0];
-                     pos++;
+                     baoS.write(toRead, 0, read);
                   }
 
-                  urlContent.append(ZLibUtils.uncompress(allRead));
+                  urlContent.append(ZLibUtils.uncompress(baoS.toByteArray()));
+                  baoS.close();
                }
                else
                {
@@ -179,15 +180,9 @@ public abstract class HtmlLoader
          StringBuilder line   = new StringBuilder();
          byte[]        toRead = new byte[1];
 
-         while(in.read(toRead) != -1)
+         while(in.read(toRead) != -1 && (char) toRead[0] != '\n')
          {
-            char read = (char) toRead[0];
-
-            line.append(read);
-            if(read == '\n')
-            {
-               break;
-            }
+            line.append((char) toRead[0]);
          }
 
          return line.toString().trim();

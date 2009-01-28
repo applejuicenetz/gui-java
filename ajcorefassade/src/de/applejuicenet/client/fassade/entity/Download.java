@@ -23,7 +23,7 @@ public interface Download extends IdOwner{
 
     DownloadSource[] getSources();
     
-    Map<String, DownloadSource> getSourcesMap();
+    Map<Integer, DownloadSource> getSourcesMap();
 
     int getShareId();
 

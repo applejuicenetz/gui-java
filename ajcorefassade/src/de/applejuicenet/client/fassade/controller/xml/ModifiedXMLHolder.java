@@ -64,17 +64,17 @@ import de.applejuicenet.client.fassade.shared.StringConstants;
 public class ModifiedXMLHolder extends DefaultHandler
 {
    private final CoreConnectionSettingsHolder coreHolder;
-   private Map<String, Download>              sourcenZuDownloads = new HashMap<String, Download>();
-   private XMLReader                          xr                 = null;
-   private Map<String, Server>                serverMap          = new HashMap<String, Server>();
-   private Map<String, Download>              downloadMap        = new HashMap<String, Download>();
-   private Map<String, Upload>                uploadMap          = new HashMap<String, Upload>();
-   private Map<String, SearchDO>              searchMap          = new HashMap<String, SearchDO>();
+   private Map<Integer, Download>             sourcenZuDownloads             = new HashMap<Integer, Download>();
+   private XMLReader                          xr                             = null;
+   private Map<Integer, Server>               serverMap                      = new HashMap<Integer, Server>();
+   private Map<Integer, Download>             downloadMap                    = new HashMap<Integer, Download>();
+   private Map<Integer, Upload>               uploadMap                      = new HashMap<Integer, Upload>();
+   private Map<Integer, Search>               searchMap                      = new HashMap<Integer, Search>();
    private NetworkInfo                        netInfo;
    private InformationDO                      information;
-   private int                                count              = 0;
-   private String                             filter             = "";
-   private String                             sessionKontext     = null;
+   private int                                count                          = 0;
+   private String                             filter                         = "";
+   private String                             sessionKontext                 = null;
    private int                                connectedWithServerId          = -1;
    private int                                tryConnectToServer             = -1;
    private boolean                            reloadInProgress               = false;
@@ -88,10 +88,17 @@ public class ModifiedXMLHolder extends DefaultHandler
    private boolean                            downloadSourceEvent;
    private DataPropertyChangeInformer         downloadPropertyChangeInformer;
    private ApplejuiceFassade                  ajFassade;
-   private Map<String, Share>                 shareMap                       = null;
+   private Map<Integer, Share>                shareMap                       = null;
    private SearchEntryDO                      tmpSearchEntry                 = null;
    private Set<SearchEntryDO>                 searchEntriesToDo              = new HashSet<SearchEntryDO>();
-   private Set<DownloadSourceDO>              downloadSourcesToDo            = new HashSet<DownloadSourceDO>();
+   private Set<DownloadSource>                downloadSourcesToDo            = new HashSet<DownloadSource>();
+   private boolean                            searchChanged                  = false;
+   private boolean                            downloadChanged                = false;
+   private boolean                            uploadChanged                  = false;
+   private boolean                            serverChanged                  = false;
+   private boolean                            speedChanged                   = false;
+   private boolean                            informationChanged             = false;
+   private boolean                            networkInfoChanged             = false;
 
    @SuppressWarnings("unchecked")
    public ModifiedXMLHolder(CoreConnectionSettingsHolder coreHolder, ApplejuiceFassade ajFassade)
@@ -132,22 +139,22 @@ public class ModifiedXMLHolder extends DefaultHandler
       init();
    }
 
-   public Map<String, Server> getServer()
+   public Map<Integer, Server> getServer()
    {
       return serverMap;
    }
 
-   public Map<String, Upload> getUploads()
+   public Map<Integer, Upload> getUploads()
    {
       return uploadMap;
    }
 
-   public Map<String, Download> getDownloads()
+   public Map<Integer, Download> getDownloads()
    {
       return downloadMap;
    }
 
-   public Map<String, SearchDO> getSearchs()
+   public Map<Integer, Search> getSearchs()
    {
       return searchMap;
    }
@@ -172,21 +179,21 @@ public class ModifiedXMLHolder extends DefaultHandler
             case 0:
             {
                count++;
-               filter = "&filter=ids;down;uploads;server;informations;search&mode=zip";
+               filter = "&filter=down;uploads;server;informations;search&mode=zip";
                break;
             }
 
             case 1:
             {
                count++;
-               filter = "&filter=ids;informations;user;search&mode=zip";
+               filter = "&filter=informations;user;search&mode=zip";
                break;
             }
 
             case 2:
             {
                count++;
-               filter = ""; // kein Filter
+               filter = "&mode=zip";
                break;
             }
 
@@ -194,6 +201,13 @@ public class ModifiedXMLHolder extends DefaultHandler
                break;
          }
 
+         searchChanged      = false;
+         uploadChanged      = false;
+         downloadChanged    = false;
+         serverChanged      = false;
+         speedChanged       = false;
+         informationChanged = false;
+         networkInfoChanged = false;
          reload();
          return true;
       }
@@ -238,22 +252,27 @@ public class ModifiedXMLHolder extends DefaultHandler
       {
          if(attr.getLocalName(i).equals(StringConstants.CREDITS))
          {
+            speedChanged = true;
             information.setCredits(Long.parseLong(attr.getValue(i)));
          }
          else if(attr.getLocalName(i).equals(StringConstants.SESSION_UPLOAD))
          {
+            speedChanged = true;
             information.setSessionUpload(Long.parseLong(attr.getValue(i)));
          }
          else if(attr.getLocalName(i).equals(StringConstants.SESSION_DOWNLOAD))
          {
+            speedChanged = true;
             information.setSessionDownload(Long.parseLong(attr.getValue(i)));
          }
          else if(attr.getLocalName(i).equals(StringConstants.UPLOAD_SPEED))
          {
+            speedChanged = true;
             information.setUploadSpeed(Long.parseLong(attr.getValue(i)));
          }
          else if(attr.getLocalName(i).equals(StringConstants.DOWNLOAD_SPEED))
          {
+            speedChanged = true;
             information.setDownloadSpeed(Long.parseLong(attr.getValue(i)));
          }
          else if(attr.getLocalName(i).equals(StringConstants.OPEN_CONNECTIONS))
@@ -319,21 +338,20 @@ public class ModifiedXMLHolder extends DefaultHandler
          attributes.put(attr.getLocalName(i), attr.getValue(i));
       }
 
-      String   key      = (String) attributes.get(StringConstants.ID);
-      int      id       = Integer.parseInt(key);
-      ServerDO serverDO;
+      int    id       = Integer.parseInt(attributes.get(StringConstants.ID));
+      Server serverDO;
 
-      if(serverMap.containsKey(key))
+      if(serverMap.containsKey(id))
       {
-         serverDO = (ServerDO) serverMap.get(key);
+         serverDO = serverMap.get(id);
       }
       else
       {
          serverDO = new ServerDO(id);
-         serverMap.put(key, serverDO);
+         serverMap.put(id, serverDO);
       }
 
-      checkServerMap(serverDO, attributes);
+      checkServerMap((ServerDO) serverDO, attributes);
       attributes.clear();
    }
 
@@ -372,40 +390,35 @@ public class ModifiedXMLHolder extends DefaultHandler
          attributes.put(attr.getLocalName(i), attr.getValue(i));
       }
 
-      String   key = (String) attributes.get(StringConstants.ID);
-      int      id = Integer.parseInt(key);
+      int    id = Integer.parseInt(attributes.get(StringConstants.ID));
 
-      UploadDO uploadDO;
+      Upload uploadDO = uploadMap.get(id);
 
-      if(uploadMap.containsKey(key))
-      {
-         uploadDO = (UploadDO) uploadMap.get(key);
-      }
-      else
+      if(null == uploadDO)
       {
          uploadDO = new UploadDO(id);
-         uploadMap.put(key, uploadDO);
+         uploadMap.put(id, uploadDO);
       }
 
-      checkUploadMap(uploadDO, attributes);
+      checkUploadMap((UploadDO) uploadDO, attributes);
       attributes.clear();
       if(shareMap == null)
       {
          shareMap = ajFassade.getShare(false);
       }
 
-      ShareDO shareDO = (ShareDO) shareMap.get(uploadDO.getShareFileIDAsString());
+      Share shareDO = shareMap.get(uploadDO.getShareFileID());
 
       if(shareDO != null)
       {
-         uploadDO.setDateiName(shareDO.getShortfilename());
+         ((UploadDO) uploadDO).setDateiName(shareDO.getShortfilename());
       }
       else
       {
          // wenns die passende Sharedatei aus irgendeinem Grund nicht geben
          // sollte,
          // wird dieser Upload auch nicht angezeigt
-         uploadMap.remove(key);
+         uploadMap.remove(id);
       }
    }
 
@@ -445,12 +458,11 @@ public class ModifiedXMLHolder extends DefaultHandler
          attributes.put(attr.getLocalName(i), attr.getValue(i));
       }
 
-      int              id          = Integer.parseInt((String) attributes.get(StringConstants.ID));
-      String           downloadKey = (String) attributes.get(StringConstants.DOWNLOADID);
-      int              downloadId  = Integer.parseInt(downloadKey);
+      int            id         = Integer.parseInt(attributes.get(StringConstants.ID));
+      int            downloadId = Integer.parseInt(attributes.get(StringConstants.DOWNLOADID));
 
-      DownloadDO       downloadDO       = (DownloadDO) downloadMap.get(downloadKey);
-      DownloadSourceDO downloadSourceDO = null;
+      Download       downloadDO       = downloadMap.get(downloadId);
+      DownloadSource downloadSourceDO = null;
 
       if(downloadDO != null)
       {
@@ -458,8 +470,8 @@ public class ModifiedXMLHolder extends DefaultHandler
          if(downloadSourceDO == null)
          {
             downloadSourceDO = new DownloadSourceDO(id);
-            downloadDO.addSource(downloadSourceDO);
-            sourcenZuDownloads.put(Integer.toString(id), downloadDO);
+            ((DownloadDO) downloadDO).addSource(downloadSourceDO);
+            sourcenZuDownloads.put(id, downloadDO);
          }
       }
       else
@@ -468,8 +480,8 @@ public class ModifiedXMLHolder extends DefaultHandler
          downloadSourcesToDo.add(downloadSourceDO);
       }
 
-      downloadSourceDO.setDownloadId(downloadId);
-      checkUserMap(downloadSourceDO, attributes);
+      ((DownloadSourceDO) downloadSourceDO).setDownloadId(downloadId);
+      checkUserMap((DownloadSourceDO) downloadSourceDO, attributes);
       attributes.clear();
       downloadSourceEvent = true;
    }
@@ -491,53 +503,53 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
       else
       {
-         int    tmpInt = Integer.parseInt((String) userAttributes.get(StringConstants.STATUS));
-         String old;
+         Integer tmpInt = Integer.parseInt((String) userAttributes.get(StringConstants.STATUS));
+         Integer oldInt;
 
          if(tmpInt != downloadDO.getStatus())
          {
-            old = Integer.toString(downloadDO.getStatus());
+            oldInt = downloadDO.getStatus();
             downloadDO.setStatus(tmpInt);
-            downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadDO, DownloadDataPropertyChangeEvent.STATUS_CHANGED, old,
-                                                                   Integer.toString(tmpInt)));
+            downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadDO, DownloadDataPropertyChangeEvent.STATUS_CHANGED,
+                                                                   oldInt, tmpInt));
          }
 
          String tmpString = (String) userAttributes.get(StringConstants.FILENAME);
+         String oldText = downloadDO.getFilename();
 
-         old = downloadDO.getFilename();
-         if(old == null || !old.equals(tmpString))
+         if(oldText == null || !oldText.equals(tmpString))
          {
             downloadDO.setFilename(tmpString);
             downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadDO, DownloadDataPropertyChangeEvent.FILENAME_CHANGED,
-                                                                   old, tmpString));
+                                                                   oldText, tmpString));
          }
 
          tmpString = (String) userAttributes.get(StringConstants.TARGETDIRECTORY);
-         old       = downloadDO.getTargetDirectory();
-         if(old == null || !old.equals(tmpString))
+         oldText   = downloadDO.getTargetDirectory();
+         if(oldText == null || !oldText.equals(tmpString))
          {
             downloadDO.setTargetDirectory(tmpString);
             downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadDO, DownloadDataPropertyChangeEvent.DIRECTORY_CHANGED,
-                                                                   old, tmpString));
+                                                                   oldText, tmpString));
          }
 
          tmpInt = Integer.parseInt((String) userAttributes.get(StringConstants.POWERDOWNLOAD));
          if(tmpInt != downloadDO.getPowerDownload())
          {
-            old = Integer.toString(downloadDO.getPowerDownload());
+            oldInt = downloadDO.getPowerDownload();
             downloadDO.setPowerDownload(tmpInt);
-            downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadDO, DownloadDataPropertyChangeEvent.PWDL_CHANGED, old,
-                                                                   Integer.toString(tmpInt)));
+            downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadDO, DownloadDataPropertyChangeEvent.PWDL_CHANGED,
+                                                                   oldInt, tmpInt));
          }
 
-         int tmpLong = Integer.parseInt((String) userAttributes.get(StringConstants.READY));
+         tmpInt = Integer.parseInt((String) userAttributes.get(StringConstants.READY));
 
-         if(tmpLong != downloadDO.getReady())
+         if(tmpInt != downloadDO.getReady())
          {
-            old = Integer.toString(downloadDO.getReady());
-            downloadDO.setReady(tmpLong);
-            downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadDO, DownloadDataPropertyChangeEvent.READY_CHANGED, old,
-                                                                   Long.toString(tmpLong)));
+            oldInt = downloadDO.getReady();
+            downloadDO.setReady(tmpInt);
+            downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadDO, DownloadDataPropertyChangeEvent.READY_CHANGED,
+                                                                   oldInt, tmpInt));
          }
       }
    }
@@ -552,24 +564,23 @@ public class ModifiedXMLHolder extends DefaultHandler
          attributes.put(attr.getLocalName(i), attr.getValue(i));
       }
 
-      String     key         = (String) attributes.get(StringConstants.ID);
-      int        id          = Integer.parseInt(key);
-      DownloadDO downloadDO;
-      boolean    newDownload;
+      int      id          = Integer.parseInt(attributes.get(StringConstants.ID));
+      Download downloadDO;
+      boolean  newDownload;
 
-      if(downloadMap.containsKey(key))
+      if(downloadMap.containsKey(id))
       {
-         downloadDO  = (DownloadDO) downloadMap.get(key);
+         downloadDO  = downloadMap.get(id);
          newDownload = false;
       }
       else
       {
          downloadDO = new DownloadDO(id);
-         downloadMap.put(key, downloadDO);
+         downloadMap.put(id, downloadDO);
          newDownload = true;
       }
 
-      checkDownloadMap(downloadDO, attributes, newDownload);
+      checkDownloadMap((DownloadDO) downloadDO, attributes, newDownload);
       attributes.clear();
       if(newDownload)
       {
@@ -578,7 +589,7 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
    }
 
-   private void removeDownload(String id)
+   private boolean removeDownload(Integer id)
    {
       Download download = downloadMap.get(id);
 
@@ -586,43 +597,64 @@ public class ModifiedXMLHolder extends DefaultHandler
       {
          for(DownloadSource curDownloadSource : download.getSources())
          {
-            sourcenZuDownloads.remove(Integer.toString(curDownloadSource.getId()));
+            sourcenZuDownloads.remove(curDownloadSource.getId());
          }
 
          downloadMap.remove(id);
          downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadMap, DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED,
                                                                 download, null));
+         return true;
+      }
+      else
+      {
+         return false;
       }
    }
 
    private void checkRemovedAttributes(Attributes attr)
    {
       int length = attr.getLength();
+      int id;
 
       for(int i = 0; i < length; i++)
       {
-         if(attr.getLocalName(i).equals(StringConstants.ID))
+         if(!attr.getLocalName(i).equals(StringConstants.ID))
          {
-            String id = attr.getValue(i);
+            continue;
+         }
 
-            removeDownload(id);
-            uploadMap.remove(id);
-            serverMap.remove(id);
-            if(sourcenZuDownloads.containsKey(id))
-            {
-               DownloadDO downloadDO = (DownloadDO) sourcenZuDownloads.get(id);
+         id = Integer.parseInt(attr.getValue(i));
+         if(removeDownload(id))
+         {
+            downloadChanged = true;
+         }
 
-               downloadDO.removeSource(id);
-               sourcenZuDownloads.remove(id);
-               downloadSourceEvent = true;
-               continue;
-            }
-            else if(searchMap.containsKey(id))
-            {
-               searchMap.remove(id);
-               Search.currentSearchCount = searchMap.size();
-               continue;
-            }
+         if(null != uploadMap.remove(id))
+         {
+            uploadChanged = true;
+         }
+
+         if(null != serverMap.remove(id))
+         {
+            serverChanged = true;
+         }
+
+         if(sourcenZuDownloads.containsKey(id))
+         {
+            downloadChanged = true;
+            DownloadDO downloadDO = (DownloadDO) sourcenZuDownloads.get(id);
+
+            downloadDO.removeSource(id);
+            sourcenZuDownloads.remove(id);
+            downloadSourceEvent = true;
+            continue;
+         }
+         else if(searchMap.containsKey(id))
+         {
+            searchChanged = true;
+            searchMap.remove(id);
+            Search.currentSearchCount = searchMap.size();
+            continue;
          }
       }
    }
@@ -647,22 +679,22 @@ public class ModifiedXMLHolder extends DefaultHandler
          attributes.put(attr.getLocalName(i), attr.getValue(i));
       }
 
-      String   key     = (String) attributes.get(StringConstants.ID);
-      int      id      = Integer.parseInt(key);
-      SearchDO aSearch;
+      int    id = Integer.parseInt(attributes.get(StringConstants.ID));
 
-      if(searchMap.containsKey(key))
+      Search aSearch;
+
+      if(searchMap.containsKey(id))
       {
-         aSearch = searchMap.get(key);
+         aSearch = searchMap.get(id);
          aSearch.setChanged(false);
       }
       else
       {
          aSearch = new SearchDO(id);
-         searchMap.put(key, aSearch);
+         searchMap.put(id, aSearch);
       }
 
-      checkSearchMap(aSearch, attributes);
+      checkSearchMap((SearchDO) aSearch, attributes);
       attributes.clear();
    }
 
@@ -695,12 +727,11 @@ public class ModifiedXMLHolder extends DefaultHandler
          }
       }
 
-      String   key     = Integer.toString(searchId);
       SearchDO aSearch;
 
-      if(searchMap.containsKey(key))
+      if(searchMap.containsKey(searchId))
       {
-         aSearch        = (SearchDO) searchMap.get(key);
+         aSearch        = (SearchDO) searchMap.get(searchId);
          tmpSearchEntry = (SearchEntryDO) aSearch.getSearchEntryById(id);
          if(tmpSearchEntry == null)
          {
@@ -750,42 +781,52 @@ public class ModifiedXMLHolder extends DefaultHandler
       contents.reset();
       if(localName.equals(StringConstants.DOWNLOAD))
       {
+         downloadChanged = true;
          checkDownloadAttributes(attr);
       }
       else if(localName.equals(StringConstants.UPLOAD))
       {
+         uploadChanged = true;
          checkUploadAttributes(attr);
       }
       else if(localName.equals(StringConstants.SERVER))
       {
+         serverChanged = true;
          checkServerAttributes(attr);
       }
       else if(localName.equals(StringConstants.INFORMATION))
       {
+         informationChanged = true;
          checkInformationAttributes(attr);
       }
       else if(localName.equals(StringConstants.NETWORKINFO))
       {
+         networkInfoChanged = true;
          checkNetworkInfoAttributes(attr);
       }
       else if(localName.equals(StringConstants.OBJECT))
       {
+         // <removed><object id="188"/></removed>
          checkRemovedAttributes(attr);
       }
       else if(localName.equals(StringConstants.USER))
       {
+         downloadChanged = true;
          checkUserAttributes(attr);
       }
       else if(localName.equals(StringConstants.SEARCH))
       {
+         searchChanged = true;
          checkSearchAttributes(attr);
       }
       else if(localName.equals(StringConstants.SEARCHENTRY))
       {
+         searchChanged = true;
          checkSearchEntryAttributes(attr);
       }
       else if(localName.equals(StringConstants.FILENAME))
       {
+         searchChanged = true;
          checkSearchEntryFilenameAttributes(attr);
       }
    }
@@ -858,7 +899,7 @@ public class ModifiedXMLHolder extends DefaultHandler
 
       if(tryConnectToServer != -1)
       {
-         Object alterServer = serverMap.get(Integer.toString(tryConnectToServer));
+         Object alterServer = serverMap.get(tryConnectToServer);
 
          if(alterServer != null)
          {
@@ -870,7 +911,7 @@ public class ModifiedXMLHolder extends DefaultHandler
 
       if(netInfo.getTryConnectToServer() != -1)
       {
-         serverDO          = (ServerDO) serverMap.get(Integer.toString(netInfo.getTryConnectToServer()));
+         serverDO          = (ServerDO) serverMap.get(netInfo.getTryConnectToServer());
          verbindungsStatus = Information.VERSUCHE_ZU_VERBINDEN;
          if(serverDO != null)
          {
@@ -891,7 +932,7 @@ public class ModifiedXMLHolder extends DefaultHandler
 
       if(connectedWithServerId != -1)
       {
-         Object alterServer = serverMap.get(Integer.toString(connectedWithServerId));
+         Object alterServer = serverMap.get(connectedWithServerId);
 
          if(alterServer != null)
          {
@@ -903,7 +944,7 @@ public class ModifiedXMLHolder extends DefaultHandler
 
       if(netInfo.getConnectedWithServerId() != -1)
       {
-         serverDO          = (ServerDO) serverMap.get(Integer.toString(netInfo.getConnectedWithServerId()));
+         serverDO          = (ServerDO) serverMap.get(netInfo.getConnectedWithServerId());
          verbindungsStatus = Information.VERBUNDEN;
          if(serverDO != null)
          {
@@ -937,17 +978,15 @@ public class ModifiedXMLHolder extends DefaultHandler
       {
          SearchDO      aSearch;
          SearchEntryDO searchEntry;
-         String        searchKey;
 
          for(SearchEntryDO curSearchEntryDO : searchEntriesToDo)
          {
-            searchKey = Integer.toString(curSearchEntryDO.getSearchId());
-            if(!searchMap.containsKey(searchKey))
+            if(!searchMap.containsKey(curSearchEntryDO.getSearchId()))
             {
                continue;
             }
 
-            aSearch = (SearchDO) searchMap.get(searchKey);
+            aSearch = (SearchDO) searchMap.get(curSearchEntryDO.getSearchId());
             aSearch.addSearchEntry(curSearchEntryDO);
          }
 
@@ -956,21 +995,18 @@ public class ModifiedXMLHolder extends DefaultHandler
 
       if(downloadSourcesToDo.size() > 0)
       {
-         DownloadDO downloadDO;
-         String     downloadKey;
+         Download downloadDO;
 
-         for(DownloadSourceDO downloadSourceDO : downloadSourcesToDo)
+         for(DownloadSource downloadSourceDO : downloadSourcesToDo)
          {
-            downloadKey = Integer.toString(downloadSourceDO.getDownloadId());
-
-            if(!downloadMap.containsKey(downloadKey))
+            if(!downloadMap.containsKey(downloadSourceDO.getDownloadId()))
             {
                continue;
             }
 
-            downloadDO = (DownloadDO) downloadMap.get(downloadKey);
-            downloadDO.addSource(downloadSourceDO);
-            sourcenZuDownloads.put(Integer.toString(downloadSourceDO.getId()), downloadDO);
+            downloadDO = downloadMap.get(downloadSourceDO.getDownloadId());
+            ((DownloadDO) downloadDO).addSource(downloadSourceDO);
+            sourcenZuDownloads.put(downloadSourceDO.getDownloadId(), downloadDO);
 
          }
 
@@ -993,19 +1029,12 @@ public class ModifiedXMLHolder extends DefaultHandler
    {
       boolean reloadSession = false;
 
-      //      Securer securer = new Securer();
       try
       {
          reloadInProgress = true;
          checkForValidSession();
-
-         //         securer.start();
          String xmlString = getXMLString(filter);
 
-         //         if(!securer.isInterrupted())
-         //         {
-         //            securer.interrupt();
-         //         }
          downloadEvents.clear();
          if(filter.indexOf("down;") != -1)
          {
@@ -1051,11 +1080,6 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
       catch(RuntimeException rE)
       {
-
-         //         if(!securer.isInterrupted())
-         //         {
-         //            securer.interrupt();
-         //         }
          throw rE;
       }
       catch(Exception ex)
@@ -1093,6 +1117,41 @@ public class ModifiedXMLHolder extends DefaultHandler
       {
          return false;
       }
+   }
+
+   public boolean isSearchChanged()
+   {
+      return searchChanged;
+   }
+
+   public boolean isDownloadChanged()
+   {
+      return downloadChanged;
+   }
+
+   public boolean isUploadChanged()
+   {
+      return uploadChanged;
+   }
+
+   public boolean isServerChanged()
+   {
+      return serverChanged;
+   }
+
+   public boolean isSpeedChanged()
+   {
+      return speedChanged;
+   }
+
+   public boolean isInformationChanged()
+   {
+      return informationChanged;
+   }
+
+   public boolean isNetworkInfoChanged()
+   {
+      return networkInfoChanged;
    }
 
    private class Securer extends Thread

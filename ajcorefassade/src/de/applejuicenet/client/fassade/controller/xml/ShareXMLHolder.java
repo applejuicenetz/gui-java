@@ -45,7 +45,7 @@ import de.applejuicenet.client.fassade.shared.StringConstants;
 public class ShareXMLHolder extends DefaultHandler
 {
    private final CoreConnectionSettingsHolder coreHolder;
-   private Map<String, Share>                 shareMap;
+   private Map<Integer, Share>                shareMap;
    private String                             xmlCommand;
    private XMLReader                          xr = null;
 
@@ -75,10 +75,9 @@ public class ShareXMLHolder extends DefaultHandler
 
    private String getXMLString() throws Exception
    {
-      String xmlData = null;
+      String xmlData = HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
+                                                    xmlCommand + coreHolder.getCorePassword());
 
-      xmlData = HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
-                                             xmlCommand + coreHolder.getCorePassword());
       if(xmlData.length() == 0)
       {
          throw new IllegalArgumentException();
@@ -108,13 +107,12 @@ public class ShareXMLHolder extends DefaultHandler
       }
 
       ShareDO shareDO = null;
-      String  key = Integer.toString(id);
 
-      shareDO = (ShareDO) shareMap.get(key);
+      shareDO = (ShareDO) shareMap.get(id);
       if(shareDO == null)
       {
          shareDO = new ShareDO(id);
-         shareMap.put(key, shareDO);
+         shareMap.put(id, shareDO);
       }
 
       length = attr.getLength();
@@ -173,7 +171,7 @@ public class ShareXMLHolder extends DefaultHandler
 
          if(shareMap == null)
          {
-            shareMap = new HashMap<String, Share>();
+            shareMap = new HashMap<Integer, Share>();
          }
 
          xr.parse(new InputSource(new StringReader(xmlString)));
@@ -184,7 +182,7 @@ public class ShareXMLHolder extends DefaultHandler
       }
    }
 
-   public Map<String, Share> getShare()
+   public Map<Integer, Share> getShare()
    {
       update();
       return shareMap;

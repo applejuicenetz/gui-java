@@ -233,10 +233,10 @@ public class UploadController extends GuiController
          return;
       }
 
-      Upload             upload = uploadPanel.getUploadActiveTableModel().getRow(selected);
+      Upload              upload = uploadPanel.getUploadActiveTableModel().getRow(selected);
 
-      String             shareFileId = upload.getShareFileIDAsString();
-      Map<String, Share> share       = AppleJuiceClient.getAjFassade().getShare(false);
+      Integer             shareFileId = upload.getShareFileID();
+      Map<Integer, Share> share       = AppleJuiceClient.getAjFassade().getShare(false);
 
       if(share.containsKey(shareFileId))
       {
@@ -476,9 +476,9 @@ public class UploadController extends GuiController
                {
                   try
                   {
-                     boolean change = uploadPanel.getUploadActiveTableModel().setUploads((Map<String, Upload>) content);
+                     boolean change = uploadPanel.getUploadActiveTableModel().setUploads((Map<Integer, Upload>) content);
 
-                     if(uploadPanel.getUploadWaitingTableModel().setUploads((Map<String, Upload>) content))
+                     if(uploadPanel.getUploadWaitingTableModel().setUploads((Map<Integer, Upload>) content))
                      {
                         change = true;
                      }

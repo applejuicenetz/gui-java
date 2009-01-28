@@ -47,7 +47,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
       }
    }
 
-   public boolean setUploads(Map<String, Upload> uploadMap)
+   public boolean setUploads(Map<Integer, Upload> uploadMap)
    {
       boolean change = false;
 
@@ -73,7 +73,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
          for(int x = count - 1; x >= 0; x--)
          {
             anUpload = uploads.get(x);
-            if(anUpload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG || !uploadMap.containsKey(anUpload.getId() + ""))
+            if(anUpload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG || !uploadMap.containsKey(anUpload.getId()))
             {
                uploads.remove(x);
                change = true;

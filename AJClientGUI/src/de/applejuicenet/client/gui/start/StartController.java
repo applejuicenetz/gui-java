@@ -21,7 +21,7 @@ import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.12 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.13 2009/01/28 09:44:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -188,8 +188,8 @@ public class StartController extends GuiController
       pos = temp.indexOf("%d");
       if(pos != -1)
       {
-         Map<String, Server> servers = AppleJuiceClient.getAjFassade().getAllServer();
-         int                 count;
+         Map<Integer, Server> servers = AppleJuiceClient.getAjFassade().getAllServer();
+         int                  count;
 
          if(servers != null)
          {

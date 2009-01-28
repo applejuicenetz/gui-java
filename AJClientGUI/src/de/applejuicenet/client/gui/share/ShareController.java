@@ -44,7 +44,7 @@ import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.22 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.23 2009/01/28 09:44:09 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -556,7 +556,7 @@ public class ShareController extends GuiController
                   rootNode.removeAllChildren();
                }
 
-               Map<String, Share> shares = AppleJuiceClient.getAjFassade().getShare(true);
+               Map<Integer, Share> shares = AppleJuiceClient.getAjFassade().getShare(true);
 
                anzahlDateien = 0;
                double size = 0;

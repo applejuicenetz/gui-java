@@ -113,7 +113,7 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
       }
    }
 
-   public boolean setDownloads(Map<String, Download> downloadMap)
+   public boolean setDownloads(Map<Integer, Download> downloadMap)
    {
       boolean change = false;
 
@@ -134,7 +134,7 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
          for(int x = count - 1; x >= 0; x--)
          {
             anDownload = downloads.get(x);
-            if(!downloadMap.containsKey(anDownload.getId() + ""))
+            if(!downloadMap.containsKey(anDownload.getId()))
             {
                downloads.remove(x);
                change = true;

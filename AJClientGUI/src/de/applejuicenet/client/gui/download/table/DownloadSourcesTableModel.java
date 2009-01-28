@@ -156,7 +156,7 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
          change = true;
       }
 
-      Map<String, DownloadSource> sourcesMap = theDownload.getSourcesMap();
+      Map<Integer, DownloadSource> sourcesMap = theDownload.getSourcesMap();
 
       for(DownloadSource curDownloadSource : sourcesMap.values())
       {
@@ -175,7 +175,7 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
          for(int x = count - 1; x >= 0; x--)
          {
             aDownloadSource = sources.get(x);
-            if(!sourcesMap.containsKey(aDownloadSource.getId() + ""))
+            if(!sourcesMap.containsKey(aDownloadSource.getId()))
             {
                sources.remove(x);
                change = true;

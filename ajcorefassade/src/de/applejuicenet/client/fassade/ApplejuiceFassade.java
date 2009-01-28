@@ -74,7 +74,7 @@ import de.applejuicenet.client.fassade.tools.MD5Encoder;
  */
 public class ApplejuiceFassade implements CoreConnectionSettingsListener
 {
-   public static final String                         FASSADE_VERSION         = "F-1.17";
+   public static final String                         FASSADE_VERSION         = "F-1.18";
    public static final String                         MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
    public static final String                         ERROR_MESSAGE           = "Unbehandelte Exception";
    public static String                               separator;
@@ -87,7 +87,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
    private SettingsXMLHolder                          settingsXML             = null;
    private DirectoryXMLHolder                         directoryXML            = null;
    private Version                                    coreVersion;
-   private Map<String, Share>                         share                   = null;
+   private Map<Integer, Share>                        share                   = null;
    private PartListXMLHolder                          partlistXML             = null;
    private long                                       sleepTime               = 2000;
 
@@ -326,9 +326,9 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
 
    public String[] getCurrentIncomingDirs()
    {
-      Map<String, Download> download     = getDownloadsSnapshot();
-      ArrayList<String>     incomingDirs = new ArrayList<String>();
-      boolean               found;
+      Map<Integer, Download> download     = getDownloadsSnapshot();
+      ArrayList<String>      incomingDirs = new ArrayList<String>();
+      boolean                found;
 
       synchronized(download)
       {
@@ -342,7 +342,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
             found = false;
             for(int i = 0; i < incomingDirs.size(); i++)
             {
-               if(((String) incomingDirs.get(i)).compareToIgnoreCase(curDownload.getTargetDirectory()) == 0)
+               if(incomingDirs.get(i).compareToIgnoreCase(curDownload.getTargetDirectory()) == 0)
                {
                   found = true;
                   break;
@@ -432,13 +432,14 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
          {
             public void run()
             {
-               String parameters = "";
+               StringBuilder parameters = new StringBuilder("MaxUpload=");
 
-               parameters += "MaxUpload=" + maxUp.toString();
-               parameters += "&MaxDownload=" + maxDown.toString();
+               parameters.append(maxUp.toString());
+               parameters.append("&MaxDownload=");
+               parameters.append(maxDown.toString());
                HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
-                                            "/function/setsettings?password=" + coreHolder.getCorePassword() + "&" + parameters,
-                                            false);
+                                            "/function/setsettings?password=" + coreHolder.getCorePassword() + "&" +
+                                            parameters.toString(), false);
             }
          }.start();
    }
@@ -473,7 +474,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
                                    false);
    }
 
-   public Map<String, Server> getAllServer()
+   public Map<Integer, Server> getAllServer()
    {
       if(modifiedXML != null)
       {
@@ -489,13 +490,40 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
       {
          if(modifiedXML.update())
          {
-            informDataUpdateListener(DATALISTENER_TYPE.SERVER_CHANGED);
-            informDataUpdateListener(DATALISTENER_TYPE.DOWNLOAD_CHANGED);
-            informDataUpdateListener(DATALISTENER_TYPE.UPLOAD_CHANGED);
-            informDataUpdateListener(DATALISTENER_TYPE.NETINFO_CHANGED);
-            informDataUpdateListener(DATALISTENER_TYPE.SPEED_CHANGED);
-            informDataUpdateListener(DATALISTENER_TYPE.SEARCH_CHANGED);
-            informDataUpdateListener(DATALISTENER_TYPE.INFORMATION_CHANGED);
+            if(modifiedXML.isServerChanged())
+            {
+               informDataUpdateListener(DATALISTENER_TYPE.SERVER_CHANGED);
+            }
+
+            if(modifiedXML.isDownloadChanged())
+            {
+               informDataUpdateListener(DATALISTENER_TYPE.DOWNLOAD_CHANGED);
+            }
+
+            if(modifiedXML.isUploadChanged())
+            {
+               informDataUpdateListener(DATALISTENER_TYPE.UPLOAD_CHANGED);
+            }
+
+            if(modifiedXML.isNetworkInfoChanged())
+            {
+               informDataUpdateListener(DATALISTENER_TYPE.NETINFO_CHANGED);
+            }
+
+            if(modifiedXML.isSpeedChanged())
+            {
+               informDataUpdateListener(DATALISTENER_TYPE.SPEED_CHANGED);
+            }
+
+            if(modifiedXML.isSearchChanged())
+            {
+               informDataUpdateListener(DATALISTENER_TYPE.SEARCH_CHANGED);
+            }
+
+            if(modifiedXML.isInformationChanged())
+            {
+               informDataUpdateListener(DATALISTENER_TYPE.INFORMATION_CHANGED);
+            }
          }
 
          return true;
@@ -977,7 +1005,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
       return coreVersion;
    }
 
-   public Map<String, Download> getDownloadsSnapshot()
+   public Map<Integer, Download> getDownloadsSnapshot()
    {
       return modifiedXML.getDownloads();
    }
@@ -992,7 +1020,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
       }
    }
 
-   public Map<String, Share> getShare(boolean reinit)
+   public Map<Integer, Share> getShare(boolean reinit)
    {
       if(share == null || reinit)
       {
@@ -1054,8 +1082,8 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
       }
 
       HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
-                                   StringConstants.SET_SETTINGS_URL + coreHolder.getCorePassword() +
-                                   StringConstants.AND + parameters.toString(), false);
+                                   StringConstants.SET_SETTINGS_URL + coreHolder.getCorePassword() + StringConstants.AND +
+                                   parameters.toString(), false);
    }
 
    public void removeShareEntry(List<String> paths)
