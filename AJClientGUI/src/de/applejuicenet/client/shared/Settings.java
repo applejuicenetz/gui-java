@@ -1,7 +1,6 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.shared;
 
 import java.awt.Color;
@@ -9,7 +8,7 @@ import java.awt.Color;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.12 2009/01/26 13:31:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.13 2009/02/01 14:45:03 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -27,10 +26,6 @@ public class Settings
    private boolean downloadUebersicht             = true;
    private boolean loadPlugins                    = true;
    private boolean enableToolTip                  = true;
-
-   public Settings()
-   {
-   }
 
    public Settings(Boolean farbenAktiv, Color downloadFertigHintergrundColor, Color quelleHintergrundColor,
                    Boolean downloadUebersicht, Boolean loadPlugins, Boolean enableToolTip)
@@ -65,6 +60,10 @@ public class Settings
          this.enableToolTip = enableToolTip.booleanValue();
       }
    }
+   
+   public Settings()
+   {
+   }
 
    public static Settings getSettings()
    {
@@ -97,9 +96,23 @@ public class Settings
       }
    }
 
+   public boolean isDownloadUebersicht()
+   {
+      return downloadUebersicht;
+   }
+
    public Color getQuelleHintergrundColor()
    {
       return quelleHintergrundColor;
+   }
+
+   public void setDownloadUebersicht(boolean downloadUebersicht)
+   {
+      if(this.downloadUebersicht != downloadUebersicht)
+      {
+         dirty                   = true;
+         this.downloadUebersicht = downloadUebersicht;
+      }
    }
 
    public void setQuelleHintergrundColor(Color quelleHintergrundColor)

@@ -1,7 +1,6 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.gui.download.table;
 
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
    }
 
    @Override
-   public Class<? > getColumnClass(int columnIndex)
+   public Class<?> getColumnClass(int columnIndex)
    {
       return CLASS_TYPES[columnIndex];
    }
@@ -88,6 +87,11 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
             return download.getGroesse();
 
          case 3:
+            if(download.getStatus() == Download.FERTIG || download.getStatus() == Download.FERTIGSTELLEN)
+            {
+               return download.getGroesse();
+            }
+
             return download.getBereitsGeladen();
 
          case 4:
@@ -97,19 +101,34 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
             return download.getRestZeitAsString();
 
          case 6:
+            if(download.getStatus() == Download.FERTIG || download.getStatus() == Download.FERTIGSTELLEN)
+            {
+               return 100d;
+            }
+
             return download.getProzentGeladen();
 
          case 7:
+            if(download.getStatus() == Download.FERTIG || download.getStatus() == Download.FERTIGSTELLEN)
+            {
+               return 0;
+            }
+
             return download.getGroesse() - download.getBereitsGeladen();
 
          case 8:
+            if(download.getStatus() == Download.FERTIG || download.getStatus() == Download.FERTIGSTELLEN)
+            {
+               return -1;
+            }
+
             return download.getPowerDownload();
 
          case 9:
             return download.getTargetDirectory();
 
          default:
-            return "";
+            return null;
       }
    }
 
@@ -161,7 +180,7 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
       }
       else if(share / 1024 < 1024)
       {
-         faktor = 1024;
+         faktor     = 1024;
       }
       else if(share / 1048576 < 1024)
       {

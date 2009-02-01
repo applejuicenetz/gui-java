@@ -31,6 +31,10 @@ public class DownloadTablePowerdownloadCellRenderer extends DefaultTableCellRend
       {
          return "1:1,0";
       }
+      else if(pwdl == -1)
+      {
+         return null;
+      }
 
       double power = pwdl;
 

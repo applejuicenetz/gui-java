@@ -34,11 +34,11 @@ public class DownloadTableDownloadFilenameCellRenderer extends DownloadTableFile
       Download download = (Download) value;
       JLabel   label = (JLabel) super.getTableCellRendererComponent(table, download.getFilename(), isSelected, hasFocus, row, column);
 
-      if(!isSelected && settings.isFarbenAktiv() && download.getStatus() == Download.FERTIG)
+      if(settings.isFarbenAktiv() && download.getStatus() == Download.FERTIG)
       {
          setBackground(settings.getDownloadFertigHintergrundColor());
       }
-      else if(!isSelected && settings.isFarbenAktiv() &&
+      else if(settings.isFarbenAktiv() &&
                  (download.getStatus() == Download.ABBRECHEN || download.getStatus() == Download.ABGEGROCHEN))
       {
          setBackground(Color.RED);

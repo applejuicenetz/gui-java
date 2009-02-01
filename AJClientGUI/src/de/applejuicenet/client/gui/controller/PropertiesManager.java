@@ -759,6 +759,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
          settings.setQuelleHintergrundColor(quelleHintergrundColor);
          settings.loadPluginsOnStartup(loadPlugins);
          settings.enableToolTipEnabled(enableToolTip);
+         settings.setDownloadUebersicht(downloadUebersicht);
          return settings;
       }
       catch(Exception e)
@@ -781,6 +782,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
       propertyHandler.put("options_farben_hintergrund_quelle", settings.getQuelleHintergrundColor().getRGB());
       propertyHandler.put("options_loadplugins", settings.shouldLoadPluginsOnStartup());
       propertyHandler.put("options_enableToolTip", settings.isToolTipEnabled());
+      propertyHandler.put("options_download_uebersicht", settings.isDownloadUebersicht());
+      propertyHandler.save();
       informSettingsListener(settings);
    }
 
