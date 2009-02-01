@@ -32,8 +32,10 @@ import java.io.IOException;
 
 import java.net.URL;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
@@ -44,7 +46,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -73,6 +74,7 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.Information;
 import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
@@ -448,6 +450,50 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          trayLoader  = (TrayIF) trayLoaderClass.newInstance();
 
          useTrayIcon = trayLoader.makeTray(image, titel, this, popupShowHideMenuItem, zeigenIcon, versteckenIcon, popup);
+         AppleJuiceClient.getAjFassade().addDataUpdateListener(new DataUpdateListener()
+            {
+               private Map<Integer, Integer> stati           = new HashMap<Integer, Integer>();
+               private List<Integer>         alreadyNotified = new ArrayList<Integer>();
+
+               public void fireContentChanged(DATALISTENER_TYPE type, Object content)
+               {
+                  Map<Integer, Download> downloads = (Map<Integer, Download>) content;
+
+                  for(Download curDownload : downloads.values())
+                  {
+                     Integer oldDownloadStatus = stati.get(curDownload.getId());
+
+                     if(null == oldDownloadStatus)
+                     {
+                        // neu
+                        stati.put(curDownload.getId(), curDownload.getStatus());
+                     }
+                     else if(curDownload.getStatus() == Download.FERTIG && oldDownloadStatus != Download.FERTIG &&
+                                !alreadyNotified.contains(curDownload.getId()))
+                     {
+                        // fertiggestellt und noch nicht benachrichtigt
+                        alreadyNotified.add(curDownload.getId());
+                        showMessage("Download fertig", curDownload.getFilename() + " fertig!");
+                     }
+                  }
+
+                  ArrayList<Integer> toRemove = new ArrayList<Integer>();
+
+                  for(Integer curKey : stati.keySet())
+                  {
+                     if(!downloads.containsKey(curKey))
+                     {
+                        // download wurde entfernt
+                        toRemove.add(curKey);
+                     }
+                  }
+
+                  for(Integer curKey : toRemove)
+                  {
+                     stati.remove(curKey);
+                  }
+               }
+            }, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
       }
       catch(Throwable e)
       {
@@ -462,20 +508,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                uebernehmeLink();
             }
          });
-
-      JComboBox targetDirs = linkPane.getCmbTargetDir();
-      String[]  dirs       = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
-
-      for(String curDir : dirs)
-      {
-         targetDirs.addItem(curDir);
-         if(curDir.equals(""))
-         {
-            targetDirs.setSelectedItem(curDir);
-         }
-      }
-
-      targetDirs.setEditable(true);
 
       getContentPane().add(linkPane, BorderLayout.NORTH);
       getContentPane().add(registerPane, BorderLayout.CENTER);
