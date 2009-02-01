@@ -5,7 +5,7 @@ package de.applejuicenet.client.gui.download;
 
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.7 2009/02/01 14:45:03 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.8 2009/02/01 14:49:17 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -55,6 +55,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener
    private DownloadPanel         downloadPanel;
    private String                verfuegbar;
    private DecimalFormat         decimalFormat        = new DecimalFormat("#.##");
+   private Object                lastPartlistObject   = null;
 
    public DownloadOverviewPanel(DownloadPanel parent)
    {
@@ -88,6 +89,17 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener
                   partListWorkerThread = null;
                   actualDLDateiName.setText(null);
                   actualDlOverviewTable.setPartList(null, null);
+               }
+               else if(holeListe.isSelected() && null != lastPartlistObject)
+               {
+                  if(lastPartlistObject instanceof Download)
+                  {
+                     setDownload((Download) lastPartlistObject);
+                  }
+                  else
+                  {
+                     setDownloadSource((DownloadSource) lastPartlistObject);
+                  }
                }
 
                Settings settings = Settings.getSettings();
@@ -152,6 +164,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener
 
    public void setDownload(Download download)
    {
+      lastPartlistObject = download;
       if(!holeListe.isSelected())
       {
          return;
@@ -200,6 +213,12 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener
 
    public void setDownloadSource(DownloadSource downloadSource)
    {
+      lastPartlistObject = downloadSource;
+      if(!holeListe.isSelected())
+      {
+         return;
+      }
+
       try
       {
          if(partListWorkerThread != null)
