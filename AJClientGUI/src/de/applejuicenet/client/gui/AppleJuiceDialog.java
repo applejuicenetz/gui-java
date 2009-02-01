@@ -473,7 +473,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                      {
                         // fertiggestellt und noch nicht benachrichtigt
                         alreadyNotified.add(curDownload.getId());
-                        showMessage("Download fertig", curDownload.getFilename() + " fertig!");
+                        showMessage("Download fertig", curDownload.getFilename() + " abgeschlossen!");
                      }
                   }
 
