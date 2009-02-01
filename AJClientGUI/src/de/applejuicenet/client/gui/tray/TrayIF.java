@@ -20,4 +20,6 @@ public interface TrayIF
    void setTextVerstecken(String verstecken);
 
    void setTextZeigen(String zeigen);
+   
+   void showBallon(String caption, String message);
 }
