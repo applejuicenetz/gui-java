@@ -34,17 +34,18 @@ import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
-import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadSourcesTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadTableDownloadFilenameCellRenderer;
 import de.applejuicenet.client.gui.download.table.DownloadTableFilenameCellRenderer;
 import de.applejuicenet.client.gui.download.table.DownloadTablePowerdownloadCellRenderer;
+import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.tablecellrenderer.ProgressTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.SizeTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.SpeedTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.StringTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.VersionTableCellRenderer;
+
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
@@ -68,34 +69,34 @@ import de.tklsoft.gui.controls.TKLTextField;
  */
 public class DownloadPanel extends TklPanel
 {
-   private DownloadOverviewPanel    downloadOverviewPanel;
-   private PowerDownloadPanel       powerDownloadPanel;
-   private DownloadsTableModel downloadActiveTableModel;
-   private JTable                   downloadActiveTable;
+   private DownloadOverviewPanel     downloadOverviewPanel;
+   private PowerDownloadPanel        powerDownloadPanel;
+   private DownloadsTableModel       downloadActiveTableModel;
+   private JTable                    downloadActiveTable;
    private DownloadSourcesTableModel downloadSourceTableModel;
-   private JTable                   downloadSourceTable;
-   private JPopupMenu               popup                           = new JPopupMenu();
-   private JScrollPane              aScrollPane;
-   private JMenuItem                abbrechen;
-   private JMenuItem                pause;
-   private JMenuItem                fortsetzen;
-   private JMenuItem                umbenennen;
-   private JMenuItem                zielordner;
-   private JMenuItem                fertigEntfernen;
-   private JMenuItem                itemCopyToClipboard             = new JMenuItem();
-   private JMenuItem                itemCopyToClipboardWithSources  = new JMenuItem();
-   private JMenuItem                itemOpenWithProgram             = new JMenuItem();
-   private JMenuItem                itemOpenWithDefaultProgram      = new JMenuItem();
-   private JSplitPane               splitPane;
-   private Logger                   logger;
-   private TableColumn[]            downloadColumns                 = new TableColumn[DownloadsTableModel.CLASS_TYPES.length];
-   private TableColumn[]            downloadSourceColumns           = new TableColumn[DownloadSourcesTableModel.CLASS_TYPES.length];
-   private JPopupMenu               columnDownloadPopup             = new JPopupMenu();
-   private JCheckBoxMenuItem[]      columnDownloadPopupItems        = new JCheckBoxMenuItem[downloadColumns.length];
-   private JPopupMenu               columnDownloadSourcesPopup      = new JPopupMenu();
-   private JCheckBoxMenuItem[]      columnDownloadSourcesPopupItems = new JCheckBoxMenuItem[downloadSourceColumns.length];
-   private JPopupMenu               menu;
-   private JScrollPane              downloadSourcesScrollPane;
+   private JTable                    downloadSourceTable;
+   private JPopupMenu                popup                           = new JPopupMenu();
+   private JScrollPane               aScrollPane;
+   private JMenuItem                 abbrechen;
+   private JMenuItem                 pause;
+   private JMenuItem                 fortsetzen;
+   private JMenuItem                 umbenennen;
+   private JMenuItem                 zielordner;
+   private JMenuItem                 fertigEntfernen;
+   private JMenuItem                 itemCopyToClipboard             = new JMenuItem();
+   private JMenuItem                 itemCopyToClipboardWithSources  = new JMenuItem();
+   private JMenuItem                 itemOpenWithProgram             = new JMenuItem();
+   private JMenuItem                 itemOpenWithDefaultProgram      = new JMenuItem();
+   private JSplitPane                splitPane;
+   private Logger                    logger;
+   private TableColumn[]             downloadColumns                 = new TableColumn[DownloadsTableModel.CLASS_TYPES.length];
+   private TableColumn[]             downloadSourceColumns           = new TableColumn[DownloadSourcesTableModel.CLASS_TYPES.length];
+   private JPopupMenu                columnDownloadPopup             = new JPopupMenu();
+   private JCheckBoxMenuItem[]       columnDownloadPopupItems        = new JCheckBoxMenuItem[downloadColumns.length];
+   private JPopupMenu                columnDownloadSourcesPopup      = new JPopupMenu();
+   private JCheckBoxMenuItem[]       columnDownloadSourcesPopupItems = new JCheckBoxMenuItem[downloadSourceColumns.length];
+   private JPopupMenu                menu;
+   private JScrollPane               downloadSourcesScrollPane;
 
    public DownloadPanel(GuiController guiController)
    {
@@ -133,11 +134,6 @@ public class DownloadPanel extends TklPanel
    public TableColumn[] getDownloadSourcesTableColumns()
    {
       return downloadSourceColumns;
-   }
-
-   public JCheckBoxMenuItem[] getColumnPopupItems()
-   {
-      return columnDownloadPopupItems;
    }
 
    public DownloadOverviewPanel getDownloadOverviewPanel()

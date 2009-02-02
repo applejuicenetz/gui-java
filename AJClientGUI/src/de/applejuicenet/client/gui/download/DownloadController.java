@@ -178,36 +178,6 @@ public class DownloadController extends GuiController
 
                   maybeShowDownloadPopup(e);
                }
-
-               //               else
-               //               {
-               //                  boolean sourcesTableVisible = downloadPanel.getDownloadSourcesScrollPane().isVisible();
-               //
-               //                  if(sourcesTableVisible)
-               //                  {
-               //                     downloadPanel.getDownloadSourcesTableModel().setDownload(null);
-               //                  }
-               //                  else
-               //                  {
-               //                     int selected = downloadPanel.getDownloadTable().getSelectedRow();
-               //
-               //                     if(selected == -1)
-               //                     {
-               //                        return;
-               //                     }
-               //
-               //                     Download download = downloadPanel.getDownloadTableModel().getRow(selected);
-               //
-               //                     if(downloadPanel.getDownloadSourcesTableModel().setDownload(download))
-               //                     {
-               //                        downloadPanel.getDownloadSourcesTableModel().fireTableDataChanged();
-               //                     }
-               //                  }
-               //
-               //                  downloadPanel.getDownloadSourcesScrollPane().setVisible(!downloadPanel.getDownloadSourcesScrollPane().isVisible());
-               //                  downloadPanel.doLayout();
-               //                  downloadPanel.updateUI();
-               //               }
             }
          });
       downloadPanel.getDownloadTable().addKeyListener(new KeyAdapter()
@@ -466,7 +436,14 @@ public class DownloadController extends GuiController
 
    private void clearReadyDownloads()
    {
-      AppleJuiceClient.getAjFassade().cleanDownloadList();
+      new Thread()
+         {
+            @Override
+            public void run()
+            {
+               AppleJuiceClient.getAjFassade().cleanDownloadList();
+            }
+         }.start();
       downloadPanel.getPowerDownloadPanel().getBtnPdl().setEnabled(false);
       downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
       downloadPanel.getDownloadTable().getSelectionModel().clearSelection();
@@ -1230,7 +1207,7 @@ public class DownloadController extends GuiController
       tableColumns[8] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
       tableColumns[9] = "Zielverzeichnis";
       TableColumn[]       columns = downloadPanel.getDownloadTableColumns();
-      JCheckBoxMenuItem[] columnPopupItems = downloadPanel.getColumnPopupItems();
+      JCheckBoxMenuItem[] columnPopupItems = downloadPanel.getColumnDownloadPopupItems();
 
       for(int i = 0; i < columns.length; i++)
       {
@@ -1252,11 +1229,12 @@ public class DownloadController extends GuiController
       tableColumns[9]  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
       tableColumns[10] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption");
 
-      columns = downloadPanel.getDownloadSourcesTableColumns();
-
+      columns          = downloadPanel.getDownloadSourcesTableColumns();
+      columnPopupItems = downloadPanel.getColumnDownloadSourcesPopupItems();
       for(int i = 0; i < columns.length; i++)
       {
          columns[i].setHeaderValue(tableColumns[i]);
+         columnPopupItems[i].setText(tableColumns[i]);
       }
 
       downloadPanel.getMnuAbbrechen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.canceldown.caption"));

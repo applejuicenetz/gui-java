@@ -21,7 +21,6 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 public class DownloadSourcesTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<DownloadSource>
 {
 
-   //   public static String[]                                    cNames = {"", "", "", "", "", "", "", "", "", "", ""};
    @SuppressWarnings("unchecked")
    public static final Class[]                               CLASS_TYPES = 
                                                                            {
