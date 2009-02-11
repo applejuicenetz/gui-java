@@ -37,7 +37,10 @@ public class ReleaseInfoXMLHolder
    public ReleaseInfo getReleaseInfo() throws Exception
    {
       String    releaseDataTmp = WebsiteContentLoader.getWebsiteContent(proxy, "http://appledocs.to", 80, "/JavaGUI/" + hash);
-
+      if ("no result".equals(releaseDataTmp))
+      {
+    	  return null;
+      }
       DOMParser parser = new DOMParser();
 
       parser.parse(new InputSource(new StringReader(releaseDataTmp)));

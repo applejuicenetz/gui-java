@@ -48,7 +48,7 @@ import de.applejuicenet.client.shared.ReleaseInfoDialog;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.16 2009/02/11 14:58:46 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.17 2009/02/11 16:09:33 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -145,7 +145,12 @@ public class SearchResultPanel extends JPanel
                   ReleaseInfo releaseInfo = AppleJuiceClient.getAjFassade()
                                             .getReleaseInfo(curSearchEntry.getChecksumme(),
                                                             ProxyManagerImpl.getInstance().getProxySettings());
-
+                  if (null == releaseInfo)
+                  {
+                      releaseInfo = new ReleaseInfo();
+                      releaseInfo.setTitle(curSearchEntry.getFileNames()[0].getDateiName());
+                      releaseInfo.setMd5(curSearchEntry.getChecksumme());
+                  }
                   new ReleaseInfoDialog(releaseInfo);
                }
                catch(Exception e)

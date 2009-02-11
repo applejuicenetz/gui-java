@@ -46,7 +46,14 @@ public class ReleaseInfoDialog extends JDialog
 
       theContent.append("<html>");
       theContent.append("  <div align=\"center\"><b>");
-      theContent.append("    <a href=\"" + releaseInfo.getDescriptionURL().toString() + "\">" + releaseInfo.getTitle() + "</a>");
+      if (null != releaseInfo.getDescriptionURL())
+      {
+          theContent.append("    <a href=\"" + releaseInfo.getDescriptionURL().toString() + "\">" + releaseInfo.getTitle() + "</a>");
+      }
+      else
+      {
+          theContent.append(releaseInfo.getTitle());
+      }
       theContent.append("  </b></div>");
       theContent.append("  <table>");
       theContent.append("    <tr>");

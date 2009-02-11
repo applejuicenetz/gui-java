@@ -380,7 +380,12 @@ public class DownloadController extends GuiController
       {
          ReleaseInfo releaseInfo = AppleJuiceClient.getAjFassade()
                                    .getReleaseInfo(curDownload.getHash(), ProxyManagerImpl.getInstance().getProxySettings());
-
+         if (null == releaseInfo)
+         {
+             releaseInfo = new ReleaseInfo();
+             releaseInfo.setTitle(curDownload.getFilename());
+             releaseInfo.setMd5(curDownload.getHash());
+         }
          new ReleaseInfoDialog(releaseInfo);
       }
       catch(Exception e)
