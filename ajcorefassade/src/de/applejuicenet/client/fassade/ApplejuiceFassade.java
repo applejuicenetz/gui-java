@@ -6,9 +6,7 @@ package de.applejuicenet.client.fassade;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-
 import java.net.URLEncoder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,6 +23,7 @@ import de.applejuicenet.client.fassade.controller.xml.InformationXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.ModifiedXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.NetworkServerXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.PartListXMLHolder;
+import de.applejuicenet.client.fassade.controller.xml.ReleaseInfoXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.SettingsXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.ShareXMLHolder;
 import de.applejuicenet.client.fassade.entity.Directory;
@@ -36,20 +35,22 @@ import de.applejuicenet.client.fassade.entity.Search;
 import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.entity.ShareEntry;
-import de.applejuicenet.client.fassade.entity.ShareEntry.SHAREMODE;
 import de.applejuicenet.client.fassade.entity.Version;
+import de.applejuicenet.client.fassade.entity.ShareEntry.SHAREMODE;
 import de.applejuicenet.client.fassade.exception.CoreLostException;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.exception.WrongPasswordException;
 import de.applejuicenet.client.fassade.listener.CoreConnectionSettingsListener;
 import de.applejuicenet.client.fassade.listener.CoreStatusListener;
-import de.applejuicenet.client.fassade.listener.CoreStatusListener.STATUS;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.fassade.listener.CoreStatusListener.STATUS;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
+import de.applejuicenet.client.fassade.shared.ProxySettings;
+import de.applejuicenet.client.fassade.shared.ReleaseInfo;
 import de.applejuicenet.client.fassade.shared.StringConstants;
 import de.applejuicenet.client.fassade.tools.MD5Encoder;
 
@@ -74,7 +75,7 @@ import de.applejuicenet.client.fassade.tools.MD5Encoder;
  */
 public class ApplejuiceFassade implements CoreConnectionSettingsListener
 {
-   public static final String                         FASSADE_VERSION         = "F-1.18";
+   public static final String                         FASSADE_VERSION         = "F-1.19";
    public static final String                         MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
    public static final String                         ERROR_MESSAGE           = "Unbehandelte Exception";
    public static String                               separator;
@@ -1153,6 +1154,12 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
 
    public void fireSettingsChanged(ITEM item, String oldValue, String newValue)
    {
+   }
+
+   public ReleaseInfo getReleaseInfo(String hash, ProxySettings proxy)
+                              throws Exception
+   {
+      return new ReleaseInfoXMLHolder(hash, proxy).getReleaseInfo();
    }
 
    private class CancelThread extends Thread

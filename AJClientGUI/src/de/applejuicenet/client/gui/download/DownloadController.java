@@ -11,9 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.io.File;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +36,7 @@ import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.shared.ReleaseInfo;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
@@ -46,12 +45,14 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.gui.download.table.DownloadSourcesTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.gui.upload.HeaderPopupListener;
 import de.applejuicenet.client.gui.upload.UploadMouseMotionListener;
 import de.applejuicenet.client.shared.DesktopTools;
+import de.applejuicenet.client.shared.ReleaseInfoDialog;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 public class DownloadController extends GuiController
@@ -75,6 +76,7 @@ public class DownloadController extends GuiController
    private static final int          HEADER_DOWNLOAD_SOURCES_POPUP   = 14;
    private static final int          HEADER_DOWNLOAD_DRAGGED         = 15;
    private static final int          HEADER_DOWNLOAD_SOURCES_DRAGGED = 17;
+   private static final int          RELEASE_INFO                    = 18;
    private DownloadPanel             downloadPanel;
    private boolean                   initialized                     = false;
    private String                    dialogTitel;
@@ -124,6 +126,7 @@ public class DownloadController extends GuiController
       downloadPanel.getMnuUmbenennen().addActionListener(new GuiControllerActionListener(this, UMBENENNEN));
       downloadPanel.getMnuZielordner().addActionListener(new GuiControllerActionListener(this, ZIELORDNER_AENDERN));
       downloadPanel.getMnuFertigeEntfernen().addActionListener(new GuiControllerActionListener(this, FERTIGE_ENTFERNEN));
+      downloadPanel.getMnuReleaseInfo().addActionListener(new GuiControllerActionListener(this, RELEASE_INFO));
       downloadPanel.getBtnPowerDownload().addActionListener(new GuiControllerActionListener(this, START_POWERDOWNLOAD));
       if(AppleJuiceClient.getAjFassade().isLocalhost())
       {
@@ -351,8 +354,41 @@ public class DownloadController extends GuiController
             break;
          }
 
+         case RELEASE_INFO:
+         {
+            showReleaseInfo();
+            break;
+         }
+
          default:
             logger.error("Unregistrierte EventId " + actionId);
+      }
+   }
+
+   private void showReleaseInfo()
+   {
+      Download[] selectedItems = getSelectedDownloads();
+
+      if(selectedItems == null || selectedItems.length < 1)
+      {
+         return;
+      }
+
+      Download curDownload = selectedItems[0];
+
+      try
+      {
+         ReleaseInfo releaseInfo = AppleJuiceClient.getAjFassade()
+                                   .getReleaseInfo(curDownload.getHash(), ProxyManagerImpl.getInstance().getProxySettings());
+
+         new ReleaseInfoDialog(releaseInfo);
+      }
+      catch(Exception e)
+      {
+          ReleaseInfo releaseInfo = new ReleaseInfo();
+          releaseInfo.setTitle(curDownload.getFilename());
+          releaseInfo.setMd5(curDownload.getHash());
+          new ReleaseInfoDialog(releaseInfo);
       }
    }
 
@@ -596,95 +632,6 @@ public class DownloadController extends GuiController
       downloadPanel.getPopup().show(downloadPanel.getDownloadTable(), e.getX(), e.getY());
    }
 
-   //   private void maybeShowPopup(MouseEvent e)
-   //   {
-   //      Object[] selectedItems = getSelectedDownloadItems();
-   //
-   //      downloadPanel.getMnuUmbenennen().setEnabled(false);
-   //      downloadPanel.getMnuZielordner().setEnabled(false);
-   //      downloadPanel.getMnuPartlisteAnzeigen().setEnabled(false);
-   //      boolean pausiert = false;
-   //      boolean laufend  = false;
-   //
-   //      if(selectedItems != null)
-   //      {
-   //         if(selectedItems.length == 1)
-   //         {
-   //            if((selectedItems[0].getClass() == DownloadMainNode.class &&
-   //                  ((DownloadMainNode) selectedItems[0]).getType() == MainNodeType.ROOT_NODE) ||
-   //                  (selectedItems[0] instanceof DownloadSource))
-   //            {
-   //               if(selectedItems[0].getClass() == DownloadMainNode.class)
-   //               {
-   //                  int status = ((DownloadMainNode) selectedItems[0]).getDownload().getStatus();
-   //
-   //                  if(status == Download.PAUSIERT || status == Download.SUCHEN_LADEN)
-   //                  {
-   //                     downloadPanel.getMnuPartlisteAnzeigen().setEnabled(true);
-   //                  }
-   //               }
-   //
-   //               downloadPanel.getMnuUmbenennen().setEnabled(true);
-   //               downloadPanel.getMnuZielordner().setEnabled(true);
-   //            }
-   //
-   //            if(selectedItems[0] instanceof DownloadSource)
-   //            {
-   //               downloadPanel.getMnuUmbenennen().setEnabled(true);
-   //               downloadPanel.getMnuZielordner().setEnabled(true);
-   //            }
-   //
-   //            if(selectedItems[0].getClass() == DownloadMainNode.class)
-   //            {
-   //               Download downloadDO = ((DownloadMainNode) selectedItems[0]).getDownload();
-   //
-   //               if(downloadDO.getStatus() == Download.SUCHEN_LADEN)
-   //               {
-   //                  laufend = true;
-   //               }
-   //               else if(downloadDO.getStatus() == Download.PAUSIERT)
-   //               {
-   //                  pausiert = true;
-   //               }
-   //            }
-   //
-   //            if(selectedItems[0] instanceof DownloadNode)
-   //            {
-   //               downloadPanel.getMnuZielordner().setEnabled(true);
-   //            }
-   //         }
-   //         else
-   //         {
-   //            for(int i = 0; i < selectedItems.length; i++)
-   //            {
-   //               if((selectedItems[i].getClass() == DownloadMainNode.class &&
-   //                     ((DownloadMainNode) selectedItems[i]).getType() == MainNodeType.ROOT_NODE))
-   //               {
-   //                  downloadPanel.getMnuZielordner().setEnabled(true);
-   //               }
-   //
-   //               Download downloadDO;
-   //
-   //               if(selectedItems[i].getClass() == DownloadMainNode.class)
-   //               {
-   //                  downloadDO = ((DownloadMainNode) selectedItems[i]).getDownload();
-   //                  if(downloadDO.getStatus() == Download.SUCHEN_LADEN)
-   //                  {
-   //                     laufend = true;
-   //                  }
-   //                  else if(downloadDO.getStatus() == Download.PAUSIERT)
-   //                  {
-   //                     pausiert = true;
-   //                  }
-   //               }
-   //            }
-   //         }
-   //      }
-   //
-   //      downloadPanel.getMnuPause().setEnabled(laufend);
-   //      downloadPanel.getMnuFortsetzen().setEnabled(pausiert);
-   //      downloadPanel.getPopup().show(downloadPanel.getDownloadTable(), e.getX(), e.getY());
-   //   }
    private void tryGetPartList(DownloadSource downloadSource)
    {
       downloadPartListWatcher.setDownloadNode(downloadSource);
@@ -1237,6 +1184,7 @@ public class DownloadController extends GuiController
          columnPopupItems[i].setText(tableColumns[i]);
       }
 
+      downloadPanel.getMnuReleaseInfo().setText("Release-Info");
       downloadPanel.getMnuAbbrechen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.canceldown.caption"));
       downloadPanel.getMnuPause().setText(languageSelector.getFirstAttrbuteByTagName("mainform.pausedown.caption") + " [F5]");
       downloadPanel.getMnuFortsetzen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.resumedown.caption") + " [F6]");

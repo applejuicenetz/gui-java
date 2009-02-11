@@ -36,16 +36,19 @@ import de.applejuicenet.client.fassade.entity.Search;
 import de.applejuicenet.client.fassade.entity.SearchEntry;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.FileType;
+import de.applejuicenet.client.fassade.shared.ReleaseInfo;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.gui.search.table.SearchEntryIconRenderer;
 import de.applejuicenet.client.gui.search.table.SearchEntrySizeRenderer;
 import de.applejuicenet.client.gui.search.table.SearchTableModel;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.ReleaseInfoDialog;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.15 2009/01/28 09:44:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.16 2009/02/11 14:58:46 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -76,6 +79,7 @@ public class SearchResultPanel extends JPanel
    private JLabel           label3                 = new JLabel();
    private JPopupMenu       popup                  = new JPopupMenu();
    private JMenuItem        item1                  = new JMenuItem();
+   private JMenuItem        mnuReleaseInfo         = new JMenuItem();
    private JToggleButton[]  filterButtons;
    private TableColumn[]    tableColumns           = new TableColumn[3];
 
@@ -121,6 +125,40 @@ public class SearchResultPanel extends JPanel
             }
          });
       popup.add(item1);
+
+      mnuReleaseInfo.setText("Release-Info");
+      mnuReleaseInfo.addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent ae)
+            {
+               int[] sel = searchResultTable.getSelectedRows();
+
+               if(null == sel || sel.length < 1)
+               {
+                  return;
+               }
+
+               SearchEntry curSearchEntry = searchResultTableModel.getRow(sel[0]);
+
+               try
+               {
+                  ReleaseInfo releaseInfo = AppleJuiceClient.getAjFassade()
+                                            .getReleaseInfo(curSearchEntry.getChecksumme(),
+                                                            ProxyManagerImpl.getInstance().getProxySettings());
+
+                  new ReleaseInfoDialog(releaseInfo);
+               }
+               catch(Exception e)
+               {
+                   ReleaseInfo releaseInfo = new ReleaseInfo();
+                   releaseInfo.setTitle(curSearchEntry.getFileNames()[0].getDateiName());
+                   releaseInfo.setMd5(curSearchEntry.getChecksumme());
+
+                   new ReleaseInfoDialog(releaseInfo);  
+               }
+            }
+         });
+      popup.add(mnuReleaseInfo);
       setLayout(new BorderLayout());
       updateZahlen();
       JPanel  buttonPanel = new JPanel(new FlowLayout());
@@ -373,6 +411,7 @@ public class SearchResultPanel extends JPanel
       try
       {
          item1.setText(linkLaden);
+         mnuReleaseInfo.setText("Release-Info");
          sucheAbbrechen.setText(sucheStoppen);
          label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
          label2.setText(gefundeneDateien.replaceFirst("%i", Long.toString(search.getEntryCount())));

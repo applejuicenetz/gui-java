@@ -83,6 +83,7 @@ public class DownloadPanel extends TklPanel
    private JMenuItem                 umbenennen;
    private JMenuItem                 zielordner;
    private JMenuItem                 fertigEntfernen;
+   private JMenuItem                 itemReleaseInfo             = new JMenuItem();
    private JMenuItem                 itemCopyToClipboard             = new JMenuItem();
    private JMenuItem                 itemCopyToClipboardWithSources  = new JMenuItem();
    private JMenuItem                 itemOpenWithProgram             = new JMenuItem();
@@ -216,6 +217,11 @@ public class DownloadPanel extends TklPanel
       return fertigEntfernen;
    }
 
+   public JMenuItem getMnuReleaseInfo()
+   {
+      return itemReleaseInfo;
+   }
+   
    public JMenuItem getMnuOpenWithProgram()
    {
       return itemOpenWithProgram;
@@ -268,6 +274,7 @@ public class DownloadPanel extends TklPanel
       zielordner.setIcon(im.getIcon("zielordner"));
       fertigEntfernen.setIcon(im.getIcon("bereinigen"));
       fortsetzen.setIcon(im.getIcon("pause"));
+      itemReleaseInfo.setIcon(im.getIcon("pause"));
       itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
       itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
 
@@ -283,6 +290,7 @@ public class DownloadPanel extends TklPanel
       popup.add(itemCopyToClipboard);
       popup.add(itemCopyToClipboardWithSources);
       popup.add(new JSeparator());
+      popup.add(itemReleaseInfo);
       popup.add(itemOpenWithProgram);
       itemOpenWithProgram.setIcon(im.getIcon("vlc"));
       popup.add(itemOpenWithDefaultProgram);
