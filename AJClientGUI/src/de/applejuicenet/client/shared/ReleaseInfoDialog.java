@@ -79,8 +79,8 @@ public class ReleaseInfoDialog extends JDialog
       String           txtRatingVideo = languageSelector.getFirstAttrbuteByTagName("releaseinfo.rating.video");
       String           txtRatingAudio = languageSelector.getFirstAttrbuteByTagName("releaseinfo.rating.audio");
       String           txtFsk18       = languageSelector.getFirstAttrbuteByTagName("releaseinfo.fsk18");
-      String           txtJa          = languageSelector.getFirstAttrbuteByTagName("releaseinfo.ja");
-      String           txtNein        = languageSelector.getFirstAttrbuteByTagName("releaseinfo.nein");
+      String           txtJa          = languageSelector.getFirstAttrbuteByTagName("releaseinfo.yes");
+      String           txtNein        = languageSelector.getFirstAttrbuteByTagName("releaseinfo.no");
 
       HyperlinkAdapter hyperlinkAdapter = new HyperlinkAdapter(getTxtContent());
 
