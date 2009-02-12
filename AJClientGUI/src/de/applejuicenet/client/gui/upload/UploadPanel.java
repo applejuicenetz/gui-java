@@ -28,6 +28,7 @@ import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.upload.table.UploadActiveTableModel;
 import de.applejuicenet.client.gui.upload.table.UploadTableDateCellRenderer;
@@ -171,7 +172,18 @@ public class UploadPanel extends TklPanel implements RegisterI
       JTableHeader       header = uploadActiveTable.getTableHeader();
 
       header.setDefaultRenderer(renderer);
-      header.addMouseListener(new HeaderListener(header, renderer));
+      header.addMouseListener(new HeaderListener(header, renderer)
+         {
+            private PositionManager pm = PositionManagerImpl.getInstance();
+
+            @Override
+            public void internalSort(int column, boolean ascent)
+            {
+               pm.setUploadSort(column, ascent);
+
+               super.internalSort(column, ascent);
+            }
+         });
 
       uploadWaitingTableModel = new UploadWaitingTableModel();
       uploadWaitingTable      = new JTable(uploadWaitingTableModel);
@@ -187,7 +199,18 @@ public class UploadPanel extends TklPanel implements RegisterI
 
       header = uploadWaitingTable.getTableHeader();
       header.setDefaultRenderer(renderer);
-      header.addMouseListener(new HeaderListener(header, renderer));
+      header.addMouseListener(new HeaderListener(header, renderer)
+         {
+            private PositionManager pm = PositionManagerImpl.getInstance();
+
+            @Override
+            public void internalSort(int column, boolean ascent)
+            {
+               pm.setUploadWaitingSort(column, ascent);
+
+               super.internalSort(column, ascent);
+            }
+         });
 
       TableColumnModel modelWaiting = uploadWaitingTable.getColumnModel();
 

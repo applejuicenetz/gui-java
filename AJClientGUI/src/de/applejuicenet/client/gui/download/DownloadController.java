@@ -11,7 +11,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,7 @@ import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
+import de.applejuicenet.client.gui.components.table.HeaderListener;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -492,31 +496,6 @@ public class DownloadController extends GuiController
             downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
          }
       }
-
-      //         else if(node instanceof DownloadSource)
-      //         {
-      //            if(Settings.getSettings().isDownloadUebersicht())
-      //            {
-      //               downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
-      //               tryGetPartList(false);
-      //            }
-      //            else
-      //            {
-      //               downloadPanel.getDownloadOverviewPanel().enableHoleListButton(true);
-      //            }
-      //   
-      //            if(!downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive())
-      //            {
-      //               downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(true);
-      //               downloadPanel.getPowerDownloadPanel().setPwdlValue(((DownloadSource) node).getPowerDownload());
-      //            }
-      //         }
-      //         else
-      //         {
-      //            downloadPanel.getPowerDownloadPanel().btnPdl.setEnabled(false);
-      //            downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
-      //            downloadPanel.getDownloadOverviewPanel().enableHoleListButton(false);
-      //         }
    }
 
    private void startPowerDownload()
@@ -1017,6 +996,8 @@ public class DownloadController extends GuiController
 
             TableColumn[]   columnsDownload        = downloadPanel.getDownloadTableColumns();
             TableColumn[]   columnsDownloadSources = downloadPanel.getDownloadSourcesTableColumns();
+            int[]           sortDownloads          = null;
+            int[]           sortDownloadSources    = null;
 
             if(pm.isLegal())
             {
@@ -1050,9 +1031,11 @@ public class DownloadController extends GuiController
                   }
                }
 
-               widths         = pm.getDownloadSourcesWidths();
-               visibilies     = pm.getDownloadSourcesColumnVisibilities();
-               indizes        = pm.getDownloadSourcesColumnIndizes();
+               widths        = pm.getDownloadSourcesWidths();
+               visibilies    = pm.getDownloadSourcesColumnVisibilities();
+               indizes       = pm.getDownloadSourcesColumnIndizes();
+               sortDownloads = pm.getDownloadSort();
+
                visibleColumns = new ArrayList<TableColumn>();
 
                for(int i = 0; i < columnsDownloadSources.length; i++)
@@ -1067,6 +1050,7 @@ public class DownloadController extends GuiController
 
                pos = -1;
 
+               sortDownloadSources = pm.getDownloadSourcesSort();
                for(int i = 0; i < visibleColumns.size(); i++)
                {
                   for(int x = 0; x < columnsDownloadSources.length; x++)
@@ -1099,6 +1083,27 @@ public class DownloadController extends GuiController
                       downloadPanel.getPowerDownloadPanel().getPreferredSize().height));
 
             downloadPanel.getSplitPane().setDividerLocation(loc);
+            if(null != sortDownloads)
+            {
+               for(MouseListener curMl : downloadPanel.getDownloadTable().getTableHeader().getMouseListeners())
+               {
+                  if(curMl instanceof HeaderListener)
+                  {
+                     ((HeaderListener) curMl).sort(sortDownloads[0], sortDownloads[1] == 1);
+                  }
+               }
+            }
+
+            if(null != sortDownloadSources)
+            {
+               for(MouseListener curMl : downloadPanel.getDownloadSourceTable().getTableHeader().getMouseListeners())
+               {
+                  if(curMl instanceof HeaderListener)
+                  {
+                     ((HeaderListener) curMl).sort(sortDownloadSources[0], sortDownloadSources[1] == 1);
+                  }
+               }
+            }
          }
 
          downloadPanel.getDownloadTable().updateUI();

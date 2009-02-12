@@ -8,7 +8,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManager.java,v 1.11 2009/01/26 13:31:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManager.java,v 1.12 2009/02/12 13:03:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -59,6 +59,30 @@ public interface PositionManager
 
    void setDownloadSourcesColumnVisible(int column, boolean visible);
 
+   void setDownloadSort(int column, boolean ascent);
+
+   int[] getDownloadSort();
+
+   void setDownlodSourcesSort(int column, boolean ascent);
+
+   int[] getDownloadSourcesSort();
+   
+   void setUploadSort(int column, boolean ascent);
+
+   int[] getUploadSort();
+
+   void setUploadWaitingSort(int column, boolean ascent);
+
+   int[] getUploadWaitingSort();
+
+   void setServerSort(int column, boolean ascent);
+
+   int[] getServerSort();
+   
+   void setSearchSort(int column, boolean ascent);
+
+   int[] getSearchSort();
+   
    boolean[] getDownloadColumnVisibilities();
 
    boolean[] getDownloadSourcesColumnVisibilities();

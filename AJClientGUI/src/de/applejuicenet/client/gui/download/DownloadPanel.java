@@ -33,6 +33,7 @@ import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.download.table.DownloadSourcesTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadTableDownloadFilenameCellRenderer;
@@ -45,7 +46,6 @@ import de.applejuicenet.client.shared.tablecellrenderer.SizeTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.SpeedTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.StringTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.VersionTableCellRenderer;
-
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
@@ -83,7 +83,7 @@ public class DownloadPanel extends TklPanel
    private JMenuItem                 umbenennen;
    private JMenuItem                 zielordner;
    private JMenuItem                 fertigEntfernen;
-   private JMenuItem                 itemReleaseInfo             = new JMenuItem();
+   private JMenuItem                 itemReleaseInfo                 = new JMenuItem();
    private JMenuItem                 itemCopyToClipboard             = new JMenuItem();
    private JMenuItem                 itemCopyToClipboardWithSources  = new JMenuItem();
    private JMenuItem                 itemOpenWithProgram             = new JMenuItem();
@@ -221,7 +221,7 @@ public class DownloadPanel extends TklPanel
    {
       return itemReleaseInfo;
    }
-   
+
    public JMenuItem getMnuOpenWithProgram()
    {
       return itemOpenWithProgram;
@@ -334,7 +334,18 @@ public class DownloadPanel extends TklPanel
       JTableHeader       header = downloadActiveTable.getTableHeader();
 
       header.setDefaultRenderer(renderer);
-      header.addMouseListener(new HeaderListener(header, renderer));
+      header.addMouseListener(new HeaderListener(header, renderer)
+         {
+            private PositionManager pm = PositionManagerImpl.getInstance();
+
+            @Override
+            public void internalSort(int column, boolean ascent)
+            {
+               pm.setDownloadSort(column, ascent);
+
+               super.internalSort(column, ascent);
+            }
+         });
       for(int i = 0; i < model.getColumnCount(); i++)
       {
          downloadColumns[i]          = model.getColumn(i);
@@ -404,7 +415,18 @@ public class DownloadPanel extends TklPanel
       header = downloadSourceTable.getTableHeader();
 
       header.setDefaultRenderer(renderer);
-      header.addMouseListener(new HeaderListener(header, renderer));
+      header.addMouseListener(new HeaderListener(header, renderer)
+         {
+            private PositionManager pm = PositionManagerImpl.getInstance();
+
+            @Override
+            public void internalSort(int column, boolean ascent)
+            {
+               pm.setDownlodSourcesSort(column, ascent);
+
+               super.internalSort(column, ascent);
+            }
+         });
       model = downloadSourceTable.getColumnModel();
       for(int i = 0; i < model.getColumnCount(); i++)
       {

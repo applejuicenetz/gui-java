@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -28,6 +29,7 @@ import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
+import de.applejuicenet.client.gui.components.table.HeaderListener;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
@@ -318,16 +320,20 @@ public class UploadController extends GuiController
 
             TableColumn[]    columnsActive      = uploadPanel.getTableActiveColumns();
             int              columnCountActive  = headerModelActive.getColumnCount();
+            int[]            uploadActiveSort   = null;
             TableColumn[]    columnsWaiting     = uploadPanel.getTableWaitingColumns();
             int              columnCountWaiting = headerModelWaiting.getColumnCount();
             PositionManager  pm                 = PositionManagerImpl.getInstance();
+            int[]            uploadWaitingSort  = null;
 
             if(pm.isLegal())
             {
-               int[]                  uploadActiveWidths     = pm.getUploadWidths();
-               boolean[]              uploadActiveVisibilies = pm.getUploadColumnVisibilities();
-               int[]                  indizesActive          = pm.getUploadColumnIndizes();
-               ArrayList<TableColumn> visibleColumnsActive   = new ArrayList<TableColumn>();
+               int[]     uploadActiveWidths     = pm.getUploadWidths();
+               boolean[] uploadActiveVisibilies = pm.getUploadColumnVisibilities();
+               int[]     indizesActive          = pm.getUploadColumnIndizes();
+
+               uploadActiveSort = pm.getUploadSort();
+               ArrayList<TableColumn> visibleColumnsActive = new ArrayList<TableColumn>();
 
                for(int i = 0; i < columnsActive.length; i++)
                {
@@ -354,10 +360,12 @@ public class UploadController extends GuiController
                   }
                }
 
-               int[]                  uploadWaitingWidths     = pm.getUploadWaitingWidths();
-               boolean[]              uploadWaitingVisibilies = pm.getUploadWaitingColumnVisibilities();
-               int[]                  indizesWaiting          = pm.getUploadWaitingColumnIndizes();
-               ArrayList<TableColumn> visibleColumnsWaiting   = new ArrayList<TableColumn>();
+               int[]     uploadWaitingWidths     = pm.getUploadWaitingWidths();
+               boolean[] uploadWaitingVisibilies = pm.getUploadWaitingColumnVisibilities();
+               int[]     indizesWaiting          = pm.getUploadWaitingColumnIndizes();
+
+               uploadWaitingSort = pm.getUploadWaitingSort();
+               ArrayList<TableColumn> visibleColumnsWaiting = new ArrayList<TableColumn>();
 
                for(int i = 0; i < columnsWaiting.length; i++)
                {
@@ -400,6 +408,27 @@ public class UploadController extends GuiController
 
             uploadPanel.getUploadActiveTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             uploadPanel.getUploadWaitingTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            if(null != uploadActiveSort)
+            {
+               for(MouseListener curMl : uploadPanel.getUploadActiveTable().getTableHeader().getMouseListeners())
+               {
+                  if(curMl instanceof HeaderListener)
+                  {
+                     ((HeaderListener) curMl).sort(uploadActiveSort[0], uploadActiveSort[1] == 1);
+                  }
+               }
+            }
+
+            if(null != uploadWaitingSort)
+            {
+               for(MouseListener curMl : uploadPanel.getUploadWaitingTable().getTableHeader().getMouseListeners())
+               {
+                  if(curMl instanceof HeaderListener)
+                  {
+                     ((HeaderListener) curMl).sort(uploadWaitingSort[0], uploadWaitingSort[1] == 1);
+                  }
+               }
+            }
          }
 
          uploadPanel.getUploadActiveTable().updateUI();

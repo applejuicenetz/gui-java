@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.util.List;
 
 import javax.swing.JButton;
@@ -38,6 +37,9 @@ import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.FileType;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.components.table.SortableTableModel;
+import de.applejuicenet.client.gui.controller.PositionManager;
+import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.search.table.SearchEntryIconRenderer;
 import de.applejuicenet.client.gui.search.table.SearchEntrySizeRenderer;
 import de.applejuicenet.client.gui.search.table.SearchTableModel;
@@ -46,7 +48,7 @@ import de.applejuicenet.client.shared.ReleaseInfoDialog;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.18 2009/02/12 09:11:24 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.19 2009/02/12 13:03:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -271,9 +273,16 @@ public class SearchResultPanel extends JPanel
          tableColumns[i].setHeaderRenderer(renderer);
       }
 
-      JTableHeader header = searchResultTable.getTableHeader();
+      JTableHeader     header = searchResultTable.getTableHeader();
 
-      header.addMouseListener(new SortMouseAdapter(header, renderer));
+      SortMouseAdapter sortMouseAdapter = new SortMouseAdapter(header, renderer);
+
+      header.addMouseListener(sortMouseAdapter);
+
+      PositionManager pm   = PositionManagerImpl.getInstance();
+      int[]           sort = pm.getSearchSort();
+
+      sortMouseAdapter.sort(sort[0], sort[1] == 1);
       if(!search.isRunning())
       {
          sucheAbbrechen.setEnabled(false);
@@ -420,13 +429,12 @@ public class SearchResultPanel extends JPanel
    {
       private JTableHeader       header;
       private SortButtonRenderer renderer;
+      private PositionManager    pm = PositionManagerImpl.getInstance();
 
       public SortMouseAdapter(JTableHeader header, SortButtonRenderer renderer)
       {
          this.header   = header;
          this.renderer = renderer;
-         renderer.setSelectedColumn(0);
-         renderer.setSelectedColumn(0);
          header.repaint();
       }
 
@@ -437,17 +445,27 @@ public class SearchResultPanel extends JPanel
             return;
          }
 
-         int col = header.columnAtPoint(e.getPoint());
+         int     col               = header.columnAtPoint(e.getPoint());
+         int     curSelectedColumn = renderer.getSelectedColumn();
+         boolean ascent;
 
-         if(col == -1)
+         if(col == curSelectedColumn)
          {
-            return;
+            ascent = !renderer.getState();
+         }
+         else
+         {
+            ascent = true;
          }
 
-         TableColumn pressedColumn = searchResultTable.getColumnModel().getColumn(col);
+         pm.setSearchSort(col, ascent);
+         sort(col, ascent);
+      }
 
-         renderer.setPressedColumn(col);
-         renderer.setSelectedColumn(col);
+      @SuppressWarnings("unchecked")
+      public void sort(int column, boolean ascent)
+      {
+         renderer.setSelectedColumn(column, ascent);
          header.repaint();
 
          if(header.getTable().isEditing())
@@ -455,20 +473,9 @@ public class SearchResultPanel extends JPanel
             header.getTable().getCellEditor().stopCellEditing();
          }
 
-         boolean isAscent;
+         int sortCol = header.getTable().convertColumnIndexToModel(column);
 
-         if(SortButtonRenderer.UP == renderer.getState(col))
-         {
-            isAscent = true;
-         }
-         else
-         {
-            isAscent = false;
-         }
-
-         ((SearchTableModel) header.getTable().getModel()).sortByColumn(col, isAscent);
-         searchResultTableModel.fireTableDataChanged();
-         renderer.setPressedColumn(-1);
+         ((SortableTableModel) header.getTable().getModel()).sortByColumn(sortCol, ascent);
          header.repaint();
       }
    }

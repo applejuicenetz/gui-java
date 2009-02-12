@@ -1,6 +1,7 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
+
 package de.applejuicenet.client.gui.server;
 
 import java.awt.BorderLayout;
@@ -16,6 +17,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -106,7 +109,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
    private ServerPanel()
    {
-      logger                                      = Logger.getLogger(getClass());
+      logger = Logger.getLogger(getClass());
       try
       {
          init();
@@ -165,8 +168,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
             public void actionPerformed(ActionEvent ae)
             {
                int               selected = serverTable.getSelectedRow();
-               Server            server   = (Server) ((ServerTableModel) serverTable.getModel()).getRow(selected);
-               ApplejuiceFassade af       = AppleJuiceClient.getAjFassade();
+               Server            server = (Server) ((ServerTableModel) serverTable.getModel()).getRow(selected);
+               ApplejuiceFassade af     = AppleJuiceClient.getAjFassade();
 
                if(af.getInformation().getVerbindungsStatus() == Information.VERBUNDEN)
                {
@@ -184,7 +187,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                   }
 
                   long timeDiff = timestamp - netInfo.getConnectionTime();
-                  int  minuten  = (int) (timeDiff / 60000);
+                  int  minuten = (int) (timeDiff / 60000);
 
                   if(minuten < 0)
                   {
@@ -281,8 +284,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
          public void actionPerformed(ActionEvent ae)
          {
             NewServerDialog newServerDialog = new NewServerDialog(AppleJuiceDialog.getApp(), true);
-            Dimension       appDimension    = newServerDialog.getSize();
-            Dimension       screenSize      = Toolkit.getDefaultToolkit().getScreenSize();
+            Dimension       appDimension = newServerDialog.getSize();
+            Dimension       screenSize   = Toolkit.getDefaultToolkit().getScreenSize();
 
             newServerDialog.setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
             newServerDialog.setVisible(true);
@@ -365,8 +368,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
       serverTable.setShowGrid(false);
       serverTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
       SortButtonRenderer renderer = new SortButtonRenderer();
-      TableColumnModel   model    = serverTable.getColumnModel();
-      int                n        = model.getColumnCount();
+      TableColumnModel   model = serverTable.getColumnModel();
+      int                n     = model.getColumnCount();
 
       for(int i = 0; i < n; i++)
       {
@@ -376,7 +379,18 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
       JTableHeader header = serverTable.getTableHeader();
 
-      header.addMouseListener(new HeaderListener(header, renderer));
+      header.addMouseListener(new HeaderListener(header, renderer)
+         {
+            private PositionManager pm = PositionManagerImpl.getInstance();
+
+            @Override
+            public void internalSort(int column, boolean ascent)
+            {
+               pm.setServerSort(column, ascent);
+
+               super.internalSort(column, ascent);
+            }
+         });
 
       serverTable.setDefaultRenderer(Server.class, new ServerTableCellRenderer());
       serverTable.setDefaultRenderer(Date.class, new ServerTableDateCellRenderer());
@@ -451,14 +465,14 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
       serverTable.addMouseListener(popupMouseAdapter);
       add(aScrollPane, BorderLayout.CENTER);
       JPanel    legende = new JPanel(new FlowLayout());
-      ImageIcon icon1   = im.getIcon("serververbunden");
-      ImageIcon icon2   = im.getIcon("serverversuche");
-      ImageIcon icon3   = im.getIcon("aelter24h");
-      ImageIcon icon4   = im.getIcon("juenger24h");
-      JLabel    label1  = new JLabel(icon1);
-      JLabel    label2  = new JLabel(icon2);
-      JLabel    label3  = new JLabel(icon3);
-      JLabel    label4  = new JLabel(icon4);
+      ImageIcon icon1  = im.getIcon("serververbunden");
+      ImageIcon icon2  = im.getIcon("serverversuche");
+      ImageIcon icon3  = im.getIcon("aelter24h");
+      ImageIcon icon4  = im.getIcon("juenger24h");
+      JLabel    label1 = new JLabel(icon1);
+      JLabel    label2 = new JLabel(icon2);
+      JLabel    label3 = new JLabel(icon3);
+      JLabel    label4 = new JLabel(icon4);
 
       legende.add(label1);
       legende.add(verbunden);
@@ -483,6 +497,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
             TableColumnModel headerModel = serverTable.getTableHeader().getColumnModel();
             int              columnCount = headerModel.getColumnCount();
             PositionManager  pm          = PositionManagerImpl.getInstance();
+            int[]            sort        = pm.getServerSort();
 
             if(pm.isLegal())
             {
@@ -498,6 +513,17 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                for(int i = 0; i < columnCount; i++)
                {
                   headerModel.getColumn(i).setPreferredWidth(serverTable.getWidth() / columnCount);
+               }
+            }
+
+            if(null != sort)
+            {
+               for(MouseListener curMl : serverTable.getTableHeader().getMouseListeners())
+               {
+                  if(curMl instanceof HeaderListener)
+                  {
+                     ((HeaderListener) curMl).sort(sort[0], sort[1] == 1);
+                  }
                }
             }
 

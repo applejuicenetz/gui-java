@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.table.JTableHeader;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/HeaderListener.java,v 1.4 2009/01/21 15:14:30 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/HeaderListener.java,v 1.5 2009/02/12 13:03:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -21,8 +21,8 @@ import javax.swing.table.JTableHeader;
  */
 public class HeaderListener extends MouseAdapter
 {
-   JTableHeader       header;
-   SortButtonRenderer renderer;
+   private JTableHeader       header;
+   private SortButtonRenderer renderer;
 
    public HeaderListener(JTableHeader header, SortButtonRenderer renderer)
    {
@@ -30,14 +30,33 @@ public class HeaderListener extends MouseAdapter
       this.renderer = renderer;
    }
 
-   @SuppressWarnings("unchecked")
    public void mouseClicked(MouseEvent e)
    {
-      int col     = header.columnAtPoint(e.getPoint());
-      int sortCol = header.getTable().convertColumnIndexToModel(col);
+      int     col               = header.columnAtPoint(e.getPoint());
+      int     curSelectedColumn = renderer.getSelectedColumn();
+      boolean ascent;
 
-      renderer.setPressedColumn(col);
-      renderer.setSelectedColumn(col);
+      if(col == curSelectedColumn)
+      {
+         ascent = !renderer.getState();
+      }
+      else
+      {
+         ascent = true;
+      }
+
+      internalSort(col, ascent);
+   }
+
+   public void internalSort(int column, boolean ascent)
+   {
+      sort(column, ascent);
+   }
+
+   @SuppressWarnings("unchecked")
+   public void sort(int column, boolean ascent)
+   {
+      renderer.setSelectedColumn(column, ascent);
       header.repaint();
 
       if(header.getTable().isEditing())
@@ -45,19 +64,9 @@ public class HeaderListener extends MouseAdapter
          header.getTable().getCellEditor().stopCellEditing();
       }
 
-      boolean isAscent;
+      int sortCol = header.getTable().convertColumnIndexToModel(column);
 
-      if(SortButtonRenderer.UP == renderer.getState(col))
-      {
-         isAscent = true;
-      }
-      else
-      {
-         isAscent = false;
-      }
-
-      ((SortableTableModel) header.getTable().getModel()).sortByColumn(sortCol, isAscent);
-      renderer.setPressedColumn(-1);
+      ((SortableTableModel) header.getTable().getModel()).sortByColumn(sortCol, ascent);
       header.repaint();
    }
 }

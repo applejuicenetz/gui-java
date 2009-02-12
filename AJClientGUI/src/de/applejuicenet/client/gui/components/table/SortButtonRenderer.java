@@ -1,17 +1,19 @@
-package de.applejuicenet.client.gui.components.table;
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
 
-import java.util.Hashtable;
+package de.applejuicenet.client.gui.components.table;
 
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Insets;
+
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/SortButtonRenderer.java,v 1.3 2005/03/23 06:59:58 loevenwong Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/SortButtonRenderer.java,v 1.4 2009/02/12 13:03:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -20,104 +22,66 @@ import javax.swing.table.TableCellRenderer;
  * @author: Maj0r <aj@tkl-soft.de>
  *
  */
+public class SortButtonRenderer extends JButton implements TableCellRenderer
+{
+   private static Font textFont       = new JTable().getFont();
+   private int         selectedColumn = -1;
+   private boolean     curAscent      = true;
+   private JButton     downButton;
+   private JButton     upButton;
 
-public class SortButtonRenderer
-    extends JButton
-    implements TableCellRenderer {
+   public SortButtonRenderer()
+   {
+      setMargin(new Insets(0, 0, 0, 0));
+      setHorizontalTextPosition(LEFT);
+      setIcon(new BlankIcon());
 
-	public static final int NONE = 0;
-    public static final int DOWN = 1;
-    public static final int UP = 2;
+      downButton = new JButton();
+      downButton.setMargin(new Insets(0, 0, 0, 0));
+      downButton.setHorizontalTextPosition(LEFT);
+      downButton.setIcon(new BevelArrowIcon(BevelArrowIcon.DOWN, false, false));
+      downButton.setPressedIcon(new BevelArrowIcon(BevelArrowIcon.DOWN, false, true));
 
-    private static Font textFont = new JTable().getFont();
+      upButton = new JButton();
+      upButton.setMargin(new Insets(0, 0, 0, 0));
+      upButton.setHorizontalTextPosition(LEFT);
+      upButton.setIcon(new BevelArrowIcon(BevelArrowIcon.UP, false, false));
+      upButton.setPressedIcon(new BevelArrowIcon(BevelArrowIcon.UP, false, true));
+   }
 
-    private int pushedColumn;
-    private Hashtable<Integer,Integer> state;
-    private JButton downButton, upButton;
-    private boolean isPressed;
+   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
+                                                  int column)
+   {
+      JButton button = this;
 
-    public SortButtonRenderer() {
-        pushedColumn = -1;
-        state = new Hashtable<Integer,Integer>();
+      if(selectedColumn == column)
+      {
+         button = curAscent ? downButton : upButton;
+      }
 
-        setMargin(new Insets(0, 0, 0, 0));
-        setHorizontalTextPosition(LEFT);
-        setIcon(new BlankIcon());
+      button.setText(null == value ? "" : value.toString());
+      button.setFont(textFont);
+      return button;
+   }
 
-        downButton = new JButton();
-        downButton.setMargin(new Insets(0, 0, 0, 0));
-        downButton.setHorizontalTextPosition(LEFT);
-        downButton.setIcon(new BevelArrowIcon(BevelArrowIcon.DOWN, false, false));
-        downButton.setPressedIcon(new BevelArrowIcon(BevelArrowIcon.DOWN, false, true));
+   public void setSelectedColumn(int col, boolean isAscent)
+   {
+      if(col < 0)
+      {
+         return;
+      }
 
-        upButton = new JButton();
-        upButton.setMargin(new Insets(0, 0, 0, 0));
-        upButton.setHorizontalTextPosition(LEFT);
-        upButton.setIcon(new BevelArrowIcon(BevelArrowIcon.UP, false, false));
-        upButton.setPressedIcon(new BevelArrowIcon(BevelArrowIcon.UP, false, true));
-    }
+      selectedColumn = col;
+      curAscent      = isAscent;
+   }
 
-    public Component getTableCellRendererComponent(JTable table, Object value,
-        boolean isSelected,
-        boolean hasFocus, int row,
-        int column) {
-        JButton button = this;
-        Object obj = state.get(new Integer(column));
-        if (obj != null) {
-            if ( ( (Integer) obj).intValue() == DOWN) {
-                button = downButton;
-            }
-            else {
-                button = upButton;
-            }
-        }
-        button.setText( (value == null) ? "" : value.toString());
-        button.setFont(textFont);
-        isPressed = (column == pushedColumn);
-        button.getModel().setPressed(isPressed);
-        button.getModel().setArmed(isPressed);
-        return button;
-    }
+   public int getSelectedColumn()
+   {
+      return selectedColumn;
+   }
 
-    public void setPressedColumn(int col) {
-        pushedColumn = col;
-    }
-
-    public void setSelectedColumn(int col) {
-        if (col < 0) {
-            return;
-        }
-        Integer value = null;
-        Object obj = state.get(new Integer(col));
-        if (obj == null) {
-            value = new Integer(DOWN);
-        }
-        else {
-            if ( ( (Integer) obj).intValue() == DOWN) {
-                value = new Integer(UP);
-            }
-            else {
-                value = new Integer(DOWN);
-            }
-        }
-        state.clear();
-        state.put(new Integer(col), value);
-    }
-
-    public int getState(int col) {
-        int retValue;
-        Object obj = state.get(new Integer(col));
-        if (obj == null) {
-            retValue = NONE;
-        }
-        else {
-            if ( ( (Integer) obj).intValue() == DOWN) {
-                retValue = DOWN;
-            }
-            else {
-                retValue = UP;
-            }
-        }
-        return retValue;
-    }
+   public boolean getState()
+   {
+      return curAscent;
+   }
 }

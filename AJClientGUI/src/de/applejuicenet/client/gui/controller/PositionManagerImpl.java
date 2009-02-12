@@ -8,7 +8,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManagerImpl.java,v 1.4 2009/01/26 13:31:36 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManagerImpl.java,v 1.5 2009/02/12 13:03:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -208,6 +208,72 @@ public class PositionManagerImpl implements PositionManager
    public void setDownloadSourcesColumnVisible(int column, boolean visible)
    {
       propertiesManager.setDownloadSourcesColumnVisible(column, visible);
+
+   }
+
+   public int[] getDownloadSort()
+   {
+      return propertiesManager.getDownloadSort();
+   }
+
+   public void setDownloadSort(int column, boolean ascent)
+   {
+      propertiesManager.setDownloadSort(column, ascent);
+
+   }
+
+   public int[] getDownloadSourcesSort()
+   {
+      return propertiesManager.getDownloadSourcesSort();
+   }
+
+   public int[] getSearchSort()
+   {
+      return propertiesManager.getSearchSort();
+   }
+
+   public int[] getUploadSort()
+   {
+      return propertiesManager.getUploadSort();
+   }
+
+   public void setDownlodSourcesSort(int column, boolean ascent)
+   {
+      propertiesManager.setDownlodSourcesSort(column, ascent);
+
+   }
+
+   public void setSearchSort(int column, boolean ascent)
+   {
+      propertiesManager.setSearchSort(column, ascent);
+
+   }
+
+   public void setUploadSort(int column, boolean ascent)
+   {
+      propertiesManager.setUploadSort(column, ascent);
+
+   }
+
+   public int[] getServerSort()
+   {
+      return propertiesManager.getServerSort();
+   }
+
+   public int[] getUploadWaitingSort()
+   {
+      return propertiesManager.getUploadWaitingSort();
+   }
+
+   public void setServerSort(int column, boolean ascent)
+   {
+      propertiesManager.setServerSort(column, ascent);
+
+   }
+
+   public void setUploadWaitingSort(int column, boolean ascent)
+   {
+      propertiesManager.setUploadWaitingSort(column, ascent);
 
    }
 }

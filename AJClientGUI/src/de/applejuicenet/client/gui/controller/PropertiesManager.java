@@ -101,6 +101,12 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
    private boolean                  legal                                      = false;
    private PropertyHandler          propertyHandler;
    private int[]                    uploadWaitingWidths;
+   private int[]                    downloadSort;
+   private int[]                    uploadSort;
+   private int[]                    searchSort;
+   private int[]                    downloadSourcesSort;
+   private int[]                    uploadWaitingSort;
+   private int[]                    serverSort;
 
    private PropertiesManager(String propertiesPath)
    {
@@ -908,6 +914,24 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             aPropertyHandler.put("options_columns_download_column" + i + "_index", i);
          }
 
+         aPropertyHandler.put("options_download_sort_column", "0");
+         aPropertyHandler.put("options_download_sort_order", "1");
+
+         aPropertyHandler.put("options_download_sources_sort_column", "0");
+         aPropertyHandler.put("options_download_sources_sort_order", "1");
+
+         aPropertyHandler.put("options_upload_sort_column", "0");
+         aPropertyHandler.put("options_upload_sort_order", "1");
+
+         aPropertyHandler.put("options_search_sort_column", "0");
+         aPropertyHandler.put("options_search_sort_order", "1");
+
+         aPropertyHandler.put("options_upload_waiting_sort_column", "0");
+         aPropertyHandler.put("options_upload_waiting_sort_order", "1");
+
+         aPropertyHandler.put("options_server_sort_column", "0");
+         aPropertyHandler.put("options_server_sort_order", "1");
+
          aPropertyHandler.put("options_columns_downloadsources_column0_width", DEFAULT_DOWNLOADSOURCES_TABLE_COLUMN_WIDTH);
          aPropertyHandler.put("options_columns_downloadsources_column0_index", 0);
          for(int i = 1; i < DownloadSourcesTableModel.CLASS_TYPES.length; i++)
@@ -1009,6 +1033,30 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             downloadWidths[i] = propertyHandler.getAsInt("options_columns_download_column" + i + "_width",
                                                          DEFAULT_DOWNLOADS_TABLE_COLUMN_WIDTH);
          }
+
+         downloadSort    = new int[2];
+         downloadSort[0] = propertyHandler.getAsInt("options_download_sort_column", 0);
+         downloadSort[1] = propertyHandler.getAsInt("options_download_sort_order", 1);
+
+         downloadSourcesSort    = new int[2];
+         downloadSourcesSort[0] = propertyHandler.getAsInt("options_download_sources_sort_column", 0);
+         downloadSourcesSort[1] = propertyHandler.getAsInt("options_download_sources_sort_order", 1);
+
+         uploadSort    = new int[2];
+         uploadSort[0] = propertyHandler.getAsInt("options_upload_sort_column", 0);
+         uploadSort[1] = propertyHandler.getAsInt("options_upload_sort_order", 1);
+
+         searchSort    = new int[2];
+         searchSort[0] = propertyHandler.getAsInt("options_search_sort_column", 0);
+         searchSort[1] = propertyHandler.getAsInt("options_search_sort_order", 1);
+
+         uploadWaitingSort = new int[2];
+         uploadWaitingSort[0]     = propertyHandler.getAsInt("options_upload_waiting_sort_column", 0);
+         uploadWaitingSort[1]     = propertyHandler.getAsInt("options_upload_waiting_sort_order", 1);
+
+         serverSort    = new int[2];
+         serverSort[0] = propertyHandler.getAsInt("options_server_sort_column", 0);
+         serverSort[1] = propertyHandler.getAsInt("options_server_sort_order", 1);
 
          downloadSourcesWidths = new int[DownloadSourcesTableModel.CLASS_TYPES.length];
          for(int i = 0; i < downloadSourcesWidths.length; i++)
@@ -1137,6 +1185,24 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
          propertyHandler.put("options_location_y", mainXY.y);
          propertyHandler.put("options_location_width", mainDimension.width);
          propertyHandler.put("options_location_height", mainDimension.height);
+
+         propertyHandler.put("options_download_sort_column", downloadSort[0]);
+         propertyHandler.put("options_download_sort_order", downloadSort[1]);
+
+         propertyHandler.put("options_download_sources_sort_column", downloadSourcesSort[0]);
+         propertyHandler.put("options_download_sources_sort_order", downloadSourcesSort[1]);
+
+         propertyHandler.put("options_upload_sort_column", uploadSort[0]);
+         propertyHandler.put("options_upload_sort_order", uploadSort[1]);
+
+         propertyHandler.put("options_search_sort_column", searchSort[0]);
+         propertyHandler.put("options_search_sort_order", searchSort[1]);
+
+         propertyHandler.put("options_upload_waiting_sort_column", uploadWaitingSort[0]);
+         propertyHandler.put("options_upload_waiting_sort_order", uploadWaitingSort[1]);
+
+         propertyHandler.put("options_server_sort_column", serverSort[0]);
+         propertyHandler.put("options_server_sort_order", serverSort[1]);
 
          for(int i = 0; i < downloadWidths.length; i++)
          {
@@ -1305,6 +1371,72 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
    public void setDownloadColumnIndex(int column, int index)
    {
       downloadIndex[column] = index;
+   }
+
+   public int[] getDownloadSort()
+   {
+      return downloadSort;
+   }
+
+   public void setDownloadSort(int column, boolean ascent)
+   {
+      downloadSort = new int[] {column, ascent ? 1 : 0};
+
+   }
+
+   public int[] getDownloadSourcesSort()
+   {
+      return downloadSourcesSort;
+   }
+
+   public int[] getSearchSort()
+   {
+      return searchSort;
+   }
+
+   public int[] getUploadSort()
+   {
+      return uploadSort;
+   }
+
+   public void setDownlodSourcesSort(int column, boolean ascent)
+   {
+      downloadSourcesSort = new int[] {column, ascent ? 1 : 0};
+
+   }
+
+   public void setSearchSort(int column, boolean ascent)
+   {
+      searchSort = new int[] {column, ascent ? 1 : 0};
+
+   }
+
+   public void setUploadSort(int column, boolean ascent)
+   {
+      uploadSort = new int[] {column, ascent ? 1 : 0};
+
+   }
+
+   public int[] getServerSort()
+   {
+      return serverSort;
+   }
+
+   public int[] getUploadWaitingSort()
+   {
+      return uploadWaitingSort;
+   }
+
+   public void setServerSort(int column, boolean ascent)
+   {
+      serverSort = new int[] {column, ascent ? 1 : 0};
+
+   }
+
+   public void setUploadWaitingSort(int column, boolean ascent)
+   {
+      uploadWaitingSort = new int[] {column, ascent ? 1 : 0};
+
    }
 
    public int[] getDownloadColumnIndizes()
