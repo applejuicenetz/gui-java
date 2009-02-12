@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -390,6 +391,26 @@ public class ReleaseInfoDialog extends JDialog
             }
          });
       southPanel.add(btnDownloadImage);
+
+      JButton btnBrowseRelease = new JButton();
+
+      btnBrowseRelease.setIcon(im.getIcon("browsen"));
+      btnBrowseRelease.setText(languageSelector.getFirstAttrbuteByTagName("releaseinfo.browse"));
+      btnBrowseRelease.addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent e)
+            {
+               try
+               {
+                  DesktopTools.browse(releaseInfo.getDescriptionURL().toURI());
+               }
+               catch(URISyntaxException e1)
+               {
+                  logger.error(e1.getMessage(), e1);
+               }
+            }
+         });
+      southPanel.add(btnBrowseRelease);
 
       if(downloadOption)
       {

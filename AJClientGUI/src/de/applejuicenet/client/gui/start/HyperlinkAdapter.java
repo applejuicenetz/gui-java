@@ -8,7 +8,6 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.net.URI;
 
-import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -16,13 +15,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.DesktopTools;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/HyperlinkAdapter.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/HyperlinkAdapter.java,v 1.9 2009/02/12 10:27:34 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -73,27 +69,7 @@ public class HyperlinkAdapter implements HyperlinkListener
    {
       try
       {
-         if(DesktopTools.isAdvancedSupported() && System.getProperty("os.name").toLowerCase().indexOf("linux") == -1)
-         {
-            DesktopTools.browse(new URI(link));
-         }
-         else
-         {
-            String browser = OptionsManagerImpl.getInstance().getStandardBrowser();
-
-            try
-            {
-               Runtime.getRuntime().exec(new String[] {browser, link});
-            }
-            catch(Exception ex)
-            {
-               LanguageSelector ls        = LanguageSelector.getInstance();
-               String           nachricht = ls.getFirstAttrbuteByTagName("javagui.startup.updatefehlernachricht");
-               String           titel     = ls.getFirstAttrbuteByTagName("mainform.caption");
-
-               JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), nachricht, titel, JOptionPane.INFORMATION_MESSAGE);
-            }
-         }
+         DesktopTools.browse(new URI(link));
       }
       catch(Exception e)
       {
