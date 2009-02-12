@@ -19,7 +19,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/NachrichtenWorker.java,v 1.4 2009/01/04 18:29:17 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/NachrichtenWorker.java,v 1.5 2009/02/12 13:11:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -53,7 +53,7 @@ public class NachrichtenWorker extends Thread
       try
       {
          final String coreVersion = AppleJuiceClient.getAjFassade().getCoreVersion().getVersion();
-         String       nachricht   = "verwendeter Core: " + coreVersion;
+         String       nachricht = "verwendeter Core: " + coreVersion;
 
          if(logger.isEnabledFor(Level.INFO))
          {
@@ -66,26 +66,29 @@ public class NachrichtenWorker extends Thread
                                                                          AppleJuiceClient.getAjFassade().getCoreVersion()
                                                                          .getVersion());
 
-         int           pos      = htmlText.toLowerCase().indexOf("<html>");
+         int           pos = htmlText.toLowerCase().indexOf("<html>");
+
+         StringBuilder buffer = new StringBuilder();
 
          if(pos != -1)
          {
-            htmlText = htmlText.substring(pos);
+            buffer.append(htmlText.substring(pos));
          }
          else
          {
-            htmlText = "<html>" + htmlText + "</html>";
+            buffer.append("<html>");
+            buffer.append(htmlText);
+            buffer.append("</html>");
          }
 
-         StringBuffer buffer = new StringBuffer(htmlText);
-         int          index;
+         int index;
 
          while((index = buffer.indexOf(". ")) != -1)
          {
             buffer.replace(index, index + 1, ".<br>");
          }
 
-         htmlText            = buffer.toString();
+         htmlText = buffer.toString();
          final String htmlContent = htmlText;
 
          SwingUtilities.invokeLater(new Runnable()

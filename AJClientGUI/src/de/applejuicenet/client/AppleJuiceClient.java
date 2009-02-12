@@ -11,14 +11,18 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+
 import java.net.Socket;
+
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -59,7 +63,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.108 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.109 2009/02/12 13:11:40 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -554,7 +558,7 @@ public class AppleJuiceClient
                            if(downloadData.length() > 0)
                            {
                               int             pos1              = downloadData.indexOf("|");
-                              String          aktuellsteVersion = downloadData.substring(0, pos1);
+                              final String    aktuellsteVersion = downloadData.substring(0, pos1);
                               StringTokenizer token1            = new StringTokenizer(aktuellsteVersion, ".");
                               String          guiVersion        = AppleJuiceDialog.GUI_VERSION;
 
@@ -613,14 +617,22 @@ public class AppleJuiceClient
 
                               if(showInfo)
                               {
-                                 int                     pos2                    = downloadData.lastIndexOf("|");
-                                 String                  winLink                 = downloadData.substring(pos1 + 1, pos2);
-                                 String                  sonstigeLink            = downloadData.substring(pos2 + 1);
-                                 UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(theApp,
-                                                                                                               aktuellsteVersion,
-                                                                                                               winLink, sonstigeLink);
+                                 int          pos2         = downloadData.lastIndexOf("|");
+                                 final String winLink      = downloadData.substring(pos1 + 1, pos2);
+                                 final String sonstigeLink = downloadData.substring(pos2 + 1);
 
-                                 updateInformationDialog.setVisible(true);
+                                 SwingUtilities.invokeLater(new Runnable()
+                                    {
+                                       public void run()
+                                       {
+                                          UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(theApp,
+                                                                                                                        aktuellsteVersion,
+                                                                                                                        winLink,
+                                                                                                                        sonstigeLink);
+
+                                          updateInformationDialog.setVisible(true);
+                                       }
+                                    });
                               }
                            }
                         }
