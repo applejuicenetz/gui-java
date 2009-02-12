@@ -41,10 +41,11 @@ import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.gui.share.tree.DirectoryNode;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
 import de.applejuicenet.client.shared.DesktopTools;
+import de.applejuicenet.client.shared.ReleaseInfoDialog;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.23 2009/01/28 09:44:09 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.24 2009/02/12 09:11:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -68,6 +69,7 @@ public class ShareController extends GuiController
    private static final int       NEUE_LISTE                     = 10;
    private static final int       OPEN_WITH_PROGRAM              = 11;
    private static final int       OPEN_WITH_STANDARD_PROGRAM     = 12;
+   private static final int       RELEASE_INFO                   = 13;
    private static ShareController instance                       = null;
    private static DecimalFormat   formatter                      = new DecimalFormat("###,##0.00");
    private SharePanel             sharePanel;
@@ -117,6 +119,7 @@ public class ShareController extends GuiController
       sharePanel.getMnuSharedWithoutSub().addActionListener(new GuiControllerActionListener(this, SHARE_WITHOUT_SUB));
       sharePanel.getMnuSharedWithSub().addActionListener(new GuiControllerActionListener(this, SHARE_WITH_SUB));
       sharePanel.getMnuCopyToClipboard().addActionListener(new GuiControllerActionListener(this, COPY_TO_CLIPBOARD));
+      sharePanel.getMnuReleaseInfo().addActionListener(new GuiControllerActionListener(this, RELEASE_INFO));
       sharePanel.getMnuCopyToClipboardWithSources()
       .addActionListener(new GuiControllerActionListener(this, COPY_TO_CLIPBOARD_WITH_SOURCES));
       sharePanel.getMnuCopyToClipboardAsUBBCode()
@@ -231,8 +234,26 @@ public class ShareController extends GuiController
             break;
          }
 
+         case RELEASE_INFO:
+         {
+            showReleaseInfo();
+            break;
+         }
+
          default:
             logger.error("Unregistrierte EventId " + actionId);
+      }
+   }
+
+   private void showReleaseInfo()
+   {
+      Object[] obj = sharePanel.getShareTable().getSelectedItems();
+
+      if(((ShareNode) obj[0]).isLeaf())
+      {
+         Share share = ((ShareNode) obj[0]).getShare();
+
+         ReleaseInfoDialog.showReleaseInfo(share.getCheckSum());
       }
    }
 
@@ -703,6 +724,7 @@ public class ShareController extends GuiController
       sharePanel.getMnuSharedWithSub().setText(languageSelector.getFirstAttrbuteByTagName("mainform.addwsubdirsbtn.caption"));
       sharePanel.getMnuSharedWithoutSub().setText(languageSelector.getFirstAttrbuteByTagName("mainform.addosubdirsbtn.caption"));
       sharePanel.getMnuNotShared().setText(languageSelector.getFirstAttrbuteByTagName("mainform.deldirbtn.caption"));
+      sharePanel.getMnuReleaseInfo().setText(languageSelector.getFirstAttrbuteByTagName("releaseinfo.menu"));
       sharePanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
       sharePanel.getMnuCopyToClipboardAsUBBCode()
       .setText(languageSelector.getFirstAttrbuteByTagName("javagui.shareform.linkalsubbcode"));

@@ -37,7 +37,7 @@ import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.15 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.16 2009/02/12 09:11:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -202,17 +202,18 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
          suchen.setText(languageSelector.getFirstAttrbuteByTagName("mainform.searchlbl.caption") + ": ");
          btnStartStopSearch.setText(languageSelector.getFirstAttrbuteByTagName("mainform.searchbtn.searchcaption"));
 
-         String[] resultTexte = new String[9];
+         String[] resultTexte = new String[10];
 
-         resultTexte[0] = (languageSelector.getFirstAttrbuteByTagName("javagui.searchform.offenesuchen"));
-         resultTexte[1] = (languageSelector.getFirstAttrbuteByTagName("javagui.searchform.gefundenedateien"));
-         resultTexte[2] = (languageSelector.getFirstAttrbuteByTagName("javagui.searchform.durchsuchteclients"));
-         resultTexte[3] = (languageSelector.getFirstAttrbuteByTagName("mainform.Getlink3.caption"));
-         resultTexte[4] = (languageSelector.getFirstAttrbuteByTagName("mainform.cancelsearch.caption"));
+         resultTexte[0] = languageSelector.getFirstAttrbuteByTagName("javagui.searchform.offenesuchen");
+         resultTexte[1] = languageSelector.getFirstAttrbuteByTagName("javagui.searchform.gefundenedateien");
+         resultTexte[2] = languageSelector.getFirstAttrbuteByTagName("javagui.searchform.durchsuchteclients");
+         resultTexte[3] = languageSelector.getFirstAttrbuteByTagName("mainform.Getlink3.caption");
+         resultTexte[4] = languageSelector.getFirstAttrbuteByTagName("mainform.cancelsearch.caption");
          resultTexte[5] = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen");
          resultTexte[6] = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");
          resultTexte[7] = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerlang");
          resultTexte[8] = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
+         resultTexte[9] = languageSelector.getFirstAttrbuteByTagName("releaseinfo.menu");
 
          String[] columns = new String[3];
 

@@ -274,7 +274,7 @@ public class DownloadPanel extends TklPanel
       zielordner.setIcon(im.getIcon("zielordner"));
       fertigEntfernen.setIcon(im.getIcon("bereinigen"));
       fortsetzen.setIcon(im.getIcon("pause"));
-      itemReleaseInfo.setIcon(im.getIcon("pause"));
+      itemReleaseInfo.setIcon(im.getIcon("hint"));
       itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
       itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
 

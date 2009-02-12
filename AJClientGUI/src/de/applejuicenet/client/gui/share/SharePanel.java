@@ -29,9 +29,9 @@ import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.components.table.NormalHeaderRenderer;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
-import de.applejuicenet.client.gui.share.table.ShareTableModel;
 import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.gui.share.table.ShareTable;
+import de.applejuicenet.client.gui.share.table.ShareTableModel;
 import de.applejuicenet.client.gui.share.tree.DirectoryTree;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
@@ -41,7 +41,7 @@ import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.layout.Synchronizer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.12 2009/01/27 07:55:56 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.13 2009/02/12 09:11:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -52,36 +52,37 @@ import de.tklsoft.gui.layout.Synchronizer;
  */
 public class SharePanel extends TklPanel
 {
-   private JPanel        panelCenter;
-   private DirectoryTree folderTree                     = new DirectoryTree();
-   private TitledBorder  folderTreeBolder;
-   private TitledBorder  mailPanelBolder;
-   private JLabel        dateien                        = new JLabel();
-   private TKLButton     neueListe                      = new TKLButton();
-   private TKLButton     neuLaden                       = new TKLButton();
-   private TKLButton     refresh                        = new TKLButton();
-   private TKLButton     prioritaetSetzen               = new TKLButton();
-   private TKLButton     prioritaetAufheben             = new TKLButton();
-   private TKLComboBox   cmbPrio                        = new TKLComboBox();
-   private AJSettings    ajSettings;
-   private ShareTable    shareTable;
-   private ShareTableModel    shareModel;
-   private JPopupMenu    popup                          = new JPopupMenu();
-   private JMenuItem     sharedwsub;
-   private JMenuItem     sharedwosub;
-   private JMenuItem     notshared;
-   private JPopupMenu    popup2                         = new JPopupMenu();
-   private JMenuItem     itemCopyToClipboard            = new JMenuItem();
-   private JMenuItem     itemCopyToClipboardWithSources = new JMenuItem();
-   private JMenuItem     itemCopyToClipboardAsUBBCode   = new JMenuItem();
-   private JMenuItem     itemOpenWithProgram            = new JMenuItem();
-   private JMenuItem     itemOpenWithStandardProgramm   = new JMenuItem();
-   private Logger        logger;
+   private JPanel          panelCenter;
+   private DirectoryTree   folderTree                     = new DirectoryTree();
+   private TitledBorder    folderTreeBolder;
+   private TitledBorder    mailPanelBolder;
+   private JLabel          dateien                        = new JLabel();
+   private TKLButton       neueListe                      = new TKLButton();
+   private TKLButton       neuLaden                       = new TKLButton();
+   private TKLButton       refresh                        = new TKLButton();
+   private TKLButton       prioritaetSetzen               = new TKLButton();
+   private TKLButton       prioritaetAufheben             = new TKLButton();
+   private TKLComboBox     cmbPrio                        = new TKLComboBox();
+   private AJSettings      ajSettings;
+   private ShareTable      shareTable;
+   private ShareTableModel shareModel;
+   private JPopupMenu      popup                          = new JPopupMenu();
+   private JMenuItem       sharedwsub;
+   private JMenuItem       sharedwosub;
+   private JMenuItem       notshared;
+   private JPopupMenu      popup2                         = new JPopupMenu();
+   private JMenuItem       itemReleaseInfo                = new JMenuItem();
+   private JMenuItem       itemCopyToClipboard            = new JMenuItem();
+   private JMenuItem       itemCopyToClipboardWithSources = new JMenuItem();
+   private JMenuItem       itemCopyToClipboardAsUBBCode   = new JMenuItem();
+   private JMenuItem       itemOpenWithProgram            = new JMenuItem();
+   private JMenuItem       itemOpenWithStandardProgramm   = new JMenuItem();
+   private Logger          logger;
 
    public SharePanel(GuiController guiController)
    {
       super(guiController);
-      logger                                            = Logger.getLogger(getClass());
+      logger = Logger.getLogger(getClass());
       try
       {
          init();
@@ -143,6 +144,11 @@ public class SharePanel extends TklPanel
    public JMenuItem getMnuCopyToClipboard()
    {
       return itemCopyToClipboard;
+   }
+
+   public JMenuItem getMnuReleaseInfo()
+   {
+      return itemReleaseInfo;
    }
 
    public JMenuItem getMnuCopyToClipboardWithSources()
@@ -209,6 +215,7 @@ public class SharePanel extends TklPanel
    {
       IconManager im = IconManager.getInstance();
 
+      itemReleaseInfo.setIcon(im.getIcon("hint"));
       itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
       itemCopyToClipboardAsUBBCode.setIcon(im.getIcon("clipboard"));
       itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
@@ -221,6 +228,7 @@ public class SharePanel extends TklPanel
       popup2.add(itemCopyToClipboardWithSources);
       popup2.add(itemCopyToClipboardAsUBBCode);
       popup2.add(new JSeparator());
+      popup2.add(itemReleaseInfo);
       popup2.add(itemOpenWithProgram);
       popup2.add(itemOpenWithStandardProgramm);
       itemOpenWithProgram.setIcon(im.getIcon("vlc"));

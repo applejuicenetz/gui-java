@@ -36,7 +36,6 @@ import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
-import de.applejuicenet.client.fassade.shared.ReleaseInfo;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
@@ -45,7 +44,6 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
-import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.gui.download.table.DownloadSourcesTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
@@ -376,25 +374,7 @@ public class DownloadController extends GuiController
 
       Download curDownload = selectedItems[0];
 
-      try
-      {
-         ReleaseInfo releaseInfo = AppleJuiceClient.getAjFassade()
-                                   .getReleaseInfo(curDownload.getHash(), ProxyManagerImpl.getInstance().getProxySettings());
-         if (null == releaseInfo)
-         {
-             releaseInfo = new ReleaseInfo();
-             releaseInfo.setTitle(curDownload.getFilename());
-             releaseInfo.setMd5(curDownload.getHash());
-         }
-         new ReleaseInfoDialog(releaseInfo);
-      }
-      catch(Exception e)
-      {
-          ReleaseInfo releaseInfo = new ReleaseInfo();
-          releaseInfo.setTitle(curDownload.getFilename());
-          releaseInfo.setMd5(curDownload.getHash());
-          new ReleaseInfoDialog(releaseInfo);
-      }
+      ReleaseInfoDialog.showReleaseInfo(curDownload.getHash());
    }
 
    private void headerDownloadsDragged()
@@ -1189,7 +1169,7 @@ public class DownloadController extends GuiController
          columnPopupItems[i].setText(tableColumns[i]);
       }
 
-      downloadPanel.getMnuReleaseInfo().setText("Release-Info");
+      downloadPanel.getMnuReleaseInfo().setText(languageSelector.getFirstAttrbuteByTagName("releaseinfo.menu"));
       downloadPanel.getMnuAbbrechen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.canceldown.caption"));
       downloadPanel.getMnuPause().setText(languageSelector.getFirstAttrbuteByTagName("mainform.pausedown.caption") + " [F5]");
       downloadPanel.getMnuFortsetzen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.resumedown.caption") + " [F6]");

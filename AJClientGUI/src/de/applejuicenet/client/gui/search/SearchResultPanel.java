@@ -36,10 +36,8 @@ import de.applejuicenet.client.fassade.entity.Search;
 import de.applejuicenet.client.fassade.entity.SearchEntry;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.FileType;
-import de.applejuicenet.client.fassade.shared.ReleaseInfo;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
-import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.gui.search.table.SearchEntryIconRenderer;
 import de.applejuicenet.client.gui.search.table.SearchEntrySizeRenderer;
 import de.applejuicenet.client.gui.search.table.SearchTableModel;
@@ -48,7 +46,7 @@ import de.applejuicenet.client.shared.ReleaseInfoDialog;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.17 2009/02/11 16:09:33 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.18 2009/02/12 09:11:24 maj0r Exp $
  *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
@@ -68,6 +66,7 @@ public class SearchResultPanel extends JPanel
    private static String    invalidLink;
    private static String    linkFailure;
    private static String    dialogTitel;
+   private static String    releaseInfo;
    private static String[]  columns;
    private Logger           logger;
    private JTable           searchResultTable;
@@ -126,7 +125,8 @@ public class SearchResultPanel extends JPanel
          });
       popup.add(item1);
 
-      mnuReleaseInfo.setText("Release-Info");
+      mnuReleaseInfo.setIcon(im.getIcon("hint"));
+      mnuReleaseInfo.setText(releaseInfo);
       mnuReleaseInfo.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent ae)
@@ -140,27 +140,8 @@ public class SearchResultPanel extends JPanel
 
                SearchEntry curSearchEntry = searchResultTableModel.getRow(sel[0]);
 
-               try
-               {
-                  ReleaseInfo releaseInfo = AppleJuiceClient.getAjFassade()
-                                            .getReleaseInfo(curSearchEntry.getChecksumme(),
-                                                            ProxyManagerImpl.getInstance().getProxySettings());
-                  if (null == releaseInfo)
-                  {
-                      releaseInfo = new ReleaseInfo();
-                      releaseInfo.setTitle(curSearchEntry.getFileNames()[0].getDateiName());
-                      releaseInfo.setMd5(curSearchEntry.getChecksumme());
-                  }
-                  new ReleaseInfoDialog(releaseInfo);
-               }
-               catch(Exception e)
-               {
-                   ReleaseInfo releaseInfo = new ReleaseInfo();
-                   releaseInfo.setTitle(curSearchEntry.getFileNames()[0].getDateiName());
-                   releaseInfo.setMd5(curSearchEntry.getChecksumme());
-
-                   new ReleaseInfoDialog(releaseInfo);  
-               }
+               ReleaseInfoDialog.showReleaseInfo(curSearchEntry.getChecksumme(), true,
+                                                 curSearchEntry.getFileNames()[0].getDateiName(), curSearchEntry.getGroesse());
             }
          });
       popup.add(mnuReleaseInfo);
@@ -359,6 +340,7 @@ public class SearchResultPanel extends JPanel
       invalidLink        = texte[6];
       linkFailure        = texte[7];
       dialogTitel        = texte[8];
+      releaseInfo        = texte[9];
       columns            = tableColumns;
    }
 
@@ -416,7 +398,7 @@ public class SearchResultPanel extends JPanel
       try
       {
          item1.setText(linkLaden);
-         mnuReleaseInfo.setText("Release-Info");
+         mnuReleaseInfo.setText(releaseInfo);
          sucheAbbrechen.setText(sucheStoppen);
          label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
          label2.setText(gefundeneDateien.replaceFirst("%i", Long.toString(search.getEntryCount())));

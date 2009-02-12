@@ -5,17 +5,23 @@
 package de.applejuicenet.client.fassade.controller.xml;
 
 import java.io.StringReader;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import org.xml.sax.InputSource;
 
 import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.fassade.shared.ReleaseInfo;
@@ -23,9 +29,11 @@ import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
 
 public class ReleaseInfoXMLHolder
 {
-   private final ReleaseInfo   releaseInfo = new ReleaseInfo();
-   private final ProxySettings proxy;
-   private final String        hash;
+   private static final Map<String, ReleaseCacheObject> releasesCache = new HashMap<String, ReleaseCacheObject>();
+   private static final long                            CACHE_TIMEOUT = 300000;
+   private final ReleaseInfo                            releaseInfo   = new ReleaseInfo();
+   private final ProxySettings                          proxy;
+   private final String                                 hash;
 
    public ReleaseInfoXMLHolder(String hash, ProxySettings proxy)
    {
@@ -36,11 +44,29 @@ public class ReleaseInfoXMLHolder
 
    public ReleaseInfo getReleaseInfo() throws Exception
    {
-      String    releaseDataTmp = WebsiteContentLoader.getWebsiteContent(proxy, "http://appledocs.to", 80, "/JavaGUI/" + hash);
-      if ("no result".equals(releaseDataTmp))
+      ReleaseCacheObject releaseCacheObject = releasesCache.get(hash);
+
+      if(null != releaseCacheObject)
       {
-    	  return null;
+         if(releaseCacheObject.getTimestamp() + CACHE_TIMEOUT > System.currentTimeMillis())
+         {
+            return releaseCacheObject.getReleaseInfo();
+         }
+         else
+         {
+            releasesCache.remove(hash);
+         }
       }
+
+      String releaseDataTmp = WebsiteContentLoader.getWebsiteContent(proxy, "http://appledocs.to", 80, "/JavaGUI/" + hash);
+
+      if("no result".equals(releaseDataTmp))
+      {
+         releaseCacheObject = new ReleaseCacheObject(System.currentTimeMillis(), null);
+         releasesCache.put(hash, releaseCacheObject);
+         return null;
+      }
+
       DOMParser parser = new DOMParser();
 
       parser.parse(new InputSource(new StringReader(releaseDataTmp)));
@@ -262,7 +288,33 @@ public class ReleaseInfoXMLHolder
          }
       }
 
+      releaseCacheObject = new ReleaseCacheObject(System.currentTimeMillis(), releaseInfo);
+      releasesCache.put(hash, releaseCacheObject);
+
       return releaseInfo;
 
+   }
+
+   private class ReleaseCacheObject
+   {
+      private long        timestamp;
+      private ReleaseInfo releaseInfo;
+
+      public ReleaseCacheObject(long timestamp, ReleaseInfo releaseInfo)
+      {
+         super();
+         this.timestamp   = timestamp;
+         this.releaseInfo = releaseInfo;
+      }
+
+      public ReleaseInfo getReleaseInfo()
+      {
+         return releaseInfo;
+      }
+
+      public long getTimestamp()
+      {
+         return timestamp;
+      }
    }
 }
