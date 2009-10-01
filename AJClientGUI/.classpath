@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="needed_jars/looks-2.2.1.jar"/>
 	<classpathentry kind="lib" path="needed_jars/tklcontrols.jar"/>
 	<classpathentry kind="lib" path="needed_jars/TableLayout-20050920.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ajcorefassade"/>
+	<classpathentry kind="lib" path="needed_jars/ajcorefassade.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

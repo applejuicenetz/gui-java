@@ -54,28 +54,9 @@ import de.applejuicenet.client.fassade.shared.ReleaseInfo;
 import de.applejuicenet.client.fassade.shared.StringConstants;
 import de.applejuicenet.client.fassade.tools.MD5Encoder;
 
-/**
- * $Header:
- * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/ApplejuiceFassade.java,v
- * 1.1 2004/12/03 07:57:12 maj0r Exp $
- *
- * <p>
- * Titel: AppleJuice Client-GUI
- * </p>
- * <p>
- * Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
- * appleJuice-Core
- * </p>
- * <p>
- * Copyright: General Public License
- * </p>
- *
- * @author: Maj0r [aj@tkl-soft.de]
- *
- */
 public class ApplejuiceFassade implements CoreConnectionSettingsListener
 {
-   public static final String                         FASSADE_VERSION         = "F-1.20";
+   public static final String                         FASSADE_VERSION         = "F-1.21";
    public static final String                         MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
    public static final String                         ERROR_MESSAGE           = "Unbehandelte Exception";
    public static String                               separator;

@@ -65,6 +65,7 @@
             <fileset dir="${basedir}" includes="AJCoreGUI.exe" />
             <fileset dir="${basedir}" includes="wizard.xml" />
             <fileset dir="${basedir}" includes="changelog.htm" />
+            <fileset dir="${basedir}" includes="ajcore.properties" />
             <fileset dir="${basedir}" includes="TrayIcon12.dll" />
             <fileset dir="${basedir}" includes="language/*.xml language/*.properties language/*.gif" />
             <fileset dir="${basedir}" includes="icons/*.gif icons/*.properties" />
