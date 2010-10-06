@@ -88,7 +88,7 @@ public class ReleaseInfoXMLHolder
 			}
 		}
 
-		String releaseDataTmp = WebsiteContentLoader.getWebsiteContent(proxy, RELEASE_INFO_HOST, RELEASE_INFO_PORT, "/JavaGUI/" + hash);
+		String releaseDataTmp = WebsiteContentLoader.getWebsiteContent(proxy, RELEASE_INFO_HOST, RELEASE_INFO_PORT, "/api/JavaGUI/" + hash);
 
 		if ("no result".equals(releaseDataTmp))
 		{
@@ -256,11 +256,22 @@ public class ReleaseInfoXMLHolder
 			}
 		}
 
-		nodes = doc.getElementsByTagName("fsk18");
+		nodes = doc.getElementsByTagName("FSK");
 		if (null != nodes && (node = nodes.item(0)) != null)
 		{
-			tmp = node.getTextContent();
-			releaseInfo.setFsk18("true".equalsIgnoreCase(tmp));
+			releaseInfo.setFsk(node.getTextContent());
+		}
+
+		nodes = doc.getElementsByTagName("Trailer");
+		if (null != nodes && (node = nodes.item(0)) != null)
+		{
+			releaseInfo.setTrailer(node.getTextContent());
+		}
+
+		nodes = doc.getElementsByTagName("Quality");
+		if (null != nodes && (node = nodes.item(0)) != null)
+		{
+			releaseInfo.setQuality(node.getTextContent());
 		}
 
 		nodes = doc.getElementsByTagName("Video");
