@@ -35,6 +35,7 @@ import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.fassade.shared.ReleaseInfo;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -131,17 +132,8 @@ public class ReleaseInfoDialog extends JDialog {
         theContent.append("    <tr>");
         theContent.append("      <td>" + txtCategories + "</td>");
         theContent.append("      <td>");
-        if (null != releaseInfo.getCategories()) {
-            int x = 0;
-
-            for (String curCategorie : releaseInfo.getCategories()) {
-                if (x > 0) {
-                    theContent.append(", ");
-                }
-
-                theContent.append(curCategorie);
-                x++;
-            }
+        if (null != releaseInfo.getCategory()) {
+            theContent.append(releaseInfo.getCategory());
         }
 
         theContent.append("      </td>");
@@ -149,7 +141,7 @@ public class ReleaseInfoDialog extends JDialog {
         if (null != releaseInfo.getImageURL()) {
             String link = releaseInfo.getImageURL().toString();
 
-            theContent.append("<IMG SRC=\"" + link + "\">");
+            theContent.append("<img src=\"" + link + "\">");
         }
 
         theContent.append("      </td>");
@@ -353,7 +345,7 @@ public class ReleaseInfoDialog extends JDialog {
         if (null != releaseInfo.getQuality()) {
             theContent.append("    <tr>");
             theContent.append("      <td>");
-            theContent.append("Qualität:");
+            theContent.append("Qualit\u00e4t:");
             theContent.append("      </td>");
             theContent.append("      <td>");
             theContent.append(releaseInfo.getQuality());
@@ -374,6 +366,14 @@ public class ReleaseInfoDialog extends JDialog {
         }
         theContent.append("  </table>");
         theContent.append("</html>");
+        ProxySettings proxySettings =
+                ProxyManagerImpl.getInstance().getProxySettings();
+        if (proxySettings != null) {
+            System.getProperties().put("proxyHost", proxySettings.getHost());
+            System.getProperties().put("proxyPort",
+                    Integer.toString(proxySettings.getPort()));
+        }
+
         getTxtContent().setContentType("text/html");
         getTxtContent().setText(theContent.toString());
         getTxtContent().setEditable(false);
@@ -436,80 +436,74 @@ public class ReleaseInfoDialog extends JDialog {
             btnDownload.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent ae) {
-                    StringBuilder toCopy = new StringBuilder();
-
-                    toCopy.append("ajfsp://file|");
-                    toCopy.append(filename + "|" + releaseInfo.getMd5() + "|"
-                            + size + "/");
-                    final String link = toCopy.toString();
-
-                    new Thread() {
-
-                        public void run() {
-                            try {
-                                final String result =
-                                        AppleJuiceClient.getAjFassade()
-                                                .processLink(link, "");
-
-                                SoundPlayer.getInstance().playSound(
-                                        SoundPlayer.LADEN);
-                                if (result.indexOf("ok") != 0) {
-                                    SwingUtilities.invokeLater(new Runnable() {
-
-                                        public void run() {
-                                            String message = null;
-                                            LanguageSelector languageSelector =
-                                                    LanguageSelector
-                                                            .getInstance();
-
-                                            if (result
-                                                    .indexOf("already downloaded") != -1) {
-                                                message =
-                                                        languageSelector
-                                                                .getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen");
-                                                message =
-                                                        message.replaceAll(
-                                                                "%s", link);
-                                            } else if (result
-                                                    .indexOf("incorrect link") != -1) {
-                                                message =
-                                                        languageSelector
-                                                                .getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");
-                                                message =
-                                                        message.replaceAll(
-                                                                "%s", link);
-                                            } else if (result
-                                                    .indexOf("failure") != -1) {
-                                                message =
-                                                        languageSelector
-                                                                .getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerlang");
-                                            }
-
-                                            if (message != null) {
-                                                JOptionPane.showMessageDialog(
-                                                        AppleJuiceDialog
-                                                                .getApp(),
-                                                        message,
-                                                        languageSelector
-                                                                .getFirstAttrbuteByTagName("mainform.caption"),
-                                                        JOptionPane.OK_OPTION
-                                                                | JOptionPane.INFORMATION_MESSAGE);
-                                            }
-                                        }
-                                    });
-                                }
-                            } catch (IllegalArgumentException e) {
-                                logger.error(e);
-                            }
-                        }
-                    }.start();
-                    setVisible(false);
+                    download();
                 }
             });
             southPanel.add(btnDownload);
         }
 
         getContentPane().add(southPanel, BorderLayout.SOUTH);
+        pack();
+    }
+
+    protected void download() {
+        StringBuilder toCopy = new StringBuilder();
+
+        toCopy.append("ajfsp://file|");
+        toCopy.append(filename + "|" + releaseInfo.getMd5() + "|" + size + "/");
+        final String link = toCopy.toString();
+
+        new Thread() {
+
+            public void run() {
+                try {
+                    final String result =
+                            AppleJuiceClient.getAjFassade().processLink(link,
+                                    "");
+
+                    SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
+                    if (result.indexOf("ok") != 0) {
+                        SwingUtilities.invokeLater(new Runnable() {
+
+                            public void run() {
+                                String message = null;
+                                LanguageSelector languageSelector =
+                                        LanguageSelector.getInstance();
+
+                                if (result.indexOf("already downloaded") != -1) {
+                                    message =
+                                            languageSelector
+                                                    .getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen");
+                                    message = message.replaceAll("%s", link);
+                                } else if (result.indexOf("incorrect link") != -1) {
+                                    message =
+                                            languageSelector
+                                                    .getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");
+                                    message = message.replaceAll("%s", link);
+                                } else if (result.indexOf("failure") != -1) {
+                                    message =
+                                            languageSelector
+                                                    .getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerlang");
+                                }
+
+                                if (message != null) {
+                                    JOptionPane.showMessageDialog(
+                                            AppleJuiceDialog.getApp(),
+                                            message,
+                                            languageSelector
+                                                    .getFirstAttrbuteByTagName("mainform.caption"),
+                                            JOptionPane.OK_OPTION
+                                                    | JOptionPane.INFORMATION_MESSAGE);
+                                }
+                            }
+                        });
+                    }
+                } catch (IllegalArgumentException e) {
+                    logger.error(e);
+                }
+            }
+        }.start();
+        setVisible(false);
     }
 
     private JTextPane getTxtContent() {
@@ -535,10 +529,14 @@ public class ReleaseInfoDialog extends JDialog {
             if (index != -1) {
                 defaultFileName = defaultFileName.substring(index + 1);
             }
+            index = defaultFileName.lastIndexOf("?");
+            if (index != -1) {
+                defaultFileName = defaultFileName.substring(0, index);
+            }
 
             fileChooser.setSelectedFile(new File(fileChooser
                     .getCurrentDirectory().getAbsolutePath()
-                    + "\\"
+                    + File.separator
                     + defaultFileName));
 
             int result = fileChooser.showSaveDialog(this);
@@ -549,24 +547,42 @@ public class ReleaseInfoDialog extends JDialog {
 
             File destFile = fileChooser.getSelectedFile();
 
-            byte[] buf = new byte[1024];
-
+            ProxySettings proxySettings =
+                    ProxyManagerImpl.getInstance().getProxySettings();
+            if (proxySettings != null) {
+                System.getProperties()
+                        .put("proxyHost", proxySettings.getHost());
+                System.getProperties().put("proxyPort",
+                        Integer.toString(proxySettings.getPort()));
+            }
             URLConnection urlconnection =
                     releaseInfo.getImageURL().openConnection();
+            if (proxySettings != null) {
+                urlconnection.setRequestProperty("Proxy-Authorization",
+                        "Basic " + proxySettings.getUserpass());
+            }
 
             urlconnection.setUseCaches(true);
+
             InputStream urlStream = urlconnection.getInputStream();
 
             FileOutputStream fos = new FileOutputStream(destFile);
 
             int bytesread = 0;
 
+            byte[] buf = new byte[1024];
             while ((bytesread = urlStream.read(buf)) > 0) {
                 fos.write(buf, 0, bytesread);
             }
 
             fos.close();
             urlStream.close();
+
+            if (proxySettings != null) {
+                System.getProperties().remove("proxyHost");
+                System.getProperties().remove("proxyPort");
+            }
+
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             String message =
                     languageSelector

@@ -13,6 +13,7 @@
     <property name="ajcorefassade.jar" location="${basedir}/needed_jars/ajcorefassade.jar" />
     <property name="tklcontrols.jar" location="${basedir}/needed_jars/tklcontrols.jar" />
 	<property name="tablelayout.jar" location="${basedir}/needed_jars/TableLayout-20050920.jar" />
+	<property name="gson-2.1.jar" location="${basedir}/needed_jars/gson-2.1.jar" />
 
     <!-- classpath for compilation ... -->
     <path id="lib.path">
@@ -21,6 +22,7 @@
         <pathelement location="${ajcorefassade.jar}" />
         <pathelement location="${tklcontrols.jar}" />
     	<pathelement location="${tablelayout.jar}" />
+    	<pathelement location="${gson-2.1.ja}" />
     </path>
 
     <!-- remove class files, DavaDoc files and test results ... -->
