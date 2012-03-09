@@ -4,6 +4,7 @@
 
 package de.applejuicenet.client.fassade.shared;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import java.util.ArrayList;
@@ -12,10 +13,11 @@ import java.util.List;
 
 public class ReleaseInfo
 {
-	private String			md5;
+	private final String	host;
+	private final String	md5;
 	private String			title				= null;
 	private Date			releaseDate			= null;
-	private List<String>	categories			= new ArrayList<String>();
+	private String			category			= null;
 	private List<String>	genres				= new ArrayList<String>();
 	private List<String>	languages			= new ArrayList<String>();
 	private List<URL>		languageImages		= new ArrayList<URL>();
@@ -29,17 +31,18 @@ public class ReleaseInfo
 	private Long			ratingAudioOutOf10	= null;
 	private URL				imageURL			= null;
 	private URL				descriptionURL		= null;
-	private String			trailer= null;
-	private String	quality;
+	private String			trailer				= null;
+	private String			quality;
+
+	public ReleaseInfo(String host, String md5)
+	{
+		this.host = host;
+		this.md5 = md5;
+	}
 
 	public String getMd5()
 	{
 		return md5;
-	}
-
-	public void setMd5(String md5)
-	{
-		this.md5 = md5;
 	}
 
 	public String getTitle()
@@ -62,14 +65,14 @@ public class ReleaseInfo
 		this.releaseDate = releaseDate;
 	}
 
-	public List<String> getCategories()
+	public String getCategory()
 	{
-		return categories;
+		return category;
 	}
 
-	public void setCategories(List<String> categories)
+	public void setCategory(String category)
 	{
-		this.categories = categories;
+		this.category = category;
 	}
 
 	public List<String> getGenres()
@@ -177,9 +180,17 @@ public class ReleaseInfo
 		return imageURL;
 	}
 
-	public void setImageURL(URL imageURL)
+	public void setImage(String imageLink)
 	{
-		this.imageURL = imageURL;
+		try
+		{
+			imageURL = new URL(host + imageLink);
+		}
+		catch (MalformedURLException e)
+		{
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	public URL getDescriptionURL()
@@ -187,9 +198,15 @@ public class ReleaseInfo
 		return descriptionURL;
 	}
 
-	public void setDescriptionURL(URL descriptionURL)
+	public void setDescription(String descriptionLink)
 	{
-		this.descriptionURL = descriptionURL;
+		try
+		{
+			descriptionURL = new URL(host + descriptionLink);
+		}
+		catch (MalformedURLException e)
+		{
+		}
 	}
 
 	public String getFsk()

@@ -17,13 +17,13 @@ import java.util.Set;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.controller.DataPropertyChangeInformer;
 import de.applejuicenet.client.fassade.controller.DataUpdateInformer;
+import de.applejuicenet.client.fassade.controller.json.ReleaseInfoJsonLoader;
 import de.applejuicenet.client.fassade.controller.xml.DirectoryXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.GetObjectXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.InformationXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.ModifiedXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.NetworkServerXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.PartListXMLHolder;
-import de.applejuicenet.client.fassade.controller.xml.ReleaseInfoXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.SettingsXMLHolder;
 import de.applejuicenet.client.fassade.controller.xml.ShareXMLHolder;
 import de.applejuicenet.client.fassade.entity.Directory;
@@ -1140,7 +1140,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
    public ReleaseInfo getReleaseInfo(String hash, ProxySettings proxy)
                               throws Exception
    {
-      return new ReleaseInfoXMLHolder(hash, proxy).getReleaseInfo();
+      return new ReleaseInfoJsonLoader(hash, proxy).getReleaseInfo();
    }
 
    private class CancelThread extends Thread
