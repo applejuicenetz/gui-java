@@ -19,19 +19,14 @@ public class ReleaseInfo
 	private Date			releaseDate			= null;
 	private String			category			= null;
 	private List<String>	genres				= new ArrayList<String>();
-	private List<String>	languages			= new ArrayList<String>();
-	private List<URL>		languageImages		= new ArrayList<URL>();
+	private String			language			= null;
+	private URL				languageImage		= null;
 	private String			format				= null;
 	private Long			viewsTotal			= null;
 	private Long			viewsCurrentMonth	= null;
-	private Long			clicksTotal			= null;
-	private Long			clicksCurrentMonth	= null;
-	private String			fsk					= null;
-	private Long			ratingVideoOutOf10	= null;
-	private Long			ratingAudioOutOf10	= null;
+	private boolean			fsk18				= false;
 	private URL				imageURL			= null;
 	private URL				descriptionURL		= null;
-	private String			trailer				= null;
 	private String			quality;
 
 	public ReleaseInfo(String host, String md5)
@@ -85,24 +80,30 @@ public class ReleaseInfo
 		this.genres = genres;
 	}
 
-	public List<String> getLanguages()
+	public String getLanguage()
 	{
-		return languages;
+		return language;
 	}
 
-	public void setLanguages(List<String> languages)
+	public void setLanguage(String language)
 	{
-		this.languages = languages;
+		this.language = language;
 	}
 
-	public List<URL> getLanguageImages()
+	public URL getLanguageImage()
 	{
-		return languageImages;
+		return languageImage;
 	}
 
-	public void setLanguageImages(List<URL> languageImages)
+	public void setLanguageImage(String languageImage)
 	{
-		this.languageImages = languageImages;
+		try
+		{
+			this.languageImage = new URL(host + languageImage);
+		}
+		catch (MalformedURLException e)
+		{
+		}
 	}
 
 	public String getFormat()
@@ -135,46 +136,6 @@ public class ReleaseInfo
 		this.viewsCurrentMonth = viewsCurrentMonth;
 	}
 
-	public Long getClicksTotal()
-	{
-		return clicksTotal;
-	}
-
-	public void setClicksTotal(Long clicksTotal)
-	{
-		this.clicksTotal = clicksTotal;
-	}
-
-	public Long getClicksCurrentMonth()
-	{
-		return clicksCurrentMonth;
-	}
-
-	public void setClicksCurrentMonth(Long clicksCurrentMonth)
-	{
-		this.clicksCurrentMonth = clicksCurrentMonth;
-	}
-
-	public Long getRatingVideoOutOf10()
-	{
-		return ratingVideoOutOf10;
-	}
-
-	public void setRatingVideoOutOf10(Long ratingVideoOutOf10)
-	{
-		this.ratingVideoOutOf10 = ratingVideoOutOf10;
-	}
-
-	public Long getRatingAudioOutOf10()
-	{
-		return ratingAudioOutOf10;
-	}
-
-	public void setRatingAudioOutOf10(Long ratingAudioOutOf10)
-	{
-		this.ratingAudioOutOf10 = ratingAudioOutOf10;
-	}
-
 	public URL getImageURL()
 	{
 		return imageURL;
@@ -188,8 +149,6 @@ public class ReleaseInfo
 		}
 		catch (MalformedURLException e)
 		{
-			System.out.println(e.getMessage());
-			e.printStackTrace();
 		}
 	}
 
@@ -209,24 +168,19 @@ public class ReleaseInfo
 		}
 	}
 
-	public String getFsk()
+	public boolean isFsk18()
 	{
-		return fsk;
+		return fsk18;
 	}
 
-	public void setFsk(String fsk)
+	public void setFsk18(boolean fsk18)
 	{
-		this.fsk = fsk;
+		this.fsk18 = fsk18;
 	}
 
-	public void setTrailer(String trailer)
+	public String getQuality()
 	{
-		this.trailer = trailer;
-	}
-
-	public String getTrailer()
-	{
-		return trailer;
+		return quality;
 	}
 
 	public void setQuality(String quality)
@@ -234,8 +188,4 @@ public class ReleaseInfo
 		this.quality = quality;
 	}
 
-	public String getQuality()
-	{
-		return quality;
-	}
 }

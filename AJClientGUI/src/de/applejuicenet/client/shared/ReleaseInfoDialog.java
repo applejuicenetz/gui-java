@@ -8,19 +8,13 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLConnection;
-
 import java.text.SimpleDateFormat;
-
 import java.util.Calendar;
 
 import javax.swing.JButton;
@@ -60,7 +54,7 @@ public class ReleaseInfoDialog extends JDialog {
         this.size = size;
         init();
         pack();
-        setSize(500, 450);
+        setSize(700, 600);
         setLocationRelativeTo(AppleJuiceDialog.getApp());
         setVisible(true);
     }
@@ -177,27 +171,6 @@ public class ReleaseInfoDialog extends JDialog {
         theContent.append("      </td>");
         theContent.append("    </tr>");
         theContent.append("    <tr>");
-        theContent.append("      <td>" + txtClicks + "</td>");
-
-        tmp = txtCount;
-        if (null != releaseInfo.getClicksTotal()) {
-            tmp = tmp.replaceAll("%all", "" + releaseInfo.getClicksTotal());
-        } else {
-            tmp = tmp.replaceAll("%all", "-");
-        }
-
-        if (null != releaseInfo.getClicksCurrentMonth()) {
-            tmp =
-                    tmp.replaceAll("%month",
-                            "" + releaseInfo.getClicksCurrentMonth());
-        } else {
-            tmp = tmp.replaceAll("%month", "-");
-        }
-
-        theContent.append("      <td>" + tmp);
-        theContent.append("      </td>");
-        theContent.append("    </tr>");
-        theContent.append("    <tr>");
         theContent.append("      <td>" + txtPublished + "</td>");
         theContent.append("      <td>");
         if (null != releaseInfo.getReleaseDate()) {
@@ -230,22 +203,14 @@ public class ReleaseInfoDialog extends JDialog {
         theContent.append("    <tr>");
         theContent.append("      <td>" + txtLanguages + "</td>");
         theContent.append("      <td>");
-        if (null != releaseInfo.getLanguageImages()) {
-            for (URL curLanguageURL : releaseInfo.getLanguageImages()) {
-                String link = curLanguageURL.toString();
+        if (null != releaseInfo.getLanguageImage()) {
+            String link = releaseInfo.getLanguageImage().toString();
 
-                theContent.append("<IMG SRC=\"" + link + "\">");
-            }
+            theContent.append("<IMG SRC=\"" + link + "\">");
         }
 
-        if (null != releaseInfo.getLanguages()) {
-            int x = 0;
-
-            for (String curLanguage : releaseInfo.getLanguages()) {
-                theContent.append(x > 0 ? ", " : "&nbsp;");
-                theContent.append(curLanguage);
-                x++;
-            }
+        if (null != releaseInfo.getLanguage()) {
+            theContent.append(releaseInfo.getLanguage());
         }
 
         theContent.append("      </td>");
@@ -275,95 +240,22 @@ public class ReleaseInfoDialog extends JDialog {
                 new File(System.getProperty("user.dir") + File.separator
                         + "icons" + File.separator + "led_gray.gif");
 
-        if (null != releaseInfo.getRatingVideoOutOf10()) {
-            theContent.append("    <tr>");
-            theContent.append("      <td>" + txtRatingVideo + "</td>");
-            theContent.append("      <td>");
-            Long count = releaseInfo.getRatingVideoOutOf10();
-            String imageGood = null;
-            String imagebad = null;
-
-            try {
-                imageGood = imageFileGood.toURI().toURL().toString();
-                imagebad = imageFileBad.toURI().toURL().toString();
-                for (int i = 0; i < count; i++) {
-                    theContent.append("<IMG SRC=\"" + imageGood + "\">");
-                }
-
-                for (int i = count.intValue(); i < 10; i++) {
-                    theContent.append("<IMG SRC=\"" + imagebad + "\">");
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            theContent.append("      </td>");
-            theContent.append("    </tr>");
-        }
-
-        if (null != releaseInfo.getRatingAudioOutOf10()) {
-            imageFileGood =
-                    new File(System.getProperty("user.dir") + File.separator
-                            + "icons" + File.separator + "led_red.gif");
-            theContent.append("    <tr>");
-            theContent.append("      <td>" + txtRatingAudio + "</td>");
-            theContent.append("      <td>");
-            Long count = releaseInfo.getRatingAudioOutOf10();
-            String imageGood = null;
-            String imagebad = null;
-
-            try {
-                imageGood = imageFileGood.toURI().toURL().toString();
-                imagebad = imageFileBad.toURI().toURL().toString();
-                for (int i = 0; i < count; i++) {
-                    theContent.append("<IMG SRC=\"" + imageGood + "\">");
-                }
-
-                for (int i = count.intValue(); i < 10; i++) {
-                    theContent.append("<IMG SRC=\"" + imagebad + "\">");
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            theContent.append("      </td>");
-            theContent.append("    </tr>");
-        }
-
         theContent.append("    <tr>");
         theContent.append("      <td>" + txtFsk18 + "</td>");
         theContent.append("      <td>");
-        if (null != releaseInfo.getFsk()) {
-            theContent.append(releaseInfo.getFsk());
-        } else {
-            theContent.append("-");
-        }
-
+        theContent.append(releaseInfo.isFsk18() ? txtJa : txtNein);
         theContent.append("      </td>");
         theContent.append("    </tr>");
 
-        if (null != releaseInfo.getQuality()) {
-            theContent.append("    <tr>");
-            theContent.append("      <td>");
-            theContent.append("Qualit\u00e4t:");
-            theContent.append("      </td>");
-            theContent.append("      <td>");
-            theContent.append(releaseInfo.getQuality());
-            theContent.append("      </td>");
-            theContent.append("    </tr>");
-        }
+        theContent.append("    <tr>");
+        theContent.append("      <td>");
+        theContent.append("Qualit\u00e4t:");
+        theContent.append("      </td>");
+        theContent.append("      <td>");
+        theContent.append(releaseInfo.getQuality());
+        theContent.append("      </td>");
+        theContent.append("    </tr>");
 
-        if (null != releaseInfo.getTrailer()) {
-            theContent.append("    <tr>");
-            theContent.append("      <td>");
-            theContent.append("Trailer:");
-            theContent.append("      </td>");
-            theContent.append("      <td>");
-            theContent.append("    <a href=\"" + releaseInfo.getTrailer()
-                    + "\">hier</a>");
-            theContent.append("      </td>");
-            theContent.append("    </tr>");
-        }
         theContent.append("  </table>");
         theContent.append("</html>");
         ProxySettings proxySettings =
@@ -442,8 +334,10 @@ public class ReleaseInfoDialog extends JDialog {
             southPanel.add(btnDownload);
         }
 
+        getTxtContent().doLayout();
+
         getContentPane().add(southPanel, BorderLayout.SOUTH);
-        pack();
+        // pack();
     }
 
     protected void download() {

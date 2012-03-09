@@ -98,23 +98,22 @@ public class ReleaseInfoJsonLoader
 
 		releaseInfo.setTitle(data.getTitle());
 		releaseInfo.setCategory(data.getCategory());
-		releaseInfo.setClicksCurrentMonth(data.getHitsInMonth());
-		releaseInfo.setClicksTotal(data.getHits());
+		releaseInfo.setViewsCurrentMonth(data.getHitsInMonth());
+		releaseInfo.setViewsTotal(data.getHits());
 		releaseInfo.setFormat(data.getFormat());
-		 releaseInfo.setDescription(data.getLink());
-		// releaseInfo.setFsk(fsk)
+		releaseInfo.setDescription(data.getLink());
+		releaseInfo.setFsk18(data.isFsk());
 		releaseInfo.setGenres(data.getGenre());
-		
-		 releaseInfo.setImage(data.getImg());
-		// releaseInfo.setLanguageImages(languageImages)
-		// releaseInfo.setLanguages(languages)
+
+		releaseInfo.setImage(data.getImg());
+
+		if (data.getLanguage() != null)
+		{
+			releaseInfo.setLanguage(data.getLanguage());
+			releaseInfo.setLanguageImage(data.getLanguageImg());
+		}
 		releaseInfo.setQuality(data.getQualiInfo());
-		// releaseInfo.setRatingAudioOutOf10(ratingAudioOutOf10)
-		// releaseInfo.setRatingVideoOutOf10(ratingVideoOutOf10)
 		releaseInfo.setReleaseDate(data.getCreated());
-		// releaseInfo.setTrailer(trailer)
-		// releaseInfo.setViewsCurrentMonth(viewsCurrentMonth)
-		// releaseInfo.setViewsTotal(viewsTotal)
 
 		releaseCacheObject = new ReleaseCacheObject(System.currentTimeMillis(), releaseInfo);
 		releasesCache.put(hash, releaseCacheObject);
