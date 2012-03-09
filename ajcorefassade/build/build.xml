@@ -42,7 +42,7 @@
 
 	<target name="create-jar" depends="compile" description="builds ajcorefassade.jar">
 		<pack classes="org.apache.xerces.parsers.XML11Configuration,
-			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl,org.apache.xerces.parsers.IntegratedParserConfiguration" targetJar="${basedir}/ajcorefassade.jar" excludePkg="java,javax,sun">
+			org.apache.xerces.impl.dv.dtd.DTDDVFactoryImpl,org.apache.xerces.parsers.IntegratedParserConfiguration,com.google.gson.GsonBuilder" targetJar="${basedir}/ajcorefassade.jar" excludePkg="java,javax,sun">
 			<classpath>
 				<pathelement path="${compiledir}" />
 				<path refid="lib.path" />
