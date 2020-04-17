@@ -32,25 +32,25 @@ public abstract class ZeichenErsetzer {
 			temp.replace(index, index + 2, "\"");
 		}
 		while ((index = temp.indexOf("&uuml;")) != -1) {
-			temp.replace(index, index + 6, "ü");
+			temp.replace(index, index + 6, "Ã¼");
 		}
 		while ((index = temp.indexOf("&Uuml;")) != -1) {
-			temp.replace(index, index + 6, "Ü");
+			temp.replace(index, index + 6, "Ãœ");
 		}
 		while ((index = temp.indexOf("&auml;")) != -1) {
-			temp.replace(index, index + 6, "ä");
+			temp.replace(index, index + 6, "Ã¤");
 		}
 		while ((index = temp.indexOf("&Auml;")) != -1) {
-			temp.replace(index, index + 6, "Ä");
+			temp.replace(index, index + 6, "Ã„");
 		}
 		while ((index = temp.indexOf("&ouml;")) != -1) {
-			temp.replace(index, index + 6, "ö");
+			temp.replace(index, index + 6, "Ã¶");
 		}
 		while ((index = temp.indexOf("&Ouml;")) != -1) {
-			temp.replace(index, index + 6, "Ö");
+			temp.replace(index, index + 6, "Ã–");
 		}
 		while ((index = temp.indexOf("&szlig;")) != -1) {
-			temp.replace(index, index + 7, "ß");
+			temp.replace(index, index + 7, "ÃŸ");
 		}
 		while ((index = temp.indexOf("&amp;")) != -1) {
 			temp.replace(index, index + 5, "");

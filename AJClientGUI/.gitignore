@@ -1,0 +1,7 @@
+AJCoreGUI.jar
+*.properties
+AJCoreGUI_v*.zip
+
+classes/
+
+Manifest

@@ -32,6 +32,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.HTMLLayout;
@@ -144,41 +147,6 @@ public class AppleJuiceClient
 
    public static void runmain(String[] args)
    {
-      StringBuffer version = new StringBuffer(System.getProperty("java.version"));
-
-      for(int i = version.length() - 1; i >= 0; i--)
-      {
-         if(version.charAt(i) == '.')
-         {
-            version.deleteCharAt(i);
-         }
-      }
-
-      boolean gueltig = false;
-
-      try
-      {
-         int versionsNr = Integer.parseInt(version.toString().substring(0, 2));
-
-         if(versionsNr >= 15)
-         {
-            gueltig = true;
-         }
-      }
-      catch(Exception e)
-      {
-         ;
-
-         //nix zu tun
-      }
-
-      if(!gueltig)
-      {
-         JOptionPane.showMessageDialog(new Frame(), "Es wird mindestens JRE 5 benoetigt!", "appleJuice Client",
-                                       JOptionPane.ERROR_MESSAGE);
-         System.exit(-1);
-      }
-
       boolean      processLink    = false;
       String       link           = "";
       boolean      doubleInstance = false;
@@ -376,8 +344,7 @@ public class AppleJuiceClient
 
       try
       {
-         String       nachricht = "appleJuice-GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION +
-                                  " wird gestartet...";
+         String       nachricht = "appleJuice-GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION + " wird gestartet...";
          ConnectFrame connectFrame = new ConnectFrame();
 
          splash = new Splash(connectFrame, ((ImageIcon) IconManager.getInstance().getIcon("splashscreen")).getImage(), 0, 100);
@@ -552,20 +519,14 @@ public class AppleJuiceClient
                         try
                         {
                            ProxySettings proxy        = ProxyManagerImpl.getInstance().getProxySettings();
-                           String        downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "http://www.tkl-soft.de", 80,
-                                                                                               "/applejuice/version.txt");
+                           String downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "https://api.github.com", 443, "/repos/appleJuiceNET/gui-java/releases/latest");
 
                            if(downloadData.length() > 0)
                            {
-                              int             pos1              = downloadData.indexOf("|");
-                              final String    aktuellsteVersion = downloadData.substring(0, pos1);
+                              JsonObject jsonObject             = new JsonParser().parse(downloadData).getAsJsonObject();
+                              String aktuellsteVersion          = jsonObject.get("tag_name").getAsString();
                               StringTokenizer token1            = new StringTokenizer(aktuellsteVersion, ".");
                               String          guiVersion        = AppleJuiceDialog.GUI_VERSION;
-
-                              if(guiVersion.indexOf('-') != -1)
-                              {
-                                 guiVersion = guiVersion.substring(0, guiVersion.indexOf('-'));
-                              }
 
                               StringTokenizer token2 = new StringTokenizer(guiVersion, ".");
 
@@ -615,24 +576,24 @@ public class AppleJuiceClient
                                  showInfo = true;
                               }
 
+                              showInfo = true;
+
                               if(showInfo)
                               {
-                                 int          pos2         = downloadData.lastIndexOf("|");
-                                 final String winLink      = downloadData.substring(pos1 + 1, pos2);
-                                 final String sonstigeLink = downloadData.substring(pos2 + 1);
+                                 String downloadLink = "";
+                                 JsonArray arr = jsonObject.getAsJsonArray("assets");
+                                 for (int i = 0; i < arr.size(); i++) {
+                                    String name = arr.get(i).getAsJsonObject().get("name").getAsString();
+                                    if(name.equals("AJCoreGUI.zip")) {
+                                       downloadLink = arr.get(i).getAsJsonObject().get("browser_download_url").getAsString();
+                                    }
+                                 }
 
-                                 SwingUtilities.invokeLater(new Runnable()
-                                    {
-                                       public void run()
-                                       {
-                                          UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(theApp,
-                                                                                                                        aktuellsteVersion,
-                                                                                                                        winLink,
-                                                                                                                        sonstigeLink);
-
-                                          updateInformationDialog.setVisible(true);
-                                       }
-                                    });
+                                 String finaldownloadLink = downloadLink;
+                                 SwingUtilities.invokeLater(() -> {
+                                    UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(theApp, aktuellsteVersion, finaldownloadLink, finaldownloadLink);
+                                    updateInformationDialog.setVisible(true);
+                                 });
                               }
                            }
                         }
