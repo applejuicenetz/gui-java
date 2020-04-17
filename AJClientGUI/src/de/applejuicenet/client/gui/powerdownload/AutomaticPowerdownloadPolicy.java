@@ -255,7 +255,7 @@ public abstract class AutomaticPowerdownloadPolicy extends Thread
    }
 
    /**
-    *  Diese Methode mit dem �ffnen und Auswerten des Einstellungendialogs ueberschreiben.
+    *  Diese Methode mit dem Ãffnen und Auswerten des Einstellungendialogs ueberschreiben.
     */
    public void showPropertiesDialog(Frame parent)
    {

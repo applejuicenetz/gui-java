@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE project []>
+<project name="ajtray" default="create-jar" basedir=".">
+
+	<!-- component directories ... -->
+	<property name="srcdir" location="${basedir}/src" />
+	<property name="compiledir" location="${basedir}/classes" />
+
+	<property name="tklcontrols.jar" location="${basedir}/lib/tklcontrols.jar" />
+
+	<path id="lib.path">
+		<pathelement location="${tklcontrols.jar}" />
+	</path>
+
+	<!-- remove class files, DavaDoc files and test results ... -->
+	<target name="clean" description="deletes class files">
+		<delete includeEmptyDirs="true">
+			<fileset dir="${compiledir}" casesensitive="false">
+				<include name="**/*.class" />
+				<exclude name="cvs" />
+				<exclude name="readme.txt" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="compile">
+		<javac srcdir="${srcdir}" encoding="cp1252" destdir="${compiledir}" debug="true">
+			<classpath>
+				<path refid="lib.path" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="rebuild" depends="clean, compile">
+	</target>
+
+	<target name="create-jar" depends="compile">
+		<delete file="${basedir}/ajtray.jar" quiet="true" />
+		<jar destfile="${basedir}/ajtray.jar" basedir="${compiledir}" />
+	</target>
+
+	<target name="complete" depends="create-jar">
+	</target>
+</project>
