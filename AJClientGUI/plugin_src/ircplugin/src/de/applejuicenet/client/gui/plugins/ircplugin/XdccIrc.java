@@ -59,9 +59,9 @@ public class XdccIrc extends JPanel
    private JButton      cancelButton;
    private Logger       logger;
    private Thread       ircWorker;
-   private String       host             = "irc.devStaff.net";
+   private String       host             = "irc.bongster.de";
    private int          port             = 6667;
-   private final String STANDARD_CHANNEL = "#applejuice";
+   private final String STANDARD_CHANNEL = "#apple-deluxe.cc";
    private JTabbedPane  tabbedPane;
    private String       nickname;
    private String       realname;

@@ -26,7 +26,7 @@ public class HTTPRequest
     *
     * @param so     der Socket, zum Lesen des Requests
     * @param log    ein Logger-Objekt, damit pro Client unterschiedliche
-    *        Log-Levels definiert werden k�nnen
+    *        Log-Levels definiert werden kÃ¶nnen
     */
    public HTTPRequest(Socket so)
    {
@@ -39,7 +39,7 @@ public class HTTPRequest
    /**
     * Liefert den Parameter-Wert zu n
     * @param n Name des Parameters
-    * @return der zugeh�rige Wert oder null
+    * @return der zugehÃ¶rige Wert oder null
     */
    public String getParameter(String n)
    {
@@ -49,7 +49,7 @@ public class HTTPRequest
    /**
     * Liefert das Header-Feld zu h
     * @param h Name des Headers
-    * @return das zugeh�rige Headerfeld.
+    * @return das zugehÃ¶rige Headerfeld.
     */
    public String getHeader(String h)
    {

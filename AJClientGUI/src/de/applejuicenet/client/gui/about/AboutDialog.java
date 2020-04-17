@@ -146,7 +146,7 @@ public class AboutDialog extends JDialog
          credits.add(new CreditsEntry(false, "muhviehstarr"));
          credits.add(new CreditsEntry(true, "Banner & Bilder"));
          credits.add(new CreditsEntry(false, "saschxd"));
-         credits.add(new CreditsEntry(true, "�bersetzung"));
+         credits.add(new CreditsEntry(true, "Ãbersetzung"));
          credits.add(new CreditsEntry(false, "BlueTiger"));
          credits.add(new CreditsEntry(false, "nurseppel"));
          credits.add(new CreditsEntry(true, "Kontakt"));

@@ -1,0 +1,260 @@
+<?xml version="1.0"?>
+<project name="aj_java_gui" default="create-jar" basedir=".">
+
+    <!-- component directories ... -->
+    <property name="gui.srcdir" location="${basedir}/src" />
+    <property name="gui.pluginrootsrcdir" location="${basedir}/plugin_src" />
+    <property name="gui.compiledir" location="${basedir}/classes" />
+
+    <!-- other path settings, some items to be customized locally ...  -->
+    <property name="log4j.jar" location="${basedir}/needed_jars/log4j-1.2.15.jar" />
+    <property name="skinlf.jar" location="${basedir}/needed_jars/skinlf.jar" />
+    <property name="ajcorefassade.jar" location="${basedir}/needed_jars/ajcorefassade.jar" />
+    <property name="tklcontrols.jar" location="${basedir}/needed_jars/tklcontrols.jar" />
+	<property name="tablelayout.jar" location="${basedir}/needed_jars/TableLayout-20050920.jar" />
+	<property name="gson.jar" location="${basedir}/needed_jars/gson-2.1.jar" />
+
+    <!-- classpath for compilation ... -->
+    <path id="lib.path">
+        <pathelement location="${log4j.jar}" />
+        <pathelement location="${skinlf.jar}" />
+        <pathelement location="${ajcorefassade.jar}" />
+        <pathelement location="${tklcontrols.jar}" />
+    	<pathelement location="${tablelayout.jar}" />
+    	<pathelement location="${gson.jar}" />
+    </path>
+
+    <!-- remove class files, DavaDoc files and test results ... -->
+    <target name="gui-clean" description="deletes class files">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${gui.compiledir}" casesensitive="false">
+                <include name="**/*.class" />
+                <exclude name="cvs" />
+                <exclude name="readme.txt" />
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="gui-compile" description="compiles the appleJuice-gui">
+        <mkdir dir="${gui.compiledir}" />
+        <javac srcdir="${gui.srcdir}" includeantruntime="true" source="1.8" target="1.8" destdir="${gui.compiledir}" debug="true">
+            <classpath>
+                <path refid="lib.path" />
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="gui-rebuild" depends="gui-clean, gui-compile" description="cleans and compiles the appleJuice-gui">
+    </target>
+
+    <target name="create-jar" depends="gui-rebuild" description="builds appleJuice-jar">
+        <jar destfile="${basedir}/AJCoreGUI.jar">
+            <manifest>
+                <attribute name="Class-Path" value="./needed_jars/TableLayout-20050920.jar ./needed_jars/log4j-1.2.15.jar ./needed_jars/skinlf.jar ./needed_jars/looks-2.2.1.jar ./needed_jars/ajcorefassade.jar ./needed_jars/tklcontrols.jar ./needed_jars/ajtray.jar" />
+                <attribute name="Main-Class" value="de.applejuicenet.client.AppleJuiceClient" />
+            </manifest>
+            <fileset dir="${basedir}/classes" includes="**/de/**/*.* **/com/jeans/**/*.*" />
+        </jar>
+    </target>
+
+    <target name="build-archive" depends="create-jar" description="builds archive-zip">
+        <jar destfile="${basedir}/AJCoreGUI_vX_XX.zip">
+            <fileset dir="${basedir}" includes="AJCoreGUI.jar" />
+            <fileset dir="${basedir}" includes="AJCoreGUI.exe" />
+            <fileset dir="${basedir}" includes="wizard.xml" />
+            <fileset dir="${basedir}" includes="changelog.htm" />
+            <fileset dir="${basedir}" includes="ajcore.properties" />
+            <fileset dir="${basedir}" includes="TrayIcon12.dll" />
+            <fileset dir="${basedir}" includes="language/*.xml language/*.properties language/*.gif" />
+            <fileset dir="${basedir}" includes="icons/*.gif icons/*.properties" />
+            <fileset dir="${basedir}" includes="plugins/*.jar plugins/*.gif plugins/*.txt" />
+            <fileset dir="${basedir}" includes="pwdlpolicies/*.jar pwdlpolicies/*.txt" />
+            <fileset dir="${basedir}" includes="themes/*.zip themes/*.first" />
+            <fileset dir="${basedir}" includes="sounds/*.wav sounds/*.first" />
+        	<fileset dir="${basedir}" includes="needed_jars/*.jar" />
+        </jar>
+    </target>
+
+    <target name="build-pluginjar-versionchecker" depends="gui-rebuild" description="builds versionchecker.jar">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${basedir}/plugins" casesensitive="false">
+                <include name="**/versionchecker.jar" />
+            </fileset>
+        </delete>
+        <javac srcdir="${gui.pluginrootsrcdir}/versionchecker/src" source="1.8" target="1.8" destdir="${gui.compiledir}" debug="true">
+            <classpath>
+                <path refid="lib.path" />
+            </classpath>
+        </javac>
+        <jar destfile="${basedir}/plugins/versionchecker.jar">
+            <fileset dir="${basedir}/plugin_src/versionchecker" includes="*.xml" />
+            <fileset dir="${basedir}/plugin_src/versionchecker/icons/" includes="*.gif" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/versionchecker/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+        </jar>
+        <jar destfile="${basedir}/plugins/versionchecker.zip">
+            <fileset dir="${basedir}/plugins/" includes="versionchecker.jar" />
+        </jar>
+    </target>
+
+    <property name="smack.jar" location="${gui.pluginrootsrcdir}/jabber/lib/smack.jar" />
+    <property name="smackx.jar" location="${gui.pluginrootsrcdir}/jabber/lib/smackx.jar" />
+
+    <!-- classpath for compilation ... -->
+    <path id="lib_jabber.path">
+        <pathelement location="${smack.jar}" />
+        <pathelement location="${smackx.jar}" />
+    </path>
+
+    <target name="build-pluginjar-jabber" depends="gui-rebuild" description="builds jabber.jar">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${basedir}/plugins" casesensitive="false">
+                <include name="**/jabber.jar" />
+                <include name="**/jabber.zip" />
+            </fileset>
+        </delete>
+        <javac srcdir="${gui.pluginrootsrcdir}/jabber/src" source="1.8" target="1.8" destdir="${gui.compiledir}" debug="true">
+            <classpath>
+                <path refid="lib.path" />
+                <path refid="lib_jabber.path" />
+            </classpath>
+        </javac>
+        <jar destfile="${basedir}/plugins/jabber.jar">
+            <fileset dir="${basedir}/plugin_src/jabber" includes="*.xml" />
+            <fileset dir="${basedir}/plugin_src/jabber/icons/" includes="*.gif" />
+            <fileset dir="${basedir}/plugin_src/jabber/icons/" includes="*.png" />
+            <fileset dir="${basedir}/plugin_src/jabber/lib/" includes="*.jar" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/jabber/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+        </jar>
+        <jar destfile="${basedir}/plugins/jabber.zip">
+            <fileset dir="${basedir}/plugins/" includes="jabber.jar" />
+        </jar>
+    </target>
+
+    <target name="build-pluginjar-ircplugin" depends="gui-rebuild" description="builds ircplugin.jar">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${basedir}/plugins" casesensitive="false">
+                <include name="**/ircplugin.jar" />
+            </fileset>
+        </delete>
+        <javac srcdir="${gui.pluginrootsrcdir}/ircplugin/src" source="1.8" target="1.8" destdir="${gui.compiledir}" debug="true">
+            <classpath>
+                <path refid="lib.path" />
+            </classpath>
+        </javac>
+        <jar destfile="${basedir}/plugins/ircplugin.jar">
+            <fileset dir="${basedir}/plugin_src/ircplugin" includes="*.xml" />
+        	<fileset dir="${basedir}/plugin_src/ircplugin" includes="*.properties" />
+            <fileset dir="${basedir}/plugin_src/ircplugin/icons/" includes="*.gif" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/ircplugin/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+        </jar>
+        <jar destfile="${basedir}/plugins/ircplugin.zip">
+            <fileset dir="${basedir}/plugins/" includes="ircplugin.jar" />
+        </jar>
+    </target>
+
+    <target name="build-pluginjar-versioncheckerplugin" depends="gui-rebuild" description="builds versioncheckerplugin.jar">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${basedir}/plugins" casesensitive="false">
+                <include name="**/versioncheckerplugin.jar" />
+            </fileset>
+        </delete>
+        <javac srcdir="${gui.pluginrootsrcdir}/versionchecker/src" source="1.8" target="1.8" destdir="${gui.compiledir}" debug="true">
+            <classpath>
+                <path refid="lib.path" />
+            </classpath>
+        </javac>
+        <jar destfile="${basedir}/plugins/versioncheckerplugin.jar">
+            <fileset dir="${basedir}/plugin_src/versionchecker" includes="*.xml" />
+        	<fileset dir="${basedir}/plugin_src/versionchecker" includes="*.properties" />
+            <fileset dir="${basedir}/plugin_src/versionchecker/icons/" includes="*.gif" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/versionchecker/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+        </jar>
+        <jar destfile="${basedir}/plugins/versionchecker.zip">
+            <fileset dir="${basedir}/plugins/" includes="versionchecker.jar" />
+        </jar>
+    </target>
+
+    <target name="build-pluginjar-logviewerplugin" depends="gui-rebuild" description="builds logviewerplugin.jar">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${basedir}/plugins" casesensitive="false">
+                <include name="**/logviewerplugin.jar" />
+            </fileset>
+        </delete>
+        <javac srcdir="${gui.pluginrootsrcdir}/logviewer/src" source="1.8" target="1.8" destdir="${gui.compiledir}" debug="true">
+            <classpath>
+                <path refid="lib.path" />
+            </classpath>
+        </javac>
+        <jar destfile="${basedir}/plugins/logviewerplugin.jar">
+            <fileset dir="${basedir}/plugin_src/logviewer" includes="*.xml" />
+        	<fileset dir="${basedir}/plugin_src/logviewer" includes="*.properties" />
+            <fileset dir="${basedir}/plugin_src/logviewer/icons/" includes="*.gif" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/logviewer/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+        </jar>
+        <jar destfile="${basedir}/plugins/logviewerplugin.zip">
+            <fileset dir="${basedir}/plugins/" includes="logviewerplugin.jar" />
+        </jar>
+    </target>
+
+    <target name="build-pluginjar-speedgraphplugin" depends="gui-rebuild" description="builds speedgraphplugin.jar">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${basedir}/plugins" casesensitive="false">
+                <include name="**/speedgraphplugin.jar" />
+            </fileset>
+        </delete>
+        <javac srcdir="${gui.pluginrootsrcdir}/speedgraph/src" source="1.8" target="1.8" destdir="${gui.compiledir}" debug="true">
+            <classpath>
+                <path refid="lib.path" />
+            </classpath>
+        </javac>
+        <jar destfile="${basedir}/plugins/speedgraphplugin.jar">
+            <fileset dir="${basedir}/plugin_src/speedgraph" includes="*.xml" />
+        	<fileset dir="${basedir}/plugin_src/speedgraph" includes="*.properties" />
+            <fileset dir="${basedir}/plugin_src/speedgraph/icons/" includes="*.gif" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/speedgraph/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+        </jar>
+        <jar destfile="${basedir}/plugins/speedgraphplugin.zip">
+            <fileset dir="${basedir}/plugins/" includes="speedgraphplugin.jar" />
+        </jar>
+    </target>
+    <target name="build-pluginjar-serverwatcher" depends="gui-rebuild" description="builds serverwatcher.jar">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${basedir}/plugins" casesensitive="false">
+                <include name="**/serverwatcher.jar" />
+            </fileset>
+        </delete>
+        <javac srcdir="${gui.pluginrootsrcdir}/serverwatcher/src" source="1.8" target="1.8" destdir="${gui.compiledir}" debug="true">
+            <classpath>
+                <path refid="lib.path" />
+            </classpath>
+        </javac>
+        <jar destfile="${basedir}/plugins/serverwatcher.jar">
+            <fileset dir="${basedir}/plugin_src/serverwatcher" includes="*.xml" />
+        	<fileset dir="${basedir}/plugin_src/serverwatcher" includes="*.properties" />
+            <fileset dir="${basedir}/plugin_src/serverwatcher/icons/" includes="*.gif" />
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/plugins/serverwatcher/**/*.*" excludes="**/de/applejuicenet/client/gui/plugins/PluginConnector.class" />
+        </jar>
+        <jar destfile="${basedir}/plugins/serverwatcher.zip">
+            <fileset dir="${basedir}/plugins/" includes="serverwatcher.jar" />
+        </jar>
+    </target>
+
+    <target name="build-pwdlPolicy-jar" description="builds pwdlPolicy - build.xml needs to be modified">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${basedir}/pwdlpolicies" casesensitive="false">
+                <include name="**/StandardPwdlPolicy.jar" />
+            </fileset>
+        </delete>
+        <jar destfile="${basedir}/pwdlpolicies/StandardPwdlPolicy.jar">
+            <fileset dir="${basedir}/classes" includes="**/de/applejuicenet/client/gui/powerdownload/**/*.*" excludes="**/de/applejuicenet/client/gui/powerdownload/AutomaticPowerdownloadPolicy.class test/**" />
+        </jar>
+    </target>
+
+    <target name="cruisecontrol" description="target for cruisecontrol">
+        <cvs dest="${basedir}" command="update -d -P" />
+        <antcall target="gui-rebuild" />
+    </target>
+
+    <target name="complete" depends="create-jar" description="builds complete appleJuice">
+    </target>
+</project>

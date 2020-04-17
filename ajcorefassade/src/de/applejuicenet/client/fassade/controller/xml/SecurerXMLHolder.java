@@ -28,7 +28,7 @@ import de.applejuicenet.client.fassade.shared.HtmlLoader;
  * Titel: AppleJuice Client-GUI
  * </p>
  * <p>
- * Beschreibung: Offizielles GUI f�r den von muhviehstarr entwickelten
+ * Beschreibung: Offizielles GUI für den von muhviehstarr entwickelten
  * appleJuice-Core
  * </p>
  * <p>

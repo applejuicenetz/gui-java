@@ -30,7 +30,7 @@ public class HTTPResponse
    public final static int HTTP_InternalServerError = 5;
    public final static int HTTP_NotImplemented      = 6;
 
-   /** String-Konstante f�r HTTP-Repsonse-Code */
+   /** String-Konstante fÃ¼r HTTP-Repsonse-Code */
    public final static String[] ResponseCodes = 
                                                 {
                                                    "200 OK", "301 Moved Permanently", "400 Bad Request", "403 Forbidden",
@@ -38,7 +38,7 @@ public class HTTPResponse
                                                 };
 
    /**
-   * Der Dateinamen f�r die Default-Datei, die verwendet wird, wenn nur ein
+   * Der Dateinamen fÃ¼r die Default-Datei, die verwendet wird, wenn nur ein
    * Verzeichnis abgefragt wird.
    */
    public static String DefaultFile = "index.html";
@@ -54,18 +54,18 @@ public class HTTPResponse
    public static String FileNotFound = "not_found.html";
 
    /**
-   * Zeitraum f�r das Cachen HTTP-Antworten<br>
-   * unsere Daten k�nnen einen Tag gecacht werden:
+   * Zeitraum fÃ¼r das Cachen HTTP-Antworten<br>
+   * unsere Daten kÃ¶nnen einen Tag gecacht werden:
    */
    public static String CacheControlSeconds = (3600 * 24) + "";
 
    /**
-   * Der Mime-Typ f�r unbekannte Dateien
+   * Der Mime-Typ fÃ¼r unbekannte Dateien
    */
    public static final String DefaultMimeType = "application/octet-stream";
 
    /**
-   * Der Mime-Typ f�r einfache Text-Dateien, wird auch f�r das Senden von
+   * Der Mime-Typ fÃ¼r einfache Text-Dateien, wird auch fÃ¼r das Senden von
    * Fehlermeldungen verwendet.
    */
    public static final String PlainMimeType = "text/plain";
