@@ -1,6 +1,6 @@
-AJCoreGUI.jar
 *.properties
-AJCoreGUI_v*.zip
+
+AJCoreGUI*
 
 classes/
 
