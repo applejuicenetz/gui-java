@@ -101,7 +101,7 @@ public class AppleJuiceClient
 
          try
          {
-            conn      = new CoreConnectionSettingsHolder(rm.getHost(), new Integer(rm.getXmlPort()), rm.getOldPassword(), false);
+            conn      = new CoreConnectionSettingsHolder(rm.getHost(), rm.getXmlPort(), rm.getOldPassword(), false);
             ajFassade = new ApplejuiceFassade(conn);
          }
          catch(IllegalArgumentException e)
@@ -132,13 +132,7 @@ public class AppleJuiceClient
    {
       AppleJuiceClientTG tg       = new AppleJuiceClientTG();
       final String[]     myargs   = args;
-      Runnable           runnable = new Runnable()
-      {
-         public void run()
-         {
-            AppleJuiceClient.runmain(myargs);
-         }
-      };
+      Runnable           runnable = () -> AppleJuiceClient.runmain(myargs);
 
       Thread t = new Thread(tg, runnable, "appleJuiceCoreGUI");
 
@@ -221,9 +215,11 @@ public class AppleJuiceClient
                      System.exit(1);
                   }
                }
-               else if(curArg.indexOf("-link=") != -1 && curArg.length() > "-link=".length() + 1)
+               else if(curArg.startsWith("ajfsp://") || (curArg.contains("-link=") && curArg.length() > "-link=".length() + 1))
                {
-                  link = curArg.substring(curArg.indexOf("-link=") + "-link=".length());
+                  link = curArg.startsWith("ajfsp://") ? curArg : curArg.substring(curArg.indexOf("-link=") + "-link=".length());
+                  link = link.replaceAll("%7C", "|");
+
                   if(linkListener == null)
                   {
                      try
@@ -283,8 +279,7 @@ public class AppleJuiceClient
       if(doubleInstance)
       {
          //bereits ein GUI vorhanden, also GUI schliessen
-         JOptionPane.showMessageDialog(new Frame(), "Eine Instanz des GUIs ist bereits in Verwendung.", "appleJuice Client",
-                                       JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(new Frame(), "Eine Instanz des GUIs ist bereits in Verwendung.", "appleJuice Client", JOptionPane.ERROR_MESSAGE);
          System.exit(1);
       }
 
@@ -347,7 +342,7 @@ public class AppleJuiceClient
          String       nachricht = "appleJuice-GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION + " wird gestartet...";
          ConnectFrame connectFrame = new ConnectFrame();
 
-         splash = new Splash(connectFrame, ((ImageIcon) IconManager.getInstance().getIcon("splashscreen")).getImage(), 0, 100);
+         splash = new Splash(connectFrame, IconManager.getInstance().getIcon("splashscreen").getImage(), 0, 100);
          KeyStates ks = new KeyStates();
 
          splash.addKeyListener(ks);
@@ -389,7 +384,7 @@ public class AppleJuiceClient
 
          String                        titel            = null;
          LanguageSelector              languageSelector = LanguageSelector.getInstance();
-         QuickConnectionSettingsDialog remoteDialog     = null;
+         QuickConnectionSettingsDialog remoteDialog;
 
          splash.setProgress(5, "Lade Themes...");
          AppleJuiceDialog.initThemes();
@@ -518,8 +513,8 @@ public class AppleJuiceClient
 
                         try
                         {
-                           ProxySettings proxy        = ProxyManagerImpl.getInstance().getProxySettings();
-                           String downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "https://api.github.com", 443, "/repos/appleJuiceNET/gui-java/releases/latest");
+                           ProxySettings proxy = ProxyManagerImpl.getInstance().getProxySettings();
+                           String downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "https://api.github.com", 443, "/repos/applejuicenet/gui-java/releases/latest");
 
                            if(downloadData.length() > 0)
                            {
@@ -575,8 +570,6 @@ public class AppleJuiceClient
                               {
                                  showInfo = true;
                               }
-
-                              showInfo = true;
 
                               if(showInfo)
                               {
