@@ -1,18 +1,26 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <root>
 	<wizard bezeichnung="Wizard">
-		<modem bezeichnung="Modem" maxupload="3" maxdownload="4" maxnewconnections10="25"/>
-		<isdn bezeichnung="ISDN" maxupload="8" maxdownload="7" maxnewconnections10="50"/>
-		<dsl768 bezeichnung="DSL 768" maxupload="14" maxdownload="90" maxnewconnections10="50"/>
-		<dsl1000 bezeichnung="DSL 1000 (1 Mbit)" maxupload="14" maxdownload="120" maxnewconnections10="50"/>
-		<dsl2000 bezeichnung="DSL 2000 (2 Mbit)" maxupload="21" maxdownload="245" maxnewconnections10="50"/>
-		<dsl3000 bezeichnung="DSL 3000 (3 Mbit)" maxupload="43" maxdownload="375" maxnewconnections10="50"/>
-		<dsl6000 bezeichnung="DSL 6000 (6 Mbit)" maxupload="45" maxdownload="760" maxnewconnections10="50"/>
-		<dsl16000n bezeichnung="DSL 16000 (16 Mbit)" maxupload="110" maxdownload="2000" maxnewconnections10="50"/>
-		<dsl16000 bezeichnung="Arcor DSL 16000" maxupload="95" maxdownload="2010" maxnewconnections10="50"/>
-		<t1 bezeichnung="T1" maxupload="67" maxdownload="67" maxnewconnections10="50"/>
-		<t3 bezeichnung="T3" maxupload="181" maxdownload="181" maxnewconnections10="50"/>
-		<lan bezeichnung="LAN" maxupload="5600" maxdownload="5600" maxnewconnections10="50"/>
-		<oc3 bezeichnung="OC3" maxupload="12000" maxdownload="12000" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 384" maxupload="128" maxdownload="384" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 786" maxupload="128" maxdownload="786" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 1.000" maxupload="128" maxdownload="1024" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 2.000" maxupload="192" maxdownload="2048" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 3.000" maxupload="384" maxdownload="3072" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 6.000" maxupload="786" maxdownload="6016" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 16.000" maxupload="1024" maxdownload="16384" maxnewconnections10="50"/>
+		<connection bezeichnung="VDSL 25.000" maxupload="4096" maxdownload="25600" maxnewconnections10="50"/>
+		<connection bezeichnung="VDSL 50.000" maxupload="9216" maxdownload="51200" maxnewconnections10="50"/>
+		<connection bezeichnung="VDSL 100.000" maxupload="20480" maxdownload="102400" maxnewconnections10="50"/>
+		<connection bezeichnung="VDSL 250.000" maxupload="40960" maxdownload="256000" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 25" maxupload="1024" maxdownload="25600" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 50" maxupload="2048" maxdownload="51200" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 100" maxupload="12288" maxdownload="102400" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 200" maxupload="25600" maxdownload="204800" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 400" maxupload="25600" maxdownload="409600" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 500" maxupload="51200" maxdownload="512000" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 1.000" maxupload="51200" maxdownload="1024000" maxnewconnections10="50"/>
+		<connection bezeichnung="Fiber 250" maxupload="10240" maxdownload="25600" maxnewconnections10="50"/>
+		<connection bezeichnung="Fiber 500" maxupload="25600" maxdownload="512000" maxnewconnections10="50"/>
+		<connection bezeichnung="Fiber 1.000" maxupload="51200" maxdownload="1024000" maxnewconnections10="50"/>
 	</wizard>
 </root>
