@@ -1,0 +1,50 @@
+name: applejuice-gui
+title: appleJuice Gui
+summary: appleJuice GUI for appleJuice Client
+description: appleJuice GUI for appleJuice Client
+version: 0.81.1
+icon: snap/gui/applejuice-gui.png
+license: GPL-2.0
+
+grade: stable
+confinement: strict
+base: core18
+
+#architectures:
+#    -   build-on: amd64
+
+apps:
+    ajgui:
+        command: $SNAP/app/launcher
+        environment:
+            JAVA_HOME: $SNAP/usr/lib/jvm/java-8-openjdk-amd64/
+            PATH: $JAVA_HOME/jre/bin:$PATH
+        plugs:
+            - home
+            - desktop
+            - desktop-legacy
+            - network
+            - network-bind
+            - audio-playback
+
+parts:
+    ajgui:
+        plugin: dump
+        source: https://github.com/applejuicenet/gui-java/releases/download/$SNAPCRAFT_PROJECT_VERSION/AJCoreGUI.zip
+        organize:
+            '*': app/
+
+    jre:
+        plugin: nil
+        build-packages:
+            - ca-certificates
+            - ca-certificates-java
+            - openjdk-8-jre
+        stage-packages:
+            - openjdk-8-jre
+
+    launcher:
+        plugin: dump
+        source: ./snap/local
+        organize:
+            '*': app/
