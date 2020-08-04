@@ -1,7 +1,13 @@
 # Changelog
 
 
-**0.81.0**
+**0.82.0**
+
+- [red171] [wizard.xml](wizard.xml) an die aktuellen Gegebenheiten angepasst
+- [red171] jegliche Konfigurationsdateien werden jetzt im `user.home` gesichert
+
+**0.81.1**
+
 - [red171] Linkübernahme in Browsern auf Basis von Chromium behoben (`%7C` vs `|`)
 
 **0.80.1**
