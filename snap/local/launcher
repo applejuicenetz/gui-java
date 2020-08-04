@@ -2,4 +2,4 @@
 
 cd $SNAP/app/
 
-java -jar -Duser.home=${SNAP_USER_COMMON} AJCoreGUI.jar "${1}"
+java -jar AJCoreGUI.jar "${@}"

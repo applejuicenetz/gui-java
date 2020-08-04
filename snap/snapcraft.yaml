@@ -26,6 +26,7 @@ apps:
             - network
             - network-bind
             - audio-playback
+            - X11
 
 parts:
     ajgui:

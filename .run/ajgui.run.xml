@@ -1,10 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ajgui" type="Application" factoryName="Application">
-    <option name="ALTERNATIVE_JRE_PATH" value="1.8.0_232" />
+    <option name="ALTERNATIVE_JRE_PATH" value="/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="de.applejuicenet.client.AppleJuiceClient" />
     <module name="AJClientGUI" />
-    <option name="PROGRAM_PARAMETERS" value="ajfsp://file|Das%20grosse%20Rennen%20rund%20um%20die%20Welt.avi|21d589b1ad6a7b676bbe497e1e6de710|1571563520/" />
     <option name="VM_PARAMETERS" value="-DDebug" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/AJClientGUI" />
     <extension name="net.ashald.envfile">

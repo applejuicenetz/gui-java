@@ -48,32 +48,7 @@ public abstract class PluginFactory
             path = System.getProperty("user.dir") + File.separator + "plugins" + File.separator;
          }
 
-         File delFile = new File(path + "ajIrcPlugin_1_3.jar");
-
-         if(delFile.isFile())
-         {
-            delFile.delete();
-         }
-
-         delFile = new File(path + "ajIrcPlugin_1_31.jar");
-         if(delFile.isFile())
-         {
-            delFile.delete();
-         }
-
-         delFile = new File(path + "IrcPlugin_1_31.jar");
-         if(delFile.isFile())
-         {
-            delFile.delete();
-         }
-
          File pluginPath = new File(path);
-
-         if(!pluginPath.isDirectory())
-         {
-            pluginPath.mkdir();
-            return plugins;
-         }
 
          String[]             tempListe = pluginPath.list();
          PluginJarClassLoader jarLoader = null;
@@ -131,7 +106,7 @@ public abstract class PluginFactory
    private static Set<PluginConnector> loadPluginsFromClasspath()
    {
       Set<PluginConnector> thePlugins = new HashSet<PluginConnector>();
-      String[]             which = new String[] { //"de.applejuicenet.client.gui.plugins.jabber.JabberTestLoader",//            
+      String[]             which = new String[] { //"de.applejuicenet.client.gui.plugins.jabber.JabberTestLoader",//
 //              "de.applejuicenet.client.gui.plugins.versionchecker.VersioncheckerTestLoader"
 //                                                                       "de.applejuicenet.client.gui.plugins.serverwatcher.ServerWatcherTestLoader"
 //                                                                       "de.applejuicenet.client.gui.plugins.logviewer.LogViewerTestLoader"

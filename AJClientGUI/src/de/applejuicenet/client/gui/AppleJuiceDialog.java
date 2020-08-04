@@ -135,7 +135,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 {
 
    //CVS-Beispiel 0.60.0-1-CVS
-   public static final String       GUI_VERSION              = "0.81.1";
+   public static final String       GUI_VERSION              = "0.82.0";
    private static Logger            logger                   = Logger.getLogger(AppleJuiceDialog.class);
    private static Map<String, Skin> themes                   = null;
    public static boolean            rewriteProperties        = false;
@@ -1288,22 +1288,18 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
                         if(somethingAdded)
                         {
-                           SwingUtilities.invokeLater(new Runnable()
-                              {
-                                 public void run()
-                                 {
-                                    JTextPane textArea = new JTextPane();
+                           SwingUtilities.invokeLater(() -> {
+                              JTextPane textArea = new JTextPane();
 
-                                    textArea.setPreferredSize(new Dimension(550, 300));
-                                    textArea.setMaximumSize(new Dimension(550, 300));
-                                    textArea.setEditable(false);
-                                    textArea.setBackground(new TKLLabel().getBackground());
-                                    textArea.setText(returnValues.toString());
-                                    JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), new JScrollPane(textArea),
-                                                                  dialogTitel,
-                                                                  JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-                                 }
-                              });
+                              textArea.setPreferredSize(new Dimension(550, 300));
+                              textArea.setMaximumSize(new Dimension(550, 300));
+                              textArea.setEditable(false);
+                              textArea.setBackground(new TKLLabel().getBackground());
+                              textArea.setText(returnValues.toString());
+                              JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), new JScrollPane(textArea),
+                                                            dialogTitel,
+                                                            JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+                           });
                         }
                      }
                      catch(FileNotFoundException ex)

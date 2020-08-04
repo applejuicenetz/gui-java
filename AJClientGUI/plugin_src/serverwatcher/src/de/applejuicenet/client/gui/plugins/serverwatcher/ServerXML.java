@@ -119,15 +119,7 @@ public class ServerXML extends XMLDecoder
    {
       String path;
 
-      if(System.getProperty("os.name").toLowerCase().indexOf("windows") == -1)
-      {
-         path = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui" + File.separator +
-                "plugins" + File.separator + "serverwatcher.xml";
-      }
-      else
-      {
-         path = System.getProperty("user.dir") + File.separator + "plugins" + File.separator + "serverwatcher.xml";
-      }
+      path = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui" + File.separator + "plugins" + File.separator + "serverwatcher.xml";
 
       return path;
    }
