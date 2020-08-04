@@ -630,14 +630,7 @@ public class AppleJuiceClient
    {
       if(rootDirectory == null)
       {
-         if(System.getProperty("os.name").toLowerCase().indexOf("windows") == -1)
-         {
-            rootDirectory = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui";
-         }
-         else
-         {
-            rootDirectory = System.getProperty("user.dir");
-         }
+         rootDirectory = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui";
       }
 
       return rootDirectory;
@@ -666,31 +659,21 @@ public class AppleJuiceClient
       return wizardDialog.isRegularClosed();
    }
 
-   public static String getPropertiesPath()
-   {
-      if(System.getProperty("os.name").toLowerCase().indexOf("windows") == -1)
-      {
-         String dir       = System.getProperty("user.home") + File.separator + "appleJuice";
-         File   directory = new File(dir);
+   public static String getPropertiesPath() {
+      String dir = System.getProperty("user.home") + File.separator + "appleJuice";
+      File directory = new File(dir);
 
-         if(!directory.isDirectory())
-         {
-            directory.mkdir();
-         }
-
-         dir += File.separator + "gui";
-         directory = new File(dir);
-         if(!directory.isDirectory())
-         {
-            directory.mkdir();
-         }
-
-         dir += File.separator + "ajgui.properties";
-         return dir;
+      if (!directory.isDirectory()) {
+         directory.mkdir();
       }
-      else
-      {
-         return System.getProperty("user.dir") + File.separator + "ajgui.properties";
+
+      dir += File.separator + "gui";
+      directory = new File(dir);
+      if (!directory.isDirectory()) {
+         directory.mkdir();
       }
+
+      dir += File.separator + "ajgui.properties";
+      return dir;
    }
 }
