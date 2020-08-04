@@ -1,10 +1,11 @@
 [Desktop Entry]
-Name=appleJuice Client GUI
-GenericName=appleJuice Client GUI
-Comment=appleJuice Client GUI (connect to appleJuice Client Core)
+Name=appleJuice GUI
+GenericName=appleJuice GUI
+Comment=appleJuice GUI (connect to appleJuice Client)
 Exec=applejuice-gui.ajgui
 Icon=${SNAP}/meta/gui/applejuice-gui.png
 Terminal=false
 Type=Application
 Categories=Network;
 MimeType=x-scheme-handler/ajfsp;
+StartupWMClass=AJCoreGUI

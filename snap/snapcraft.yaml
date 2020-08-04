@@ -10,12 +10,15 @@ grade: stable
 confinement: strict
 base: core18
 
-#architectures:
-#    -   build-on: amd64
+layout:
+    /usr/bin/xprop:
+        bind-file: $SNAP/usr/bin/xprop
 
 apps:
     ajgui:
         command: $SNAP/app/launcher
+        extensions:
+            - gnome-3-28
         environment:
             JAVA_HOME: $SNAP/usr/lib/jvm/java-8-openjdk-amd64/
             PATH: $JAVA_HOME/jre/bin:$PATH
@@ -43,6 +46,7 @@ parts:
             - openjdk-8-jre
         stage-packages:
             - openjdk-8-jre
+            - x11-utils
 
     launcher:
         plugin: dump
