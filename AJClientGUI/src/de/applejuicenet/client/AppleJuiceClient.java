@@ -178,7 +178,7 @@ public class AppleJuiceClient
                   System.out.println();
                   hilfeAusgegeben = true;
                }
-               else if(curArg.indexOf("-command=") != -1)
+               else if(curArg.contains("-command="))
                {
                   if(linkListener == null)
                   {
@@ -335,6 +335,16 @@ public class AppleJuiceClient
          }
 
          rootLogger.setLevel(logLevel);
+      }
+
+      if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+         try {
+            Toolkit xToolkit = Toolkit.getDefaultToolkit();
+            java.lang.reflect.Field awtAppClassNameField = xToolkit.getClass().getDeclaredField("awtAppClassName");
+            awtAppClassNameField.setAccessible(true);
+            awtAppClassNameField.set(xToolkit, "AJCoreGUI");
+         } catch (Exception ignored) {
+         }
       }
 
       try
