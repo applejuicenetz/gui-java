@@ -5,6 +5,7 @@
 
 - [red171] [wizard.xml](wizard.xml) an die aktuellen Gegebenheiten angepasst
 - [red171] jegliche Konfigurationsdateien werden jetzt im `user.home` gesichert
+- [red171] unter Linux wird jetzt der interne Fenster Titel korrekt gesetzt (für `.desktop` Files wichtig)
 
 **0.81.1**
 
