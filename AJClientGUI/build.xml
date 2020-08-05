@@ -51,7 +51,7 @@
         <jar destfile="${basedir}/AJCoreGUI.jar">
             <manifest>
                 <attribute name="Class-Path"
-                           value="./needed_jars/TableLayout-20050920.jar ./needed_jars/log4j-1.2.15.jar ./needed_jars/skinlf.jar ./needed_jars/looks-2.2.1.jar ./needed_jars/ajcorefassade.jar ./needed_jars/tklcontrols.jar ./needed_jars/ajtray.jar"/>
+                           value="./needed_jars/TableLayout-20050920.jar ./needed_jars/log4j-1.2.15.jar ./needed_jars/skinlf.jar ./needed_jars/looks-2.2.1.jar ./needed_jars/ajcorefassade.jar ./needed_jars/tklcontrols.jar ./needed_jars/ajtray.jar ./needed_jars/gson-2.1.jar"/>
                 <attribute name="Main-Class" value="de.applejuicenet.client.AppleJuiceClient"/>
             </manifest>
             <fileset dir="${basedir}/classes" includes="**/de/**/*.* **/com/jeans/**/*.*"/>

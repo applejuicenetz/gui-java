@@ -66,6 +66,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.l2fprod.gui.plaf.skin.Skin;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 
@@ -336,7 +339,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    @SuppressWarnings("unchecked")
    private void init() throws Exception
    {
-      titel = "appleJuice Client (GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION + ")";
+      titel = "appleJuice GUI (" + AppleJuiceDialog.GUI_VERSION + ")";
       IconManager im = IconManager.getInstance();
 
       firewallIcon       = im.getIcon("firewall");
@@ -1379,93 +1382,72 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    {
       if(type == DATALISTENER_TYPE.NETINFO_CHANGED)
       {
-         SwingUtilities.invokeLater(new Runnable()
+         SwingUtilities.invokeLater(() -> {
+            try
             {
-               public void run()
+               NetworkInfo netInfo = (NetworkInfo) content;
+
+               if(netInfo.isFirewalled() != firewalled)
                {
-                  try
+                  firewalled = !firewalled;
+                  updateFirewall();
+                  if(firewalled)
                   {
-                     NetworkInfo netInfo = (NetworkInfo) content;
-
-                     if(netInfo.isFirewalled() != firewalled)
-                     {
-                        firewalled = !firewalled;
-                        updateFirewall();
-                        if(firewalled)
-                        {
-                           statusbar[0].setToolTipText(firewallWarning);
-                        }
-                        else
-                        {
-                           statusbar[0].setToolTipText(null);
-                        }
-
-                        updateFirewall();
-                     }
+                     statusbar[0].setToolTipText(firewallWarning);
                   }
-                  catch(Exception e)
+                  else
                   {
-                     logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                     statusbar[0].setToolTipText(null);
                   }
+
+                  updateFirewall();
                }
-            });
+            }
+            catch(Exception e)
+            {
+               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            }
+         });
       }
       else if(type == DATALISTENER_TYPE.INFORMATION_CHANGED)
       {
-         SwingUtilities.invokeLater(new Runnable()
+         SwingUtilities.invokeLater(() -> {
+            try
             {
-               public void run()
+               information = (Information) content;
+               statusbar[0].setText(getVerbindungsStatusAsString(information));
+               if(information.getVerbindungsStatus() == Information.NICHT_VERBUNDEN)
                {
-                  try
-                  {
-                     if(firstChange)
-                     {
-                        firstChange = false;
-                        SoundPlayer.getInstance().playSound(SoundPlayer.GESTARTET);
-                        String versionsNr = AppleJuiceClient.getAjFassade().getCoreVersion().getVersion();
-
-                        titel = LanguageSelector.getInstance().getFirstAttrbuteByTagName("mainform.caption") + " (Core " +
-                                versionsNr + " - GUI " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION +
-                                ")";
-                        setTitle(titel);
-                        repaint();
-                     }
-
-                     information = (Information) content;
-                     statusbar[0].setText(getVerbindungsStatusAsString(information));
-                     if(information.getVerbindungsStatus() == Information.NICHT_VERBUNDEN)
-                     {
-                        statusbar[1].setText(keinServer);
-                     }
-                     else
-                     {
-                        String tmp = information.getServerName();
-
-                        if(tmp == null || tmp.length() == 0)
-                        {
-                           Server server = information.getServer();
-
-                           if(server != null)
-                           {
-                              tmp = server.getHost() + ":" + server.getPort();
-                           }
-                        }
-
-                        statusbar[1].setText(tmp);
-                     }
-
-                     statusbar[2].setText(information.getUpDownAsString());
-                     statusbar[3].setText(information.getUpDownSessionAsString());
-                     statusbar[4].setText(information.getExterneIP());
-                     statusbar[5].setText(information.getCreditsAsString());
-                     updateFirewall();
-                  }
-                  catch(Exception e)
-                  {
-                     logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                  }
+                  statusbar[1].setText(keinServer);
                }
-            });
+               else
+               {
+                  String tmp = information.getServerName();
+
+                  if(tmp == null || tmp.length() == 0)
+                  {
+                     Server server = information.getServer();
+
+                     if(server != null)
+                     {
+                        tmp = server.getHost() + ":" + server.getPort();
+                     }
+                  }
+
+                  statusbar[1].setText(tmp);
+               }
+
+               statusbar[2].setText(information.getUpDownAsString());
+               statusbar[3].setText(information.getUpDownSessionAsString());
+               statusbar[4].setText(information.getExterneIP());
+               statusbar[5].setText(information.getCreditsAsString());
+               updateFirewall();
+            }
+            catch(Exception e)
+            {
+               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            }
+         });
       }
    }
 
@@ -1706,21 +1688,15 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
             try
             {
-               ProxySettings proxy        = ProxyManagerImpl.getInstance().getProxySettings();
-               String        downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "http://www.tkl-soft.de", 80,
-                                                                                   "/applejuice/version.txt");
+               ProxySettings proxy = ProxyManagerImpl.getInstance().getProxySettings();
+               String downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "https://api.github.com", 443, "/repos/applejuicenet/gui-java/releases/latest");
 
                if(downloadData.length() > 0)
                {
-                  int             pos1              = downloadData.indexOf("|");
-                  String          aktuellsteVersion = downloadData.substring(0, pos1);
+                  JsonObject jsonObject             = new JsonParser().parse(downloadData).getAsJsonObject();
+                  String aktuellsteVersion          = jsonObject.get("tag_name").getAsString();
                   StringTokenizer token1            = new StringTokenizer(aktuellsteVersion, ".");
                   String          guiVersion        = AppleJuiceDialog.GUI_VERSION;
-
-                  if(guiVersion.indexOf('-') != -1)
-                  {
-                     guiVersion = guiVersion.substring(0, guiVersion.indexOf('-'));
-                  }
 
                   StringTokenizer token2 = new StringTokenizer(guiVersion, ".");
 
@@ -1738,31 +1714,54 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                      aktuelleVersion[i] = token2.nextToken();
                   }
 
-                  if((versionInternet[0].compareTo(aktuelleVersion[0]) > 0) ||
-                        (versionInternet[0].compareTo(aktuelleVersion[0]) == 0 &&
-                           versionInternet[1].compareTo(aktuelleVersion[1]) > 0) ||
-                        (versionInternet[0].compareTo(aktuelleVersion[0]) == 0 &&
-                           versionInternet[1].compareTo(aktuelleVersion[1]) == 0) &&
-                        versionInternet[2].compareTo(aktuelleVersion[2]) > 0)
-                  {
-                     int                     pos2                    = downloadData.lastIndexOf("|");
-                     String                  winLink                 = downloadData.substring(pos1 + 1, pos2);
-                     String                  sonstigeLink            = downloadData.substring(pos2 + 1);
-                     UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(AppleJuiceDialog.getApp(),
-                                                                                                   aktuellsteVersion, winLink,
-                                                                                                   sonstigeLink);
+                  int     versionsInfoModus = OptionsManagerImpl.getInstance().getVersionsinfoModus();
+                  boolean showInfo        = false;
+                  boolean versionUpdate   = false;
+                  boolean importantUpdate = false;
+                  boolean cosmeticUpdate  = false;
 
-                     updateInformationDialog.setVisible(true);
+                  if(Integer.parseInt(versionInternet[0]) > Integer.parseInt(aktuelleVersion[0]))
+                  {
+                     versionUpdate = true;
                   }
-                  else
+                  else if(Integer.parseInt(versionInternet[1]) > Integer.parseInt(aktuelleVersion[1]))
                   {
-                     LanguageSelector languageSelector = LanguageSelector.getInstance();
-                     String           fehlerTitel      = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
+                     importantUpdate = true;
+                  }
+                  else if(Integer.parseInt(versionInternet[2]) > Integer.parseInt(aktuelleVersion[2]))
+                  {
+                     cosmeticUpdate = true;
+                  }
 
-                     String           fehlerNachricht  = languageSelector.getFirstAttrbuteByTagName("javagui.checkupdate.keineNeueVersion");
+                  if(versionsInfoModus == 2 && (cosmeticUpdate || importantUpdate || versionUpdate))
+                  {
+                     showInfo = true;
+                  }
+                  else if(versionsInfoModus == 1 && (importantUpdate || versionUpdate))
+                  {
+                     showInfo = true;
+                  }
+                  else if(versionsInfoModus == 0 && versionUpdate)
+                  {
+                     showInfo = true;
+                  }
 
-                     JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), fehlerNachricht, fehlerTitel,
-                                                   JOptionPane.INFORMATION_MESSAGE);
+                  if(showInfo)
+                  {
+                     String downloadLink = "";
+                     JsonArray arr = jsonObject.getAsJsonArray("assets");
+                     for (int i = 0; i < arr.size(); i++) {
+                        String name = arr.get(i).getAsJsonObject().get("name").getAsString();
+                        if(name.equals("AJCoreGUI.zip")) {
+                           downloadLink = arr.get(i).getAsJsonObject().get("browser_download_url").getAsString();
+                        }
+                     }
+
+                     String finaldownloadLink = downloadLink;
+                     SwingUtilities.invokeLater(() -> {
+                        UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(theApp, aktuellsteVersion, finaldownloadLink, finaldownloadLink);
+                        updateInformationDialog.setVisible(true);
+                     });
                   }
                }
             }
