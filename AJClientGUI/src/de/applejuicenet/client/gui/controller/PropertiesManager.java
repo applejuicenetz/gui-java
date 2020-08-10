@@ -436,7 +436,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
    {
       try
       {
-         return propertyHandler.get("options_browser_file", "");
+         return propertyHandler.get("options_browser_file", "xdg-open");
       }
       catch(Exception e)
       {
