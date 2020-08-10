@@ -1,9 +1,13 @@
 # Changelog
 
 
+**0.82.1**
+
+- [red171] benutze unter Linux [xdg-open](https://wiki.ubuntuusers.de/xdg-utils/#xdg-open) als Standard Browser für URLs 
+
 **0.82.0**
 
-- [red171] [wizard.xml](wizard.xml) an die aktuellen Gegebenheiten angepasst
+- [red171] [wizard.xml](./AJClientGUI/wizard.xml) an die aktuellen Gegebenheiten angepasst
 - [red171] jegliche Konfigurationsdateien werden jetzt im `user.home` gesichert
 - [red171] unter Linux wird jetzt der interne Fenster Titel korrekt gesetzt (für `.desktop` Files wichtig)
 

@@ -1,7 +1,5 @@
 # appleJuice JAVA GUI
 
-[Changelog](CHANGELOG.md)
-
 
 ## Themes
 weitere Themes gibts [hier](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks)
