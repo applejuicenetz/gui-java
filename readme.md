@@ -1,4 +1,3 @@
 # appleJuice JAVA Client
 
-weiterführende Infos in den Unterordnern
-
+Ein GUI ist ein grafisches Interface (Graphical User Interface) für appleJuice. Es ist die Benutzeroberfläche für den Core (Client).

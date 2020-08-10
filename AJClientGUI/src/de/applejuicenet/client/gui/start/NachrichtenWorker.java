@@ -91,17 +91,12 @@ public class NachrichtenWorker extends Thread
          htmlText = buffer.toString();
          final String htmlContent = htmlText;
 
-         SwingUtilities.invokeLater(new Runnable()
-            {
-               public void run()
-               {
-                  version.setText("<html>GUI: " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION +
-                                  "<br>Core: " + coreVersion + "</html>");
-                  nachrichten.setContentType("text/html");
-                  nachrichten.setText(htmlContent);
-                  nachrichten.setFont(version.getFont());
-               }
-            });
+         SwingUtilities.invokeLater(() -> {
+            version.setText("<html>GUI: " + AppleJuiceDialog.GUI_VERSION + "/" + ApplejuiceFassade.FASSADE_VERSION + "<br>Core: " + coreVersion + "</html>");
+            nachrichten.setContentType("text/html");
+            nachrichten.setText(htmlContent);
+            nachrichten.setFont(version.getFont());
+         });
       }
       catch(Exception e)
       {
