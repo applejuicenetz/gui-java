@@ -2,10 +2,10 @@
 Name=appleJuice GUI
 GenericName=appleJuice GUI
 Comment=appleJuice GUI (connect to appleJuice Client)
-Exec=applejuice-gui.ajgui
+Exec=applejuice-gui.ajgui %u
 Icon=${SNAP}/meta/gui/applejuice-gui.png
 Terminal=false
 Type=Application
-Categories=Network;
+Categories=Java;Application;Network;
 MimeType=x-scheme-handler/ajfsp;
 StartupWMClass=AJCoreGUI
