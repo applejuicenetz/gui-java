@@ -5,6 +5,8 @@
 package de.applejuicenet.client.fassade.shared;
 
 
+import java.util.Base64;
+
 /**
  * $Header:
  * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/shared/ProxySettings.java,v
@@ -64,7 +66,8 @@ public class ProxySettings
 
    public void setUserpass(String user, String passwort)
    {
-      this.userpass = new sun.misc.BASE64Encoder().encode((user + ":" + passwort).getBytes());
+      Base64.Encoder base64Encoder = Base64.getEncoder().withoutPadding();
+      this.userpass = base64Encoder.encodeToString((user + ":" + passwort).getBytes());
    }
 
    public boolean isUse()

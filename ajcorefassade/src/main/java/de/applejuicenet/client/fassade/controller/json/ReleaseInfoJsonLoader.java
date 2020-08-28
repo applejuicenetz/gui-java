@@ -20,15 +20,16 @@ import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
 
 public class ReleaseInfoJsonLoader
 {
-	private static final Map<String, ReleaseCacheObject>	releasesCache	= new HashMap<String, ReleaseCacheObject>();
+	private static final Map<String, ReleaseCacheObject>	releasesCache	= new HashMap<>();
 	private static final long								CACHE_TIMEOUT	= 300000;
 	private final ReleaseInfo								releaseInfo;
 	private final ProxySettings								proxy;
 	private final String									hash;
+	private final Long									    size;
 	private static String									releaseInfoHost	= null;
 	private static Integer									releaseInfoPort;
 
-	public ReleaseInfoJsonLoader(String hash, ProxySettings proxy)
+	public ReleaseInfoJsonLoader(String hash, Long size, ProxySettings proxy)
 	{
 		if (null == releaseInfoHost)
 		{
@@ -60,6 +61,7 @@ public class ReleaseInfoJsonLoader
 			}
 		}
 		this.hash = hash;
+		this.size = size;
 		releaseInfo = new ReleaseInfo(releaseInfoHost, hash);
 		this.proxy = proxy;
 	}
@@ -81,7 +83,7 @@ public class ReleaseInfoJsonLoader
 		}
 
 		String releaseDataTmp =
-				WebsiteContentLoader.getWebsiteContent(proxy, releaseInfoHost, releaseInfoPort, "/api/get_link_info/?hash=" + hash);
+				WebsiteContentLoader.getWebsiteContent(proxy, releaseInfoHost, releaseInfoPort, "/api/get_link_info/?hash=" + hash + "&size=" + size);
 
 		if ("no result".equals(releaseDataTmp))
 		{
