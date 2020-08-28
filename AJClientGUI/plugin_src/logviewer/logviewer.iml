@@ -7,7 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="needed_jars" level="project" />
     <orderEntry type="library" name="tklcontrols" level="project" />
     <orderEntry type="module" module-name="AJClientGUI" />
   </component>
