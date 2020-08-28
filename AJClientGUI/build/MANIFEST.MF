@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Class-Path: ./needed_jars/log4j-1.2.8.jar ./needed_jars/skinlf.jar ./n
- eeded_jars/looks-1.2.1.jar
-Main-Class: de.applejuicenet.client.AppleJuiceClient
-
