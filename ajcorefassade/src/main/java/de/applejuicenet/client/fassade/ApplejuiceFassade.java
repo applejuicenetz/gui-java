@@ -56,7 +56,7 @@ import de.applejuicenet.client.fassade.tools.MD5Encoder;
 
 public class ApplejuiceFassade implements CoreConnectionSettingsListener
 {
-   public static final String                         FASSADE_VERSION         = "F-1.23";
+   public static final String                         FASSADE_VERSION         = "1.24.0";
    public static final String                         MIN_NEEDED_CORE_VERSION = "0.30.146.1203";
    public static final String                         ERROR_MESSAGE           = "Unbehandelte Exception";
    public static String                               separator;
@@ -1137,10 +1137,9 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener
    {
    }
 
-   public ReleaseInfo getReleaseInfo(String hash, ProxySettings proxy)
-                              throws Exception
+   public ReleaseInfo getReleaseInfo(String hash, Long size, ProxySettings proxy) throws Exception
    {
-      return new ReleaseInfoJsonLoader(hash, proxy).getReleaseInfo();
+      return new ReleaseInfoJsonLoader(hash, size, proxy).getReleaseInfo();
    }
 
    private class CancelThread extends Thread
