@@ -2,10 +2,11 @@
   <configuration default="false" name="ajgui" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
     <option name="MAIN_CLASS_NAME" value="de.applejuicenet.client.AppleJuiceClient" />
-    <module name="AJClientGUI" />
+    <module name="AJCoreGUI" />
     <option name="VM_PARAMETERS" value="-DDebug" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/AJClientGUI" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/resources" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />
