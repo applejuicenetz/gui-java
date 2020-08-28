@@ -1,2 +1,6 @@
 .idea
-out
+target/
+dependency-reduced-pom.xml
+*.iml
+*.jar
+*.properties

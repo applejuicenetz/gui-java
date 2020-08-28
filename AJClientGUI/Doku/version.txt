@@ -1,1 +1,0 @@
-0.56.0|http://download.berlios.de/applejuicejava/AJCoreGUI_Win_v0_56_0.zip|http://download.berlios.de/applejuicejava/AJCoreGUI_v0_56_0.zip
