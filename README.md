@@ -5,17 +5,6 @@ Dieses GUI ist das grafisches Interface (Graphical User Interface) für den appl
 ## Themes
 weitere Themes gibts [hier](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks)
 
-# Aufgaben wenn neues Release erstellt wird
-
-1. Version in `de.applejuicenet.client.gui.AppleJuiceDialog.GUI_VERSION` anpassen
-2. Changelog anpassen
-3. Änderungen commiten und taggen
-4. in der `snapcraft.yaml` Die Version anheben (darf wirklich erst nach dem erstellen des Releases passieren)
-5. Änderungen der `snapcraft.yaml` commiten (ohne Taggen) > triggert dann einen build für http://snapcraft.io/applejuice-gui/builds
-
-Punkt 2-5 kann komplett via Github Action automatisiert werden!  
-
-
 ## Release Info
 
 Im `~/appleJuice/gui/` Ordner muss eine `xrel.properties` Datei mit folgender Konfiguration vorhanden sein:
@@ -38,3 +27,13 @@ Es wird folgendes JSON Format und ein Status Code `200` erwartet:
 "fsk": false,   // TODO json vervollständigen
 }
 ```
+
+### neues Release in dieser Reihenfolge erstellen
+
+1. Version in `de.applejuicenet.client.gui.AppleJuiceDialog.GUI_VERSION` anpassen
+2. Changelog anpassen
+3. Änderungen commiten und taggen
+4. in der `snapcraft.yaml` Die Version anheben (darf wirklich erst nach dem erstellen des Releases passieren)
+5. Änderungen der `snapcraft.yaml` commiten (ohne Taggen) > triggert dann einen build für http://snapcraft.io/applejuice-gui/builds
+
+Punkt 2-5 kann komplett via Github Action automatisiert werden!  
