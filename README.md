@@ -5,6 +5,17 @@ Dieses GUI ist das grafisches Interface (Graphical User Interface) für den appl
 ## Themes
 weitere Themes gibts [hier](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks)
 
+# Aufgaben wenn neues Release erstellt wird
+
+1. Version in `de.applejuicenet.client.gui.AppleJuiceDialog.GUI_VERSION` anpassen
+2. Changelog anpassen
+3. Änderungen commiten und taggen
+4. in der `snapcraft.yaml` Die Version anheben (darf wirklich erst nach dem erstellen des Releases passieren)
+5. Änderungen der `snapcraft.yaml` commiten (ohne Taggen) > triggert dann einen build für http://snapcraft.io/applejuice-gui/builds
+
+Punkt 2-5 kann komplett via Github Action automatisiert werden!  
+
+
 ## Release Info
 
 Im `~/appleJuice/gui/` Ordner muss eine `xrel.properties` Datei mit folgender Konfiguration vorhanden sein:
@@ -18,12 +29,12 @@ Im `path` ist der erste `%s` die `md5sum` und der zweite `%s` die Größe in `by
 
 Vom Core `0.31.149.111` sieht das dann wie folgt aus `65571b8f2f2e1ea2aceb38b8017cf871_318936.json`.
 
-Der dazugehörige `ajfsp Links wäre folgender `ajfsp://file|ajcore-0.31.149.111.jar|65571b8f2f2e1ea2aceb38b8017cf871_318936|31893/`
+Der dazugehörige `ajfsp` Links wäre folgender `ajfsp://file|ajcore-0.31.149.111.jar|65571b8f2f2e1ea2aceb38b8017cf871|318936/`
 
 Es wird folgendes JSON Format und ein Status Code `200` erwartet:
 
 ```json5
 {
-"fsk": false,   // TBD json vervollständigen
+"fsk": false,   // TODO json vervollständigen
 }
 ```
