@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CFBundleDevelopmentRegion</key>
+        <string>German</string>
+
+        <key>CFBundleExecutable</key>
+        <string>universalJavaApplicationStub</string>
+
+        <key>CFBundleIconFile</key>
+        <string>AJCoreGUI.icns</string>
+
+        <key>CFBundleIdentifier</key>
+        <string>de.applejuicenet.client.AppleJuiceClient</string>
+
+        <key>CFBundleDisplayName</key>
+        <string>AJCoreGUI</string>
+
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+
+        <key>CFBundleName</key>
+        <string>AJCoreGUI</string>
+
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+
+        <key>NSHighResolutionCapable</key>
+        <string>True</string>
+
+        <key>CFBundleShortVersionString</key>
+        <string>1.0.1</string>
+
+        <key>CFBundleSignature</key>
+        <string>agui</string>
+
+        <key>CFBundleVersion</key>
+        <string>1.0.1</string>
+
+        <key>CFBundleURLTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleURLName</key>
+                <string>appleJuice Links</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>ajfsp</string>
+                </array>
+            </dict>
+        </array>
+
+        <key>JVMMainClassName</key>
+        <string>de.applejuicenet.client.AppleJuiceClient</string>
+    </dict>
+</plist>

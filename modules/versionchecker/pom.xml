@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.applejuicenet.client.gui.plugins</groupId>
+    <artifactId>versionchecker</artifactId>
+    <version>1.6.1</version>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>de.applejuicenet.client</groupId>
+        <artifactId>AJClientGUI</artifactId>
+        <version>1</version>
+        <relativePath>./../../pom.xml</relativePath>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.applejuicenet.client.gui</groupId>
+            <artifactId>AJCoreGUI</artifactId>
+            <version>0.83.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

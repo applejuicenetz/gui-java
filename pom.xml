@@ -1,131 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-    <parent>
-        <groupId>de.applejuicenet.client</groupId>
-        <artifactId>AJCoreGUI</artifactId>
-        <version>0.83.0</version>
-    </parent>
-
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.applejuicenet.client.gui</groupId>
-    <artifactId>AJCoreGUI</artifactId>
-    <version>0.83.0</version>
-    <packaging>jar</packaging>
+    <groupId>de.applejuicenet.client</groupId>
+    <artifactId>AJClientGUI</artifactId>
+    <version>1</version>
+    <packaging>pom</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>de.applejuicenet.client</groupId>
-            <artifactId>tklcontrols</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
-        <dependency>
-            <groupId>skinlf</groupId>
-            <artifactId>skinlf</artifactId>
-            <version>1.2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>tablelayout</groupId>
-            <artifactId>TableLayout</artifactId>
-            <version>20050920</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jgoodies</groupId>
-            <artifactId>looks</artifactId>
-            <version>2.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>2.0.2</version>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>modules/AJCoreGUI</module>
+        <module>modules/logviewer</module>
+        <module>modules/versionchecker</module>
+        <module>modules/standardpwdlpolicy</module>
+    </modules>
 
     <build>
-        <finalName>../resources/${artifactId}</finalName>
         <plugins>
             <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
+                <inherited>false</inherited>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/resources/needed_jars/</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Built-By>appleJuice maintainer</Built-By>
-                        </manifestEntries>
-                        <manifest>
-                            <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>./needed_jars/</classpathPrefix>
-                            <mainClass>de.applejuicenet.client.AppleJuiceClient</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>de.perdian.maven.plugins</groupId>
-                <artifactId>macosappbundler-maven-plugin</artifactId>
-                <version>1.9.0</version>
-                <configuration>
-                    <plist>
-                        <CFBundleIconFile>src/main/resources/AJCoreGUI.icns</CFBundleIconFile>
-                        <CFBundleDisplayName>AJCoreGUI</CFBundleDisplayName>
-                        <CFBundleDevelopmentRegion>German</CFBundleDevelopmentRegion>
-                        <JVMMainClassName>de.applejuicenet.client.AppleJuiceClient</JVMMainClassName>
-                        <JVMVersion>8+</JVMVersion>
-                        <CFBundleURLTypes>
-                            <string>ajfsp</string>
-                        </CFBundleURLTypes>
-                    </plist>
-                    <dmg>
-                        <generate>false</generate>
-                        <additionalResources>
-                            <additionalResource>
-                                <directory>./resources/</directory>
-                            </additionalResource>
-                        </additionalResources>
-                    </dmg>
-                </configuration>
-                <executions>
-                    <execution>
+                        <id>antrun.package.archive</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>bundle</goal>
+                            <goal>run</goal>
                         </goals>
+                        <configuration>
+                            <target>
+                                <zip destfile="${basedir}/target/AJCoreGUI.zip">
+                                    <zipfileset dir="${basedir}/resources/" includes="*/*"/>
+                                    <zipfileset dir="${basedir}/resources/" includes="AJCoreGUI.exe"/>
+                                    <zipfileset dir="${basedir}/modules/AJCoreGUI/target/" includes="AJCoreGUI-*.jar" fullpath="AJCoreGUI.jar"/>
+                                    <zipfileset dir="${basedir}/modules/logviewer/target/" includes="logviewer-*.jar" fullpath="plugins/logviewer.jar"/>
+                                    <zipfileset dir="${basedir}/modules/serverwatcher/target/" includes="serverwatcher-*.jar" fullpath="plugins/serverwatcher.jar"/>
+                                    <zipfileset dir="${basedir}/modules/versionchecker/target/" includes="versionchecker-*.jar" fullpath="plugins/versionchecker.jar"/>
+                                    <zipfileset dir="${basedir}/modules/standardpwdlpolicy/target/" includes="StandardPwdlPolicy-*.jar" fullpath="pwdlpolicies/StandardPwdlPolicy.jar"/>
+                                </zip>
+                                <exec executable="md5" dir="${basedir}/target/" output="${basedir}/target/AJCoreGUI.zip.md5.txt">
+                                    <arg line="AJCoreGUI.zip"/>
+                                </exec>
+                                <exec executable="shasum" dir="${basedir}/target/" output="${basedir}/target/AJCoreGUI.zip.sha256.txt">
+                                    <arg line="-a 256"/>
+                                    <arg line="AJCoreGUI.zip"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>antrun.package.osx</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <zip destfile="${basedir}/target/AJCoreGUI.macOS.zip">
+                                    <zipfileset dir="${basedir}/resources/" prefix="AJCoreGUI.app/Contents/Java/" includes="*/*"/>
+                                    <zipfileset dir="${basedir}/modules/AJCoreGUI/target/" includes="AJCoreGUI-*.jar" fullpath="AJCoreGUI.app/Contents/Java/AJCoreGUI.jar"/>
+                                    <zipfileset dir="${basedir}/modules/logviewer/target/" includes="logviewer-*.jar" fullpath="AJCoreGUI.app/Contents/Java/plugins/logviewer.jar"/>
+                                    <zipfileset dir="${basedir}/modules/serverwatcher/target/" includes="serverwatcher*.jar" fullpath="AJCoreGUI.app/Contents/Java/plugins/serverwatcher.jar"/>
+                                    <zipfileset dir="${basedir}/modules/versionchecker/target/" includes="versionchecker-*.jar" fullpath="AJCoreGUI.app/Contents/Java/plugins/versionchecker.jar"/>
+                                    <zipfileset dir="${basedir}/modules/standardpwdlpolicy/target/" includes="StandardPwdlPolicy-*.jar"
+                                                fullpath="AJCoreGUI.app/Contents/Java/pwdlpolicies/StandardPwdlPolicy.jar"/>
+                                    <zipfileset dir="${basedir}/modules/AJCoreGUI/src/main/resources/" prefix="AJCoreGUI.app/Contents/" includes="Info.plist"/>
+                                    <zipfileset dir="${basedir}/modules/AJCoreGUI/src/main/resources/" prefix="AJCoreGUI.app/Contents/Resources" includes="AJCoreGUI.icns"/>
+                                    <zipfileset dir="${basedir}/modules/AJCoreGUI/src/main/resources/" prefix="AJCoreGUI.app/Contents/MacOS" includes="universalJavaApplicationStub" filemode="777"/>
+                                </zip>
+                                <exec executable="md5" dir="${basedir}/target/" output="${basedir}/target/AJCoreGUI.macOS.zip.md5.txt">
+                                    <arg line="AJCoreGUI.macOS.zip"/>
+                                </exec>
+                                <exec executable="shasum" dir="${basedir}/target/" output="${basedir}/target/AJCoreGUI.macOS.zip.sha256.txt">
+                                    <arg line="-a 256"/>
+                                    <arg line="AJCoreGUI.macOS.zip"/>
+                                </exec>
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
