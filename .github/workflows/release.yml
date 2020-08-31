@@ -39,7 +39,7 @@ jobs:
                 uses: meeDamian/github-release@2.0
                 with:
                     token: ${{ secrets.GITHUB_TOKEN }}
-                    draft: true
+                    draft: false
                     gzip: false
                     body: >
                         aktuelles Changelog befindet sich [hier](https://github.com/applejuicenet/gui-java/blob/master/CHANGELOG.md)
