@@ -134,7 +134,7 @@ public class PluginJarClassLoader extends SecureClassLoader
             InputStream iS = jf.getInputStream(entry);
 
             pluginProperties = new Properties();
-            pluginProperties.load(iS);
+            pluginProperties.load(new InputStreamReader(iS, StandardCharsets.UTF_8));
          }
          else if(entryName.indexOf("icon.gif") != -1)
          {
