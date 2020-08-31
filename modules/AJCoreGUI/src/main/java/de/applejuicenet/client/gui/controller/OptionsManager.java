@@ -31,9 +31,9 @@ public interface OptionsManager
 
    String getSprache();
 
-   int getVersionsinfoModus();
+   boolean getUpdateInfo();
 
-   void setVersionsinfoModus(int versionsinfoModus);
+   void setUpdateInfo(boolean UpdateInfo);
 
    boolean isErsterStart();
 

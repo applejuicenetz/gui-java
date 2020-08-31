@@ -536,19 +536,14 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
       propertyHandler.put("options_themes", enable);
    }
 
-   public int getVersionsinfoModus()
+   public boolean getUpdateInfo()
    {
-      return propertyHandler.getAsInt("options_versionsinfo", 1);
+      return propertyHandler.getAsBoolean("options_updateinfo", true);
    }
 
-   public void setVersionsinfoModus(int versionsinfoModus)
+   public void setUpdateInfo(boolean UpdateInfo)
    {
-      if(versionsinfoModus < 0 || versionsinfoModus > 2)
-      {
-         versionsinfoModus = 1;
-      }
-
-      propertyHandler.put("options_versionsinfo", versionsinfoModus);
+      propertyHandler.put("options_updateinfo", UpdateInfo);
    }
 
    public int getLinkListenerPort()
@@ -886,7 +881,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
          aPropertyHandler.put("options_loadplugins", true);
          aPropertyHandler.put("options_enableToolTip", true);
          aPropertyHandler.put("options_linklistenerport", 8768);
-         aPropertyHandler.put("options_versionsinfo", 1);
+         aPropertyHandler.put("options_updateinfo", true);
          aPropertyHandler.put("options_remote_host", "localhost");
          aPropertyHandler.put("options_remote_passwort", "");
          aPropertyHandler.put("options_remote_port", 9851);
