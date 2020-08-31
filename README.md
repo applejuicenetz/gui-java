@@ -1,6 +1,29 @@
 # appleJuice Client GUI
 
+![](https://img.shields.io/github/release/applejuicenet/gui-java.svg)
+![](https://github.com/applejuicenet/gui-java/workflows/release/badge.svg)
+![](https://img.shields.io/github/license/applejuicenet/gui-java.svg)
+
 Dieses GUI ist das grafisches Interface (Graphical User Interface) für den appleJuice Core.
+
+## Installation
+
+### Windows
+
+Bitte das Setup von [hier](https://github.com/applejuicenet/setup/releases) oder die `AJCoreGUI.zip` von [hier](https://github.com/applejuicenet/gui-java/releases) nehmen.
+
+### macOS
+
+- per [Homebrew](https://brew.sh) installieren `brew cask install applejuicenet/packages/applejuice-gui`
+- oder die `AJCoreGUI.masOS.zip` von [hier](https://github.com/applejuicenet/gui-java/releases) nehmen
+
+### Linux
+
+Für Linux wurde eine `snap` Paket zusammengestellt.
+
+[![Installieren vom Snap Store](https://snapcraft.io/static/images/badges/de/snap-store-white.svg)](https://snapcraft.io/applejuice-gui)
+
+
 
 ## Themes
 weitere Themes gibts [hier](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks)
@@ -32,8 +55,8 @@ Es wird folgendes JSON Format und ein Status Code `200` erwartet:
 
 1. Version in `de.applejuicenet.client.gui.AppleJuiceDialog.GUI_VERSION` anpassen
 2. Changelog anpassen
-3. Änderungen commiten und taggen
-4. in der `snapcraft.yaml` Die Version anheben (darf wirklich erst nach dem erstellen des Releases passieren)
-5. Änderungen der `snapcraft.yaml` commiten (ohne Taggen) > triggert dann einen build für http://snapcraft.io/applejuice-gui/builds
+3. Änderungen committen und taggen
+4. Warten bis die Github Release Action durchgelaufen ist
+5. in der `snapcraft.yaml` Die Version anheben (darf wirklich erst nach dem erstellen des Releases passieren)
+6. Änderungen der `snapcraft.yaml` commiten (ohne Taggen) > triggert dann einen build für http://snapcraft.io/applejuice-gui/builds
 
-Punkt 2-5 kann komplett via Github Action automatisiert werden!  
