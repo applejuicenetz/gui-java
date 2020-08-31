@@ -102,13 +102,7 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       beschreibung.setWrapStyleWord(true);
       pluginList = new JList(v);
       pluginList.setPreferredSize(new Dimension(190, pluginList.getPreferredSize().height));
-      pluginList.addListSelectionListener(new ListSelectionListener()
-         {
-            public void valueChanged(ListSelectionEvent e)
-            {
-               pluginList_valueChanged(e);
-            }
-         });
+      pluginList.addListSelectionListener(e -> pluginList_valueChanged(e));
       setLayout(new BorderLayout());
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
@@ -131,19 +125,15 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       panel1.add(sp, BorderLayout.CENTER);
       panel1.add(panel2, BorderLayout.SOUTH);
       add(panel1, BorderLayout.CENTER);
-      einstellungen.addActionListener(new ActionListener()
+      einstellungen.addActionListener(ae -> {
+         if(selectedPluginConnector != null)
          {
-            public void actionPerformed(ActionEvent ae)
-            {
-               if(selectedPluginConnector != null)
-               {
-                  ODPluginOptionsDialog pluginOptionsDialog = new ODPluginOptionsDialog(parentDialog, selectedPluginConnector);
+            ODPluginOptionsDialog pluginOptionsDialog = new ODPluginOptionsDialog(parentDialog, selectedPluginConnector);
 
-                  pluginOptionsDialog.setResizable(true);
-                  pluginOptionsDialog.setVisible(true);
-               }
-            }
-         });
+            pluginOptionsDialog.setResizable(true);
+            pluginOptionsDialog.setVisible(true);
+         }
+      });
    }
 
    void pluginList_valueChanged(ListSelectionEvent e)

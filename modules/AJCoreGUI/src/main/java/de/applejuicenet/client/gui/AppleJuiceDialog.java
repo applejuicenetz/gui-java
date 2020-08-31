@@ -32,12 +32,7 @@ import java.io.IOException;
 
 import java.net.URL;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -139,7 +134,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
    //CVS-Beispiel 0.60.0-1-CVS
    public static final String       GUI_VERSION              = "0.83.0";
-   private static Logger            logger                   = Logger.getLogger(AppleJuiceDialog.class);
+   private static final Logger      logger                   = Logger.getLogger(AppleJuiceDialog.class);
    private static Map<String, Skin> themes                   = null;
    public static boolean            rewriteProperties        = false;
    private static AppleJuiceDialog  theApp;
@@ -1416,36 +1411,26 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    {
       final JPopupMenu popup = new JPopupMenu();
 
-      popupShowHideMenuItem.addActionListener(new ActionListener()
+      popupShowHideMenuItem.addActionListener(ae -> {
+         if(!isVisible())
          {
-            public void actionPerformed(ActionEvent ae)
+            setVisible(true);
+            setAlwaysOnTop(true);
+            setAlwaysOnTop(false);
+            requestFocus();
+         }
+         else
+         {
+            if(popup.isVisible())
             {
-               if(!isVisible())
-               {
-                  setVisible(true);
-                  setAlwaysOnTop(true);
-                  setAlwaysOnTop(false);
-                  requestFocus();
-               }
-               else
-               {
-                  if(popup.isVisible())
-                  {
-                     popup.setVisible(false);
-                  }
+               popup.setVisible(false);
+            }
 
-                  setVisible(false);
-               }
-            }
-         });
+            setVisible(false);
+         }
+      });
       popup.add(popupShowHideMenuItem);
-      popupOptionenMenuItem.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent ae)
-            {
-               showOptionsDialog();
-            }
-         });
+      popupOptionenMenuItem.addActionListener(ae -> showOptionsDialog());
 
       popup.add(popupOptionenMenuItem);
       IconManager im = IconManager.getInstance();
@@ -1456,13 +1441,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
       popupOptionenMenuItem.setIcon(im.getIcon("optionen"));
       popupAboutMenuItem.setIcon(aboutIcon);
-      popupAboutMenuItem.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent ae)
-            {
-               showAboutDialog();
-            }
-         });
+      popupAboutMenuItem.addActionListener(ae -> showAboutDialog());
       popup.add(popupAboutMenuItem);
       new Thread()
          {
@@ -1505,40 +1484,32 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                   final TKLLabel label1        = new TKLLabel("50 kb/s");
                   final TKLLabel label2        = new TKLLabel("50 kb/s");
 
-                  label1.setText(Long.toString(ajSettings.getMaxUploadInKB()) + " kb/s");
-                  label2.setText(Long.toString(ajSettings.getMaxDownloadInKB()) + " kb/s");
+                  label1.setText(ajSettings.getMaxUploadInKB() + " kb/s");
+                  label2.setText(ajSettings.getMaxDownloadInKB() + " kb/s");
                   uploadPanel.add(label1, BorderLayout.NORTH);
                   uploadPanel.add(uploadSlider, BorderLayout.SOUTH);
                   uploadMenu.add(uploadPanel);
                   downloadPanel.add(label2, BorderLayout.NORTH);
                   downloadPanel.add(downloadSlider, BorderLayout.SOUTH);
                   downloadMenu.add(downloadPanel);
-                  uploadSlider.addChangeListener(new ChangeListener()
-                     {
-                        public void stateChanged(ChangeEvent e)
-                        {
-                           JSlider slider = (JSlider) e.getSource();
+                  uploadSlider.addChangeListener(e -> {
+                     JSlider slider = (JSlider) e.getSource();
 
-                           label1.setText(Integer.toString(slider.getValue()) + " kb/s");
-                        }
-                     });
-                  downloadSlider.addChangeListener(new ChangeListener()
-                     {
-                        public void stateChanged(ChangeEvent e)
-                        {
-                           JSlider slider = (JSlider) e.getSource();
+                     label1.setText(slider.getValue() + " kb/s");
+                  });
+                  downloadSlider.addChangeListener(e -> {
+                     JSlider slider = (JSlider) e.getSource();
 
-                           label2.setText(Integer.toString(slider.getValue()) + " kb/s");
-                        }
-                     });
+                     label2.setText(slider.getValue() + " kb/s");
+                  });
                   uploadSlider.addMouseListener(new MouseAdapter()
                      {
                         public void mouseReleased(MouseEvent e)
                         {
                            if(uploadSlider.getValue() < uploadSlider.getMaximum() && uploadSlider.getValue() > 0)
                            {
-                              Long down = new Long(downloadSlider.getValue() * 1024);
-                              Long up   = new Long(uploadSlider.getValue() * 1024);
+                              Long down = (long) (downloadSlider.getValue() * 1024);
+                              Long up   = (long) (uploadSlider.getValue() * 1024);
 
                               try
                               {
@@ -1561,8 +1532,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                         {
                            if(downloadSlider.getValue() < downloadSlider.getMaximum() && downloadSlider.getValue() > 0)
                            {
-                              Long down = new Long(downloadSlider.getValue() * 1024);
-                              Long up   = new Long(uploadSlider.getValue() * 1024);
+                              Long down = (long) (downloadSlider.getValue() * 1024);
+                              Long up   = (long) (uploadSlider.getValue() * 1024);
 
                               try
                               {
@@ -1579,14 +1550,10 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                            }
                         }
                      });
-                  SwingUtilities.invokeLater(new Runnable()
-                     {
-                        public void run()
-                        {
-                           popup.add(uploadMenu);
-                           popup.add(downloadMenu);
-                        }
-                     });
+                  SwingUtilities.invokeLater(() -> {
+                     popup.add(uploadMenu);
+                     popup.add(downloadMenu);
+                  });
                }
             }
          }.start();
@@ -1619,110 +1586,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
    private void checkAndDisplayUpdate()
    {
-      Thread versionWorker = new Thread()
-      {
-         public void run()
-         {
-            if(logger.isEnabledFor(Level.DEBUG))
-            {
-               logger.debug("VersionWorkerThread gestartet. " + this);
-            }
-
-            try
-            {
-               ProxySettings proxy = ProxyManagerImpl.getInstance().getProxySettings();
-               String downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "https://api.github.com", 443, "/repos/applejuicenet/gui-java/releases/latest");
-
-               if(downloadData.length() > 0)
-               {
-                  JsonObject jsonObject             = new JsonParser().parse(downloadData).getAsJsonObject();
-                  String aktuellsteVersion          = jsonObject.get("tag_name").getAsString();
-                  StringTokenizer token1            = new StringTokenizer(aktuellsteVersion, ".");
-                  String          guiVersion        = AppleJuiceDialog.GUI_VERSION;
-
-                  StringTokenizer token2 = new StringTokenizer(guiVersion, ".");
-
-                  if(token1.countTokens() != 3 || token2.countTokens() != 3)
-                  {
-                     return;
-                  }
-
-                  String[] versionInternet = new String[3];
-                  String[] aktuelleVersion = new String[3];
-
-                  for(int i = 0; i < 3; i++)
-                  {
-                     versionInternet[i] = token1.nextToken();
-                     aktuelleVersion[i] = token2.nextToken();
-                  }
-
-                  int     versionsInfoModus = OptionsManagerImpl.getInstance().getVersionsinfoModus();
-                  boolean showInfo        = false;
-                  boolean versionUpdate   = false;
-                  boolean importantUpdate = false;
-                  boolean cosmeticUpdate  = false;
-
-                  if(Integer.parseInt(versionInternet[0]) > Integer.parseInt(aktuelleVersion[0]))
-                  {
-                     versionUpdate = true;
-                  }
-                  else if(Integer.parseInt(versionInternet[1]) > Integer.parseInt(aktuelleVersion[1]))
-                  {
-                     importantUpdate = true;
-                  }
-                  else if(Integer.parseInt(versionInternet[2]) > Integer.parseInt(aktuelleVersion[2]))
-                  {
-                     cosmeticUpdate = true;
-                  }
-
-                  if(versionsInfoModus == 2 && (cosmeticUpdate || importantUpdate || versionUpdate))
-                  {
-                     showInfo = true;
-                  }
-                  else if(versionsInfoModus == 1 && (importantUpdate || versionUpdate))
-                  {
-                     showInfo = true;
-                  }
-                  else if(versionsInfoModus == 0 && versionUpdate)
-                  {
-                     showInfo = true;
-                  }
-
-                  if(showInfo)
-                  {
-                     String downloadLink = "";
-                     JsonArray arr = jsonObject.getAsJsonArray("assets");
-                     for (int i = 0; i < arr.size(); i++) {
-                        String name = arr.get(i).getAsJsonObject().get("name").getAsString();
-                        if(name.equals("AJCoreGUI.zip")) {
-                           downloadLink = arr.get(i).getAsJsonObject().get("browser_download_url").getAsString();
-                        }
-                     }
-
-                     String finaldownloadLink = downloadLink;
-                     SwingUtilities.invokeLater(() -> {
-                        UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(theApp, aktuellsteVersion, finaldownloadLink, finaldownloadLink);
-                        updateInformationDialog.setVisible(true);
-                     });
-                  }
-               }
-            }
-            catch(Exception e)
-            {
-               if(logger.isEnabledFor(Level.INFO))
-               {
-                  logger.info("Aktualisierungsinformationen konnten nicht geladen werden. Server down?");
-               }
-            }
-
-            if(logger.isEnabledFor(Level.DEBUG))
-            {
-               logger.debug("VersionWorkerThread beendet. " + this);
-            }
-         }
-      };
-
-      versionWorker.start();
+      VersionChecker.check();
    }
 
    public void informWrongPassword()
@@ -1765,24 +1629,20 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       {
          super(lookAFeelToUse.getName());
          this.lookAFeel = lookAFeelToUse;
-         addItemListener(new ItemListener()
+         addItemListener(ae -> {
+            if(isSelected())
             {
-               public void itemStateChanged(ItemEvent ae)
+               try
                {
-                  if(isSelected())
-                  {
-                     try
-                     {
-                        UIManager.setLookAndFeel(lookAFeel.getClassName());
-                        SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
-                     }
-                     catch(Exception ex)
-                     {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-                     }
-                  }
+                  UIManager.setLookAndFeel(lookAFeel.getClassName());
+                  SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
                }
-            });
+               catch(Exception ex)
+               {
+                  logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+               }
+            }
+         });
       }
    }
 }

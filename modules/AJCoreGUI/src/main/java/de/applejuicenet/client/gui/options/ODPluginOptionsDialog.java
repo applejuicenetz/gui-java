@@ -60,13 +60,7 @@ public class ODPluginOptionsDialog extends JDialog
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      schliessen.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent ae)
-            {
-               ODPluginOptionsDialog.this.dispose();
-            }
-         });
+      schliessen.addActionListener(ae -> ODPluginOptionsDialog.this.dispose());
 
       String title = pluginConnector.getTitle() + " - ";
 
