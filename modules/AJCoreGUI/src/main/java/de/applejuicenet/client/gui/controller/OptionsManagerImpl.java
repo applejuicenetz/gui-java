@@ -47,12 +47,12 @@ public class OptionsManagerImpl implements OptionsManager{
         return propertiesManager.getSprache();
     }
 
-    public int getVersionsinfoModus() {
-        return propertiesManager.getVersionsinfoModus();
+    public boolean getUpdateInfo() {
+        return propertiesManager.getUpdateInfo();
     }
 
-    public void setVersionsinfoModus(int versionsInfoModus) {
-        propertiesManager.setVersionsinfoModus(versionsInfoModus);
+    public void setUpdateInfo(boolean UpdateInfo) {
+        propertiesManager.setUpdateInfo(UpdateInfo);
     }
 
     public boolean isErsterStart() {

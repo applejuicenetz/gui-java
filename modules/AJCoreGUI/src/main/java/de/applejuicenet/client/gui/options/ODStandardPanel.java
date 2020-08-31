@@ -12,8 +12,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -27,8 +25,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -87,8 +83,8 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
    private JDialog            parent;
    private AJSettings         ajSettings;
    private TKLComboBox        cmbLog;
-   private TKLComboBox        updateInfoModus;
-   private TKLCheckBox        loadPlugins           = new TKLCheckBox();
+   private TKLCheckBox        updateNotification = new TKLCheckBox();
+   private TKLCheckBox        loadPlugins        = new TKLCheckBox();
    private Logger             logger;
    private ConnectionSettings remote;
    private Icon               menuIcon;
@@ -123,18 +119,9 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       return ((LevelItem) cmbLog.getSelectedItem()).getLevel();
    }
 
-   public int getVersionsinfoModus()
+   public boolean getUpdateInfo()
    {
-      if(updateInfoModus.getSelectedIndex() == -1)
-      {
-         return 1;
-      }
-      else
-      {
-         UpdateInfoItem selectedItem = (UpdateInfoItem) updateInfoModus.getSelectedItem();
-
-         return selectedItem.getModus();
-      }
+      return updateNotification.isSelected();
    }
 
    public String getBrowserPfad()
@@ -179,13 +166,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       levelItems[2] = new LevelItem(Level.OFF, languageSelector.getFirstAttrbuteByTagName("javagui.options.logging.off"));
       menuText      = languageSelector.getFirstAttrbuteByTagName("einstform.standardsheet.caption");
       cmbLog        = new TKLComboBox(levelItems);
-      cmbLog.addItemListener(new ItemListener()
-         {
-            public void itemStateChanged(ItemEvent e)
-            {
-               dirty = true;
-            }
-         });
+      cmbLog.addItemListener(e -> dirty = true);
 
       int index = 0;
 
@@ -206,57 +187,11 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
 
       panel8.add(cmbLog);
 
-      updateInfoModus = new TKLComboBox();
-      UpdateInfoItem item0 = new UpdateInfoItem(0,
-                                                languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.updateinfo0"));
-      UpdateInfoItem item1 = new UpdateInfoItem(1,
-                                                languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.updateinfo1"));
-      UpdateInfoItem item2 = new UpdateInfoItem(2,
-                                                languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.updateinfo2"));
+      updateNotification.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.updateinfotext"));
+      updateNotification.setSelected(optionsManager.getUpdateInfo());
+      updateNotification.addItemListener(e -> dirty = true);
 
-      updateInfoModus.addItem(item0);
-      updateInfoModus.addItem(item1);
-      updateInfoModus.addItem(item2);
-      int infoModus = optionsManager.getVersionsinfoModus();
 
-      switch(infoModus)
-      {
-
-         case 0:
-         {
-            updateInfoModus.setSelectedItem(item0);
-            break;
-         }
-
-         case 1:
-         {
-            updateInfoModus.setSelectedItem(item1);
-            break;
-         }
-
-         case 2:
-         {
-            updateInfoModus.setSelectedItem(item2);
-            break;
-         }
-
-         default:
-            updateInfoModus.setSelectedIndex(-1);
-      }
-
-      updateInfoModus.addItemListener(new ItemListener()
-         {
-            public void itemStateChanged(ItemEvent e)
-            {
-               dirty = true;
-            }
-         });
-
-      JPanel panel9  = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-      JLabel label10 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.updateinfotext"));
-
-      panel9.add(label10);
-      panel9.add(updateInfoModus);
 
       setLayout(new BorderLayout());
       port.setHorizontalAlignment(JLabel.RIGHT);
@@ -303,13 +238,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
 
       selectStandardBrowser.addMouseListener(new SelectBrowserMouseListener());
 
-      loadPlugins.addChangeListener(new ChangeListener()
-         {
-            public void stateChanged(ChangeEvent e)
-            {
-               dirty = true;
-            }
-         });
+      loadPlugins.addChangeListener(e -> dirty = true);
 
       GridBagConstraints constraints = new GridBagConstraints();
 
@@ -319,14 +248,16 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       constraints.gridy      = 0;
       constraints.insets.top = 5;
 
-      JPanel panel1          = new JPanel(new GridBagLayout());
+      JPanel panel1  = new JPanel(new GridBagLayout());
       JPanel panel2  = new JPanel(new GridBagLayout());
       JPanel panel3  = new JPanel(new GridBagLayout());
       JPanel panel4  = new JPanel(new GridBagLayout());
       JPanel panel7  = new JPanel(new GridBagLayout());
       JPanel panel10 = new JPanel(new GridBagLayout());
+      JPanel panel9  = new JPanel(new FlowLayout(FlowLayout.RIGHT));
       JPanel panel11 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
+      panel9.add(updateNotification);
       panel11.add(loadPlugins);
 
       constraints.insets.right = 5;
@@ -389,6 +320,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       panel6.add(hint5, constraints);
       constraints.gridy = 7;
       constraints.gridx = 0;
+      constraints.gridwidth = 5;
       panel6.add(panel9, constraints);
       constraints.gridy = 8;
       constraints.gridx = 0;
@@ -403,7 +335,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       nick.confirmNewValue();
       browser.confirmNewValue();
       cmbLog.confirmNewValue();
-      updateInfoModus.confirmNewValue();
+      updateNotification.confirmNewValue();
       loadPlugins.confirmNewValue();
 
       if(DesktopTools.isAdvancedSupported() && !System.getProperty("os.name").toLowerCase().contains("linux"))

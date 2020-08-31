@@ -26,6 +26,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
@@ -51,11 +52,11 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  */
 public class OptionsDialog extends JDialog
 {
+   private static final Logger logger = Logger.getLogger(OptionsDialog.class);
    private JFrame             parent;
    private JButton            speichern;
    private JButton            abbrechen;
    private AJSettings         ajSettings;
-   private Logger             logger;
    private ConnectionSettings remote;
    private JList              menuList;
    private OptionsRegister[]  optionPanels;
@@ -65,7 +66,6 @@ public class OptionsDialog extends JDialog
    public OptionsDialog(JFrame parent) throws HeadlessException
    {
       super(parent, true);
-      logger = Logger.getLogger(getClass());
       try
       {
          this.parent = parent;
@@ -99,32 +99,16 @@ public class OptionsDialog extends JDialog
          registerPanel.add(optionPanels[i].getMenuText(), (JPanel) optionPanels[i]);
       }
 
-      menuList.addListSelectionListener(new ListSelectionListener()
-         {
-            public void valueChanged(ListSelectionEvent listSelectionEvent)
-            {
-               Object selected = menuList.getSelectedValue();
+      menuList.addListSelectionListener(listSelectionEvent -> {
+         Object selected = menuList.getSelectedValue();
 
-               registerLayout.show(registerPanel, ((OptionsRegister) selected).getMenuText());
-            }
-         });
+         registerLayout.show(registerPanel, ((OptionsRegister) selected).getMenuText());
+      });
       menuList.setSelectedValue(optionPanels[0], true);
       speichern = new JButton(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
       abbrechen = new JButton(languageSelector.getFirstAttrbuteByTagName("einstform.Button2.caption"));
-      abbrechen.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent e)
-            {
-               dispose();
-            }
-         });
-      speichern.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent e)
-            {
-               speichern();
-            }
-         });
+      abbrechen.addActionListener(e -> dispose());
+      speichern.addActionListener(e -> speichern());
 
       JPanel     panel = new JPanel();
       FlowLayout flowL = new FlowLayout();
@@ -158,10 +142,10 @@ public class OptionsDialog extends JDialog
             om.saveAJSettings(ajSettings);
             om.setStandardBrowser(((ODStandardPanel) optionPanels[0]).getBrowserPfad());
             om.loadPluginsOnStartup(((ODStandardPanel) optionPanels[0]).shouldLoadPluginsOnStartup());
+            om.setUpdateInfo(((ODStandardPanel) optionPanels[0]).getUpdateInfo());
             if(((ODStandardPanel) optionPanels[0]).isDirty())
             {
                om.setLogLevel(((ODStandardPanel) optionPanels[0]).getLogLevel());
-               om.setVersionsinfoModus(((ODStandardPanel) optionPanels[0]).getVersionsinfoModus());
             }
 
             etwasGeaendert = true;
