@@ -4,8 +4,8 @@
 
 - [red171] in der `ajcorefassade` das Release-Info Request um übermittlung des `size` Parameters ergänzt
 - [red171] die Konfiguration der Release-Info wird nun ebenfalls im `user.home` gespeichert, außerdem ist der API Pfad konfigurierbar
-- [red171] Paket und Plugins wird nun über Maven, statt Ant gebaut
-- [red171] alle GUI Plugins mit Java8 und UTF-8 Encoding neu kompiliert, Sprachdateien zu UTF-8 umgewandelt
+- [red171] Gui und Plugins werden mit Maven kompiliert, Pakete (leider) noch via `ant` komprimiert
+- [red171] alle GUI Plugins mit Java8 und UTF-8 Encoding neu kompiliert, Sprachdateien mit UTF-8 neu kodiert 
 
 **0.82.1**
 
