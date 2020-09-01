@@ -48,7 +48,3 @@ Das letzte `%s` wird mit dem vollständigen `ajfsp` Link ersetzt (urlencoded).
 1. Version in `de.applejuicenet.client.gui.AppleJuiceDialog.GUI_VERSION` anpassen
 2. Changelog anpassen
 3. Änderungen committen und taggen
-4. Warten bis die Github Release Action durchgelaufen ist
-5. in der `snapcraft.yaml` Die Version anheben (darf wirklich erst nach dem erstellen des Releases passieren)
-6. Änderungen der `snapcraft.yaml` commiten (ohne Taggen) > triggert dann einen build für http://snapcraft.io/applejuice-gui/builds
-
