@@ -55,3 +55,10 @@ jobs:
                     token: ${{ secrets.REPO_DISPATCH_TOKEN }}
                     repository: applejuicenet/homebrew-packages
                     event-type: gui-update
+
+            -   name: trigger snapcraft update
+                uses: peter-evans/repository-dispatch@v1
+                with:
+                    token: ${{ secrets.REPO_DISPATCH_TOKEN }}
+                    repository: applejuicenet/gui-java
+                    event-type: snapcraft-update
