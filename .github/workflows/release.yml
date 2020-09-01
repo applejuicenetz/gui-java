@@ -48,3 +48,10 @@ jobs:
                         target/AJCoreGUI.zip.sha256.txt
                         target/AJCoreGUI.macOS.zip
                         target/AJCoreGUI.macOS.zip.sha256.txt
+
+            -   name: trigger homebrew update
+                uses: peter-evans/repository-dispatch@v1
+                with:
+                    token: ${{ secrets.REPO_DISPATCH_TOKEN }}
+                    repository: applejuicenet/homebrew-packages
+                    event-type: gui-update
