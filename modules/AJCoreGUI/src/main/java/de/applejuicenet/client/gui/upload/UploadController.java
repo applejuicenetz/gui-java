@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import de.applejuicenet.client.shared.ReleaseInfo;
 import org.apache.log4j.Level;
 
 import de.applejuicenet.client.AppleJuiceClient;
@@ -45,6 +46,7 @@ public class UploadController extends GuiController
    private static final int        COPY_TO_CLIPBOARD      = 4;
    private static final int        HEADER_WAITING_DRAGGED = 8;
    private static final int        HEADER_WAITING_POPUP   = 9;
+   private static final int        RELEASE_INFO           = 18;
    private final UploadPanel       uploadPanel;
    private boolean                 componentSelected      = false;
    private boolean                 initialized            = false;
@@ -93,6 +95,7 @@ public class UploadController extends GuiController
       uploadPanel.getUploadActiveTable().addMouseListener(new UploadTableMouseListener(this, TABLE_MOUSE_CLICKED));
       uploadPanel.getUploadActiveTable().addMouseListener(new UploadTablePopupListener(this, TABLE_POPUP));
       uploadPanel.getMnuCopyToClipboard().addActionListener(new GuiControllerActionListener(this, COPY_TO_CLIPBOARD));
+      uploadPanel.getMnuReleaseInfo().addActionListener(new GuiControllerActionListener(this, RELEASE_INFO));
 
       uploadPanel.getUploadWaitingTable().getTableHeader().addMouseListener(new HeaderPopupListener(this, HEADER_WAITING_POPUP));
       uploadPanel.getUploadWaitingTable().getTableHeader()
@@ -146,9 +149,46 @@ public class UploadController extends GuiController
             break;
          }
 
+         case RELEASE_INFO:
+         {
+            showReleaseInfo();
+            break;
+         }
+
          default:
             logger.error("Unregistrierte EventId " + actionId);
       }
+   }
+
+   private void showReleaseInfo()
+   {
+      int selected = uploadPanel.getUploadActiveTable().getSelectedRow();
+
+      if(selected == -1)
+      {
+         return;
+      }
+
+      Share shareObj = getShareObject4SelectedRow(selected);
+
+      if(shareObj != null)
+      {
+         ReleaseInfo.handle(shareObj.getShortfilename(), shareObj.getCheckSum(), shareObj.getSize());
+      }
+   }
+
+   private Share getShareObject4SelectedRow(int selected) {
+      Upload upload = uploadPanel.getUploadActiveTableModel().getRow(selected);
+
+      Integer             shareFileId = upload.getShareFileID();
+      Map<Integer, Share> share       = AppleJuiceClient.getAjFassade().getShare(false);
+
+      if(share.containsKey(shareFileId))
+      {
+         return share.get(shareFileId);
+      }
+
+      return null;
    }
 
    private void headerDragged()
@@ -235,26 +275,15 @@ public class UploadController extends GuiController
          return;
       }
 
-      Upload              upload = uploadPanel.getUploadActiveTableModel().getRow(selected);
+      Share shareObj = getShareObject4SelectedRow(selected);
 
-      Integer             shareFileId = upload.getShareFileID();
-      Map<Integer, Share> share       = AppleJuiceClient.getAjFassade().getShare(false);
+      if(shareObj != null) {
+         Clipboard    cb     = Toolkit.getDefaultToolkit().getSystemClipboard();
+         StringBuffer toCopy = new StringBuffer();
 
-      if(share.containsKey(shareFileId))
-      {
-         Share shareObj = share.get(shareFileId);
-
-         if(share != null)
-         {
-            Clipboard    cb     = Toolkit.getDefaultToolkit().getSystemClipboard();
-            StringBuffer toCopy = new StringBuffer();
-
-            toCopy.append("ajfsp://file|");
-            toCopy.append(shareObj.getShortfilename() + "|" + shareObj.getCheckSum() + "|" + shareObj.getSize() + "/");
-            StringSelection contents = new StringSelection(toCopy.toString());
-
-            cb.setContents(contents, null);
-         }
+         toCopy.append(shareObj.getAjfspLink());
+         StringSelection contents = new StringSelection(toCopy.toString());
+         cb.setContents(contents, null);
       }
    }
 
@@ -492,6 +521,7 @@ public class UploadController extends GuiController
 
       warteschlangeVoll = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.warteschlangevoll");
       uploadPanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
+      uploadPanel.getMnuReleaseInfo().setText(languageSelector.getFirstAttrbuteByTagName("releaseinfo.menu"));
    }
 
    protected void contentChanged(DATALISTENER_TYPE type, final Object content)

@@ -140,4 +140,8 @@ class ShareDO implements Share
    {
       this.searchCount = searchCount;
    }
+
+   public String getAjfspLink() {
+      return String.format("ajfsp://file|%s|%s|%s/", getShortfilename(), getCheckSum(), getSize());
+   }
 }

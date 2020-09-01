@@ -3,8 +3,12 @@
 **0.83.1**
 
 - [red171] die Konfiguration der Release-Info wird nun ebenfalls im `user.home` gespeichert, außerdem ist der API Pfad konfigurierbar
-- [red171] der Release Info Button öffnet nun die konfigurierte URL
-- [red171] Gui und Plugins werden mit Maven kompiliert, Pakete (leider) noch via `ant` komprimiert
+- [red171] der Release Info Button öffnet nun eine konfigurierte URL [#9](../../issues/9)
+- [red171] Im Upload Tab ist jetzt auch Kontext Menü [#10](../../issues/10)
+- [red171] Gui und Plugins werden mit Maven kompiliert, Pakete (leider) noch via `ant` komprimiert [#4](../../issues/4)
+- [red171] das IRC Plugin wurde entfernt [#3](../../issues/3)
+- [red171] für die Updateüberprüfung gibt es nur einen an/aus Schalter [#1](../../issues/1) 
+- [red171] der "neue Version verfügbar" Dialog hat nur noch eine URL und zeigt auf Github Release [#2](../../issues/2)
 - [red171] alle GUI Plugins mit Java8 und UTF-8 Encoding neu kompiliert, Sprachdateien mit UTF-8 neu kodiert 
 
 **0.82.1**
