@@ -4,17 +4,11 @@
 
 package de.applejuicenet.client.gui.upload;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Date;
 
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -67,7 +61,8 @@ public class UploadPanel extends TklPanel implements RegisterI
 {
    private JLabel                  uploadListeLabel               = new JLabel("0 Clients in Deiner Uploadliste");
    private JPopupMenu              popupMenu                      = new JPopupMenu();
-   private JMenuItem               itemCopyToClipboard;
+   private JMenuItem               itemCopyToClipboard            = new JMenuItem();
+   private JMenuItem               itemReleaseInfo                = new JMenuItem();
    private JPopupMenu              columnActivePopup              = new JPopupMenu();
    private TableColumn[]           columnsActiveUploads           = new TableColumn[7];
    private JCheckBoxMenuItem[]     columnPopupItemsActiveUploads  = new JCheckBoxMenuItem[columnsActiveUploads.length];
@@ -118,6 +113,26 @@ public class UploadPanel extends TklPanel implements RegisterI
       uploadActiveTable.getColumnModel().getColumn(4).setCellRenderer(new ProgressTableCellRenderer());
       uploadActiveTable.getColumnModel().getColumn(5).setCellRenderer(new UploadTablePrioCellRenderer());
       uploadActiveTable.getColumnModel().getColumn(6).setCellRenderer(new VersionTableCellRenderer());
+
+      uploadActiveTable.addMouseListener(new MouseAdapter()
+      {
+         @Override
+         public void mouseClicked(MouseEvent e)
+         {
+            if(SwingUtilities.isRightMouseButton(e))
+            {
+
+               int row = uploadActiveTable.rowAtPoint(e.getPoint());
+
+               if(!uploadActiveTable.getSelectionModel().isSelectedIndex(row))
+               {
+                  uploadActiveTable.getSelectionModel().setSelectionInterval(row, row);
+               }
+
+               maybeShowUploadPopup(e);
+            }
+         }
+      });
 
       TableColumnModel modelActive = uploadActiveTable.getColumnModel();
 
@@ -260,14 +275,31 @@ public class UploadPanel extends TklPanel implements RegisterI
 
       JScrollPane aScrollPaneWaiting = new JScrollPane(uploadWaitingTable);
 
+      IconManager im = IconManager.getInstance();
+
       aScrollPaneWaiting.setBackground(uploadWaitingTable.getBackground());
       aScrollPaneWaiting.getViewport().setOpaque(false);
       add(aScrollPaneWaiting, "1, 2");
 
       add(uploadListeLabel, "1, 3, L, T");
-      itemCopyToClipboard = new JMenuItem();
-      itemCopyToClipboard.setIcon(IconManager.getInstance().getIcon("clipboard"));
+      itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
       popupMenu.add(itemCopyToClipboard);
+
+      itemReleaseInfo.setIcon(im.getIcon("hint"));
+
+      popupMenu.add(itemReleaseInfo);
+   }
+
+   private void maybeShowUploadPopup(MouseEvent e)
+   {
+      int[] selected = uploadActiveTable.getSelectedRows();
+
+      if(null == selected || selected.length == 0)
+      {
+         return;
+      }
+
+      getPopup().show(uploadActiveTable, e.getX(), e.getY());
    }
 
    public int[] getColumnActiveWidths()
@@ -357,5 +389,10 @@ public class UploadPanel extends TklPanel implements RegisterI
    public JMenuItem getMnuCopyToClipboard()
    {
       return itemCopyToClipboard;
+   }
+
+   public JMenuItem getMnuReleaseInfo()
+   {
+      return itemReleaseInfo;
    }
 }
