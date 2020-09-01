@@ -28,6 +28,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import de.applejuicenet.client.shared.ReleaseInfo;
 import org.apache.log4j.Level;
 
 import de.applejuicenet.client.AppleJuiceClient;
@@ -54,7 +55,6 @@ import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.gui.upload.HeaderPopupListener;
 import de.applejuicenet.client.gui.upload.UploadMouseMotionListener;
 import de.applejuicenet.client.shared.DesktopTools;
-import de.applejuicenet.client.shared.ReleaseInfoDialog;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 public class DownloadController extends GuiController
@@ -378,7 +378,7 @@ public class DownloadController extends GuiController
 
       Download curDownload = selectedItems[0];
 
-      ReleaseInfoDialog.showReleaseInfo(curDownload.getHash(), (long) curDownload.getGroesse());
+      ReleaseInfo.handle(curDownload.getFilename(), curDownload.getHash(), (long) curDownload.getGroesse());
    }
 
    private void headerDownloadsDragged()

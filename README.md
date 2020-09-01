@@ -23,33 +23,21 @@ Für Linux wurde eine `snap` Paket zusammengestellt.
 
 [![Installieren vom Snap Store](https://snapcraft.io/static/images/badges/de/snap-store-white.svg)](https://snapcraft.io/applejuice-gui)
 
-
-
 ## Themes
-weitere Themes gibts [hier](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks)
 
-## Release Info
+Das GUI hat einen Theme Support, weitere Themes gibts [hier](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks)
 
-Im `~/appleJuice/gui/` Ordner muss eine `xrel.properties` Datei mit folgender Konfiguration vorhanden sein:
+## mehr Informationen Button
+
+Der `Suche nach mehr Informationen` Button im Kontextmenü öffnet eine URL, mit dem dahinterliegenden `ajfsp` Link als GET Parameter.
+
+Dafür muss im `~/appleJuice/gui/` Ordner eine `rel.properties` Datei mit folgender Konfiguration vorhanden sein (wird automatisch angelegt):
 
 ```ini
-host=https://api.ajdomain.tld
-port=443
-path=/api/ajfsp/%s_%s.json
+host=https://relinfo.tld/api/ajfsp/?link=%s
 ```
-Im `path` ist der erste `%s` die `md5sum` und der zweite `%s` die Größe in `bytes` (wie im `ajfsp` Link).
 
-Vom Core `0.31.149.111` sieht das dann wie folgt aus `65571b8f2f2e1ea2aceb38b8017cf871_318936.json`.
-
-Der dazugehörige `ajfsp` Links wäre folgender `ajfsp://file|ajcore-0.31.149.111.jar|65571b8f2f2e1ea2aceb38b8017cf871|318936/`
-
-Es wird folgendes JSON Format und ein Status Code `200` erwartet:
-
-```json5
-{
-"fsk": false,   // TODO json vervollständigen
-}
-```
+Das letzte `%s` wird mit dem vollständigen `ajfsp` Link ersetzt (urlencoded).
 
 ### neues Release in dieser Reihenfolge erstellen
 

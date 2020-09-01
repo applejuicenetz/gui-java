@@ -352,41 +352,35 @@ public class DownloadPanel extends TklPanel
          columnDownloadPopupItems[i] = new JCheckBoxMenuItem((String) downloadColumns[i].getHeaderValue());
          final int x                 = i;
 
-         columnDownloadPopupItems[i].addActionListener(new ActionListener()
+         columnDownloadPopupItems[i].addActionListener(ae -> {
+            if(columnDownloadPopupItems[x].isSelected())
             {
-               public void actionPerformed(ActionEvent ae)
+               downloadActiveTable.getColumnModel().addColumn(downloadColumns[x]);
+               PositionManagerImpl.getInstance().setDownloadColumnVisible(x, true);
+               PositionManagerImpl.getInstance()
+               .setDownloadColumnIndex(x,
+                                       downloadActiveTable.getColumnModel().getColumnIndex(downloadColumns[x].getIdentifier()));
+            }
+            else
+            {
+               downloadActiveTable.getColumnModel().removeColumn(downloadColumns[x]);
+               PositionManagerImpl.getInstance().setDownloadColumnVisible(x, false);
+               for(int y = 0; y < downloadColumns.length; y++)
                {
-                  if(columnDownloadPopupItems[x].isSelected())
+                  try
                   {
-                     downloadActiveTable.getColumnModel().addColumn(downloadColumns[x]);
-                     PositionManagerImpl.getInstance().setDownloadColumnVisible(x, true);
                      PositionManagerImpl.getInstance()
-                     .setDownloadColumnIndex(x,
-                                             downloadActiveTable.getColumnModel().getColumnIndex(downloadColumns[x].getIdentifier()));
+                     .setDownloadColumnIndex(y,
+                                             downloadActiveTable.getColumnModel()
+                                             .getColumnIndex(downloadColumns[y].getIdentifier()));
                   }
-                  else
+                  catch(IllegalArgumentException niaE)
                   {
-                     downloadActiveTable.getColumnModel().removeColumn(downloadColumns[x]);
-                     PositionManagerImpl.getInstance().setDownloadColumnVisible(x, false);
-                     for(int y = 0; y < downloadColumns.length; y++)
-                     {
-                        try
-                        {
-                           PositionManagerImpl.getInstance()
-                           .setDownloadColumnIndex(y,
-                                                   downloadActiveTable.getColumnModel()
-                                                   .getColumnIndex(downloadColumns[y].getIdentifier()));
-                        }
-                        catch(IllegalArgumentException niaE)
-                        {
-                           ;
-
-                           //nix zu tun
-                        }
-                     }
+                     //nix zu tun
                   }
                }
-            });
+            }
+         });
          columnDownloadPopup.add(columnDownloadPopupItems[i]);
       }
 
@@ -434,42 +428,36 @@ public class DownloadPanel extends TklPanel
          columnDownloadSourcesPopupItems[i] = new JCheckBoxMenuItem((String) downloadSourceColumns[i].getHeaderValue());
          final int x                        = i;
 
-         columnDownloadSourcesPopupItems[i].addActionListener(new ActionListener()
+         columnDownloadSourcesPopupItems[i].addActionListener(ae -> {
+            if(columnDownloadSourcesPopupItems[x].isSelected())
             {
-               public void actionPerformed(ActionEvent ae)
+               downloadSourceTable.getColumnModel().addColumn(downloadSourceColumns[x]);
+               PositionManagerImpl.getInstance().setDownloadSourcesColumnVisible(x, true);
+               PositionManagerImpl.getInstance()
+               .setDownloadSourcesColumnIndex(x,
+                                              downloadSourceTable.getColumnModel()
+                                              .getColumnIndex(downloadSourceColumns[x].getIdentifier()));
+            }
+            else
+            {
+               downloadSourceTable.getColumnModel().removeColumn(downloadSourceColumns[x]);
+               PositionManagerImpl.getInstance().setDownloadSourcesColumnVisible(x, false);
+               for(int y = 0; y < downloadSourceColumns.length; y++)
                {
-                  if(columnDownloadSourcesPopupItems[x].isSelected())
+                  try
                   {
-                     downloadSourceTable.getColumnModel().addColumn(downloadSourceColumns[x]);
-                     PositionManagerImpl.getInstance().setDownloadSourcesColumnVisible(x, true);
                      PositionManagerImpl.getInstance()
-                     .setDownloadSourcesColumnIndex(x,
+                     .setDownloadSourcesColumnIndex(y,
                                                     downloadSourceTable.getColumnModel()
-                                                    .getColumnIndex(downloadSourceColumns[x].getIdentifier()));
+                                                    .getColumnIndex(downloadSourceColumns[y].getIdentifier()));
                   }
-                  else
+                  catch(IllegalArgumentException niaE)
                   {
-                     downloadSourceTable.getColumnModel().removeColumn(downloadSourceColumns[x]);
-                     PositionManagerImpl.getInstance().setDownloadSourcesColumnVisible(x, false);
-                     for(int y = 0; y < downloadSourceColumns.length; y++)
-                     {
-                        try
-                        {
-                           PositionManagerImpl.getInstance()
-                           .setDownloadSourcesColumnIndex(y,
-                                                          downloadSourceTable.getColumnModel()
-                                                          .getColumnIndex(downloadSourceColumns[y].getIdentifier()));
-                        }
-                        catch(IllegalArgumentException niaE)
-                        {
-                           ;
-
-                           //nix zu tun
-                        }
-                     }
+                     //nix zu tun
                   }
                }
-            });
+            }
+         });
          columnDownloadSourcesPopup.add(columnDownloadSourcesPopupItems[i]);
       }
 

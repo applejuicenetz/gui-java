@@ -27,6 +27,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import de.applejuicenet.client.shared.ReleaseInfo;
 import org.apache.log4j.Logger;
 
 import de.applejuicenet.client.AppleJuiceClient;
@@ -44,7 +45,6 @@ import de.applejuicenet.client.gui.search.table.SearchEntryIconRenderer;
 import de.applejuicenet.client.gui.search.table.SearchEntrySizeRenderer;
 import de.applejuicenet.client.gui.search.table.SearchTableModel;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.ReleaseInfoDialog;
 import de.applejuicenet.client.shared.SoundPlayer;
 
 /**
@@ -142,8 +142,7 @@ public class SearchResultPanel extends JPanel
 
                SearchEntry curSearchEntry = searchResultTableModel.getRow(sel[0]);
 
-               ReleaseInfoDialog.showReleaseInfo(curSearchEntry.getChecksumme(), true,
-                                                 curSearchEntry.getFileNames()[0].getDateiName(), curSearchEntry.getGroesse());
+               ReleaseInfo.handle(curSearchEntry.getFileNames()[0].getDateiName(), curSearchEntry.getChecksumme(), curSearchEntry.getGroesse());
             }
          });
       popup.add(mnuReleaseInfo);

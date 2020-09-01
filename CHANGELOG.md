@@ -1,9 +1,9 @@
 # Changelog
 
-**0.83.0**
+**0.83.1**
 
-- [red171] in der `ajcorefassade` das Release-Info Request um übermittlung des `size` Parameters ergänzt
 - [red171] die Konfiguration der Release-Info wird nun ebenfalls im `user.home` gespeichert, außerdem ist der API Pfad konfigurierbar
+- [red171] der Release Info Button öffnet nun die konfigurierte URL
 - [red171] Gui und Plugins werden mit Maven kompiliert, Pakete (leider) noch via `ant` komprimiert
 - [red171] alle GUI Plugins mit Java8 und UTF-8 Encoding neu kompiliert, Sprachdateien mit UTF-8 neu kodiert 
 

@@ -41,7 +41,7 @@ import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.gui.share.tree.DirectoryNode;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
 import de.applejuicenet.client.shared.DesktopTools;
-import de.applejuicenet.client.shared.ReleaseInfoDialog;
+import de.applejuicenet.client.shared.ReleaseInfo;
 import de.applejuicenet.client.shared.SwingWorker;
 
 /**
@@ -253,7 +253,7 @@ public class ShareController extends GuiController
       {
          Share share = ((ShareNode) obj[0]).getShare();
 
-         ReleaseInfoDialog.showReleaseInfo(share.getCheckSum(), share.getSize());
+         ReleaseInfo.handle(share.getShortfilename(), share.getCheckSum(), (long) share.getSize());
       }
    }
 

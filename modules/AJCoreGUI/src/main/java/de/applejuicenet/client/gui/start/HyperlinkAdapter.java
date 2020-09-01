@@ -29,7 +29,7 @@ import de.applejuicenet.client.shared.DesktopTools;
  */
 public class HyperlinkAdapter implements HyperlinkListener
 {
-   private Logger    logger;
+   private static Logger    logger;
    private Component parent;
 
    public HyperlinkAdapter(Component parent)
@@ -65,7 +65,7 @@ public class HyperlinkAdapter implements HyperlinkListener
       }
    }
 
-   private void executeLink(String link)
+   public static void executeLink(String link)
    {
       try
       {
