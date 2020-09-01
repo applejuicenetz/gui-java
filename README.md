@@ -27,6 +27,10 @@ Für Linux wurde eine `snap` Paket zusammengestellt.
 
 Das GUI hat einen Theme Support, weitere Themes gibts [hier](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks)
 
+## Changelog
+
+Ein aktuelles Changelog befindet sich [hier](CHANGELOG.md)
+
 ## mehr Informationen Button
 
 Der `Suche nach mehr Informationen` Button im Kontextmenü öffnet eine URL, mit dem dahinterliegenden `ajfsp` Link als GET Parameter.
