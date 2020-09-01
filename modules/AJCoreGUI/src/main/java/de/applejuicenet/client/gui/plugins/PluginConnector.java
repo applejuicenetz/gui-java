@@ -212,7 +212,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
     * @param type int: Typ des angesprochenen Listeners
     * @param content Object: Geaenderte Werte, Typ abhaengig vom
     *   angesprochenen Listener
-    * @see DataUpdateListener.class
+    * @see DataUpdateListener
     */
    public abstract void fireContentChanged(DATALISTENER_TYPE type, Object content);
 

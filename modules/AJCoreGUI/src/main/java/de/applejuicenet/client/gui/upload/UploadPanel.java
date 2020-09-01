@@ -99,7 +99,7 @@ public class UploadPanel extends TklPanel implements RegisterI
    {
       double     p     = TableLayout.PREFERRED;
       double     f     = TableLayout.FILL;
-      double[][] sizes = 
+      double[][] sizes =
                          {
                             {5, f, 5},
                             {5, f, f, p}
@@ -127,41 +127,35 @@ public class UploadPanel extends TklPanel implements RegisterI
          columnPopupItemsActiveUploads[i] = new JCheckBoxMenuItem((String) columnsActiveUploads[i].getHeaderValue());
          final int x                      = i;
 
-         columnPopupItemsActiveUploads[i].addActionListener(new ActionListener()
+         columnPopupItemsActiveUploads[i].addActionListener(ae -> {
+            if(columnPopupItemsActiveUploads[x].isSelected())
             {
-               public void actionPerformed(ActionEvent ae)
+               uploadActiveTable.getColumnModel().addColumn(columnsActiveUploads[x]);
+               PositionManagerImpl.getInstance().setUploadColumnVisible(x, true);
+               PositionManagerImpl.getInstance()
+               .setUploadColumnIndex(x,
+                                     uploadActiveTable.getColumnModel().getColumnIndex(columnsActiveUploads[x].getIdentifier()));
+            }
+            else
+            {
+               uploadActiveTable.getColumnModel().removeColumn(columnsActiveUploads[x]);
+               PositionManagerImpl.getInstance().setUploadColumnVisible(x, false);
+               for(int y = 0; y < columnsActiveUploads.length; y++)
                {
-                  if(columnPopupItemsActiveUploads[x].isSelected())
+                  try
                   {
-                     uploadActiveTable.getColumnModel().addColumn(columnsActiveUploads[x]);
-                     PositionManagerImpl.getInstance().setUploadColumnVisible(x, true);
                      PositionManagerImpl.getInstance()
-                     .setUploadColumnIndex(x,
-                                           uploadActiveTable.getColumnModel().getColumnIndex(columnsActiveUploads[x].getIdentifier()));
+                     .setUploadColumnIndex(y,
+                                           uploadActiveTable.getColumnModel()
+                                           .getColumnIndex(columnsActiveUploads[y].getIdentifier()));
                   }
-                  else
+                  catch(IllegalArgumentException niaE)
                   {
-                     uploadActiveTable.getColumnModel().removeColumn(columnsActiveUploads[x]);
-                     PositionManagerImpl.getInstance().setUploadColumnVisible(x, false);
-                     for(int y = 0; y < columnsActiveUploads.length; y++)
-                     {
-                        try
-                        {
-                           PositionManagerImpl.getInstance()
-                           .setUploadColumnIndex(y,
-                                                 uploadActiveTable.getColumnModel()
-                                                 .getColumnIndex(columnsActiveUploads[y].getIdentifier()));
-                        }
-                        catch(IllegalArgumentException niaE)
-                        {
-                           ;
-
-                           //nix zu tun
-                        }
-                     }
+                     //nix zu tun
                   }
                }
-            });
+            }
+         });
          columnActivePopup.add(columnPopupItemsActiveUploads[i]);
       }
 
@@ -220,42 +214,38 @@ public class UploadPanel extends TklPanel implements RegisterI
          columnPopupItemsWaitingUploads[i] = new JCheckBoxMenuItem((String) columnsWaitingUploads[i].getHeaderValue());
          final int x                       = i;
 
-         columnPopupItemsWaitingUploads[i].addActionListener(new ActionListener()
+         columnPopupItemsWaitingUploads[i].addActionListener(ae -> {
+            if(columnPopupItemsWaitingUploads[x].isSelected())
             {
-               public void actionPerformed(ActionEvent ae)
+               uploadWaitingTable.getColumnModel().addColumn(columnsWaitingUploads[x]);
+               PositionManagerImpl.getInstance().setUploadWaitingColumnVisible(x, true);
+               PositionManagerImpl.getInstance()
+               .setUploadWaitingColumnIndex(x,
+                                            uploadWaitingTable.getColumnModel()
+                                            .getColumnIndex(columnsWaitingUploads[x].getIdentifier()));
+            }
+            else
+            {
+               uploadWaitingTable.getColumnModel().removeColumn(columnsWaitingUploads[x]);
+               PositionManagerImpl.getInstance().setUploadWaitingColumnVisible(x, false);
+               for(int y = 0; y < columnsWaitingUploads.length; y++)
                {
-                  if(columnPopupItemsWaitingUploads[x].isSelected())
+                  try
                   {
-                     uploadWaitingTable.getColumnModel().addColumn(columnsWaitingUploads[x]);
-                     PositionManagerImpl.getInstance().setUploadWaitingColumnVisible(x, true);
                      PositionManagerImpl.getInstance()
-                     .setUploadWaitingColumnIndex(x,
+                     .setUploadWaitingColumnIndex(y,
                                                   uploadWaitingTable.getColumnModel()
-                                                  .getColumnIndex(columnsWaitingUploads[x].getIdentifier()));
+                                                  .getColumnIndex(columnsWaitingUploads[y].getIdentifier()));
                   }
-                  else
+                  catch(IllegalArgumentException niaE)
                   {
-                     uploadWaitingTable.getColumnModel().removeColumn(columnsWaitingUploads[x]);
-                     PositionManagerImpl.getInstance().setUploadWaitingColumnVisible(x, false);
-                     for(int y = 0; y < columnsWaitingUploads.length; y++)
-                     {
-                        try
-                        {
-                           PositionManagerImpl.getInstance()
-                           .setUploadWaitingColumnIndex(y,
-                                                        uploadWaitingTable.getColumnModel()
-                                                        .getColumnIndex(columnsWaitingUploads[y].getIdentifier()));
-                        }
-                        catch(IllegalArgumentException niaE)
-                        {
-                           ;
+                     ;
 
-                           //nix zu tun
-                        }
-                     }
+                     //nix zu tun
                   }
                }
-            });
+            }
+         });
          columnWaitingPopup.add(columnPopupItemsWaitingUploads[i]);
       }
 
