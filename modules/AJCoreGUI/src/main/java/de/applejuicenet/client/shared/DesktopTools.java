@@ -28,9 +28,6 @@ public class DesktopTools {
 
     public static void browse(URI uri) {
         if (null != desktopToolIF && !System.getProperty("os.name").toLowerCase().contains("linux")) {
-            /**
-             * unter Linux ist #browse() teilweise nicht funktionstuechtig...
-             */
             desktopToolIF.browse(uri);
         } else {
             String browser = OptionsManagerImpl.getInstance().getStandardBrowser();
