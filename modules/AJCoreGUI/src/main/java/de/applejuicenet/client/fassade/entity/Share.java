@@ -15,8 +15,10 @@ public interface Share extends IdOwner{
 	int getPrioritaet();
 
 	long getAskCount();
-	
+
 	long getLastAsked();
-	
+
 	long getSearchCount();
+
+	String getAjfspLink();
 }
