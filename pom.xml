@@ -56,8 +56,7 @@
                                     <zipfileset dir="${basedir}/modules/AJCoreGUI/target/" includes="AJCoreGUI-*.jar" fullpath="AJCoreGUI.app/Contents/Java/AJCoreGUI.jar"/>
                                     <zipfileset dir="${basedir}/modules/logviewer/target/" includes="logviewer-*.jar" fullpath="AJCoreGUI.app/Contents/Java/plugins/logviewer.jar"/>
                                     <zipfileset dir="${basedir}/modules/versionchecker/target/" includes="versionchecker-*.jar" fullpath="AJCoreGUI.app/Contents/Java/plugins/versionchecker.jar"/>
-                                    <zipfileset dir="${basedir}/modules/standardpwdlpolicy/target/" includes="StandardPwdlPolicy-*.jar"
-                                                fullpath="AJCoreGUI.app/Contents/Java/pwdlpolicies/StandardPwdlPolicy.jar"/>
+                                    <zipfileset dir="${basedir}/modules/standardpwdlpolicy/target/" includes="StandardPwdlPolicy-*.jar" fullpath="AJCoreGUI.app/Contents/Java/pwdlpolicies/StandardPwdlPolicy.jar"/>
                                     <zipfileset dir="${basedir}/modules/AJCoreGUI/src/main/resources/" prefix="AJCoreGUI.app/Contents/" includes="Info.plist"/>
                                     <zipfileset dir="${basedir}/modules/AJCoreGUI/src/main/resources/" prefix="AJCoreGUI.app/Contents/Resources" includes="AJCoreGUI.icns"/>
                                     <zipfileset dir="${basedir}/modules/AJCoreGUI/src/main/resources/" prefix="AJCoreGUI.app/Contents/MacOS" includes="universalJavaApplicationStub" filemode="777"/>

@@ -79,9 +79,10 @@ public class LinkListener extends Thread implements CoreStatusListener
                   BufferedReader  reader = new BufferedReader(new InputStreamReader(in));
                   String          line   = reader.readLine();
 
-                  if(line.indexOf("-link=") != -1)
+                  if(line.contains("-link="))
                   {
                      String link = getLinkFromReadLine(line);
+                     link = link.replaceAll("%7C", "|");
 
                      if(link != null)
                      {
