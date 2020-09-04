@@ -380,53 +380,51 @@ public class AppleJuiceClient {
             SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
 
             splash.setProgress(20, "Lade Hauptdialog...");
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    final AppleJuiceDialog theApp = new AppleJuiceDialog();
+            SwingUtilities.invokeLater(() -> {
+                final AppleJuiceDialog theApp = new AppleJuiceDialog();
 
-                    splash.setProgress(100, "GUI geladen...");
-                    PositionManager lm = PositionManagerImpl.getInstance();
+                splash.setProgress(100, "GUI geladen...");
+                PositionManager lm = PositionManagerImpl.getInstance();
 
-                    if (lm.isLegal()) {
-                        theApp.setLocation(lm.getMainXY());
-                        theApp.setSize(lm.getMainDimension());
-                    } else {
-                        Toolkit tk = Toolkit.getDefaultToolkit();
-                        Dimension screenSize = tk.getScreenSize();
-                        Dimension appScreenSize = new Dimension(screenSize.width, screenSize.height);
-                        Insets insets = tk.getScreenInsets(theApp.getGraphicsConfiguration());
+                if (lm.isLegal()) {
+                    theApp.setLocation(lm.getMainXY());
+                    theApp.setSize(lm.getMainDimension());
+                } else {
+                    Toolkit tk = Toolkit.getDefaultToolkit();
+                    Dimension screenSize = tk.getScreenSize();
+                    Dimension appScreenSize = new Dimension(screenSize.width, screenSize.height);
+                    Insets insets = tk.getScreenInsets(theApp.getGraphicsConfiguration());
 
-                        appScreenSize.width -= (insets.left + insets.right);
-                        appScreenSize.width = appScreenSize.width / 5 * 4;
-                        appScreenSize.height -= (insets.top + insets.bottom);
-                        appScreenSize.height = appScreenSize.height / 5 * 4;
-                        Point location = new Point((screenSize.width - appScreenSize.width) / 2,
-                                (screenSize.height - appScreenSize.height) / 2);
+                    appScreenSize.width -= (insets.left + insets.right);
+                    appScreenSize.width = appScreenSize.width / 5 * 4;
+                    appScreenSize.height -= (insets.top + insets.bottom);
+                    appScreenSize.height = appScreenSize.height / 5 * 4;
+                    Point location = new Point((screenSize.width - appScreenSize.width) / 2,
+                            (screenSize.height - appScreenSize.height) / 2);
 
-                        lm.setMainXY(location);
-                        lm.setMainDimension(appScreenSize);
-                        theApp.setSize(appScreenSize);
-                        theApp.setLocation(location);
-                    }
+                    lm.setMainXY(location);
+                    lm.setMainDimension(appScreenSize);
+                    theApp.setSize(appScreenSize);
+                    theApp.setLocation(location);
+                }
 
-                    theApp.setVisible(true);
-                    String nachricht = "appleJuice-GUI gestartet...";
+                theApp.setVisible(true);
+                String nachricht1 = "appleJuice-GUI gestartet...";
 
-                    if (logger.isEnabledFor(Level.INFO)) {
-                        logger.info(nachricht);
-                    }
+                if (logger.isEnabledFor(Level.INFO)) {
+                    logger.info(nachricht1);
+                }
 
-                    System.out.println(nachricht);
-                    splash.dispose();
-                    if (OptionsManagerImpl.getInstance().isErsterStart()) {
-                        showConnectionWizard(theApp);
-                    }
+                System.out.println(nachricht1);
+                splash.dispose();
+                if (OptionsManagerImpl.getInstance().isErsterStart()) {
+                    showConnectionWizard(theApp);
+                }
 
-                    boolean UpdateInfo = OptionsManagerImpl.getInstance().getUpdateInfo();
+                boolean UpdateInfo = OptionsManagerImpl.getInstance().getUpdateInfo();
 
-                    if (UpdateInfo) {
-                        VersionChecker.check();
-                    }
+                if (UpdateInfo) {
+                    VersionChecker.check();
                 }
             });
 

@@ -25,7 +25,6 @@ public class TrayLoader
 
       IconManager im = IconManager.getInstance();
 
-      //  TODO change image on macOS
       Image image = im.getIcon("applejuice").getImage();
 
       trayIcon = new TrayIcon(image, title, null);
