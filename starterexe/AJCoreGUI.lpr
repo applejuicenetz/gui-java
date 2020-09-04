@@ -1,6 +1,8 @@
 program AJCoreGUI;
 uses ShellAPI, SysUtils;
 
+{$R project.rc}
+
 var     verzeichnis, argumente, arg: string;
         i: integer;
 begin
@@ -12,7 +14,7 @@ if fileexists(verzeichnis+'\AJCoreGUI.jar')=true then begin
         for i := 1 to paramCount() do
         begin
                 argumente:=argumente+' '+paramStr(i);
-        end
+        end;
 
         ShellExecute(0, 'open' ,PChar('javaw.exe'), PChar(argumente), PChar(verzeichnis), 1);
 
