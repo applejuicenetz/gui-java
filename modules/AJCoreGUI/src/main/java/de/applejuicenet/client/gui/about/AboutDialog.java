@@ -169,7 +169,7 @@ public class AboutDialog extends JDialog
             //kein Bild da, dann kack drauf ;-)
          }
 
-         version.setText("Version " + AppleJuiceDialog.GUI_VERSION);
+         version.setText("Version " + AppleJuiceDialog.getVersion());
          Font font = version.getFont();
 
          font = new Font(font.getName(), Font.PLAIN, font.getSize());

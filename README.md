@@ -45,6 +45,16 @@ Das letzte `%s` wird mit dem vollständigen `ajfsp` Link ersetzt (urlencoded).
 
 ### neues Release in dieser Reihenfolge erstellen
 
-1. Version in `de.applejuicenet.client.gui.AppleJuiceDialog.GUI_VERSION` anpassen
+```bash
+mvn versions:set \
+    -DgroupId=de.applejuicenet.client.gui \
+    -DartifactId=AJCoreGUI \
+    -DgenerateBackupPoms=false \
+    -DoldVersion="*" \
+    -N versions:update-child-modules \
+    -DnewVersion=0.83.1
+```
+
 2. Changelog anpassen
-3. Änderungen committen und taggen
+3. Änderungen committen und mit der neuen Version taggen
+4. die github action erstellt zum Tag das Release mit passenden Assets

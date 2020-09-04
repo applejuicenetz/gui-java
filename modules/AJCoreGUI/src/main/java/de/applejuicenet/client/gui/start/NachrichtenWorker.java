@@ -92,7 +92,7 @@ public class NachrichtenWorker extends Thread
          final String htmlContent = htmlText;
 
          SwingUtilities.invokeLater(() -> {
-            version.setText("<html>GUI: " + AppleJuiceDialog.GUI_VERSION + "<br>Core: " + coreVersion + "</html>");
+            version.setText("<html>GUI: " + AppleJuiceDialog.getVersion() + "<br>Core: " + coreVersion + "</html>");
             nachrichten.setContentType("text/html");
             nachrichten.setText(htmlContent);
             nachrichten.setFont(version.getFont());
