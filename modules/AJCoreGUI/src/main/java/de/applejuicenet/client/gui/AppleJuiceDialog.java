@@ -16,8 +16,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.InputEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -124,8 +122,6 @@ import de.tklsoft.gui.controls.TKLPanel;
 public class AppleJuiceDialog extends TKLFrame implements LanguageListener, DataUpdateListener
 {
 
-   //CVS-Beispiel 0.60.0-1-CVS
-   public static final String       GUI_VERSION              = "0.83.1";
    private static final Logger      logger                   = Logger.getLogger(AppleJuiceDialog.class);
    private static Map<String, Skin> themes                   = null;
    public static boolean            rewriteProperties        = false;
@@ -200,6 +196,10 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       {
          logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
       }
+   }
+
+   public static String getVersion() {
+      return AppleJuiceDialog.class.getPackage().getImplementationVersion();
    }
 
    private void initKeyStrokes()
@@ -326,7 +326,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    @SuppressWarnings("unchecked")
    private void init() throws Exception
    {
-      titel = "appleJuice GUI (" + AppleJuiceDialog.GUI_VERSION + ")";
+      titel = "appleJuice GUI (" + AppleJuiceDialog.getVersion() + ")";
       IconManager im = IconManager.getInstance();
 
       firewallIcon       = im.getIcon("firewall");

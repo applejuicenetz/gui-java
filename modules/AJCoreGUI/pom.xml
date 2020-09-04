@@ -4,7 +4,7 @@
     <groupId>de.applejuicenet.client.gui</groupId>
     <artifactId>AJCoreGUI</artifactId>
     <packaging>jar</packaging>
-    <version>0.83.0</version>
+    <version>0.83.1</version>
 
     <parent>
         <groupId>de.applejuicenet.client</groupId>
@@ -84,11 +84,13 @@
                 <version>3.2.0</version>
                 <configuration>
                     <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
                         <manifestEntries>
                             <Built-By>appleJuice maintainer</Built-By>
                         </manifestEntries>
                         <manifest>
-                            <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>./needed_jars/</classpathPrefix>
                             <mainClass>de.applejuicenet.client.AppleJuiceClient</mainClass>
@@ -96,38 +98,6 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <id>shade</id>
-                        <configuration>
-                            <minimizeJar>true</minimizeJar>
-                            <artifactSet>
-                                <includes>
-                                    <include>de.applejuicenet:client:**</include>
-                                </includes>
-                            </artifactSet>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>src/main/resources/**</exclude>
-                                        <exclude>META-INF/maven/**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 </project>

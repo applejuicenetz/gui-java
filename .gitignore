@@ -5,3 +5,5 @@ dependency-reduced-pom.xml
 *.jar
 *.zip
 *.exc
+
+pom.xml.versionsBackup
