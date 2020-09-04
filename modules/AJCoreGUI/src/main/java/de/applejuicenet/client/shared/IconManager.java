@@ -10,6 +10,7 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
 
+import java.io.FileNotFoundException;
 import java.net.URL;
 
 import java.util.HashMap;
@@ -22,136 +23,118 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/IconManager.java,v 1.17 2009/01/07 15:21:33 maj0r Exp $
- *
  * <p>Titel: AppleJuice Client-GUI</p>
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
  * @author: Maj0r [aj@tkl-soft.de]
- *
  */
-public class IconManager
-{
-   private static IconManager     instance   = null;
-   private final Logger           logger;
-   private Map<String, ImageIcon> icons;
-   private String                 pluginPath;
+public class IconManager {
+    private static IconManager instance = null;
+    private final Logger logger;
+    private final Map<String, ImageIcon> icons;
+    private String pluginPath;
 
-   private IconManager()
-   {
-      logger = Logger.getLogger(getClass());
-      icons  = new HashMap<String, ImageIcon>();
-      if(System.getProperty("os.name").toLowerCase().indexOf("windows") == -1)
-      {
-         pluginPath = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui" + File.separator +
-                      "plugins" + File.separator;
-      }
-      else
-      {
-         pluginPath = System.getProperty("user.dir") + File.separator + "plugins" + File.separator;
-      }
-   }
+    private IconManager() {
+        logger = Logger.getLogger(getClass());
+        icons = new HashMap<>();
+        if (!System.getProperty("os.name").toLowerCase().contains("windows")) {
+            pluginPath = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui" + File.separator + "plugins" + File.separator;
+        } else {
+            pluginPath = System.getProperty("user.dir") + File.separator + "plugins" + File.separator;
+        }
+    }
 
-   public static IconManager getInstance()
-   {
-      if(instance == null)
-      {
-         instance = new IconManager();
-      }
+    public static IconManager getInstance() {
+        if (instance == null) {
+            instance = new IconManager();
+        }
 
-      return instance;
-   }
+        return instance;
+    }
 
-   public ImageIcon getIcon(String key)
-   {
-      ImageIcon result = null;
+    public ImageIcon getIcon(String key) {
+        ImageIcon result = null;
 
-      try
-      {
-         String hashtableKey = key;
+        try {
 
-         if(icons.containsKey(hashtableKey))
-         {
-            result = icons.get(hashtableKey);
-         }
-         else
-         {
-            String path = System.getProperty("user.dir") + File.separator + "icons" + File.separator + key + ".gif";
-            Image  img = Toolkit.getDefaultToolkit().getImage(path);
+            if (icons.containsKey(key)) {
+                result = icons.get(key);
+            } else {
+                String path;
+                String pathGif = System.getProperty("user.dir") + File.separator + "icons" + File.separator + key + ".gif";
+                String pathPng = System.getProperty("user.dir") + File.separator + "icons" + File.separator + key + ".png";
 
-            result = new ImageIcon(img);
-            icons.put(hashtableKey, result);
-         }
-      }
-      catch(Exception e)
-      {
-         if(logger.isEnabledFor(Level.INFO))
-         {
-            logger.info("Icon " + key + ".gif nicht gefunden", e);
-         }
-      }
+                File fileGif = new File(pathGif);
+                File filePng = new File(pathPng);
 
-      return result;
-   }
+                if (filePng.exists() && !filePng.isDirectory()) {
+                    path = pathPng;
+                }
+                else if (fileGif.exists() && !fileGif.isDirectory()) {
+                    path = pathGif;
+                }
+                else {
+                    throw new FileNotFoundException("No Icon for " + key + " found (.gif or .png)");
+                }
 
-   @SuppressWarnings("unchecked")
-   public ImageIcon getIcon(String key, boolean isPlugin, Class referenceClass)
-   {
-      if(!isPlugin)
-      {
-         return getIcon(key);
-      }
+                Image img = Toolkit.getDefaultToolkit().getImage(path);
 
-      ImageIcon result = null;
+                result = new ImageIcon(img);
+                icons.put(key, result);
+            }
+        } catch (Exception e) {
+            if (logger.isEnabledFor(Level.INFO)) {
+                logger.info("Icon " + key + ".gif nicht gefunden", e);
+            }
+        }
 
-      try
-      {
-         result = icons.get(key);
-         if(null == result)
-         {
-            URL   url = referenceClass.getClassLoader().getResource(key + ".gif");
+        return result;
+    }
 
-            Image img = Toolkit.getDefaultToolkit().getImage(url);
+    @SuppressWarnings("unchecked")
+    public ImageIcon getIcon(String key, boolean isPlugin, Class referenceClass) {
+        if (!isPlugin) {
+            return getIcon(key);
+        }
 
-            result = new ImageIcon(img);
-            icons.put(key, result);
-         }
-      }
-      catch(Exception e)
-      {
-         if(logger.isEnabledFor(Level.INFO))
-         {
-            logger.info("Plugin-Icon " + key + ".gif nicht gefunden", e);
-         }
-      }
+        ImageIcon result = null;
 
-      return result;
-   }
+        try {
+            result = icons.get(key);
+            if (null == result) {
+                URL url = referenceClass.getClassLoader().getResource(key + ".gif");
 
-   public Properties getIconProperties(String identifier)
-   {
-      String path  = System.getProperty("user.dir") + File.separator + "icons" + File.separator + identifier + ".properties";
-      File   aFile = new File(path);
+                Image img = Toolkit.getDefaultToolkit().getImage(url);
 
-      if(aFile.isFile())
-      {
-         Properties props = new Properties();
+                result = new ImageIcon(img);
+                icons.put(key, result);
+            }
+        } catch (Exception e) {
+            if (logger.isEnabledFor(Level.INFO)) {
+                logger.info("Plugin-Icon " + key + ".gif nicht gefunden", e);
+            }
+        }
 
-         try
-         {
-            props.load(new FileInputStream(aFile));
-         }
-         catch(Exception e)
-         {
+        return result;
+    }
+
+    public Properties getIconProperties(String identifier) {
+        String path = System.getProperty("user.dir") + File.separator + "icons" + File.separator + identifier + ".properties";
+        File aFile = new File(path);
+
+        if (aFile.isFile()) {
+            Properties props = new Properties();
+
+            try {
+                props.load(new FileInputStream(aFile));
+            } catch (Exception e) {
+                return null;
+            }
+
+            return props;
+        } else {
             return null;
-         }
-
-         return props;
-      }
-      else
-      {
-         return null;
-      }
-   }
+        }
+    }
 }
