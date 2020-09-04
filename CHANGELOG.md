@@ -3,7 +3,7 @@
 **0.83.1**
 
 - [red171] neues, zeitgemäßes Icon der ausführbaren Dateien und Trayicon
-- [red171] Linkübernahme in Browsern auf Basis von Chromium behoben, auch wenn die GUI bereits geöffnet ist (Danke an `Pepsi`)
+- [red171] Linkübernahme in Browsern auf Basis von Chromium behoben, auch wenn die GUI bereits geöffnet ist  [#12](../../issues/12) (Danke an `Pepsi`)
 - [red171] der Release Info Button öffnet nun eine konfigurierte URL mit `ajfsp` Link angehängt [#9](../../issues/9)
 - [red171] die Konfiguration der Release-Info wird nun ebenfalls im `user.home` gespeichert, außerdem ist der API Pfad konfigurierbar [#9](../../issues/9)
 - [red171] Im Upload Tab ist jetzt auch Kontext Menü [#10](../../issues/10)
