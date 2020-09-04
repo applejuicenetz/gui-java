@@ -36,7 +36,7 @@ public class VersionChecker {
                             logger.info("letzte veröffentlichte Version: " + aktuellsteVersion);
                         }
 
-                        if (compareVersion(aktuellsteVersion, AppleJuiceDialog.GUI_VERSION) == 1) {
+                        if (compareVersion(aktuellsteVersion, AppleJuiceDialog.getVersion()) == 1) {
                             String releaseLink = jsonObject.get("html_url").getAsString();
                             SwingUtilities.invokeLater(() -> {
                                 UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(AppleJuiceDialog.getApp(), aktuellsteVersion, releaseLink);
@@ -44,7 +44,7 @@ public class VersionChecker {
                             });
                         } else {
                             if (logger.isEnabledFor(Level.INFO)) {
-                                logger.info("aktuelle Version " + AppleJuiceDialog.GUI_VERSION + " | letzte veröffentlichte Version: " + aktuellsteVersion);
+                                logger.info("aktuelle Version " + AppleJuiceDialog.getVersion() + " | letzte veröffentlichte Version: " + aktuellsteVersion);
                             }
                         }
 

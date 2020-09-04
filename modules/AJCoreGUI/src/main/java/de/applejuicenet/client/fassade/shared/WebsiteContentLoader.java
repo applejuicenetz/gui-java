@@ -61,7 +61,7 @@ public abstract class WebsiteContentLoader
          }
 
          uc.setRequestProperty("User-Agent",
-                 String.format("AJCoreGUI/%s; Java/%s; (%s/%s)", AppleJuiceDialog.GUI_VERSION, System.getProperty("java.version"), System.getProperty("os.name"), System.getProperty("os.version")));
+                 String.format("AJCoreGUI/%s; Java/%s; (%s/%s)", AppleJuiceDialog.getVersion(), System.getProperty("java.version"), System.getProperty("os.name"), System.getProperty("os.version")));
 
          InputStream    content = uc.getInputStream();
          BufferedReader in = new BufferedReader(new InputStreamReader(content));

@@ -284,7 +284,7 @@ public class AppleJuiceClient {
         }
 
         try {
-            String nachricht = "appleJuice-GUI " + AppleJuiceDialog.GUI_VERSION + " wird gestartet...";
+            String nachricht = "appleJuice-GUI " + AppleJuiceDialog.getVersion() + " wird gestartet...";
             ConnectFrame connectFrame = new ConnectFrame();
 
             splash = new Splash(connectFrame, IconManager.getInstance().getIcon("splashscreen").getImage(), 0, 100);
