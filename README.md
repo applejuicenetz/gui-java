@@ -1,8 +1,9 @@
 # appleJuice Client GUI
 
-![](https://img.shields.io/github/release/applejuicenet/gui-java.svg)
-![](https://github.com/applejuicenet/gui-java/workflows/release/badge.svg)
 ![](https://img.shields.io/github/license/applejuicenet/gui-java.svg)
+![](https://img.shields.io/github/release/applejuicenet/gui-java.svg)
+![](https://img.shields.io/github/downloads/applejuicenet/setup/total)
+![](https://github.com/applejuicenet/gui-java/workflows/release/badge.svg)
 
 Dieses GUI ist das grafisches Interface (Graphical User Interface) für den appleJuice Core.
 
