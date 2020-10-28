@@ -2,7 +2,7 @@ name: applejuice-gui
 title: appleJuice Gui
 summary: appleJuice GUI for appleJuice Client
 description: appleJuice GUI for appleJuice Client
-version: 0.83.1
+version: 0.83.3
 icon: snap/gui/applejuice-gui.png
 license: GPL-2.0
 

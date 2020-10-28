@@ -89,7 +89,7 @@ public class NetworkServerXMLHolder extends DefaultHandler
 
       try
       {
-         xmlData = WebsiteContentLoader.getWebsiteContent("http://www.applejuicenet.org", 80, "/serverlist/xmllist.php");
+         xmlData = WebsiteContentLoader.getWebsiteContent("https://www.applejuicenet.de", 443, "/serverlist/xmllist.php");
          if(xmlData == null || xmlData.length() == 0)
          {
             return null;

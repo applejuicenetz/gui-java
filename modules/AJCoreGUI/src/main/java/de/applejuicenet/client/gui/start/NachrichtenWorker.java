@@ -61,7 +61,7 @@ public class NachrichtenWorker extends Thread
          }
 
          ProxySettings proxy    = ProxyManagerImpl.getInstance().getProxySettings();
-         String        htmlText = WebsiteContentLoader.getWebsiteContent(proxy, "http://www.applejuicenet.org", 80,
+         String        htmlText = WebsiteContentLoader.getWebsiteContent(proxy, "https://www.applejuicenet.de", 443,
                                                                          "/inprog/news.php?version=" +
                                                                          AppleJuiceClient.getAjFassade().getCoreVersion()
                                                                          .getVersion());

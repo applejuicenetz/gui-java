@@ -25,7 +25,7 @@ import de.applejuicenet.client.shared.IconManager;
  * $Header:
  * /cvsroot/applejuicejava/AJClientGUI/src/de/applejuicenet/client/gui/StartPanel.java,v
  * 1.57 2004/06/15 16:19:19 maj0r Exp $
- * 
+ *
  * <p>
  * Titel: AppleJuice Client-GUI
  * </p>
@@ -36,9 +36,9 @@ import de.applejuicenet.client.shared.IconManager;
  * <p>
  * Copyright: General Public License
  * </p>
- * 
+ *
  * @author: Maj0r [aj@tkl-soft.de]
- *  
+ *
  */
 
 public class StartPanel extends TklPanel {
@@ -61,7 +61,7 @@ public class StartPanel extends TklPanel {
 	private NetworkInfo netInfo;
 	private Information information;
 	private LanguageSelector languageSelector;
-	
+
 	public StartPanel(GuiController guiController) {
     	super(guiController);
 		try {
@@ -84,7 +84,7 @@ public class StartPanel extends TklPanel {
 	public JTextPane getFaqPane(){
 		return faq;
 	}
-	
+
 	public JLabel getLblVersion(){
 		return version;
 	}
@@ -124,7 +124,7 @@ public class StartPanel extends TklPanel {
 	public JLabel getLblNeuigkeiten(){
 		return neuigkeiten;
 	}
-	
+
 	private void init() throws Exception {
 		setLayout(new BorderLayout());
 		serverMessage = new JTextPane();
@@ -167,7 +167,7 @@ public class StartPanel extends TklPanel {
 		faq = new JTextPane();
 		faq.setContentType("text/html");
 		faq.setEditable(false);
-		faq.setText("<html><a href=\"http://www.applejuicenet.de/13.0.html\">FAQ</a></html>");
+		faq.setText("<html><a href=\"https://www.applejuicenet.de/faq/\">FAQ</a></html>");
 		panel3.add(faq, constraints);
 
 		constraints.gridy++;

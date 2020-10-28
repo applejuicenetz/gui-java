@@ -10,9 +10,8 @@ import java.awt.event.KeyListener;
 
 import java.io.File;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -38,7 +37,7 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
    {
       double     p     = TableLayout.PREFERRED;
       double     f     = TableLayout.FILL;
-      double[][] sizes = 
+      double[][] sizes =
                          {
                             {5, p, 5, f, 5, p, 5},
                             {5, p}
@@ -56,82 +55,71 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
       };
 
       txtDownloadLink.addKeyListener(keyListener);
-      InvalidRule downloadloadlinkRule = new InvalidRule()
-      {
-         public boolean isInvalid(ModifyableComponent component)
+      InvalidRule downloadloadlinkRule = component -> {
+         String text = ((TKLTextField) component).getText().toLowerCase();
+
+         if(text.length() == 0)
          {
-            String text = ((TKLTextField) component).getText().toLowerCase();
-
-            if(text.length() == 0)
-            {
-               return false;
-            }
-
-            if(!text.startsWith("ajfsp://"))
-            {
-               return true;
-            }
-
-            text = text.substring("ajfsp://".length());
-            if(!text.startsWith("file") && !text.startsWith("server"))
-            {
-               return true;
-            }
-
-            int count;
-
-            if(text.startsWith("file"))
-            {
-               count = 3;
-            }
-            else
-            {
-               count = 2;
-            }
-
-            for(int i = 0; i < text.length(); i++)
-            {
-               if(text.charAt(i) == '|')
-               {
-                  count--;
-               }
-            }
-
-            if(count > 0)
-            {
-               return true;
-            }
-
             return false;
          }
+
+         if(!text.startsWith("ajfsp://"))
+         {
+            return true;
+         }
+
+         text = text.substring("ajfsp://".length());
+         if(!text.startsWith("file") && !text.startsWith("server"))
+         {
+            return true;
+         }
+
+         int count;
+
+         if(text.startsWith("file"))
+         {
+            count = 3;
+         }
+         else
+         {
+            count = 2;
+         }
+
+         for(int i = 0; i < text.length(); i++)
+         {
+            if(text.charAt(i) == '|')
+            {
+               count--;
+            }
+         }
+
+         if(count > 0)
+         {
+            return true;
+         }
+
+         return false;
       };
 
       txtDownloadLink.ignoreStatus(STATUSFLAG.MODIFIED, true);
       txtDownloadLink.addInvalidRule(downloadloadlinkRule);
       txtDownloadLink.ignoreInvalidRules(false);
 
+//      txtDownloadLink.getComponentPopupMenu().add( new JMenuItem(new DefaultEditorKit.CopyAction()) );
+
       cmbTargetDir.ignoreStatus(STATUSFLAG.MODIFIED, true);
-      InvalidRule targetDirRule = new InvalidRule()
-      {
-         public boolean isInvalid(ModifyableComponent component)
+      InvalidRule targetDirRule = component -> {
+         Object obj = ((TKLComboBox) component).getSelectedItem();
+
+         if(obj == null)
          {
-            Object obj = ((TKLComboBox) component).getSelectedItem();
-
-            if(obj == null)
-            {
-               return false;
-            }
-
-            String subdir = (String) obj;
-
-            if(subdir.indexOf(File.separator) != -1 || subdir.indexOf(ApplejuiceFassade.separator) != -1 ||
-                  subdir.indexOf("..") != -1 || subdir.indexOf(":") != -1)
-            {
-               return true;
-            }
-
             return false;
          }
+
+         String subdir = (String) obj;
+
+         return subdir.contains(File.separator) || subdir.indexOf(ApplejuiceFassade.separator) != -1 ||
+                 subdir.contains("..") || subdir.contains(":");
       };
 
       cmbTargetDir.addInvalidRule(targetDirRule);
