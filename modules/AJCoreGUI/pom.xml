@@ -21,11 +21,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.applejuicenet.client</groupId>
-            <artifactId>tklcontrols</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.1</version>
