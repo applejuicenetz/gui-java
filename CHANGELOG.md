@@ -1,5 +1,10 @@
 # Changelog
 
+**0.83.3**
+
+- [red171] import der dekompilierten `tklcontrols`
+- [red171] alte `AjCoreGUI.exe` wiederhergestellt [#15](../../issues/15)
+
 **0.83.1**
 
 - [red171] neues, zeitgemäßes Icon der ausführbaren Dateien und Trayicon
