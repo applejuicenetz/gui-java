@@ -209,7 +209,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       for(int i = 0; i < tabCount; i++)
       {
          int            event       = i < 9 ? KeyEvent.VK_1 + i : KeyEvent.VK_A + i - 9;
-         KeyStroke      stroke      = KeyStroke.getKeyStroke(event, InputEvent.CTRL_DOWN_MASK);
+         KeyStroke      stroke      = KeyStroke.getKeyStroke(event, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
          final int      index       = i;
          AbstractAction action      = new AbstractAction()
          {
@@ -488,13 +488,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
 
       getContentPane().setLayout(new BorderLayout());
-      linkPane.getBtnStartDownload().addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent e)
-            {
-               uebernehmeLink();
-            }
-         });
+      linkPane.getBtnStartDownload().addActionListener(e -> uebernehmeLink());
 
       getContentPane().add(linkPane, BorderLayout.NORTH);
       getContentPane().add(registerPane, BorderLayout.CENTER);
@@ -842,13 +836,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
          optionenMenu = new JMenu();
          menuItemOptionen.addActionListener(e -> showOptionsDialog());
-         menuItemDateiliste.addActionListener(new ActionListener()
-            {
-               public void actionPerformed(ActionEvent e)
-               {
-                  dateiListeImportieren();
-               }
-            });
+         menuItemDateiliste.addActionListener(e -> dateiListeImportieren());
          menuItemCheckUpdate.addActionListener(e -> checkAndDisplayUpdate());
          menuItemCoreBeenden.addActionListener(e -> {
             int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), bestaetigung, "appleJuice Client",

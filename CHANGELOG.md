@@ -1,5 +1,10 @@
 # Changelog
 
+**0.83.2**
+- [red171] import der dekompilierten `tklcontrols`
+- [red171] hole news von `applejuicenet.cc`
+- [red171] hole server von `applejuicenet.cc`
+
 **0.83.1**
 
 - [red171] neues, zeitgemäßes Icon der ausführbaren Dateien und Trayicon
