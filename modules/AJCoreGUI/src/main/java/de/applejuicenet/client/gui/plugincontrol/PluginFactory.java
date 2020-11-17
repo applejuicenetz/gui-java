@@ -7,6 +7,7 @@ package de.applejuicenet.client.gui.plugincontrol;
 import java.io.File;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -53,7 +54,7 @@ public abstract class PluginFactory
          String[]             tempListe = pluginPath.list();
          PluginJarClassLoader jarLoader = null;
 
-         for(int i = 0; i < tempListe.length; i++)
+         for(int i = 0; i < Objects.requireNonNull(tempListe).length; i++)
          {
             if(tempListe[i].toLowerCase().endsWith(".jar"))
             {

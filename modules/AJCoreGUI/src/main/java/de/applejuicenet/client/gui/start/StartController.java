@@ -77,7 +77,6 @@ public class StartController extends GuiController
 
       startPanel.getServerMessagePane().addHyperlinkListener(hyperlinkAdapter);
       startPanel.getNachrichtenPane().addHyperlinkListener(hyperlinkAdapter);
-      startPanel.getFaqPane().addHyperlinkListener(hyperlinkAdapter);
 
       AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.NETINFO_CHANGED);
       AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.INFORMATION_CHANGED);

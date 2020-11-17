@@ -65,6 +65,12 @@ public interface OptionsManager
 
    void setDefaultTheme(String themeShortName);
 
+   String getNewsURL();
+
+   String getServerListURL();
+
+   String getUpdateServerURL();
+
    boolean isThemesSupported();
 
    void enableThemeSupport(boolean enable);
@@ -78,10 +84,6 @@ public interface OptionsManager
    int getLinkListenerPort();
 
    void setLinkListenerPort(int port);
-
-   String getStandardBrowser();
-
-   void setStandardBrowser(String browser);
 
    void loadPluginsOnStartup(boolean loadPluginsOnStartup);
 

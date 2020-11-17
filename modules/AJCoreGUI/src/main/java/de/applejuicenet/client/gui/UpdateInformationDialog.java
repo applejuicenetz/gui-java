@@ -4,18 +4,12 @@
 
 package de.applejuicenet.client.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URI;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -24,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import de.applejuicenet.client.gui.tray.DesktopTool;
+import de.applejuicenet.client.shared.DesktopTools;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -132,19 +128,7 @@ public class UpdateInformationDialog extends JDialog {
 
     private void executeLink(String link) {
         try {
-            String browser = OptionsManagerImpl.getInstance().getStandardBrowser();
-
-            try {
-                Runtime.getRuntime().exec(new String[]{browser, link});
-            } catch (Exception ex) {
-                LanguageSelector ls = LanguageSelector.getInstance();
-                String nachricht = ls.getFirstAttrbuteByTagName("javagui.startup.updatefehlernachricht");
-                String titel = ls.getFirstAttrbuteByTagName("mainform.caption");
-
-                setVisible(false);
-                JOptionPane.showMessageDialog(this, nachricht, titel, JOptionPane.INFORMATION_MESSAGE);
-                setVisible(true);
-            }
+            DesktopTools.browse(new URI(link));
         } catch (Exception e) {
             if (logger.isEnabledFor(Level.ERROR)) {
                 logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);

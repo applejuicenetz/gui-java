@@ -55,7 +55,6 @@ public class StartPanel extends TklPanel {
 	private JLabel verbindungsNachricht;
 	private JLabel verbindungen;
 	private JLabel version;
-	private JTextPane faq;
 	private JLabel warnungIcon;
 	private JTextPane serverMessage;
 	private NetworkInfo netInfo;
@@ -79,10 +78,6 @@ public class StartPanel extends TklPanel {
 
 	public JTextPane getServerMessagePane(){
 		return serverMessage;
-	}
-
-	public JTextPane getFaqPane(){
-		return faq;
 	}
 
 	public JLabel getLblVersion(){
@@ -162,13 +157,6 @@ public class StartPanel extends TklPanel {
 		constraints.insets.left = 15;
 		version = new JLabel();
 		panel3.add(version, constraints);
-		constraints.gridy++;
-		constraints.insets.left = 15;
-		faq = new JTextPane();
-		faq.setContentType("text/html");
-		faq.setEditable(false);
-		faq.setText("<html><a href=\"https://www.applejuicenet.de/faq/\">FAQ</a></html>");
-		panel3.add(faq, constraints);
 
 		constraints.gridy++;
 		constraints.insets.left = 5;

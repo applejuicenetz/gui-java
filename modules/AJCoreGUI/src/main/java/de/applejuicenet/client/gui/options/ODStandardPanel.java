@@ -64,7 +64,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
    private JLabel             label3                = new JLabel();
    private JLabel             label4                = new JLabel();
    private JLabel             label6                = new JLabel();
-   private JLabel             label7                = new JLabel();
    private JLabel             selectStandardBrowser;
    private JLabel             openTemp;
    private JLabel             openIncoming;
@@ -146,9 +145,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       temp.setBackground(Color.WHITE);
       incoming.setEditable(false);
       incoming.setBackground(Color.WHITE);
-      browser.setEditable(false);
-      browser.setBackground(Color.WHITE);
-      browser.setText(optionsManager.getStandardBrowser());
       port.addFocusListener(new PortFocusListener());
       xmlPort.addFocusListener(new XmlPortFocusListener());
       nick.addFocusListener(new NickFocusListener());
@@ -204,7 +200,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       label3.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Label3.caption"));
       label4.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Label8.caption"));
       label6.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.xmlport"));
-      label7.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.standardbrowser"));
       loadPlugins.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ladeplugins"));
 
       loadPlugins.setSelected(optionsManager.shouldLoadPluginsOnStartup());
@@ -233,10 +228,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       openIncoming = new JLabel(icon2);
       openIncoming.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       openIncoming.addMouseListener(dcMouseAdapter);
-      selectStandardBrowser = new JLabel(icon2);
-      selectStandardBrowser.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-      selectStandardBrowser.addMouseListener(new SelectBrowserMouseListener());
 
       loadPlugins.addChangeListener(e -> dirty = true);
 
@@ -267,7 +258,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       panel3.add(label3, constraints);
       panel4.add(label4, constraints);
       panel7.add(label6, constraints);
-      panel10.add(label7, constraints);
 
       constraints.insets.left  = 0;
       constraints.insets.right = 2;
@@ -278,12 +268,10 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       panel3.add(port, constraints);
       panel7.add(xmlPort, constraints);
       panel4.add(nick, constraints);
-      panel10.add(browser, constraints);
       constraints.gridx   = 2;
       constraints.weightx = 0;
       panel1.add(openTemp, constraints);
       panel2.add(openIncoming, constraints);
-      panel10.add(selectStandardBrowser, constraints);
 
       constraints.gridx   = 0;
       constraints.gridy   = 0;
@@ -333,17 +321,9 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
       port.confirmNewValue();
       xmlPort.confirmNewValue();
       nick.confirmNewValue();
-      browser.confirmNewValue();
       cmbLog.confirmNewValue();
       updateNotification.confirmNewValue();
       loadPlugins.confirmNewValue();
-
-      if(DesktopTools.isAdvancedSupported() && !System.getProperty("os.name").toLowerCase().contains("linux"))
-      {
-         selectStandardBrowser.setVisible(false);
-         browser.setVisible(false);
-         label7.setVisible(false);
-      }
    }
 
    public boolean isXmlPortDirty()
@@ -446,57 +426,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister
          return tip;
       }
    }
-
-
-   class SelectBrowserMouseListener extends MouseAdapter
-   {
-      public void mouseEntered(MouseEvent e)
-      {
-         JLabel source = (JLabel) e.getSource();
-
-         source.setBorder(BorderFactory.createLineBorder(Color.black));
-      }
-
-      public void mouseClicked(MouseEvent e)
-      {
-         JLabel       source      = (JLabel) e.getSource();
-         JFileChooser fileChooser = new JFileChooser();
-
-         fileChooser.setDialogType(JFileChooser.FILES_ONLY);
-         fileChooser.setDialogTitle(label7.getText());
-         if(browser.getText().length() != 0)
-         {
-            File tmpFile = new File(browser.getText());
-
-            if(tmpFile.isFile())
-            {
-               fileChooser.setCurrentDirectory(tmpFile);
-            }
-         }
-
-         int returnVal = fileChooser.showOpenDialog(source);
-
-         if(returnVal == JFileChooser.APPROVE_OPTION)
-         {
-            File browserFile = fileChooser.getSelectedFile();
-
-            if(browserFile.isFile())
-            {
-               browser.setText(browserFile.getPath());
-               dirty = true;
-               browser.fireCheckRules();
-            }
-         }
-      }
-
-      public void mouseExited(MouseEvent e)
-      {
-         JLabel source = (JLabel) e.getSource();
-
-         source.setBorder(null);
-      }
-   }
-
 
    class DirectoryChooserMouseAdapter extends MouseAdapter
    {

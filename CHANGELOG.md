@@ -1,22 +1,29 @@
 # Changelog
 
+**0.83.4**
+- [red171] die URL für die GUI NEWS ist nun manuell in der `ajgui.properties` konfigurierbar (`options_news_url`)
+- [red171] die URL für die Serverliste ist nun manuell in der `ajgui.properties` konfigurierbar (`options_server_list_url`)
+- [red171] die URL für den Update Server Feed ist nun manuell in der `ajgui.properties` konfigurierbar (`options_update_server_url`)
+- [red171] den Browser Bug bei der Update Benachrichtigung final behoben ;)
+- [red171] der FAQ link aus dem "Dein Client" Bereich wurde entfernt
+
 **0.83.3**
 
 - [red171] import der dekompilierten `tklcontrols`
-- [red171] alte `AjCoreGUI.exe` wiederhergestellt [#15](../../issues/15)
+- [red171] alte `AjCoreGUI.exe` wiederhergestellt (mehrfach Linkübernahme funktioniert nun wieder!)
 
 **0.83.1**
 
 - [red171] neues, zeitgemäßes Icon der ausführbaren Dateien und Trayicon
-- [red171] Linkübernahme in Browsern auf Basis von Chromium behoben, auch wenn die GUI bereits geöffnet ist  [#12](../../issues/12) (Danke an `Pepsi`)
-- [red171] der Release Info Button öffnet nun eine konfigurierte URL mit `ajfsp` Link angehängt [#9](../../issues/9)
-- [red171] die Konfiguration der Release-Info wird nun ebenfalls im `user.home` gespeichert, außerdem ist der API Pfad konfigurierbar [#9](../../issues/9)
-- [red171] Im Upload Tab ist jetzt auch Kontext Menü [#10](../../issues/10)
-- [red171] das IRC Plugin wurde entfernt [#3](../../issues/3)
-- [red171] für die Updateüberprüfung gibt es nur noch einen an/aus Schalter [#1](../../issues/1) 
-- [red171] der "neue Version verfügbar" Dialog hat nur noch eine URL und zeigt auf das Github Release [#2](../../issues/2)
-- [red171] Gui und Plugins werden mit Maven kompiliert, Pakete (leider) noch via `ant` komprimiert [#4](../../issues/4)
-- [red171] alle GUI Plugins mit Java8 und UTF-8 Encoding neu kompiliert, Sprachdateien mit UTF-8 neu kodiert [#4](../../issues/4)
+- [red171] Linkübernahme in Browsern auf Basis von Chromium behoben, auch wenn die GUI bereits geöffnet ist
+- [red171] der Release Info Button öffnet nun eine konfigurierte URL mit `ajfsp` Link angehängt
+- [red171] die Konfiguration der Release-Info wird nun ebenfalls im `user.home` gespeichert, außerdem ist der API Pfad konfigurierbar
+- [red171] Im Upload Tab ist jetzt auch Kontext Menü
+- [red171] das IRC Plugin wurde entfernt
+- [red171] für die Update-Überprüfung gibt es nur noch einen an/aus Schalter 
+- [red171] der "neue Version verfügbar" Dialog hat nur noch eine URL und zeigt auf das Github Release
+- [red171] Gui und Plugins werden mit Maven kompiliert, Pakete (leider) noch via `ant` komprimiert
+- [red171] alle GUI Plugins mit Java8 und UTF-8 Encoding neu kompiliert, Sprachdateien mit UTF-8 neu kodiert
 
 **0.82.1**
 

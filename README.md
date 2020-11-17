@@ -1,9 +1,9 @@
 # appleJuice Client GUI
 
-![](https://img.shields.io/github/license/applejuicenet/gui-java.svg)
-![](https://img.shields.io/github/release/applejuicenet/gui-java.svg)
-![](https://img.shields.io/github/downloads/applejuicenet/setup/total)
-![](https://github.com/applejuicenet/gui-java/workflows/release/badge.svg)
+![](https://img.shields.io/github/license/applejuicenetz/gui-java.svg)
+![](https://img.shields.io/github/release/applejuicenetz/gui-java.svg)
+![](https://img.shields.io/github/downloads/applejuicenetz/setup/total)
+![](https://github.com/applejuicenetz/gui-java/workflows/release/badge.svg)
 
 Dieses GUI ist das grafisches Interface (Graphical User Interface) für den appleJuice Core.
 
@@ -11,12 +11,12 @@ Dieses GUI ist das grafisches Interface (Graphical User Interface) für den appl
 
 ### Windows
 
-Bitte das Setup von [hier](https://github.com/applejuicenet/setup/releases) oder die `AJCoreGUI.zip` von [hier](https://github.com/applejuicenet/gui-java/releases) nehmen.
+Bitte das Setup von [hier](https://github.com/applejuicenetz/setup/releases) oder die `AJCoreGUI.zip` von [hier](https://github.com/applejuicenetz/gui-java/releases) nehmen.
 
 ### macOS
 
-- per [Homebrew](https://brew.sh) installieren `brew cask install applejuicenet/packages/applejuice-gui`
-- oder die `AJCoreGUI.masOS.zip` von [hier](https://github.com/applejuicenet/gui-java/releases) nehmen
+- per [Homebrew](https://brew.sh) installieren `brew cask install applejuicenetz/packages/applejuice-gui`
+- oder die `AJCoreGUI.masOS.zip` von [hier](https://github.com/applejuicenetz/gui-java/releases) nehmen
 
 ### Linux
 
@@ -53,7 +53,7 @@ mvn versions:set \
     -DgenerateBackupPoms=false \
     -DoldVersion="*" \
     -N versions:update-child-modules \
-    -DnewVersion=0.83.3
+    -DnewVersion=0.83.4
 ```
 
 2. Changelog anpassen

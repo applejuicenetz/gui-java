@@ -111,6 +111,18 @@ public class OptionsManagerImpl implements OptionsManager{
         return propertiesManager.getDefaultTheme();
     }
 
+    public String getNewsURL() {
+        return propertiesManager.getNewsURL();
+    }
+
+    public String getServerListURL() {
+        return propertiesManager.getServerListURL();
+    }
+
+    public String getUpdateServerURL() {
+        return propertiesManager.getUpdateServerURL();
+    }
+
     public void setDefaultTheme(String themeShortName) {
         propertiesManager.setDefaultTheme(themeShortName);
     }
@@ -141,14 +153,6 @@ public class OptionsManagerImpl implements OptionsManager{
 
     public void setLinkListenerPort(int port) {
         propertiesManager.setLinkListenerPort(port);
-    }
-
-    public String getStandardBrowser() {
-        return propertiesManager.getStandardBrowser();
-    }
-
-    public void setStandardBrowser(String browser) {
-        propertiesManager.setStandardBrowser(browser);
     }
 
 	public void setOpenProgram(String path) {

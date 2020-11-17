@@ -20,6 +20,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.applejuicenet.client.fassade.shared.ProxySettings;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import org.apache.xerces.parsers.SAXParser;
 
 import org.xml.sax.Attributes;
@@ -87,10 +90,13 @@ public class NetworkServerXMLHolder extends DefaultHandler
    {
       String xmlData = null;
 
+      ProxySettings proxy = ProxyManagerImpl.getInstance().getProxySettings();
+      String ServerListURL = OptionsManagerImpl.getInstance().getServerListURL();
+
       try
       {
-         xmlData = WebsiteContentLoader.getWebsiteContent("https://www.applejuicenet.de", 443, "/serverlist/xmllist.php");
-         if(xmlData == null || xmlData.length() == 0)
+         xmlData = WebsiteContentLoader.getWebsiteContent(ServerListURL, proxy);
+         if(xmlData.length() == 0)
          {
             return null;
          }

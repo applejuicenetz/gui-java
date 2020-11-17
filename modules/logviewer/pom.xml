@@ -23,7 +23,7 @@
         <dependency>
             <groupId>de.applejuicenet.client.gui</groupId>
             <artifactId>AJCoreGUI</artifactId>
-            <version>0.83.3</version>
+            <version>0.83.4</version>
         </dependency>
     </dependencies>
 
