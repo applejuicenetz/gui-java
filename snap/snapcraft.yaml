@@ -2,7 +2,7 @@ name: applejuice-gui
 title: appleJuice Gui
 summary: appleJuice GUI for appleJuice Client
 description: appleJuice GUI for appleJuice Client
-version: 0.83.3
+version: 0.83.4
 icon: snap/gui/applejuice-gui.png
 license: GPL-2.0
 
@@ -34,7 +34,7 @@ apps:
 parts:
     ajgui:
         plugin: dump
-        source: https://github.com/applejuicenet/gui-java/releases/download/$SNAPCRAFT_PROJECT_VERSION/AJCoreGUI.zip
+        source: https://github.com/applejuicenetz/gui-java/releases/download/$SNAPCRAFT_PROJECT_VERSION/AJCoreGUI.zip
         organize:
             '*': app/
 

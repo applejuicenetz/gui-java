@@ -4,7 +4,7 @@
     <groupId>de.applejuicenet.client.gui</groupId>
     <artifactId>AJCoreGUI</artifactId>
     <packaging>jar</packaging>
-    <version>0.83.3</version>
+    <version>0.83.4</version>
 
     <parent>
         <groupId>de.applejuicenet.client</groupId>

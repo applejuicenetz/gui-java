@@ -258,6 +258,18 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
       propertyHandler.put("options_defaulttheme", themeShortName);
    }
 
+   public String getNewsURL() {
+      return propertyHandler.get("options_news_url", "https://applejuicenetz.github.io/news/%s.html");
+   }
+
+   public String getServerListURL() {
+      return propertyHandler.get("options_server_list_url", "http://www.applejuicenet.cc/serverlist/xmllist.php");
+   }
+
+   public String getUpdateServerURL() {
+      return propertyHandler.get("options_update_server_url", "https://api.github.com/repos/applejuicenetz/gui-java/releases/latest");
+   }
+
    public LookAFeel[] getLookAndFeels()
    {
       try
@@ -429,37 +441,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
          AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
          return "";
-      }
-   }
-
-   public String getStandardBrowser()
-   {
-      try
-      {
-         return propertyHandler.get("options_browser_file", "xdg-open");
-      }
-      catch(Exception e)
-      {
-         AppleJuiceDialog.rewriteProperties = true;
-         if(logger.isEnabledFor(Level.ERROR))
-         {
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-         }
-
-         AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-         return "";
-      }
-   }
-
-   public void setStandardBrowser(String browser)
-   {
-      propertyHandler.put("options_browser_file", browser);
-      String temp = getStandardBrowser();
-
-      if(temp.compareTo(browser) != 0)
-      {
-         AppleJuiceDialog.rewriteProperties = true;
-         AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
       }
    }
 

@@ -12,7 +12,6 @@ import javax.swing.JOptionPane;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.tray.DesktopTool;
 
 public class DesktopTools {
@@ -30,10 +29,8 @@ public class DesktopTools {
         if (null != desktopToolIF && !System.getProperty("os.name").toLowerCase().contains("linux")) {
             desktopToolIF.browse(uri);
         } else {
-            String browser = OptionsManagerImpl.getInstance().getStandardBrowser();
-
             try {
-                Runtime.getRuntime().exec(new String[]{browser, uri.toURL().toString()});
+                Runtime.getRuntime().exec(new String[]{"xdg-open", uri.toURL().toString()});
             } catch (Exception ex) {
                 LanguageSelector ls = LanguageSelector.getInstance();
                 String nachricht = ls.getFirstAttrbuteByTagName("javagui.startup.updatefehlernachricht");

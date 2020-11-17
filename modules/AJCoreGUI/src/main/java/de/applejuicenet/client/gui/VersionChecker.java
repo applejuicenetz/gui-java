@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -26,7 +27,8 @@ public class VersionChecker {
 
                 try {
                     ProxySettings proxy = ProxyManagerImpl.getInstance().getProxySettings();
-                    String downloadData = WebsiteContentLoader.getWebsiteContent(proxy, "https://api.github.com", 443, "/repos/applejuicenet/gui-java/releases/latest");
+                    String updateServer = OptionsManagerImpl.getInstance().getUpdateServerURL();
+                    String downloadData = WebsiteContentLoader.getWebsiteContent(updateServer, proxy);
 
                     if (downloadData.length() > 0) {
                         JsonObject jsonObject = new JsonParser().parse(downloadData).getAsJsonObject();

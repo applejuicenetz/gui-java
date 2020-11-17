@@ -33,7 +33,7 @@ jobs:
                     draft: false
                     gzip: false
                     body: >
-                        aktuelles Changelog befindet sich [hier](https://github.com/applejuicenet/gui-java/blob/master/CHANGELOG.md)
+                        aktuelles Changelog befindet sich [hier](https://github.com/applejuicenetz/gui-java/blob/master/CHANGELOG.md)
                     files: >
                         target/AJCoreGUI.zip
                         target/AJCoreGUI.zip.sha256.txt
@@ -51,5 +51,5 @@ jobs:
                 uses: peter-evans/repository-dispatch@v1
                 with:
                     token: ${{ secrets.REPO_DISPATCH_TOKEN }}
-                    repository: applejuicenet/gui-java
+                    repository: applejuicenetz/gui-java
                     event-type: snapcraft-update

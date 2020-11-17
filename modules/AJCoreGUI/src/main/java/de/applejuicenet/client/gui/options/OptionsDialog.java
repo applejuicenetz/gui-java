@@ -140,7 +140,6 @@ public class OptionsDialog extends JDialog
          if(((ODStandardPanel) optionPanels[0]).isDirty() || ((ODVerbindungPanel) optionPanels[1]).isDirty())
          {
             om.saveAJSettings(ajSettings);
-            om.setStandardBrowser(((ODStandardPanel) optionPanels[0]).getBrowserPfad());
             om.loadPluginsOnStartup(((ODStandardPanel) optionPanels[0]).shouldLoadPluginsOnStartup());
             om.setUpdateInfo(((ODStandardPanel) optionPanels[0]).getUpdateInfo());
             if(((ODStandardPanel) optionPanels[0]).isDirty())

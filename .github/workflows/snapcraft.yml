@@ -15,7 +15,7 @@ jobs:
             -   name: get latest tag
                 id: latestrelease
                 run: |
-                    echo "::set-output name=version::$(curl -s https://api.github.com/repos/applejuicenet/gui-java/releases/latest | jq -r '.tag_name')"
+                    echo "::set-output name=version::$(curl -s https://api.github.com/repos/applejuicenetz/gui-java/releases/latest | jq -r '.tag_name')"
 
             -   name: confirm tag
                 run: |

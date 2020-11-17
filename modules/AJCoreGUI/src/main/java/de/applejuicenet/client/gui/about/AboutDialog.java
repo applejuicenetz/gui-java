@@ -152,7 +152,7 @@ public class AboutDialog extends JDialog
          credits.add(new CreditsEntry(false, "BlueTiger"));
          credits.add(new CreditsEntry(false, "nurseppel"));
          credits.add(new CreditsEntry(true, "Kontakt"));
-         credits.add(new CreditsEntry(false, "www.applejuicenet.de"));
+         credits.add(new CreditsEntry(false, "applejuicenet.cc"));
 
          backgroundImage = IconManager.getInstance().getIcon("applejuiceinfobanner").getImage();
          flagge          = IconManager.getInstance().getIcon("deutsch").getImage();

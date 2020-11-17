@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -60,13 +61,11 @@ public class NachrichtenWorker extends Thread
             logger.info(nachricht);
          }
 
-         ProxySettings proxy    = ProxyManagerImpl.getInstance().getProxySettings();
-         String        htmlText = WebsiteContentLoader.getWebsiteContent(proxy, "https://www.applejuicenet.de", 443,
-                                                                         "/inprog/news.php?version=" +
-                                                                         AppleJuiceClient.getAjFassade().getCoreVersion()
-                                                                         .getVersion());
-
-         int           pos = htmlText.toLowerCase().indexOf("<html>");
+         String newsURL = OptionsManagerImpl.getInstance().getNewsURL();
+         String newsURLFormatted = String.format(newsURL, AppleJuiceClient.getAjFassade().getCoreVersion().getVersion());
+         ProxySettings proxy = ProxyManagerImpl.getInstance().getProxySettings();
+         String htmlText = WebsiteContentLoader.getWebsiteContent(newsURLFormatted, proxy);
+         int pos = htmlText.toLowerCase().indexOf("<html>");
 
          StringBuilder buffer = new StringBuilder();
 
