@@ -50,6 +50,20 @@
             </dict>
         </array>
 
+        <key>CFBundleDocumentTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleTypeName</key>
+                <string>appleJuice Link List</string>
+                <key>CFBundleTypeExtensions</key>
+                <array>
+                    <string>ajl</string>
+                </array>
+            </dict>
+        </array>
+
         <key>JVMMainClassName</key>
         <string>de.applejuicenet.client.AppleJuiceClient</string>
     </dict>
