@@ -1136,106 +1136,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
             final String targetDir = directory;
 
-            new Thread()
-               {
-                  public void run()
-                  {
-                     BufferedReader reader = null;
-
-                     try
-                     {
-                        reader = new BufferedReader(new FileReader(file));
-                        String line = "";
-
-                        while((line = reader.readLine()) != null)
-                        {
-                           if(line.compareTo("100") == 0)
-                           {
-                              break;
-                           }
-                        }
-
-                        String             size           = "";
-                        String             filename       = "";
-                        String             checksum       = "";
-                        String             link           = "";
-                        ApplejuiceFassade  af             = AppleJuiceClient.getAjFassade();
-                        final StringBuffer returnValues   = new StringBuffer();
-                        boolean            somethingAdded = false;
-
-                        while((line = reader.readLine()) != null)
-                        {
-                           filename = line;
-                           checksum = reader.readLine();
-                           size = reader.readLine();
-                           if(size != null && checksum != null)
-                           {
-                              link = "ajfsp://file|" + filename + "|" + checksum + "|" + size + "/";
-                              String result;
-
-                              try
-                              {
-                                 result = af.processLink(link, targetDir);
-                              }
-                              catch(IllegalArgumentException e)
-                              {
-                                 logger.error(e);
-                                 return;
-                              }
-
-                              if(result.indexOf("ok") == 0)
-                              {
-                                 returnValues.append("'" + link + "' OK\n");
-                                 somethingAdded = true;
-                              }
-                              else if(result.contains("already downloaded"))
-                              {
-                                 returnValues.append(alreadyLoaded.replaceAll("%s", link) + "\n");
-                                 somethingAdded = true;
-                              }
-                              else if(result.contains("incorrect link"))
-                              {
-                                 returnValues.append(invalidLink.replaceAll("%s", link) + "\n");
-                                 somethingAdded = true;
-                              }
-                              else if(result.contains("failure"))
-                              {
-                                 returnValues.append(linkFailure + "\n");
-                                 somethingAdded = true;
-                              }
-                           }
-                        }
-
-                        if(somethingAdded)
-                        {
-                           SwingUtilities.invokeLater(() -> {
-                              JTextPane textArea = new JTextPane();
-
-                              textArea.setPreferredSize(new Dimension(550, 300));
-                              textArea.setMaximumSize(new Dimension(550, 300));
-                              textArea.setEditable(false);
-                              textArea.setBackground(new TKLLabel().getBackground());
-                              textArea.setText(returnValues.toString());
-                              JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), new JScrollPane(textArea),
-                                                            dialogTitel,
-                                                            JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-                           });
-                        }
-                     }
-                     catch(FileNotFoundException ex)
-                     {
-                        ;
-
-                        //nix zu tun
-                     }
-                     catch(IOException ex1)
-                     {
-                        ;
-
-                        //nix zu tun
-                     }
-                  }
-               }.start();
+            new Thread(() -> importAjl(file, targetDir)).start();
          }
       }
    }
@@ -1538,6 +1439,94 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             }
          }.start();
       return popup;
+   }
+
+   public void importAjl(File file, String targetDir) {
+      BufferedReader reader = null;
+
+      try
+      {
+         reader = new BufferedReader(new FileReader(file));
+         String line = "";
+
+         while((line = reader.readLine()) != null)
+         {
+            if(line.compareTo("100") == 0)
+            {
+               break;
+            }
+         }
+
+         String             size           = "";
+         String             filename       = "";
+         String             checksum       = "";
+         String             link           = "";
+         ApplejuiceFassade  af             = AppleJuiceClient.getAjFassade();
+         final StringBuffer returnValues   = new StringBuffer();
+         boolean            somethingAdded = false;
+
+         while((line = reader.readLine()) != null)
+         {
+            filename = line;
+            checksum = reader.readLine();
+            size = reader.readLine();
+            if(size != null && checksum != null)
+            {
+               link = "ajfsp://file|" + filename + "|" + checksum + "|" + size + "/";
+               String result;
+
+               try
+               {
+                  result = af.processLink(link, targetDir);
+               }
+               catch(IllegalArgumentException e)
+               {
+                  logger.error(e);
+                  return;
+               }
+
+               if(result.indexOf("ok") == 0)
+               {
+                  returnValues.append("'" + link + "' OK\n");
+                  somethingAdded = true;
+               }
+               else if(result.contains("already downloaded"))
+               {
+                  returnValues.append(alreadyLoaded.replaceAll("%s", link) + "\n");
+                  somethingAdded = true;
+               }
+               else if(result.contains("incorrect link"))
+               {
+                  returnValues.append(invalidLink.replaceAll("%s", link) + "\n");
+                  somethingAdded = true;
+               }
+               else if(result.contains("failure"))
+               {
+                  returnValues.append(linkFailure + "\n");
+                  somethingAdded = true;
+               }
+            }
+         }
+
+         if(somethingAdded)
+         {
+            SwingUtilities.invokeLater(() -> {
+               JTextPane textArea = new JTextPane();
+
+               textArea.setPreferredSize(new Dimension(550, 300));
+               textArea.setMaximumSize(new Dimension(550, 300));
+               textArea.setEditable(false);
+               textArea.setBackground(new TKLLabel().getBackground());
+               textArea.setText(returnValues.toString());
+               JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), new JScrollPane(textArea),
+                       dialogTitel,
+                       JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+            });
+         }
+      } catch(IOException ex)
+      {
+         ; //nix zu tun
+      }
    }
 
    public static void showInformation(String information)

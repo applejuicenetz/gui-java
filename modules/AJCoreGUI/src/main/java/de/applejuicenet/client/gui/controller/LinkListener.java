@@ -217,6 +217,9 @@ public class LinkListener extends Thread implements CoreStatusListener
 
    public void processLink(String link, String directory)
    {
+      link = link.replaceAll("%7C", "|");
+      link = link.replaceAll("%20", ".");
+
       Link aLink = new Link(link, "");
 
       if(applejuiceFassade == null)

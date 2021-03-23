@@ -21,7 +21,7 @@ import de.applejuicenet.client.shared.PluginJarClassLoader;
 public abstract class PluginFactory
 {
    private static Set<PluginConnector> plugins = null;
-   private static Logger               logger = Logger.getLogger(PluginFactory.class);
+   private static final Logger               logger = Logger.getLogger(PluginFactory.class);
 
    public static Set<PluginConnector> getPlugins()
    {

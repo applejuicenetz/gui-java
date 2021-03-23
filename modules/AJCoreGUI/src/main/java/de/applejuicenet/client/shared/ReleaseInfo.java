@@ -5,11 +5,12 @@ import de.applejuicenet.client.gui.start.HyperlinkAdapter;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Properties;
 
 public class ReleaseInfo {
 
-    private static final String defaultHost = "http://www.apple-deluxe.cc/index.php?ct=403&va=%s";
+    private static final String defaultHost = new String(Base64.getDecoder().decode("aHR0cHM6Ly93d3cuYXBwbGUtZGVsdXhlLmNvL2luZGV4LnBocD9jdD00MDMmdmE9JXM="));
 
     private static String releaseInfoHost = null;
 
