@@ -53,7 +53,7 @@ mvn versions:set \
     -DgenerateBackupPoms=false \
     -DoldVersion="*" \
     -N versions:update-child-modules \
-    -DnewVersion=0.83.4
+    -DnewVersion=0.83.5
 ```
 
 2. Changelog anpassen

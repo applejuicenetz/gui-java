@@ -4,12 +4,9 @@
 
 package de.applejuicenet.client;
 
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.HeadlessException;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.awt.desktop.OpenURIEvent;
+import java.awt.desktop.OpenURIHandler;
 import java.awt.event.KeyEvent;
 
 import java.io.BufferedReader;
@@ -31,6 +28,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import de.applejuicenet.client.gui.VersionChecker;
+import de.applejuicenet.client.gui.handler.ajfspURIHandler;
+import de.applejuicenet.client.gui.handler.ajlFileHandler;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.HTMLLayout;
@@ -74,6 +73,8 @@ public class AppleJuiceClient {
     private static ApplejuiceFassade ajFassade = null;
     private static CoreConnectionSettingsHolder conn = null;
     private static String rootDirectory = null;
+
+    public static LinkListener linkListener = null;
 
     /**
      * @return Returns the path of the Client-GUI.
@@ -123,7 +124,16 @@ public class AppleJuiceClient {
         boolean processLink = false;
         String link = "";
         boolean doubleInstance = false;
-        LinkListener linkListener = null;
+
+        try {
+            linkListener = new LinkListener();
+        } catch (IOException ex) {
+            //bereits ein GUI vorhanden, also GUI schliessen
+            doubleInstance = true;
+        }
+
+        Desktop.getDesktop().setOpenFileHandler(new ajlFileHandler());
+        Desktop.getDesktop().setOpenURIHandler(new ajfspURIHandler());
 
         if (args != null && args.length > 0) {
             try {
@@ -179,16 +189,6 @@ public class AppleJuiceClient {
                         }
                     } else if (curArg.startsWith("ajfsp://") || (curArg.contains("-link=") && curArg.length() > "-link=".length() + 1)) {
                         link = curArg.startsWith("ajfsp://") ? curArg : curArg.substring(curArg.indexOf("-link=") + "-link=".length());
-                        link = link.replaceAll("%7C", "|");
-
-                        if (linkListener == null) {
-                            try {
-                                linkListener = new LinkListener();
-                            } catch (IOException ex) {
-                                //bereits ein GUI vorhanden, also GUI schliessen
-                                doubleInstance = true;
-                            }
-                        }
 
                         if (doubleInstance) {
                             int PORT = OptionsManagerImpl.getInstance().getLinkListenerPort();
@@ -202,6 +202,17 @@ public class AppleJuiceClient {
                             System.exit(1);
                         } else {
                             linkListener.processLink(link, "");
+                        }
+                    } else if (curArg.endsWith(".ajl")) {
+                        logger.info(".ajl Datei argument gefunden: " + curArg);
+
+                        File inputFile = new File(curArg);
+
+                        if (inputFile.exists() && !inputFile.isDirectory())
+                        {
+                            new AppleJuiceDialog().importAjl(inputFile, "");
+                        } else {
+                            logger.info("kann .ajl Datei nicht öffnen: " + curArg);
                         }
                     }
                 }
