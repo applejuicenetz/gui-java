@@ -3,7 +3,7 @@
 cd $SNAP/app/
 
 # first start, copy plugins
-if [ ! -e ~/appleJuice/gui/plugins ]; then
+if [ ! -d ~/appleJuice/gui/plugins ]; then
   mkdir -p ~/appleJuice/gui/plugins
   cp ./plugins/*.jar ~/appleJuice/gui/plugins/
 fi
