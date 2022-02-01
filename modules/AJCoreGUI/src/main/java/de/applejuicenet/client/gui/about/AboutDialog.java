@@ -143,7 +143,7 @@ public class AboutDialog extends JDialog
          credits.add(new CreditsEntry(false, "loevenwong"));
          credits.add(new CreditsEntry(false, "(tloevenich@tkl-soft.de)"));
          credits.add(new CreditsEntry(false, "red171"));
-         credits.add(new CreditsEntry(false, "(red171@tr4sh.eu)"));
+         credits.add(new CreditsEntry(false, "(red171@applejuicenet.cc)"));
          credits.add(new CreditsEntry(true, "Besonderen Dank an"));
          credits.add(new CreditsEntry(false, "muhviehstarr"));
          credits.add(new CreditsEntry(true, "Banner & Bilder"));

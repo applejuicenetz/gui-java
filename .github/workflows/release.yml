@@ -38,8 +38,11 @@ jobs:
 #          file_pattern: pom.xml
 #          commit_message: Update mvn Package Version to ${{ github.ref_name }}
 
-      - name: Build with Maven
+      - name: compile with Maven
         run: mvn package
+
+      - name: package with Maven
+        run: mvn install
 
       - name: Create Release
         id: create_release
@@ -71,7 +74,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: launch4j/AJCoreGUI.setup.exe
+          asset_path: assets/windows/AJCoreGUI.setup.exe
           asset_name: AJCoreGUI.setup.exe
           asset_content_type: application/octet-stream
 

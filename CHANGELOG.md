@@ -1,5 +1,12 @@
 # Changelog
 
+**0.84.0**
+- [red171] Code Basis auf Java 11 angehoben
+- [red171] `ajfsp` URL Handler funktioniert nun unter macOS und Linux
+- [red171] `.ajl` Dateien können direkt mit dem GUI geöffnet/verknüpft werden
+- [red171] das `serverwatcher` plugin wurde entfernt
+- [red171] für macOS wird jetzt ein `.dmg` File erstellt (vereinfacht Installation)
+
 **0.83.4**
 - [red171] die URL für die GUI NEWS ist nun manuell in der `ajgui.properties` konfigurierbar (`options_news_url`)
 - [red171] die URL für die Serverliste ist nun manuell in der `ajgui.properties` konfigurierbar (`options_server_list_url`)

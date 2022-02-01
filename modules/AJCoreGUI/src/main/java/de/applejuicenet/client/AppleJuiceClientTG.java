@@ -30,7 +30,7 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
  */
 public class AppleJuiceClientTG extends ThreadGroup
 {
-   private Logger logger;
+   private final Logger logger;
 
    public AppleJuiceClientTG()
    {

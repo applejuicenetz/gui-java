@@ -3,7 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.applejuicenet.client</groupId>
     <artifactId>AJClientGUI</artifactId>
-    <version>1</version>
+    <version>0.84.0</version>
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
     <packaging>pom</packaging>
 
     <modules>
@@ -15,33 +19,107 @@
 
     <build>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>io.github.fvarrui</groupId>-->
-<!--                <artifactId>javapackager</artifactId>-->
-<!--                <version>1.5.1</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>javapackager.mac</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>package</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <name>AJCoreGUI</name>-->
-<!--                            <displayName>AJCoreGUI</displayName>-->
-<!--                            <mainClass>de.applejuicenet.client.AppleJuiceClient</mainClass>-->
-<!--                            <bundleJre>false</bundleJre>-->
-<!--                            <platform>mac</platform>-->
-<!--                            <macConfig>-->
-<!--                                <appId>de.applejuicenet.client.AppleJuiceClient</appId>-->
-<!--                                <generateDmg>true</generateDmg>-->
-<!--                                <generatePkg>false</generatePkg>-->
-<!--                            </macConfig>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-
+            <plugin>
+                <inherited>false</inherited>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}/resources/needed_jars/</directory>
+                            <includes>
+                                <include>*.jar</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>${basedir}/resources/plugins/</directory>
+                            <includes>
+                                <include>*.jar</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>${basedir}/resources/pwdlpolicies/</directory>
+                            <includes>
+                                <include>*.jar</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <inherited>false</inherited>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy.plugins</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <sourceFile>${basedir}/modules/logviewer/target/logviewer.jar</sourceFile>
+                                    <destinationFile>${basedir}/resources/plugins/logviewer.jar</destinationFile>
+                                </fileSet>
+                                <fileSet>
+                                    <sourceFile>${basedir}/modules/versionchecker/target/versionchecker.jar</sourceFile>
+                                    <destinationFile>${basedir}/resources/plugins/versionchecker.jar</destinationFile>
+                                </fileSet>
+                                <fileSet>
+                                    <sourceFile>${basedir}/modules/standardpwdlpolicy/target/StandardPwdlPolicy.jar</sourceFile>
+                                    <destinationFile>${basedir}/resources/pwdlpolicies/StandardPwdlPolicy.jar</destinationFile>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <inherited>false</inherited>
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>1.6.2</version>
+                <executions>
+                    <execution>
+                        <id>javapackager.mac</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <name>AJCoreGUI</name>
+                            <displayName>AJCoreGUI</displayName>
+                            <mainClass>de.applejuicenet.client.AppleJuiceClient</mainClass>
+                            <runnableJar>${basedir}/modules/AJCoreGUI/target/AJCoreGUI.jar</runnableJar>
+                            <bundleJre>false</bundleJre>
+                            <platform>mac</platform>
+                            <jreMinVersion>11</jreMinVersion>
+                            <organizationName>appleJuiceNETZ</organizationName>
+                            <organizationUrl>https://applejuicenet.cc</organizationUrl>
+                            <macConfig>
+                                <appId>de.applejuicenet.client.AppleJuiceClient</appId>
+                                <generateDmg>true</generateDmg>
+                                <generatePkg>false</generatePkg>
+                                <relocateJar>false</relocateJar>
+                                <codesignApp>false</codesignApp>
+                            </macConfig>
+                            <additionalResources>
+                                <additionalResource>resources/icons</additionalResource>
+                                <additionalResource>resources/language</additionalResource>
+                                <additionalResource>resources/needed_jars</additionalResource>
+                                <additionalResource>resources/plugins</additionalResource>
+                                <additionalResource>resources/pwdlpolicies</additionalResource>
+                                <additionalResource>resources/sounds</additionalResource>
+                                <additionalResource>resources/themes</additionalResource>
+                                <additionalResource>resources/wizard.xml</additionalResource>
+                            </additionalResources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <inherited>false</inherited>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -56,42 +134,10 @@
                         <configuration>
                             <target>
                                 <zip destfile="./target/AJCoreGUI.zip">
-                                    <zipfileset dir="${basedir}/resources/" includes="*/*"/>
-                                    <zipfileset dir="${basedir}/resources/" includes="AJCoreGUI.exe"/>
-                                    <zipfileset dir="${basedir}/modules/AJCoreGUI/target/" includes="AJCoreGUI-*.jar" fullpath="AJCoreGUI.jar"/>
-                                    <zipfileset dir="${basedir}/modules/logviewer/target/" includes="logviewer-*.jar" fullpath="plugins/logviewer.jar"/>
-                                    <zipfileset dir="${basedir}/modules/versionchecker/target/" includes="versionchecker-*.jar" fullpath="plugins/versionchecker.jar"/>
-                                    <zipfileset dir="${basedir}/modules/standardpwdlpolicy/target/" includes="StandardPwdlPolicy-*.jar" fullpath="pwdlpolicies/StandardPwdlPolicy.jar"/>
+                                    <zipfileset dir="${basedir}/resources/" includes="*"/>
+                                    <zipfileset dir="${basedir}/assets/windows/" includes="AJCoreGUI.exe"/>
+                                    <zipfileset dir="${basedir}/modules/AJCoreGUI/target/" includes="AJCoreGUI.jar" fullpath="AJCoreGUI.jar"/>
                                 </zip>
-                                <exec executable="shasum" dir="${basedir}/target/" output="${basedir}/target/AJCoreGUI.zip.sha256.txt">
-                                    <arg line="-a 256"/>
-                                    <arg line="AJCoreGUI.zip"/>
-                                </exec>
-                            </target>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>antrun.package.osx</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <zip destfile="./target/AJCoreGUI.macOS.zip">
-                                    <zipfileset dir="${basedir}/resources/" prefix="AJCoreGUI.app/Contents/Java/" includes="*/*"/>
-                                    <zipfileset dir="${basedir}/modules/AJCoreGUI/target/" includes="AJCoreGUI-*.jar" fullpath="AJCoreGUI.app/Contents/Java/AJCoreGUI.jar"/>
-                                    <zipfileset dir="${basedir}/modules/logviewer/target/" includes="logviewer-*.jar" fullpath="AJCoreGUI.app/Contents/Java/plugins/"/>
-                                    <zipfileset dir="${basedir}/modules/versionchecker/target/" includes="versionchecker-*.jar" fullpath="AJCoreGUI.app/Contents/Java/plugins/"/>
-                                    <zipfileset dir="${basedir}/modules/standardpwdlpolicy/target/" includes="StandardPwdlPolicy-*.jar" fullpath="AJCoreGUI.app/Contents/Java/pwdlpolicies/"/>
-                                    <zipfileset dir="${basedir}/osx/" includes="Info.plist" prefix="AJCoreGUI.app/Contents/"/>
-                                    <zipfileset dir="${basedir}/osx/" includes="AJCoreGUI.icns" prefix="AJCoreGUI.app/Contents/Resources"/>
-                                    <zipfileset dir="${basedir}/osx/" includes="universalJavaApplicationStub" prefix="AJCoreGUI.app/Contents/MacOS" filemode="777"/>
-                                </zip>
-                                <exec executable="shasum" dir="${basedir}/target/" output="${basedir}/target/AJCoreGUI.macOS.zip.sha256.txt">
-                                    <arg line="-a 256"/>
-                                    <arg line="AJCoreGUI.macOS.zip"/>
-                                </exec>
                             </target>
                         </configuration>
                     </execution>
