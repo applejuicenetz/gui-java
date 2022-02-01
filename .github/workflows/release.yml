@@ -1,55 +1,87 @@
 name: 'release'
 
 on:
-    create:
-        tags:
+  create:
+    tags:
 
 jobs:
-    release:
-        runs-on: ubuntu-latest
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v2
+  release:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-            -   name: Inject slug/short variables
-                uses: rlespinasse/github-slug-action@v2.x
+      - name: Inject JDK
+        id: inject_jdk
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: 11
 
-            -   name: Inject JDK
-                uses: actions/setup-java@v1
-                with:
-                    java-version: 8
+      - name: update mvn version
+        id: update_mvn_package
+        run: |
+          mvn versions:set
+          mvn versions:set \
+          -DgroupId=de.applejuicenet.client.gui \
+          -DartifactId=AJCoreGUI \
+          -DgenerateBackupPoms=false \
+          -DoldVersion="*" \
+          -N versions:update-child-modules \
+          -DnewVersion=${{ github.ref_name }}
 
-            -   name: Build with Maven
-                run: mvn package
+#      - name: commit updated package_version
+#        id: commit_updated_package_version
+#        uses: stefanzweifel/git-auto-commit-action@v4
+#        with:
+#          branch: master
+#          file_pattern: pom.xml
+#          commit_message: Update mvn Package Version to ${{ github.ref_name }}
 
-            -   name: Create Artefaktes
-                run: mvn install
+      - name: Build with Maven
+        run: mvn package
 
-            -   name: Upload Release Asset
-                id: upload-release-asset
-                uses: meeDamian/github-release@2.0
-                with:
-                    token: ${{ secrets.GITHUB_TOKEN }}
-                    draft: false
-                    gzip: false
-                    body: >
-                        aktuelles Changelog befindet sich [hier](https://github.com/applejuicenetz/gui-java/blob/master/CHANGELOG.md)
-                    files: >
-                        target/AJCoreGUI.zip
-                        target/AJCoreGUI.zip.sha256.txt
-                        target/AJCoreGUI.macOS.zip
-                        target/AJCoreGUI.macOS.zip.sha256.txt
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref_name }}
+          draft: true
+          prerelease: true
+          body: aktuelles Changelog befindet sich [hier](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md#changelog)
 
-            -   name: trigger homebrew update
-                uses: peter-evans/repository-dispatch@v1
-                with:
-                    token: ${{ secrets.REPO_DISPATCH_TOKEN }}
-                    repository: applejuicenet/homebrew-packages
-                    event-type: gui-update
+      - name: upload .zip
+        id: upload-release-asset-jar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/AJCoreGUI.zip
+          asset_name: AJCoreGUI.zip
+          asset_content_type: application/zip
 
-            -   name: trigger snapcraft update
-                uses: peter-evans/repository-dispatch@v1
-                with:
-                    token: ${{ secrets.REPO_DISPATCH_TOKEN }}
-                    repository: applejuicenetz/gui-java
-                    event-type: snapcraft-update
+      - name: upload windows setup
+        id: upload-release-asset-setup
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: launch4j/AJCoreGUI.setup.exe
+          asset_name: AJCoreGUI.setup.exe
+          asset_content_type: application/octet-stream
+
+      - name: upload macOS .dmg
+        id: upload-release-asset-dmg
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/AJCoreGUI_${{github.ref_name}}.dmg
+          asset_name: AJCoreGUI.dmg
+          asset_content_type: application/octet-stream

@@ -35,9 +35,6 @@
         <key>CFBundleSignature</key>
         <string>agui</string>
 
-        <key>CFBundleVersion</key>
-        <string>1.0.1</string>
-
         <key>CFBundleURLTypes</key>
         <array>
             <dict>
