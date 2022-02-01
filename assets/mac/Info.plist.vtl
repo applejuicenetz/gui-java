@@ -87,42 +87,30 @@
 			click OK to display a dialog with more information or cancel and view
 			the syslog for details.</string>
 
-#if (!$info.extra.fileAssociations.isEmpty())
-        <key>CFBundleDocumentTypes</key>
-        <array>
-#foreach ($fileAssociation in $info.extra.fileAssociations)
-            <dict>
-                <key>CFBundleTypeIconFile</key>
-                <string>${info.iconFile.name}</string>
-                <key>CFBundleTypeName</key>
-                <string>${fileAssociation.description}</string>
-                <key>CFBundleTypeRole</key>
-                <string>Viewer</string>
-                <key>LSHandlerRank</key>
-                <string>Owner</string>
-                <key>CFBundleTypeExtensions</key>
-                <array>
-                    <string>${fileAssociation.extension}</string>
-                </array>
-            </dict>
-#end
-        </array>
-#end
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>appleJuice Links</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>ajfsp</string>
+				</array>
+			</dict>
+		</array>
 
-#if (!$info.extra.urlAssociations.isEmpty())
-        <key>CFBundleURLTypes</key>
-        <array>
-#foreach ($urlAssociation in $info.extra.urlAssociations)
-            <dict>
-                <key>CFBundleURLName</key>
-                <string>${urlAssociation.description}</string>
-                <key>CFBundleURLSchemes</key>
-                <array>
-                    <string>${urlAssociation.protocol}</string>
-                </array>
-            </dict>
-#end
-        </array>
-#end
+		<key>CFBundleDocumentTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleTypeName</key>
+				<string>appleJuice Link List</string>
+				<key>CFBundleTypeExtensions</key>
+				<array>
+					<string>ajl</string>
+				</array>
+			</dict>
+		</array>
 	</dict>
 </plist>

@@ -63,7 +63,7 @@ import de.applejuicenet.client.shared.Splash;
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  */
 public class AppleJuiceClient {
     public static Splash splash = null;
@@ -111,6 +111,9 @@ public class AppleJuiceClient {
     }
 
     public static void main(String[] args) {
+        org.apache.log4j.BasicConfigurator.configure();
+
+
         AppleJuiceClientTG tg = new AppleJuiceClientTG();
         final String[] myargs = args;
         Runnable runnable = () -> AppleJuiceClient.runmain(myargs);
@@ -132,8 +135,13 @@ public class AppleJuiceClient {
             doubleInstance = true;
         }
 
-        Desktop.getDesktop().setOpenFileHandler(new ajlFileHandler());
-        Desktop.getDesktop().setOpenURIHandler(new ajfspURIHandler());
+        if (Desktop.getDesktop().isSupported(Desktop.Action.APP_OPEN_FILE)) {
+            Desktop.getDesktop().setOpenFileHandler(new ajlFileHandler());
+        }
+
+        if (Desktop.getDesktop().isSupported(Desktop.Action.APP_OPEN_URI)) {
+            Desktop.getDesktop().setOpenURIHandler(new ajfspURIHandler());
+        }
 
         if (args != null && args.length > 0) {
             try {
@@ -208,8 +216,7 @@ public class AppleJuiceClient {
 
                         File inputFile = new File(curArg);
 
-                        if (inputFile.exists() && !inputFile.isDirectory())
-                        {
+                        if (inputFile.exists() && !inputFile.isDirectory()) {
                             new AppleJuiceDialog().importAjl(inputFile, "");
                         } else {
                             logger.info("kann .ajl Datei nicht öffnen: " + curArg);
