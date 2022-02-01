@@ -1,9 +1,13 @@
 # appleJuice Client GUI
 
-![](https://img.shields.io/github/license/applejuicenetz/gui-java.svg)
 ![](https://img.shields.io/github/release/applejuicenetz/gui-java.svg)
 ![](https://img.shields.io/github/downloads/applejuicenetz/gui-java/total)
+![](https://img.shields.io/github/license/applejuicenetz/gui-java.svg)
+
 ![](https://github.com/applejuicenetz/gui-java/workflows/release/badge.svg)
+
+![](https://github.com/applejuicenetz/gui-java/actions/workflows/snapcraft.yml/badge.svg)
+![](https://snapcraft.io/applejuice-gui/badge.svg)
 
 Dieses GUI ist das grafisches Interface (Graphical User Interface) für den appleJuice Core.
 
@@ -11,12 +15,11 @@ Dieses GUI ist das grafisches Interface (Graphical User Interface) für den appl
 
 ### Windows
 
-Bitte das Setup von [hier](https://github.com/applejuicenetz/setup/releases) oder die `AJCoreGUI.zip` von [hier](https://github.com/applejuicenetz/gui-java/releases) nehmen.
+Bitte das Setup von [hier](https://github.com/applejuicenetz/gui-java//releases) oder die `AJCoreGUI.zip` von [hier](https://github.com/applejuicenetz/gui-java/releases) nehmen.
 
 ### macOS
 
-- per [Homebrew](https://brew.sh) installieren `brew cask install applejuicenetz/packages/applejuice-gui`
-- oder die `AJCoreGUI.masOS.zip` von [hier](https://github.com/applejuicenetz/gui-java/releases) nehmen
+- die `AJCoreGUI.dmg` von [hier](https://github.com/applejuicenetz/gui-java/releases) nehmen
 
 ### Linux
 
@@ -26,7 +29,7 @@ Für Linux wurde eine `snap` Paket zusammengestellt.
 
 ## Themes
 
-Das GUI hat einen Theme Support, weitere Themes gibts [hier](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks)
+Das GUI hat einen Theme Support, weitere Themes gibt es [hier](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks)
 
 ## Changelog
 
@@ -43,19 +46,3 @@ host=https://relinfo.tld/api/ajfsp/?link=%s
 ```
 
 Das letzte `%s` wird mit dem vollständigen `ajfsp` Link ersetzt (urlencoded).
-
-### neues Release in dieser Reihenfolge erstellen
-
-```bash
-mvn versions:set \
-    -DgroupId=de.applejuicenet.client.gui \
-    -DartifactId=AJCoreGUI \
-    -DgenerateBackupPoms=false \
-    -DoldVersion="*" \
-    -N versions:update-child-modules \
-    -DnewVersion=0.83.5
-```
-
-2. Changelog anpassen
-3. Änderungen committen und mit der neuen Version taggen
-4. die github action erstellt zum Tag das Release mit passenden Assets
