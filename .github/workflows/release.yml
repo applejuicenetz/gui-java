@@ -21,10 +21,17 @@ jobs:
       - name: update mvn version
         id: update_mvn_package
         run: |
-          mvn versions:set
           mvn versions:set \
           -DgroupId=de.applejuicenet.client.gui \
           -DartifactId=AJCoreGUI \
+          -DgenerateBackupPoms=false \
+          -DoldVersion="*" \
+          -N versions:update-child-modules \
+          -DnewVersion=${{ github.ref_name }}
+          
+           mvn versions:set \
+          -DgroupId=de.applejuicenet.client \
+          -DartifactId=AJClientGUI \
           -DgenerateBackupPoms=false \
           -DoldVersion="*" \
           -N versions:update-child-modules \
@@ -38,10 +45,12 @@ jobs:
 #          file_pattern: pom.xml
 #          commit_message: Update mvn Package Version to ${{ github.ref_name }}
 
-      - name: compile with Maven
+      - name: compile and package jar with Maven
+        id: mvn_package
         run: mvn package
 
-      - name: package with Maven
+      - name: build installable files with Maven
+        id: mvn_install
         run: mvn install
 
       - name: Create Release
