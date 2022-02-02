@@ -2,24 +2,20 @@ name: applejuice-gui
 title: appleJuice GUI
 summary: appleJuice GUI for appleJuice Client
 description: appleJuice GUI for appleJuice Client
-version: 0.83.4
+version: 0.84.0
 icon: snap/gui/applejuice-gui.png
 license: GPL-2.0
-
 grade: stable
 confinement: strict
 base: core18
-
 architectures:
   - build-on: amd64
   - build-on: i386
   - build-on: armhf
   - build-on: arm64
-
 layout:
   /usr/bin/xprop:
     bind-file: $SNAP/usr/bin/xprop
-
 apps:
   ajgui:
     command: $SNAP/app/launcher
@@ -36,14 +32,12 @@ apps:
       - network-bind
       - audio-playback
       - x11
-
 parts:
   ajgui:
     plugin: dump
     source: https://github.com/applejuicenetz/gui-java/releases/download/$SNAPCRAFT_PROJECT_VERSION/AJCoreGUI.zip
     organize:
       '*': app/
-
   jre:
     plugin: nil
     build-packages:
@@ -53,7 +47,6 @@ parts:
     stage-packages:
       - openjdk-11-jre
       - x11-utils
-
   launcher:
     plugin: dump
     source: ./snap/local
