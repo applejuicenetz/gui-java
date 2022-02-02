@@ -5,6 +5,7 @@
 - [red171] `ajfsp` URL Handler funktioniert nun unter macOS und Linux
 - [red171] `.ajl` Dateien können direkt mit dem GUI geöffnet/verknüpft werden
 - [red171] das `serverwatcher` plugin wurde entfernt
+- [red171] standard plugins werden jetzt auf allen Plattformen geladen
 - [red171] für macOS wird jetzt ein `.dmg` File erstellt (vereinfacht Installation)
 
 **0.83.4**

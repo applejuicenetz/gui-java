@@ -33,16 +33,10 @@ public class IconManager {
     private static IconManager instance = null;
     private final Logger logger;
     private final Map<String, ImageIcon> icons;
-    private String pluginPath;
 
     private IconManager() {
         logger = Logger.getLogger(getClass());
         icons = new HashMap<>();
-        if (!System.getProperty("os.name").toLowerCase().contains("windows")) {
-            pluginPath = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui" + File.separator + "plugins" + File.separator;
-        } else {
-            pluginPath = System.getProperty("user.dir") + File.separator + "plugins" + File.separator;
-        }
     }
 
     public static IconManager getInstance() {

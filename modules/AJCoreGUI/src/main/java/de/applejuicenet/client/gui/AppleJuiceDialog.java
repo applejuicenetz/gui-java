@@ -253,7 +253,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
             for(int i = 0; i < themeFiles.length; i++)
             {
-               if(themeFiles[i].isFile() && themeFiles[i].getName().indexOf(".zip") != -1)
+               if(themeFiles[i].isFile() && themeFiles[i].getName().endsWith(".zip"))
                {
 
                   //testen, ob es wirklich ein skinfile ist
