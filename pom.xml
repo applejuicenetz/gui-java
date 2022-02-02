@@ -134,7 +134,7 @@
                         <configuration>
                             <target>
                                 <zip destfile="./target/AJCoreGUI.zip">
-                                    <zipfileset dir="${basedir}/resources/" includes="*"/>
+                                    <zipfileset dir="${basedir}/resources/" includes="**"/>
                                     <zipfileset dir="${basedir}/assets/windows/" includes="AJCoreGUI.exe"/>
                                     <zipfileset dir="${basedir}/modules/AJCoreGUI/target/" includes="AJCoreGUI.jar" fullpath="AJCoreGUI.jar"/>
                                 </zip>
