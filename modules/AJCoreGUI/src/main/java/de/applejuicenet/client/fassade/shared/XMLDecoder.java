@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 public abstract class XMLDecoder

@@ -5,11 +5,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
+import javax.swing.*;
 
 import org.apache.log4j.Level;
 
@@ -37,7 +33,7 @@ import de.applejuicenet.client.shared.IconManager;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  *
  */
 
@@ -57,9 +53,6 @@ public class StartPanel extends TklPanel {
 	private JLabel version;
 	private JLabel warnungIcon;
 	private JTextPane serverMessage;
-	private NetworkInfo netInfo;
-	private Information information;
-	private LanguageSelector languageSelector;
 
 	public StartPanel(GuiController guiController) {
     	super(guiController);
@@ -120,20 +113,21 @@ public class StartPanel extends TklPanel {
 		return neuigkeiten;
 	}
 
-	private void init() throws Exception {
+	private void init(){
 		setLayout(new BorderLayout());
 		serverMessage = new JTextPane();
 		serverMessage.setContentType("text/html");
 		serverMessage.setEditable(false);
 
 		JPanel panel3 = new JPanel(new GridBagLayout());
-		panel3.setBackground(Color.WHITE);
+		panel3.setBackground(UIManager.getColor("TextField.background"));
+
 		JPanel panel4 = new JPanel(new BorderLayout());
-		panel4.setBackground(Color.WHITE);
+		panel4.setBackground(UIManager.getColor("TextField.background"));
 
 		IconManager im = IconManager.getInstance();
 		JPanel panel1 = new NorthPanel(serverMessage);
-		panel1.setBackground(Color.WHITE);
+		panel1.setBackground(UIManager.getColor("TextField.background"));
 
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.NORTH;
@@ -194,6 +188,7 @@ public class StartPanel extends TklPanel {
 		nachrichten = new JTextPane();
 		panel3.add(nachrichten, constraints);
 		nachrichten.setEditable(false);
+		nachrichten.setBackground(UIManager.getColor("TextField.background"));
 
 		constraints.gridy++;
 		constraints.insets.left = 5;

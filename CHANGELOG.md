@@ -1,5 +1,11 @@
 # Changelog
 
+**0.84.1**
+- [red171] Für Windows das `Darcula` Java `Look and Feel` Theme integriert
+- [red171] die alternativen Skins funktionieren wieder
+- [red171] alle alternativen Skins werden mit installiert 
+- [red171] Sounds funktionieren wieder!
+
 **0.84.0**
 - [red171] Code Basis auf Java 11 angehoben
 - [red171] `ajfsp` URL Handler funktioniert nun unter macOS und Linux
@@ -11,8 +17,8 @@
 **0.83.4**
 - [red171] die URL für die GUI NEWS ist nun manuell in der `ajgui.properties` konfigurierbar (`options_news_url`)
 - [red171] die URL für die Serverliste ist nun manuell in der `ajgui.properties` konfigurierbar (`options_server_list_url`)
-- [red171] die URL für den Update Server Feed ist nun manuell in der `ajgui.properties` konfigurierbar (`options_update_server_url`)
-- [red171] den Browser Bug bei der Update Benachrichtigung final behoben ;)
+- [red171] die URL für den Update-Server Feed ist nun manuell in der `ajgui.properties` konfigurierbar (`options_update_server_url`)
+- [red171] den Browser Bug bei der Update-Benachrichtigung final behoben ;)
 - [red171] der FAQ link aus dem "Dein Client" Bereich wurde entfernt
 
 **0.83.3**

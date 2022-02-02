@@ -22,7 +22,7 @@ import de.applejuicenet.client.fassade.entity.Version;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  *
  */
 class VersionDO extends Version

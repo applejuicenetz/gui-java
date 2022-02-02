@@ -27,7 +27,7 @@ import de.applejuicenet.client.gui.RegisterI;
  * <p>Diese Klasse darf nicht veraendert werden!
  * Um ein Plugin zu erstellen, muss diese Klasse ueberschrieben werden.</p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  */
 public abstract class PluginConnector extends JPanel implements DataUpdateListener, RegisterI
 {

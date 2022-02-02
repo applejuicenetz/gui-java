@@ -21,7 +21,7 @@ import de.applejuicenet.client.fassade.entity.Upload;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 class UploadDO extends Upload

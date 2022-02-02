@@ -24,7 +24,7 @@ import de.applejuicenet.client.fassade.entity.ShareEntry;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 public class AJSettings

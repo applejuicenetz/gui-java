@@ -18,24 +18,24 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
-      - name: update mvn version
-        id: update_mvn_package
-        run: |
-          mvn versions:set \
-          -DgroupId=de.applejuicenet.client.gui \
-          -DartifactId=AJCoreGUI \
-          -DgenerateBackupPoms=false \
-          -DoldVersion="*" \
-          -N versions:update-child-modules \
-          -DnewVersion=${{ github.ref_name }}
-          
-           mvn versions:set \
-          -DgroupId=de.applejuicenet.client \
-          -DartifactId=AJClientGUI \
-          -DgenerateBackupPoms=false \
-          -DoldVersion="*" \
-          -N versions:update-child-modules \
-          -DnewVersion=${{ github.ref_name }}
+#      - name: update mvn version
+#        id: update_mvn_package
+#        run: |
+#          mvn versions:set \
+#          -DgroupId=de.applejuicenet.client.gui \
+#          -DartifactId=AJCoreGUI \
+#          -DgenerateBackupPoms=false \
+#          -DoldVersion="*" \
+#          -N versions:update-child-modules \
+#          -DnewVersion=${{ github.ref_name }}
+
+#           mvn versions:set \
+#          -DgroupId=de.applejuicenet.client \
+#          -DartifactId=AJClientGUI \
+#          -DgenerateBackupPoms=false \
+#          -DoldVersion="*" \
+#          -N versions:update-child-modules \
+#          -DnewVersion=${{ github.ref_name }}
 
 #      - name: commit updated package_version
 #        id: commit_updated_package_version

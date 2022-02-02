@@ -30,7 +30,7 @@ import de.tklsoft.gui.controls.TKLComboBox;
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 public class IncomingDirSelectionDialog extends JDialog

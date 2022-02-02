@@ -54,7 +54,7 @@ import info.clearthought.layout.TableLayout;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  *
  */
 public class UploadPanel extends TklPanel implements RegisterI

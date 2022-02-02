@@ -61,7 +61,7 @@ import javax.swing.JPanel;
  * <p>              modifizierte, gekuerzte Sun-Source</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 

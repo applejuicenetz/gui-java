@@ -43,7 +43,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  *
  */
 public class DownloadPartListPanel extends JPanel implements MouseMotionListener, LanguageListener

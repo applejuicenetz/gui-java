@@ -23,7 +23,7 @@ import de.applejuicenet.client.fassade.entity.Server;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 class InformationDO extends Information

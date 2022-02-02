@@ -32,7 +32,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  */
 
 public abstract class WebsiteContentLoader {

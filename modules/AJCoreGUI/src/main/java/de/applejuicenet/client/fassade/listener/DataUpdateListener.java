@@ -16,7 +16,7 @@ package de.applejuicenet.client.fassade.listener;
  * Copyright: General Public License
  * </p>
  * 
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  * 
  */
 

@@ -4,12 +4,12 @@
     <groupId>de.applejuicenet.client.gui</groupId>
     <artifactId>AJCoreGUI</artifactId>
     <packaging>jar</packaging>
-    <version>0.84.0</version>
+    <version>0.84.1</version>
 
     <parent>
         <groupId>de.applejuicenet.client</groupId>
         <artifactId>AJClientGUI</artifactId>
-        <version>0.84.0</version>
+        <version>0.84.1</version>
         <relativePath>./../../pom.xml</relativePath>
     </parent>
 
@@ -31,9 +31,9 @@
             <version>1.2.17</version>
         </dependency>
         <dependency>
-            <groupId>skinlf</groupId>
+            <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
             <artifactId>skinlf</artifactId>
-            <version>1.2.3</version>
+            <version>6.7</version>
         </dependency>
         <dependency>
             <groupId>tablelayout</groupId>
@@ -54,6 +54,11 @@
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
             <version>1.4.01</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freeplane.bulenkov</groupId>
+            <artifactId>darcula</artifactId>
+            <version>2021.7</version>
         </dependency>
     </dependencies>
 

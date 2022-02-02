@@ -27,7 +27,7 @@ import de.applejuicenet.client.fassade.entity.DownloadSource;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  *
  */
 class DownloadDO implements Download

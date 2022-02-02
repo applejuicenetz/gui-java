@@ -39,7 +39,7 @@ import de.applejuicenet.client.fassade.shared.StringConstants;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 public class ShareXMLHolder extends DefaultHandler

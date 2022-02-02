@@ -28,7 +28,7 @@ import de.applejuicenet.client.gui.plugins.versionchecker.panels.MainPanel;
  * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: GPL</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 public class VersionChecker extends PluginConnector

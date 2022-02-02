@@ -64,7 +64,7 @@ import de.tklsoft.gui.controls.TKLTextField;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 public class DownloadPanel extends TklPanel

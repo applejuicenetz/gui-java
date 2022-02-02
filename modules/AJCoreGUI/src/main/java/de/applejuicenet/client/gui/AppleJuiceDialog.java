@@ -34,26 +34,7 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.swing.AbstractAction;
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JSlider;
-import javax.swing.JTextPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileFilter;
 
@@ -116,7 +97,7 @@ import de.tklsoft.gui.controls.TKLPanel;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  *
  */
 public class AppleJuiceDialog extends TKLFrame implements LanguageListener, DataUpdateListener
@@ -227,7 +208,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
    }
 
-   @SuppressWarnings("deprecation")
    public static void initThemes()
    {
       try
@@ -251,18 +231,15 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
             File[] themeFiles = themesPath.listFiles();
 
-            for(int i = 0; i < themeFiles.length; i++)
-            {
-               if(themeFiles[i].isFile() && themeFiles[i].getName().endsWith(".zip"))
-               {
+            for (File themeFile : themeFiles) {
+               if (themeFile.isFile() && themeFile.getName().endsWith(".zip")) {
 
                   //testen, ob es wirklich ein skinfile ist
-                  ZipFile  jf    = new ZipFile(themeFiles[i]);
+                  ZipFile jf = new ZipFile(themeFile);
                   ZipEntry entry = jf.getEntry("skinlf-themepack.xml");
 
-                  if(entry != null)
-                  {
-                     themesDateien.add(themeFiles[i].toURL());
+                  if (entry != null) {
+                     themesDateien.add(themeFile.toURL());
                   }
                }
             }
@@ -273,7 +250,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             String shortName    = "";
             String defaultTheme = OptionsManagerImpl.getInstance().getDefaultTheme();
 
-            themes              = new HashMap<String, Skin>();
+            themes              = new HashMap<>();
             for(URL curSkinURL : themesDateien)
             {
                temp = curSkinURL.getFile();
@@ -323,7 +300,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       return theApp;
    }
 
-   @SuppressWarnings("unchecked")
    private void init() throws Exception
    {
       titel = "appleJuice GUI (" + AppleJuiceDialog.getVersion() + ")";
@@ -970,24 +946,15 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             LookAFeel         defaultlookandfeel = OptionsManagerImpl.getInstance().getDefaultLookAndFeel();
             ButtonGroup       lafGroup2          = new ButtonGroup();
 
-            for(int i = 0; i < feels.length; i++)
-            {
-               final JCheckBoxLookAndFeelMenuItem lookAndFeelMenuItem = new JCheckBoxLookAndFeelMenuItem(feels[i]);
+            for (LookAFeel feel : feels) {
+               final JCheckBoxLookAndFeelMenuItem lookAndFeelMenuItem = new JCheckBoxLookAndFeelMenuItem(feel);
 
                lafGroup2.add(lookAndFeelMenuItem);
                themesMenu.add(lookAndFeelMenuItem);
-               if(defaultlookandfeel != null && feels[i].getName().equals(defaultlookandfeel.getName()))
-               {
-                  lookAndFeelMenuItem.setSelected(true);
-               }
-               else
-               {
-                  lookAndFeelMenuItem.setSelected(false);
-               }
+               lookAndFeelMenuItem.setSelected(defaultlookandfeel != null && feel.getName().equals(defaultlookandfeel.getName()));
 
                lookAndFeelMenuItem.addItemListener(ae -> {
-                  if(lookAndFeelMenuItem.isSelected())
-                  {
+                  if (lookAndFeelMenuItem.isSelected()) {
                      activateLaF(lookAndFeelMenuItem.getText());
                   }
                });

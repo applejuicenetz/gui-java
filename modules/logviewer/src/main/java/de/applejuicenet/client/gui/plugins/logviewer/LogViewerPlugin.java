@@ -31,7 +31,7 @@ import de.applejuicenet.client.gui.plugins.PluginConnector;
  * <p>Beschreibung: GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: GPL</p>
  *
- * @author: loevenwong <timo@loevenwong.de>
+ * @author loevenwong <timo@loevenwong.de>
  *
  */
 public class LogViewerPlugin extends PluginConnector

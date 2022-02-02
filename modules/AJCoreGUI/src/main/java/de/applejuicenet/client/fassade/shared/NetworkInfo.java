@@ -21,7 +21,7 @@ package de.applejuicenet.client.fassade.shared;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  *
  */
 public class NetworkInfo

@@ -35,7 +35,7 @@ import de.applejuicenet.client.fassade.shared.HtmlLoader;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 public class SecurerXMLHolder extends DefaultHandler

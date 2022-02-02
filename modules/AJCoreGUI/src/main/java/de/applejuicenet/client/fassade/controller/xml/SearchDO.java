@@ -33,7 +33,7 @@ import de.applejuicenet.client.fassade.shared.FileType;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  *
  */
 class SearchDO extends Search

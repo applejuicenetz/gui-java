@@ -6,7 +6,7 @@
     <option name="MAIN_CLASS_NAME" value="de.applejuicenet.client.AppleJuiceClient" />
     <module name="AJCoreGUI" />
     <option name="PROGRAM_PARAMETERS" value="~/Downloads/test.ajl" />
-    <option name="VM_PARAMETERS" value="-DDebug" />
+    <option name="VM_PARAMETERS" value="-DDebug -Dapple.awt.application.appearance=system" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/resources" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />

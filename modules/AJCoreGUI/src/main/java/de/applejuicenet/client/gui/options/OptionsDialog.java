@@ -47,7 +47,7 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
  * <p>Copyright: General Public License</p>
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  *
  */
 public class OptionsDialog extends JDialog

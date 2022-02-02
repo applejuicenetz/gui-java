@@ -33,7 +33,7 @@ import de.applejuicenet.client.fassade.shared.XMLDecoder;
  * Copyright: General Public License
  * </p>
  * 
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author Maj0r <aj@tkl-soft.de>
  * 
  */
 

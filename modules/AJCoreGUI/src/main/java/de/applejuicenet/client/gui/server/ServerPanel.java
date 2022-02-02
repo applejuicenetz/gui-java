@@ -79,7 +79,7 @@ import de.applejuicenet.client.shared.SoundPlayer;
  * Copyright: General Public License
  * </p>
  *
- * @author: Maj0r [aj@tkl-soft.de]
+ * @author Maj0r [aj@tkl-soft.de]
  *
  */
 public class ServerPanel extends JPanel implements LanguageListener, DataUpdateListener, RegisterI
