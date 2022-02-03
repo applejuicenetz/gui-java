@@ -257,9 +257,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                     }
                 }
 
-                if (System.getProperty("os.name").toLowerCase().contains("win")) {
-                    lookAndFeels.add(new LookAFeel("Darcula", "com.bulenkov.darcula.DarculaLaf"));
-                }
+                lookAndFeels.add(new LookAFeel("Darcula", "com.bulenkov.darcula.DarculaLaf"));
 
             } catch (Exception e) {
                 AppleJuiceDialog.rewriteProperties = true;
