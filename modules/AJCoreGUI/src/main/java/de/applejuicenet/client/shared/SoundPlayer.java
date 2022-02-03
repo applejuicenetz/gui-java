@@ -34,10 +34,11 @@ public class SoundPlayer {
     public static final int GESTARTET = 10;
     private static SoundPlayer instance = null;
     private static Logger logger;
-    private String soundPath;
+    private final String soundPath;
 
     private SoundPlayer() {
-        soundPath = System.getProperty("user.dir") + File.separator + "sounds" + File.separator;
+        String soundPack = OptionsManagerImpl.getInstance().getSoundSetName();
+        soundPath = System.getProperty("user.dir") + File.separator + "sounds" + File.separator + soundPack + File.separator;
     }
 
     public static SoundPlayer getInstance() {

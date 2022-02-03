@@ -146,7 +146,7 @@ public class AppleJuiceClient {
         if (args != null && args.length > 0) {
             try {
                 for (String curArg : args) {
-                    if (curArg.indexOf("-path=") != -1) {
+                    if (curArg.contains("-path=")) {
                         System.setProperty("user.dir", curArg.substring(6));
                         break;
                     }
@@ -161,10 +161,9 @@ public class AppleJuiceClient {
                         }
 
                         System.out.println();
-                        System.out.println(" -help                       Diese Uebersicht.");
-                        System.out.println(" -path=<pfad>                Ausfuehrpfad setzen. Alles im GUI ist relativ zu diesem.");
-                        System.out.println(" -link=<md5Passwort|link>    ajfsp-Link ans GUI uebergeben. " +
-                                " Das GUI wird ggf gestartet.");
+                        System.out.println(" -help                       Diese Übersicht.");
+                        System.out.println(" -path=<pfad>                Ausführpfad setzen. Alles im GUI ist relativ zu diesem.");
+                        System.out.println(" -link=<md5Passwort|link>    ajfsp-Link ans GUI übergeben. Das GUI wird ggf gestartet.");
                         System.out.println();
                         hilfeAusgegeben = true;
                     } else if (curArg.contains("-command=")) {

@@ -71,6 +71,14 @@ public interface OptionsManager
 
    String getUpdateServerURL();
 
+   String getIconSetName();
+
+   String getSoundSetName();
+
+   void setIconSetName(String name);
+
+   void setSoundSetName(String name);
+
    boolean isThemesSupported();
 
    void enableThemeSupport(boolean enable);
