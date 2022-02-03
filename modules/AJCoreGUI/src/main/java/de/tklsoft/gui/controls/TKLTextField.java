@@ -6,9 +6,8 @@ import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.JComponent;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
 
 public class TKLTextField extends JTextField implements ModifyableComponent, Synchronizable {
 
@@ -33,14 +32,12 @@ public class TKLTextField extends JTextField implements ModifyableComponent, Syn
    }
 
    private void init() {
-      KeyStroke undo = KeyStroke.getKeyStroke(90, 2);
       this.statusHolder = new StatusHolder(this, -1);
       this.addKeyListener(new KeyAdapter() {
          public void keyPressed(KeyEvent e) {
-            if(e.isControlDown() && e.getKeyCode() == 90) {
+            if((e.isMetaDown() || e.isControlDown()) && e.getKeyCode() == KeyEvent.VK_Z) {
                TKLTextField.this.setText(TKLTextField.this.oldValue);
             }
-
          }
          public void keyReleased(KeyEvent keyEvent) {
             super.keyReleased(keyEvent);

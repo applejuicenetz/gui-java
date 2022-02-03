@@ -1,6 +1,11 @@
 # Changelog
 
-**0.84.1**
+**0.84.2**
+- [red171] `iconpack` Support (siehe [readme.txt](./resources/icons/readme.txt) im `icons` Ordner)
+- [red171] `soundpack` Support (siehe [readme.txt](./resources/sounds/readme.txt) im `icons` Ordner)
+- [red171] unter macOS funktioniert nun CMD+V / CMD+C usw.
+
+- **0.84.1**
 - [red171] Darkmode via `Darcula` Java `Look and Feel` Theme integriert
 - [red171] die alternativen Skins funktionieren wieder
 - [red171] alle alternativen Skins werden mit installiert 

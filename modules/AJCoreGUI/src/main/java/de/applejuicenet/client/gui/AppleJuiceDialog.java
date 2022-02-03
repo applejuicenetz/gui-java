@@ -35,6 +35,7 @@ import java.util.zip.ZipFile;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.DefaultEditorKit;
 
 import com.l2fprod.gui.plaf.skin.Skin;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
@@ -286,6 +287,15 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             if(defaultlookandfeel != null)
             {
                UIManager.setLookAndFeel(defaultlookandfeel.getClassName());
+
+               // https://stackoverflow.com/a/7253059
+               if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
+                  InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
+                  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
+                  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+                  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+                  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+               }
             }
          }
       }
@@ -1623,6 +1633,15 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                {
                   UIManager.setLookAndFeel(lookAFeel.getClassName());
                   SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
+
+                  // https://stackoverflow.com/a/7253059
+                  if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
+                     InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
+                     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
+                     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+                     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+                     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+                  }
                }
                catch(Exception ex)
                {

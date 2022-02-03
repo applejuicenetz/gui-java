@@ -105,8 +105,6 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
       txtDownloadLink.addInvalidRule(downloadloadlinkRule);
       txtDownloadLink.ignoreInvalidRules(false);
 
-//      txtDownloadLink.getComponentPopupMenu().add( new JMenuItem(new DefaultEditorKit.CopyAction()) );
-
       cmbTargetDir.ignoreStatus(STATUSFLAG.MODIFIED, true);
       InvalidRule targetDirRule = component -> {
          Object obj = ((TKLComboBox) component).getSelectedItem();
