@@ -1,7 +1,7 @@
 # Changelog
 
 **0.84.1**
-- [red171] Für Windows das `Darcula` Java `Look and Feel` Theme integriert
+- [red171] Darkmode via `Darcula` Java `Look and Feel` Theme integriert
 - [red171] die alternativen Skins funktionieren wieder
 - [red171] alle alternativen Skins werden mit installiert 
 - [red171] Sounds funktionieren wieder!
