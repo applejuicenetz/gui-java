@@ -105,7 +105,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     private int[] uploadWaitingSort;
     private int[] serverSort;
 
-    private ArrayList<LookAFeel> lookAndFeels = new ArrayList<>();
+    private final ArrayList<LookAFeel> lookAndFeels = new ArrayList<>();
 
     private PropertiesManager(String propertiesPath) {
         PropertiesManager.path = propertiesPath;
@@ -235,6 +235,22 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
     public String getUpdateServerURL() {
         return propertyHandler.get("options_update_server_url", "https://api.github.com/repos/applejuicenetz/gui-java/releases/latest");
+    }
+
+    public String getIconSetName() {
+        return propertyHandler.get("options_icon_set", "classic");
+    }
+
+    public String getSoundSetName() {
+        return propertyHandler.get("options_sound_set", "classic");
+    }
+
+    public void setIconSetName(String name) {
+        propertyHandler.put("options_sound_set", name);
+    }
+
+    public void setSoundSetName(String name) {
+        propertyHandler.put("options_sound_set", name);
     }
 
     public LookAFeel[] getLookAndFeels() {
@@ -898,7 +914,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                 logger.error(PROPERTIES_ERROR_MESSAGE, e);
             }
 
-            if (firstReadError == true) {
+            if (firstReadError) {
                 PropertiesManager.restoreProperties();
                 AppleJuiceDialog.showInformation(PROPERTIES_ERROR);
                 firstReadError = false;

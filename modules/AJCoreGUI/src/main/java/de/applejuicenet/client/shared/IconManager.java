@@ -55,21 +55,14 @@ public class IconManager {
             if (icons.containsKey(key)) {
                 result = icons.get(key);
             } else {
-                String path;
-                String pathGif = System.getProperty("user.dir") + File.separator + "icons" + File.separator + key + ".gif";
-                String pathPng = System.getProperty("user.dir") + File.separator + "icons" + File.separator + key + ".png";
+                String iconSet = "classic";
 
-                File fileGif = new File(pathGif);
-                File filePng = new File(pathPng);
+                String path = System.getProperty("user.dir") + File.separator + "icons" + File.separator + iconSet + File.separator + key + ".png";
 
-                if (filePng.exists() && !filePng.isDirectory()) {
-                    path = pathPng;
-                }
-                else if (fileGif.exists() && !fileGif.isDirectory()) {
-                    path = pathGif;
-                }
-                else {
-                    throw new FileNotFoundException("No Icon for " + key + " found (.gif or .png)");
+                File file = new File(path);
+
+                if (!file.exists()) {
+                    throw new FileNotFoundException("No Icon for " + key + " found");
                 }
 
                 Image img = Toolkit.getDefaultToolkit().getImage(path);
@@ -79,34 +72,7 @@ public class IconManager {
             }
         } catch (Exception e) {
             if (logger.isEnabledFor(Level.INFO)) {
-                logger.info("Icon " + key + ".gif nicht gefunden", e);
-            }
-        }
-
-        return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    public ImageIcon getIcon(String key, boolean isPlugin, Class referenceClass) {
-        if (!isPlugin) {
-            return getIcon(key);
-        }
-
-        ImageIcon result = null;
-
-        try {
-            result = icons.get(key);
-            if (null == result) {
-                URL url = referenceClass.getClassLoader().getResource(key + ".gif");
-
-                Image img = Toolkit.getDefaultToolkit().getImage(url);
-
-                result = new ImageIcon(img);
-                icons.put(key, result);
-            }
-        } catch (Exception e) {
-            if (logger.isEnabledFor(Level.INFO)) {
-                logger.info("Plugin-Icon " + key + ".gif nicht gefunden", e);
+                logger.info("Icon " + key + ".png nicht gefunden", e);
             }
         }
 
@@ -114,7 +80,8 @@ public class IconManager {
     }
 
     public Properties getIconProperties(String identifier) {
-        String path = System.getProperty("user.dir") + File.separator + "icons" + File.separator + identifier + ".properties";
+        String iconSet = "classic";
+        String path = System.getProperty("user.dir") + File.separator + "icons" + File.separator + iconSet + File.separator + identifier + ".properties";
         File aFile = new File(path);
 
         if (aFile.isFile()) {

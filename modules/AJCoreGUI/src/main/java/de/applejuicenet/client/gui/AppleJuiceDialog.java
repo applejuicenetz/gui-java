@@ -114,6 +114,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    private JMenu                    sprachMenu;
    private JMenu                    optionenMenu;
    private JMenu                    themesMenu               = null;
+   private JMenu                    iconsetMenu             = null;
+   private JMenu                    soundsetMenu             = null;
    private JMenu                    coreMenu;
    private JMenuItem                menuItemOptionen         = new JMenuItem();
    private JMenuItem                menuItemDateiliste       = new JMenuItem();
@@ -131,8 +133,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
    private String                   keinServer;
    private boolean                  firstChange              = true;
    private MemoryMonitorDialog      memoryMonitorDialog;
-   private String                   themeSupportTitel;
-   private String                   themeSupportNachricht;
+   private String                   neustartTitel;
+   private String                   neustartNachricht;
    private boolean                  automaticPwdlEnabled     = false;
    private String                   titel;
    private String                   bestaetigung;
@@ -775,8 +777,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          {
             if(logger.isEnabledFor(Level.INFO))
             {
-               logger.info("Der Ordner " + path + " fuer die Sprachauswahl properties-Dateien ist nicht vorhanden." +
-                           "\r\nappleJuice wird beendet.");
+               logger.info("Der Ordner " + path + " für die Sprachauswahl properties-Dateien ist nicht vorhanden." + "\r\nappleJuice wird beendet.");
             }
 
             closeWithErrormessage("Der Ordner " + path + " fuer die Sprachauswahl properties-Dateien ist nicht vorhanden." +
@@ -962,8 +963,51 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             themesMenu.add(new JSeparator());
             themesMenu.add(menuItemAktivieren);
          }
-
          menuBar.add(themesMenu);
+
+         iconsetMenu = new JMenu();
+         ButtonGroup iconsetGroup = new ButtonGroup();
+         String iconsetPath = System.getProperty("user.dir") + File.separator + "icons" + File.separator;
+         String iconsetDefault = OptionsManagerImpl.getInstance().getSoundSetName();
+
+         File iconsetPathFile = new File(iconsetPath);
+         File[] iconsetDirectoryListing = iconsetPathFile.listFiles();
+         if (iconsetDirectoryListing != null) {
+            for (File iconSet : iconsetDirectoryListing) {
+               if (iconSet.isDirectory()) {
+                  final iconsetFeelMenuItem iconsetMenuItem = new iconsetFeelMenuItem(iconSet.getName());
+                  iconsetMenuItem.setSelected(iconSet.getName().equals(iconsetDefault));
+                  iconsetMenuItem.addActionListener(ce -> changeIconOrSoundSet());
+                  iconsetMenu.add(iconsetMenuItem);
+                  iconsetGroup.add(iconsetMenuItem);
+               }
+            }
+         }
+
+         soundsetMenu = new JMenu();
+         ButtonGroup soundsetGroup = new ButtonGroup();
+
+         String soundsetPath = System.getProperty("user.dir") + File.separator + "sounds" + File.separator;
+         String soundsetDefault = OptionsManagerImpl.getInstance().getSoundSetName();
+
+         File soundsetPathFile = new File(soundsetPath);
+         File[] soundsetDirectoryListing = soundsetPathFile.listFiles();
+         if (soundsetDirectoryListing != null) {
+            for (File soundSet : soundsetDirectoryListing) {
+               if (soundSet.isDirectory()) {
+                  final soundsetFeelMenuItem soundsetMenuItem = new soundsetFeelMenuItem(soundSet.getName());
+                  soundsetMenuItem.setSelected(soundSet.getName().equals(soundsetDefault));
+                  soundsetMenu.add(soundsetMenuItem);
+                  soundsetGroup.add(soundsetMenuItem);
+
+                  soundsetMenuItem.addActionListener(ce -> changeIconOrSoundSet());
+               }
+            }
+         }
+
+         menuBar.add(iconsetMenu);
+         menuBar.add(soundsetMenu);
+
          coreMenu = new JMenu();
          coreMenu.add(menuItemCoreBeenden);
          menuBar.add(coreMenu);
@@ -999,12 +1043,21 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
    private void activateThemeSupport(boolean enable)
    {
-      int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.this, themeSupportNachricht, themeSupportTitel,
-                                                 JOptionPane.YES_NO_OPTION);
+      int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.this, neustartNachricht, "appleJuice Client", JOptionPane.YES_NO_OPTION);
 
       if(result == JOptionPane.YES_OPTION)
       {
          OptionsManagerImpl.getInstance().enableThemeSupport(enable);
+         closeDialog(null);
+      }
+   }
+
+   private void changeIconOrSoundSet()
+   {
+      int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.this, neustartNachricht, "appleJuice Client", JOptionPane.YES_NO_OPTION);
+
+      if(result == JOptionPane.YES_OPTION)
+      {
          closeDialog(null);
       }
    }
@@ -1033,11 +1086,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
          if(feels != null && laf != null)
          {
-            for(int i = 0; i < feels.length; i++)
-            {
-               if(laf.equals(feels[i].getName()))
-               {
-                  OptionsManagerImpl.getInstance().setDefaultLookAndFeel(feels[i]);
+            for (LookAFeel feel : feels) {
+               if (laf.equals(feel.getName())) {
+                  OptionsManagerImpl.getInstance().setDefaultLookAndFeel(feel);
                   return;
                }
             }
@@ -1116,8 +1167,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          verbinden             = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.verbinden");
          nichtVerbunden        = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.nichtverbunden");
          keinServer            = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.keinserver");
-         themeSupportTitel     = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
-         themeSupportNachricht = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.themesupportnachricht");
+         neustartTitel         = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
+         neustartNachricht     = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.neustartnachricht");
          sprachMenu.setText(languageSelector.getFirstAttrbuteByTagName("einstform.languagesheet.caption"));
          menuItemOptionen.setText(languageSelector.getFirstAttrbuteByTagName("mainform.optbtn.caption"));
          menuItemOptionen.setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.optbtn.hint"));
@@ -1131,6 +1182,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          menuItemDateiliste.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.dateiliste"));
          menuItemDateiliste.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.dateilistehint"));
          themesMenu.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.themes"));
+         iconsetMenu.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.icons"));
+         soundsetMenu.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.sound"));
          bestaetigung = languageSelector.getFirstAttrbuteByTagName("javagui.menu.bestaetigung");
          menuItemAktivieren.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.aktivieren"));
          menuItemDeaktivieren.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.deaktivieren"));
@@ -1570,6 +1623,47 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                {
                   UIManager.setLookAndFeel(lookAFeel.getClassName());
                   SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
+               }
+               catch(Exception ex)
+               {
+                  logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+               }
+            }
+         });
+      }
+   }
+
+   private class iconsetFeelMenuItem extends JCheckBoxMenuItem
+   {
+      public iconsetFeelMenuItem(String name)
+      {
+         super(name);
+         addItemListener(ae -> {
+            if(isSelected())
+            {
+               try
+               {
+                  OptionsManagerImpl.getInstance().setIconSetName(name);
+               }
+               catch(Exception ex)
+               {
+                  logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+               }
+            }
+         });
+      }
+   }
+   private class soundsetFeelMenuItem extends JCheckBoxMenuItem
+   {
+      public soundsetFeelMenuItem(String name)
+      {
+         super(name);
+         addItemListener(ae -> {
+            if(isSelected())
+            {
+               try
+               {
+                  OptionsManagerImpl.getInstance().setSoundSetName(name);
                }
                catch(Exception ex)
                {

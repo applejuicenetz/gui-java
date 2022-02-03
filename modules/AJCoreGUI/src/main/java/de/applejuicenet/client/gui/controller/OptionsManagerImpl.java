@@ -123,6 +123,22 @@ public class OptionsManagerImpl implements OptionsManager{
         return propertiesManager.getUpdateServerURL();
     }
 
+    public String getIconSetName() {
+        return propertiesManager.getIconSetName();
+    }
+
+    public String getSoundSetName() {
+        return propertiesManager.getSoundSetName();
+    }
+
+    public void setIconSetName(String name) {
+        propertiesManager.setIconSetName(name);
+    }
+
+    public void setSoundSetName(String name) {
+        propertiesManager.setSoundSetName(name);
+    }
+
     public void setDefaultTheme(String themeShortName) {
         propertiesManager.setDefaultTheme(themeShortName);
     }
