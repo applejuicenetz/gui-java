@@ -1187,7 +1187,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          menuItemUeber.setText(languageSelector.getFirstAttrbuteByTagName("mainform.aboutbtn.caption"));
          menuItemCheckUpdate.setText(languageSelector.getFirstAttrbuteByTagName("mainform.checkupdate.caption"));
          menuItemCheckUpdate.setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.checkupdate.hint"));
-         menuItemDeaktivieren.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.deaktivieren"));
          optionenMenu.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.extras"));
          menuItemDateiliste.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.dateiliste"));
          menuItemDateiliste.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.dateilistehint"));
@@ -1652,7 +1651,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
       }
    }
 
-   private class iconsetFeelMenuItem extends JCheckBoxMenuItem
+   private static class iconsetFeelMenuItem extends JCheckBoxMenuItem
    {
       public iconsetFeelMenuItem(String name)
       {
@@ -1672,7 +1671,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          });
       }
    }
-   private class soundsetFeelMenuItem extends JCheckBoxMenuItem
+   private static class soundsetFeelMenuItem extends JCheckBoxMenuItem
    {
       public soundsetFeelMenuItem(String name)
       {
