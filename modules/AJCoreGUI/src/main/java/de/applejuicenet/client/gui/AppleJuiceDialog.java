@@ -978,7 +978,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
          iconsetMenu = new JMenu();
          ButtonGroup iconsetGroup = new ButtonGroup();
          String iconsetPath = System.getProperty("user.dir") + File.separator + "icons" + File.separator;
-         String iconsetDefault = OptionsManagerImpl.getInstance().getSoundSetName();
+         String iconsetDefault = OptionsManagerImpl.getInstance().getIconSetName();
 
          File iconsetPathFile = new File(iconsetPath);
          File[] iconsetDirectoryListing = iconsetPathFile.listFiles();

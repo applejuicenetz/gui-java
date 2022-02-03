@@ -246,7 +246,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     }
 
     public void setIconSetName(String name) {
-        propertyHandler.put("options_sound_set", name);
+        propertyHandler.put("options_icon_set", name);
     }
 
     public void setSoundSetName(String name) {

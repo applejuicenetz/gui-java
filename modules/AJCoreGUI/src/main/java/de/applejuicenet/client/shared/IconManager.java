@@ -19,6 +19,7 @@ import java.util.Properties;
 
 import javax.swing.ImageIcon;
 
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -55,7 +56,7 @@ public class IconManager {
             if (icons.containsKey(key)) {
                 result = icons.get(key);
             } else {
-                String iconSet = "classic";
+                String iconSet = OptionsManagerImpl.getInstance().getIconSetName();
 
                 String path = System.getProperty("user.dir") + File.separator + "icons" + File.separator + iconSet + File.separator + key + ".png";
 
@@ -80,7 +81,7 @@ public class IconManager {
     }
 
     public Properties getIconProperties(String identifier) {
-        String iconSet = "classic";
+        String iconSet = OptionsManagerImpl.getInstance().getIconSetName();
         String path = System.getProperty("user.dir") + File.separator + "icons" + File.separator + iconSet + File.separator + identifier + ".properties";
         File aFile = new File(path);
 
