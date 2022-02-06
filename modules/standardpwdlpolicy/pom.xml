@@ -35,7 +35,32 @@
                 <version>3.2.0</version>
                 <configuration>
                     <finalName>${project.artifactId}</finalName>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy.plugins</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <sourceFile>${basedir}/target/${project.artifactId}.jar</sourceFile>
+                                    <destinationFile>${project.parent.basedir}/resources/pwdlpolicies/${project.artifactId}.jar</destinationFile>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

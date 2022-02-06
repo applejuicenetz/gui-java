@@ -171,19 +171,17 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
     @SuppressWarnings("unchecked")
     private void informSettingsListener(Settings settings) {
-        Iterator it = settingsListener.iterator();
 
-        while (it.hasNext()) {
-            ((DataUpdateListener) it.next()).fireContentChanged(DATALISTENER_TYPE.SETTINGS_CHANGED, settings);
+        for (DataUpdateListener dataUpdateListener : settingsListener) {
+            dataUpdateListener.fireContentChanged(DATALISTENER_TYPE.SETTINGS_CHANGED, settings);
         }
     }
 
     @SuppressWarnings("unchecked")
     private void informConnectionSettingsListener(ConnectionSettings settings) {
-        Iterator it = connectionSettingsListener.iterator();
 
-        while (it.hasNext()) {
-            ((DataUpdateListener) it.next()).fireContentChanged(DATALISTENER_TYPE.CONNECTION_SETTINGS_CHANGED, settings);
+        for (DataUpdateListener dataUpdateListener : connectionSettingsListener) {
+            dataUpdateListener.fireContentChanged(DATALISTENER_TYPE.CONNECTION_SETTINGS_CHANGED, settings);
         }
     }
 
@@ -238,7 +236,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     }
 
     public String getIconSetName() {
-        return propertyHandler.get("options_icon_set", "classic");
+        return propertyHandler.get("options_icon_set", "modern");
     }
 
     public String getSoundSetName() {

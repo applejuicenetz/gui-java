@@ -143,13 +143,7 @@ public class TreeTableModelAdapter extends AbstractTableModel
 
    protected void delayedFireTableDataChanged()
    {
-      SwingUtilities.invokeLater(new Runnable()
-         {
-            public void run()
-            {
-               fireTableDataChanged();
-            }
-         });
+      SwingUtilities.invokeLater(this::fireTableDataChanged);
    }
 
    public void expandOrCollapseRow(int row)

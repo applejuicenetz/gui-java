@@ -43,7 +43,7 @@ public class PluginJarClassLoader extends SecureClassLoader
    private static Logger           logger              = Logger.getLogger(PluginJarClassLoader.class);
    private Properties              pluginProperties    = null;
    private ImageIcon               pluginIcon          = null;
-   private Map<String, Properties> languageFiles       = new HashMap<String, Properties>();
+   private Map<String, Properties> languageFiles       = new HashMap<>();
    private Map<String, ImageIcon>  availableIcons      = new HashMap<String, ImageIcon>();
    private Map<String, File>       availableIcons2File = new HashMap<String, File>();
 
@@ -95,7 +95,7 @@ public class PluginJarClassLoader extends SecureClassLoader
 
       JarFile                 jf        = new JarFile(jar);
       String                  entryName;
-      HashMap<String, byte[]> lazyLoad = new HashMap<String, byte[]>();
+      HashMap<String, byte[]> lazyLoad = new HashMap<>();
 
       for(Enumeration e = jf.entries(); e.hasMoreElements();)
       {
@@ -226,7 +226,7 @@ public class PluginJarClassLoader extends SecureClassLoader
    {
       try
       {
-         Class clazz = findLoadedClass(name);
+         Class<?> clazz = findLoadedClass(name);
 
          if(null != clazz)
          {
@@ -281,9 +281,7 @@ public class PluginJarClassLoader extends SecureClassLoader
       }
       catch(MalformedURLException e)
       {
-
          // bloed, aber nicht soooo schlimm
-         ;
       }
 
       return url;

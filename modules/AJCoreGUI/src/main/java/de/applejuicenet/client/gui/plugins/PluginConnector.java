@@ -59,7 +59,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
       if(null == availableIcons)
       {
          logger.info("Map availableIcons nicht uebergeben");
-         availableIcons = new HashMap<String, ImageIcon>();
+         availableIcons = new HashMap<>();
       }
 
       this.properties     = properties;
@@ -160,7 +160,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
    }
 
    /**
-    * Liefert ein Icon zurueck, welches in der Lasche angezeigt werden soll. Es muss als icon.gif im Plugin-Unterordner /icons gespeichert
+    * Liefert ein Icon zurueck, welches in der Lasche angezeigt werden soll. Es muss als icon.png im Plugin-Unterordner /icons gespeichert
     * werden, damit es spaeter an die richtige Stelle im jar-Archiv wandert (ca. 16x16)
     *
     * @return ImageIcon: LaschenIcon

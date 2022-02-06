@@ -30,7 +30,7 @@ public class IconManager {
             if (icons.containsKey(key)) {
                 result = (ImageIcon) icons.get(key);
             } else {
-                String url = System.getProperty("user.dir") + File.separator + "icons"  + File.separator + iconSet + File.separator + key + ".gif";
+                String url = System.getProperty("user.dir") + File.separator + "icons"  + File.separator + iconSet + File.separator + key + ".png";
                 Image img = (new ImageIcon(url)).getImage();
                 result = new ImageIcon(img);
                 icons.put(key, result);

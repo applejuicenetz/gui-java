@@ -70,7 +70,6 @@ public class ShareTableModel extends AbstractTreeTableModel
       return cNames[column];
    }
 
-   @SuppressWarnings("unchecked")
    public Class getColumnClass(int column)
    {
       return CLASS_TYPES[column];
@@ -113,7 +112,7 @@ public class ShareTableModel extends AbstractTreeTableModel
             {
                if(shareNode.isLeaf() && shareNode != getRoot())
                {
-                  return new Integer(shareNode.getShare().getPrioritaet());
+                  return shareNode.getShare().getPrioritaet();
                }
                else
                {
@@ -137,7 +136,7 @@ public class ShareTableModel extends AbstractTreeTableModel
             {
                if(shareNode.isLeaf() && shareNode != getRoot())
                {
-                  return new Long(shareNode.getShare().getAskCount());
+                  return shareNode.getShare().getAskCount();
                }
                else
                {
@@ -149,7 +148,7 @@ public class ShareTableModel extends AbstractTreeTableModel
             {
                if(shareNode.isLeaf() && shareNode != getRoot())
                {
-                  return new Long(shareNode.getShare().getSearchCount());
+                  return shareNode.getShare().getSearchCount();
                }
                else
                {

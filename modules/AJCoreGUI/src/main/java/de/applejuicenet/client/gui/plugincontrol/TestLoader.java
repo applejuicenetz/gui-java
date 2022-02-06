@@ -49,13 +49,7 @@ public abstract class TestLoader
    private Map<String, Properties> getLanguageFiles() throws IOException
    {
       Map<String, Properties> languageProperties = new HashMap<String, Properties>();
-      String[]                filenames = new File(path).list(new FilenameFilter()
-         {
-            public boolean accept(File dir, String name)
-            {
-               return name.startsWith("language_") && name.endsWith(".properties");
-            }
-         });
+      String[]                filenames = new File(path).list((dir, name) -> name.startsWith("language_") && name.endsWith(".properties"));
 
       if(null != filenames)
       {
@@ -81,7 +75,7 @@ public abstract class TestLoader
 
    private ImageIcon getIcon()
    {
-      ImageIcon icon = new ImageIcon(path + File.separator + "icons" + File.separator + "icon.gif");
+      ImageIcon icon = new ImageIcon(path + File.separator + "icons" + File.separator + "icon.png");
 
       return icon;
    }
@@ -90,14 +84,9 @@ public abstract class TestLoader
    {
       Map<String, ImageIcon> availableIcons = new HashMap<String, ImageIcon>();
       File                   aFile = new File(path + File.separator + "icons" + File.separator);
-      String[]               names = aFile.list(new FilenameFilter()
-         {
-            public boolean accept(File dir, String name)
-            {
-               return name.endsWith(".gif") || name.endsWith(".png");
-            }
-         });
+      String[]               names = aFile.list((dir, name) -> name.endsWith(".png"));
 
+      assert names != null;
       for(String curName : names)
       {
          String key = curName.substring(0, curName.length() - 4);
@@ -120,8 +109,8 @@ public abstract class TestLoader
             BufferedReader reader;
 
             reader = new BufferedReader(new FileReader(fullPath));
-            String       line = "";
-            StringBuffer read = new StringBuffer();
+            String       line;
+            StringBuilder read = new StringBuilder();
 
             while(null != (line = reader.readLine()))
             {
