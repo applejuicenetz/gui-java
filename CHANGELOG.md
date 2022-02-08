@@ -311,7 +311,7 @@ diese Version benötigt den Core ab Version **0.29.135.208**
 - [Maj0r] Unterstützung für fremde Look&Feels eingebaut
     Um Look&Feels zu verwenden, müssen die Themes deaktiviert werden.
     Ausgeliefert werden nur JGoodies als alternative Look&Feels.
-    Es können alle konformen Look&Feels verwendet werden. Dazu einfach ein passendes Jar in /needed_jars legen und die Look&Feel-Klasse in der propertes.xml eintragen.
+    Es können alle konformen Look&Feels verwendet werden. Dazu einfach ein passendes Jar in /lib legen und die Look&Feel-Klasse in der propertes.xml eintragen.
 - [Maj0r] Unnützes Passwortfeld unter Optionen->Passwort entfernt.
 - [Maj0r] Passwortfeld unter Optionen->Proxy ist nun wirklich ein Passwortfeld und stellt das Passwort nicht mehr im Klartext dar.
 - [Maj0r] Standardthemepack auf Toxic geändert.

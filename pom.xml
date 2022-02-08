@@ -11,6 +11,8 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>modules/ajcorefassade</module>
+        <module>modules/tklcontrols</module>
         <module>modules/AJCoreGUI</module>
         <module>modules/logviewer</module>
         <module>modules/versionchecker</module>
@@ -27,7 +29,7 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>${basedir}/resources/needed_jars/</directory>
+                            <directory>${basedir}/resources/lib/</directory>
                             <includes>
                                 <include>*.jar</include>
                             </includes>
@@ -82,7 +84,7 @@
                             <additionalResources>
                                 <additionalResource>resources/icons</additionalResource>
                                 <additionalResource>resources/language</additionalResource>
-                                <additionalResource>resources/needed_jars</additionalResource>
+                                <additionalResource>resources/lib</additionalResource>
                                 <additionalResource>resources/plugins</additionalResource>
                                 <additionalResource>resources/pwdlpolicies</additionalResource>
                                 <additionalResource>resources/sounds</additionalResource>
