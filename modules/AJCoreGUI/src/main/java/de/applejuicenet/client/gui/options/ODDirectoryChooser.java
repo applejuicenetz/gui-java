@@ -4,21 +4,6 @@
 
 package de.applejuicenet.client.gui.options;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultTreeModel;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -26,6 +11,14 @@ import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserNode;
 import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserTreeCellRenderer;
 import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserTreeModel;
 import de.applejuicenet.client.shared.SwingWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODDirectoryChooser.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
@@ -35,110 +28,87 @@ import de.applejuicenet.client.shared.SwingWorker;
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
- *
  */
-public class ODDirectoryChooser extends JDialog
-{
-   private JTree   folderTree  = new JTree();
-   private JButton uebernehmen = new JButton();
-   private JButton abbrechen   = new JButton();
-   private boolean change      = false;
-   private String  path;
-   private Logger  logger;
+public class ODDirectoryChooser extends JDialog {
+    private JTree folderTree = new JTree();
+    private JButton uebernehmen = new JButton();
+    private JButton abbrechen = new JButton();
+    private boolean change = false;
+    private String path;
+    private Logger logger;
 
-   public ODDirectoryChooser(JDialog parent, String title)
-   {
-      super(parent, true);
-      logger = Logger.getLogger(getClass());
-      try
-      {
-         setTitle(title);
-         init();
-      }
-      catch(Exception e)
-      {
-         if(logger.isEnabledFor(Level.ERROR))
-         {
+    public ODDirectoryChooser(JDialog parent, String title) {
+        super(parent, true);
+        logger = LoggerFactory.getLogger(getClass());
+        try {
+            setTitle(title);
+            init();
+        } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-         }
-      }
-   }
+        }
+    }
 
-   private void init()
-   {
-      LanguageSelector languageSelector = LanguageSelector.getInstance();
+    private void init() {
+        LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      getContentPane().setLayout(new BorderLayout());
-      getContentPane().add(new JScrollPane(folderTree), BorderLayout.CENTER);
-      folderTree.setModel(new DefaultTreeModel(new WaitNode()));
-      folderTree.setCellRenderer(new DirectoryChooserTreeCellRenderer());
-      uebernehmen.setEnabled(false);
-      final SwingWorker worker = new SwingWorker()
-      {
-         public Object construct()
-         {
-            DirectoryChooserTreeModel treeModel = new DirectoryChooserTreeModel();
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(new JScrollPane(folderTree), BorderLayout.CENTER);
+        folderTree.setModel(new DefaultTreeModel(new WaitNode()));
+        folderTree.setCellRenderer(new DirectoryChooserTreeCellRenderer());
+        uebernehmen.setEnabled(false);
+        final SwingWorker worker = new SwingWorker() {
+            public Object construct() {
+                DirectoryChooserTreeModel treeModel = new DirectoryChooserTreeModel();
 
-            folderTree.setModel(treeModel);
-            folderTree.setRootVisible(false);
-            uebernehmen.setEnabled(true);
-            return null;
-         }
-      };
-
-      worker.start();
-      JPanel aPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
-      aPanel.add(uebernehmen);
-      aPanel.add(abbrechen);
-      uebernehmen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
-      uebernehmen.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent e)
-            {
-               uebernehmen();
+                folderTree.setModel(treeModel);
+                folderTree.setRootVisible(false);
+                uebernehmen.setEnabled(true);
+                return null;
             }
-         });
-      abbrechen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button2.caption"));
-      abbrechen.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent e)
-            {
-               dispose();
+        };
+
+        worker.start();
+        JPanel aPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        aPanel.add(uebernehmen);
+        aPanel.add(abbrechen);
+        uebernehmen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
+        uebernehmen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                uebernehmen();
             }
-         });
-      getContentPane().add(aPanel, BorderLayout.SOUTH);
-      pack();
-      setSize(getWidth() * 2, getHeight());
-   }
+        });
+        abbrechen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button2.caption"));
+        abbrechen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+        getContentPane().add(aPanel, BorderLayout.SOUTH);
+        pack();
+        setSize(getWidth() * 2, getHeight());
+    }
 
-   public boolean isNewPathSelected()
-   {
-      return change;
-   }
+    public boolean isNewPathSelected() {
+        return change;
+    }
 
-   public String getSelectedPath()
-   {
-      return path;
-   }
+    public String getSelectedPath() {
+        return path;
+    }
 
-   private void uebernehmen()
-   {
-      try
-      {
-         if(folderTree.getSelectionCount() != 0)
-         {
-            change = true;
-            DirectoryChooserNode node = (DirectoryChooserNode) folderTree.getLastSelectedPathComponent();
+    private void uebernehmen() {
+        try {
+            if (folderTree.getSelectionCount() != 0) {
+                change = true;
+                DirectoryChooserNode node = (DirectoryChooserNode) folderTree.getLastSelectedPathComponent();
 
-            path = node.getDirectory().getPath();
-         }
+                path = node.getDirectory().getPath();
+            }
 
-         dispose();
-      }
-      catch(Exception e)
-      {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-      }
-   }
+            dispose();
+        } catch (Exception e) {
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+        }
+    }
 }

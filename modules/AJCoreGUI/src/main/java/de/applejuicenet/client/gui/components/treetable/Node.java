@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.components.treetable;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/treetable/Node.java,v 1.2 2009/01/12 07:45:46 maj0r Exp $

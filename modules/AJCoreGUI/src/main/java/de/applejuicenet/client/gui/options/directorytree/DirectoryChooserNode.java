@@ -1,18 +1,17 @@
 package de.applejuicenet.client.gui.options.directorytree;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.Icon;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.entity.Directory;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.components.tree.ApplejuiceNode;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/directorytree/DirectoryChooserNode.java,v 1.7 2006/05/03 14:52:22 maj0r Exp $

@@ -4,10 +4,9 @@
 
 package de.applejuicenet.client.gui.components.table;
 
+import javax.swing.table.JTableHeader;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.table.JTableHeader;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/HeaderListener.java,v 1.5 2009/02/12 13:03:34 maj0r Exp $

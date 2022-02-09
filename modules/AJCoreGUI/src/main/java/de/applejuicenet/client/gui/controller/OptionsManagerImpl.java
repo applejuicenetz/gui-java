@@ -1,13 +1,11 @@
 package de.applejuicenet.client.gui.controller;
 
-import org.apache.log4j.Level;
-
+import ch.qos.logback.classic.Level;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.Settings;
-import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManagerImpl.java,v 1.6 2005/01/18 17:35:28 maj0r Exp $
@@ -79,7 +77,7 @@ public class OptionsManagerImpl implements OptionsManager{
         return propertiesManager.getLogLevel();
     }
 
-    public void setLogLevel(Level level) {
+    public void setLogLevel(String level) {
         propertiesManager.setLogLevel(level);
     }
 
@@ -95,7 +93,7 @@ public class OptionsManagerImpl implements OptionsManager{
         return propertiesManager.getRemoteSettings();
     }
 
-    public void saveRemote(ConnectionSettings remote) throws InvalidPasswordException{
+    public void saveRemote(ConnectionSettings remote) {
         propertiesManager.saveRemote(remote);
     }
 

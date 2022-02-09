@@ -4,21 +4,22 @@
 
 package de.applejuicenet.client.gui.plugincontrol;
 
-import java.io.File;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.shared.PluginJarClassLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import de.applejuicenet.client.gui.plugins.PluginConnector;
-import de.applejuicenet.client.shared.PluginJarClassLoader;
-
 public abstract class PluginFactory {
     private static Set<PluginConnector> plugins = null;
-    private static final Logger logger = Logger.getLogger(PluginFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(PluginFactory.class);
 
     public static Set<PluginConnector> getPlugins() {
         if (null == plugins) {
@@ -75,11 +76,7 @@ public abstract class PluginFactory {
 
                     if (aPlugin != null) {
                         plugins.add(aPlugin);
-                        String nachricht = "Plugin " + aPlugin.getTitle() + " geladen...";
-
-                        if (logger.isEnabledFor(Level.INFO)) {
-                            logger.info(nachricht);
-                        }
+                        logger.info(String.format("Plugin %s (%s) geladen ...", aPlugin.getTitle(), aPlugin.getVersion()));
                     }
                 } catch (Exception e) {
                     //Von einem Plugin lassen wir uns nicht beirren! ;-)
@@ -106,9 +103,7 @@ public abstract class PluginFactory {
                 thePlugins.add(plugin);
                 String nachricht = "Plugin " + plugin.getTitle() + " geladen...";
 
-                if (logger.isEnabledFor(Level.INFO)) {
-                    logger.info(nachricht);
-                }
+                logger.info(nachricht);
             }
         }
 

@@ -11,20 +11,9 @@ package de.applejuicenet.client.shared;
  *
  */
 
-import java.awt.AWTException;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Robot;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Properties;
-
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JProgressBar;
 
 public class Splash
     extends JDialog {

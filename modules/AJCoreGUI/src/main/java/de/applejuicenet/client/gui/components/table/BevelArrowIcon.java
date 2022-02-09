@@ -1,10 +1,7 @@
 package de.applejuicenet.client.gui.components.table;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import javax.swing.Icon;
-import javax.swing.UIManager;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/BevelArrowIcon.java,v 1.1 2004/10/29 11:58:43 maj0r Exp $

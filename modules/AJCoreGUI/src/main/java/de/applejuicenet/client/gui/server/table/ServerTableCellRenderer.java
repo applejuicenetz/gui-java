@@ -3,15 +3,12 @@
  */
 package de.applejuicenet.client.gui.server.table;
 
-import java.awt.Component;
-
-import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.shared.IconManager;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableCellRenderer.java,v 1.4 2009/01/22 22:18:23 maj0r Exp $

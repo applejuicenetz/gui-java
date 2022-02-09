@@ -4,22 +4,18 @@
 
 package de.applejuicenet.client.gui.search;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.Icon;
-import javax.swing.JTabbedPane;
-
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Search;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.shared.IconManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultTabbedPane.java,v 1.7 2009/01/28 09:44:09 maj0r Exp $
@@ -33,8 +29,8 @@ import de.applejuicenet.client.shared.IconManager;
  */
 public class SearchResultTabbedPane extends JTabbedPane implements MouseListener
 {
-   private static Icon   icon   = IconManager.getInstance().getIcon("abbrechen");
-   private static Logger logger = Logger.getLogger(SearchResultTabbedPane.class);
+   private static final Icon   icon   = IconManager.getInstance().getIcon("abbrechen");
+   private static final Logger logger = LoggerFactory.getLogger(SearchResultTabbedPane.class);
 
    public SearchResultTabbedPane()
    {

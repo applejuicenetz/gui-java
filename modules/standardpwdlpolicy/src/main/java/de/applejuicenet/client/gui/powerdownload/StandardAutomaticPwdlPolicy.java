@@ -1,18 +1,14 @@
 package de.applejuicenet.client.gui.powerdownload;
 
-import java.awt.Frame;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Vector;
-
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
 
 /**
  * $Header:

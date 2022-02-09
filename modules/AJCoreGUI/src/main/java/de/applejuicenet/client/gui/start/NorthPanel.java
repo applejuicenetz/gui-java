@@ -1,15 +1,9 @@
 package de.applejuicenet.client.gui.start;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-
 import de.applejuicenet.client.shared.IconManager;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/NorthPanel.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $

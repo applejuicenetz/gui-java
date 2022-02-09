@@ -4,12 +4,10 @@
 
 package de.applejuicenet.client.gui.plugins.versionchecker.panels;
 
+import javax.swing.table.AbstractTableModel;
 import java.text.DecimalFormat;
-
 import java.util.HashMap;
 import java.util.StringTokenizer;
-
-import javax.swing.table.AbstractTableModel;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/panels/VersionTableModel.java,v 1.2 2009/01/07 15:29:22 maj0r Exp $

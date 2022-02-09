@@ -4,24 +4,21 @@
 
 package de.applejuicenet.client.gui.search.table;
 
-import java.util.List;
-
-import javax.swing.table.AbstractTableModel;
-
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.fassade.entity.FileName;
 import de.applejuicenet.client.fassade.entity.Search;
 import de.applejuicenet.client.fassade.entity.SearchEntry;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
+import org.slf4j.Logger;
+
+import javax.swing.table.AbstractTableModel;
+import java.util.List;
 
 public class SearchTableModel extends AbstractTableModel implements SortableTableModel<SearchEntry>
 {
    final static String[]                                     COL_NAMES   = {"Dateiname", "Groesze", "Anzahl"};
    @SuppressWarnings("unchecked")
    public static final Class[]                               CLASS_TYPES = {SearchEntry.class, Long.class, Integer.class};
-   private Logger                                            logger;
    private final Search                                      search;
    private TableSorter<SearchEntry>                          sorter;
 

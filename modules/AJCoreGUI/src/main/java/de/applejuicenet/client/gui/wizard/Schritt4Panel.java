@@ -4,14 +4,11 @@
 
 package de.applejuicenet.client.gui.wizard;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
-import javax.swing.JLabel;
-
 import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.controls.TKLTextArea;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt4Panel.java,v 1.14 2009/01/12 09:19:20 maj0r Exp $

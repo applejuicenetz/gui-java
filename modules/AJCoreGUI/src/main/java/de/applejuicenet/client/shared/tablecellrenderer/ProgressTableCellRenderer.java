@@ -3,13 +3,10 @@
  */
 package de.applejuicenet.client.shared.tablecellrenderer;
 
-import java.awt.Component;
-
-import java.text.DecimalFormat;
-
-import javax.swing.JProgressBar;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.text.DecimalFormat;
 
 public class ProgressTableCellRenderer extends JProgressBar implements TableCellRenderer
 {

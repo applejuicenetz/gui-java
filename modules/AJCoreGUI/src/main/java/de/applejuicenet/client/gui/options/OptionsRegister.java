@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.options;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/OptionsRegister.java,v 1.2 2006/05/03 14:52:00 maj0r Exp $

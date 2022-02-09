@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.share.tree;
 
-import java.awt.Dimension;
-import javax.swing.JTree;
+import javax.swing.*;
+import java.awt.*;
 
 
 /**

@@ -4,31 +4,6 @@
 
 package de.applejuicenet.client.gui.options;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import de.applejuicenet.client.gui.AppleJuiceDialog;
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.shared.AJSettings;
@@ -39,6 +14,11 @@ import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.exception.InvalidPasswordException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/OptionsDialog.java,v 1.9 2009/01/12 09:19:20 maj0r Exp $
@@ -52,7 +32,7 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  */
 public class OptionsDialog extends JDialog
 {
-   private static final Logger logger = Logger.getLogger(OptionsDialog.class);
+   private static final Logger logger = LoggerFactory.getLogger(OptionsDialog.class);
    private JFrame             parent;
    private JButton            speichern;
    private JButton            abbrechen;

@@ -4,57 +4,34 @@
 
 package de.applejuicenet.client;
 
-import java.awt.*;
-import java.awt.desktop.OpenURIEvent;
-import java.awt.desktop.OpenURIHandler;
-import java.awt.event.KeyEvent;
-
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-
-import java.net.Socket;
-
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
-import de.applejuicenet.client.gui.VersionChecker;
-import de.applejuicenet.client.gui.handler.ajfspURIHandler;
-import de.applejuicenet.client.gui.handler.ajlFileHandler;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.HTMLLayout;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-
+import ch.qos.logback.classic.Level;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.VersionChecker;
 import de.applejuicenet.client.gui.components.listener.KeyStates;
 import de.applejuicenet.client.gui.connect.ConnectFrame;
 import de.applejuicenet.client.gui.connect.QuickConnectionSettingsDialog;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.LinkListener;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.gui.controller.PositionManager;
-import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.controller.*;
+import de.applejuicenet.client.gui.handler.ajfspURIHandler;
+import de.applejuicenet.client.gui.handler.ajlFileHandler;
 import de.applejuicenet.client.gui.wizard.WizardDialog;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.Socket;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.109 2009/02/12 13:11:40 maj0r Exp $
@@ -67,9 +44,7 @@ import de.applejuicenet.client.shared.Splash;
  */
 public class AppleJuiceClient {
     public static Splash splash = null;
-    private static Logger logger = Logger.getLogger(AppleJuiceClient.class);
-    private static String fileAppenderPath;
-    private static HTMLLayout layout;
+    private static final Logger logger = LoggerFactory.getLogger(AppleJuiceClient.class);
     private static ApplejuiceFassade ajFassade = null;
     private static CoreConnectionSettingsHolder conn = null;
     private static String rootDirectory = null;
@@ -91,7 +66,7 @@ public class AppleJuiceClient {
                 conn = new CoreConnectionSettingsHolder(rm.getHost(), rm.getXmlPort(), rm.getOldPassword(), false);
                 ajFassade = new ApplejuiceFassade(conn);
             } catch (IllegalArgumentException e) {
-                logger.error(e);
+                logger.error("connection failed", e);
             }
         }
 
@@ -102,18 +77,7 @@ public class AppleJuiceClient {
         return conn;
     }
 
-    public static HTMLLayout getLoggerHtmlLayout() {
-        return layout;
-    }
-
-    public static String getLoggerFileAppenderPath() {
-        return fileAppenderPath;
-    }
-
     public static void main(String[] args) {
-        org.apache.log4j.BasicConfigurator.configure();
-
-
         AppleJuiceClientTG tg = new AppleJuiceClientTG();
         final String[] myargs = args;
         Runnable runnable = () -> AppleJuiceClient.runmain(myargs);
@@ -127,6 +91,13 @@ public class AppleJuiceClient {
         boolean processLink = false;
         String link = "";
         boolean doubleInstance = false;
+
+        try {
+            Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
+            AppleJuiceClient.setLogLevel(logLevel);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
 
         try {
             linkListener = new LinkListener();
@@ -249,51 +220,10 @@ public class AppleJuiceClient {
             linkListener.processLink(link, "");
         }
 
-        boolean isDebug = System.getProperty("Debug") != null;
-
-        if (isDebug) {
-            ConsoleAppender consoleAppender = new ConsoleAppender(new PatternLayout("%d [%t] %-5p %c - %m%n"));
-
-            Logger.getRootLogger().addAppender(consoleAppender);
-            Logger.getRootLogger().setLevel(Level.DEBUG);
-        } else {
-            Logger rootLogger = Logger.getRootLogger();
-
-            String datum = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date(System.currentTimeMillis()));
-            String dateiName;
-
-            dateiName = datum + ".html";
-            layout = new HTMLLayout();
-            layout.setTitle("appleJuice-GUI-Log " + datum);
-            layout.setLocationInfo(true);
-            Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
-
-            try {
-                String path = getRootDirectory() + File.separator + "logs";
-                File aFile = new File(path);
-
-                if (!aFile.exists()) {
-                    aFile.mkdir();
-                }
-
-                fileAppenderPath = path + File.separator + dateiName;
-                if (logLevel != Level.OFF) {
-                    FileAppender fileAppender = new FileAppender(layout, fileAppenderPath);
-
-                    rootLogger.removeAllAppenders();
-                    rootLogger.addAppender(fileAppender);
-                }
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-
-            rootLogger.setLevel(logLevel);
-        }
-
         if (System.getProperty("os.name").toLowerCase().contains("linux")) {
             try {
                 Toolkit xToolkit = Toolkit.getDefaultToolkit();
-                java.lang.reflect.Field awtAppClassNameField = xToolkit.getClass().getDeclaredField("awtAppClassName");
+                Field awtAppClassNameField = xToolkit.getClass().getDeclaredField("awtAppClassName");
                 awtAppClassNameField.setAccessible(true);
                 awtAppClassNameField.set(xToolkit, "AJCoreGUI");
             } catch (Exception ignored) {
@@ -311,7 +241,7 @@ public class AppleJuiceClient {
             splash.setVisible(true);
             try {
                 if (OptionsManagerImpl.getInstance().isThemesSupported()) {
-                    java.lang.reflect.Method method = JFrame.class.getMethod("setDefaultLookAndFeelDecorated",
+                    Method method = JFrame.class.getMethod("setDefaultLookAndFeelDecorated",
                             new Class[]{boolean.class});
 
                     method.invoke(null, new Object[]{Boolean.TRUE});
@@ -320,17 +250,17 @@ public class AppleJuiceClient {
                     method.invoke(null, new Object[]{Boolean.TRUE});
                 }
             } catch (Exception e) {
-                if (logger.isEnabledFor(Level.FATAL)) {
-                    logger.fatal("Programmabbruch", e);
+                if (logger.isErrorEnabled()) {
+                    logger.error("Programmabbruch", e);
                 }
             }
 
-            if (logger.isEnabledFor(Level.INFO)) {
+            if (logger.isInfoEnabled()) {
                 logger.info(nachricht);
             }
 
             System.out.println(nachricht);
-            if (logger.isEnabledFor(Level.INFO)) {
+            if (logger.isInfoEnabled()) {
                 nachricht = "erkanntes GUI-OS: " + System.getProperty("os.name");
                 logger.info(nachricht);
                 nachricht = "erkannte Java-Version: " + System.getProperty("java.version");
@@ -385,7 +315,7 @@ public class AppleJuiceClient {
                         nachricht = languageSelector.getFirstAttrbuteByTagName("javagui.startup.verbindungsfehler");
                         nachricht = nachricht.replaceFirst("%s", OptionsManagerImpl.getInstance().getRemoteSettings().getHost());
                         JOptionPane.showMessageDialog(connectFrame, nachricht, titel, JOptionPane.OK_OPTION);
-                        logger.fatal(nachricht);
+                        logger.error(nachricht);
                         System.out.println("Fehler: " + nachricht);
                         System.exit(-1);
                     }
@@ -428,9 +358,7 @@ public class AppleJuiceClient {
                 theApp.setVisible(true);
                 String nachricht1 = "appleJuice-GUI gestartet...";
 
-                if (logger.isEnabledFor(Level.INFO)) {
-                    logger.info(nachricht1);
-                }
+                logger.info(nachricht1);
 
                 System.out.println(nachricht1);
                 splash.dispose();
@@ -446,9 +374,7 @@ public class AppleJuiceClient {
             });
 
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.FATAL)) {
-                logger.fatal("Programmabbruch", e);
-            }
+            logger.error("Programmabbruch", e);
 
             System.exit(-1);
         }
@@ -498,5 +424,9 @@ public class AppleJuiceClient {
 
         dir += File.separator + "ajgui.properties";
         return dir;
+    }
+
+    public static void setLogLevel(Level logLevel) {
+        ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)).setLevel(logLevel);
     }
 }

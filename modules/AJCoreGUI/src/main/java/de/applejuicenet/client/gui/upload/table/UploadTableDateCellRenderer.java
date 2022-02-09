@@ -4,12 +4,11 @@
 
 package de.applejuicenet.client.gui.upload.table;
 
-import java.awt.Component;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 
 public class UploadTableDateCellRenderer extends DefaultTableCellRenderer
 {

@@ -1,14 +1,12 @@
 package de.applejuicenet.client.gui.share;
 
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-
 import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.gui.share.table.ShareTable;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareTableMouseAdapter.java,v 1.3 2004/10/15 13:39:47 maj0r Exp $

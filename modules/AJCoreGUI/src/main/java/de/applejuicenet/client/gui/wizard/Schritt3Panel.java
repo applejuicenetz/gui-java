@@ -4,19 +4,16 @@
 
 package de.applejuicenet.client.gui.wizard;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
-import javax.swing.JLabel;
-
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.tklsoft.gui.controls.InvalidRule;
 import de.tklsoft.gui.controls.ModifyableComponent;
 import de.tklsoft.gui.controls.TKLTextArea;
 import de.tklsoft.gui.controls.TKLTextField;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt3Panel.java,v 1.18 2009/01/12 09:19:20 maj0r Exp $

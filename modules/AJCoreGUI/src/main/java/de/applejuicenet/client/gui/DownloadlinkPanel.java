@@ -4,26 +4,20 @@
 
 package de.applejuicenet.client.gui;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import java.io.File;
-
-import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
-
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
-
 import de.tklsoft.gui.controls.InvalidRule;
-import de.tklsoft.gui.controls.ModifyableComponent;
 import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
 import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.controls.TKLTextField;
-
 import info.clearthought.layout.TableLayout;
+
+import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
 
 public class DownloadlinkPanel extends JPanel implements LanguageListener
 {

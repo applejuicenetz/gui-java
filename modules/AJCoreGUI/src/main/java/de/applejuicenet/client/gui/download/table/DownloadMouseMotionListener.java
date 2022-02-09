@@ -4,10 +4,10 @@
 
 package de.applejuicenet.client.gui.download.table;
 
+import de.applejuicenet.client.gui.components.GuiController;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-
-import de.applejuicenet.client.gui.components.GuiController;
 
 public class DownloadMouseMotionListener extends MouseMotionAdapter
 {

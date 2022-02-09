@@ -4,18 +4,15 @@
 
 package de.applejuicenet.client.gui.start;
 
-import java.awt.Component;
-import java.awt.Cursor;
-import java.net.URI;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.shared.DesktopTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.shared.DesktopTools;
+import java.awt.*;
+import java.net.URI;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/HyperlinkAdapter.java,v 1.9 2009/02/12 10:27:34 maj0r Exp $
@@ -25,58 +22,40 @@ import de.applejuicenet.client.shared.DesktopTools;
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
- *
  */
-public class HyperlinkAdapter implements HyperlinkListener
-{
-   private static Logger    logger;
-   private Component parent;
+public class HyperlinkAdapter implements HyperlinkListener {
+    private static Logger logger;
+    private Component parent;
 
-   public HyperlinkAdapter(Component parent)
-   {
-      logger      = Logger.getLogger(getClass());
-      this.parent = parent;
-   }
+    public HyperlinkAdapter(Component parent) {
+        logger = LoggerFactory.getLogger(getClass());
+        this.parent = parent;
+    }
 
-   public void hyperlinkUpdate(HyperlinkEvent e)
-   {
-      HyperlinkEvent.EventType type = e.getEventType();
+    public void hyperlinkUpdate(HyperlinkEvent e) {
+        HyperlinkEvent.EventType type = e.getEventType();
 
-      if(type == HyperlinkEvent.EventType.ENTERED)
-      {
-         parent.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        if (type == HyperlinkEvent.EventType.ENTERED) {
+            parent.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-      }
-      else if(type == HyperlinkEvent.EventType.EXITED)
-      {
-         parent.setCursor(Cursor.getDefaultCursor());
-      }
-      else if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
-      {
-         if(e.getURL() != null)
-         {
-            String url = e.getURL().toString();
+        } else if (type == HyperlinkEvent.EventType.EXITED) {
+            parent.setCursor(Cursor.getDefaultCursor());
+        } else if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            if (e.getURL() != null) {
+                String url = e.getURL().toString();
 
-            if(url.length() != 0)
-            {
-               executeLink(url);
+                if (url.length() != 0) {
+                    executeLink(url);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   public static void executeLink(String link)
-   {
-      try
-      {
-         DesktopTools.browse(new URI(link));
-      }
-      catch(Exception e)
-      {
-         if(logger.isEnabledFor(Level.ERROR))
-         {
+    public static void executeLink(String link) {
+        try {
+            DesktopTools.browse(new URI(link));
+        } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-         }
-      }
-   }
+        }
+    }
 }

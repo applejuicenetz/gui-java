@@ -4,28 +4,17 @@
 
 package de.applejuicenet.client.gui;
 
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.shared.DesktopTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
-import de.applejuicenet.client.gui.tray.DesktopTool;
-import de.applejuicenet.client.shared.DesktopTools;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
 /**
  * <p>Titel: AppleJuice Client-GUI</p>
@@ -42,15 +31,13 @@ public class UpdateInformationDialog extends JDialog {
 
     public UpdateInformationDialog(JFrame parentFrame, String aktuellsteVersion, String releaseLink) {
         super(parentFrame, true);
-        logger = Logger.getLogger(getClass());
+        logger = LoggerFactory.getLogger(getClass());
         try {
             this.aktuellsteVersion = aktuellsteVersion;
             this.releaseLink = releaseLink;
             init();
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -130,9 +117,7 @@ public class UpdateInformationDialog extends JDialog {
         try {
             DesktopTools.browse(new URI(link));
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 }

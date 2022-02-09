@@ -1,11 +1,11 @@
 package de.applejuicenet.client.gui.components.util;
 
-import javax.swing.ImageIcon;
-
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.shared.IconManager;
+
+import javax.swing.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/util/IconGetter.java,v 1.4 2005/01/19 11:03:56 maj0r Exp $

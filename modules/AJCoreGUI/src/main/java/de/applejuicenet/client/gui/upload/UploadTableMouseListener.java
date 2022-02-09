@@ -1,9 +1,9 @@
 package de.applejuicenet.client.gui.upload;
 
+import de.applejuicenet.client.gui.components.GuiController;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import de.applejuicenet.client.gui.components.GuiController;
 
 public class UploadTableMouseListener extends MouseAdapter{
 	private GuiController guiController;

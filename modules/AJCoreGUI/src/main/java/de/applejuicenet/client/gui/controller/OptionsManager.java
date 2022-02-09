@@ -4,8 +4,8 @@
 
 package de.applejuicenet.client.gui.controller;
 
-import org.apache.log4j.Level;
 
+import ch.qos.logback.classic.Level;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.shared.ConnectionSettings;
@@ -47,7 +47,7 @@ public interface OptionsManager
 
    Level getLogLevel();
 
-   void setLogLevel(Level level);
+   void setLogLevel(String level);
 
    Settings getSettings();
 

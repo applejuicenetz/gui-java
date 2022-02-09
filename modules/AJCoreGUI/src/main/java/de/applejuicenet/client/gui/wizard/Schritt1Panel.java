@@ -4,20 +4,15 @@
 
 package de.applejuicenet.client.gui.wizard;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import java.io.File;
-
-import javax.swing.JLabel;
-
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-
 import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.controls.TKLTextArea;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Schritt1Panel.java,v 1.16 2009/01/14 13:20:55 maj0r Exp $

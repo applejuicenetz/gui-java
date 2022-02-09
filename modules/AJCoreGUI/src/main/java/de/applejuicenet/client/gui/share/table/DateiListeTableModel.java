@@ -3,12 +3,11 @@
  */
 package de.applejuicenet.client.gui.share.table;
 
-import java.util.HashMap;
-import java.util.Map;
+import de.applejuicenet.client.fassade.entity.Share;
 
 import javax.swing.table.AbstractTableModel;
-
-import de.applejuicenet.client.fassade.entity.Share;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DateiListeTableModel.java,v 1.7 2009/01/18 22:57:48 maj0r Exp $

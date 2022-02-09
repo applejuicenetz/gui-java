@@ -4,17 +4,15 @@
 
 package de.applejuicenet.client.gui.plugins;
 
+import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.gui.RegisterI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-
-import org.apache.log4j.Logger;
-
-import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.RegisterI;
 
 /**
  * <p>Titel: AppleJuice Core-GUI</p>
@@ -36,7 +34,6 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
    private final Map<String, Properties> languageFiles;
    private Properties                    currentLanguageFile;
    private Map<String, ImageIcon>        availableIcons;
-   private final Logger                  logger = Logger.getLogger(getClass());
 
    protected PluginConnector(Properties properties, Map<String, Properties> languageFiles, ImageIcon icon,
                              Map<String, ImageIcon> availableIcons)
@@ -58,6 +55,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
 
       if(null == availableIcons)
       {
+         Logger logger = LoggerFactory.getLogger(getClass());
          logger.info("Map availableIcons nicht uebergeben");
          availableIcons = new HashMap<>();
       }

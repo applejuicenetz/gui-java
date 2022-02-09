@@ -4,13 +4,12 @@
 
 package de.applejuicenet.client.gui.plugins.logviewer;
 
-import java.util.Map;
-import java.util.Properties;
-
-import javax.swing.ImageIcon;
-
 import de.applejuicenet.client.gui.plugincontrol.TestLoader;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
+
+import javax.swing.*;
+import java.util.Map;
+import java.util.Properties;
 
 public class LogViewerTestLoader extends TestLoader
 {

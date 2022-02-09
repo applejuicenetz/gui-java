@@ -4,34 +4,20 @@
 
 package de.applejuicenet.client.gui.options;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.plugincontrol.PluginFactory;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.shared.IconManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import java.awt.*;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginPanel.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
@@ -54,7 +40,7 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
    private String           version;
    private String           autor;
    private String           erlaeuterung;
-   private Logger           logger;
+   private Logger logger;
    private PluginConnector  selectedPluginConnector = null;
    private JDialog          parentDialog;
    private Icon             menuIcon;
@@ -62,7 +48,7 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
 
    public ODPluginPanel(JDialog parent)
    {
-      logger = Logger.getLogger(getClass());
+      logger = LoggerFactory.getLogger(getClass());
       try
       {
          theApp       = AppleJuiceDialog.getApp();
@@ -71,15 +57,11 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       }
       catch(Exception e)
       {
-         if(logger.isEnabledFor(Level.ERROR))
-         {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-         }
       }
    }
 
-   private void init() throws Exception
-   {
+   private void init() {
       IconManager im = IconManager.getInstance();
 
       menuIcon = im.getIcon("opt_plugins");

@@ -1,14 +1,11 @@
 package de.applejuicenet.client.gui.share.tree;
 
-import java.util.Vector;
-
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-
-
 import java.util.List;
+import java.util.Vector;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/ShareSelectionTreeModel.java,v 1.2 2005/02/28 14:58:19 maj0r Exp $

@@ -6,9 +6,7 @@ package de.applejuicenet.client.gui.mobileproxy;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
 import java.net.Socket;
-
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 

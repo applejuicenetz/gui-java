@@ -18,8 +18,8 @@ package de.applejuicenet.client.gui.components.treetable;
  * it only in accordance with the terms of the license agreement
  * you entered into with Sun.
  */
-import javax.swing.JTree;
-import javax.swing.SwingUtilities;
+
+import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeModelEvent;

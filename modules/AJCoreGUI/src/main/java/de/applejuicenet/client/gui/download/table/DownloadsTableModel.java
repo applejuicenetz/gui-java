@@ -3,18 +3,17 @@
  */
 package de.applejuicenet.client.gui.download.table;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.table.AbstractTableModel;
-
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+
+import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class DownloadsTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<Download>
 {

@@ -1,18 +1,5 @@
 package de.applejuicenet.client.gui.share.tree;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.Icon;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
-
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Directory;
@@ -22,6 +9,13 @@ import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.components.tree.ApplejuiceNode;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import java.util.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/DirectoryNode.java,v 1.7 2005/02/28 14:58:19 maj0r Exp $
@@ -31,19 +25,18 @@ import de.applejuicenet.client.shared.IconManager;
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
- *
  */
 
 public class DirectoryNode
-    extends DefaultMutableTreeNode
-    implements Node, ApplejuiceNode {
-	public static final int NOT_SHARED = 0;
+        extends DefaultMutableTreeNode
+        implements Node, ApplejuiceNode {
+    public static final int NOT_SHARED = 0;
     public static final int SHARED_WITH_SUB = 1;
     public static final int SHARED_WITHOUT_SUB = 2;
     public static final int SHARED_SOMETHING = 3;
     public static final int SHARED_SUB = 4;
-    
-    private static Logger logger = Logger.getLogger(DirectoryNode.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(DirectoryNode.class);
 
     private static Set<ShareEntry> shareDirs = new HashSet<ShareEntry>();
     private static Map<String, Icon> icons = new HashMap<String, Icon>();
@@ -62,14 +55,14 @@ public class DirectoryNode
         this.parent = null;
         this.directory = null;
         try {
-        	children = new ArrayList<DirectoryNode>();
-			List<Directory> directories = AppleJuiceClient.getAjFassade().getDirectories(null);
-			for (Directory curDirectory : directories){
-				children.add(new DirectoryNode(this, curDirectory));
-			}
-		} catch (IllegalArgumentException e) {
-			logger.error(e);
-		}
+            children = new ArrayList<DirectoryNode>();
+            List<Directory> directories = AppleJuiceClient.getAjFassade().getDirectories(null);
+            for (Directory curDirectory : directories) {
+                children.add(new DirectoryNode(this, curDirectory));
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+        }
     }
 
     public static void setShareDirs(Set<ShareEntry> newShareDirs) {
@@ -94,32 +87,29 @@ public class DirectoryNode
         }
         int shareMode = NOT_SHARED;
         for (ShareEntry curShareEntry : shareDirs) {
-        	if (directory.getName().indexOf("crypto") != -1){
-        		int i = 0;
-        	}
+            if (directory.getName().indexOf("crypto") != -1) {
+                int i = 0;
+            }
             if (curShareEntry.getDir().toLowerCase().startsWith(directory.getPath().
-                toLowerCase())) {
+                    toLowerCase())) {
                 if (directory.getPath().length() < curShareEntry.getDir().length()
-                    &&
-                    directory.getPath().lastIndexOf(ApplejuiceFassade.separator) ==
-                    	curShareEntry.getDir().lastIndexOf(ApplejuiceFassade.separator)) {
+                        &&
+                        directory.getPath().lastIndexOf(ApplejuiceFassade.separator) ==
+                                curShareEntry.getDir().lastIndexOf(ApplejuiceFassade.separator)) {
                     continue;
                 }
                 if (curShareEntry.getShareMode() == SHAREMODE.SUBDIRECTORY) {
                     if (directory.getPath().toLowerCase().startsWith(curShareEntry.
-                        getDir().toLowerCase())) {
+                            getDir().toLowerCase())) {
                         return SHARED_WITH_SUB;
-                    }
-                    else {
+                    } else {
                         return SHARED_SOMETHING;
                     }
-                }
-                else {
+                } else {
                     if (directory.getPath().toLowerCase().startsWith(curShareEntry.
-                        getDir().toLowerCase())) {
+                            getDir().toLowerCase())) {
                         return SHARED_WITHOUT_SUB;
-                    }
-                    else {
+                    } else {
                         return SHARED_SOMETHING;
                     }
                 }
@@ -133,7 +123,7 @@ public class DirectoryNode
     }
 
     public Icon getShareModeIcon() {
-        if (!initialized){
+        if (!initialized) {
             initializeImages();
         }
         switch (getShareMode()) {
@@ -154,7 +144,7 @@ public class DirectoryNode
         if (directory == null) {
             return null; //rootNode
         }
-        if (!initialized){
+        if (!initialized) {
             initializeImages();
         }
         switch (directory.getType()) {
@@ -202,11 +192,11 @@ public class DirectoryNode
         for (int i = 0; i < n - 1; i++) {
             k = i;
             for (int j = i + 1; j < n; j++) {
-                if (!((DirectoryNode)children.get(j)).getDirectory().isFileSystem()){
+                if (!((DirectoryNode) children.get(j)).getDirectory().isFileSystem()) {
                     continue;
                 }
                 if (children.get(j).toString().compareToIgnoreCase(children.get(
-                    k).toString()) < 0) {
+                        k).toString()) < 0) {
                     k = j;
                 }
             }
@@ -220,20 +210,20 @@ public class DirectoryNode
         if (children == null) {
             children = new ArrayList<DirectoryNode>();
             try {
-    			List<Directory> directories = AppleJuiceClient.getAjFassade().
-					getDirectories(directory.getPath());
-    			for (Directory curDirectory : directories){
-    				children.add(new DirectoryNode(this, curDirectory));
-    			}
-			} catch (IllegalArgumentException e) {
-				logger.error(e);
-			}
+                List<Directory> directories = AppleJuiceClient.getAjFassade().
+                        getDirectories(directory.getPath());
+                for (Directory curDirectory : directories) {
+                    children.add(new DirectoryNode(this, curDirectory));
+                }
+            } catch (IllegalArgumentException e) {
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            }
             sortChildren();
         }
         return children.toArray(new DirectoryNode[children.size()]);
     }
 
-    private static void initializeImages(){
+    private static void initializeImages() {
         initialized = true;
         IconManager im = IconManager.getInstance();
         icons.put("server", im.getIcon("server"));
@@ -248,13 +238,13 @@ public class DirectoryNode
         icons.put("warten", im.getIcon("warten"));
     }
 
-    public static int getMaxHeight(){
-        if (!initialized){
+    public static int getMaxHeight() {
+        if (!initialized) {
             initializeImages();
         }
         int maxHeight = 0;
-        for (Icon curIcon : icons.values()){
-            if (curIcon.getIconHeight() > maxHeight){
+        for (Icon curIcon : icons.values()) {
+            if (curIcon.getIconHeight() > maxHeight) {
                 maxHeight = curIcon.getIconHeight();
             }
         }

@@ -4,13 +4,9 @@
 
 package de.applejuicenet.client.gui.components.table;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Insets;
-
-import javax.swing.JButton;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/table/NormalHeaderRenderer.java,v 1.3 2009/01/21 14:45:10 maj0r Exp $

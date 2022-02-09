@@ -1,18 +1,14 @@
 package de.applejuicenet.client.gui.components.treetable;
 
-import java.util.EventObject;
-
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import javax.swing.JTable;
-import javax.swing.JTree;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
 
 
 /**

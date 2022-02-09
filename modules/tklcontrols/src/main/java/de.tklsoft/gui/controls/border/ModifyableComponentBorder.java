@@ -51,20 +51,17 @@ public class ModifyableComponentBorder
     }
 
     private void init() {
-        this.timer = new Timer(100, new ActionListener(){
-
-            public void actionPerformed(ActionEvent e) {
-                if (ModifyableComponentBorder.this.parentComponent.isShowing()) {
-                    ModifyableComponentBorder.this.currentColor = new Color(ModifyableComponentBorder.this.colors[0], ModifyableComponentBorder.this.colors[1], ModifyableComponentBorder.this.colors[2]);
-                    int[] arrn = ModifyableComponentBorder.this.colors;
-                    arrn[1] = arrn[1] + ModifyableComponentBorder.this.increment;
-                    int[] arrn2 = ModifyableComponentBorder.this.colors;
-                    arrn2[2] = arrn2[2] + ModifyableComponentBorder.this.increment;
-                    if (ModifyableComponentBorder.this.colors[1] >= 240 || ModifyableComponentBorder.this.colors[1] == 0) {
-                        ModifyableComponentBorder.this.increment = -ModifyableComponentBorder.this.increment;
-                    }
-                    ModifyableComponentBorder.this.parentComponent.repaint();
+        this.timer = new Timer(100, e -> {
+            if (ModifyableComponentBorder.this.parentComponent.isShowing()) {
+                ModifyableComponentBorder.this.currentColor = new Color(ModifyableComponentBorder.this.colors[0], ModifyableComponentBorder.this.colors[1], ModifyableComponentBorder.this.colors[2]);
+                int[] arrn = ModifyableComponentBorder.this.colors;
+                arrn[1] = arrn[1] + ModifyableComponentBorder.this.increment;
+                int[] arrn2 = ModifyableComponentBorder.this.colors;
+                arrn2[2] = arrn2[2] + ModifyableComponentBorder.this.increment;
+                if (ModifyableComponentBorder.this.colors[1] >= 240 || ModifyableComponentBorder.this.colors[1] == 0) {
+                    ModifyableComponentBorder.this.increment = -ModifyableComponentBorder.this.increment;
                 }
+                ModifyableComponentBorder.this.parentComponent.repaint();
             }
         });
     }

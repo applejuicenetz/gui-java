@@ -1,9 +1,9 @@
 package de.applejuicenet.client.gui.wizard;
 
-import java.awt.Color;
-
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.tklsoft.gui.controls.TKLPanel;
+
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardPanel.java,v 1.7 2005/02/22 09:21:07 maj0r Exp $

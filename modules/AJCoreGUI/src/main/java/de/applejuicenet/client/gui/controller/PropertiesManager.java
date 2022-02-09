@@ -4,25 +4,6 @@
 
 package de.applejuicenet.client.gui.controller;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-
-import java.io.IOException;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
@@ -40,7 +21,16 @@ import de.applejuicenet.client.gui.upload.table.UploadWaitingTableModel;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.Settings;
-import de.applejuicenet.client.shared.exception.InvalidPasswordException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.Level;
+
+import javax.swing.*;
+import javax.swing.UIManager.LookAndFeelInfo;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * $Header:
@@ -62,8 +52,7 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
  */
 public class PropertiesManager implements OptionsManager, PositionManager, ProxyManager {
     private static PropertiesManager instance = null;
-    private static final String PROPERTIES_ERROR = "Fehler beim Zugriff auf die ajgui.properties. " +
-            "Die Datei wird neu erstellt.";
+    private static final String PROPERTIES_ERROR = "Fehler beim Zugriff auf die ajgui.properties. Die Datei wird neu erstellt.";
     private static final String PROPERTIES_ERROR_MESSAGE = "ajgui.properties neu erstellt";
     private static Logger logger;
     private static String path;
@@ -74,8 +63,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     private static final int DEFAULT_SHARE_TABLE_COLUMN_WIDTH = 194;
     private static final int DEFAULT_SERVER_TABLE_COLUMN_WIDTH = 175;
     private static final int DEFAULT_SEARCH_TABLE_COLUMN_WIDTH = 103;
-    private Set<DataUpdateListener> settingsListener = new HashSet<DataUpdateListener>();
-    private Set<DataUpdateListener> connectionSettingsListener = new HashSet<DataUpdateListener>();
+    private final Set<DataUpdateListener> settingsListener = new HashSet<DataUpdateListener>();
+    private final Set<DataUpdateListener> connectionSettingsListener = new HashSet<DataUpdateListener>();
     private Point mainXY;
     private Dimension mainDimension;
     private ProxySettings proxySettings;
@@ -109,19 +98,11 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
     private PropertiesManager(String propertiesPath) {
         PropertiesManager.path = propertiesPath;
-        logger = Logger.getLogger(getClass());
+        logger = LoggerFactory.getLogger(getClass());
         init();
     }
 
     static PropertiesManager getInstance() {
-        if (instance == null) {
-            instance = new PropertiesManager(AppleJuiceClient.getPropertiesPath());
-        }
-
-        return instance;
-    }
-
-    static PositionManager getPositionManager() {
         if (instance == null) {
             instance = new PropertiesManager(AppleJuiceClient.getPropertiesPath());
         }
@@ -134,9 +115,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             propertyHandler.save();
         } catch (IllegalArgumentException e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(e.getMessage(), e);
-            }
+            logger.error(e.getMessage(), e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
         }
@@ -190,9 +169,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             return propertyHandler.get("options_sprache", "deutsch");
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return null;
@@ -210,9 +187,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             return temp;
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return "";
@@ -275,9 +250,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             } catch (Exception e) {
                 AppleJuiceDialog.rewriteProperties = true;
-                if (logger.isEnabledFor(Level.ERROR)) {
-                    logger.error(PROPERTIES_ERROR_MESSAGE, e);
-                }
+                logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
                 AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             }
@@ -297,9 +270,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             }
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
         }
@@ -338,9 +309,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             }
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return "";
@@ -352,9 +321,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             return propertyHandler.getAsBoolean("options_firststart", true);
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return false;
@@ -370,9 +337,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             return propertyHandler.getAsBoolean("options_loadplugins", true);
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return false;
@@ -389,9 +354,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             return propertyHandler.getAsBoolean("options_themes", false);
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return false;
@@ -423,9 +386,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             return propertyHandler.getAsBoolean("options_sound", true);
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return false;
@@ -445,9 +406,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             return propertyHandler.getAsBoolean("options_dialogzeigen", true);
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return false;
@@ -461,79 +420,37 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     public Level getLogLevel() {
         try {
             String temp = propertyHandler.get("options_logging_level", "INFO");
-            Level result = Level.OFF;
+            Level result = Level.INFO;
 
             if (temp.compareToIgnoreCase("INFO") == 0) {
                 return Level.INFO;
+            } else if (temp.compareToIgnoreCase("TRACE") == 0) {
+                return Level.TRACE;
             } else if (temp.compareToIgnoreCase("DEBUG") == 0) {
                 return Level.DEBUG;
             } else if (temp.compareToIgnoreCase("WARN") == 0) {
                 return Level.WARN;
-            } else if (temp.compareToIgnoreCase("FATAL") == 0) {
-                return Level.FATAL;
             } else if (temp.compareToIgnoreCase("ALL") == 0) {
-                return Level.ALL;
+                return Level.INFO;
             } else if (temp.compareToIgnoreCase("OFF") == 0) {
-                return Level.OFF;
+                return null;
             }
 
-            if (logger.isEnabledFor(Level.DEBUG)) {
-                logger.debug("Aktueller Loglevel: " + result.toString());
-            }
+            logger.debug("Aktueller Loglevel: " + result);
 
             return result;
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return null;
         }
     }
 
-    public void setLogLevel(Level level) {
-        if (level == null) {
-            level = Level.OFF;
-        }
-
-        String temp = "OFF";
-
-        if (level == Level.ALL) {
-            temp = "ALL";
-        } else if (level == Level.INFO) {
-            temp = "INFO";
-        } else if (level == Level.DEBUG) {
-            temp = "DEBUG";
-        } else if (level == Level.WARN) {
-            temp = "WARN";
-        } else if (level == Level.FATAL) {
-            temp = "FATAL";
-        }
-
-        propertyHandler.put("options_logging_level", temp);
-        Logger rootLogger = Logger.getRootLogger();
-
-        rootLogger.setLevel(level);
-        rootLogger.removeAllAppenders();
-        if (level != Level.OFF) {
-            try {
-                FileAppender fileAppender = new FileAppender(AppleJuiceClient.getLoggerHtmlLayout(),
-                        AppleJuiceClient.getLoggerFileAppenderPath());
-
-                rootLogger.addAppender(fileAppender);
-            } catch (IOException ioe) {
-                rootLogger.addAppender(new ConsoleAppender());
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, ioe);
-            }
-        } else {
-            rootLogger.addAppender(new ConsoleAppender());
-        }
-
-        if (logger.isEnabledFor(Level.DEBUG)) {
-            logger.debug("Loglevel geaendert in " + level.toString());
-        }
+    public void setLogLevel(String level) {
+        AppleJuiceClient.setLogLevel(Level.toLevel(level));
+        propertyHandler.put("options_logging_level", level);
     }
 
     public Settings getSettings() {
@@ -573,9 +490,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             return settings;
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return null;
@@ -599,9 +514,9 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                 connectionSettings = new ConnectionSettings();
             }
 
-            String host = "localhost";
-            String passwort = "";
-            int xmlPort = 9851;
+            String host;
+            String passwort;
+            int xmlPort;
 
             host = propertyHandler.get("options_remote_host", "localhost");
             passwort = propertyHandler.get("options_remote_passwort", "");
@@ -617,21 +532,19 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             return connectionSettings;
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
             return null;
         }
     }
 
-    public void saveRemote(ConnectionSettings remote) throws InvalidPasswordException {
+    public void saveRemote(ConnectionSettings remote) {
         propertyHandler.put("options_remote_host", remote.getHost());
         try {
             AppleJuiceClient.getAjFassade().setPassword(remote.getNewPassword(), false);
         } catch (de.applejuicenet.client.fassade.exception.IllegalArgumentException e) {
-            logger.error(e);
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
 
         propertyHandler.put("options_remote_passwort", remote.getNewPassword());
@@ -796,8 +709,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             downloadWidths = new int[DownloadsTableModel.CLASS_TYPES.length];
             for (int i = 0; i < downloadWidths.length; i++) {
-                downloadWidths[i] = propertyHandler.getAsInt("options_columns_download_column" + i + "_width",
-                        DEFAULT_DOWNLOADS_TABLE_COLUMN_WIDTH);
+                downloadWidths[i] = propertyHandler.getAsInt("options_columns_download_column" + i + "_width", DEFAULT_DOWNLOADS_TABLE_COLUMN_WIDTH);
             }
 
             downloadSort = new int[2];
@@ -826,39 +738,33 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             downloadSourcesWidths = new int[DownloadSourcesTableModel.CLASS_TYPES.length];
             for (int i = 0; i < downloadSourcesWidths.length; i++) {
-                downloadSourcesWidths[i] = propertyHandler.getAsInt("options_columns_downloadsources_column" + i + "_width",
-                        DEFAULT_DOWNLOADSOURCES_TABLE_COLUMN_WIDTH);
+                downloadSourcesWidths[i] = propertyHandler.getAsInt("options_columns_downloadsources_column" + i + "_width", DEFAULT_DOWNLOADSOURCES_TABLE_COLUMN_WIDTH);
             }
 
             uploadWidths = new int[UploadActiveTableModel.CLASS_TYPES.length];
             for (int i = 0; i < uploadWidths.length; i++) {
-                uploadWidths[i] = propertyHandler.getAsInt("options_columns_upload_column" + i + "_width",
-                        DEFAULT_UPLOADS_ACTIVE_TABLE_COLUMN_WIDTH);
+                uploadWidths[i] = propertyHandler.getAsInt("options_columns_upload_column" + i + "_width", DEFAULT_UPLOADS_ACTIVE_TABLE_COLUMN_WIDTH);
             }
 
             uploadWaitingWidths = new int[UploadWaitingTableModel.CLASS_TYPES.length];
             for (int i = 0; i < uploadWaitingWidths.length; i++) {
-                uploadWaitingWidths[i] = propertyHandler.getAsInt("options_columns_uploadwaiting_column" + i + "_width",
-                        DEFAULT_UPLOADS_WAITING_TABLE_COLUMN_WIDTH);
+                uploadWaitingWidths[i] = propertyHandler.getAsInt("options_columns_uploadwaiting_column" + i + "_width", DEFAULT_UPLOADS_WAITING_TABLE_COLUMN_WIDTH);
             }
 
             uploadWaitingVisibilities = new boolean[UploadWaitingTableModel.CLASS_TYPES.length];
             uploadWaitingVisibilities[0] = true;
             for (int i = 1; i < uploadWaitingVisibilities.length; i++) {
-                uploadWaitingVisibilities[i] = propertyHandler.getAsBoolean("options_columns_uploadwaiting_column" + i + "_visibility",
-                        true);
+                uploadWaitingVisibilities[i] = propertyHandler.getAsBoolean("options_columns_uploadwaiting_column" + i + "_visibility", true);
             }
 
             serverWidths = new int[ServerTableModel.CLASS_TYPES.length];
             for (int i = 0; i < serverWidths.length; i++) {
-                serverWidths[i] = propertyHandler.getAsInt("options_columns_server_column" + i + "_width",
-                        DEFAULT_SERVER_TABLE_COLUMN_WIDTH);
+                serverWidths[i] = propertyHandler.getAsInt("options_columns_server_column" + i + "_width", DEFAULT_SERVER_TABLE_COLUMN_WIDTH);
             }
 
             shareWidths = new int[ShareTableModel.CLASS_TYPES.length];
             for (int i = 0; i < shareWidths.length; i++) {
-                shareWidths[i] = propertyHandler.getAsInt("options_columns_share_column" + i + "_width",
-                        DEFAULT_SHARE_TABLE_COLUMN_WIDTH);
+                shareWidths[i] = propertyHandler.getAsInt("options_columns_share_column" + i + "_width", DEFAULT_SHARE_TABLE_COLUMN_WIDTH);
             }
 
             downloadVisibilities = new boolean[DownloadsTableModel.CLASS_TYPES.length];
@@ -870,8 +776,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             downloadSourcesVisibilities = new boolean[DownloadSourcesTableModel.CLASS_TYPES.length];
             downloadSourcesVisibilities[0] = true;
             for (int i = 1; i < downloadSourcesVisibilities.length; i++) {
-                downloadSourcesVisibilities[i] = propertyHandler.getAsBoolean("options_columns_downloadsources_column" + i +
-                        "_visibility", true);
+                downloadSourcesVisibilities[i] = propertyHandler.getAsBoolean("options_columns_downloadsources_column" + i + "_visibility", true);
             }
 
             uploadVisibilities = new boolean[UploadActiveTableModel.CLASS_TYPES.length];
@@ -908,9 +813,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             proxySettings = new ProxySettings(use, host, port, userpass);
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-            }
+            logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             if (firstReadError) {
                 PropertiesManager.restoreProperties();
@@ -1003,9 +906,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             saveFile();
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -1176,7 +1077,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             connectionSet.add(temp);
         }
 
-        return (ConnectionSettings[]) connectionSet.toArray(new ConnectionSettings[]{});
+        return connectionSet.toArray(new ConnectionSettings[]{});
     }
 
     public void setConnectionsSet(ConnectionSettings[] set) {

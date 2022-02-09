@@ -1,12 +1,10 @@
 package de.applejuicenet.client.gui.share.table;
 
-import java.awt.Component;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.TableCellRenderer;
-
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
+
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareTableCellRenderer.java,v 1.2 2004/10/29 11:58:43 maj0r Exp $

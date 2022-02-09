@@ -4,13 +4,12 @@
 
 package de.applejuicenet.client.gui.share.table;
 
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-
 import de.applejuicenet.client.gui.components.treetable.AbstractTreeTableModel;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareTableModel.java,v 1.1 2009/01/27 07:55:55 maj0r Exp $

@@ -4,17 +4,8 @@
 
 package de.applejuicenet.client.gui.mobileproxy;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-
+import java.io.*;
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;

@@ -1,10 +1,10 @@
 package de.applejuicenet.client.gui.components;
 
-import javax.swing.JPanel;
-
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.gui.RegisterI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/TklPanel.java,v 1.3 2004/11/22 16:25:26 maj0r Exp $
@@ -26,7 +26,7 @@ public class TklPanel extends JPanel implements RegisterI {
 		if (null == guiController){
 			throw new RuntimeException("Ungueltiger GuiController");
 		}
-		logger = Logger.getLogger(getClass());
+		logger = LoggerFactory.getLogger(getClass());
 		this.guiController = guiController;
 	}
 

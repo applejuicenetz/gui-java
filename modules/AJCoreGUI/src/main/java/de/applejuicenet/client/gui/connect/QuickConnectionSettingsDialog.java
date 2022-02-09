@@ -4,34 +4,6 @@
 
 package de.applejuicenet.client.gui.connect;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
@@ -39,6 +11,15 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.options.ODConnectionPanel;
 import de.applejuicenet.client.shared.ConnectionSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/QuickConnectionSettingsDialog.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
@@ -60,14 +41,14 @@ public class QuickConnectionSettingsDialog extends JDialog
    private JButton              abbrechen          = new JButton("Abbrechen");
    private JCheckBox            cmbNieWiederZeigen = new JCheckBox();
    private JComboBox            connectionListe    = new JComboBox();
-   private Logger               logger;
+   private Logger logger;
    private boolean              dirty              = false;
    private int                  result = 0;
 
    public QuickConnectionSettingsDialog(Frame parent)
    {
       super(parent, true);
-      logger = Logger.getLogger(getClass());
+      logger = LoggerFactory.getLogger(getClass());
       try
       {
          init();

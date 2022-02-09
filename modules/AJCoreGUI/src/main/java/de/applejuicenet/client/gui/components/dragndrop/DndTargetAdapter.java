@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.components.dragndrop;
 
-import java.awt.Point;
+import java.awt.*;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;

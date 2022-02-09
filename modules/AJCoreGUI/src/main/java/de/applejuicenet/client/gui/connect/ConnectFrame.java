@@ -1,14 +1,12 @@
 package de.applejuicenet.client.gui.connect;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import javax.swing.JFrame;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.shared.IconManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/connect/ConnectFrame.java,v 1.3 2005/01/18 17:35:29 maj0r Exp $
@@ -18,24 +16,20 @@ import de.applejuicenet.client.shared.IconManager;
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
- *
  */
 
 public class ConnectFrame
-    extends JFrame {
+        extends JFrame {
 
-	private Logger logger;
+    private Logger logger;
 
     public ConnectFrame() {
         super();
-        logger = Logger.getLogger(getClass());
+        logger = LoggerFactory.getLogger(getClass());
         try {
             init();
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+        } catch (Exception e) {
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -44,11 +38,11 @@ public class ConnectFrame
         IconManager im = IconManager.getInstance();
         setIconImage(im.getIcon("applejuice").getImage());
         Dimension screenSize = Toolkit.getDefaultToolkit().
-            getScreenSize();
+                getScreenSize();
         Dimension appDimension = getSize();
-        setLocation( (screenSize.width -
-                      appDimension.width) / 2,
-                    (screenSize.height -
-                     appDimension.height) / 2);
+        setLocation((screenSize.width -
+                        appDimension.width) / 2,
+                (screenSize.height -
+                        appDimension.height) / 2);
     }
 }

@@ -1,12 +1,9 @@
 package de.applejuicenet.client.gui.memorymonitor;
 
-import java.awt.BorderLayout;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Frame;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JDialog;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/memorymonitor/MemoryMonitorDialog.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $

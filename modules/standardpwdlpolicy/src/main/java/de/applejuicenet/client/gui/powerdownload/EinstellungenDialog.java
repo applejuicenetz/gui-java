@@ -1,28 +1,16 @@
 package de.applejuicenet.client.gui.powerdownload;
 
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-
 import de.applejuicenet.client.gui.powerdownload.StandardAutomaticPwdlPolicy.Reihenfolge;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberAndSpecialCharsInputVerifier;
 import de.applejuicenet.client.shared.NumberInputVerifier;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class EinstellungenDialog extends JDialog implements ActionListener {
 

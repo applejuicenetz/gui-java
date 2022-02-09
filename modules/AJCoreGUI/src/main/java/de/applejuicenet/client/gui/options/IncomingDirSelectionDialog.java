@@ -4,24 +4,13 @@
 
 package de.applejuicenet.client.gui.options;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLComboBox;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/IncomingDirSelectionDialog.java,v 1.7 2009/01/12 09:19:20 maj0r Exp $

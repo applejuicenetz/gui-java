@@ -4,22 +4,6 @@
 
 package de.applejuicenet.client.gui.options;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
-import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.connect.QuickConnectionSettingsDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -27,6 +11,15 @@ import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.tklsoft.gui.controls.TKLTextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODConnectionPanel.java,v 1.10 2009/01/12 09:19:20 maj0r Exp $
@@ -48,7 +41,6 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
    private TKLTextField                  port                          = new TKLTextField();
    private JPasswordField                passwortNeu                   = new JPasswordField();
    private ConnectionSettings            remote;
-   private Logger                        logger;
    private boolean                       showPort                      = false;
    private QuickConnectionSettingsDialog quickConnectionSettingsDialog;
    private Icon                          menuIcon;
@@ -56,7 +48,7 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
 
    public ODConnectionPanel(ConnectionSettings remote, QuickConnectionSettingsDialog quickConnectionSettingsDialog, boolean showPort)
    {
-      logger = Logger.getLogger(getClass());
+      Logger logger = LoggerFactory.getLogger(getClass());
       try
       {
          this.showPort                      = showPort;
@@ -75,8 +67,7 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
       this(remote, quickConnectionSettingsDialog, false);
    }
 
-   private void init() throws Exception
-   {
+   private void init() {
       setLayout(new BorderLayout());
       IconManager im = IconManager.getInstance();
 

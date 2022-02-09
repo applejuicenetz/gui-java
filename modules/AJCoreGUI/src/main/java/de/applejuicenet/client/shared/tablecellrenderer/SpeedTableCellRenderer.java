@@ -4,11 +4,9 @@
 
 package de.applejuicenet.client.shared.tablecellrenderer;
 
-import java.awt.Component;
-
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 public class SpeedTableCellRenderer extends DefaultTableCellRenderer
 {

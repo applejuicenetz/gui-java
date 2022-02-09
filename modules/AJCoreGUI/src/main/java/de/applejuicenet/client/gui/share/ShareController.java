@@ -4,23 +4,6 @@
 
 package de.applejuicenet.client.gui.share;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.swing.JComponent;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.table.TableColumnModel;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Information;
@@ -43,6 +26,20 @@ import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
 import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.ReleaseInfo;
 import de.applejuicenet.client.shared.SwingWorker;
+
+import javax.swing.*;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.24 2009/02/12 09:11:24 maj0r Exp $

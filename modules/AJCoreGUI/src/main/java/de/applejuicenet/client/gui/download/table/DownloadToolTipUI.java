@@ -4,19 +4,12 @@
 
 package de.applejuicenet.client.gui.download.table;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-
+import javax.swing.*;
+import javax.swing.plaf.metal.MetalToolTipUI;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import javax.swing.JComponent;
-import javax.swing.JToolTip;
-import javax.swing.SwingUtilities;
-import javax.swing.plaf.metal.MetalToolTipUI;
 
 public class DownloadToolTipUI extends MetalToolTipUI
 {

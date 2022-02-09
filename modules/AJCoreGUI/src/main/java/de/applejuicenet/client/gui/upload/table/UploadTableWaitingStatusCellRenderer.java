@@ -4,17 +4,13 @@
 
 package de.applejuicenet.client.gui.upload.table;
 
-import java.awt.Component;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 public class UploadTableWaitingStatusCellRenderer extends DefaultTableCellRenderer
 {

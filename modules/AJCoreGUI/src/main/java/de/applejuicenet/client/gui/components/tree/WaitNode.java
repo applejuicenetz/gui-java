@@ -4,12 +4,12 @@
 
 package de.applejuicenet.client.gui.components.tree;
 
-import javax.swing.Icon;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/tree/WaitNode.java,v 1.5 2009/01/12 09:19:20 maj0r Exp $

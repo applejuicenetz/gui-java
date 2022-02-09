@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.shared.tablecellrenderer;
 
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class StringTableCellRenderer extends DefaultTableCellRenderer

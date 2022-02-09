@@ -4,32 +4,6 @@
 
 package de.applejuicenet.client.gui.search;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-
-import de.applejuicenet.client.shared.ReleaseInfo;
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Search;
@@ -45,7 +19,21 @@ import de.applejuicenet.client.gui.search.table.SearchEntryIconRenderer;
 import de.applejuicenet.client.gui.search.table.SearchEntrySizeRenderer;
 import de.applejuicenet.client.gui.search.table.SearchTableModel;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.ReleaseInfo;
 import de.applejuicenet.client.shared.SoundPlayer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.19 2009/02/12 13:03:34 maj0r Exp $
@@ -55,454 +43,373 @@ import de.applejuicenet.client.shared.SoundPlayer;
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
- *
  */
-public class SearchResultPanel extends JPanel
-{
-   private static String    offeneSuchen           = "%i offene Suchen";
-   private static String    gefundeneDateien       = "%i gefundene Dateien";
-   private static String    durchsuchteClients     = "%i durchsuchte Clients";
-   private static String    linkLaden              = "Link";
-   private static String    sucheStoppen           = "Suche stoppen";
-   private static String    alreadyLoaded;
-   private static String    invalidLink;
-   private static String    linkFailure;
-   private static String    dialogTitel;
-   private static String    releaseInfo;
-   private static String[]  columns;
-   private Logger           logger;
-   private JTable           searchResultTable;
-   private SearchTableModel searchResultTableModel;
-   private Search           search;
-   private JButton          sucheAbbrechen         = new JButton();
-   private JLabel           label1                 = new JLabel();
-   private JLabel           label2                 = new JLabel();
-   private JLabel           label3                 = new JLabel();
-   private JPopupMenu       popup                  = new JPopupMenu();
-   private JMenuItem        item1                  = new JMenuItem();
-   private JMenuItem        mnuReleaseInfo         = new JMenuItem();
-   private JToggleButton[]  filterButtons;
-   private TableColumn[]    tableColumns           = new TableColumn[3];
+public class SearchResultPanel extends JPanel {
+    private static String offeneSuchen = "%i offene Suchen";
+    private static String gefundeneDateien = "%i gefundene Dateien";
+    private static String durchsuchteClients = "%i durchsuchte Clients";
+    private static String linkLaden = "Link";
+    private static String sucheStoppen = "Suche stoppen";
+    private static String alreadyLoaded;
+    private static String invalidLink;
+    private static String linkFailure;
+    private static String dialogTitel;
+    private static String releaseInfo;
+    private static String[] columns;
+    private final Logger logger;
+    private JTable searchResultTable;
+    private SearchTableModel searchResultTableModel;
+    private Search search;
+    private JButton sucheAbbrechen = new JButton();
+    private JLabel label1 = new JLabel();
+    private JLabel label2 = new JLabel();
+    private JLabel label3 = new JLabel();
+    private JPopupMenu popup = new JPopupMenu();
+    private JMenuItem item1 = new JMenuItem();
+    private JMenuItem mnuReleaseInfo = new JMenuItem();
+    private JToggleButton[] filterButtons;
+    private TableColumn[] tableColumns = new TableColumn[3];
 
-   public SearchResultPanel(Search aSearch)
-   {
-      search = aSearch;
-      logger = Logger.getLogger(getClass());
-      try
-      {
-         init();
-      }
-      catch(Exception e)
-      {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-      }
-   }
+    public SearchResultPanel(Search aSearch) {
+        search = aSearch;
+        logger = LoggerFactory.getLogger(getClass());
+        try {
+            init();
+        } catch (Exception e) {
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+        }
+    }
 
-   public Search getSearch()
-   {
-      return search;
-   }
+    public Search getSearch() {
+        return search;
+    }
 
-   private void init() throws Exception
-   {
-      IconManager im = IconManager.getInstance();
+    private void init() throws Exception {
+        IconManager im = IconManager.getInstance();
 
-      item1.setText(linkLaden);
-      item1.setIcon(im.getIcon("download"));
-      sucheAbbrechen.setText(sucheStoppen);
-      sucheAbbrechen.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent ae)
-            {
-               sucheAbbrechen.setEnabled(false);
-               try
-               {
-                  AppleJuiceClient.getAjFassade().cancelSearch(search);
-               }
-               catch(IllegalArgumentException e)
-               {
-                  logger.error(e);
-               }
+        item1.setText(linkLaden);
+        item1.setIcon(im.getIcon("download"));
+        sucheAbbrechen.setText(sucheStoppen);
+        sucheAbbrechen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                sucheAbbrechen.setEnabled(false);
+                try {
+                    AppleJuiceClient.getAjFassade().cancelSearch(search);
+                } catch (IllegalArgumentException e) {
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                }
             }
-         });
-      popup.add(item1);
+        });
+        popup.add(item1);
 
-      mnuReleaseInfo.setIcon(im.getIcon("hint"));
-      mnuReleaseInfo.setText(releaseInfo);
-      mnuReleaseInfo.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent ae)
-            {
-               int[] sel = searchResultTable.getSelectedRows();
+        mnuReleaseInfo.setIcon(im.getIcon("hint"));
+        mnuReleaseInfo.setText(releaseInfo);
+        mnuReleaseInfo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                int[] sel = searchResultTable.getSelectedRows();
 
-               if(null == sel || sel.length < 1)
-               {
-                  return;
-               }
+                if (null == sel || sel.length < 1) {
+                    return;
+                }
 
-               SearchEntry curSearchEntry = searchResultTableModel.getRow(sel[0]);
+                SearchEntry curSearchEntry = searchResultTableModel.getRow(sel[0]);
 
-               ReleaseInfo.handle(curSearchEntry.getFileNames()[0].getDateiName(), curSearchEntry.getChecksumme(), curSearchEntry.getGroesse());
+                ReleaseInfo.handle(curSearchEntry.getFileNames()[0].getDateiName(), curSearchEntry.getChecksumme(), curSearchEntry.getGroesse());
             }
-         });
-      popup.add(mnuReleaseInfo);
-      setLayout(new BorderLayout());
-      updateZahlen();
-      JPanel  buttonPanel = new JPanel(new FlowLayout());
-      JButton all = new JButton(IconManager.getInstance().getIcon("abbrechen"));
+        });
+        popup.add(mnuReleaseInfo);
+        setLayout(new BorderLayout());
+        updateZahlen();
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JButton all = new JButton(IconManager.getInstance().getIcon("abbrechen"));
 
-      buttonPanel.add(all);
+        buttonPanel.add(all);
 
-      FileType[] allTypes = FileType.values();
+        FileType[] allTypes = FileType.values();
 
-      filterButtons = new JToggleButton[allTypes.length];
-      for(int i = 0; i < allTypes.length; i++)
-      {
-         filterButtons[i] = new JToggleButton(IconManager.getInstance().getIcon(allTypes[i].toString()));
-         filterButtons[i].addActionListener(new FilterAdapter(allTypes[i]));
-         buttonPanel.add(filterButtons[i]);
-      }
+        filterButtons = new JToggleButton[allTypes.length];
+        for (int i = 0; i < allTypes.length; i++) {
+            filterButtons[i] = new JToggleButton(IconManager.getInstance().getIcon(allTypes[i].toString()));
+            filterButtons[i].addActionListener(new FilterAdapter(allTypes[i]));
+            buttonPanel.add(filterButtons[i]);
+        }
 
-      all.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent ae)
-            {
-               for(int i = 0; i < filterButtons.length; i++)
-               {
-                  filterButtons[i].setSelected(false);
-               }
+        all.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                for (int i = 0; i < filterButtons.length; i++) {
+                    filterButtons[i].setSelected(false);
+                }
 
-               search.clearFilter();
-               searchResultTableModel.fireTableDataChanged();
+                search.clearFilter();
+                searchResultTableModel.fireTableDataChanged();
             }
-         });
+        });
 
-      add(buttonPanel, BorderLayout.NORTH);
-      searchResultTableModel = new SearchTableModel(search);
-      searchResultTable      = new JTable(searchResultTableModel);
+        add(buttonPanel, BorderLayout.NORTH);
+        searchResultTableModel = new SearchTableModel(search);
+        searchResultTable = new JTable(searchResultTableModel);
 
-      searchResultTable.setDefaultRenderer(SearchEntry.class, new SearchEntryIconRenderer());
-      searchResultTable.setDefaultRenderer(Long.class, new SearchEntrySizeRenderer());
+        searchResultTable.setDefaultRenderer(SearchEntry.class, new SearchEntryIconRenderer());
+        searchResultTable.setDefaultRenderer(Long.class, new SearchEntrySizeRenderer());
 
-      add(new JScrollPane(searchResultTable), BorderLayout.CENTER);
-      JPanel southPanel = new JPanel(new BorderLayout());
-      JPanel textPanel = new JPanel(new FlowLayout());
+        add(new JScrollPane(searchResultTable), BorderLayout.CENTER);
+        JPanel southPanel = new JPanel(new BorderLayout());
+        JPanel textPanel = new JPanel(new FlowLayout());
 
-      textPanel.add(label1);
-      textPanel.add(label2);
-      textPanel.add(label3);
+        textPanel.add(label1);
+        textPanel.add(label2);
+        textPanel.add(label3);
 
-      JPanel panel1 = new JPanel(new FlowLayout());
+        JPanel panel1 = new JPanel(new FlowLayout());
 
-      panel1.add(sucheAbbrechen);
-      southPanel.add(panel1, BorderLayout.WEST);
-      southPanel.add(textPanel, BorderLayout.CENTER);
-      add(southPanel, BorderLayout.SOUTH);
-      MouseAdapter popupMouseAdapter = new MouseAdapter()
-      {
-         public void mousePressed(MouseEvent me)
-         {
-            if(SwingUtilities.isRightMouseButton(me))
-            {
-               Point p   = me.getPoint();
-               int   row = searchResultTable.rowAtPoint(p);
+        panel1.add(sucheAbbrechen);
+        southPanel.add(panel1, BorderLayout.WEST);
+        southPanel.add(textPanel, BorderLayout.CENTER);
+        add(southPanel, BorderLayout.SOUTH);
+        MouseAdapter popupMouseAdapter = new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                if (SwingUtilities.isRightMouseButton(me)) {
+                    Point p = me.getPoint();
+                    int row = searchResultTable.rowAtPoint(p);
 
-               if(row != -1 && !searchResultTable.getSelectionModel().isSelectedIndex(row))
-               {
-                  searchResultTable.getSelectionModel().setSelectionInterval(row, row);
-               }
+                    if (row != -1 && !searchResultTable.getSelectionModel().isSelectedIndex(row)) {
+                        searchResultTable.getSelectionModel().setSelectionInterval(row, row);
+                    }
+                }
+
+                maybeShowPopup(me);
             }
 
-            maybeShowPopup(me);
-         }
-
-         public void mouseReleased(MouseEvent e)
-         {
-            super.mouseReleased(e);
-            maybeShowPopup(e);
-         }
-
-         private void maybeShowPopup(MouseEvent e)
-         {
-            if(e.isPopupTrigger())
-            {
-               int[] sel = searchResultTable.getSelectedRows();
-
-               if(null != sel && sel.length > 0)
-               {
-                  popup.show(searchResultTable, e.getX(), e.getY());
-               }
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                maybeShowPopup(e);
             }
-         }
-      };
 
-      searchResultTable.addMouseListener(popupMouseAdapter);
-      item1.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent ae)
-            {
-               int[] sel = searchResultTable.getSelectedRows();
+            private void maybeShowPopup(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    int[] sel = searchResultTable.getSelectedRows();
 
-               if(null != sel && sel.length > 0)
-               {
-                  SearchEntry curSearchEntry;
-
-                  for(int curRow : sel)
-                  {
-                     curSearchEntry = searchResultTableModel.getRow(curRow);
-                     StringBuilder toCopy = new StringBuilder();
-
-                     toCopy.append("ajfsp://file|");
-                     toCopy.append(curSearchEntry.getFileNames()[0].getDateiName() + "|" + curSearchEntry.getChecksumme() + "|" +
-                                   curSearchEntry.getGroesse() + "/");
-                     String link = toCopy.toString();
-
-                     processLink(link);
-                  }
-               }
+                    if (null != sel && sel.length > 0) {
+                        popup.show(searchResultTable, e.getX(), e.getY());
+                    }
+                }
             }
-         });
+        };
 
-      TableColumnModel   model    = searchResultTable.getColumnModel();
-      SortButtonRenderer renderer = new SortButtonRenderer();
+        searchResultTable.addMouseListener(popupMouseAdapter);
+        item1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                int[] sel = searchResultTable.getSelectedRows();
 
-      for(int i = 0; i < tableColumns.length; i++)
-      {
-         tableColumns[i] = model.getColumn(i);
-         tableColumns[i].setHeaderRenderer(renderer);
-      }
+                if (null != sel && sel.length > 0) {
+                    SearchEntry curSearchEntry;
 
-      JTableHeader     header = searchResultTable.getTableHeader();
+                    for (int curRow : sel) {
+                        curSearchEntry = searchResultTableModel.getRow(curRow);
+                        StringBuilder toCopy = new StringBuilder();
 
-      SortMouseAdapter sortMouseAdapter = new SortMouseAdapter(header, renderer);
+                        toCopy.append("ajfsp://file|");
+                        toCopy.append(curSearchEntry.getFileNames()[0].getDateiName() + "|" + curSearchEntry.getChecksumme() + "|" +
+                                curSearchEntry.getGroesse() + "/");
+                        String link = toCopy.toString();
 
-      header.addMouseListener(sortMouseAdapter);
+                        processLink(link);
+                    }
+                }
+            }
+        });
 
-      PositionManager pm   = PositionManagerImpl.getInstance();
-      int[]           sort = pm.getSearchSort();
+        TableColumnModel model = searchResultTable.getColumnModel();
+        SortButtonRenderer renderer = new SortButtonRenderer();
 
-      sortMouseAdapter.sort(sort[0], sort[1] == 1);
-      if(!search.isRunning())
-      {
-         sucheAbbrechen.setEnabled(false);
-      }
-   }
+        for (int i = 0; i < tableColumns.length; i++) {
+            tableColumns[i] = model.getColumn(i);
+            tableColumns[i].setHeaderRenderer(renderer);
+        }
 
-   private void processLink(final String link)
-   {
-      new Thread()
-         {
-            public void run()
-            {
-               try
-               {
-                  final String result = AppleJuiceClient.getAjFassade().processLink(link, "");
+        JTableHeader header = searchResultTable.getTableHeader();
 
-                  SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
-                  if(result.indexOf("ok") != 0)
-                  {
-                     SwingUtilities.invokeLater(new Runnable()
-                        {
-                           public void run()
-                           {
-                              String message = null;
+        SortMouseAdapter sortMouseAdapter = new SortMouseAdapter(header, renderer);
 
-                              if(result.indexOf("already downloaded") != -1)
-                              {
-                                 message = alreadyLoaded.replaceAll("%s", link);
-                              }
-                              else if(result.indexOf("incorrect link") != -1)
-                              {
-                                 message = invalidLink.replaceAll("%s", link);
-                              }
-                              else if(result.indexOf("failure") != -1)
-                              {
-                                 message = linkFailure;
-                              }
+        header.addMouseListener(sortMouseAdapter);
 
-                              if(message != null)
-                              {
-                                 JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message, dialogTitel,
-                                                               JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-                              }
-                           }
+        PositionManager pm = PositionManagerImpl.getInstance();
+        int[] sort = pm.getSearchSort();
+
+        sortMouseAdapter.sort(sort[0], sort[1] == 1);
+        if (!search.isRunning()) {
+            sucheAbbrechen.setEnabled(false);
+        }
+    }
+
+    private void processLink(final String link) {
+        new Thread() {
+            public void run() {
+                try {
+                    final String result = AppleJuiceClient.getAjFassade().processLink(link, "");
+
+                    SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
+                    if (result.indexOf("ok") != 0) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                String message = null;
+
+                                if (result.indexOf("already downloaded") != -1) {
+                                    message = alreadyLoaded.replaceAll("%s", link);
+                                } else if (result.indexOf("incorrect link") != -1) {
+                                    message = invalidLink.replaceAll("%s", link);
+                                } else if (result.indexOf("failure") != -1) {
+                                    message = linkFailure;
+                                }
+
+                                if (message != null) {
+                                    JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message, dialogTitel,
+                                            JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+                                }
+                            }
                         });
-                  }
-               }
-               catch(IllegalArgumentException e)
-               {
-                  logger.error(e);
-               }
+                    }
+                } catch (IllegalArgumentException e) {
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                }
             }
-         }.start();
-   }
+        }.start();
+    }
 
-   public static void setTexte(String[] texte, String[] tableColumns)
-   {
-      offeneSuchen       = texte[0];
-      gefundeneDateien   = texte[1];
-      durchsuchteClients = texte[2];
-      linkLaden          = texte[3];
-      sucheStoppen       = texte[4];
-      alreadyLoaded      = texte[5];
-      invalidLink        = texte[6];
-      linkFailure        = texte[7];
-      dialogTitel        = texte[8];
-      releaseInfo        = texte[9];
-      columns            = tableColumns;
-   }
+    public static void setTexte(String[] texte, String[] tableColumns) {
+        offeneSuchen = texte[0];
+        gefundeneDateien = texte[1];
+        durchsuchteClients = texte[2];
+        linkLaden = texte[3];
+        sucheStoppen = texte[4];
+        alreadyLoaded = texte[5];
+        invalidLink = texte[6];
+        linkFailure = texte[7];
+        dialogTitel = texte[8];
+        releaseInfo = texte[9];
+        columns = tableColumns;
+    }
 
-   public void updateSearchContent()
-   {
-      if(!SwingUtilities.isEventDispatchThread())
-      {
-         SwingUtilities.invokeLater(new Runnable()
-            {
-               public void run()
-               {
-                  updateSearchContent();
+    public void updateSearchContent() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    updateSearchContent();
 
-               }
+                }
             });
-         return;
-      }
-
-      try
-      {
-         searchResultTableModel.forceResort();
-         searchResultTable.updateUI();
-         updateZahlen();
-      }
-      catch(Exception e)
-      {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-      }
-   }
-
-   public void updateZahlen()
-   {
-      if(!SwingUtilities.isEventDispatchThread())
-      {
-         SwingUtilities.invokeLater(new Runnable()
-            {
-               public void run()
-               {
-                  updateZahlen();
-
-               }
-            });
-         return;
-      }
-
-      List<SearchEntry> searchEntries = search.getAllSearchEntries();
-
-      label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
-      label2.setText(gefundeneDateien.replaceFirst("%i", Integer.toString(searchEntries.size())));
-      label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
-   }
-
-   public void aendereSprache()
-   {
-      try
-      {
-         item1.setText(linkLaden);
-         mnuReleaseInfo.setText(releaseInfo);
-         sucheAbbrechen.setText(sucheStoppen);
-         label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
-         label2.setText(gefundeneDateien.replaceFirst("%i", Long.toString(search.getEntryCount())));
-         label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
-         TableColumnModel tcm = searchResultTable.getColumnModel();
-
-         for(int i = 0; i < tcm.getColumnCount(); i++)
-         {
-            tcm.getColumn(i).setHeaderValue(columns[i]);
-         }
-      }
-      catch(Exception e)
-      {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-      }
-   }
-
-   class SortMouseAdapter extends MouseAdapter
-   {
-      private JTableHeader       header;
-      private SortButtonRenderer renderer;
-      private PositionManager    pm = PositionManagerImpl.getInstance();
-
-      public SortMouseAdapter(JTableHeader header, SortButtonRenderer renderer)
-      {
-         this.header   = header;
-         this.renderer = renderer;
-         header.repaint();
-      }
-
-      public void mouseClicked(MouseEvent e)
-      {
-         if(e.getButton() != MouseEvent.BUTTON1)
-         {
             return;
-         }
+        }
 
-         int     col               = header.columnAtPoint(e.getPoint());
-         int     curSelectedColumn = renderer.getSelectedColumn();
-         boolean ascent;
+        try {
+            searchResultTableModel.forceResort();
+            searchResultTable.updateUI();
+            updateZahlen();
+        } catch (Exception e) {
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+        }
+    }
 
-         if(col == curSelectedColumn)
-         {
-            ascent = !renderer.getState();
-         }
-         else
-         {
-            ascent = true;
-         }
+    public void updateZahlen() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    updateZahlen();
 
-         pm.setSearchSort(col, ascent);
-         sort(col, ascent);
-      }
+                }
+            });
+            return;
+        }
 
-      @SuppressWarnings("unchecked")
-      public void sort(int column, boolean ascent)
-      {
-         renderer.setSelectedColumn(column, ascent);
-         header.repaint();
+        List<SearchEntry> searchEntries = search.getAllSearchEntries();
 
-         if(header.getTable().isEditing())
-         {
-            header.getTable().getCellEditor().stopCellEditing();
-         }
+        label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
+        label2.setText(gefundeneDateien.replaceFirst("%i", Integer.toString(searchEntries.size())));
+        label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
+    }
 
-         int sortCol = header.getTable().convertColumnIndexToModel(column);
+    public void aendereSprache() {
+        try {
+            item1.setText(linkLaden);
+            mnuReleaseInfo.setText(releaseInfo);
+            sucheAbbrechen.setText(sucheStoppen);
+            label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
+            label2.setText(gefundeneDateien.replaceFirst("%i", Long.toString(search.getEntryCount())));
+            label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
+            TableColumnModel tcm = searchResultTable.getColumnModel();
 
-         ((SortableTableModel) header.getTable().getModel()).sortByColumn(sortCol, ascent);
-         header.repaint();
-      }
-   }
+            for (int i = 0; i < tcm.getColumnCount(); i++) {
+                tcm.getColumn(i).setHeaderValue(columns[i]);
+            }
+        } catch (Exception e) {
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+        }
+    }
+
+    class SortMouseAdapter extends MouseAdapter {
+        private JTableHeader header;
+        private SortButtonRenderer renderer;
+        private PositionManager pm = PositionManagerImpl.getInstance();
+
+        public SortMouseAdapter(JTableHeader header, SortButtonRenderer renderer) {
+            this.header = header;
+            this.renderer = renderer;
+            header.repaint();
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            if (e.getButton() != MouseEvent.BUTTON1) {
+                return;
+            }
+
+            int col = header.columnAtPoint(e.getPoint());
+            int curSelectedColumn = renderer.getSelectedColumn();
+            boolean ascent;
+
+            if (col == curSelectedColumn) {
+                ascent = !renderer.getState();
+            } else {
+                ascent = true;
+            }
+
+            pm.setSearchSort(col, ascent);
+            sort(col, ascent);
+        }
+
+        @SuppressWarnings("unchecked")
+        public void sort(int column, boolean ascent) {
+            renderer.setSelectedColumn(column, ascent);
+            header.repaint();
+
+            if (header.getTable().isEditing()) {
+                header.getTable().getCellEditor().stopCellEditing();
+            }
+
+            int sortCol = header.getTable().convertColumnIndexToModel(column);
+
+            ((SortableTableModel) header.getTable().getModel()).sortByColumn(sortCol, ascent);
+            header.repaint();
+        }
+    }
 
 
-   private class FilterAdapter implements ActionListener
-   {
-      private FileType filter;
+    private class FilterAdapter implements ActionListener {
+        private FileType filter;
 
-      public FilterAdapter(FileType newFilter)
-      {
-         filter = newFilter;
-      }
+        public FilterAdapter(FileType newFilter) {
+            filter = newFilter;
+        }
 
-      public void actionPerformed(ActionEvent ae)
-      {
-         JToggleButton source = (JToggleButton) ae.getSource();
+        public void actionPerformed(ActionEvent ae) {
+            JToggleButton source = (JToggleButton) ae.getSource();
 
-         if(source.isSelected())
-         {
-            search.removeFilter(filter);
-         }
-         else
-         {
-            search.addFilter(filter);
-         }
+            if (source.isSelected()) {
+                search.removeFilter(filter);
+            } else {
+                search.addFilter(filter);
+            }
 
-         searchResultTableModel.fireTableDataChanged();
-      }
-   }
+            searchResultTableModel.fireTableDataChanged();
+        }
+    }
 }

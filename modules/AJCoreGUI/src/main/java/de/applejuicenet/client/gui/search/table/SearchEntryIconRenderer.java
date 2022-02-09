@@ -4,17 +4,14 @@
 
 package de.applejuicenet.client.gui.search.table;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.util.HashSet;
-
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import de.applejuicenet.client.fassade.entity.FileName;
 import de.applejuicenet.client.fassade.entity.SearchEntry;
 import de.applejuicenet.client.shared.IconManager;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.util.HashSet;
 
 public class SearchEntryIconRenderer extends DefaultTableCellRenderer
 {

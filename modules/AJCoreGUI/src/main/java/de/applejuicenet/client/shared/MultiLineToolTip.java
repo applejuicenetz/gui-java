@@ -4,18 +4,12 @@
 
 package de.applejuicenet.client.shared;
 
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-
+import javax.swing.*;
+import javax.swing.plaf.metal.MetalToolTipUI;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import javax.swing.JComponent;
-import javax.swing.JToolTip;
-import javax.swing.SwingUtilities;
-import javax.swing.plaf.metal.MetalToolTipUI;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/MultiLineToolTip.java,v 1.14 2009/01/19 15:45:29 maj0r Exp $

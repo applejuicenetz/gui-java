@@ -1,15 +1,11 @@
 package de.applejuicenet.client.gui.components.treetable;
 
-import java.awt.Component;
-import java.awt.Graphics;
-
-import javax.swing.JTable;
-import javax.swing.JTree;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
+import java.awt.*;
 
 
 public class DefaultTreeTableCellRenderer extends JTree implements

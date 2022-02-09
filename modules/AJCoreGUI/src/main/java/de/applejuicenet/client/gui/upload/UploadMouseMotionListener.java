@@ -4,10 +4,10 @@
 
 package de.applejuicenet.client.gui.upload;
 
+import de.applejuicenet.client.gui.components.GuiController;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-
-import de.applejuicenet.client.gui.components.GuiController;
 
 public class UploadMouseMotionListener extends MouseMotionAdapter
 {

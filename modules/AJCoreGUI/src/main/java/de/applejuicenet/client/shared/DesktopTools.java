@@ -4,18 +4,16 @@
 
 package de.applejuicenet.client.shared;
 
-import java.io.File;
-
-import java.net.URI;
-
-import javax.swing.JOptionPane;
-
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.tray.DesktopTool;
 
+import javax.swing.*;
+import java.io.File;
+import java.net.URI;
+
 public class DesktopTools {
-    private static DesktopTool desktopToolIF;
+    private static final DesktopTool desktopToolIF;
 
     static {
         desktopToolIF = new DesktopTool();

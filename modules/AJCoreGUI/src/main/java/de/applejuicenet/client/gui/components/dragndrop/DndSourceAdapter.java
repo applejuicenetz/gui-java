@@ -1,11 +1,6 @@
 package de.applejuicenet.client.gui.components.dragndrop;
 
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragSource;
-import java.awt.dnd.DragSourceDragEvent;
-import java.awt.dnd.DragSourceDropEvent;
-import java.awt.dnd.DragSourceEvent;
-import java.awt.dnd.DragSourceListener;
+import java.awt.dnd.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/dragndrop/DndSourceAdapter.java,v 1.1 2004/10/29 11:58:43 maj0r Exp $

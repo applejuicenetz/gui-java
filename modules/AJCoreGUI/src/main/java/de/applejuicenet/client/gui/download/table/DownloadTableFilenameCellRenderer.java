@@ -4,15 +4,12 @@
 
 package de.applejuicenet.client.gui.download.table;
 
-import java.awt.Component;
-
-import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import de.applejuicenet.client.fassade.shared.FileType;
 import de.applejuicenet.client.shared.IconManager;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 public class DownloadTableFilenameCellRenderer extends DefaultTableCellRenderer
 {

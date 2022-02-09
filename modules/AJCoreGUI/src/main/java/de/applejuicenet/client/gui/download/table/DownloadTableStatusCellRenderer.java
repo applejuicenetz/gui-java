@@ -4,15 +4,14 @@
 
 package de.applejuicenet.client.gui.download.table;
 
-import java.awt.Component;
-
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 public class DownloadTableStatusCellRenderer extends DefaultTableCellRenderer implements LanguageListener
 {

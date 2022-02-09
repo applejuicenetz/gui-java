@@ -1,12 +1,12 @@
 package de.applejuicenet.client.gui.mobileproxy;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Information;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 
 public class MobileProxy extends Thread {

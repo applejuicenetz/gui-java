@@ -1,10 +1,10 @@
 package de.applejuicenet.client.gui.plugins;
 
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import java.awt.*;
 import java.util.HashMap;
 
@@ -48,15 +48,14 @@ public class GraphPanel extends JPanel {
 
     public GraphPanel() {
         //private UpDownChart ud = new UpDownChart();
-        Logger logger = Logger.getLogger(getClass());
+        Logger logger = LoggerFactory.getLogger(getClass());
         try {
             setLayout(new BorderLayout());
             this.setBackground(Color.BLACK);
             //add(new JScrollPane(ud), BorderLayout.NORTH);
             setBackground(Color.BLACK);
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Unbehandelte Exception", e);
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
 
     }

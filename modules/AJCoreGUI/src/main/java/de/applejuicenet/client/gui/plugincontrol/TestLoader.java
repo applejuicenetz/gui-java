@@ -4,22 +4,14 @@
 
 package de.applejuicenet.client.gui.plugincontrol;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
+import de.applejuicenet.client.gui.plugins.PluginConnector;
 
+import javax.swing.*;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.swing.ImageIcon;
-
-import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
-import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 public abstract class TestLoader
 {

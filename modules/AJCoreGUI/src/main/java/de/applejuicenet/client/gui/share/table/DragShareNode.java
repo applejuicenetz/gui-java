@@ -1,9 +1,8 @@
 package de.applejuicenet.client.gui.share.table;
 
-import java.io.Serializable;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.io.Serializable;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/DragShareNode.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $

@@ -4,14 +4,14 @@
 
 package de.applejuicenet.client.shared;
 
-import java.io.File;
-import java.io.IOException;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.*;
-
-import org.apache.log4j.Logger;
-
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * <p>Titel: AppleJuice Client-GUI</p>
@@ -44,7 +44,7 @@ public class SoundPlayer {
     public static SoundPlayer getInstance() {
         if (instance == null) {
             instance = new SoundPlayer();
-            logger = Logger.getLogger(instance.getClass());
+            logger = LoggerFactory.getLogger(instance.getClass());
         }
 
         return instance;
@@ -134,7 +134,7 @@ public class SoundPlayer {
                 }.start();
             }
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -168,7 +168,7 @@ public class SoundPlayer {
         } catch (UnsupportedAudioFileException uafE) {
             logger.error("Die Datei " + file.getAbsolutePath() + " hat ein ungueltiges Format und kann nicht ausgegeben werden.");
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
 
         return clip;

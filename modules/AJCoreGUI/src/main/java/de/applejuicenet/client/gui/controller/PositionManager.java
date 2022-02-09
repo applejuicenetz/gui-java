@@ -4,8 +4,7 @@
 
 package de.applejuicenet.client.gui.controller;
 
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManager.java,v 1.12 2009/02/12 13:03:34 maj0r Exp $

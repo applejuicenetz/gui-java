@@ -4,14 +4,11 @@
 
 package de.applejuicenet.client.gui.plugins.logviewer;
 
-import java.awt.Component;
-
-import java.io.File;
-
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-
 import de.tklsoft.gui.controls.TKLLabel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 
 public class FileNameListCellRenderer extends TKLLabel implements ListCellRenderer
 {

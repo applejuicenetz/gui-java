@@ -3,15 +3,11 @@
  */
 package de.applejuicenet.client.gui.server.table;
 
-import java.awt.Component;
-
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ServerTableDateCellRenderer extends DefaultTableCellRenderer
 {

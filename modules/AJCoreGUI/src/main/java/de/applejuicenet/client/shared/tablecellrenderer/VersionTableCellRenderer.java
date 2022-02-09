@@ -4,16 +4,12 @@
 
 package de.applejuicenet.client.shared.tablecellrenderer;
 
-import java.awt.Component;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.shared.IconManager;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 public class VersionTableCellRenderer extends DefaultTableCellRenderer
 {

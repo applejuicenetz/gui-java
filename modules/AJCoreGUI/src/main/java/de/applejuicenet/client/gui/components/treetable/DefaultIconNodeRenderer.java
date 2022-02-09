@@ -1,12 +1,10 @@
 package de.applejuicenet.client.gui.components.treetable;
 
-import java.awt.Component;
-
-import javax.swing.Icon;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultTreeCellRenderer;
-
 import de.applejuicenet.client.gui.components.util.IconGetter;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import java.awt.*;
 
 public class DefaultIconNodeRenderer extends DefaultTreeCellRenderer {
 

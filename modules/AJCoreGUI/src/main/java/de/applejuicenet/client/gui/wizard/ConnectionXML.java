@@ -1,16 +1,15 @@
 package de.applejuicenet.client.gui.wizard;
 
-import java.io.File;
-import java.util.ArrayList;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.fassade.shared.XMLDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.XMLDecoder;
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/ConnectionXML.java,v 1.9 2005/02/28 14:58:19 maj0r Exp $
@@ -20,22 +19,21 @@ import de.applejuicenet.client.fassade.shared.XMLDecoder;
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
- *
  */
 
 public class ConnectionXML
-    extends XMLDecoder {
+        extends XMLDecoder {
     private static Logger logger;
 
     private ConnectionXML(String path) {
         super(path);
-        logger = Logger.getLogger(getClass());
+        logger = LoggerFactory.getLogger(getClass());
     }
 
     public static ConnectionKind[] getConnections() {
         try {
             String path = System.getProperty("user.dir") + File.separator +
-                "wizard.xml";
+                    "wizard.xml";
             ConnectionXML connectionXML = new ConnectionXML(path);
 
             Element e = null;
@@ -45,7 +43,7 @@ public class ConnectionXML
             int maxDownload;
             int maxNewConnectionsPro10Sek;
             NodeList nodes = connectionXML.document.getElementsByTagName(
-                "wizard");
+                    "wizard");
             nodes = nodes.item(0).getChildNodes();
             int nodesSize = nodes.getLength();
             for (int y = 0; y < nodesSize; y++) {
@@ -55,18 +53,15 @@ public class ConnectionXML
                     maxUpload = Integer.parseInt(e.getAttribute("maxupload"));
                     maxDownload = Integer.parseInt(e.getAttribute("maxdownload"));
                     maxNewConnectionsPro10Sek = Integer.parseInt(e.getAttribute(
-                        "maxnewconnections10"));
+                            "maxnewconnections10"));
                     connectionKinds.add(new ConnectionKind(bezeichnung,
-                        maxUpload, maxDownload, maxNewConnectionsPro10Sek));
+                            maxUpload, maxDownload, maxNewConnectionsPro10Sek));
                 }
             }
-            return (ConnectionKind[]) connectionKinds.toArray(new
-                ConnectionKind[connectionKinds.size()]);
-        }
-        catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR)) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
+            return connectionKinds.toArray(new
+                    ConnectionKind[connectionKinds.size()]);
+        } catch (Exception e) {
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             return null;
         }
     }

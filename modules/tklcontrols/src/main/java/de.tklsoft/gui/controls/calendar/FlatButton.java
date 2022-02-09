@@ -9,8 +9,8 @@ import java.awt.event.MouseListener;
 
 public class FlatButton extends JButton implements FocusListener, MouseListener {
 
-   private Border _focus = BorderFactory.createEtchedBorder();
-   private Border _withoutfocus = BorderFactory.createEmptyBorder(2, 2, 2, 2);
+   private final Border _focus = BorderFactory.createEtchedBorder();
+   private final Border _withoutfocus = BorderFactory.createEmptyBorder(2, 2, 2, 2);
 
 
    public FlatButton(String text) {

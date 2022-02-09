@@ -4,14 +4,11 @@
 
 package de.applejuicenet.client.gui.search.table;
 
-import java.awt.Component;
-
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 public class SearchEntrySizeRenderer extends DefaultTableCellRenderer
 {

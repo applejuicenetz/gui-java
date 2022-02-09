@@ -4,15 +4,6 @@
 
 package de.applejuicenet.client.gui.share.table;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Share;
@@ -20,6 +11,13 @@ import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.FileType;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareNode.java,v 1.10 2009/01/18 22:57:48 maj0r Exp $
@@ -33,8 +31,8 @@ import de.applejuicenet.client.shared.IconManager;
  */
 public class ShareNode implements Node
 {
-   private static ImageIcon treeIcon;
-   private static Logger    logger = Logger.getLogger(ShareNode.class);
+   private static final ImageIcon treeIcon;
+   private static final Logger logger = LoggerFactory.getLogger(ShareNode.class);
 
    static
    {

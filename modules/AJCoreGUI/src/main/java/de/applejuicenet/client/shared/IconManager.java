@@ -4,24 +4,18 @@
 
 package de.applejuicenet.client.shared;
 
-import java.awt.Image;
-import java.awt.Toolkit;
+import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
-
 import java.io.FileNotFoundException;
-import java.net.URL;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.swing.ImageIcon;
-
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 /**
  * <p>Titel: AppleJuice Client-GUI</p>
@@ -32,11 +26,10 @@ import org.apache.log4j.Logger;
  */
 public class IconManager {
     private static IconManager instance = null;
-    private final Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Map<String, ImageIcon> icons;
 
     private IconManager() {
-        logger = Logger.getLogger(getClass());
         icons = new HashMap<>();
     }
 
@@ -72,9 +65,7 @@ public class IconManager {
                 icons.put(key, result);
             }
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.INFO)) {
-                logger.info("Icon " + key + ".png nicht gefunden", e);
-            }
+            logger.info("Icon " + key + ".png nicht gefunden", e);
         }
 
         return result;

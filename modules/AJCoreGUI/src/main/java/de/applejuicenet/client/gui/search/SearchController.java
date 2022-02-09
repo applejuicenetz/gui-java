@@ -4,14 +4,6 @@
 
 package de.applejuicenet.client.gui.search;
 
-import java.awt.Component;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
@@ -27,8 +19,12 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.download.DownloadPropertyChangeListener;
 import de.applejuicenet.client.gui.search.table.SearchEntryIconRenderer;
 import de.applejuicenet.client.shared.SoundPlayer;
-
 import de.tklsoft.gui.controls.TKLTextField;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SearchController extends GuiController
 {
@@ -112,7 +108,7 @@ public class SearchController extends GuiController
          }
          catch(IllegalArgumentException e)
          {
-            logger.error(e);
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE,e);
          }
       }
    }

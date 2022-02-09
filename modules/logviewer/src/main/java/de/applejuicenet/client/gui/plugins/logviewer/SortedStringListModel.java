@@ -4,13 +4,11 @@
 
 package de.applejuicenet.client.gui.plugins.logviewer;
 
+import javax.swing.*;
+import javax.swing.event.ListDataListener;
 import java.io.File;
-
 import java.util.HashSet;
 import java.util.TreeSet;
-
-import javax.swing.ListModel;
-import javax.swing.event.ListDataListener;
 
 public class SortedStringListModel implements ListModel
 {

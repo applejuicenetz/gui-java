@@ -4,16 +4,15 @@
 
 package de.applejuicenet.client.gui.server.table;
 
+import de.applejuicenet.client.fassade.entity.Server;
+import de.applejuicenet.client.gui.components.table.SortableTableModel;
+import de.applejuicenet.client.gui.components.table.TableSorter;
+
+import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.table.AbstractTableModel;
-
-import de.applejuicenet.client.fassade.entity.Server;
-import de.applejuicenet.client.gui.components.table.SortableTableModel;
-import de.applejuicenet.client.gui.components.table.TableSorter;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableModel.java,v 1.11 2009/01/27 07:55:56 maj0r Exp $

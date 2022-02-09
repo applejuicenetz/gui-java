@@ -4,16 +4,13 @@
 
 package de.applejuicenet.client.gui.download.table;
 
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.JLabel;
-import javax.swing.JTable;
-
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.Settings;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class DownloadTableDownloadFilenameCellRenderer extends DownloadTableFilenameCellRenderer implements DataUpdateListener
 {

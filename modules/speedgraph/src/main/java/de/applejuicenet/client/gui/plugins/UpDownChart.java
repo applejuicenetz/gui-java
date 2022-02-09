@@ -6,8 +6,13 @@
  */
 package de.applejuicenet.client.gui.plugins;
 
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
 import java.awt.*;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -21,12 +26,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.swing.JPanel;
-
-import de.applejuicenet.client.AppleJuiceClient;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 /*TODO UL/DL marken für ISDN, DSL,...
 
@@ -132,7 +131,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
     }
 
     public UpDownChart() {
-        logger = Logger.getLogger(getClass());
+        logger = LoggerFactory.getLogger(getClass());
         addMouseListener(this);
         initTime = System.currentTimeMillis();
         try {
@@ -140,16 +139,12 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
                 timerThread = new Timer();
                 chartTimer = new chartTimerTask();
             } catch (Exception e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e1);
             }
 
             ud = new UpDownData();
         } catch (NullPointerException e) {
-            if (logger != null) {
-                if (logger.isEnabledFor(Level.ERROR))
-                    logger.error("Nullpointer-exception: data-storage not initialized!");
-            }
+            logger.error("Nullpointer-exception: data-storage not initialized!", e);
         }
     }
 
@@ -315,8 +310,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
                 g.drawImage(image, 0, 0, null);
                 g.drawImage(legendImage, legendX, legendY, new Color(0, 0, 0, legendAlpha), null);
             } catch (Exception e) {
-                if (logger.isEnabledFor(Level.ERROR))
-                    logger.error("Error drawing graphics :" + e.getMessage() + "\r\n" + e.getCause());
+                logger.error("Error drawing graphics :" + e.getMessage() + "\r\n" + e.getCause());
             }
         } else {
             initializeImages();
@@ -422,7 +416,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
         speedVal = bottomY - (speedVal * bottomY / maxSpeed / 1024.0);
         g.drawLine(31, (int) speedVal, image.getWidth(null), (int) speedVal);
         g.setColor(col.brighter());
-        String outText = new String(nf.format(value));
+        String outText = nf.format(value);
 
         g.drawString(outText, image.getWidth(null) - g.getFontMetrics().stringWidth(outText) - 10, (int) speedVal - 10);
     }
@@ -465,7 +459,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
 //			g.dispose();
 //		}
 //		catch (Exception e) {
-//			if (logger.isEnabledFor(Level.ERROR))
+//			if (logger.isEnabled(Level.ERROR))
 //				logger.error("Error drawing labels :" + e.getMessage() + "\r\n" + e.getCause());
 //		}
     }
@@ -504,8 +498,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
             g.drawLine(110, (int) (strHeight * 1), 125, (int) (strHeight * 1));
             g.dispose();
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Error painting legend :" + e.getMessage() + "\r\n" + e.getCause());
+            logger.error("Error painting legend :" + e.getMessage() + "\r\n" + e.getCause());
         }
     }
 
@@ -523,8 +516,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
             g.fillRect(0, 0, backImage.getWidth(), backImage.getHeight());
             g.dispose();
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Error painting background :" + e.getMessage() + "\r\n" + e.getCause());
+            logger.error("Error painting background :" + e.getMessage() + "\r\n" + e.getCause());
         }
     }
 
@@ -582,8 +574,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
 
             g.dispose();
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Error drawing lines :" + e.getMessage() + "\r\n" + e.getCause());
+            logger.error("Error drawing lines :" + e.getMessage() + "\r\n" + e.getCause());
         }
 
     }
@@ -609,8 +600,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
             g.drawLine(aktXPos, topY - 2, aktXPos, bottomY - 2);
             g.dispose();
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Error drawing time :" + e.getMessage() + "\r\n" + e.getCause());
+            logger.error("Error drawing time :" + e.getMessage() + "\r\n" + e.getCause());
         }
 
     }
@@ -640,8 +630,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
             parent.getProperties().put("changed", "false");
             parent.saveProperties();
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Error reading Properties :" + e.getMessage() + "\r\n" + e.getCause());
+            logger.error("Error reading Properties :" + e.getMessage() + "\r\n" + e.getCause());
         }
     }
 
@@ -703,8 +692,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
                 }
             }
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Error creating Image :" + e.getMessage() + "\r\n" + e.getCause());
+            logger.error("Error creating Image :" + e.getMessage() + "\r\n" + e.getCause());
         }
     }
 

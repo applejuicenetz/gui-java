@@ -4,27 +4,6 @@
 
 package de.applejuicenet.client.gui.search;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.GuiController;
@@ -35,6 +14,15 @@ import de.applejuicenet.client.shared.IconManager;
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.16 2009/02/12 09:11:24 maj0r Exp $
@@ -55,12 +43,12 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
    private TKLLabel               bearbeitung        = new TKLLabel();
    private JMenuItem              einfuegen;
    private JPopupMenu             menu;
-   private Logger                 logger;
+   private final Logger logger;
 
    public SearchPanel(GuiController guiController)
    {
       super(guiController);
-      logger = Logger.getLogger(getClass());
+      logger = LoggerFactory.getLogger(getClass());
       try
       {
          init();

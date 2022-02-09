@@ -1,17 +1,13 @@
 package de.applejuicenet.client.gui.plugins;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import de.applejuicenet.client.AppleJuiceClient;
+import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,16 +15,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-
-import de.applejuicenet.client.AppleJuiceClient;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/ajzab0815/Repository/AJStatsPlugin/de/applejuicenet/client/gui/plugins/AJStatsPlugin.java,v 1.3 2004/06/17 10:14:03 zab0815 Exp $
@@ -70,7 +56,7 @@ public class SpeedGraphPlugin
     private Properties properties;
 
     private void init() {
-        logger = Logger.getLogger(getClass());
+        logger = LoggerFactory.getLogger(getClass());
         savePath = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui";
         savePath = savePath + File.separator + "speedgraph.properties";
         properties = new Properties();
@@ -169,8 +155,7 @@ public class SpeedGraphPlugin
             AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.SPEED_CHANGED);
             fireContentChanged(DATALISTENER_TYPE.SPEED_CHANGED, new HashMap());
         } catch (Exception e) {
-            if (logger.isEnabledFor(Level.ERROR))
-                logger.error("Unbehandelte Exception", e);
+            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
@@ -190,12 +175,12 @@ public class SpeedGraphPlugin
             js.getContentPane().add(pluginSettings);
 
             js.setSize(800, 600);
-            js.show();
+            js.setVisible(true);
         });
 
         jp.getContentPane().add(plugin);
         jp.getContentPane().add(jb);
-        jp.show();
+        jp.setVisible(true);
     }
 
 

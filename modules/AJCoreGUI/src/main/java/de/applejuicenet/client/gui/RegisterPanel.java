@@ -4,16 +4,6 @@
 
 package de.applejuicenet.client.gui;
 
-import java.awt.event.KeyEvent;
-
-import java.util.Set;
-
-import javax.swing.DefaultSingleSelectionModel;
-import javax.swing.ImageIcon;
-import javax.swing.JTabbedPane;
-
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -28,6 +18,12 @@ import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.gui.start.StartController;
 import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.util.Set;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.65 2009/01/14 17:05:33 maj0r Exp $
@@ -48,12 +44,12 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
    private ServerPanel        serverPanel;
    private ShareController    shareController;
    private AppleJuiceDialog   parent;
-   private Logger             logger;
+   private Logger logger;
 
    public RegisterPanel(AppleJuiceDialog parent)
    {
       super(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
-      logger = Logger.getLogger(getClass());
+      logger = LoggerFactory.getLogger(getClass());
       try
       {
          this.parent = parent;

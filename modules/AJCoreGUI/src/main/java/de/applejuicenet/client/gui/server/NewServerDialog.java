@@ -4,31 +4,16 @@
 
 package de.applejuicenet.client.gui.server;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.SoundPlayer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/NewServerDialog.java,v 1.5 2009/01/12 09:19:20 maj0r Exp $
@@ -38,112 +23,91 @@ import de.applejuicenet.client.shared.SoundPlayer;
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
- *
  */
-public class NewServerDialog extends JDialog
-{
-   private JButton    ok     = new JButton();
-   private JTextField dyn    = new JTextField();
-   private JTextField port   = new JTextField();
-   private boolean    legal  = false;
-   private String     link   = "";
-   private Logger     logger;
+public class NewServerDialog extends JDialog {
+    private JButton ok = new JButton();
+    private JTextField dyn = new JTextField();
+    private JTextField port = new JTextField();
+    private boolean legal = false;
+    private String link = "";
+    private Logger logger;
 
-   public NewServerDialog(Frame parent, boolean modal)
-   {
-      super(parent, modal);
-      logger = Logger.getLogger(getClass());
-      try
-      {
-         init();
-      }
-      catch(Exception e)
-      {
-         if(logger.isEnabledFor(Level.ERROR))
-         {
+    public NewServerDialog(Frame parent, boolean modal) {
+        super(parent, modal);
+        logger = LoggerFactory.getLogger(getClass());
+        try {
+            init();
+        } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-         }
-      }
-   }
+        }
+    }
 
-   private void init()
-   {
-      addWindowListener(new WindowAdapter()
-         {
-            public void windowClosing(WindowEvent evt)
-            {
-               close();
+    private void init() {
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                close();
             }
-         });
+        });
 
-      LanguageSelector languageSelector = LanguageSelector.getInstance();
+        LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      setTitle(languageSelector.getFirstAttrbuteByTagName("addserverform.caption"));
-      ok.setText(languageSelector.getFirstAttrbuteByTagName("addserverform.okbtn.caption"));
-      dyn.setColumns(15);
-      port.setColumns(5);
-      port.setDocument(new NumberInputVerifier());
-      getContentPane().setLayout(new BorderLayout());
-      JPanel             panel2      = new JPanel(new GridBagLayout());
-      GridBagConstraints constraints = new GridBagConstraints();
+        setTitle(languageSelector.getFirstAttrbuteByTagName("addserverform.caption"));
+        ok.setText(languageSelector.getFirstAttrbuteByTagName("addserverform.okbtn.caption"));
+        dyn.setColumns(15);
+        port.setColumns(5);
+        port.setDocument(new NumberInputVerifier());
+        getContentPane().setLayout(new BorderLayout());
+        JPanel panel2 = new JPanel(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
 
-      constraints.anchor      = GridBagConstraints.NORTH;
-      constraints.fill        = GridBagConstraints.BOTH;
-      constraints.gridx       = 0;
-      constraints.gridy       = 0;
-      constraints.insets.left = 5;
-      panel2.add(new JLabel(languageSelector.getFirstAttrbuteByTagName("addserverform.serverlbl.caption") + ": "), constraints);
-      constraints.gridy = 1;
-      panel2.add(new JLabel(languageSelector.getFirstAttrbuteByTagName("addserverform.portlbl.caption") + ": "), constraints);
-      constraints.insets.left = 0;
-      constraints.gridx       = 1;
-      constraints.gridy       = 0;
-      panel2.add(dyn, constraints);
-      constraints.gridy = 1;
-      panel2.add(port, constraints);
-      getContentPane().add(panel2, BorderLayout.CENTER);
-      JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        constraints.anchor = GridBagConstraints.NORTH;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.insets.left = 5;
+        panel2.add(new JLabel(languageSelector.getFirstAttrbuteByTagName("addserverform.serverlbl.caption") + ": "), constraints);
+        constraints.gridy = 1;
+        panel2.add(new JLabel(languageSelector.getFirstAttrbuteByTagName("addserverform.portlbl.caption") + ": "), constraints);
+        constraints.insets.left = 0;
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        panel2.add(dyn, constraints);
+        constraints.gridy = 1;
+        panel2.add(port, constraints);
+        getContentPane().add(panel2, BorderLayout.CENTER);
+        JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-      panel1.add(ok);
-      getContentPane().add(panel1, BorderLayout.SOUTH);
-      pack();
-      port.addKeyListener(new KeyAdapter()
-         {
-            public void keyPressed(KeyEvent ke)
-            {
-               if(ke.getKeyCode() == KeyEvent.VK_ENTER)
-               {
-                  ok.doClick();
-               }
+        panel1.add(ok);
+        getContentPane().add(panel1, BorderLayout.SOUTH);
+        pack();
+        port.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    ok.doClick();
+                }
             }
-         });
-      ok.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent ae)
-            {
-               if(dyn.getText().length() > 0 && port.getText().length() > 0)
-               {
-                  legal = true;
-                  link = "ajfsp://server|" + dyn.getText() + "|" + port.getText();
-                  close();
-               }
+        });
+        ok.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                if (dyn.getText().length() > 0 && port.getText().length() > 0) {
+                    legal = true;
+                    link = "ajfsp://server|" + dyn.getText() + "|" + port.getText();
+                    close();
+                }
             }
-         });
-      SoundPlayer.getInstance().playSound(SoundPlayer.KONKRETISIEREN);
-   }
+        });
+        SoundPlayer.getInstance().playSound(SoundPlayer.KONKRETISIEREN);
+    }
 
-   private void close()
-   {
-      dispose();
-   }
+    private void close() {
+        dispose();
+    }
 
-   public String getLink()
-   {
-      return link;
-   }
+    public String getLink() {
+        return link;
+    }
 
-   public boolean isLegal()
-   {
-      return legal;
-   }
+    public boolean isLegal() {
+        return legal;
+    }
 }

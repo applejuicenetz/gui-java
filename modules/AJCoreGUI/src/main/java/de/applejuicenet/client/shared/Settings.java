@@ -3,9 +3,9 @@
  */
 package de.applejuicenet.client.shared;
 
-import java.awt.Color;
-
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
+
+import java.awt.*;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.13 2009/02/01 14:45:03 maj0r Exp $

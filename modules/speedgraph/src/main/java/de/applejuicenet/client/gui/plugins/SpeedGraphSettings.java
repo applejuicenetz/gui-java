@@ -6,13 +6,8 @@
  */
 package de.applejuicenet.client.gui.plugins;
 
-import java.awt.Color;
-import java.awt.Image;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JColorChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Zab

@@ -4,20 +4,18 @@
 
 package de.applejuicenet.client.gui.upload.table;
 
-import java.text.SimpleDateFormat;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.table.AbstractTableModel;
-
 import de.applejuicenet.client.fassade.entity.Upload;
 import de.applejuicenet.client.fassade.entity.Version;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
+
+import javax.swing.table.AbstractTableModel;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class UploadActiveTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<Upload>
 {
