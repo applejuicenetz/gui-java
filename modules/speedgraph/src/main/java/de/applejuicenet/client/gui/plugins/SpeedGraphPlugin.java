@@ -43,10 +43,7 @@ import java.util.Properties;
  * Revision 0.9  2003/12/22 16:25:35  zab0815
  * Neues Plugin auf basis von SpeedGraph vom Maj0r.
  */
-public class SpeedGraphPlugin
-        extends PluginConnector
-        implements FocusListener, ActionListener, ComponentListener, KeyListener,
-        MouseListener {
+public class SpeedGraphPlugin extends PluginConnector implements FocusListener, ActionListener, ComponentListener, KeyListener, MouseListener {
 
     private GraphPanel graphPanel = null;
     private UpDownChart ud = null;
@@ -69,6 +66,7 @@ public class SpeedGraphPlugin
                 ex.printStackTrace();
             }
         }
+
         setLayout(new BorderLayout());
 
         graphPanel = new GraphPanel();
@@ -79,9 +77,12 @@ public class SpeedGraphPlugin
         addPropertyChangeListener(ud);
         addMouseListener(ud);
         addMouseMotionListener(ud);
+
         String propGradient = properties.getProperty("UseGradient");
+
         if (propGradient != null) {
             int propGradientDir;
+
             try {
                 propGradientDir = Integer.decode(properties.getProperty("GradientDirection"));
             } catch (Exception e) {
@@ -93,8 +94,9 @@ public class SpeedGraphPlugin
             ud.setBGStart(getPropertyColor("GradientStart", Color.white));
             ud.setBGEnd(getPropertyColor("GradientEnd", Color.green));
             ud.setUpdatePeriod(Long.parseLong(properties.getProperty("UpdateTime", "2000")));
-        } else
+        } else {
             ud.setGradientDirection(UpDownChart.BG_NO_GRADIENT);
+        }
 
         JSplitPane jsPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, graphPanel, ud);
         jsPane.setDividerLocation(getHeight() / 2);
@@ -104,8 +106,7 @@ public class SpeedGraphPlugin
 
     public void saveProperties() {
         try {
-            properties.store(new FileOutputStream(savePath),
-                    "ajStatsPlugin-PropertyFile");
+            properties.store(new FileOutputStream(savePath), "ajStatsPlugin-PropertyFile");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -121,7 +122,6 @@ public class SpeedGraphPlugin
         valString = "0x" + Integer.toHexString(ColorKey.getRGB());
 
         properties.put(propertyKey, valString);
-//    	System.out.println("Key:" + propertyKey + " Val:" + valString);
     }
 
     public Color getPropertyColor(String propertyKey, Color defaultCol) {
@@ -145,9 +145,7 @@ public class SpeedGraphPlugin
         }
     }
 
-
-    public SpeedGraphPlugin(Properties pluginsProperties, Map<String, Properties> languageFiles, ImageIcon icon,
-                            Map<String, ImageIcon> availableIcons) {
+    public SpeedGraphPlugin(Properties pluginsProperties, Map<String, Properties> languageFiles, ImageIcon icon, Map<String, ImageIcon> availableIcons) {
         super(pluginsProperties, languageFiles, icon, availableIcons);
 
         try {

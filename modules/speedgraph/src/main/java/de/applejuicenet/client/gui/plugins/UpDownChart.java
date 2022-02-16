@@ -58,7 +58,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
     private final int minChartHeight = 100;
 
     private static Logger logger;
-    private static Timer timerThread;
+    private static TimerThread timerThread;
     private TimerTask chartTimer = null;
 
     private long initTime = 0;
@@ -136,7 +136,7 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
         initTime = System.currentTimeMillis();
         try {
             try {
-                timerThread = new Timer();
+                timerThread = new TimerThread();
                 chartTimer = new chartTimerTask();
             } catch (Exception e1) {
                 logger.error(ApplejuiceFassade.ERROR_MESSAGE, e1);
@@ -221,6 +221,19 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
 
     ;
 
+    static class TimerThread extends Timer {
+
+        private boolean hasStarted = false;
+
+        public void run(TimerTask task, long delay, long period) {
+            this.schedule(task, delay, period);
+            this.hasStarted = true;
+        }
+
+        public boolean hasRunStarted() {
+            return this.hasStarted;
+        }
+    }
 
     public void update(HashMap info) {
 
@@ -236,8 +249,9 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
                 ud.remove(0);
 
             ud.add((Long) info.get(uploadSpeedKey), (Long) info.get(downloadSpeedKey), System.currentTimeMillis());
-            if (ud.size() == 1)
+            if (ud.size() == 1 && timerThread.hasRunStarted()) {
                 timerThread.schedule(chartTimer, 1000, updatePeriod);
+            }
 
         } catch (NullPointerException e) {
             //No Data, or no Time then exit
@@ -663,7 +677,6 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
                 try {
                     legendImage = new BufferedImage(legendWidth, legendHeight, BufferedImage.TYPE_INT_ARGB);
                     drawLegend(legendAlpha);
-                    //System.out.print("new legendImage("+ legendImage.getWidth(null)+ "," + legendImage.getHeight(null) +")\r\n");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
