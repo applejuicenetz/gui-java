@@ -90,10 +90,10 @@ public abstract class PluginFactory {
 
     private static Set<PluginConnector> loadPluginsFromClasspath() {
         Set<PluginConnector> thePlugins = new HashSet<PluginConnector>();
-        String[] which = new String[]{ //"de.applejuicenet.client.gui.plugins.jabber.JabberTestLoader",//
-//                                                                       "de.applejuicenet.client.gui.plugins.serverwatcher.ServerWatcherTestLoader"
-//                                                                       "de.applejuicenet.client.gui.plugins.logviewer.LogViewerTestLoader"
-                "de.applejuicenet.client.gui.plugins.speedgraph.SpeedGraphPluginTestLoader"
+        String[] which = new String[]{
+                "de.applejuicenet.client.gui.plugins.logviewer.LogViewerPluginTestLoader",
+                "de.applejuicenet.client.gui.plugins.speedgraph.SpeedGraphPluginTestLoader",
+                "de.applejuicenet.client.gui.plugins.versionchecker.VersioncheckerPluginTestLoader",
         };
 
         for (String curWhich : which) {
@@ -112,11 +112,10 @@ public abstract class PluginFactory {
 
     private static PluginConnector loadPlugin(String which) {
         try {
-            Class pluginClass = Class.forName(which);
+            Class<?> pluginClass = Class.forName(which);
             TestLoader testLoader = (TestLoader) pluginClass.newInstance();
-            PluginConnector pluginConnector = testLoader.getPlugin();
 
-            return pluginConnector;
+            return testLoader.getPlugin();
         } catch (Throwable e) {
             //Von einem Plugin lassen wir uns nicht beirren! ;-)
             logger.error("Ein Plugin konnte nicht instanziert werden", e);
