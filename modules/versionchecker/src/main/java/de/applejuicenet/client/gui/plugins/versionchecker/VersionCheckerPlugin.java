@@ -28,12 +28,12 @@ import java.util.Properties;
  *
  * @author Maj0r <aj@tkl-soft.de>
  */
-public class VersionChecker extends PluginConnector {
+public class VersionCheckerPlugin extends PluginConnector {
     private MainPanel mainPanel;
     private final Logger logger;
 
-    public VersionChecker(Properties pluginProperties, Map<String, Properties> languageFiles, ImageIcon icon,
-                          Map<String, ImageIcon> availableIcons) {
+    public VersionCheckerPlugin(Properties pluginProperties, Map<String, Properties> languageFiles, ImageIcon icon,
+                                Map<String, ImageIcon> availableIcons) {
         super(pluginProperties, languageFiles, icon, availableIcons);
         logger = LoggerFactory.getLogger(getClass());
         try {
