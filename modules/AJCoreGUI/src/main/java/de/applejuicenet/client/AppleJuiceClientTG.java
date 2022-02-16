@@ -23,14 +23,13 @@ import org.slf4j.LoggerFactory;
  * @author Maj0r <aj@tkl-soft.de>
  */
 public class AppleJuiceClientTG extends ThreadGroup {
-    private final Logger logger;
 
     public AppleJuiceClientTG() {
         super("AppleJuiceClientThreadGroup");
-        logger = LoggerFactory.getLogger(getClass());
     }
 
     public void uncaughtException(Thread t, Throwable e) {
+        Logger logger = LoggerFactory.getLogger(getClass());
         if (e.getClass() == ClassCastException.class && e.getMessage().equals("java.awt.TrayIcon cannot be cast to java.awt.Component")) {
 
             /*

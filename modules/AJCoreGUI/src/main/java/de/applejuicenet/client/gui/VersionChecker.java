@@ -19,10 +19,11 @@ public class VersionChecker {
     public static void check() {
         Thread versionWorker = new Thread("VersionChecker") {
             public void run() {
-                logger.debug("VersionWorkerThread gestartet. " + this);
+                logger.debug("VersionWorkerThread gestartet.");
 
                 try {
                     String updateServer = OptionsManagerImpl.getInstance().getUpdateServerURL();
+                    logger.debug(String.format("GET %s", updateServer));
                     String downloadData = WebsiteContentLoader.getWebsiteContent(updateServer);
 
                     if (downloadData.length() > 0) {
@@ -31,7 +32,7 @@ public class VersionChecker {
 
                         logger.info("aktuelle Version " + AppleJuiceDialog.getVersion() + " | letzte veröffentlichte Version: " + aktuellsteVersion);
 
-                        if (compareVersion(aktuellsteVersion, AppleJuiceDialog.getVersion()) == 1) {
+                        if (AppleJuiceDialog.getVersion() != null && compareVersion(aktuellsteVersion, AppleJuiceDialog.getVersion()) == 1) {
                             String releaseLink = jsonObject.get("html_url").getAsString();
                             SwingUtilities.invokeLater(() -> {
                                 UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(AppleJuiceDialog.getApp(), aktuellsteVersion, releaseLink);
@@ -44,7 +45,7 @@ public class VersionChecker {
                     logger.info("Aktualisierungsinformationen konnten nicht geladen werden.", e);
                 }
 
-                logger.debug("VersionWorkerThread beendet. " + this);
+                logger.debug("VersionWorkerThread beendet.");
             }
         };
 

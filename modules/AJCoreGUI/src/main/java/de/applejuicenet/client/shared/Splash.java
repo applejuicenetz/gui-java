@@ -34,6 +34,11 @@ public class Splash
             && position <= progress.getMaximum() ){
             progress.setValue(position);
             progress.setString(text);
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

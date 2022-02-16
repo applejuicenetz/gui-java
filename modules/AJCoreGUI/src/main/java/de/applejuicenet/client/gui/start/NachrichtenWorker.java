@@ -39,7 +39,7 @@ public class NachrichtenWorker extends Thread {
     }
 
     public void run() {
-        logger.debug("NachrichtenWorkerThread gestartet. " + this);
+        logger.debug("NachrichtenWorkerThread gestartet.");
 
         try {
             final String coreVersion = AppleJuiceClient.getAjFassade().getCoreVersion().getVersion();
@@ -47,6 +47,7 @@ public class NachrichtenWorker extends Thread {
 
             String newsURL = OptionsManagerImpl.getInstance().getNewsURL();
             String newsURLFormatted = String.format(newsURL, AppleJuiceClient.getAjFassade().getCoreVersion().getVersion());
+            logger.debug(String.format("GET %s", newsURLFormatted));
             String htmlText = WebsiteContentLoader.getWebsiteContent(newsURLFormatted);
             int pos = htmlText.toLowerCase().indexOf("<html>");
 
@@ -76,9 +77,9 @@ public class NachrichtenWorker extends Thread {
                 nachrichten.setFont(version.getFont());
             });
         } catch (Exception e) {
-            logger.info("Versionsabhängige Nachrichten konnten nicht geladen werden.");
+            logger.error("Versionsabhängige Nachrichten konnten nicht geladen werden.");
         }
 
-        logger.debug("NachrichtenWorkerThread beendet. " + this);
+        logger.debug("NachrichtenWorkerThread beendet.");
     }
 }

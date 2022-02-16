@@ -32,6 +32,8 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.Socket;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.109 2009/02/12 13:11:40 maj0r Exp $
@@ -44,7 +46,7 @@ import java.net.Socket;
  */
 public class AppleJuiceClient {
     public static Splash splash = null;
-    private static final Logger logger = LoggerFactory.getLogger(AppleJuiceClient.class);
+    private static Logger logger;
     private static ApplejuiceFassade ajFassade = null;
     private static CoreConnectionSettingsHolder conn = null;
     private static String rootDirectory = null;
@@ -78,6 +80,15 @@ public class AppleJuiceClient {
     }
 
     public static void main(String[] args) {
+        logger = LoggerFactory.getLogger(AppleJuiceClient.class);
+
+        try {
+            Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
+            AppleJuiceClient.setLogLevel(logLevel);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
         AppleJuiceClientTG tg = new AppleJuiceClientTG();
         final String[] myargs = args;
         Runnable runnable = () -> AppleJuiceClient.runmain(myargs);
@@ -91,13 +102,6 @@ public class AppleJuiceClient {
         boolean processLink = false;
         String link = "";
         boolean doubleInstance = false;
-
-        try {
-            Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
-            AppleJuiceClient.setLogLevel(logLevel);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
 
         try {
             linkListener = new LinkListener();
@@ -239,6 +243,9 @@ public class AppleJuiceClient {
 
             splash.addKeyListener(ks);
             splash.setVisible(true);
+
+            splash.setProgress(10, "check system...");
+
             try {
                 if (OptionsManagerImpl.getInstance().isThemesSupported()) {
                     Method method = JFrame.class.getMethod("setDefaultLookAndFeelDecorated",
@@ -260,6 +267,7 @@ public class AppleJuiceClient {
             }
 
             System.out.println(nachricht);
+
             if (logger.isInfoEnabled()) {
                 nachricht = "erkanntes GUI-OS: " + System.getProperty("os.name");
                 logger.info(nachricht);
@@ -271,9 +279,10 @@ public class AppleJuiceClient {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog;
 
-            splash.setProgress(5, "Lade Themes...");
+            splash.setProgress(25, "load themes...");
             AppleJuiceDialog.initThemes();
-            splash.setProgress(10, "Teste Verbindung...");
+
+            splash.setProgress(50, "test connection...");
             boolean showDialog = OptionsManagerImpl.getInstance().shouldShowConnectionDialogOnStartup();
             boolean keyDown = ks.isKeyDown(KeyEvent.VK_SHIFT);
 
@@ -326,7 +335,7 @@ public class AppleJuiceClient {
 
             SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
 
-            splash.setProgress(20, "Lade Hauptdialog...");
+            splash.setProgress(75, "load GUI...");
             SwingUtilities.invokeLater(() -> {
                 final AppleJuiceDialog theApp = new AppleJuiceDialog();
 
