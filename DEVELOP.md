@@ -9,7 +9,15 @@ mvn versions:set \
     -DgenerateBackupPoms=false \
     -DoldVersion="*" \
     -N versions:update-child-modules \
-    -DnewVersion=0.84.0
+    -DnewVersion=0.85.0
+    
+    mvn versions:set \
+    -DgroupId=de.applejuicenet.client \
+    -DartifactId=AJClientGUI \
+    -DgenerateBackupPoms=false \
+    -DoldVersion="*" \
+    -N versions:update-child-modules \
+    -DnewVersion=0.85.0
 ```
 
 2. Changelog anpassen

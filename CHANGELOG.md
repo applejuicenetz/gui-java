@@ -1,8 +1,17 @@
 # Changelog
 
+**0.85.0**
+- [meins57] iconpack `modern` zusammengestellt
+- [meins57] neue JavaGUI logos für `modern` erstellt
+- [red171] iconpack `modern` als standard hinzugefügt
+- [red171] `speedgraph` plugin wiederhergestellt
+- [red171] logger `log4j` gegen `logback` ausgetauscht
+- [red171] `ajcorefassade` lib als eigenständiges modul
+- [red171] `tklcontrols` lib als eigenständiges modul
+
 **0.84.2**
-- [red171] `iconpack` Support (siehe [readme.txt](./resources/icons/readme.txt) im `icons` Ordner)
-- [red171] `soundpack` Support (siehe [readme.txt](./resources/sounds/readme.txt) im `sounds` Ordner)
+- [red171] `iconpack` Support (siehe [icons](./resources/icons/) Ordner)
+- [red171] `soundpack` Support (siehe [sounds](./resources/sounds/) Ordner)
 - [red171] unter macOS funktioniert nun CMD+V / CMD+C usw.
 
 **0.84.1**
