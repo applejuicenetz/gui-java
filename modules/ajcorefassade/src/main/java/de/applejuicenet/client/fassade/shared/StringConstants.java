@@ -94,6 +94,7 @@ public interface StringConstants
    String COMMA                               = ",";
    String SPACE                               = " ";
    String TWO_QUESTIONMARKS                   = " ??";
+   String PB                                  = " PB";
    String TB                                  = " TB";
    String GB                                  = " GB";
    String MB                                  = " MB";
