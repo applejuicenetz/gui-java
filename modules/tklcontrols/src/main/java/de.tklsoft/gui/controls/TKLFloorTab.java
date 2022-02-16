@@ -8,21 +8,20 @@ import java.util.Iterator;
 
 public class TKLFloorTab extends JPanel {
 
-   private ArrayList buttons = new ArrayList();
-   private JPanel northPanel = new JPanel(new GridBagLayout());
-   private JPanel southPanel = new JPanel(new GridBagLayout());
-   private CardLayout cardLayout = new CardLayout();
-   private JPanel centerPanel;
-   private ArrayList mainMenuButtons;
-   private HashMap yIndizes;
-   private GridBagConstraints constraints;
+   private final JPanel northPanel = new JPanel(new GridBagLayout());
+   private final JPanel southPanel = new JPanel(new GridBagLayout());
+   private final CardLayout cardLayout = new CardLayout();
+   private final JPanel centerPanel;
+   private final ArrayList<TKLFloorMainMenu> mainMenuButtons;
+   private final HashMap<String, Integer> yIndizes;
+   private final GridBagConstraints constraints;
    private int maxY;
 
 
    public TKLFloorTab() {
       this.centerPanel = new JPanel(this.cardLayout);
-      this.mainMenuButtons = new ArrayList();
-      this.yIndizes = new HashMap();
+      this.mainMenuButtons = new ArrayList<>();
+      this.yIndizes = new HashMap<>();
       this.constraints = new GridBagConstraints();
       this.maxY = -1;
       this.setLayout(new BorderLayout());
@@ -40,14 +39,14 @@ public class TKLFloorTab extends JPanel {
    public void showMenu(TKLFloorMainMenu tKLFloorMainMenu) {
       String name = tKLFloorMainMenu.getName();
       if(name != null && name.length() != 0) {
-         Integer indexTmp = (Integer)this.yIndizes.get(name.toLowerCase());
+         Integer indexTmp = this.yIndizes.get(name.toLowerCase());
          if(indexTmp != null) {
-            int index = indexTmp.intValue();
+            int index = indexTmp;
 
             for(int i = 0; i < this.yIndizes.size(); ++i) {
-               JButton northButton = ((TKLFloorMainMenu)this.mainMenuButtons.get(i)).getNorthButton();
+               JButton northButton = (this.mainMenuButtons.get(i)).getNorthButton();
                northButton.setSelected(false);
-               JButton southButton = ((TKLFloorMainMenu)this.mainMenuButtons.get(i)).getSouthButton();
+               JButton southButton = (this.mainMenuButtons.get(i)).getSouthButton();
                southButton.setSelected(false);
                if(i <= index) {
                   northButton.setVisible(true);
@@ -72,8 +71,7 @@ public class TKLFloorTab extends JPanel {
 
    public void addMenu(TKLFloorMainMenu tKLFloorMainMenu) {
       String name = tKLFloorMainMenu.getName();
-      int size = this.mainMenuButtons.size();
-      Iterator northButton = this.mainMenuButtons.iterator();
+      Iterator<TKLFloorMainMenu> northButton = this.mainMenuButtons.iterator();
 
       TKLFloorMainMenu southButton;
       do {
@@ -87,14 +85,14 @@ public class TKLFloorTab extends JPanel {
             this.southPanel.add(southButton1, this.constraints);
             northButton1.setVisible(false);
             this.mainMenuButtons.add(tKLFloorMainMenu);
-            this.yIndizes.put(name.toLowerCase(), new Integer(this.maxY));
+            this.yIndizes.put(name.toLowerCase(), this.maxY);
             this.centerPanel.add(name.toLowerCase(), tKLFloorMainMenu.getMenuPanel());
             return;
          }
 
-         southButton = (TKLFloorMainMenu)northButton.next();
+         southButton = northButton.next();
       } while(!southButton.getName().equalsIgnoreCase(name));
 
-      throw new RuntimeException("Menüname \'" + name + "\' bereits definiert!");
+      throw new RuntimeException("Menüname '" + name + "' bereits definiert!");
    }
 }

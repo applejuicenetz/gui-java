@@ -36,11 +36,7 @@ public class TKLCheckBox extends JCheckBox implements ModifyableComponent, Synch
    private void init() {
       this.statusHolder = new StatusHolder(this, 13);
       this.setBorderPainted(true);
-      this.addChangeListener(new ChangeListener() {
-         public void stateChanged(ChangeEvent ce) {
-            TKLCheckBox.this.fireCheckRules();
-         }
-      });
+      this.addChangeListener(ce -> TKLCheckBox.this.fireCheckRules());
       this.addKeyListener(new KeyAdapter() {
          public void keyReleased(KeyEvent keyEvent) {
             super.keyReleased(keyEvent);
@@ -99,7 +95,7 @@ public class TKLCheckBox extends JCheckBox implements ModifyableComponent, Synch
    }
 
    public Object getOldValue() {
-      return new Boolean(this.oldValue);
+      return this.oldValue;
    }
 
    public void confirmNewValue() {

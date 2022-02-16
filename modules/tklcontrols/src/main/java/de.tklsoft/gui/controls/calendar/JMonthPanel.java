@@ -15,8 +15,8 @@ public class JMonthPanel extends JPanel {
    private boolean _enabled = true;
    private Calendar _cal;
    private Locale _locale;
-   private ArrayList _days;
-   private ArrayList _changeListener = new ArrayList();
+   private ArrayList<DayLabel> _days;
+   private ArrayList<ChangeListener> _changeListener = new ArrayList<>();
    private boolean _fireingChangeEvent = false;
    public static final Color BACKGROUND_COLOR = UIManager.getColor("TextField.background");
    public static final Color FONT_COLOR = UIManager.getColor("TextField.foreground");
@@ -89,7 +89,7 @@ public class JMonthPanel extends JPanel {
    }
 
    private JPanel createTable() {
-      this._days = new ArrayList();
+      this._days = new ArrayList<>();
       JPanel table = new JPanel();
       table.setBackground(BACKGROUND_COLOR);
       table.setLayout(new GridLayout(6, 7, 1, 1));
@@ -150,14 +150,14 @@ public class JMonthPanel extends JPanel {
       this.removeAll();
       this.createGUI();
       this.updateUI();
-      DayLabel dayLabel = (DayLabel)this._days.get(cal.get(5) - 1);
+      DayLabel dayLabel = this._days.get(cal.get(5) - 1);
       dayLabel.grabFocus();
       this.setBackground(BACKGROUND_COLOR);
    }
 
    public void grabFocus() {
       super.grabFocus();
-      DayLabel dayLabel = (DayLabel)this._days.get(this._cal.get(5) - 1);
+      DayLabel dayLabel = this._days.get(this._cal.get(5) - 1);
       dayLabel.grabFocus();
    }
 
@@ -168,10 +168,10 @@ public class JMonthPanel extends JPanel {
    public void setSelectedDayOfMonth(int day) {
       if(this._enabled && day > 0 && day <= this._days.size()) {
          int oldday = this._cal.get(5);
-         DayLabel dayLabel = (DayLabel)this._days.get(oldday - 1);
+         DayLabel dayLabel = this._days.get(oldday - 1);
          dayLabel.setSelected(false);
          this._cal.set(5, day);
-         dayLabel = (DayLabel)this._days.get(day - 1);
+         dayLabel = this._days.get(day - 1);
          dayLabel.setSelected(true);
          this.updateUI();
          this.fireChangeEvent();
@@ -192,17 +192,15 @@ public class JMonthPanel extends JPanel {
    }
 
    public ChangeListener[] getChangeListener() {
-      return (ChangeListener[])((ChangeListener[])this._changeListener.toArray());
+      return (ChangeListener[]) this._changeListener.toArray();
    }
 
    protected void fireChangeEvent() {
       if(!this._fireingChangeEvent) {
          this._fireingChangeEvent = true;
          ChangeEvent event = new ChangeEvent(this);
-         Iterator i$ = this._changeListener.iterator();
 
-         while(i$.hasNext()) {
-            ChangeListener cl = (ChangeListener)i$.next();
+         for (ChangeListener cl : this._changeListener) {
             cl.stateChanged(event);
          }
 

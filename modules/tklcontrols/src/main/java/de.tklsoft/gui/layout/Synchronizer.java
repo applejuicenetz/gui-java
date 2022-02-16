@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.HashSet;
 
 public class Synchronizer {
-    private HashSet<Synchronizable> items = new HashSet();
+    private final HashSet<Synchronizable> items = new HashSet<>();
     private final METHOD method;
 
     public Synchronizer(METHOD method) {
@@ -66,14 +66,10 @@ public class Synchronizer {
         return new Dimension(width, synchronizable.getNormalSize().height);
     }
 
-    /*
-     * This class specifies class file version 49.0 but uses Java 6 signatures.  Assumed Java 6.
-     */
-    public static enum METHOD {
+    public enum METHOD {
         WIDTH,
         HEIGHT,
-        WIGHT_AND_HEIGHT;
-
+        WIGHT_AND_HEIGHT
     }
 }
 

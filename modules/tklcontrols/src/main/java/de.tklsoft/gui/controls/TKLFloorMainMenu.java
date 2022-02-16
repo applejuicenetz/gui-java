@@ -12,11 +12,11 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 public class TKLFloorMainMenu {
-    private JButton northButton;
-    private JButton southButton;
-    private MenuPanel menuPanel;
-    private String name;
-    private TKLFloorTab parent;
+    private final JButton northButton;
+    private final JButton southButton;
+    private final MenuPanel menuPanel;
+    private final String name;
+    private final TKLFloorTab parent;
 
     public TKLFloorMainMenu(TKLFloorTab parent, String name) {
         this.name = name.toLowerCase();
@@ -63,9 +63,9 @@ public class TKLFloorMainMenu {
 
     private class MenuPanel
             extends JPanel {
-        private GridBagConstraints gridconst = new GridBagConstraints();
+        private final GridBagConstraints gridconst = new GridBagConstraints();
         private int currentMaxY = -1;
-        private HashMap<String, ButtonPanel> buttons = new HashMap();
+        private final HashMap<String, Object> buttons = new HashMap<String, Object>();
 
         public MenuPanel() {
             this.setLayout(new GridBagLayout());
@@ -73,16 +73,15 @@ public class TKLFloorMainMenu {
             this.gridconst.fill = 2;
             this.gridconst.insets = new Insets(0, 0, 0, 0);
             this.gridconst.weightx = 1.0;
-            this.gridconst.weighty = 0.0;
             this.gridconst.gridx = 0;
             this.gridconst.weighty = 1.0;
             this.gridconst.gridy = 251;
-            this.add((Component)new JLabel(), this.gridconst);
+            this.add(new JLabel(), this.gridconst);
             this.gridconst.weighty = 0.0;
         }
 
         void renameButton(String oldValue, String newValue) {
-            ButtonPanel obj = this.buttons.get(oldValue);
+            Object obj = this.buttons.get(oldValue);
             if (obj != null) {
                 this.buttons.remove(oldValue);
                 this.buttons.put(newValue, obj);
@@ -109,18 +108,16 @@ public class TKLFloorMainMenu {
             }
             ++this.currentMaxY;
             this.gridconst.gridy = this.currentMaxY;
-            this.add((Component)buttonPanel, this.gridconst);
+            this.add(buttonPanel, this.gridconst);
             return new TklFloorButton(this, buttonPanel);
         }
     }
 
-    private class MenuButtonListener
-            implements ActionListener {
-        private final String name;
+    private class MenuButtonListener implements ActionListener {
         private final TKLFloorMainMenu tKLFloorMainMenu;
 
         public MenuButtonListener(String name, TKLFloorMainMenu tKLFloorMainMenu2) {
-            this.name = name.toLowerCase();
+            String name1 = name.toLowerCase();
             this.tKLFloorMainMenu = tKLFloorMainMenu2;
         }
 
@@ -129,9 +126,8 @@ public class TKLFloorMainMenu {
         }
     }
 
-    private class ButtonPanel
-            extends JPanel {
-        private JLabel buttonLabel;
+    private class ButtonPanel extends JPanel {
+        private final JLabel buttonLabel;
 
         ButtonPanel(String name, Icon icon, ActionListener actionListener) {
             super(new GridBagLayout());
@@ -147,20 +143,20 @@ public class TKLFloorMainMenu {
             gridconstint.weightx = 1.0;
             gridconstint.weighty = 0.0;
             gridconstint.gridx = 0;
-            this.add((Component)new JLabel(), gridconstint);
+            this.add(new JLabel(), gridconstint);
             gridconstint.weightx = 0.0;
             gridconstint.gridx = 1;
-            this.add((Component)button, gridconstint);
+            this.add(button, gridconstint);
             gridconstint.gridx = 2;
             gridconstint.weightx = 1.0;
-            this.add((Component)new JLabel(), gridconstint);
+            this.add(new JLabel(), gridconstint);
             gridconstint.weightx = 0.0;
             gridconstint.gridx = 0;
             gridconstint.gridy = 1;
             gridconstint.gridwidth = 3;
             gridconstint.insets.top = 0;
-            this.buttonLabel = new JLabel(name, 0);
-            this.add((Component)this.buttonLabel, gridconstint);
+            this.buttonLabel = new JLabel(name, SwingConstants.CENTER);
+            this.add(this.buttonLabel, gridconstint);
         }
 
         String getButtonText() {
@@ -172,10 +168,9 @@ public class TKLFloorMainMenu {
         }
     }
 
-    private class MouseOverAdapter
-            extends MouseAdapter {
-        private ActionListener actionListener;
-        private String name;
+    private class MouseOverAdapter extends MouseAdapter {
+        private final ActionListener actionListener;
+        private final String name;
 
         public MouseOverAdapter(ActionListener actionListener, String name) {
             this.actionListener = actionListener;
