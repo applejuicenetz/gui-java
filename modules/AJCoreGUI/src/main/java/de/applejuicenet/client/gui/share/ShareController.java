@@ -496,7 +496,7 @@ public class ShareController extends GuiController
             {
                try
                {
-                  int      prio   = ((Integer) sharePanel.getCmbPrioritaet().getSelectedItem()).intValue();
+                  int      prio   = (Integer) sharePanel.getCmbPrioritaet().getSelectedItem();
                   Object[] values = sharePanel.getShareTable().getSelectedItems();
 
                   if(values != null)
@@ -670,13 +670,7 @@ public class ShareController extends GuiController
                      sharePanel.getBtnPrioritaetSetzen().setEnabled(true);
                      sharePanel.getBtnNeuLaden().setEnabled(true);
                      sharePanel.getBtnRefresh().setEnabled(true);
-                     SwingUtilities.invokeLater(new Runnable()
-                        {
-                           public void run()
-                           {
-                              initShareSelectionTree();
-                           }
-                        });
+                     SwingUtilities.invokeLater(() -> initShareSelectionTree());
                   }
                }.start();
          }

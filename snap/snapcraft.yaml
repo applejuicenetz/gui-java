@@ -2,7 +2,7 @@ name: applejuice-gui
 title: appleJuice GUI
 summary: appleJuice GUI for appleJuice Client
 description: appleJuice GUI for appleJuice Client
-version: 0.84.2
+version: 0.85.0
 icon: snap/gui/applejuice-gui.png
 license: GPL-2.0
 grade: stable
@@ -47,6 +47,9 @@ parts:
     stage-packages:
       - openjdk-11-jre
       - x11-utils
+    override-prime: |
+      snapcraftctl prime
+      rm -vf usr/lib/jvm/java-11-openjdk-*/lib/security/blacklisted.certs
   launcher:
     plugin: dump
     source: ./snap/local

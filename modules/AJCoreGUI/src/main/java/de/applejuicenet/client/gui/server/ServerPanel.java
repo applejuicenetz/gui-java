@@ -435,12 +435,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
             if (changed && tabSelected) {
                 ((SortableTableModel) serverTable.getModel()).forceResort();
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        serverTable.updateUI();
-
-                    }
-                });
+                SwingUtilities.invokeLater(() -> serverTable.updateUI());
             }
         }
     }
