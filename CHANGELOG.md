@@ -1,5 +1,9 @@
 # Changelog
 
+**0.85.1**
+- [red171] erlaube `%7C` (`|`) in Links auch im "link hinzufügen" Feld
+- [red171] in der `wizard.xml` den `maxdownloads` Wert per default auf `0` gestellt
+
 **0.85.0**
 - [meins57] iconpack `modern` zusammengestellt
 - [meins57] neue JavaGUI logos für `modern` erstellt

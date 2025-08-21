@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <root>
 	<wizard bezeichnung="Wizard">
-		<connection bezeichnung="DSL 384" maxupload="128" maxdownload="384" maxnewconnections10="50"/>
-		<connection bezeichnung="DSL 786" maxupload="128" maxdownload="786" maxnewconnections10="50"/>
-		<connection bezeichnung="DSL 1.000" maxupload="128" maxdownload="1024" maxnewconnections10="50"/>
-		<connection bezeichnung="DSL 2.000" maxupload="192" maxdownload="2048" maxnewconnections10="50"/>
-		<connection bezeichnung="DSL 3.000" maxupload="384" maxdownload="3072" maxnewconnections10="50"/>
-		<connection bezeichnung="DSL 6.000" maxupload="786" maxdownload="6016" maxnewconnections10="50"/>
-		<connection bezeichnung="DSL 16.000" maxupload="1024" maxdownload="16384" maxnewconnections10="50"/>
-		<connection bezeichnung="VDSL 25.000" maxupload="4096" maxdownload="25600" maxnewconnections10="50"/>
-		<connection bezeichnung="VDSL 50.000" maxupload="9216" maxdownload="51200" maxnewconnections10="50"/>
-		<connection bezeichnung="VDSL 100.000" maxupload="20480" maxdownload="102400" maxnewconnections10="50"/>
-		<connection bezeichnung="VDSL 250.000" maxupload="40960" maxdownload="256000" maxnewconnections10="50"/>
-		<connection bezeichnung="Cable 25" maxupload="1024" maxdownload="25600" maxnewconnections10="50"/>
-		<connection bezeichnung="Cable 50" maxupload="2048" maxdownload="51200" maxnewconnections10="50"/>
-		<connection bezeichnung="Cable 100" maxupload="12288" maxdownload="102400" maxnewconnections10="50"/>
-		<connection bezeichnung="Cable 200" maxupload="25600" maxdownload="204800" maxnewconnections10="50"/>
-		<connection bezeichnung="Cable 400" maxupload="25600" maxdownload="409600" maxnewconnections10="50"/>
-		<connection bezeichnung="Cable 500" maxupload="51200" maxdownload="512000" maxnewconnections10="50"/>
-		<connection bezeichnung="Cable 1.000" maxupload="51200" maxdownload="1024000" maxnewconnections10="50"/>
-		<connection bezeichnung="Fiber 250" maxupload="10240" maxdownload="25600" maxnewconnections10="50"/>
-		<connection bezeichnung="Fiber 500" maxupload="25600" maxdownload="512000" maxnewconnections10="50"/>
-		<connection bezeichnung="Fiber 1.000" maxupload="51200" maxdownload="1024000" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 384" maxupload="128" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 786" maxupload="128" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 1.000" maxupload="128" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 2.000" maxupload="192" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 3.000" maxupload="384" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 6.000" maxupload="786" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="DSL 16.000" maxupload="1024" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="VDSL 25.000" maxupload="4096" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="VDSL 50.000" maxupload="9216" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="VDSL 100.000" maxupload="20480" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="VDSL 250.000" maxupload="40960" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 25" maxupload="1024" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 50" maxupload="2048" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 100" maxupload="12288" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 200" maxupload="25600" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 400" maxupload="25600" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 500" maxupload="51200" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="Cable 1.000" maxupload="51200" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="Fiber 250" maxupload="10240" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="Fiber 500" maxupload="25600" maxdownload="0" maxnewconnections10="50"/>
+		<connection bezeichnung="Fiber 1.000" maxupload="51200" maxdownload="0" maxnewconnections10="50"/>
 	</wizard>
 </root>

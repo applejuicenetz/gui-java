@@ -50,7 +50,7 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
 
       txtDownloadLink.addKeyListener(keyListener);
       InvalidRule downloadloadlinkRule = component -> {
-         String text = ((TKLTextField) component).getText().toLowerCase();
+         String text = ((TKLTextField) component).getText().replace("%7C", "|").toLowerCase();
 
          if(text.length() == 0)
          {
