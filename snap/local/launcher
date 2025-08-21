@@ -2,4 +2,4 @@
 
 cd $SNAP/app/
 
-java -jar AJCoreGUI.jar "${@}"
+java -Djava.net.preferIPv4Stack=true -Dsun.java2d.xrender=false -jar AJCoreGUI.jar "${@}"

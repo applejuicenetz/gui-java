@@ -2,56 +2,65 @@ name: applejuice-gui
 title: appleJuice GUI
 summary: appleJuice GUI for appleJuice Client
 description: appleJuice GUI for appleJuice Client
-version: 0.85.0
+version: 0.85.1
 icon: snap/gui/applejuice-gui.png
 license: GPL-2.0
+
 grade: stable
 confinement: strict
-base: core18
+base: core22
+
 architectures:
   - build-on: amd64
-  - build-on: i386
   - build-on: armhf
   - build-on: arm64
+
 layout:
   /usr/bin/xprop:
     bind-file: $SNAP/usr/bin/xprop
+
+hooks:
+  configure:
+    plugs: [ home ]
+
 apps:
   ajgui:
     command: $SNAP/app/launcher
     extensions:
-      - gnome-3-28
+      - gnome
     environment:
-      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-$SNAP_ARCH
+      JAVA_HOME: $SNAP/usr/lib/jvm/java-21-openjdk-$SNAP_ARCH
       PATH: $JAVA_HOME/bin:$PATH
     plugs:
       - home
       - desktop
-      - desktop-legacy
       - network
       - network-bind
       - audio-playback
       - x11
+
 parts:
   ajgui:
     plugin: dump
     source: https://github.com/applejuicenetz/gui-java/releases/download/$SNAPCRAFT_PROJECT_VERSION/AJCoreGUI.zip
     organize:
       '*': app/
+
   jre:
     plugin: nil
     build-packages:
       - ca-certificates
       - ca-certificates-java
-      - openjdk-11-jre
+      - openjdk-21-jre
     stage-packages:
-      - openjdk-11-jre
+      - openjdk-21-jre
       - x11-utils
     override-prime: |
       snapcraftctl prime
-      rm -vf usr/lib/jvm/java-11-openjdk-*/lib/security/blacklisted.certs
+      rm -vf usr/lib/jvm/java-21-openjdk-*/lib/security/blacklisted.certs
+
   launcher:
     plugin: dump
-    source: ./snap/local
+    source: ./snap/local/
     organize:
-      '*': app/
+      '*': $SNAP/app/
