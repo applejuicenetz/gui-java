@@ -13,6 +13,7 @@ package de.applejuicenet.client.shared;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Properties;
 
 public class Splash
@@ -44,20 +45,18 @@ public class Splash
 
     private void init(){
         setUndecorated(true);
+        setBackground(new Color(0, 0, 0, 0));
         int w = image.getWidth(this);
         int h = image.getHeight(this);
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        Image back = null;
-        setBounds( (d.width - w) / 2, (d.height - h) / 3, w, h);
-        try {
-            back = new Robot().createScreenCapture(getBounds());
-        }
-        catch (AWTException e) {
-            ;
-        }
+        Rectangle r = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        Dimension d = new Dimension(r.width, r.height);
+        setBounds((d.width - w) / 2, (d.height - h) / 3, w, h);
+        Image back = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics g = back.getGraphics();
         g.drawImage(image, 0, 0, this);
+        g.dispose();
         JLabel label = new JLabel(new ImageIcon(back));
+        label.setOpaque(false);
         label.setBounds(0, 0, w, h);
         try{
             Properties props = IconManager.getInstance().getIconProperties("splashscreen");
@@ -70,14 +69,19 @@ public class Splash
                 throw new Exception();
             }
             progress.setBounds(x, y, width, height);
+            progress.setOpaque(false);
         }
         catch(Exception e){
             progress.setBounds(160, 61, 180, 15);
+            progress.setOpaque(false);
         }
-        JLayeredPane panel = new JLayeredPane();
-        panel.add(progress, JLayeredPane.DEFAULT_LAYER);
+        panel = new JLayeredPane();
+        panel.setBounds(0, 0, w, h);
+        panel.setOpaque(false);
         panel.add(label, JLayeredPane.DEFAULT_LAYER);
-        getContentPane().add(panel);
+        panel.add(progress, JLayeredPane.PALETTE_LAYER);
+        setContentPane(panel);
+        getRootPane().setOpaque(false);
     }
 
     public void dispose() {

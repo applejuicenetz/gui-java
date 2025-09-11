@@ -89,6 +89,11 @@ public class AppleJuiceClient {
             logger.error(e.getMessage(), e);
         }
 
+        if (GraphicsEnvironment.isHeadless()) {
+            System.out.println("Headless system detected, exiting...");
+            System.exit(1);
+        }
+
         AppleJuiceClientTG tg = new AppleJuiceClientTG();
         final String[] myargs = args;
         Runnable runnable = () -> AppleJuiceClient.runmain(myargs);

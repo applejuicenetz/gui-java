@@ -1,5 +1,8 @@
 # Changelog
 
+**0.85.2**
+- [red171] erzeuge den `Splashscreen` direkt transparent ohne ScreenCapture (erzeugt keine ScreenShare Abfrage mehr)
+
 **0.85.1**
 - [red171] erlaube `%7C` (`|`) in Links auch im "link hinzufügen" Feld
 - [red171] in der `wizard.xml` den `maxdownloads` Wert per default auf `0` gestellt
