@@ -2,7 +2,7 @@ name: applejuice-gui
 title: appleJuice GUI
 summary: appleJuice GUI for appleJuice Client
 description: appleJuice GUI for appleJuice Client
-version: 0.85.1
+version: 0.85.2
 icon: snap/gui/applejuice-gui.png
 license: GPL-2.0
 
@@ -12,7 +12,6 @@ base: core22
 
 architectures:
   - build-on: amd64
-  - build-on: armhf
   - build-on: arm64
 
 layout:
