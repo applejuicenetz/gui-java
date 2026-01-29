@@ -5,11 +5,10 @@
 package de.applejuicenet.client.gui.start;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.shared.ProxySettings;
+import de.applejuicenet.client.fassade.exception.NoAccessException;
 import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,10 +44,18 @@ public class NachrichtenWorker extends Thread {
             final String coreVersion = AppleJuiceClient.getAjFassade().getCoreVersion().getVersion();
             logger.info("verwendeter Core: " + coreVersion);
 
+            String htmlText = null;
             String newsURL = OptionsManagerImpl.getInstance().getNewsURL();
             String newsURLFormatted = String.format(newsURL, AppleJuiceClient.getAjFassade().getCoreVersion().getVersion());
             logger.debug(String.format("GET %s", newsURLFormatted));
-            String htmlText = WebsiteContentLoader.getWebsiteContent(newsURLFormatted);
+
+            try {
+                htmlText = WebsiteContentLoader.getWebsiteContent(newsURLFormatted);
+            } catch (NoAccessException e) {
+                newsURLFormatted = String.format(newsURL, "index"); // fallback to show regular news
+                htmlText = WebsiteContentLoader.getWebsiteContent(newsURLFormatted);
+            }
+
             int pos = htmlText.toLowerCase().indexOf("<html>");
 
             StringBuilder buffer = new StringBuilder();

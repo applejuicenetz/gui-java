@@ -1,5 +1,8 @@
 # Changelog
 
+**0.85.3**
+- [red171] Zeige Core Version auch an, wenn die News einen 404 liefern (z.B. wenn die News URL nicht erreichbar ist)
+
 **0.85.2**
 - [red171] erzeuge den `Splashscreen` direkt transparent ohne ScreenCapture (erzeugt keine ScreenShare Abfrage mehr)
 

@@ -9,7 +9,7 @@ mvn versions:set \
     -DgenerateBackupPoms=false \
     -DoldVersion="*" \
     -N versions:update-child-modules \
-    -DnewVersion=0.85.1
+    -DnewVersion=0.85.3
     
     mvn versions:set \
     -DgroupId=de.applejuicenet.client \
@@ -17,7 +17,7 @@ mvn versions:set \
     -DgenerateBackupPoms=false \
     -DoldVersion="*" \
     -N versions:update-child-modules \
-    -DnewVersion=0.85.1
+    -DnewVersion=0.85.3
 ```
 
 2. Changelog anpassen
