@@ -30,9 +30,9 @@ class DownloadSourceDO extends DownloadSource
    private final int id;
    private int       status;
    private int       directstate;
-   private int       downloadFrom;
-   private int       downloadTo;
-   private int       actualDownloadPosition;
+   private long       downloadFrom;
+   private long       downloadTo;
+   private long       actualDownloadPosition;
    private int       speed;
    private VersionDO version                = null;
    private int       queuePosition;
@@ -40,11 +40,11 @@ class DownloadSourceDO extends DownloadSource
    private String    filename;
    private String    nickname;
    private int       downloadId;
-   private int       oldSize;
+   private long       oldSize;
    private String    sizeAsString;
-   private int       oldBereitsGeladen;
+   private long       oldBereitsGeladen;
    private String    bereitsGeladenAsString;
-   private int       oldNochZuLaden;
+   private long       oldNochZuLaden;
    private String    nochZuLadenAsString;
    private boolean   progressChanged        = false;
    private boolean   versionChanged         = false;
@@ -55,7 +55,7 @@ class DownloadSourceDO extends DownloadSource
       this.id = id;
    }
 
-   public DownloadSourceDO(int id, int status, int directstate, int downloadFrom, int downloadTo, int actualDownloadPosition,
+   public DownloadSourceDO(int id, int status, int directstate, long downloadFrom, long downloadTo, long actualDownloadPosition,
                            int speed, VersionDO version, int queuePosition, int powerDownload, String filename, String nickname,
                            int downloadId, int herkunft)
    {
@@ -82,7 +82,7 @@ class DownloadSourceDO extends DownloadSource
       return status;
    }
 
-   public int getSize()
+   public long getSize()
    {
       if(downloadTo == -1 || downloadFrom == -1)
       {
@@ -117,34 +117,34 @@ class DownloadSourceDO extends DownloadSource
       this.directstate = directstate;
    }
 
-   public int getDownloadFrom()
+   public long getDownloadFrom()
    {
       return downloadFrom;
    }
 
-   public void setDownloadFrom(int downloadFrom)
+   public void setDownloadFrom(long downloadFrom)
    {
       this.downloadFrom = downloadFrom;
       progressChanged   = true;
    }
 
-   public int getDownloadTo()
+   public long getDownloadTo()
    {
       return downloadTo;
    }
 
-   public void setDownloadTo(int downloadTo)
+   public void setDownloadTo(long downloadTo)
    {
       this.downloadTo = downloadTo;
       progressChanged = true;
    }
 
-   public int getActualDownloadPosition()
+   public long getActualDownloadPosition()
    {
       return actualDownloadPosition;
    }
 
-   public void setActualDownloadPosition(int actualDownloadPosition)
+   public void setActualDownloadPosition(long actualDownloadPosition)
    {
       this.actualDownloadPosition = actualDownloadPosition;
       progressChanged             = true;

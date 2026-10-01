@@ -1,5 +1,9 @@
 # Changelog
 
+**0.85.4**
+
+- [red171] Dateien über 2 GiB können korrekt behandelt werden
+
 **0.85.3**
 - [red171] Zeige Core Version auch an, wenn die News einen 404 liefern (z.B. wenn die News URL nicht erreichbar ist)
 

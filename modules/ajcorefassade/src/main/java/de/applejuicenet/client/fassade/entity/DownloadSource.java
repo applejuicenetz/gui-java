@@ -43,17 +43,17 @@ public abstract class DownloadSource implements IdOwner
 
    public abstract int getStatus();
 
-   public abstract int getSize();
+   public abstract long getSize();
 
    public abstract int getHerkunft();
 
    public abstract int getDirectstate();
 
-   public abstract int getDownloadFrom();
+   public abstract long getDownloadFrom();
 
-   public abstract int getDownloadTo();
+   public abstract long getDownloadTo();
 
-   public abstract int getActualDownloadPosition();
+   public abstract long getActualDownloadPosition();
 
    public abstract int getSpeed();
 
@@ -73,19 +73,19 @@ public abstract class DownloadSource implements IdOwner
 
    public final double getReadyPercent()
    {
-      if(getActualDownloadPosition() == -1 || getDownloadFrom() == -1)
+      if(getActualDownloadPosition() == -1 || getDownloadFrom() == -1 || getSize() <= 0)
       {
          return 0;
       }
 
-      return (getActualDownloadPosition() - getDownloadFrom()) * 100 / getSize();
+      return (double) (getActualDownloadPosition() - getDownloadFrom()) * 100 / getSize();
    }
 
    public final String getDownloadPercentAsString()
    {
       try
       {
-         if(getActualDownloadPosition() == -1 || getDownloadFrom() == -1)
+         if(getActualDownloadPosition() == -1 || getDownloadFrom() == -1 || getSize() <= 0)
          {
             return "0";
          }
@@ -112,14 +112,14 @@ public abstract class DownloadSource implements IdOwner
             return "";
          }
 
-         int restZeit = getNochZuLaden() / speed;
-         int tage     = restZeit / 86400;
+         long restZeit = getNochZuLaden() / speed;
+         long tage     = restZeit / 86400;
 
          restZeit -= tage * 86400;
-         int stunden = restZeit / 3600;
+         long stunden = restZeit / 3600;
 
          restZeit -= stunden * 3600;
-         int minuten = restZeit / 60;
+         long minuten = restZeit / 60;
 
          restZeit -= minuten * 60;
 
@@ -130,28 +130,28 @@ public abstract class DownloadSource implements IdOwner
             temp.append('0');
          }
 
-         temp.append(Integer.toString(tage));
+         temp.append(Long.toString(tage));
          temp.append(':');
          if(stunden < 10)
          {
             temp.append('0');
          }
 
-         temp.append(Integer.toString(stunden));
+         temp.append(Long.toString(stunden));
          temp.append(':');
          if(minuten < 10)
          {
             temp.append('0');
          }
 
-         temp.append(Integer.toString(minuten));
+         temp.append(Long.toString(minuten));
          temp.append(':');
          if(restZeit < 10)
          {
             temp.append('0');
          }
 
-         temp.append(Integer.toString(restZeit));
+         temp.append(Long.toString(restZeit));
          return temp.toString();
       }
       catch(Exception e)
@@ -160,7 +160,7 @@ public abstract class DownloadSource implements IdOwner
       }
    }
 
-   public final int getBereitsGeladen()
+   public final long getBereitsGeladen()
    {
       if(getActualDownloadPosition() == -1 || getDownloadFrom() == -1)
       {
@@ -170,7 +170,7 @@ public abstract class DownloadSource implements IdOwner
       return getActualDownloadPosition() - getDownloadFrom();
    }
 
-   public final int getNochZuLaden()
+   public final long getNochZuLaden()
    {
       if(getDownloadTo() == -1 || getActualDownloadPosition() == -1)
       {

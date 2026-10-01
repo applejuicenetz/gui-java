@@ -127,6 +127,11 @@ public class TableSorter<T>
 
    public int compare(Number o1, Number o2)
    {
+      if(!(o1 instanceof Float || o1 instanceof Double || o2 instanceof Float || o2 instanceof Double))
+      {
+         return Long.compare(o1.longValue(), o2.longValue());
+      }
+
       double n1 = o1.doubleValue();
       double n2 = o2.doubleValue();
 

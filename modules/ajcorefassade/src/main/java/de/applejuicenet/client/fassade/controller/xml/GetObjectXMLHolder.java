@@ -56,8 +56,8 @@ public class GetObjectXMLHolder extends WebXMLParser
       int        id              = Integer.parseInt(e.getAttribute("id"));
       int        shareid         = Integer.parseInt(e.getAttribute("shareid"));
       String     hash            = e.getAttribute("hash");
-      int        fileSize        = Integer.parseInt(e.getAttribute("size"));
-      int        sizeReady       = Integer.parseInt(e.getAttribute("ready"));
+      long        fileSize        = Long.parseLong(e.getAttribute("size"));
+      long        sizeReady       = Long.parseLong(e.getAttribute("ready"));
       String     temp            = e.getAttribute("status");
       int        status          = Integer.parseInt(temp);
       String     filename        = e.getAttribute("filename");
@@ -115,8 +115,8 @@ public class GetObjectXMLHolder extends WebXMLParser
       int      prioritaet      = Integer.parseInt(e.getAttribute("priority"));
       String   nick            = e.getAttribute("nick");
       String   status          = e.getAttribute("status");
-      int      uploadFrom      = Integer.parseInt(e.getAttribute("uploadfrom"));
-      int      uploadTo        = Integer.parseInt(e.getAttribute("uploadto"));
+      long      uploadFrom      = Long.parseLong(e.getAttribute("uploadfrom"));
+      long      uploadTo        = Long.parseLong(e.getAttribute("uploadto"));
       long     actualUploadPos = Long.parseLong(e.getAttribute("actualuploadposition"));
       int      speed           = Integer.parseInt(e.getAttribute("speed"));
       int      directstate     = Integer.parseInt(e.getAttribute("directstate"));
@@ -130,9 +130,9 @@ public class GetObjectXMLHolder extends WebXMLParser
 
    private Object getDownloadSourceObject(NodeList nodes)
    {
-      int       downloadFrom;
-      int       downloadTo;
-      int       actualDownloadPosition;
+      long       downloadFrom;
+      long       downloadTo;
+      long       actualDownloadPosition;
       int       speed;
       int       downloadId;
       VersionDO version       = null;
@@ -151,11 +151,11 @@ public class GetObjectXMLHolder extends WebXMLParser
       if(status == DownloadSourceDO.UEBERTRAGUNG)
       {
          temp                   = e.getAttribute("downloadfrom");
-         downloadFrom           = Integer.parseInt(temp);
+         downloadFrom           = Long.parseLong(temp);
          temp                   = e.getAttribute("downloadto");
-         downloadTo             = Integer.parseInt(temp);
+         downloadTo             = Long.parseLong(temp);
          temp                   = e.getAttribute("actualdownloadposition");
-         actualDownloadPosition = Integer.parseInt(temp);
+         actualDownloadPosition = Long.parseLong(temp);
          temp                   = e.getAttribute("speed");
          speed                  = Integer.parseInt(temp);
       }

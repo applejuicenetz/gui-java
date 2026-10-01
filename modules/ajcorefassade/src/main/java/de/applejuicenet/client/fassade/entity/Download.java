@@ -29,7 +29,7 @@ public interface Download extends IdOwner{
 
     String getHash();
 
-    int getGroesse();
+    long getGroesse();
 
     int getStatus();
 
@@ -43,7 +43,7 @@ public interface Download extends IdOwner{
 
     int getTemporaryFileNumber();
 
-    int getReady();
+    long getReady();
 
     long getRestZeit();
 
@@ -51,5 +51,5 @@ public interface Download extends IdOwner{
 
     int getSpeedInBytes();
 
-    int getBereitsGeladen();
+    long getBereitsGeladen();
 }

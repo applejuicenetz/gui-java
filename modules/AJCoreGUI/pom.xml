@@ -21,6 +21,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>de.applejuicenet.client.gui</groupId>
             <artifactId>ajcorefassade</artifactId>
             <version>1.0.0</version>

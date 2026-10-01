@@ -56,7 +56,7 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
     private MouseEvent savedMouseEvent = null;
     private Integer id = null;
     private int zeilenHoehe;
-    private int pixelSize;
+    private long pixelSize;
     private BufferedImage lineImage;
 
     private DownloadPartListPanel() {
@@ -156,16 +156,16 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
             partList = newPartList;
             height = getSize().height;
             width = getSize().width;
-            if (partList != null && partList.getGroesse() > 0 && partList.getParts().length > 0) {
+            if (partList != null && width > 0 && height >= 15 && partList.getGroesse() > 0 && partList.getParts().length > 0) {
                 Part[] parts = partList.getParts();
 
                 zeilenHoehe = 15;
                 int zeilen = height / zeilenHoehe;
 
                 miniFile = false;
-                pixelSize = (int) (partList.getGroesse() / (zeilen * width));
+                pixelSize = partList.getGroesse() / ((long) zeilen * width);
                 if (pixelSize == 0) {
-                    pixelSize = (int) ((zeilen * width) / partList.getGroesse());
+                    pixelSize = ((long) zeilen * width) / partList.getGroesse();
                     miniFile = true;
                 }
 
@@ -218,11 +218,11 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
                 for (DownloadSource curSource : download.getSources()) {
                     if (curSource.getStatus() == DownloadSource.UEBERTRAGUNG) {
                         if (!miniFile) {
-                            obenLinks = curSource.getDownloadFrom() / pixelSize;
-                            breite = (curSource.getDownloadTo() / pixelSize) - obenLinks;
+                            obenLinks = (int) (curSource.getDownloadFrom() / pixelSize);
+                            breite = (int) (curSource.getDownloadTo() / pixelSize) - obenLinks;
                         } else {
-                            obenLinks = curSource.getDownloadFrom() * pixelSize;
-                            breite = (curSource.getDownloadTo() * pixelSize) - obenLinks;
+                            obenLinks = (int) (curSource.getDownloadFrom() * pixelSize);
+                            breite = (int) (curSource.getDownloadTo() * pixelSize) - obenLinks;
                         }
 
                         graphics.setColor(getColorByPercent(curSource.getReadyPercent()));
@@ -235,11 +235,11 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
 
             if (downloadSource.getStatus() == DownloadSource.UEBERTRAGUNG) {
                 if (!miniFile) {
-                    obenLinks = downloadSource.getDownloadFrom() / pixelSize;
-                    breite = (downloadSource.getDownloadTo() / pixelSize) - obenLinks;
+                    obenLinks = (int) (downloadSource.getDownloadFrom() / pixelSize);
+                    breite = (int) (downloadSource.getDownloadTo() / pixelSize) - obenLinks;
                 } else {
-                    obenLinks = downloadSource.getDownloadFrom() * pixelSize;
-                    breite = (downloadSource.getDownloadTo() * pixelSize) - obenLinks;
+                    obenLinks = (int) (downloadSource.getDownloadFrom() * pixelSize);
+                    breite = (int) (downloadSource.getDownloadTo() * pixelSize) - obenLinks;
                 }
 
                 graphics.setColor(getColorByPercent(downloadSource.getReadyPercent()));
@@ -260,7 +260,7 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
         return imageWithSources;
     }
 
-    private void drawPart(boolean forceDraw, boolean isMainList, Graphics graphics, int pixelSize, int partType, int zeilenHoehe,
+    private void drawPart(boolean forceDraw, boolean isMainList, Graphics graphics, long pixelSize, int partType, int zeilenHoehe,
                           long currentFrom, long nextFrom) {
         int obenLinks = 0;
         int breite = 0;
@@ -275,9 +275,9 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
             } else {
                 if (fertigSeit != -1) {
                     obenLinks = (int) (fertigSeit / pixelSize);
-                    int mbCount = (int) (currentFrom - fertigSeit) / 1048576;
+                    long mbCount = (currentFrom - fertigSeit) / 1048576;
 
-                    breite = mbCount * 1048576 / pixelSize;
+                    breite = (int) (mbCount * 1048576 / pixelSize);
                     graphics.setColor(PartList.COLOR_TYPE_UEBERPRUEFT);
                     graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
                     obenLinks += breite;
@@ -289,7 +289,7 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
                     }
 
                     graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
-                    obenLinks = (int) currentFrom / pixelSize;
+                    obenLinks = (int) (currentFrom / pixelSize);
                     breite = (int) (nextFrom / pixelSize) - obenLinks;
                     graphics.setColor(getColorByType(partType));
                     graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);

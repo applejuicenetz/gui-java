@@ -36,14 +36,15 @@ class DownloadDO implements Download
    private final int                    id;
    private int                          shareId;
    private String                       hash;
-   private int                          groesse;
-   private int                          ready;
+   private long                          groesse;
+   private long                          ready;
    private int                          status;
    private String                       filename;
    private String                       targetDirectory;
    private int                          powerDownload;
    private int                          temporaryFileNumber;
    private long                         oldSpeed;
+   private long                         oldReady = -1;
    private String                       speedAsString;
    private Map<Integer, DownloadSource> sourcen = new HashMap<Integer, DownloadSource>();
 
@@ -52,7 +53,7 @@ class DownloadDO implements Download
       this.id = id;
    }
 
-   public DownloadDO(int id, int shareId, String hash, int groesse, int ready, int status, String filename, String targetDirectory,
+   public DownloadDO(int id, int shareId, String hash, long groesse, long ready, int status, String filename, String targetDirectory,
                      int powerDownload, int temporaryFileNumber)
    {
       this.id                  = id;
@@ -83,7 +84,7 @@ class DownloadDO implements Download
 
    public double getProzentGeladen()
    {
-      return (double) ready * 100 / groesse;
+      return groesse > 0 ? (double) ready * 100 / groesse : 0;
    }
 
    public DownloadSourceDO getSourceById(int sourceId)
@@ -151,12 +152,12 @@ class DownloadDO implements Download
       this.hash = hash;
    }
 
-   public int getGroesse()
+   public long getGroesse()
    {
       return groesse;
    }
 
-   public void setGroesse(int groesse)
+   public void setGroesse(long groesse)
    {
       this.groesse = groesse;
    }
@@ -228,12 +229,12 @@ class DownloadDO implements Download
       this.temporaryFileNumber = temporaryFileNumber;
    }
 
-   public int getReady()
+   public long getReady()
    {
       return ready;
    }
 
-   public void setReady(int newReady)
+   public void setReady(long newReady)
    {
       if(ready != newReady)
       {
@@ -264,20 +265,21 @@ class DownloadDO implements Download
             return "";
          }
 
-         if(speed == oldSpeed)
+         if(speed == oldSpeed && ready == oldReady)
          {
             return speedAsString;
          }
 
          oldSpeed = speed;
-         int restZeit = (int) ((groesse - ready) / speed);
-         int tage = restZeit / 86400;
+         oldReady = ready;
+         long restZeit = ((groesse - ready) / speed);
+         long tage = restZeit / 86400;
 
          restZeit -= tage * 86400;
-         int stunden = restZeit / 3600;
+         long stunden = restZeit / 3600;
 
          restZeit -= stunden * 3600;
-         int minuten = restZeit / 60;
+         long minuten = restZeit / 60;
 
          restZeit -= minuten * 60;
 
@@ -334,9 +336,9 @@ class DownloadDO implements Download
       return speed;
    }
 
-   public int getBereitsGeladen()
+   public long getBereitsGeladen()
    {
-      int geladen = ready;
+      long geladen = ready;
 
       synchronized(sourcen)
       {

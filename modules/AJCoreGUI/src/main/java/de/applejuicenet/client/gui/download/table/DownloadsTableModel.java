@@ -21,9 +21,9 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
    @SuppressWarnings("unchecked")
    public static final Class[]                               CLASS_TYPES = 
                                                                            {
-                                                                              Download.class, String.class, Integer.class,
-                                                                              Integer.class, Integer.class, String.class,
-                                                                              Double.class, Integer.class, Integer.class,
+                                                                              Download.class, String.class, Long.class,
+                                                                              Long.class, Integer.class, String.class,
+                                                                              Double.class, Long.class, Integer.class,
                                                                               String.class
                                                                            };
 
@@ -109,7 +109,7 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
          case 7:
             if(download.getStatus() == Download.FERTIG || download.getStatus() == Download.FERTIGSTELLEN)
             {
-               return 0;
+               return 0L;
             }
 
             return download.getGroesse() - download.getBereitsGeladen();
@@ -164,62 +164,30 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
 
    public static String parseGroesse(long groesse)
    {
-      double share  = Double.parseDouble(Long.toString(groesse));
-      int    faktor;
-
-      if(share == 0)
+      if(groesse == 0)
       {
          return "";
       }
-
-      if(share < 1024)
+      if(groesse < 1024)
       {
          return groesse + " Bytes";
       }
-      else if(share / 1024 < 1024)
-      {
-         faktor     = 1024;
-      }
-      else if(share / 1048576 < 1024)
-      {
-         faktor = 1048576;
-      }
-      else if(share / 1073741824 < 1024)
-      {
-         faktor = 1073741824;
-      }
-      else
-      {
-         faktor = 1;
-      }
 
-      share = share / faktor;
+      String[] units = {"Bytes", "KB", "MB", "GB", "TB", "PB", "EB"};
+      double share = groesse;
+      int unit = 0;
+      while(share >= 1024 && unit < units.length - 1)
+      {
+         share /= 1024;
+         unit++;
+      }
       String result = Double.toString(share);
-
-      if(result.indexOf('.') != -1 && (result.indexOf('.') + 3 < result.length()))
+      int dot = result.indexOf('.');
+      if(dot != -1 && dot + 3 < result.length())
       {
-         result = result.substring(0, result.indexOf('.') + 3);
+         result = result.substring(0, dot + 3);
       }
-
-      result = result.replace('.', ',');
-      if(faktor == 1024)
-      {
-         result += " KB";
-      }
-      else if(faktor == 1048576)
-      {
-         result += " MB";
-      }
-      else if(faktor == 1073741824)
-      {
-         result += " GB";
-      }
-      else
-      {
-         result += " ??";
-      }
-
-      return result;
+      return result.replace('.', ',') + " " + units[unit];
    }
 
    public void fireLanguageChanged()

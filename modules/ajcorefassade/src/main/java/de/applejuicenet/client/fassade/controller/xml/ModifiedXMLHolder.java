@@ -349,9 +349,9 @@ public class ModifiedXMLHolder extends DefaultHandler
       uploadDO.setStatus(Integer.parseInt((String) userAttributes.get(StringConstants.STATUS)));
       uploadDO.setDirectState(Integer.parseInt((String) userAttributes.get(StringConstants.DIRECTSTATE)));
       uploadDO.setPrioritaet(Integer.parseInt((String) userAttributes.get(StringConstants.PRIORITY)));
-      uploadDO.setUploadFrom(Integer.parseInt((String) userAttributes.get(StringConstants.UPLOADFROM)));
-      uploadDO.setActualUploadPosition(Integer.parseInt((String) userAttributes.get(StringConstants.ACTUALUPLOADPOSITION)));
-      uploadDO.setUploadTo(Integer.parseInt((String) userAttributes.get(StringConstants.UPLOADTO)));
+      uploadDO.setUploadFrom(Long.parseLong((String) userAttributes.get(StringConstants.UPLOADFROM)));
+      uploadDO.setActualUploadPosition(Long.parseLong((String) userAttributes.get(StringConstants.ACTUALUPLOADPOSITION)));
+      uploadDO.setUploadTo(Long.parseLong((String) userAttributes.get(StringConstants.UPLOADTO)));
       uploadDO.setSpeed(Integer.parseInt((String) userAttributes.get(StringConstants.SPEED)));
       uploadDO.setNick((String) userAttributes.get(StringConstants.NICK));
       uploadDO.setLastConnection(Long.parseLong((String) userAttributes.get(StringConstants.LASTCONNECTION)));
@@ -414,9 +414,9 @@ public class ModifiedXMLHolder extends DefaultHandler
    {
       downloadSourceDO.setStatus(Integer.parseInt((String) userAttributes.get(StringConstants.STATUS)));
       downloadSourceDO.setDirectstate(Integer.parseInt((String) userAttributes.get(StringConstants.DIRECTSTATE)));
-      downloadSourceDO.setDownloadFrom(Integer.parseInt((String) userAttributes.get(StringConstants.DOWNLOADFROM)));
-      downloadSourceDO.setDownloadTo(Integer.parseInt((String) userAttributes.get(StringConstants.DOWNLOADTO)));
-      downloadSourceDO.setActualDownloadPosition(Integer.parseInt((String) userAttributes.get(StringConstants.ACTUALDOWNLOADPOSITION)));
+      downloadSourceDO.setDownloadFrom(Long.parseLong((String) userAttributes.get(StringConstants.DOWNLOADFROM)));
+      downloadSourceDO.setDownloadTo(Long.parseLong((String) userAttributes.get(StringConstants.DOWNLOADTO)));
+      downloadSourceDO.setActualDownloadPosition(Long.parseLong((String) userAttributes.get(StringConstants.ACTUALDOWNLOADPOSITION)));
       downloadSourceDO.setSpeed(Integer.parseInt((String) userAttributes.get(StringConstants.SPEED)));
       downloadSourceDO.setQueuePosition(Integer.parseInt((String) userAttributes.get(StringConstants.QUEUEPOSITION)));
       downloadSourceDO.setPowerDownload(Integer.parseInt((String) userAttributes.get(StringConstants.POWERDOWNLOAD)));
@@ -477,7 +477,7 @@ public class ModifiedXMLHolder extends DefaultHandler
    private void checkDownloadMap(DownloadDO downloadDO, Map userAttributes, boolean newDownload)
    {
       downloadDO.setShareId(Integer.parseInt((String) userAttributes.get(StringConstants.SHAREID)));
-      downloadDO.setGroesse(Integer.parseInt((String) userAttributes.get(StringConstants.SIZE)));
+      downloadDO.setGroesse(Long.parseLong((String) userAttributes.get(StringConstants.SIZE)));
       downloadDO.setHash((String) userAttributes.get(StringConstants.HASH));
       downloadDO.setTemporaryFileNumber(Integer.parseInt((String) userAttributes.get(StringConstants.TEMPORARYFILENUMBER)));
       if(newDownload)
@@ -486,7 +486,7 @@ public class ModifiedXMLHolder extends DefaultHandler
          downloadDO.setFilename((String) userAttributes.get(StringConstants.FILENAME));
          downloadDO.setTargetDirectory((String) userAttributes.get(StringConstants.TARGETDIRECTORY));
          downloadDO.setPowerDownload(Integer.parseInt((String) userAttributes.get(StringConstants.POWERDOWNLOAD)));
-         downloadDO.setReady(Integer.parseInt((String) userAttributes.get(StringConstants.READY)));
+         downloadDO.setReady(Long.parseLong((String) userAttributes.get(StringConstants.READY)));
       }
       else
       {
@@ -529,14 +529,14 @@ public class ModifiedXMLHolder extends DefaultHandler
                                                                    oldInt, tmpInt));
          }
 
-         tmpInt = Integer.parseInt((String) userAttributes.get(StringConstants.READY));
+         long tmpReady = Long.parseLong((String) userAttributes.get(StringConstants.READY));
 
-         if(tmpInt != downloadDO.getReady())
+         if(tmpReady != downloadDO.getReady())
          {
-            oldInt = downloadDO.getReady();
-            downloadDO.setReady(tmpInt);
+            long oldReady = downloadDO.getReady();
+            downloadDO.setReady(tmpReady);
             downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadDO, DownloadDataPropertyChangeEvent.READY_CHANGED,
-                                                                   oldInt, tmpInt));
+                                                                   oldReady, tmpReady));
          }
       }
    }

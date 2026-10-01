@@ -24,8 +24,8 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
    public static final Class[]                               CLASS_TYPES = 
                                                                            {
                                                                               String.class, String.class, String.class,
-                                                                              Integer.class, Integer.class, Integer.class,
-                                                                              String.class, Double.class, Integer.class,
+                                                                              Long.class, Long.class, Integer.class,
+                                                                              String.class, Double.class, Long.class,
                                                                               Integer.class, Version.class
                                                                            };
 
