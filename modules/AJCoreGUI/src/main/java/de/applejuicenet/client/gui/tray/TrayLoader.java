@@ -5,107 +5,143 @@ package de.applejuicenet.client.gui.tray;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.IconManager;
+import dev.hivens.libtray.Tray;
+import dev.hivens.libtray.TrayBuilder;
+import dev.hivens.libtray.TrayEvent;
+import kotlin.Unit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.TrayIcon.MessageType;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.ByteArrayOutputStream;
+import java.awt.image.BufferedImage;
+import java.util.Locale;
 
-public class TrayLoader
-{
-   private String   zeigen;
-   private String   verstecken;
-   private TrayIcon trayIcon = null;
+public class TrayLoader implements AutoCloseable {
+    private static final Logger logger = LoggerFactory.getLogger(TrayLoader.class);
+    private String zeigen = "Anzeigen";
+    private String verstecken = "Verstecken";
+    private TrayIcon trayIcon;
+    private Tray nativeTray;
+    private SwingTrayMenu nativeMenu;
+    private AppleJuiceDialog dialog;
+    private JMenuItem showHideItem;
+    private Icon zeigenIcon;
+    private Icon versteckenIcon;
+    private final ComponentAdapter visibilityListener = new ComponentAdapter() {
+        @Override public void componentShown(ComponentEvent event) { updateVisibilityLabel(); }
+        @Override public void componentHidden(ComponentEvent event) { updateVisibilityLabel(); }
+    };
 
-   public boolean makeTray( String title, final AppleJuiceDialog dialog, final JMenuItem popupShowHideMenuItem,
-                           final Icon zeigenIcon, final Icon versteckenIcon, final JPopupMenu popup)
-   {
-      SystemTray tray = SystemTray.getSystemTray();
-
-      IconManager im = IconManager.getInstance();
-
-      Image image = im.getIcon("applejuice").getImage();
-
-      trayIcon = new TrayIcon(image, title, null);
-
-      trayIcon.setImageAutoSize(true);
-      trayIcon.addMouseListener(new MouseAdapter()
-         {
-            public void mouseReleased(MouseEvent e)
-            {
-               e.consume();
-               if(!dialog.isVisible())
-               {
-                  popupShowHideMenuItem.setText(zeigen);
-                  popupShowHideMenuItem.setIcon(zeigenIcon);
-               }
-               else
-               {
-                  popupShowHideMenuItem.setText(verstecken);
-                  popupShowHideMenuItem.setIcon(versteckenIcon);
-               }
-
-               if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2)
-               {
-                  AppleJuiceDialog dialog = AppleJuiceDialog.getApp();
-
-                  if(!dialog.isVisible())
-                  {
-                     dialog.setVisible(true);
-                     dialog.toFront();
-                  }
-                  else
-                  {
-                     dialog.setVisible(false);
-                  }
-               }
-
-               if(e.getButton() == MouseEvent.BUTTON3)
-               {
-                  if(popup.isVisible())
-                  {
-                     popup.setVisible(false);
-                  }
-                  else
-                  {
-                     popup.setLocation(e.getX(), e.getY());
-                     popup.setInvoker(popup);
-                     popup.setVisible(true);
-                  }
-               }
+    public boolean makeTray(String title, AppleJuiceDialog dialog, JMenuItem showHideItem,
+                            Icon zeigenIcon, Icon versteckenIcon, JPopupMenu popup) {
+        this.dialog = dialog;
+        this.showHideItem = showHideItem;
+        this.zeigenIcon = zeigenIcon;
+        this.versteckenIcon = versteckenIcon;
+        updateVisibilityLabel();
+        dialog.addComponentListener(visibilityListener);
+        ImageIcon icon = IconManager.getInstance().getIcon("applejuice");
+        if (System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("linux") &&
+                createNativeTray(title, icon, popup)) return true;
+        if (!SystemTray.isSupported()) {
+            close();
+            return false;
+        }
+        trayIcon = new TrayIcon(icon.getImage(), title);
+        trayIcon.setImageAutoSize(true);
+        trayIcon.addMouseListener(new MouseAdapter() {
+            @Override public void mouseReleased(MouseEvent event) {
+                SwingUtilities.invokeLater(() -> {
+                    updateVisibilityLabel();
+                    if (event.getButton() == MouseEvent.BUTTON1 && event.getClickCount() == 2) {
+                        showHideItem.doClick();
+                    } else if (event.getButton() == MouseEvent.BUTTON3) {
+                        if (popup.isVisible()) popup.setVisible(false);
+                        else {
+                            popup.setLocation(event.getXOnScreen(), event.getYOnScreen());
+                            popup.setInvoker(popup);
+                            popup.setVisible(true);
+                        }
+                    }
+                });
             }
-         });
+        });
+        try {
+            SystemTray.getSystemTray().add(trayIcon);
+            return true;
+        } catch (AWTException e) {
+            logger.info("AWT-Tray nicht verfügbar", e);
+            close();
+            return false;
+        }
+    }
 
-      try
-      {
-         tray.add(trayIcon);
-      }
-      catch(AWTException e)
-      {
-         return false;
-      }
+    private boolean createNativeTray(String title, ImageIcon icon, JPopupMenu popup) {
+        try {
+            nativeMenu = new SwingTrayMenu(popup, () -> {
+                if (!dialog.isVisible()) showHideItem.doClick();
+                popup.show(dialog, dialog.getWidth() / 2, dialog.getHeight() / 2);
+            }, menu -> { if (nativeTray != null) nativeTray.setMenu(menu); });
+            ByteArrayOutputStream png = new ByteArrayOutputStream();
+            BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D graphics = image.createGraphics();
+            try { icon.paintIcon(null, graphics, 0, 0); }
+            finally { graphics.dispose(); }
+            ImageIO.write(image, "png", png);
+            nativeTray = Tray.Companion.create(new TrayBuilder(title, png.toByteArray(), title,
+                    nativeMenu.snapshot(), null, "io.github.applejuicenetz.javagui.StatusNotifierItem"));
+            if (nativeTray == null) {
+                nativeMenu.close();
+                nativeMenu = null;
+                return false;
+            }
+            SwingTrayMenu menu = nativeMenu;
+            nativeTray.onEvent(event -> {
+                if (event instanceof TrayEvent.MenuItemSelected selected) menu.select(selected.getId());
+                else if (event instanceof TrayEvent.Activated) SwingUtilities.invokeLater(() -> showHideItem.doClick());
+                return Unit.INSTANCE;
+            });
+            logger.info("Linux-Tray mit libtray/StatusNotifierItem gestartet");
+            return true;
+        } catch (Exception | LinkageError e) {
+            logger.info("libtray nicht verfügbar; versuche AWT-Tray", e);
+            if (nativeTray != null) nativeTray.close();
+            if (nativeMenu != null) nativeMenu.close();
+            nativeTray = null;
+            nativeMenu = null;
+            return false;
+        }
+    }
 
-      return true;
-   }
+    private void updateVisibilityLabel() {
+        if (showHideItem != null) {
+            showHideItem.setText(dialog.isVisible() ? verstecken : zeigen);
+            showHideItem.setIcon(dialog.isVisible() ? versteckenIcon : zeigenIcon);
+        }
+    }
 
-   public void setTextZeigen(String zeigen)
-   {
-      this.zeigen = zeigen;
-   }
+    public void setTextZeigen(String text) { zeigen = text; updateVisibilityLabel(); }
+    public void setTextVerstecken(String text) { verstecken = text; updateVisibilityLabel(); }
 
-   public void setTextVerstecken(String verstecken)
-   {
-      this.verstecken = verstecken;
-   }
+    public void showBallon(String caption, String message) {
+        if (trayIcon != null && (caption != null || message != null))
+            trayIcon.displayMessage(caption, message, TrayIcon.MessageType.INFO);
+    }
 
-   public void showBallon(String caption, String message)
-   {
-      if(null == trayIcon || (null == caption && null == message))
-      {
-         return;
-      }
-
-      trayIcon.displayMessage(caption, message, MessageType.INFO);
-   }
+    @Override public void close() {
+        if (dialog != null) dialog.removeComponentListener(visibilityListener);
+        if (nativeMenu != null) nativeMenu.close();
+        if (nativeTray != null) nativeTray.close();
+        if (trayIcon != null && SystemTray.isSupported()) SystemTray.getSystemTray().remove(trayIcon);
+        nativeMenu = null;
+        nativeTray = null;
+        trayIcon = null;
+    }
 }

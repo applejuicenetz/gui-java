@@ -9,21 +9,19 @@
     <parent>
         <groupId>de.applejuicenet.client</groupId>
         <artifactId>AJClientGUI</artifactId>
-        <version>0.85.3</version>
+        <version>0.86.0</version>
         <relativePath>./../../pom.xml</relativePath>
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>de.applejuicenet.client.gui</groupId>
             <artifactId>AJCoreGUI</artifactId>
-            <version>0.85.3</version>
+            <version>0.86.0</version>
         </dependency>
     </dependencies>
 
@@ -32,7 +30,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.5.1</version>
                 <configuration>
                     <finalName>${project.artifactId}</finalName>
                     <archive>
@@ -43,7 +41,7 @@
             <plugin>
                 <groupId>com.coderplus.maven.plugins</groupId>
                 <artifactId>copy-rename-maven-plugin</artifactId>
-                <version>1.0</version>
+                <version>1.0.1</version>
                 <executions>
                     <execution>
                         <id>copy.plugins</id>

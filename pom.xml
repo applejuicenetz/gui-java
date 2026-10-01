@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.applejuicenet.client</groupId>
     <artifactId>AJClientGUI</artifactId>
-    <version>0.85.3</version>
+    <version>0.86.0</version>
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.release>25</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <packaging>pom</packaging>
 
@@ -21,11 +21,23 @@
     </modules>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.11.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <inherited>false</inherited>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
+                <version>3.5.0</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -50,73 +62,12 @@
                 </configuration>
             </plugin>
             <plugin>
-                <inherited>false</inherited>
-                <groupId>io.github.fvarrui</groupId>
-                <artifactId>javapackager</artifactId>
-                <version>1.6.2</version>
-                <executions>
-                    <execution>
-                        <id>javapackager.mac</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <name>AJCoreGUI</name>
-                            <displayName>AJCoreGUI</displayName>
-                            <mainClass>de.applejuicenet.client.AppleJuiceClient</mainClass>
-                            <runnableJar>${basedir}/modules/AJCoreGUI/target/AJCoreGUI.jar</runnableJar>
-                            <bundleJre>false</bundleJre>
-                            <platform>mac</platform>
-                            <jreMinVersion>11</jreMinVersion>
-                            <organizationName>appleJuiceNETZ</organizationName>
-                            <organizationUrl>https://applejuicenet.cc</organizationUrl>
-                            <vmArgs>
-                                <arg>-Dapple.awt.application.appearance=system</arg>
-                            </vmArgs>
-                            <macConfig>
-                                <appId>de.applejuicenet.client.AppleJuiceClient</appId>
-                                <generateDmg>true</generateDmg>
-                                <generatePkg>false</generatePkg>
-                                <relocateJar>false</relocateJar>
-                                <codesignApp>false</codesignApp>
-                            </macConfig>
-                            <additionalResources>
-                                <additionalResource>resources/icons</additionalResource>
-                                <additionalResource>resources/language</additionalResource>
-                                <additionalResource>resources/lib</additionalResource>
-                                <additionalResource>resources/plugins</additionalResource>
-                                <additionalResource>resources/pwdlpolicies</additionalResource>
-                                <additionalResource>resources/sounds</additionalResource>
-                                <additionalResource>resources/themes</additionalResource>
-                                <additionalResource>resources/wizard.xml</additionalResource>
-                            </additionalResources>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.16.0</version>
             </plugin>
             <plugin>
-                <inherited>false</inherited>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>antrun.package.archive</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <zip destfile="./target/AJCoreGUI.zip">
-                                    <zipfileset dir="${basedir}/resources/" includes="**"/>
-                                    <zipfileset dir="${basedir}/assets/windows/" includes="AJCoreGUI.exe"/>
-                                    <zipfileset dir="${basedir}/modules/AJCoreGUI/target/" includes="AJCoreGUI.jar" fullpath="AJCoreGUI.jar"/>
-                                </zip>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.6.0</version>
             </plugin>
         </plugins>
     </build>

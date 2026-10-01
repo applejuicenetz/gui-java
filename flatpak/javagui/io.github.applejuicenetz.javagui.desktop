@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=appleJuice JavaGUI
+GenericName=GUI for appleJuice Core
+GenericName[de]=GUI für appleJuice Core
+Comment=JavaGUI for appleJuice Core
+Comment[de]=JavaGUI für appleJuice Core
+Exec=ajgui %U
+Icon=io.github.applejuicenetz.javagui
+Type=Application
+Terminal=false
+Categories=Network;
+StartupWMClass=AJCoreGUI
+MimeType=x-scheme-handler/ajfsp;application/x-ajl;

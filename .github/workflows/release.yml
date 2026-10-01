@@ -1,99 +1,226 @@
-name: 'release'
+name: release
 
 on:
-  create:
+  push:
+    branches:
+      - 'build/javagui-*'
     tags:
+      - '*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: read
 
 jobs:
-  release:
-    runs-on: macos-latest
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15-intel
+            platform: macos
+            arch: amd64
+            type: dmg
+          - runner: macos-15
+            platform: macos
+            arch: aarch64
+            type: dmg
+          - runner: windows-2025
+            platform: windows
+            arch: amd64
+            type: exe
+          - runner: windows-11-arm
+            platform: windows
+            arch: aarch64
+            type: exe
+    runs-on: ${{ matrix.runner }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Inject JDK
-        id: inject_jdk
-        uses: actions/setup-java@v2
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
-          distribution: 'zulu'
-          java-version: 11
+          distribution: zulu
+          java-version: '25'
+          cache: maven
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
 
-#      - name: update mvn version
-#        id: update_mvn_package
-#        run: |
-#          mvn versions:set \
-#          -DgroupId=de.applejuicenet.client.gui \
-#          -DartifactId=AJCoreGUI \
-#          -DgenerateBackupPoms=false \
-#          -DoldVersion="*" \
-#          -N versions:update-child-modules \
-#          -DnewVersion=${{ github.ref_name }}
+      - uses: actions/setup-dotnet@v6
+        if: matrix.platform == 'windows'
+        with:
+          dotnet-version: '8.0.x'
+      - name: Install WiX for jpackage
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          dotnet tool install --global wix --version 5.0.2
+          "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
+          & "$env:USERPROFILE\.dotnet\tools\wix.exe" extension add --global WixToolset.UI.wixext/5.0.2
+          & "$env:USERPROFILE\.dotnet\tools\wix.exe" extension add --global WixToolset.Util.wixext/5.0.2
 
-#           mvn versions:set \
-#          -DgroupId=de.applejuicenet.client \
-#          -DartifactId=AJClientGUI \
-#          -DgenerateBackupPoms=false \
-#          -DoldVersion="*" \
-#          -N versions:update-child-modules \
-#          -DnewVersion=${{ github.ref_name }}
-
-#      - name: commit updated package_version
-#        id: commit_updated_package_version
-#        uses: stefanzweifel/git-auto-commit-action@v4
-#        with:
-#          branch: master
-#          file_pattern: pom.xml
-#          commit_message: Update mvn Package Version to ${{ github.ref_name }}
-
-      - name: compile and package jar with Maven
-        id: mvn_package
-        run: mvn package
-
-      - name: build installable files with Maven
-        id: mvn_install
-        run: mvn install
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Build JAR and native installer
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-          body: aktuelles Changelog befindet sich [hier](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md#changelog)
+          GITHUB_TOKEN: ${{ github.token }}
+          PACKAGE_PLATFORM: ${{ matrix.platform }}
+          PACKAGE_ARCH: ${{ matrix.arch }}
+          PACKAGE_TYPE: ${{ matrix.type }}
+        run: |
+          set -euo pipefail
+          mvn -B clean package
+          version="$(python -c "import xml.etree.ElementTree as E; print(E.parse('pom.xml').getroot().findtext('version'))")"
+          if [[ "$GITHUB_REF_TYPE" == tag ]]; then
+            test "$version" = "${GITHUB_REF_NAME#v}"
+          fi
+          python scripts/package.py native \
+            --platform "$PACKAGE_PLATFORM" --arch "$PACKAGE_ARCH" --type "$PACKAGE_TYPE"
 
-      - name: upload .zip
-        id: upload-release-asset-jar
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v7
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/AJCoreGUI.zip
-          asset_name: AJCoreGUI.zip
-          asset_content_type: application/zip
+          name: native-${{ matrix.platform }}-${{ matrix.arch }}
+          path: target/AJCoreGUI-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.type }}
+          if-no-files-found: error
 
-      - name: upload windows setup
-        id: upload-release-asset-setup
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  flatpak:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: x86_64
+            package-arch: amd64
+          - runner: ubuntu-24.04-arm
+            arch: aarch64
+            package-arch: aarch64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: assets/windows/AJCoreGUI.setup.exe
-          asset_name: AJCoreGUI.setup.exe
-          asset_content_type: application/octet-stream
+          distribution: zulu
+          java-version: '25'
+          cache: maven
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - name: Install Flatpak builder
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends flatpak flatpak-builder
+          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+      - name: Build JAR and Flatpak bundle
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          FLATPAK_ARCH: ${{ matrix.arch }}
+          PACKAGE_ARCH: ${{ matrix.package-arch }}
+        run: |
+          set -euo pipefail
+          mvn -B clean package
+          python scripts/package.py prepare
+          version="$(python -c "import xml.etree.ElementTree as E; print(E.parse('pom.xml').getroot().findtext('version'))")"
+          if [[ "$GITHUB_REF_TYPE" == tag ]]; then
+            test "$version" = "${GITHUB_REF_NAME#v}"
+          fi
+          release_date="$(date -u +%F)"
+          sed -i -E "s|<release version=\"[^\"]+\" type=\"stable\" date=\"[^\"]+\"/>|<release version=\"$version\" type=\"stable\" date=\"$release_date\"/>|" \
+            flatpak/javagui/io.github.applejuicenetz.javagui.metainfo.xml
+          flatpak-builder \
+            --arch="$FLATPAK_ARCH" \
+            --user \
+            --install-deps-from=flathub \
+            --disable-rofiles-fuse \
+            --force-clean \
+            --repo=target/flatpak-repo \
+            --default-branch=stable \
+            target/flatpak-build \
+            flatpak/io.github.applejuicenetz.javagui.yaml
+          flatpak build-bundle \
+            --arch="$FLATPAK_ARCH" \
+            --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo \
+            target/flatpak-repo \
+            "target/AJCoreGUI-linux-${PACKAGE_ARCH}.flatpak" \
+            io.github.applejuicenetz.javagui stable
+      - uses: actions/upload-artifact@v7
+        with:
+          name: flatpak-${{ matrix.package-arch }}
+          path: target/AJCoreGUI-linux-${{ matrix.package-arch }}.flatpak
+          if-no-files-found: error
 
-      - name: upload macOS .dmg
-        id: upload-release-asset-dmg
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release:
+    needs: [package, flatpak]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/assets/AJCoreGUI_${{github.ref_name}}.dmg
-          asset_name: AJCoreGUI.dmg
-          asset_content_type: application/octet-stream
+          distribution: zulu
+          java-version: '25'
+          cache: maven
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - name: Build portable ZIP
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          mvn -B clean package
+          python scripts/package.py prepare
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: native-*
+          merge-multiple: true
+          path: target
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: flatpak-*
+          merge-multiple: true
+          path: target
+      - name: Check all six packages and ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in \
+            AJCoreGUI.zip \
+            AJCoreGUI-macos-amd64.dmg \
+            AJCoreGUI-macos-aarch64.dmg \
+            AJCoreGUI-windows-amd64.exe \
+            AJCoreGUI-windows-aarch64.exe \
+            AJCoreGUI-linux-amd64.flatpak \
+            AJCoreGUI-linux-aarch64.flatpak; do
+            test -s "target/$file"
+          done
+      - uses: actions/upload-artifact@v7
+        with:
+          name: AJCoreGUI-packages
+          path: |
+            target/AJCoreGUI.zip
+            target/*.dmg
+            target/*.exe
+            target/*.flatpak
+          if-no-files-found: error
+      - name: Publish GitHub release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v3
+        with:
+          generate_release_notes: true
+          body: aktuelles Changelog befindet sich [hier](https://github.com/applejuicenetz/gui-java/blob/${{ github.ref_name }}/CHANGELOG.md#changelog)
+          fail_on_unmatched_files: true
+          files: |
+            target/AJCoreGUI.zip
+            target/AJCoreGUI-macos-amd64.dmg
+            target/AJCoreGUI-macos-aarch64.dmg
+            target/AJCoreGUI-windows-amd64.exe
+            target/AJCoreGUI-windows-aarch64.exe
+            target/AJCoreGUI-linux-amd64.flatpak
+            target/AJCoreGUI-linux-aarch64.flatpak

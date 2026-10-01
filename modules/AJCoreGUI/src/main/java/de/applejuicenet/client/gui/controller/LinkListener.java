@@ -103,14 +103,27 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
 
     static void forwardAjl(int port, String password, File file) throws IOException {
         String path = Base64.getUrlEncoder().encodeToString(file.getAbsolutePath().getBytes(StandardCharsets.UTF_8));
+        forwardMessage(port, password, "-ajl=" + path);
+    }
+
+    public static void forwardLink(String link) throws IOException {
+        forwardLink(OptionsManagerImpl.getInstance().getLinkListenerPort(),
+                OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword(), link);
+    }
+
+    static void forwardLink(int port, String password, String link) throws IOException {
+        forwardMessage(port, password, link);
+    }
+
+    private static void forwardMessage(int port, String password, String message) throws IOException {
         try (Socket socket = new Socket("localhost", port)) {
             socket.setSoTimeout(5000);
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
-            writer.write(password + "|-ajl=" + path + "\n");
+            writer.write(password + "|" + message + "\n");
             writer.flush();
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
             if (!"OK".equals(reader.readLine())) {
-                throw new IOException("AJL-Datei wurde von der laufenden GUI nicht angenommen");
+                throw new IOException("Link/AJL-Datei wurde von der laufenden GUI nicht angenommen");
             }
         }
     }

@@ -349,7 +349,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         useTrayIcon = true;
         popup = makeSwingPopup();
         try {
-            TrayLoader trayLoader = new TrayLoader();
+            trayLoader = new TrayLoader();
 
             useTrayIcon = trayLoader.makeTray(titel, this, popupShowHideMenuItem, zeigenIcon, versteckenIcon, popup);
             AppleJuiceClient.getAjFassade().addDataUpdateListener(new DataUpdateListener() {
@@ -617,6 +617,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         }
 
         setVisible(false);
+        if (trayLoader != null) trayLoader.close();
 
         System.exit(0);
     }
@@ -640,6 +641,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
         System.out.println("Fehler: " + error);
 
+        if (trayLoader != null) trayLoader.close();
         System.exit(-1);
     }
 
@@ -1118,6 +1120,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         popup.add(popupShowHideMenuItem);
         popupOptionenMenuItem.addActionListener(ae -> showOptionsDialog());
 
+        popupOptionenMenuItem.setText(menuItemOptionen.getText());
         popup.add(popupOptionenMenuItem);
         IconManager im = IconManager.getInstance();
 
@@ -1128,6 +1131,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         popupOptionenMenuItem.setIcon(im.getIcon("optionen"));
         popupAboutMenuItem.setIcon(aboutIcon);
         popupAboutMenuItem.addActionListener(ae -> showAboutDialog());
+        popupAboutMenuItem.setText(menuItemUeber.getText());
         popup.add(popupAboutMenuItem);
         new Thread() {
             public void run() {

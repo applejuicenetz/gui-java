@@ -1,6 +1,11 @@
 # Changelog
 
-**0.85.4**
+**0.86.0**
+
+- [red171] Java 25 und sechs OS-Pakete mit Laufzeit; ZIP bleibt erhalten
+- [red171] Native Launcher übernehmen ajfsp-Links und AJL-Dateien
+- [red171] Linux-Tray mit libtray wie im Collector integriert
+- [red171] GitHub Actions und Maven-Abhängigkeiten aktualisiert, CodeQL entfernt
 
 - [red171] Dateien über 2 GiB können korrekt behandelt werden
 - Core- und XML-Port erlauben Werte bis 65535; ungültige Eingaben werden zurückgesetzt (#17).

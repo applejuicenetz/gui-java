@@ -82,6 +82,7 @@ public class AppleJuiceClient {
     }
 
     public static void main(String[] args) {
+        ApplicationPaths.configure(args);
         logger = LoggerFactory.getLogger(AppleJuiceClient.class);
 
         try {
@@ -110,6 +111,7 @@ public class AppleJuiceClient {
         String link = "";
         boolean doubleInstance = false;
         boolean ajlForwarded = false;
+        boolean linkForwarded = false;
 
         try {
             linkListener = new LinkListener();
@@ -128,13 +130,6 @@ public class AppleJuiceClient {
 
         if (args != null && args.length > 0) {
             try {
-                for (String curArg : args) {
-                    if (curArg.contains("-path=")) {
-                        System.setProperty("user.dir", curArg.substring(6));
-                        break;
-                    }
-                }
-
                 boolean hilfeAusgegeben = false;
 
                 for (String curArg : args) {
@@ -181,15 +176,8 @@ public class AppleJuiceClient {
                         link = curArg.startsWith("ajfsp://") ? curArg : curArg.substring(curArg.indexOf("-link=") + "-link=".length());
 
                         if (doubleInstance) {
-                            int PORT = OptionsManagerImpl.getInstance().getLinkListenerPort();
-                            String passwort = OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword();
-                            Socket socket = new Socket("localhost", PORT);
-                            PrintStream out = new PrintStream(socket.getOutputStream(), true, StandardCharsets.UTF_8);
-
-                            out.println(passwort + "|" + curArg);
-                            socket.close();
-                            //war nur Linkprocessing, also GUI schliessen
-                            System.exit(1);
+                            LinkListener.forwardLink(link);
+                            linkForwarded = true;
                         } else {
                             linkListener.processLink(link, "");
                         }
@@ -227,7 +215,7 @@ public class AppleJuiceClient {
             }
         }
 
-        if (doubleInstance && ajlForwarded) {
+        if (doubleInstance && (ajlForwarded || linkForwarded)) {
             System.exit(0);
             return;
         }

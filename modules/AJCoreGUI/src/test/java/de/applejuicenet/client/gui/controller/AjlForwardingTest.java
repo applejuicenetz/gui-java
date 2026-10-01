@@ -39,6 +39,19 @@ public class AjlForwardingTest {
     }
 
     @Test
+    public void osLinksReachRunningGuiAndWaitForCoreStartup() throws Exception {
+        List<String> received = new CopyOnWriteArrayList<>();
+        try (LinkListener listener = new LinkListener(0, () -> "secret", (link, dir) -> received.add(link))) {
+            LinkListener.forwardLink(listener.getListenerPort(), "secret", "ajfsp://file%7CGrüße.bin%7Chash%7C5368709120/");
+            assertTrue(received.isEmpty());
+            listener.fireStatusChanged(STATUS.STARTED);
+            LinkListener.forwardLink(listener.getListenerPort(), "secret", "ajfsp://file|zweite.bin|hash2|1024/");
+            assertEquals(Arrays.asList("ajfsp://file|Grüße.bin|hash|5368709120/",
+                    "ajfsp://file|zweite.bin|hash2|1024/"), received);
+        }
+    }
+
+    @Test
     public void runningGuiReceivesMultipleFilesWithUnicodePaths() throws Exception {
         List<String> received = new CopyOnWriteArrayList<>();
         File first = ajl("Grüße mit Leerzeichen eins.AJL", "München.bin\nhash1\n5368709120\n");

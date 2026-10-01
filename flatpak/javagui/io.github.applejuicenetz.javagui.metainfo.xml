@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>io.github.applejuicenetz.javagui</id>
+    <name>appleJuice JavaGUI</name>
+    <launchable type="desktop-id">io.github.applejuicenetz.javagui.desktop</launchable>
+    <summary>JavaGUI for appleJuice Core</summary>
+    <description>
+        <p>JavaGUI für appleJuice Core</p>
+    </description>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>GPL-2.0</project_license>
+    <developer id="io.github.applejuicenetz">
+        <name>appleJuiceNETZ</name>
+    </developer>
+    <url type="homepage">https://applejuicenetz.github.io/</url>
+    <url type="faq">https://applejuicenetz.github.io/faq/</url>
+    <url type="bugtracker">https://github.com/applejuicenetz/gui-java/issues</url>
+    <releases>
+        <release version="0.86.0" type="stable" date="2026-10-01"/>
+    </releases>
+    <categories>
+        <category>Network</category>
+    </categories>
+    <recommends>
+        <internet>always</internet>
+    </recommends>
+    <keywords>
+        <keyword translate="no">appleJuice</keyword>
+        <keyword>p2p</keyword>
+    </keywords>
+    <provides>
+        <mediatype>application/x-ajl</mediatype>
+    </provides>
+    <suggests>
+        <id>io.github.applejuicenetz.core</id>
+        <id>io.github.applejuicenetz.collector</id>
+    </suggests>
+    <requires>
+        <control>keyboard</control>
+        <control>pointing</control>
+        <display_length compare="ge">768</display_length>
+    </requires>
+    <screenshots>
+        <screenshot type="default">
+            <image>https://applejuicenetz.github.io/assets/screenshots/applejuice_gui_java.png</image>
+            <caption>Main Window</caption>
+        </screenshot>
+    </screenshots>
+</component>
