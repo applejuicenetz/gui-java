@@ -1,13 +1,13 @@
 /*
  * Copyright 2006 TKLSoft.de   All rights reserved.
  */
-
 package de.applejuicenet.client.gui.controller;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.listener.CoreStatusListener;
+import de.applejuicenet.client.shared.AjlFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,200 +15,162 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashSet;
+import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
-/**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LinkListener.java,v 1.15 2009/01/12 14:53:08 maj0r Exp $
- *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r [aj@tkl-soft.de]
- */
-public class LinkListener extends Thread implements CoreStatusListener {
-    private static Logger logger;
-    private final int PORT;
-    private ServerSocket listen;
-    private ApplejuiceFassade applejuiceFassade = null;
-    private HashSet<Link> linkCache = null;
+public class LinkListener extends Thread implements CoreStatusListener, AutoCloseable {
+    private static final Logger logger = LoggerFactory.getLogger(LinkListener.class);
+    private final ServerSocket listen;
+    private final Supplier<String> passwordSupplier;
+    private final BiConsumer<String, String> linkProcessor;
+    private final List<Link> linkCache = new ArrayList<>();
+    private boolean ready;
 
     public LinkListener() throws IOException {
-        PORT = OptionsManagerImpl.getInstance().getLinkListenerPort();
-        logger = LoggerFactory.getLogger(getClass());
-        try {
-            listen = new ServerSocket(PORT);
-            setName("LinkListenerThread");
-            setDaemon(true);
-            start();
-            ApplejuiceFassade.addCoreStatusListener(this);
-        } catch (IOException ioE) {
-            throw ioE;
-        } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-        }
+        this(OptionsManagerImpl.getInstance().getLinkListenerPort(),
+                () -> OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword(),
+                LinkListener::submitToCore);
+        ApplejuiceFassade.addCoreStatusListener(this);
     }
 
+    LinkListener(int port, Supplier<String> passwordSupplier, BiConsumer<String, String> linkProcessor) throws IOException {
+        this.passwordSupplier = passwordSupplier;
+        this.linkProcessor = linkProcessor;
+        listen = new ServerSocket(port, 50, InetAddress.getByName("localhost"));
+        setName("LinkListenerThread");
+        setDaemon(true);
+        start();
+    }
+
+    @Override
     public void run() {
-        try {
-            while (true) {
-                Socket client = listen.accept();
-
-                if (client.getInetAddress().getHostAddress().compareTo(InetAddress.getByName("localhost").getHostAddress()) == 0) {
-                    try {
-                        DataInputStream in = new DataInputStream(client.getInputStream());
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                        String line = reader.readLine();
-
-                        if (line.contains("-link=")) {
-                            String link = getLinkFromReadLine(line);
-                            link = link.replaceAll("%7C", "|");
-
-                            if (link != null) {
-                                Link aLink = new Link(link, "");
-
-                                if (applejuiceFassade != null) {
-                                    processLink(aLink);
-                                } else {
-                                    if (linkCache == null) {
-                                        linkCache = new HashSet<Link>();
-                                    }
-
-                                    linkCache.add(aLink);
-                                }
-                            }
-                        }
-
-                        //todo
-                  /*                        else if (line.indexOf("-command=") != -1) {
-                                              String command = line.substring(line.indexOf(
-                                                  "-command=") + 9).toLowerCase();
-                                              if (command.startsWith("getajstats")) {
-                                                  PrintStream out = new PrintStream(client.
-                                                      getOutputStream());
-                                                  out.println(AppleJuiceClient.getAjFassade().
-                                                              getStats());
-                                              }
-                                              else if (command.startsWith("getajinfo")) {
-                                                  PrintStream out = new PrintStream(client.
-                                                      getOutputStream());
-                                                  out.println(ApplejuiceFassade.getInstance().getVersionInformation());
-                                              }
-                                          }*/
-                    } catch (Exception e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                        client.close();
-                        return;
-                    }
-                } else {
-                    DataInputStream in = new DataInputStream(client.getInputStream());
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-                    reader.readLine();
-                    PrintStream out = new PrintStream(client.getOutputStream());
-
-                    out.println("Fuck you, little bastard !!!");
+        while (!listen.isClosed()) {
+            try (Socket client = listen.accept()) {
+                client.setSoTimeout(5000);
+                if (!client.getInetAddress().isLoopbackAddress()) {
+                    continue;
                 }
-
-                client.close();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8));
+                try {
+                    boolean accepted = handleMessage(reader.readLine());
+                    writer.write(accepted ? "OK\n" : "ERROR\n");
+                } catch (Exception e) {
+                    logger.warn("Link-/AJL-Übergabe fehlgeschlagen", e);
+                    writer.write("ERROR\n");
+                }
+                writer.flush();
+            } catch (SocketException e) {
+                if (!listen.isClosed()) {
+                    logger.warn("LinkListener-Verbindung fehlgeschlagen", e);
+                }
+            } catch (IOException e) {
+                logger.warn("LinkListener-Verbindung fehlgeschlagen", e);
             }
-        } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
-    private boolean isValidAjLink(String line) {
-        try {
-            if (line == null) {
-                return false;
-            }
-
-            String password = OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword();
-
-            if (line.substring(0, password.length()).compareTo(password) != 0) {
-                return false;
-            }
-
-            if (line.indexOf("ajfsp://") == -1) {
-                return false;
-            }
-        } catch (Exception e) {
+    private boolean handleMessage(String line) throws IOException {
+        String prefix = passwordSupplier.get() + "|";
+        if (line == null || !line.startsWith(prefix)) {
             return false;
         }
-
-        return true;
+        String command = line.substring(prefix.length());
+        if (command.startsWith("-ajl=")) {
+            String path = new String(Base64.getUrlDecoder().decode(command.substring(5)), StandardCharsets.UTF_8);
+            processAjl(new File(path), "");
+            return true;
+        }
+        if (command.startsWith("-link=") || command.startsWith("ajfsp://")) {
+            int start = command.indexOf("ajfsp://");
+            if (start >= 0) {
+                processLink(command.substring(start), "");
+                return true;
+            }
+        }
+        return false;
     }
 
-    private String getLinkFromReadLine(String line) {
-        if (!isValidAjLink(line)) {
-            return null;
-        } else {
-            return line.substring(line.indexOf("ajfsp://"));
+    public static void forwardAjl(File file) throws IOException {
+        forwardAjl(OptionsManagerImpl.getInstance().getLinkListenerPort(),
+                OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword(), file);
+    }
+
+    static void forwardAjl(int port, String password, File file) throws IOException {
+        String path = Base64.getUrlEncoder().encodeToString(file.getAbsolutePath().getBytes(StandardCharsets.UTF_8));
+        try (Socket socket = new Socket("localhost", port)) {
+            socket.setSoTimeout(5000);
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+            writer.write(password + "|-ajl=" + path + "\n");
+            writer.flush();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+            if (!"OK".equals(reader.readLine())) {
+                throw new IOException("AJL-Datei wurde von der laufenden GUI nicht angenommen");
+            }
         }
     }
 
-    public void fireStatusChanged(STATUS newStatus) {
-        if (newStatus == STATUS.STARTED) {
+    public void processAjl(File file, String directory) throws IOException {
+        for (String link : AjlFile.readLinks(file)) {
+            queueLink(new Link(link, directory));
+        }
+    }
+
+    @Override
+    public synchronized void fireStatusChanged(STATUS newStatus) {
+        if (newStatus == STATUS.STARTED && !ready) {
+            ready = true;
             ApplejuiceFassade.removeCoreStatusListener(this);
-            applejuiceFassade = AppleJuiceClient.getAjFassade();
-            processCache();
+            for (Link link : linkCache) {
+                linkProcessor.accept(link.link, link.directory);
+            }
+            linkCache.clear();
         }
-    }
-
-    private void processCache() {
-        if (linkCache == null) {
-            return;
-        }
-
-        for (Link curLink : linkCache) {
-            processLink(curLink);
-        }
-
-        linkCache.clear();
-        linkCache = null;
     }
 
     public void processLink(String link, String directory) {
-        link = link.replaceAll("%7C", "|");
-        link = link.replaceAll("%20", ".");
+        link = link.replace("%7C", "|").replace("%20", ".");
+        queueLink(new Link(link, directory));
+    }
 
-        Link aLink = new Link(link, "");
-
-        if (applejuiceFassade == null) {
-            if (linkCache == null) {
-                linkCache = new HashSet<Link>();
-            }
-
-            linkCache.add(aLink);
+    private synchronized void queueLink(Link link) {
+        if (ready) {
+            linkProcessor.accept(link.link, link.directory);
         } else {
-            processLink(aLink);
+            linkCache.add(link);
         }
     }
 
-    private void processLink(Link aLink) {
+    private static void submitToCore(String link, String directory) {
         try {
-            applejuiceFassade.processLink(aLink.getLink(), aLink.getDirectory());
+            AppleJuiceClient.getAjFassade().processLink(link, directory);
         } catch (IllegalArgumentException e) {
-            // an dieser Stelle unterbuttern
             logger.warn(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
-    private class Link {
+    int getListenerPort() {
+        return listen.getLocalPort();
+    }
+
+    @Override
+    public void close() throws IOException {
+        ApplejuiceFassade.removeCoreStatusListener(this);
+        listen.close();
+    }
+
+    private static class Link {
         private final String link;
         private final String directory;
 
-        public Link(String link, String directory) {
+        Link(String link, String directory) {
             this.link = link;
             this.directory = directory;
-        }
-
-        public String getDirectory() {
-            return directory;
-        }
-
-        public String getLink() {
-            return link;
         }
     }
 }

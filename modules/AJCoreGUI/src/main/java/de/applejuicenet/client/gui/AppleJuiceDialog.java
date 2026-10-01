@@ -40,14 +40,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import de.applejuicenet.client.shared.AjlFile;
+
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -1227,51 +1226,33 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
     }
 
     public void importAjl(File file, String targetDir) {
-        try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
-            String line = "";
-
-            while ((line = reader.readLine()) != null) {
-                if (line.compareTo("100") == 0) {
-                    break;
-                }
-            }
-
-            String size = "";
-            String filename = "";
-            String checksum = "";
-            String link = "";
+        try {
             ApplejuiceFassade af = AppleJuiceClient.getAjFassade();
             final StringBuffer returnValues = new StringBuffer();
             boolean somethingAdded = false;
 
-            while ((line = reader.readLine()) != null) {
-                filename = line;
-                checksum = reader.readLine();
-                size = reader.readLine();
-                if (size != null && checksum != null) {
-                    link = "ajfsp://file|" + filename + "|" + checksum + "|" + size + "/";
-                    String result;
+            for (String link : AjlFile.readLinks(file)) {
+                String result;
 
-                    try {
-                        result = af.processLink(link, targetDir);
-                    } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                        return;
-                    }
+                try {
+                    result = af.processLink(link, targetDir);
+                } catch (IllegalArgumentException e) {
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                    return;
+                }
 
-                    if (result.indexOf("ok") == 0) {
-                        returnValues.append("'" + link + "' OK\n");
-                        somethingAdded = true;
-                    } else if (result.contains("already downloaded")) {
-                        returnValues.append(alreadyLoaded.replaceAll("%s", link) + "\n");
-                        somethingAdded = true;
-                    } else if (result.contains("incorrect link")) {
-                        returnValues.append(invalidLink.replaceAll("%s", link) + "\n");
-                        somethingAdded = true;
-                    } else if (result.contains("failure")) {
-                        returnValues.append(linkFailure + "\n");
-                        somethingAdded = true;
-                    }
+                if (result.indexOf("ok") == 0) {
+                    returnValues.append("'" + link + "' OK\n");
+                    somethingAdded = true;
+                } else if (result.contains("already downloaded")) {
+                    returnValues.append(alreadyLoaded.replaceAll("%s", link) + "\n");
+                    somethingAdded = true;
+                } else if (result.contains("incorrect link")) {
+                    returnValues.append(invalidLink.replaceAll("%s", link) + "\n");
+                    somethingAdded = true;
+                } else if (result.contains("failure")) {
+                    returnValues.append(linkFailure + "\n");
+                    somethingAdded = true;
                 }
             }
 
@@ -1290,7 +1271,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                 });
             }
         } catch (IOException ex) {
-            ; //nix zu tun
+            logger.warn("AJL-Datei konnte nicht importiert werden: " + file, ex);
         }
     }
 

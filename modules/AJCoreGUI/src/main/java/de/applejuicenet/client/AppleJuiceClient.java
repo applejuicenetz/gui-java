@@ -34,6 +34,8 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.109 2009/02/12 13:11:40 maj0r Exp $
@@ -107,6 +109,7 @@ public class AppleJuiceClient {
         boolean processLink = false;
         String link = "";
         boolean doubleInstance = false;
+        boolean ajlForwarded = false;
 
         try {
             linkListener = new LinkListener();
@@ -160,11 +163,11 @@ public class AppleJuiceClient {
                             int PORT = OptionsManagerImpl.getInstance().getLinkListenerPort();
                             String passwort = OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword();
                             Socket socket = new Socket("localhost", PORT);
-                            PrintStream out = new PrintStream(socket.getOutputStream());
+                            PrintStream out = new PrintStream(socket.getOutputStream(), true, StandardCharsets.UTF_8);
                             DataInputStream in = new DataInputStream(socket.getInputStream());
 
                             out.println(passwort + "|" + curArg);
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
                             String line = reader.readLine();
 
                             System.out.println(line);
@@ -181,7 +184,7 @@ public class AppleJuiceClient {
                             int PORT = OptionsManagerImpl.getInstance().getLinkListenerPort();
                             String passwort = OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword();
                             Socket socket = new Socket("localhost", PORT);
-                            PrintStream out = new PrintStream(socket.getOutputStream());
+                            PrintStream out = new PrintStream(socket.getOutputStream(), true, StandardCharsets.UTF_8);
 
                             out.println(passwort + "|" + curArg);
                             socket.close();
@@ -190,13 +193,18 @@ public class AppleJuiceClient {
                         } else {
                             linkListener.processLink(link, "");
                         }
-                    } else if (curArg.endsWith(".ajl")) {
+                    } else if (curArg.toLowerCase(Locale.ROOT).endsWith(".ajl")) {
                         logger.info(".ajl Datei argument gefunden: " + curArg);
 
                         File inputFile = new File(curArg);
 
                         if (inputFile.exists() && !inputFile.isDirectory()) {
-                            new AppleJuiceDialog().importAjl(inputFile, "");
+                            if (doubleInstance) {
+                                LinkListener.forwardAjl(inputFile);
+                                ajlForwarded = true;
+                            } else {
+                                linkListener.processAjl(inputFile, "");
+                            }
                         } else {
                             logger.info("kann .ajl Datei nicht öffnen: " + curArg);
                         }
@@ -217,6 +225,11 @@ public class AppleJuiceClient {
                 //bereits ein GUI vorhanden, also GUI schliessen
                 doubleInstance = true;
             }
+        }
+
+        if (doubleInstance && ajlForwarded) {
+            System.exit(0);
+            return;
         }
 
         if (doubleInstance) {
