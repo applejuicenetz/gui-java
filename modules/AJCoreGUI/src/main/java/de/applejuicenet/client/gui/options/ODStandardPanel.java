@@ -313,12 +313,18 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
 
     class PortFocusListener extends FocusAdapter {
         public void focusLost(FocusEvent e) {
-            int portNr = Integer.parseInt(port.getText());
+            int portNr;
+            try {
+                portNr = Integer.parseInt(port.getText());
+            } catch (NumberFormatException ex) {
+                port.setText(Long.toString(ajSettings.getPort()));
+                return;
+            }
 
             if (ajSettings.getPort() != portNr) {
-                if (portNr > 1024 && portNr <= 32000) {
+                if (portNr > 1024 && portNr <= 65535) {
                     dirty = true;
-                    ajSettings.setPort(Integer.parseInt(port.getText()));
+                    ajSettings.setPort(portNr);
                 } else {
                     port.setText(Long.toString(ajSettings.getPort()));
                 }
@@ -337,14 +343,20 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
 
     class XmlPortFocusListener extends FocusAdapter {
         public void focusLost(FocusEvent e) {
-            int xmlPortNr = Integer.parseInt(xmlPort.getText());
+            int xmlPortNr;
+            try {
+                xmlPortNr = Integer.parseInt(xmlPort.getText());
+            } catch (NumberFormatException ex) {
+                xmlPort.setText(Long.toString(ajSettings.getXMLPort()));
+                return;
+            }
 
-            if (ajSettings.getXMLPort() != Long.parseLong(xmlPort.getText())) {
-                if (xmlPortNr > 1024 && xmlPortNr <= 32000) {
+            if (ajSettings.getXMLPort() != xmlPortNr) {
+                if (xmlPortNr > 1024 && xmlPortNr <= 65535) {
                     dirty = true;
                     xmlPortDirty = true;
-                    remote.setXmlPort(Integer.parseInt(xmlPort.getText()));
-                    ajSettings.setXMLPort(Long.parseLong(xmlPort.getText()));
+                    remote.setXmlPort(xmlPortNr);
+                    ajSettings.setXMLPort(xmlPortNr);
                 } else {
                     xmlPort.setText(Long.toString(ajSettings.getXMLPort()));
                 }
