@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -173,7 +174,7 @@ public class ShareController extends GuiController
 
          case SHARE_ERNEUERN:
          {
-            shareNeuLaden(true);
+            shareNeuLaden();
             break;
          }
 
@@ -477,7 +478,7 @@ public class ShareController extends GuiController
                         }
                      }
 
-                     shareNeuLaden(false);
+                     shareNeuLaden();
                   }
                }
                catch(Exception e)
@@ -515,7 +516,7 @@ public class ShareController extends GuiController
                         }
                      }
 
-                     shareNeuLaden(false);
+                     shareNeuLaden();
                   }
                }
                catch(Exception e)
@@ -556,7 +557,7 @@ public class ShareController extends GuiController
       worker.start();
    }
 
-   private void shareNeuLaden(final boolean komplettNeu)
+   private void shareNeuLaden()
    {
       sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
       sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
@@ -567,22 +568,32 @@ public class ShareController extends GuiController
          {
             try
             {
-               ShareNode rootNode = sharePanel.getShareModel().getRootNode();
+               return new ArrayList<Share>(AppleJuiceClient.getAjFassade().getShare(true).values());
+            }
+            catch(Exception e)
+            {
+               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+               return null;
+            }
+         }
 
-               if(komplettNeu)
+         public void finished()
+         {
+            try
+            {
+               @SuppressWarnings("unchecked")
+               List<Share> shares = (List<Share>) get();
+               if(shares == null)
                {
-                  rootNode.removeAllChildren();
+                  return;
                }
-
-               Map<Integer, Share> shares = AppleJuiceClient.getAjFassade().getShare(true);
-
+               sharePanel.getShareModel().setShares(shares);
                anzahlDateien = 0;
                double size = 0;
 
                prio = 0;
-               for(Share curShare : shares.values())
+               for(Share curShare : shares)
                {
-                  rootNode.addChild(curShare);
                   size += curShare.getSize();
                   if(curShare.getPrioritaet() > 1)
                   {
@@ -610,16 +621,12 @@ public class ShareController extends GuiController
             {
                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
-
-            return null;
-         }
-
-         public void finished()
-         {
-            sharePanel.getShareTable().updateUI();
-            sharePanel.getBtnPrioritaetAufheben().setEnabled(true);
-            sharePanel.getBtnPrioritaetSetzen().setEnabled(true);
-            sharePanel.getBtnNeuLaden().setEnabled(true);
+            finally
+            {
+               sharePanel.getBtnPrioritaetAufheben().setEnabled(true);
+               sharePanel.getBtnPrioritaetSetzen().setEnabled(true);
+               sharePanel.getBtnNeuLaden().setEnabled(true);
+            }
          }
       };
 

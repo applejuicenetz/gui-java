@@ -10,6 +10,8 @@ import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Collection;
+import de.applejuicenet.client.fassade.entity.Share;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareTableModel.java,v 1.1 2009/01/27 07:55:55 maj0r Exp $
@@ -35,6 +37,17 @@ public class ShareTableModel extends AbstractTreeTableModel
    public ShareTableModel(ShareNode rootNode)
    {
       super(rootNode);
+   }
+
+   public void setShares(Collection<Share> shares)
+   {
+      ShareNode newRoot = new ShareNode(null, null);
+      for(Share share : shares)
+      {
+         newRoot.addChild(share);
+      }
+      root = newRoot;
+      fireTreeStructureChanged(this, new Object[]{root}, null, null);
    }
 
    public int getChildCount(Object node)

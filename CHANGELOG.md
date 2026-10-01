@@ -5,6 +5,7 @@
 - [red171] Dateien über 2 GiB können korrekt behandelt werden
 - Core- und XML-Port erlauben Werte bis 65535; ungültige Eingaben werden zurückgesetzt (#17).
 - AJL-Dateien werden als UTF-8 gespeichert und gelesen; HTML-Linklisten deklarieren UTF-8 (#16).
+- Shareanzeige übernimmt vollständige Snapshots, entfernt gelöschte Dateien und aktualisiert den Verzeichnisbaum korrekt (#14).
 
 **0.85.3**
 - [red171] Zeige Core Version auch an, wenn die News einen 404 liefern (z.B. wenn die News URL nicht erreichbar ist)

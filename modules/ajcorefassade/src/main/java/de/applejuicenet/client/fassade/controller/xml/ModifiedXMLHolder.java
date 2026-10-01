@@ -75,7 +75,6 @@ public class ModifiedXMLHolder extends DefaultHandler
    private boolean                            downloadSourceEvent;
    private DataPropertyChangeInformer         downloadPropertyChangeInformer;
    private ApplejuiceFassade                  ajFassade;
-   private Map<Integer, Share>                shareMap                       = null;
    private SearchEntryDO                      tmpSearchEntry                 = null;
    private Set<SearchEntryDO>                 searchEntriesToDo              = new HashSet<SearchEntryDO>();
    private Set<DownloadSource>                downloadSourcesToDo            = new HashSet<DownloadSource>();
@@ -389,12 +388,7 @@ public class ModifiedXMLHolder extends DefaultHandler
 
       checkUploadMap((UploadDO) uploadDO, attributes);
       attributes.clear();
-      if(shareMap == null)
-      {
-         shareMap = ajFassade.getShare(false);
-      }
-
-      Share shareDO = shareMap.get(uploadDO.getShareFileID());
+      Share shareDO = ajFassade.getShare(false).get(uploadDO.getShareFileID());
 
       if(shareDO != null)
       {

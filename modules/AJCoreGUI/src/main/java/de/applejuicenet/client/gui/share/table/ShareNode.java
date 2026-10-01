@@ -173,6 +173,7 @@ public class ShareNode implements Node
          {
             childNode = new ShareNode(this, shareToAdd);
             children.put(aKey, childNode);
+            sortedChildren = null;
             childNode.addChild(shareToAdd);
          }
       }

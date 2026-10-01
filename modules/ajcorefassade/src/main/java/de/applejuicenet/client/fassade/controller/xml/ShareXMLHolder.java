@@ -43,6 +43,7 @@ public class ShareXMLHolder extends DefaultHandler
 {
    private final CoreConnectionSettingsHolder coreHolder;
    private Map<Integer, Share>                shareMap;
+   private Map<Integer, Share>                parsedShares;
    private String                             xmlCommand;
    private XMLReader                          xr = null;
 
@@ -105,11 +106,11 @@ public class ShareXMLHolder extends DefaultHandler
 
       ShareDO shareDO = null;
 
-      shareDO = (ShareDO) shareMap.get(id);
+      shareDO = (ShareDO) parsedShares.get(id);
       if(shareDO == null)
       {
          shareDO = new ShareDO(id);
-         shareMap.put(id, shareDO);
+         parsedShares.put(id, shareDO);
       }
 
       length = attr.getLength();
@@ -160,26 +161,28 @@ public class ShareXMLHolder extends DefaultHandler
       }
    }
 
-   public void update()
+   public synchronized void update()
    {
       try
       {
          String xmlString = getXMLString();
 
-         if(shareMap == null)
-         {
-            shareMap = new HashMap<Integer, Share>();
-         }
-
+         parsedShares = new HashMap<Integer, Share>();
          xr.parse(new InputSource(new StringReader(xmlString)));
+         // share.xml is a complete snapshot: deleted files must disappear.
+         shareMap = parsedShares;
       }
       catch(Exception e)
       {
          throw new RuntimeException(e);
       }
+      finally
+      {
+         parsedShares = null;
+      }
    }
 
-   public Map<Integer, Share> getShare()
+   public synchronized Map<Integer, Share> getShare()
    {
       update();
       return shareMap;
