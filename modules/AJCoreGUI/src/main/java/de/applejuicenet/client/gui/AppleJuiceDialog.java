@@ -17,17 +17,14 @@ import de.applejuicenet.client.fassade.shared.NetworkInfo;
 import de.applejuicenet.client.gui.about.AboutDialog;
 import de.applejuicenet.client.gui.controller.*;
 import de.applejuicenet.client.gui.download.DownloadController;
-import de.applejuicenet.client.gui.download.DownloadPanel;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.memorymonitor.MemoryMonitorDialog;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.gui.options.OptionsDialog;
 import de.applejuicenet.client.gui.server.ServerPanel;
 import de.applejuicenet.client.gui.share.ShareController;
-import de.applejuicenet.client.gui.share.SharePanel;
 import de.applejuicenet.client.gui.tray.TrayLoader;
 import de.applejuicenet.client.gui.upload.UploadController;
-import de.applejuicenet.client.gui.upload.UploadPanel;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
@@ -95,6 +92,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
     private JMenuItem menuItemCheckUpdate = new JMenuItem();
     private JMenuItem menuItemCoreBeenden = new JMenuItem();
     private JMenuItem menuItemUeber = new JMenuItem();
+    private JMenuItem menuItemBeenden = new JMenuItem();
     private JMenuItem menuItemDeaktivieren = new JMenuItem();
     private JMenuItem menuItemAktivieren = new JMenuItem();
     private JMenuItem popupOptionenMenuItem = new JMenuItem();
@@ -569,24 +567,12 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             String sprachText = LanguageSelector.getInstance().getFirstAttrbuteByTagName("Languageinfo.name");
 
             OptionsManagerImpl.getInstance().setSprache(sprachText);
-            int[] downloadWidths = ((DownloadPanel) DownloadController.getInstance().getComponent()).getDownloadColumnWidths();
-            int[] downloadSourcesWidths = ((DownloadPanel) DownloadController.getInstance().getComponent()).getDownloadSourcesColumnWidths();
-            int[] uploadWidths = ((UploadPanel) UploadController.getInstance().getComponent()).getColumnActiveWidths();
-            int[] uploadWaitingWidths = ((UploadPanel) UploadController.getInstance().getComponent()).getColumnWaitingWidths();
-            int[] serverWidths = ServerPanel.getInstance().getColumnWidths();
-            int[] shareWidths = ((SharePanel) ShareController.getInstance().getComponent()).getColumnWidths();
             Dimension dim = AppleJuiceDialog.getApp().getSize();
             Point p = AppleJuiceDialog.getApp().getLocationOnScreen();
             PositionManager pm = PositionManagerImpl.getInstance();
 
             pm.setMainXY(p);
             pm.setMainDimension(dim);
-            pm.setDownloadWidths(downloadWidths);
-            pm.setDownloadSourcesWidths(downloadSourcesWidths);
-            pm.setUploadWidths(uploadWidths);
-            pm.setUploadWaitingWidths(uploadWaitingWidths);
-            pm.setServerWidths(serverWidths);
-            pm.setShareWidths(shareWidths);
             pm.save();
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
@@ -693,10 +679,12 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                 }
             });
             menuItemUeber.addActionListener(e -> showAboutDialog());
+            menuItemBeenden.addActionListener(e -> closeDialog(null));
             optionenMenu.add(menuItemOptionen);
             optionenMenu.add(menuItemDateiliste);
             optionenMenu.add(menuItemCheckUpdate);
             optionenMenu.add(menuItemUeber);
+            optionenMenu.add(menuItemBeenden);
             menuBar.add(optionenMenu);
 
             sprachMenu = new JMenu();
@@ -1000,6 +988,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             menuItemCoreBeenden.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.corebeenden"));
             menuItemCoreBeenden.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.corebeendenhint"));
             menuItemUeber.setText(languageSelector.getFirstAttrbuteByTagName("mainform.aboutbtn.caption"));
+            menuItemBeenden.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.beenden"));
             menuItemCheckUpdate.setText(languageSelector.getFirstAttrbuteByTagName("mainform.checkupdate.caption"));
             menuItemCheckUpdate.setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.checkupdate.hint"));
             optionenMenu.setText(languageSelector.getFirstAttrbuteByTagName("javagui.menu.extras"));

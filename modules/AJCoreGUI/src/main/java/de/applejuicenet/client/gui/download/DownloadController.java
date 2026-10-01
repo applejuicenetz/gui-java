@@ -18,6 +18,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.controller.TableColumnSettings;
 import de.applejuicenet.client.gui.download.table.DownloadSourcesTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
@@ -850,6 +851,8 @@ public class DownloadController extends GuiController {
 
                 downloadPanel.getDownloadTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 downloadPanel.getDownloadSourceTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                TableColumnSettings.install(downloadPanel.getDownloadTable(), "download", columnsDownload);
+                TableColumnSettings.install(downloadPanel.getDownloadSourceTable(), "downloadsources", columnsDownloadSources);
                 int loc = (int) ((downloadPanel.getSplitPane().getHeight() - downloadPanel.getSplitPane().getDividerSize() -
                         downloadPanel.getPowerDownloadPanel().getPreferredSize().height));
 

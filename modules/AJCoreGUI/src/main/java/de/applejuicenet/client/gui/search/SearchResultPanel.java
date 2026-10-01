@@ -15,6 +15,7 @@ import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.controller.TableColumnSettings;
 import de.applejuicenet.client.gui.search.table.SearchEntryIconRenderer;
 import de.applejuicenet.client.gui.search.table.SearchEntrySizeRenderer;
 import de.applejuicenet.client.gui.search.table.SearchTableModel;
@@ -228,6 +229,8 @@ public class SearchResultPanel extends JPanel {
         }
 
         JTableHeader header = searchResultTable.getTableHeader();
+        searchResultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        TableColumnSettings.install(searchResultTable, "search", tableColumns);
 
         SortMouseAdapter sortMouseAdapter = new SortMouseAdapter(header, renderer);
 

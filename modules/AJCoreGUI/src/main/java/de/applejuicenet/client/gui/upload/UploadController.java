@@ -15,6 +15,7 @@ import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.controller.TableColumnSettings;
 import de.applejuicenet.client.shared.ReleaseInfo;
 
 import javax.swing.*;
@@ -359,6 +360,8 @@ public class UploadController extends GuiController {
 
                 uploadPanel.getUploadActiveTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 uploadPanel.getUploadWaitingTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                TableColumnSettings.install(uploadPanel.getUploadActiveTable(), "upload", columnsActive);
+                TableColumnSettings.install(uploadPanel.getUploadWaitingTable(), "uploadwaiting", columnsWaiting);
                 if (null != uploadActiveSort) {
                     for (MouseListener curMl : uploadPanel.getUploadActiveTable().getTableHeader().getMouseListeners()) {
                         if (curMl instanceof HeaderListener) {

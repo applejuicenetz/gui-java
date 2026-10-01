@@ -1,0 +1,119 @@
+package de.applejuicenet.client.gui.controller;
+
+import org.junit.Test;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.table.TableColumn;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
+
+public class TableColumnSettingsTest {
+    @Test
+    public void preservesDifferentLayoutsAcrossTabChangesAndReload() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JFrame frame = new JFrame();
+            try {
+                Properties settings = new Properties();
+                JTable downloads = table();
+                JTable uploads = table();
+                JTable untouched = table();
+                settings.setProperty("share_column0_width", "247");
+                install(downloads, "download", settings);
+                install(uploads, "upload", settings);
+                install(untouched, "share", settings);
+                JTabbedPane tabs = new JTabbedPane();
+                tabs.addTab("Downloads", new JScrollPane(downloads));
+                tabs.addTab("Uploads", new JScrollPane(uploads));
+                tabs.addTab("Share", new JScrollPane(untouched));
+                frame.add(tabs);
+                frame.setSize(640, 400);
+                frame.setVisible(true);
+                resizeColumn(downloads, 0, 231);
+                downloads.getColumnModel().moveColumn(0, 2);
+                tabs.setSelectedIndex(1);
+                resizeColumn(uploads, 0, 173);
+                uploads.getColumnModel().moveColumn(2, 0);
+                downloads.getColumnModel().getColumn(2).setPreferredWidth(75);
+
+                StringWriter writer = new StringWriter();
+                settings.store(writer, null);
+                Properties reloaded = new Properties();
+                reloaded.load(new StringReader(writer.toString()));
+                JTable restoredDownloads = table();
+                JTable restoredUploads = table();
+                JTable restoredShare = table();
+                install(restoredDownloads, "download", reloaded);
+                install(restoredUploads, "upload", reloaded);
+                install(restoredShare, "share", reloaded);
+                assertEquals(231, restoredDownloads.getColumnModel().getColumn(2).getPreferredWidth());
+                assertEquals(0, restoredDownloads.getColumnModel().getColumn(2).getModelIndex());
+                assertEquals(173, restoredUploads.getColumnModel().getColumn(1).getPreferredWidth());
+                assertEquals(2, restoredUploads.getColumnModel().getColumn(0).getModelIndex());
+                assertEquals(247, restoredShare.getColumnModel().getColumn(0).getPreferredWidth());
+            } catch (Exception exception) {
+                throw new AssertionError(exception);
+            } finally {
+                frame.dispose();
+            }
+        });
+    }
+
+    @Test
+    public void keepsWidthsAssociatedWithHiddenModelColumns() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            Properties settings = new Properties();
+            settings.setProperty("download_column0_width", "200");
+            settings.setProperty("download_column1_width", "160");
+            settings.setProperty("download_column2_width", "90");
+            settings.setProperty("download_column0_index", "1");
+            settings.setProperty("download_column2_index", "0");
+            JTable table = table();
+            TableColumn[] columns = columns(table);
+            table.removeColumn(columns[1]);
+            TableColumnSettings.install(table, columns,
+                    key -> Integer.parseInt(settings.getProperty("download_" + key, "-1")),
+                    (key, value) -> settings.setProperty("download_" + key, Integer.toString(value)));
+            assertEquals(2, table.getColumnCount());
+            assertEquals(2, table.getColumnModel().getColumn(0).getModelIndex());
+            assertEquals(200, columns[0].getPreferredWidth());
+            assertEquals(160, columns[1].getPreferredWidth());
+            assertEquals(90, columns[2].getPreferredWidth());
+        });
+    }
+
+    private static JTable table() {
+        JTable table = new JTable(new Object[0][3], new String[]{"Name", "Size", "Status"});
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        return table;
+    }
+
+    private static void resizeColumn(JTable table, int index, int width) {
+        TableColumn column = table.getColumnModel().getColumn(index);
+        table.getTableHeader().setResizingColumn(column);
+        column.setWidth(width);
+        table.setSize(table.getColumnModel().getTotalColumnWidth(), table.getHeight());
+        table.doLayout();
+        table.getTableHeader().setResizingColumn(null);
+    }
+
+    private static TableColumn[] columns(JTable table) {
+        TableColumn[] columns = new TableColumn[table.getColumnCount()];
+        for (int index = 0; index < columns.length; index++) {
+            columns[index] = table.getColumnModel().getColumn(index);
+        }
+        return columns;
+    }
+
+    private static void install(JTable table, String view, Properties settings) {
+        TableColumnSettings.install(table, columns(table),
+                key -> Integer.parseInt(settings.getProperty(view + "_" + key, "-1")),
+                (key, value) -> settings.setProperty(view + "_" + key, Integer.toString(value)));
+    }
+}

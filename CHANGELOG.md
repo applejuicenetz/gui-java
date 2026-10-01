@@ -1,7 +1,9 @@
 # Changelog
 
-**0.86.0**
+**0.86.1**
 
+- [red171] Extras-Menü um „Beenden“ unter „Über“ ergänzt; GUI speichert Einstellungen und beendet sich
+- [red171] Spaltenbreiten und Reihenfolge pro View gespeichert; unbesuchte Tabs überschreiben keine Einstellungen, Suchergebnisse übernehmen ihr Layout (#6)
 - [red171] Darcula durch FlatLaf 3.7.2 ersetzt; Darkmode bleibt unter Java 25 ohne Zugriff auf interne Swing-Klassen nutzbar
 - [red171] Temp- und Incoming-Felder in den Optionen übernehmen die Theme-Farben statt festem Weiß
 - [red171] VLC-Feld, Ratio-Feld (PWDL) und SpeedGraph-Hintergrund nutzen standardmäßig die Theme-Farbe
@@ -11,7 +13,6 @@
 - [red171] LogViewer: Button "Alle Logs löschen" unten links; DEBUG-Einträge für das Löschen
 - [red171] Tray-Einzelklick schaltet Fenster um; macOS-Kontextmenü nutzt eigenen Fenster-Owner und unterstützt Control-Klick
 - [red171] Linux-Tray mit libtray wie im Collector integriert
-
 - [red171] AJL-Dateien an laufende GUI übergeben (#13)
 - [red171] GitHub Actions und Maven-Abhängigkeiten aktualisiert, CodeQL entfernt
 - [red171] Java 25 und sechs OS-Pakete mit Laufzeit; ZIP bleibt erhalten

@@ -20,6 +20,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.controller.TableColumnSettings;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.server.table.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.server.table.ServerTableDateCellRenderer;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -422,6 +424,11 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                 }
 
                 serverTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                TableColumn[] columns = new TableColumn[columnCount];
+                for (int index = 0; index < columnCount; index++) {
+                    columns[index] = headerModel.getColumn(index);
+                }
+                TableColumnSettings.install(serverTable, "server", columns);
             }
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);

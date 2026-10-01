@@ -29,7 +29,9 @@ import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -51,6 +53,7 @@ import java.util.Set;
  * @author Maj0r [aj@tkl-soft.de]
  */
 public class PropertiesManager implements OptionsManager, PositionManager, ProxyManager {
+    private final Map<String, Integer> tableColumnSettings = new HashMap<>();
     private static PropertiesManager instance = null;
     private static final String PROPERTIES_ERROR = "Fehler beim Zugriff auf die ajgui.properties. Die Datei wird neu erstellt.";
     private static final String PROPERTIES_ERROR_MESSAGE = "ajgui.properties neu erstellt";
@@ -112,6 +115,9 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
     private void saveFile() {
         try {
+            for (Map.Entry<String, Integer> entry : tableColumnSettings.entrySet()) {
+                propertyHandler.put(entry.getKey(), entry.getValue());
+            }
             propertyHandler.save();
         } catch (IllegalArgumentException e) {
             AppleJuiceDialog.rewriteProperties = true;
@@ -827,6 +833,14 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         }
     }
 
+    int getTableColumnSetting(String key) {
+        return tableColumnSettings.getOrDefault(key, propertyHandler.getAsInt(key, -1));
+    }
+
+    void setTableColumnSetting(String key, int value) {
+        tableColumnSettings.put(key, value);
+    }
+
     public void save() {
         try {
             propertyHandler.put("options_location_x", mainXY.x);
@@ -902,6 +916,10 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             for (int i = 0; i < uploadWaitingIndex.length; i++) {
                 propertyHandler.put("options_columns_uploadwaiting_column" + i + "_index", uploadWaitingIndex[i]);
+            }
+
+            for (int i = 0; i < uploadIndex.length; i++) {
+                propertyHandler.put("options_columns_upload_column" + i + "_index", uploadIndex[i]);
             }
 
             saveFile();

@@ -16,7 +16,7 @@
     <url type="faq">https://applejuicenetz.github.io/faq/</url>
     <url type="bugtracker">https://github.com/applejuicenetz/gui-java/issues</url>
     <releases>
-        <release version="0.86.0" type="stable" date="2026-10-01"/>
+        <release version="0.86.1" type="stable" date="2026-10-01"/>
     </releases>
     <categories>
         <category>Network</category>

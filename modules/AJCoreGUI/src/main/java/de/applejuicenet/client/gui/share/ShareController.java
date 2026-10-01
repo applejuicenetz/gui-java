@@ -20,6 +20,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
+import de.applejuicenet.client.gui.controller.TableColumnSettings;
 import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.gui.share.tree.DirectoryNode;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
@@ -29,6 +30,7 @@ import de.applejuicenet.client.shared.SwingWorker;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -661,6 +663,12 @@ public class ShareController extends GuiController
                   headerModel.getColumn(i).setPreferredWidth(sharePanel.getShareTable().getWidth() / columnCount);
                }
             }
+            TableColumn[] columns = new TableColumn[columnCount];
+            for(int index = 0; index < columnCount; index++)
+            {
+               columns[index] = headerModel.getColumn(index);
+            }
+            TableColumnSettings.install(sharePanel.getShareTable(), "share", columns);
          }
 
          if(!treeInitialisiert)
