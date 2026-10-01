@@ -46,7 +46,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -1226,10 +1227,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
     }
 
     public void importAjl(File file, String targetDir) {
-        BufferedReader reader = null;
-
-        try {
-            reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
             String line = "";
 
             while ((line = reader.readLine()) != null) {

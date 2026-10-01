@@ -25,7 +25,8 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.*;
 import java.io.File;
-import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/DateiListeDialog.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
@@ -190,7 +191,7 @@ public class DateiListeDialog extends JDialog {
                         file = new File(file.getPath() + ".html");
                     }
 
-                    text.append("<html><head><title>appleJuice Linklist</title></head><body bgcolor=#000080 text=#ffffff " +
+                    text.append("<html><head><meta charset=\"UTF-8\"><title>appleJuice Linklist</title></head><body bgcolor=#000080 text=#ffffff " +
                             "link=#ffffff vlink=#ffffff><table align=center border=0><tr><td><b>appleJuice Dateien</b></td></tr><br>" +
                             "\r\n");
                     Share[] sortedShareDOs = sortShares(share);
@@ -222,10 +223,7 @@ public class DateiListeDialog extends JDialog {
                 }
 
                 try {
-                    FileWriter fileWriter = new FileWriter(file);
-
-                    fileWriter.write(text.toString());
-                    fileWriter.close();
+                    Files.writeString(file.toPath(), text.toString(), StandardCharsets.UTF_8);
                 } catch (Exception ex) {
                     logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
                 }
