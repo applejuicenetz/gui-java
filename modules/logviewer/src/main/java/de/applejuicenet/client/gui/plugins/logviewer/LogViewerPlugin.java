@@ -48,7 +48,10 @@ public class LogViewerPlugin extends PluginConnector {
             list.setCellRenderer(new FileNameListCellRenderer());
             JButton deleteAllButton = new JButton("Alle Logs löschen");
 
-            deleteAllButton.addActionListener(e -> deleteAllLogfiles());
+            deleteAllButton.addActionListener(e -> {
+                logger.debug("LogViewer: Button 'Alle Logs loeschen' ausgeloest");
+                deleteAllLogfiles();
+            });
             JPanel listPanel = new JPanel(new BorderLayout());
 
             listPanel.add(new JScrollPane(list), BorderLayout.CENTER);
@@ -82,6 +85,7 @@ public class LogViewerPlugin extends PluginConnector {
             return;
         }
 
+        logger.debug("LogViewer: Kontextmenue angefordert bei ({}, {})", event.getX(), event.getY());
         int index = list.locationToIndex(event.getPoint());
 
         if (index < 0 || !list.getCellBounds(index, index).contains(event.getPoint())) {
@@ -89,6 +93,7 @@ public class LogViewerPlugin extends PluginConnector {
         }
 
         list.setSelectedIndex(index);
+        logger.debug("LogViewer: Kontextmenue fuer Eintrag {}", index);
         File logFile = (File) listModel.getElementAt(index);
         JPopupMenu popup = new JPopupMenu();
         JMenuItem deleteItem = new JMenuItem("Löschen");
@@ -99,20 +104,27 @@ public class LogViewerPlugin extends PluginConnector {
     }
 
     private void deleteLogfile(File logFile) {
+        logger.debug("LogViewer: Loeschen angeklickt fuer {}", logFile.getAbsolutePath());
         int answer = JOptionPane.showConfirmDialog(this, "Logdatei \"" + logFile.getName() + "\" wirklich löschen?",
                                                    "Logdatei löschen", JOptionPane.YES_NO_OPTION,
                                                    JOptionPane.WARNING_MESSAGE);
+
+        logger.debug("LogViewer: Rueckfrage beantwortet mit {} (YES={})", answer, JOptionPane.YES_OPTION);
 
         if (answer != JOptionPane.YES_OPTION) {
             return;
         }
 
         try {
+            logger.debug("LogViewer: loesche {} (existiert={}, schreibbar={}, Ordner schreibbar={})",
+                         logFile.getAbsolutePath(), logFile.exists(), logFile.canWrite(),
+                         logFile.getParentFile() != null && logFile.getParentFile().canWrite());
             Files.delete(logFile.toPath());
+            logger.debug("LogViewer: geloescht, existiert noch={}", logFile.exists());
             listModel.remove(logFile);
             logPane.setText("");
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error("LogViewer: Loeschen fehlgeschlagen: " + logFile.getAbsolutePath(), e);
             JOptionPane.showMessageDialog(this, "Logdatei konnte nicht gelöscht werden:\n" + e.getMessage(),
                                           "Logdatei löschen", JOptionPane.ERROR_MESSAGE);
         }
@@ -121,6 +133,8 @@ public class LogViewerPlugin extends PluginConnector {
     private void deleteAllLogfiles() {
         File[] logFiles = listModel.getFiles();
 
+        logger.debug("LogViewer: Alle Logs loeschen angeklickt, {} Eintraege, Ordner {}", logFiles.length, path);
+
         if (logFiles.length == 0) {
             return;
         }
@@ -128,6 +142,8 @@ public class LogViewerPlugin extends PluginConnector {
         int answer = JOptionPane.showConfirmDialog(this, "Alle " + logFiles.length + " Logdateien wirklich löschen?",
                                                    "Alle Logs löschen", JOptionPane.YES_NO_OPTION,
                                                    JOptionPane.WARNING_MESSAGE);
+
+        logger.debug("LogViewer: Rueckfrage beantwortet mit {} (YES={})", answer, JOptionPane.YES_OPTION);
 
         if (answer != JOptionPane.YES_OPTION) {
             return;
@@ -138,13 +154,15 @@ public class LogViewerPlugin extends PluginConnector {
         for (File logFile : logFiles) {
             try {
                 Files.delete(logFile.toPath());
+                logger.debug("LogViewer: geloescht {}", logFile.getName());
                 listModel.remove(logFile);
             } catch (Exception e) {
                 failed++;
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                logger.error("LogViewer: Loeschen fehlgeschlagen: " + logFile.getAbsolutePath(), e);
             }
         }
 
+        logger.debug("LogViewer: Alle loeschen fertig, fehlgeschlagen={}, verbleibend={}", failed, listModel.getSize());
         logPane.setText("");
 
         if (failed > 0) {
@@ -169,6 +187,8 @@ public class LogViewerPlugin extends PluginConnector {
 
     private void readLogDir() {
         File logPath = new File(path);
+
+        logger.debug("LogViewer: lese Logordner {} (Ordner={})", logPath.getAbsolutePath(), logPath.isDirectory());
 
         if (!logPath.isDirectory()) {
             return;
