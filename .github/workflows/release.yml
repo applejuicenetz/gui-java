@@ -45,7 +45,7 @@ jobs:
           server-id: github
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.x'
 
@@ -107,7 +107,7 @@ jobs:
           server-id: github
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.x'
       - name: Install Flatpak builder
@@ -167,7 +167,7 @@ jobs:
           server-id: github
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.x'
       - name: Build portable ZIP
