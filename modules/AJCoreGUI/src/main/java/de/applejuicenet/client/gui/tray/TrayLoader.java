@@ -17,7 +17,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.ByteArrayOutputStream;
 import java.awt.image.BufferedImage;
@@ -30,6 +29,7 @@ public class TrayLoader implements AutoCloseable {
     private TrayIcon trayIcon;
     private Tray nativeTray;
     private SwingTrayMenu nativeMenu;
+    private SwingTrayPopup awtPopup;
     private AppleJuiceDialog dialog;
     private JMenuItem showHideItem;
     private Icon zeigenIcon;
@@ -56,23 +56,11 @@ public class TrayLoader implements AutoCloseable {
         }
         trayIcon = new TrayIcon(icon.getImage(), title);
         trayIcon.setImageAutoSize(true);
-        trayIcon.addMouseListener(new MouseAdapter() {
-            @Override public void mouseReleased(MouseEvent event) {
-                SwingUtilities.invokeLater(() -> {
-                    updateVisibilityLabel();
-                    if (event.getButton() == MouseEvent.BUTTON1 && event.getClickCount() == 2) {
-                        showHideItem.doClick();
-                    } else if (event.getButton() == MouseEvent.BUTTON3) {
-                        if (popup.isVisible()) popup.setVisible(false);
-                        else {
-                            popup.setLocation(event.getXOnScreen(), event.getYOnScreen());
-                            popup.setInvoker(popup);
-                            popup.setVisible(true);
-                        }
-                    }
-                });
-            }
-        });
+        awtPopup = new SwingTrayPopup(popup);
+        trayIcon.addMouseListener(new TrayMouseListener(() -> {
+            updateVisibilityLabel();
+            showHideItem.doClick();
+        }, this::showTrayPopup));
         try {
             SystemTray.getSystemTray().add(trayIcon);
             return true;
@@ -81,6 +69,11 @@ public class TrayLoader implements AutoCloseable {
             close();
             return false;
         }
+    }
+
+    private void showTrayPopup(MouseEvent event) {
+        updateVisibilityLabel();
+        if (awtPopup != null) awtPopup.show(event.getXOnScreen(), event.getYOnScreen());
     }
 
     private boolean createNativeTray(String title, ImageIcon icon, JPopupMenu popup) {
@@ -137,10 +130,12 @@ public class TrayLoader implements AutoCloseable {
 
     @Override public void close() {
         if (dialog != null) dialog.removeComponentListener(visibilityListener);
+        if (awtPopup != null) awtPopup.close();
         if (nativeMenu != null) nativeMenu.close();
         if (nativeTray != null) nativeTray.close();
         if (trayIcon != null && SystemTray.isSupported()) SystemTray.getSystemTray().remove(trayIcon);
         nativeMenu = null;
+        awtPopup = null;
         nativeTray = null;
         trayIcon = null;
     }

@@ -124,7 +124,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
         hint2.setToolTipText(tooltipp);
 
         openProgram.setEditable(false);
-        openProgram.setBackground(Color.WHITE);
         openProgram.setText(om.getOpenProgram());
         openProgram.ignoreInvalidRules(false);
         Icon icon2 = im.getIcon("folderopen");

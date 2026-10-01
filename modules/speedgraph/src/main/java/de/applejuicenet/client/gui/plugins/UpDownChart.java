@@ -619,12 +619,17 @@ public class UpDownChart extends JPanel implements MouseListener, MouseMotionLis
 
     }
 
+    public static Color defaultBackground() {
+        Color background = UIManager.getColor("Panel.background");
+        return background == null ? Color.white : background;
+    }
+
     private void readProperies() {
         try {
             upCol = parent.getPropertyColor("UploadColor", Color.red);
             downCol = parent.getPropertyColor("DownloadColor", Color.blue);
 
-            BGStart = parent.getPropertyColor("GradientStart", Color.white);
+            BGStart = parent.getPropertyColor("GradientStart", UpDownChart.defaultBackground());
             BGEnd = parent.getPropertyColor("GradientEnd", Color.darkGray);
 
             if (!Boolean.parseBoolean(parent.getProperties().getProperty("UseGradient")))

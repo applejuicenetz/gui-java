@@ -246,7 +246,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                     }
                 }
 
-                lookAndFeels.add(new LookAFeel("Darcula", "com.bulenkov.darcula.DarculaLaf"));
+                lookAndFeels.add(new LookAFeel("Darcula", "com.formdev.flatlaf.FlatDarculaLaf"));
 
             } catch (Exception e) {
                 AppleJuiceDialog.rewriteProperties = true;

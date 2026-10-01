@@ -11,6 +11,8 @@ public class FileModificationDateComparator implements Comparator<File>
 {
    public int compare(File o1, File o2)
    {
-      return Long.valueOf(o2.lastModified()).compareTo(Long.valueOf(o1.lastModified()));
+      int byDate = Long.compare(o2.lastModified(), o1.lastModified());
+
+      return byDate != 0 ? byDate : o1.getName().compareTo(o2.getName());
    }
 }

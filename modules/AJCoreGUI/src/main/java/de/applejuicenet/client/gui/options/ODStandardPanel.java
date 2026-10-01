@@ -104,9 +104,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         port.setDocument(new NumberInputVerifier());
         xmlPort.setDocument(new NumberInputVerifier());
         temp.setEditable(false);
-        temp.setBackground(Color.WHITE);
         incoming.setEditable(false);
-        incoming.setBackground(Color.WHITE);
         port.addFocusListener(new PortFocusListener());
         xmlPort.addFocusListener(new XmlPortFocusListener());
         nick.addFocusListener(new NickFocusListener());

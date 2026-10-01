@@ -2,89 +2,103 @@
 
 **0.86.0**
 
+- [red171] Darcula durch FlatLaf 3.7.2 ersetzt; Darkmode bleibt unter Java 25 ohne Zugriff auf interne Swing-Klassen nutzbar
+- [red171] Temp- und Incoming-Felder in den Optionen übernehmen die Theme-Farben statt festem Weiß
+- [red171] VLC-Feld in den Optionen und SpeedGraph-Hintergrund nutzen standardmäßig die Theme-Farbe
+- [red171] LogViewer: Rechtsklick auf eine Logdatei bietet Löschen mit Rückfrage
+- [red171] LogViewer: Button "Alle Logs löschen" unten links
+- [red171] Tray-Einzelklick schaltet Fenster um; macOS-Kontextmenü nutzt eigenen Fenster-Owner und unterstützt Control-Klick
+- [red171] Linux-Tray mit libtray wie im Collector integriert
+
+- [red171] AJL-Dateien an laufende GUI übergeben (#13)
+- [red171] GitHub Actions und Maven-Abhängigkeiten aktualisiert, CodeQL entfernt
 - [red171] Java 25 und sechs OS-Pakete mit Laufzeit; ZIP bleibt erhalten
 - [red171] Native Launcher übernehmen ajfsp-Links und AJL-Dateien
-- [red171] Linux-Tray mit libtray wie im Collector integriert
-- [red171] GitHub Actions und Maven-Abhängigkeiten aktualisiert, CodeQL entfernt
-
 - [red171] Dateien über 2 GiB können korrekt behandelt werden
-- Core- und XML-Port erlauben Werte bis 65535; ungültige Eingaben werden zurückgesetzt (#17).
-- AJL-Dateien werden als UTF-8 gespeichert und gelesen; HTML-Linklisten deklarieren UTF-8 (#16).
-- Shareanzeige übernimmt vollständige Snapshots, entfernt gelöschte Dateien und aktualisiert den Verzeichnisbaum korrekt (#14).
-- AJL-Doppelklick bei laufender GUI funktioniert (#13).
+- [red171] Ports bis 65535 erlaubt (#17)
+- [red171] AJL-Dateien als UTF-8 gespeichert und gelesen (#16)
+- [red171] Shareanzeige nach Dateiänderungen korrekt aktualisiert (#14)
 
 **0.85.3**
-- [red171] Zeige Core Version auch an, wenn die News einen 404 liefern (z.B. wenn die News URL nicht erreichbar ist)
+
+- [red171] Zeige Core-Version auch an, wenn die News einen HTTP-Status `404` liefern (z. B. wenn die News-URL nicht erreichbar ist)
 
 **0.85.2**
-- [red171] erzeuge den `Splashscreen` direkt transparent ohne ScreenCapture (erzeugt keine ScreenShare Abfrage mehr)
+
+- [red171] Erzeuge den Splashscreen direkt transparent ohne Bildschirmaufnahme (erzeugt keine Abfrage zur Bildschirmfreigabe mehr)
 
 **0.85.1**
-- [red171] erlaube `%7C` (`|`) in Links auch im "link hinzufügen" Feld
-- [red171] in der `wizard.xml` den `maxdownloads` Wert per default auf `0` gestellt
+
+- [red171] Erlaube `%7C` (`|`) in Links auch im „Link hinzufügen“-Feld
+- [red171] In der `wizard.xml` den `maxdownloads`-Wert standardmäßig auf `0` gestellt
 
 **0.85.0**
-- [meins57] iconpack `modern` zusammengestellt
-- [meins57] neue JavaGUI logos für `modern` erstellt
-- [red171] iconpack `modern` als standard hinzugefügt
-- [red171] `speedgraph` plugin wiederhergestellt
-- [red171] logger `log4j` gegen `logback` ausgetauscht
-- [red171] `ajcorefassade` lib als eigenständiges modul
-- [red171] `tklcontrols` lib als eigenständiges modul
+
+- [meins57] Iconpack `modern` zusammengestellt
+- [meins57] Neue Java-GUI-Logos für `modern` erstellt
+- [red171] Iconpack `modern` als Standard hinzugefügt
+- [red171] `speedgraph`-Plugin wiederhergestellt
+- [red171] Logger `log4j` gegen `logback` ausgetauscht
+- [red171] `ajcorefassade`-Bibliothek als eigenständiges Modul
+- [red171] `tklcontrols`-Bibliothek als eigenständiges Modul
 
 **0.84.2**
-- [red171] `iconpack` Support (siehe [icons](./resources/icons/) Ordner)
-- [red171] `soundpack` Support (siehe [sounds](./resources/sounds/) Ordner)
-- [red171] unter macOS funktioniert nun CMD+V / CMD+C usw.
+
+- [red171] Iconpack-Unterstützung (siehe [icons](./resources/icons/)-Ordner)
+- [red171] Soundpack-Unterstützung (siehe [sounds](./resources/sounds/)-Ordner)
+- [red171] Unter macOS funktioniert nun `Cmd+V` / `Cmd+C` usw.
 
 **0.84.1**
-- [red171] Darkmode via `Darcula` Java `Look and Feel` Theme integriert
-- [red171] die alternativen Skins funktionieren wieder
-- [red171] alle alternativen Skins werden mit installiert 
+
+- [red171] Darkmode über das Java-Look-and-Feel-Theme `Darcula` integriert
+- [red171] Die alternativen Skins funktionieren wieder
+- [red171] Alle alternativen Skins werden mitinstalliert
 - [red171] Sounds funktionieren wieder!
 
 **0.84.0**
-- [red171] Code Basis auf Java 11 angehoben
-- [red171] `ajfsp` URL Handler funktioniert nun unter macOS und Linux
-- [red171] `.ajl` Dateien können direkt mit dem GUI geöffnet/verknüpft werden
-- [red171] das `serverwatcher` plugin wurde entfernt
-- [red171] standard plugins werden jetzt auf allen Plattformen geladen
-- [red171] für macOS wird jetzt ein `.dmg` File erstellt (vereinfacht Installation)
+
+- [red171] Codebasis auf Java 11 angehoben
+- [red171] `ajfsp`-URL-Handler funktioniert nun unter macOS und Linux
+- [red171] `.ajl`-Dateien können direkt mit dem GUI geöffnet/verknüpft werden
+- [red171] Das `serverwatcher`-Plugin wurde entfernt
+- [red171] Standard-Plugins werden jetzt auf allen Plattformen geladen
+- [red171] Für macOS wird jetzt eine `.dmg`-Datei erstellt (vereinfacht die Installation)
 
 **0.83.4**
-- [red171] die URL für die GUI NEWS ist nun manuell in der `ajgui.properties` konfigurierbar (`options_news_url`)
-- [red171] die URL für die Serverliste ist nun manuell in der `ajgui.properties` konfigurierbar (`options_server_list_url`)
-- [red171] die URL für den Update-Server Feed ist nun manuell in der `ajgui.properties` konfigurierbar (`options_update_server_url`)
-- [red171] den Browser Bug bei der Update-Benachrichtigung final behoben ;)
-- [red171] der FAQ link aus dem "Dein Client" Bereich wurde entfernt
+
+- [red171] Die URL für die GUI-News ist nun manuell in der `ajgui.properties` konfigurierbar (`options_news_url`)
+- [red171] Die URL für die Serverliste ist nun manuell in der `ajgui.properties` konfigurierbar (`options_server_list_url`)
+- [red171] Die URL für den Update-Server-Feed ist nun manuell in der `ajgui.properties` konfigurierbar (`options_update_server_url`)
+- [red171] Den Browser-Bug bei der Update-Benachrichtigung final behoben ;)
+- [red171] Der FAQ-Link aus dem „Dein Client“-Bereich wurde entfernt
 
 **0.83.3**
 
-- [red171] import der dekompilierten `tklcontrols`
-- [red171] alte `AjCoreGUI.exe` wiederhergestellt (mehrfach Linkübernahme funktioniert nun wieder!)
+- [red171] Import der dekompilierten `tklcontrols`
+- [red171] Alte `AJCoreGUI.exe` wiederhergestellt (mehrfache Linkübernahme funktioniert nun wieder!)
 
 **0.83.1**
 
-- [red171] neues, zeitgemäßes Icon der ausführbaren Dateien und Trayicon
+- [red171] Neues, zeitgemäßes Icon für die ausführbaren Dateien und das Tray-Icon
 - [red171] Linkübernahme in Browsern auf Basis von Chromium behoben, auch wenn die GUI bereits geöffnet ist
-- [red171] der Release Info Button öffnet nun eine konfigurierte URL mit `ajfsp` Link angehängt
-- [red171] die Konfiguration der Release-Info wird nun ebenfalls im `user.home` gespeichert, außerdem ist der API Pfad konfigurierbar
-- [red171] Im Upload Tab ist jetzt auch Kontext Menü
-- [red171] das IRC Plugin wurde entfernt
-- [red171] für die Update-Überprüfung gibt es nur noch einen an/aus Schalter 
-- [red171] der "neue Version verfügbar" Dialog hat nur noch eine URL und zeigt auf das Github Release
-- [red171] Gui und Plugins werden mit Maven kompiliert, Pakete (leider) noch via `ant` komprimiert
-- [red171] alle GUI Plugins mit Java8 und UTF-8 Encoding neu kompiliert, Sprachdateien mit UTF-8 neu kodiert
+- [red171] Der Release-Info-Button öffnet nun eine konfigurierte URL mit `ajfsp`-Link angehängt
+- [red171] Die Konfiguration der Release-Info wird nun ebenfalls im Verzeichnis `user.home` gespeichert, außerdem ist der API-Pfad konfigurierbar
+- [red171] Im Upload-Tab gibt es jetzt auch ein Kontextmenü
+- [red171] Das IRC-Plugin wurde entfernt
+- [red171] Für die Update-Überprüfung gibt es nur noch einen Ein-/Aus-Schalter
+- [red171] Der „Neue Version verfügbar“-Dialog hat nur noch eine URL und zeigt auf das GitHub-Release
+- [red171] GUI und Plugins werden mit Maven kompiliert, Pakete (leider) noch via `ant` komprimiert
+- [red171] Alle GUI-Plugins mit Java 8 und UTF-8-Kodierung neu kompiliert, Sprachdateien mit UTF-8 neu kodiert
 
 **0.82.1**
 
-- [red171] benutze unter Linux [xdg-open](https://wiki.ubuntuusers.de/xdg-utils/#xdg-open) als Standard Browser für URLs 
+- [red171] Benutze unter Linux [xdg-open](https://wiki.ubuntuusers.de/xdg-utils/#xdg-open) als Standardbrowser für URLs
 
 **0.82.0**
 
 - [red171] [wizard.xml](./AJClientGUI/wizard.xml) an die aktuellen Gegebenheiten angepasst
-- [red171] jegliche Konfigurationsdateien werden jetzt im `user.home` gesichert
-- [red171] unter Linux wird jetzt der interne Fenster Titel korrekt gesetzt (für `.desktop` Files wichtig)
+- [red171] Jegliche Konfigurationsdateien werden jetzt im Verzeichnis `user.home` gesichert
+- [red171] Unter Linux wird jetzt der interne Fenstertitel korrekt gesetzt (für `.desktop`-Dateien wichtig)
 
 **0.81.1**
 
@@ -92,10 +106,10 @@
 
 **0.80.1**
 
-- [red171] VCS import
-- [red171] JRE Version checker entfernt (so funktioniert das GUI auch mit Java >= 11)
-- [red171] Update Checker URL auf github umgestellt
-- [red171] ant `build.xml` kompatibilität zu Java 8 hergestellt
+- [red171] VCS-Import
+- [red171] JRE-Versionsprüfung entfernt (so funktioniert das GUI auch mit `Java >= 11`)
+- [red171] URL der Updateprüfung auf GitHub umgestellt
+- [red171] Kompatibilität der Ant-Datei `build.xml` zu Java 8 hergestellt
 
 **0.71.1**
 
@@ -110,16 +124,16 @@
 **0.70.5**
 
 - [Maj0r] Fehler beim Hinzufügen von Share-Ordnern behoben
-- [Maj0r] Priorität der Uploads in der Form 1:2,2 (Priowert) anzeigen
+- [Maj0r] Priorität der Uploads in der Form `1:2,2` (Prioritätswert) anzeigen
 - [Maj0r] Sortierung im Downloadreiter korrigiert
 
 **0.70.4**
 
 - [Maj0r] Deadlock beim Start gefixt
-- [Maj0r] Anzeige der Downloadgechwindigkeit und des Gesamtdown- und uploads korrigiert
-- [Maj0r] PwDl der Uploads in der Form 1:2,2 anzeigen
-- [Maj0r] Mit Java6 lassen sich bei lokaler Coreverbindung Sharedateien und laufende Downloads nun mit dem Standardprogramm öffnen
-- [Maj0r] Bug #670 Reiter per Tastaturschnelltaste anwaehlbar
+- [Maj0r] Anzeige der Downloadgeschwindigkeit und des gesamten Down- und Uploads korrigiert
+- [Maj0r] Pwdl der Uploads in der Form `1:2,2` anzeigen
+- [Maj0r] Mit Java 6 lassen sich bei lokaler Core-Verbindung Share-Dateien und laufende Downloads nun mit dem Standardprogramm öffnen
+- [Maj0r] Bug #670 Reiter per Tastaturschnelltaste anwählbar
 
 **0.70.2**
 
@@ -129,31 +143,31 @@
 
 Java ab 5.0 wird benötigt
 
-- [Maj0r] TrayIcon von Java6 eingebaut und funktioniert nun unter Windows, Mac und Linux (Gnome-Tray und KDE-Tray)
+- [Maj0r] Tray-Icon von Java 6 eingebaut und funktioniert nun unter Windows, Mac und Linux (GNOME-Tray und KDE-Tray)
 - [Maj0r] CPU-Last der Suchergebnisdarstellung wesentlich verringert.
-          Nun sind auch große Treffermengen gut verwendbar (Test mit 1500 bis 2000 Treffern pro Suche bei 3 Suchen).
-          Lediglich das initiale Laden der Treffer dauert etwas, das Zeug muss halt über die Leitung und einmal geparst werden.
+  Nun sind auch große Treffermengen gut verwendbar (Test mit 1500 bis 2000 Treffern pro Suche bei 3 Suchen).
+  Lediglich das initiale Laden der Treffer dauert etwas, das Zeug muss halt über die Leitung und einmal geparst werden.
 - [Maj0r] Anzahl aller unterschiedlichen gefundenen Dateien einer Suche wird im Suchergebnisreiter angezeigt
-- [Maj0r] Ist beim Start Loglevel Debug eingestellt, wird ein weiterer Reiter "Debug" angezeigt, der alle Lognachrichten enthält
-- [Maj0r] Featurerequest: Gesamtpunkte der gesetzten Priorität wird im Sharebereich ( x/1000 ) angezeigt. (Danke an `fdh`)
-- [Maj0r] TKLControls eingebaut ([www.tkl-soft.de](http://www.tkl-soft.de))
-          In den Optionen und im Wizard werden nun Felder mit modifizierten Werten blau umrahmt. Mit `Strg+z` kann der Ursprungswert wieder hergestellt werden.
-          Ungültige Werte werden rot umrahmt (z.B. im Downloadlinkfeld im Downloadbereich).
-- [Maj0r] Bug #527 gefixt: 100%-CPU-Bug behoben. Trat immer auf, wenn man die Größe der Partliste veränderte. (Danke an `fdh`)
-- [Maj0r] Featurerequest #476: Suchergebnisse, die bereits im Temp oder im Share vorhanden sind, werden grün markiert. (Danke an `clickweg`)
-- [Maj0r] GUI komplett refactored und auf die neue `CoreFassade 1.0` umgebaut
-- [loevenwong] Featurerequest #549 Automatischen Powerdownload komplett überarbeitet. (Danke an `xxluckystrikexx`)
+- [Maj0r] Ist beim Start der Loglevel `DEBUG` eingestellt, wird ein weiterer Reiter „Debug“ angezeigt, der alle Lognachrichten enthält
+- [Maj0r] Feature-Request: Gesamtpunkte der gesetzten Priorität werden im Sharebereich (`x/1000`) angezeigt. (Danke an `fdh`)
+- [Maj0r] `TKLControls` eingebaut ([www.tkl-soft.de](http://www.tkl-soft.de))
+  In den Optionen und im Wizard werden nun Felder mit modifizierten Werten blau umrahmt. Mit `Strg+Z` kann der Ursprungswert wiederhergestellt werden.
+  Ungültige Werte werden rot umrahmt (z. B. im Downloadlinkfeld im Downloadbereich).
+- [Maj0r] Bug #527 gefixt: Bug mit 100 % CPU-Last behoben. Trat immer auf, wenn man die Größe der Partliste veränderte. (Danke an `fdh`)
+- [Maj0r] Feature-Request #476: Suchergebnisse, die bereits im Temp- oder Share-Verzeichnis vorhanden sind, werden grün markiert. (Danke an `clickweg`)
+- [Maj0r] GUI komplett überarbeitet und auf die neue `CoreFassade 1.0` umgebaut
+- [loevenwong] Feature-Request #549: Automatischen Powerdownload komplett überarbeitet. (Danke an `xxluckystrikexx`)
 
 **0.61.2**
 
 - [Maj0r] Bug #528 gefixt: Deadlock bei der Darstellung der Partliste behoben. (Danke an `akku`)
-- [Maj0r] Bug #525 gefixt: Das GUI nutzte bei ungünstiger Datenkonstellation 100% CPU-Zeit (Danke an `akku` und `apokalypse1982`)
+- [Maj0r] Bug #525 gefixt: Das GUI nutzte bei ungünstiger Datenkonstellation 100 % CPU-Zeit (Danke an `akku` und `apokalypse1982`)
 
 **0.61.1**
 
-- [Maj0r] Auf vielfachen Wunsch Partlistanzeige wieder auf mehrere Threads aufgeteilt. Braucht wieder etwas mehr Ressourcen, ist aber beim gefühlten Laden schneller.
+- [Maj0r] Auf vielfachen Wunsch Partlistenanzeige wieder auf mehrere Threads aufgeteilt. Braucht wieder etwas mehr Ressourcen, ist aber beim gefühlten Laden schneller.
 - [Maj0r] Bug #524 gefixt (Danke an `akku` und `fdh`)
-- [Maj0r] Bug gefixt: Nach Benutzung von "Priorität löschen" wurde die View nicht aktualisiert.
+- [Maj0r] Bug gefixt: Nach Benutzung von „Priorität löschen“ wurde die View nicht aktualisiert.
 
 **0.61.0**
 
@@ -161,71 +175,83 @@ Core ab Version **0.30.146.1202** wird benötigt
 
 - [Maj0r] Wenn ein Download hinzugefügt wird, gibt es nun, wenn der Core einen Fehler meldet, eine Benachrichtigung.
 - [Maj0r] Bug gefixt (Danke an Up)
- Coreseitig beendete Suchen werden nun auch im GUI als beendet dargestellt.
+  Coreseitig beendete Suchen werden nun auch im GUI als beendet dargestellt.
 - [Maj0r] `skinlf.jar` aktualisiert
-- [Maj0r] ajl-Listen können nun direkt mit Angabe eines Zielverzeichnisses importiert werden
+- [Maj0r] `.ajl`-Listen können nun direkt mit Angabe eines Zielverzeichnisses importiert werden
 - [Maj0r] Downloads können nun direkt mit Angabe eines Zielverzeichnisses gestartet werden
-- [Maj0r] Anzeige zusätzlicher Information gesharter Dateien (Datum letzter Anfrage, Anzahl Downloadanfragen, Anzahl Suchanfragen)
+- [Maj0r] Anzeige zusätzlicher Informationen freigegebener Dateien (Datum letzter Anfrage, Anzahl Downloadanfragen, Anzahl Suchanfragen)
 - [Maj0r] Bug gefixt
- Es konnte mit jedem offenen Port eine Verbindung hergestellt werden, das GUI blieb anschließend leer.
- Unterscheidung zwischen ungültiger Coreadresse und falschem Passwort eingebaut.
-- [Maj0r] Featurerequest #465 (Danke an clickweg)
- Beim ersten Start des GUIs wird versucht, anhand der Standardeinstellungen zu verbinden.
-- [Maj0r] Die Datei properties.xml wurde durch die Datei ajgui.properties ersetzt.
+  Es konnte mit jedem offenen Port eine Verbindung hergestellt werden, das GUI blieb anschließend leer.
+  Unterscheidung zwischen ungültiger Core-Adresse und falschem Passwort eingebaut.
+- [Maj0r] Feature-Request #465 (Danke an clickweg)
+  Beim ersten Start des GUIs wird versucht, anhand der Standardeinstellungen zu verbinden.
+- [Maj0r] Die Datei `properties.xml` wurde durch die Datei `ajgui.properties` ersetzt.
 - [Maj0r] Einschränkung aufgehoben
- Im Verbindungsdialog können nun beliebig viele Cores gespeichert werden.
+  Im Verbindungsdialog können nun beliebig viele Cores gespeichert werden.
 - [Maj0r] Bug #490 gefixt (Danke an Up)
- Umlaute sind nun in Verzeichnis- und Dateinamen in den Optionen möglich.
+  Umlaute sind nun in Verzeichnis- und Dateinamen in den Optionen möglich.
 - [Maj0r] Bug gefixt
- Im Verbindungsdialog funktionierte die Datenübernahme nicht, wenn im Host- oder Passwortfeld Return betätigt wurde.
-- [Maj0r] Featurerequest #475 (Danke an clickweg)
- Anzeige der Verfügbarkeit in Prozent der aktuell gezeigten Partliste.
-- [Maj0r] Featurerequest #481 (Danke an johannes8)
- Firewall-Warnung wird nun zusätzlich als Symbol und als Tooltipp ganz links in der Statusleiste angezeigt.
+  Im Verbindungsdialog funktionierte die Datenübernahme nicht, wenn im Host- oder Passwortfeld `Return` betätigt wurde.
+- [Maj0r] Feature-Request #475 (Danke an clickweg)
+  Anzeige der Verfügbarkeit in Prozent der aktuell gezeigten Partliste.
+- [Maj0r] Feature-Request #481 (Danke an johannes8)
+  Firewall-Warnung wird nun zusätzlich als Symbol und als Tooltip ganz links in der Statusleiste angezeigt.
 - [Maj0r] Bug #494 gefixt (Danke an dsp2004)
 - [Maj0r] Bug #505 gefixt (Danke an rexcorda)
-- [loevenwong] Focus wird auf das Passwort-Feld gesetzt.
+- [loevenwong] Fokus wird auf das Passwortfeld gesetzt.
 
 **0.60.0**
 
-- [Maj0r] Featurerequest #472 (Danke an clickweg)
- Downloads, Shares und Suchergebnisse werden nun mit passenden Icons dargestellt (vgl. Suche).
-- [loevenwong] Featurerequest #458; Verbindungswizard kann über Optionen->Verbindungen gestartet werden.- [loevenwong] Featurerequest #414 (Danke an clickweg)
- Download-Tooltipps können per Optionen->Ansicht deaktiviert werden.
-- [loevenwong] Wenn automatisch Verbinden ausgewählt ist, wird anschliessend noch geprüft, ob die SHIFT-Taste gedrückt wird (nach Erscheinen des Splash-Screens),
- falls doch ein anderer Core verwendet werden soll.- [loevenwong] Tastaturereignisse beim Anmeldedialog um ENTER/ESCAPE erweitert.- [Maj0r] Featurerequest
- Unter Optionen->Ansicht kann ein Programm ausgewählt werden (z.B. VLC).
- Wenn der Core auf dem gleichen Rechner wie das GUI läuft, dann wird in der Downloadtabelle und in der Sharetabelle im Kontextmenü ein neuer Menüpunkt aktiviert.
- Mit diesem wird der Shareeintrag an das verknüpfte Programm übergeben.
+- [Maj0r] Feature-Request #472 (Danke an clickweg)
+  Downloads, Shares und Suchergebnisse werden nun mit passenden Icons dargestellt (vgl. Suche).
+- [loevenwong] Feature-Request #458; Verbindungswizard kann über „Optionen → Verbindungen“ gestartet werden.
+- [loevenwong] Feature-Request #414 (Danke an clickweg)
+  Download-Tooltips können per „Optionen → Ansicht“ deaktiviert werden.
+- [loevenwong] Wenn „Automatisch verbinden“ ausgewählt ist, wird anschließend noch geprüft, ob die `Shift`-Taste gedrückt wird (nach Erscheinen des Splashscreens),
+  falls doch ein anderer Core verwendet werden soll.
+- [loevenwong] Tastaturereignisse beim Anmeldedialog um `Enter`/`Escape` erweitert.
+- [Maj0r] Feature-Request
+  Unter „Optionen → Ansicht“ kann ein Programm ausgewählt werden (z. B. VLC).
+  Wenn der Core auf dem gleichen Rechner wie das GUI läuft, dann wird in der Downloadtabelle und in der Sharetabelle im Kontextmenü ein neuer Menüpunkt aktiviert.
+  Mit diesem wird der Shareeintrag an das verknüpfte Programm übergeben.
 - [Maj0r] Bug #175 gefixt (Danke an jr17)
- TrayIcon gefixt.
+  Tray-Icon gefixt.
 - [Maj0r] Bug #413 gefixt (Danke an hirsch.marcel)
- Leere Suchen werden nicht mehr ausgeführt. Leerstellen am Anfang und am Ende eines Suchbegriffs werden entfernt.
-- [Maj0r] Featurerequest #442 (Danke an clickweg)
- Uploads können nun per Kontextmenü als Links in die Zwischenablage kopiert werden.
-- [Maj0r] Stats eingebaut. Parameter: -command=getajstats
-- [loevenwong] Versionsanzeige eingebaut. Parameter: -command=getajinfo
+  Leere Suchen werden nicht mehr ausgeführt. Leerstellen am Anfang und am Ende eines Suchbegriffs werden entfernt.
+- [Maj0r] Feature-Request #442 (Danke an clickweg)
+  Uploads können nun per Kontextmenü als Links in die Zwischenablage kopiert werden.
+- [Maj0r] Stats eingebaut. Parameter:
+
+  ```text
+  -command=getajstats
+  ```
+
+- [loevenwong] Versionsanzeige eingebaut. Parameter:
+
+  ```text
+  -command=getajinfo
+  ```
 
 **0.59.3**
 
 - [Maj0r] Bugfix (Danke an muhviehstarr)
- Zwei Deadlocks behoben. Einer bewirkte, dass das GUI beim Start beim Splashscreen hängen bleiben konnte.
-- [Maj0r] \n in der Servernachricht wird nicht mehr beachtet. Html-Tags verwenden.
-- [Maj0r] Featurerequest
- Automatischer Powerdownload pausiert nun standardmäßig nicht mehr die Downloads.
- Außerdem kann nun ein Einstellungendialog implementiert werden, um Anpassungen während des Betriebs des autom. Pwdls vorzunehmen.
+  Zwei Deadlocks behoben. Einer bewirkte, dass das GUI beim Start beim Splashscreen hängen bleiben konnte.
+- [Maj0r] `\n` in der Servernachricht wird nicht mehr beachtet. HTML-Tags verwenden.
+- [Maj0r] Feature-Request
+  Automatischer Powerdownload pausiert nun standardmäßig nicht mehr die Downloads.
+  Außerdem kann nun ein Einstellungsdialog implementiert werden, um Anpassungen während des Betriebs des automatischen Powerdownloads vorzunehmen.
 - [Maj0r] Bugfix
- Bei sehr hohen Maxupload- und/oder Maxdownloadwerten kam es zu Fehlern im TrayIcon.
+  Bei sehr hohen Maxupload- und/oder Maxdownloadwerten kam es zu Fehlern im Tray-Icon.
 - [Maj0r] Bug #421 gefixt (Danke an Up)
- Wizard wurde um Standardeinstellungen für DSL 1000, DSL 2000 und DSL 3000 erweitert.
+  Wizard wurde um Standardeinstellungen für DSL 1000, DSL 2000 und DSL 3000 erweitert.
 - [Maj0r] Bug #423 gefixt (Danke an hirsch.marcel und Up)
- Aktive, indirekte Uploads werden wieder angezeigt.
+  Aktive, indirekte Uploads werden wieder angezeigt.
 - [Maj0r] Dreckigen Rest im Uploadbereich entfernt.
 
 **0.59.2**
 
 - [Maj0r] Bug #420 gefixt (Danke an Up)
- Ganz frischen NullPointer gefixt.
+  Ganz frischen `NullPointer` gefixt.
 
 **0.59.1**
 
@@ -234,16 +260,16 @@ Core ab Version **0.30.145.610** wird benötigt
 - [Maj0r] Wasserstände der einzelnen Uploader werden angezeigt.
 - [Maj0r] Beim Serverwechsel wird nun eine qualifizierte Warnung ausgegeben, wenn die aktuelle Verbindung noch keine 30 Minuten besteht.
 - [Maj0r] Bugfix
- Beim Neuerzeigen der properties.xml wurden die neuen Coredaten nicht für die aktuelle Sitzung übernommen.
- Folge war ein Verbindungsverlust.
+  Beim Neuerzeugen der `properties.xml` wurden die neuen Coredaten nicht für die aktuelle Sitzung übernommen.
+  Folge war ein Verbindungsverlust.
 
 **0.59.0**
 
-- [Maj0r] Durch Ändern einer Source-Variable in der AutomaticPowerdownloadPolicy.java kann das Pausieren von Dateien verhindert werden.
+- [Maj0r] Durch Ändern einer Quellcodevariable in der `AutomaticPowerdownloadPolicy.java` kann das Pausieren von Dateien verhindert werden.
 - [Maj0r] Bug #392 gefixt (Danke an Up und jr17)
- Im Zuge der XML-Parser-Umstellung (0.56.1) ist die Firewallwarnung verschütt gegangen.
+  Im Zuge der XML-Parser-Umstellung (0.56.1) ist die Firewall-Warnung verloren gegangen.
 - [Maj0r] Icons für Uploads in der Warteschlange korrigiert.
-- [Maj0r] Downloadadresse für die Updateinfodatei auf Wunsch der berlios-Crew von berlios.de auf tkl-soft.de geändert.
+- [Maj0r] Downloadadresse für die Updateinfodatei auf Wunsch der BerliOS-Crew von `berlios.de` auf `tkl-soft.de` geändert.
 - [Maj0r] Uploads, die zwar in der Warteschlange sind, aber keine aktive Verbindung halten, werden jetzt im dreckigen Rest angezeigt.
 
 **0.58.0**
@@ -251,137 +277,143 @@ Core ab Version **0.30.145.610** wird benötigt
 Core ab Version **0.30.144.522** wird benötigt
 
 - [Maj0r] Bug #360 gefixt (Danke an fapu & panterfrau)
- Beim Linkklicken konnte es passieren, dass zwei GUIs gestartet werden.
+  Beim Linkklicken konnte es passieren, dass zwei GUIs gestartet werden.
 - [Maj0r] Bug #361 gefixt (Danke an panterfrau)
- Logfehlermeldung bei überlastetem Core wird nun nur noch als Debug gelogt.
-- [Maj0r] Featurerequest (Danke an Up)
- Bei Servern ohne Namen wird nun im Startbereich IP:Port angezeigt.
+  Logfehlermeldung bei überlastetem Core wird nun nur noch als `DEBUG` geloggt.
+- [Maj0r] Feature-Request (Danke an Up)
+  Bei Servern ohne Namen wird nun im Startbereich `IP:Port` angezeigt.
 - [Maj0r] Willkommensnachricht des Servers eingebaut.
 - [Maj0r] Anzeige, ob die Warteschlange voll ist, im Uploadbereich eingebaut.
-- [maj0r] In der Statusspalte eines nicht aktiven Uploads wird nun die Corezeit der letzen Aktivität angezeigt.
+- [maj0r] In der Statusspalte eines nicht aktiven Uploads wird nun die Corezeit der letzten Aktivität angezeigt.
 
 **0.57.1**
 
 - [Maj0r] Bugfix (Danke an mich ;) )
- Beim Laden von Plugins konnten Fehler beim Classloading auftreten. Wenn der Statusbalken bei "Lade Plugins..." hängen bleibt, bitte updaten.
+  Beim Laden von Plugins konnten Fehler beim Classloading auftreten. Wenn der Statusbalken bei „Lade Plugins...“ hängen bleibt, bitte updaten.
 - [Maj0r] Change (Danke an hirsch.marcel)
- Irc-Server im Infodialog angepasst.
-- [Maj0r] Archivdifferenzierung beseitigt (Besonderen Dank an Up für die Windows-Starter-Exe !!)
- Es gibt fortan keine separaten Archive mehr für Windows und andere Betriebssysteme.
-- [Maj0r] Featurerequest #319 (Danke an tom62)
- Sortierung im Dateilistenexport eingebaut.
+  IRC-Server im Infodialog angepasst.
+- [Maj0r] Archivdifferenzierung beseitigt (besonderen Dank an Up für die Windows-Starter-EXE!)
+  Es gibt fortan keine separaten Archive mehr für Windows und andere Betriebssysteme.
+- [Maj0r] Feature-Request #319 (Danke an tom62)
+  Sortierung im Dateilistenexport eingebaut.
 - [Maj0r] Bugfix (Danke an muhviehstarr)
- Sortierung nach Zeit in der Serveranzeige korrigiert.
+  Sortierung nach Zeit in der Serveranzeige korrigiert.
 - [Maj0r] Bug #322 gefixt (Danke an torsten_altreiter)
- Der Dateiname wurde per Linkübernahme aus der Suche nicht korrekt übernommen.
+  Der Dateiname wurde per Linkübernahme aus der Suche nicht korrekt übernommen.
 - [loevenwong] Updateprüfung auch per Menüeintrag ermöglicht.
 - [Maj0r] Standardaussehen auf JGoodies geändert (weniger ressourcenlastig)
- Themes können natürlich weiterhin verwendet werden.
+  Themes können natürlich weiterhin verwendet werden.
 
 **0.57.0**
 
 - [Maj0r] Bugfix (Danke an whitewindow)
- Die Anzahl der Quellen pro gefundener Datei wurde bei neuen Ergebnissen nicht korrigiert.
- Die Anzahl der gefundenen Dateien war korrekt, jedoch die Anzahl der Quellen pro Datei entsprechend niedrig.
+  Die Anzahl der Quellen pro gefundener Datei wurde bei neuen Ergebnissen nicht korrigiert.
+  Die Anzahl der gefundenen Dateien war korrekt, jedoch die Anzahl der Quellen pro Datei entsprechend niedrig.
 - [Maj0r] Bug #306 gefixt (Danke an dsp2004)
- Bei Partlistanfragen an einen überlasteten Core kam es zu Fehlern.
+  Bei Partlistanfragen an einen überlasteten Core kam es zu Fehlern.
 - [Maj0r] Fortschrittsbalken in den Splashscreen eingebaut.
-- [Maj0r] Tooltipps in der ersten Spalte der Downloadtabelle eingebaut.
+- [Maj0r] Tooltips in der ersten Spalte der Downloadtabelle eingebaut.
 - [Maj0r] Info-Dialog geändert
- Credits geändert.
- Credits lassen sich nun per Mausklick in den Dialog anhalten bzw. fortsetzen.
+  Credits geändert.
+  Credits lassen sich nun per Mausklick im Dialog anhalten bzw. fortsetzen.
 
 **0.56.2**
 
 - [Maj0r] Bug #293 gefixt (Danke an dsp2004)
- Bei Partlistanfragen an einen überlasteten Core kam es zu Fehlern.
+  Bei Partlistanfragen an einen überlasteten Core kam es zu Fehlern.
 - [Maj0r] Bug #260 gefixt (Danke an computer.ist.org)
- Buttons im Sharebereich dürfen erst aktiviert werden, wenn die Einstellungen vom Core geholt wurden.
+  Buttons im Sharebereich dürfen erst aktiviert werden, wenn die Einstellungen vom Core geholt wurden.
 - [Maj0r] Bug #282 gefixt (Danke an tnt23)
- NullPointer behoben, der auftrat, wenn man im Sharebereich auf "Prioritaet setzen" geklickt hat, ohne vorher einen Eintrag zu selektieren.
+  `NullPointer` behoben, der auftrat, wenn man im Sharebereich auf „Priorität setzen“ geklickt hat, ohne vorher einen Eintrag zu selektieren.
 - [Maj0r] Bug #273 gefixt
- Es kam zu einem Fehler, wenn die Partliste nicht den gesamten reservierten Bereich bedeckte und dieser Teil von der Maus überwandert wurde.
-- [loevenwong] Featurerequest #222: Combobox zur Auswahl der letzten 3 Verbindungen eingebaut. (Danke an `hirsch.marcel`)
-- [Maj0r] Featurerequest #222 (Danke an `johannes8`)
- Download-Umbennen-Dialog bietet nun eine Auswahl der gefundenen Namen der Sourcen des Downloads an.
+  Es kam zu einem Fehler, wenn die Partliste nicht den gesamten reservierten Bereich bedeckte und dieser Teil von der Maus überwandert wurde.
+- [loevenwong] Feature-Request #222: ComboBox zur Auswahl der letzten 3 Verbindungen eingebaut. (Danke an `hirsch.marcel`)
+- [Maj0r] Feature-Request #222 (Danke an `johannes8`)
+  Download-Umbenennungsdialog bietet nun eine Auswahl der gefundenen Namen der Quellen des Downloads an.
 - [Maj0r] Kontextmenü im Downloadbereich überarbeitet
- F-Tasten eingebaut.
- Pausieren und Fortsetzen auf vielfachen Wunsch getrennt.
-- [Maj0r] Dialog zur Eingabe eines Datei-Incoming-Verzeichnisses kann jetzt per `RETURN` bestätigt werden.
-- [Maj0r] Bug behoben, der sich durch die dynamische Generierung der properties.xml ohne Neustart eingeschlichen hat.
+  F-Tasten eingebaut.
+  Pausieren und Fortsetzen auf vielfachen Wunsch getrennt.
+- [Maj0r] Dialog zur Eingabe eines Datei-Incoming-Verzeichnisses kann jetzt per `Return` bestätigt werden.
+- [Maj0r] Bug behoben, der sich durch die dynamische Generierung der `properties.xml` ohne Neustart eingeschlichen hat.
 - [loevenwong] Einfügen per Kontextmenü im Download-Textfeld eingebaut.
 - [loevenwong] Einstellungen der JGoodies werden jetzt gespeichert.
-- [Maj0r] Installierte Look&Feels werden beim Generieren der Standard-XML mit aufgenommen.
+- [Maj0r] Installierte Look-and-Feels werden beim Generieren der Standard-XML mit aufgenommen.
 
 **0.56.1**
 
-diese Version benötigt den Core ab Version **0.29.135.208**
+Diese Version benötigt den Core ab Version **0.29.135.208**
 
-- [Maj0r] GUI startet nur noch bei unterstützter Coreversion
-- [loevenwong] GUI muss nicht neugestartet werden, wenn noch kein Property-File vorhanden ist (wird weiterhin automatisch erzeugt).
-- [Maj0r] Featurerequest #254 gefixt (Danke an te_real_ZeroBANG)
- Downloadtabelle wird jetzt beim Start standarmäßig nach Dateiname sortiert.
-- [Maj0r] Featurerequest #274 gefixt (Danke an johannes8)
- Downloads können per F2 umbenannt werden.
+- [Maj0r] GUI startet nur noch bei unterstützter Core-Version
+- [loevenwong] GUI muss nicht neu gestartet werden, wenn noch keine Properties-Datei vorhanden ist (wird weiterhin automatisch erzeugt).
+- [Maj0r] Feature-Request #254 gefixt (Danke an te_real_ZeroBANG)
+  Downloadtabelle wird jetzt beim Start standardmäßig nach Dateinamen sortiert.
+- [Maj0r] Feature-Request #274 gefixt (Danke an johannes8)
+  Downloads können per `F2` umbenannt werden.
 - [Maj0r] Bug #264 gefixt (Danke an muhviestarr)
- Verbindungsstatus wird richtig angezeigt.
-- [Maj0r] Modifizierbare und potenziell modifizierbare Dateien bei Nicht-Windows-System verschoben
- properties.xml nach ~/appleJuice/gui
- Plugins nach ~/appleJuice/gui/plugins
- Logs nach ~/appleJuice/gui/logs
+  Verbindungsstatus wird richtig angezeigt.
+- [Maj0r] Modifizierbare und potenziell modifizierbare Dateien bei Nicht-Windows-Systemen verschoben
+
+  ```text
+  properties.xml → ~/appleJuice/gui
+  Plugins        → ~/appleJuice/gui/plugins
+  Logs           → ~/appleJuice/gui/logs
+  ```
+
 - [Maj0r] Pluginschnittstelle komplett überarbeitet
- Alle vorhandenen Plugins müssen an die neue Schnittstelle angepasst werden.
- Gründe für die Überarbeitung:
- 1\. einfacher
- 2\. Eingrenzung der Plugins und Minimierung der Fehlermöglichkeiten
- 3\. Sprachdateien werden unterstützt (zB language_xml_deutsch.xml im Plugin-Jar)
-- [Maj0r] Suchergebnisse werden nun, wenn möglich mit einem sprechenden Icon angezeigt.
+  Alle vorhandenen Plugins müssen an die neue Schnittstelle angepasst werden.
+  Gründe für die Überarbeitung:
+
+  1. Einfacher
+  2. Eingrenzung der Plugins und Minimierung der Fehlermöglichkeiten
+  3. Sprachdateien werden unterstützt (z. B. `language_xml_deutsch.xml` im Plugin-JAR)
+- [Maj0r] Suchergebnisse werden nun, wenn möglich, mit einem sprechenden Icon angezeigt.
 - [Maj0r] Suche um Filter erweitert
- Die Filter in der Suchergebnistabelle wirken sich NICHT auf die Suche aus, lediglich die Treffer werden gefiltert.
-- [Maj0r] Status "Warteschlange voll" wird nun auch in "In Warteschlange" angezeigt, da diese zB für Pwdl-Änderungen genauso relevant sind.
-- [Maj0r] TableHeader werden in allen Tabellen gleich dargestellt.
-- [Maj0r] Unterstützung für fremde Look&Feels eingebaut
-    Um Look&Feels zu verwenden, müssen die Themes deaktiviert werden.
-    Ausgeliefert werden nur JGoodies als alternative Look&Feels.
-    Es können alle konformen Look&Feels verwendet werden. Dazu einfach ein passendes Jar in /lib legen und die Look&Feel-Klasse in der propertes.xml eintragen.
-- [Maj0r] Unnützes Passwortfeld unter Optionen->Passwort entfernt.
-- [Maj0r] Passwortfeld unter Optionen->Proxy ist nun wirklich ein Passwortfeld und stellt das Passwort nicht mehr im Klartext dar.
-- [Maj0r] Standardthemepack auf Toxic geändert.
+  Die Filter in der Suchergebnistabelle wirken sich NICHT auf die Suche aus, lediglich die Treffer werden gefiltert.
+- [Maj0r] Status „Warteschlange voll“ wird nun auch in „In Warteschlange“ angezeigt, da diese z. B. für Pwdl-Änderungen genauso relevant sind.
+- [Maj0r] Tabellenköpfe werden in allen Tabellen gleich dargestellt.
+- [Maj0r] Unterstützung für fremde Look-and-Feels eingebaut
+  Um Look-and-Feels zu verwenden, müssen die Themes deaktiviert werden.
+  Ausgeliefert werden nur JGoodies als alternative Look-and-Feels.
+  Es können alle konformen Look-and-Feels verwendet werden. Dazu einfach ein passendes JAR in `/lib` legen und die Look-and-Feel-Klasse in der `properties.xml` eintragen.
+- [Maj0r] Unnötiges Passwortfeld unter „Optionen → Passwort“ entfernt.
+- [Maj0r] Passwortfeld unter „Optionen → Proxy“ ist nun wirklich ein Passwortfeld und stellt das Passwort nicht mehr im Klartext dar.
+- [Maj0r] Standard-Theme-Pack auf Toxic geändert.
 
 **0.56.0**
 
-meine wahrscheinlich letzte GUI für den Core 0.29.x
-**- Soundausgabe bei korrektem Login korrigiert.
+Meine wahrscheinlich letzte GUI für den Core 0.29.x
+
+- Soundausgabe bei korrektem Login korrigiert.
 - Sound bei fertigem Download eingebaut.
 - Unicode-Verwendung im Umgang mit den Sprachdateien korrigiert.
 - Kleinere Korrekturen.
 
 **0.55.10**
 
-- Bug #246 gefixt: Nun können auch bei "voller" Dateilistetabelle im Sharebereich neue Dateien hinein gezogen werden. (Danke an `mail_tom62`)
-- Automatische Sortierung nach Dateiname eingebaut.
-- Featurerequest #244 gefixt: Standardmäßig ist nun beim automatischen Powerdownload der Inaktiv-Button selektiert. (Danke an `Homer1Simpson`)
-- Bug #243 gefixt: GUI stört sich nicht mehr an Nicht-Themes-Zips im Themes-Verzeichnis. (Danke an `RoadRunner`)
+- Bug #246 gefixt: Nun können auch bei „voller“ Dateilistentabelle im Sharebereich neue Dateien hineingezogen werden. (Danke an `mail_tom62`)
+- Automatische Sortierung nach Dateinamen eingebaut.
+- Feature-Request #244 gefixt: Standardmäßig ist nun beim automatischen Powerdownload der Inaktiv-Button selektiert. (Danke an `Homer1Simpson`)
+- Bug #243 gefixt: GUI stört sich nicht mehr an Nicht-Theme-ZIPs im Themes-Verzeichnis. (Danke an `RoadRunner`)
 - Bug #241 gefixt: Farbgebung war genau umgekehrt. Nun gilt wirklich: je dunkler, desto mehr Quellen gefunden. (Danke an `computer.ist.org`)
-- Partliste zeigt nun per MausOver-Effekt den Tooltipp zum ausgewählten Partstück an.
+- Partliste zeigt nun per Mouseover-Effekt den Tooltip zum ausgewählten Partstück an.
 
 **0.55.9**
 
 - Link zur FAQ im Startbereich hinzugefügt.
-- Bug #242 gefixt: Legende für Partliste um "aktive Übertragung" erweitert. (Danke an `Kossi-Jaki`)
-- Bug behoben, der im VersionChecker zu einer NoSuchElementException führte. (Danke an `computer.ist.org`)
-- Bug #239 gefixt: ArrayIndexOutOfBoundsException behoben. (Danke an `dsp2004`)
+- Bug #242 gefixt: Legende für Partliste um „aktive Übertragung“ erweitert. (Danke an `Kossi-Jaki`)
+- Bug behoben, der im `VersionChecker` zu einer `NoSuchElementException` führte. (Danke an `computer.ist.org`)
+- Bug #239 gefixt: `ArrayIndexOutOfBoundsException` behoben. (Danke an `dsp2004`)
 - Bug #235 gefixt: Passwortfeld im Logindialog funktioniert wieder ordentlich. (Danke an `Up`)
 
 **0.55.8**
 
 - Bug #234 gefixt: Tabellen werden beim Ändern von Spaltengrößen nicht mehr sortiert. (Danke an `hirsch.marcel`)
-- Featurerequest #228: Im Pwdl-Eingabefeld funktionieren nun auch die Hoch/Runter-Pfeiltasten. (Danke an `Major-Tom`)
+- Feature-Request #228: Im Pwdl-Eingabefeld funktionieren nun auch die Hoch-/Runter-Pfeiltasten. (Danke an `Major-Tom`)
 - Links werden nun bei Übernahme in eine verwertbare Schreibweise geparst.
 - Bug #226 gefixt (Danke an dsp2004)
 - GUI reagiert ordentlich auf eine coreseitige Passwortänderung.
 - Server werden nun korrekt angezeigt.
-- weitere Speicheroptimierung.
+- Weitere Speicheroptimierung.
 
 **0.55.7**
 
@@ -389,15 +421,15 @@ meine wahrscheinlich letzte GUI für den Core 0.29.x
 
 **0.55.6**
 
-- meisten Teile von DOM auf SAX umgebaut, RAM-Verbrauch sollte dadurch spürbar gesenkt werden.
-- Bug #219 gefixt: 100%-CPU bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt.  (Danke an `Up`)
-- Bug #220 gefixt: OutOfMemoryError behoben. (Danke an `dsp2004`)
+- Die meisten Teile von DOM auf SAX umgebaut, RAM-Verbrauch sollte dadurch spürbar gesenkt werden.
+- Bug #219 gefixt: 100 % CPU-Last bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt. (Danke an `Up`)
+- Bug #220 gefixt: `OutOfMemoryError` behoben. (Danke an `dsp2004`)
 
 **0.55.5**
 
-- alten Timestampfehler beseitigt. Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
+- Alten Timestampfehler beseitigt. Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
 - Bug #215 gefixt: Partliste wird nun auch bei kleinen Dateien korrekt gezeichnet. (Danke an `dsp2004`)
-- Bug #129 gefixt: WebsiteException durch Überlastung des Cores sollte nun weitgehend unterbunden sein. (Danke an dsp2004)
+- Bug #129 gefixt: `WebsiteException` durch Überlastung des Cores sollte nun weitgehend unterbunden sein. (Danke an dsp2004)
 
 **0.55.4**
 
@@ -405,14 +437,14 @@ meine wahrscheinlich letzte GUI für den Core 0.29.x
 
 **0.55.3**
 
-- Mehr Logging für WebSiteNotFoundException eingebaut.
+- Mehr Logging für `WebSiteNotFoundException` eingebaut.
 - Partliste bearbeitet:
-    Hoffentlich den letzten Fehler behoben.
-    Anzeige der Teile, die zurzeit übertragen werden (hellgelb bis dunkelgelb).
-    Aktualisierungintervall auf 2 Sekunden geändert.
+  Hoffentlich den letzten Fehler behoben.
+  Anzeige der Teile, die zurzeit übertragen werden (hellgelb bis dunkelgelb).
+  Aktualisierungsintervall auf 2 Sekunden geändert.
 - Button zum Verwerfen einer abgebrochenen Suche in den Suchreiter verschoben.
 - Link mit Quellen kann nun auch im Sharebereich erzeugt werden.
-- Bug #195 gefixt: Bug bei Pwdl-Einstellung korrigiert.. (Danke an `supermuhkuh`)
+- Bug #195 gefixt: Bug bei Pwdl-Einstellung korrigiert. (Danke an `supermuhkuh`)
 - Bug #167 gefixt: Sortierung nach Anzahl in der Suchtabelle korrigiert. (Danke an `arnoldfake`)
 - Bug #198 gefixt: Sortierung nach Downloadstatus korrigiert. (Danke an `froeschle567`)
 
@@ -421,17 +453,17 @@ meine wahrscheinlich letzte GUI für den Core 0.29.x
 Core ab **0.29.135.208** ist zu verwenden.
 
 - Max. Anzahl von Quellen pro Datei kann nun begrenzt werden
-- SplitPane in Sharebereich eingebaut.
+- `SplitPane` im Sharebereich eingebaut.
 - Sortierung des Sharebaums verbessert.
-- Sortierung in Incoming- / Tempauswahlbaum eingebaut.
+- Sortierung im Incoming-/Temp-Auswahlbaum eingebaut.
 - Partliste überarbeitet.
 - Startbereich scrollbar gemacht, wenn die Darstellung zu klein ist.
-- Rand der JSplitPane im Downloadbereich entfernt (Danke an `muhviestarr`).
-- Icons für Upload-DirectStates eingebaut.
-- verwendete Java-Version wird in die Logdatei geschrieben.
+- Rand der `JSplitPane` im Downloadbereich entfernt (Danke an `muhviestarr`).
+- Icons für `Upload-DirectStates` eingebaut.
+- Verwendete Java-Version wird in die Logdatei geschrieben.
 - Wizarddialog korrigiert: Nickname wird nun auf Richtigkeit geprüft und gespeichert wird erst nach Durchlaufen des gesamten Wizards.
-- Bug #94 gefixt: Zulässige Werte für Core-Port und XML-Port sind 1024<x<=32000. (Danke an `error666`)
-- Bug #185 gefixt: Einstellungen des GUIs werden beim Schliessen des Core gesichert. (Danke an `muhviestarr`)
+- Bug #94 gefixt: Zulässige Werte für Core-Port und XML-Port sind `1024 < x <= 32000`. (Danke an `error666`)
+- Bug #185 gefixt: Einstellungen des GUIs werden beim Schließen des Cores gesichert. (Danke an `muhviestarr`)
 - Downloadlinks können optional mit der eigenen Quelle und ggf. mit dem verbundenen Server in die Ablage kopiert werden.
 - Serverlinks können in die Ablage kopiert werden.
 
@@ -442,38 +474,50 @@ Core ab Version 0.29.133.201 ist zu verwenden.
 - Kommunikation mit dem Core erfolgt nun komprimiert
 
 **0.54.7**
-- AutomaticPowerdownloadPolicies können nun von Benutzern mit Java-Erfahrung selbst implementiert werden
-    Dazu muss die Klasse AutomaticPowerdownloadPolicy abgeleitet und ein Jar gebaut werden.
-    Zum Bauen des jar-Archivs gibt es ein neues Target in der build.xml.
-    Das GUI erwartet diese Jars im Unterordner /pwdlpolicies.
-- "Verbindung zum Core verloren" sollte nicht mehr so schnell kommen (Danke an `the_Killerbee`).
-- Interne Umbauten um Objekte zu sparen
- Alle Plugins, die auf globale Objekte mittels MapSetStringKey zugreifen, müssen angepasst werden, sind in ihrer alten Version nicht mehr lauffähig und führen zu ClassNotFoundExceptions im Log.
- Anstatt eines "new MapSetStringKey(String)" reicht nun dieser String oder ein "Integer.toString(int)" bei IDs.
- Die Klasse MapSetStringKey wurde restlos entfernt.
+
+- `AutomaticPowerdownloadPolicies` können nun von Benutzern mit Java-Erfahrung selbst implementiert werden
+  Dazu muss die Klasse `AutomaticPowerdownloadPolicy` abgeleitet und ein JAR gebaut werden.
+  Zum Bauen des JAR-Archivs gibt es ein neues Target in der `build.xml`.
+  Das GUI erwartet diese JARs im Unterordner `/pwdlpolicies`.
+- „Verbindung zum Core verloren“ sollte nicht mehr so schnell kommen (Danke an `the_Killerbee`).
+- Interne Umbauten, um Objekte zu sparen
+  Alle Plugins, die auf globale Objekte mittels `MapSetStringKey` zugreifen, müssen angepasst werden, sind in ihrer alten Version nicht mehr lauffähig und führen zu `ClassNotFoundExceptions` im Log.
+  Statt des bisherigen Aufrufs
+
+  ```text
+  new MapSetStringKey(String)
+  ```
+
+  reicht nun dieser String oder bei IDs:
+
+  ```text
+  Integer.toString(int)
+  ```
+
+  Die Klasse `MapSetStringKey` wurde restlos entfernt.
 - Logging verbessert
- main() in eigene ThreadGroup gepackt, dadurch kann keine Exception mehr "durchrasseln", alle Exceptions finden sich im Log.
+  `main()` in eine eigene `ThreadGroup` gepackt, dadurch kann keine Exception mehr „durchrasseln“, alle Exceptions finden sich im Log.
 
 **0.54.6**
 
-Nur Frische Bugs beseitigt
+Nur frische Bugs beseitigt
 
 - Bug #155 gefixt (Danke an daa803)
- Sharebaum wird nun wieder korrekt dargestellt.
+  Sharebaum wird nun wieder korrekt dargestellt.
 - Bug #154 gefixt (Danke an hirsch.marcel)
- Alte Objekte werden jetzt wieder korrekt entfernt.
+  Alte Objekte werden jetzt wieder korrekt entfernt.
 - Bug #160 gefixt (Danke an octron80)
- Fertige oder abgebrochene Downloads können nun wieder entfernt werden.
+  Fertige oder abgebrochene Downloads können nun wieder entfernt werden.
 - Bug #153 umgesetzt (Danke an jr17)
- Verbindungsdialog kann nun per Option beim nächsten GUI-Start erzwungen werden.
+  Verbindungsdialog kann nun per Option beim nächsten GUI-Start erzwungen werden.
 
 **0.54.5**
 
-- Filter beim Start des GUI eingebaut
- Die Quellen werden beim ersten Holen der Daten vom Core nicht abgefragt, so dass Downloads sehr schnell gezeigt werden können.
- Nachteil: Da die Quellen anfangs fehlen, stehen die Geschwindigkeiten aller Downloads auf 0 kb/s. Die Gesamtgeschwindigkeit wird jedoch angezeigt.
- Das lange Laden aufgrund von vielen Quellen wird so folglich nur verschoben und der Benutzer bekommt früh erste Informationen zu sehen.
-- Icons für Netware und OS/2 eingefügt.
+- Filter beim Start des GUIs eingebaut
+  Die Quellen werden beim ersten Holen der Daten vom Core nicht abgefragt, sodass Downloads sehr schnell gezeigt werden können.
+  Nachteil: Da die Quellen anfangs fehlen, stehen die Geschwindigkeiten aller Downloads auf 0 kb/s. Die Gesamtgeschwindigkeit wird jedoch angezeigt.
+  Das lange Laden aufgrund von vielen Quellen wird so folglich nur verschoben und der Benutzer bekommt früh erste Informationen zu sehen.
+- Icons für NetWare und OS/2 eingefügt.
 - Wiederholtes, zeitintensives Laden der gesamten Infos sollte nun durch ein überarbeitetes Sessionmanagement unterbunden sein.
 - Fehlerhafte Anzeige von Menütexten bei Nicht-Windows-Systemen gefixt.
 
@@ -482,137 +526,137 @@ Nur Frische Bugs beseitigt
 - Kontextmenüs mit Icons ausgestattet.
 - Optionenmenü überarbeitet.
 - An neue Coreschnittstelle angepasst.
-- TrayIcon-Bug hoffentlich behoben.
+- Tray-Icon-Bug hoffentlich behoben.
 
 **0.54.3**
 
 - Reihenfolge der Spalten der Download- und Uploadtabelle wird gespeichert
- Da die properties.xml angefasst werden musste, wird diese beim ersten Start neu generiert.
+  Da die `properties.xml` angefasst werden musste, wird diese beim ersten Start neu generiert.
 - Bug #74 gefixt (Danke an habkeineMail)
-- ajl-Listen können nun über das Menü importiert werden.
-- Sprachdatei "türkisch" eingebaut (Danke an nurseppel).
+- `.ajl`-Listen können nun über das Menü importiert werden.
+- Sprachdatei „türkisch“ eingebaut (Danke an nurseppel).
 - Upload-Fortschrittsanzeige wird jetzt nur noch bei aktiven Uploads angezeigt.
 - Laden von Plugins verbessert.
- Müll oder nicht standardkonforme Plugins im Plugin-Ordner werden nun korrekt behandelt.
+  Müll oder nicht standardkonforme Plugins im Plugin-Ordner werden nun korrekt behandelt.
 - Bug #98 gefixt (Danke an twix)
 
 **0.54.2**
 
 - Bug #91 umgesetzt (Danke an hirsch.marcel)
- Maxupload- und Maxdownloadgeschwindigkeit kann nun über das TrayIcon eingestellt werden (Windowsversion).
+  Maxupload- und Maxdownloadgeschwindigkeit können nun über das Tray-Icon eingestellt werden (Windowsversion).
 - Bug #82 gefixt (Danke an hirsch.marcel)
- Sortierung von Downloads innerhalb von Unterverzeichnissen der Downloadtabelle korrigiert.
+  Sortierung von Downloads innerhalb von Unterverzeichnissen der Downloadtabelle korrigiert.
 - Sortierung in die Suchergebnistabelle eingebaut.
 - Bug #92 gefixt (Danke an daa803)
 - Bug #77 gefixt (Danke an spam_blocker)
- Selektionsproblem der Downloadtabelle beim Entfernen von fertigen Downloads behoben.
-- Tabellenspalten der Download- und Uploadtabelle können nun über ein Kontextmenü bei Rechtsklick auf den Tabellenheader aus/eingeblendet werden.
+  Selektionsproblem der Downloadtabelle beim Entfernen von fertigen Downloads behoben.
+- Tabellenspalten der Download- und Uploadtabelle können nun über ein Kontextmenü bei Rechtsklick auf den Tabellenheader aus-/eingeblendet werden.
 - Im Downloadbereich sind nun der obere (Tabelle) und der untere Bereich (Powerdownload, Partliste) in der Höhe verstellbar.
 - Bug #83 gefixt (Danke an hirsch.marcel)
- Tabellenspalten können nun korrekt verschoben werden..
+  Tabellenspalten können nun korrekt verschoben werden.
 - Bug #33 gefixt (Danke an oz_2k)
- Obwohl ich denke, dass es sich um ein Feature der Themes handelt, wurde der Vollbildmodus auf Wunsch vieler Benutzer an Windowsstandard angepasst.
+  Obwohl ich denke, dass es sich um ein Feature der Themes handelt, wurde der Vollbildmodus auf Wunsch vieler Benutzer an den Windows-Standard angepasst.
 
 **0.54.1**
 
 - Bug #53 gefixt (Danke an o_a_s_e_)
- 98%-CPU-Last Bug durch Suche gefixt.
+  Bug mit 98 % CPU-Last durch Suche gefixt.
 - Warnmeldung bezüglich 30-Minuten-Sperre bei manuellem Serverwechsel eingebaut.
 - Bug #63 umgesetzt (Danke an clickweg)
- Den Link zum Holen von Servern in einen Button umgebaut, da der Link wohl von vielen übersehen wurde.
+  Den Link zum Holen von Servern in einen Button umgebaut, da der Link wohl von vielen übersehen wurde.
 - Bug #23 gefixt (Danke an computer.ist.org)
- Suche lässt sich nun korrekt abrechen.
+  Suche lässt sich nun korrekt abbrechen.
 
 **0.53.2**
 
 - Bug #67 gefixt (Danke an dsp2004)
- Probleme mit der Funktion automatisch Partliste anzeigen korrigiert.
+  Probleme mit der Funktion automatisch Partliste anzeigen korrigiert.
 
 **0.53.1**
 
-- Wenn die Verbindung zum Core aufgrund von Überlastung des Core abreisst, wird 2x erneut probiert, bevor das GUI beendet wird.
-- TrayIcon für Windowsplattformen eingebaut
+- Wenn die Verbindung zum Core aufgrund von Überlastung des Cores abreißt, wird zweimal erneut probiert, bevor das GUI beendet wird.
+- Tray-Icon für Windowsplattformen eingebaut
 - Bug #56 gefixt (Danke an MeineR)
- Das Laden der Plugins beim Start kann über das Optionenmenü deaktiviert werden.
+  Das Laden der Plugins beim Start kann über das Optionenmenü deaktiviert werden.
 - Bug #43 gefixt (Danke an flabeg)
- Shareverzeichnis wird bei Prioritätenänderung nicht mehr komplett neu geladen, sondern nur aktualsiert.
+  Shareverzeichnis wird bei Prioritätenänderung nicht mehr komplett neu geladen, sondern nur aktualisiert.
 - Bug #13 umgesetzt (Danke an HabkeineMail)
- Powerdownload-Werte werden jetzt bei Klick auf einen Download / Quelle im Powerdownloadfeld angezeigt.
+  Powerdownload-Werte werden jetzt bei Klick auf einen Download oder eine Quelle im Powerdownloadfeld angezeigt.
 - Bug #42 umgesetzt (Danke an dsp2004)
- Partlisten werden nun durch eine Option wahlweise bei Mausklick auf den Download / Quelle oder über den Button "Partliste anzeigen" geholt.
-- properties.xml aus den Download-Archiven entfernt
- Beim Update auf eine neuere Version muss diese nun nur noch bei einer Formatänderung erneuert werden.
- Nachteil: Bei einer kompletten Neuinstallation erhält man beim ersten Start eine Fehlermeldung und muss das GUI neu starten.
-- Wenn eine neue Version gefunden wird, kann diese nun direkt mit dem Standardbrowser herunter geladen werden
- Der Standardbrowser muss in den Optionen ausgewählt werden.
+  Partlisten werden nun durch eine Option wahlweise bei Mausklick auf den Download oder eine Quelle oder über den Button „Partliste anzeigen“ geholt.
+- `properties.xml` aus den Download-Archiven entfernt
+  Beim Update auf eine neuere Version muss diese nun nur noch bei einer Formatänderung erneuert werden.
+  Nachteil: Bei einer kompletten Neuinstallation erhält man beim ersten Start eine Fehlermeldung und muss das GUI neu starten.
+- Wenn eine neue Version gefunden wird, kann diese nun direkt mit dem Standardbrowser heruntergeladen werden
+  Der Standardbrowser muss in den Optionen ausgewählt werden.
 - Links im Startbereich sind jetzt anklickbar, sofern ein Standardbrowser ausgewählt ist.
 - Bug #40 umgesetzt (Danke an hirsch.marcel)
- Incoming-Verzeichnis kann nun für mehrere Downloads gleichzeitig geändert werden.
-- PluginOptionenDialog überarbeitet.
+  Incoming-Verzeichnis kann nun für mehrere Downloads gleichzeitig geändert werden.
+- `PluginOptionenDialog` überarbeitet.
 - Dialog bei fehlgeschlagenem Verbindungsversuch überarbeitet.
-- Menüpunkt zum Beenden des Core auf vielfachen Wunsch an separate Stelle verschoben.
+- Menüpunkt zum Beenden des Cores auf vielfachen Wunsch an separate Stelle verschoben.
 - Bug #17 gefixt (Danke an HabkeineMail)
- Partlisten von einigen wenigen DownloadSourcen wurden bei Bedarf nicht geholt.
-- sonstige Kleinigkeiten.
+  Partlisten von einigen wenigen Downloadquellen wurden bei Bedarf nicht geholt.
+- Sonstige Kleinigkeiten.
 
 **0.52.1**
 
-- Plugin-Entwickler können nun ein JPanel für Optionen implementieren, welches ggf. im Plugin-Reiter der Optionen aufgerufen werden kann..
+- Plugin-Entwickler können nun ein `JPanel` für Optionen implementieren, welches ggf. im Plugin-Reiter der Optionen aufgerufen werden kann.
 - Plugin-Entwickler können nun Objekte direkt mittels ID vom Core erfragen (Danke an webhamster).
 - Bug #19 gefixt (Danke an dsp2004)
- Nullpointer behoben.
+  `NullPointer` behoben.
 
 **0.51.2**
 
 - Bug #14 umgesetzt (Danke an Dragonne)
- Es konnte zu einem Fehler kommen, wenn gleichzeitig zwei Instanzen des GUIs liefen.
+  Es konnte zu einem Fehler kommen, wenn gleichzeitig zwei Instanzen des GUIs liefen.
 - Der Core kann jetzt übers GUI beendet werden.
 - Downloads können nun umbenannt werden.
 - Das Zielverzeichnis für einen Download (Incoming-Unterverzeichnis) kann nun geändert werden.
-- Überprüfung auf gültige Javaversion eingebaut
- Es wird mindestens 1.4 benötigt (empfohlen 1.4.2).
+- Überprüfung auf gültige Java-Version eingebaut
+  Es wird mindestens 1.4 benötigt (empfohlen 1.4.2).
 - Suchanzeige korrigiert
- Es kann passieren, dass nicht alle gefundenen Suchergebnisse beim Core ankommen, die Ausgabe wurde entsprechend korrigiert.
+  Es kann passieren, dass nicht alle gefundenen Suchergebnisse beim Core ankommen, die Ausgabe wurde entsprechend korrigiert.
 - Bug #8 umgesetzt (Danke an finn)
- Downloadlinks kann man nun auch direkt in der Downloadtabelle per Kontexmenü erzeugen.
- Ich wollte es eigentlich nicht umsetzen, da ich die Funktion an dieser Stelle für falsch platziert erachte, doch da der Wunsch bei vielen Benutzern bestand, hab ich es nun doch eingebaut.
- In die Uploadtabelle werde ich es definitiv NICHT einbauen.
-- Bug #10 fixed (Danke an muhviestarr)
- Wenn man keine Downloads hat, steht nun nicht mehr "bitte warten" in der Downloadtabelle.
+  Downloadlinks kann man nun auch direkt in der Downloadtabelle per Kontextmenü erzeugen.
+  Ich wollte es eigentlich nicht umsetzen, da ich die Funktion an dieser Stelle für falsch platziert erachte, doch da der Wunsch bei vielen Benutzern bestand, habe ich es nun doch eingebaut.
+  In die Uploadtabelle werde ich es definitiv NICHT einbauen.
+- Bug #10 gefixt (Danke an muhviestarr)
+  Wenn man keine Downloads hat, steht nun nicht mehr „bitte warten“ in der Downloadtabelle.
 
 **0.51.1**
 
-- Downloadlinks werden jetzt in ISO-8859-1 an den Core übertragen.
-- Versionupdateinformation geändert
- Über die Optionen kann nun gewählt werden, ob man nur bei neuen Versionen (0.51.1), wichtigen Änderungen (0.51.1) oder sogar bei kosmetischen Korrekturen (0.51.1) benachrichtigt wird.
- Standard ist Benachrichtigung bei wichtigen Änderungen.
-- Bug #1 fixed (Danke an muhviestarr)
- Look & Feel stimmt nun auch beim Verbindungsdialog.
-- Bug #2 fixed (Danke an muhviestarr)
- Taskbareintrag für den Splashscreen und den Verbindungsdialog eingebaut.
-- Bug #4 fixed (Danke an muhviestarr)
- Shareanzeige bei Prioritaetenaenderung gefixt.
+- Downloadlinks werden jetzt in `ISO-8859-1` an den Core übertragen.
+- Versionsupdateinformation geändert
+  Über die Optionen kann nun gewählt werden, ob man nur bei neuen Versionen (0.51.1), wichtigen Änderungen (0.51.1) oder sogar bei kosmetischen Korrekturen (0.51.1) benachrichtigt wird.
+  Standard ist eine Benachrichtigung bei wichtigen Änderungen.
+- Bug #1 gefixt (Danke an muhviestarr)
+  Look & Feel stimmt nun auch beim Verbindungsdialog.
+- Bug #2 gefixt (Danke an muhviestarr)
+  Taskbar-Eintrag für den Splashscreen und den Verbindungsdialog eingebaut.
+- Bug #4 gefixt (Danke an muhviestarr)
+  Shareanzeige bei Prioritätenänderung gefixt.
 - Dateigrößen in der Sharetabelle werden nun korrekt ausgegeben (Danke an schnigger und TuxHomer).
-- Nullpointer behoben der auftrat, wenn der verbundene Server keinen Namen hat (Danke an paderborner).
+- `NullPointer` behoben, der auftrat, wenn der verbundene Server keinen Namen hat (Danke an paderborner).
 
 **0.50**
 
 - Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
-- Im Verbindungsfenster geht nun ein einfaches <Enter> (Danke an muhviestarr).
+- Im Verbindungsfenster geht nun ein einfaches `Enter` (Danke an muhviestarr).
 - Legende für die Servertabelle eingebaut (Danke an muhviestarr).
 - Text von Netzwerk, Neuigkeiten und Nachrichten ist nun auch schwarz (Danke an muhviestarr).
-- Die Überschrift "Warnungen" auf der Startseite wird nun ausgeblendet, wenn es keine Warnungen gibt (Danke an muhviestarr).
+- Die Überschrift „Warnungen“ auf der Startseite wird nun ausgeblendet, wenn es keine Warnungen gibt (Danke an muhviestarr).
 - Gridlines werden nun in der Servertabelle nicht mehr angezeigt (Danke an muhviestarr).
 - Splashscreen wird nun früher angezeigt (Danke an muhviestarr).
 - Bug in der Partliste behoben.
-- Dau-Button zum Anzeigen der Partliste eingebaut.
-- Bug der Tableheader der Share- und der Uploadtabelle behoben (Danke an muhviestarr).
+- DAU-Button zum Anzeigen der Partliste eingebaut.
+- Bug der Tabellenköpfe der Share- und der Uploadtabelle behoben (Danke an muhviestarr).
 
 **0.49**
 
 - Bug bei der Wiedergabe von Sounds korrigiert (Danke an mrbond).
- Sounddevice wird nun nach Ausgabe eines Sounds wieder freigegeben.
-- Es kann nun der Link einer gesharten Datei über das Popupmenü der Sharetabelle als UBB-Code in die Ablage kopiert werden.
+  Audiogerät wird nun nach Ausgabe eines Sounds wieder freigegeben.
+- Es kann nun der Link einer freigegebenen Datei über das Popupmenü der Sharetabelle als UBB-Code in die Ablage kopiert werden.
 - Entwicklercreditsanzeige im Infodialog korrigiert.
 - Bug im Sharebaum behoben.
 - Bug beim Sortieren der Sharetabelle behoben.
@@ -620,58 +664,57 @@ Nur Frische Bugs beseitigt
 **0.48**
 
 - Initialen Aufruf des Sharetabs durch einen Initialisierungsthread beschleunigt.
-- In der Downloadtabelle nun ein Warteicon angezeigt, bis erstmalig Daten geholt wurden.
+- In der Downloadtabelle nun ein Warte-Icon angezeigt, bis erstmalig Daten geholt wurden.
 - Verhalten des Popupmenüs der Servertabelle überarbeitet.
-- Partliste wird nun nur noch über das PopupMenü geholt.
- Wenn der Downloadtab verlassen wird, wird das Aktualisieren der aktuellen Partliste beendet.
+- Partliste wird nun nur noch über das Popupmenü geholt.
+  Wenn der Downloadtab verlassen wird, wird das Aktualisieren der aktuellen Partliste beendet.
 
 **0.47**
 
 - Sharetabelle auf vielfachen Wunsch komplett überarbeitet.
 - Partliste wird erst nach 2 Sekunden Wartezeit geholt (Danke an muhviestarr).
- Wenn innerhalb dieser Zeit auf einen anderen Download.bzw. eine andere Quelle geklickt wird, wird die Wartezeit neu gestartet.
+  Wenn innerhalb dieser Zeit auf einen anderen Download bzw. eine andere Quelle geklickt wird, wird die Wartezeit neu gestartet.
 - Suche kann nun GUI-seitig abgebrochen werden.
- Der aktuelle Core (0.29.124.1215) hat an dieser Stelle noch einen Bug, eine Suche wird jedoch nach einiger Zeit automatisch beendet.
-- Tabellenspaltenroothandles werden nun in der Downloadtabelle angezeigt (Danke an muhviestarr).
- So weiss auch der letzte Benutzer, dass man auf einen Download klicken kann, um die Quellen zu finden.
-- Neuen Downloadstatus "Fehler beim Fertigstellen" und neuen Quellenstatus "Eigenes Limit erreicht" eingebaut.
+  Der aktuelle Core (0.29.124.1215) hat an dieser Stelle noch einen Bug, eine Suche wird jedoch nach einiger Zeit automatisch beendet.
+- Tabellenspalten-Root-Handles werden nun in der Downloadtabelle angezeigt (Danke an muhviestarr).
+  So weiß auch der letzte Benutzer, dass man auf einen Download klicken kann, um die Quellen zu finden.
+- Neuen Downloadstatus „Fehler beim Fertigstellen“ und neuen Quellenstatus „Eigenes Limit erreicht“ eingebaut.
 - Rundungsfehler beim automatischen Powerdownload behoben (Danke an garnichda).
 
 **0.46**
 
-- Bug beim autom. Pwdl behoben, der auftrat, wenn nur eine Datei im Download war.
-- Bug im Menü behoben, Auswahl eines Menüpunktes geht nun gewohnt schnell..
+- Bug beim automatischen Powerdownload behoben, der auftrat, wenn nur eine Datei im Download war.
+- Bug im Menü behoben, Auswahl eines Menüpunktes geht nun gewohnt schnell.
 - Kleinere optische Korrekturen (Danke an DBZfan)
- z.B. Hintergrundfarben aller Scrollbereiche an ihre Tabelle angepasst.
+  z. B. Hintergrundfarben aller Scrollbereiche an ihre Tabelle angepasst.
 - Prozentangabe bei Downloads nun auf zwei Nachkommastellen genau (Danke an muhviestarr)
 - Parameterübergabe an das GUI geändert
- Mögliche Parameter können per -help angezeigt werden.
- Die reg-Datei muss neu angepasst und importiert werden, da diese ebenfalls modifiziert werden musste.
-- diverse andere Bugs behoben
+  Mögliche Parameter können per `-help` angezeigt werden.
+  Die `.reg`-Datei muss neu angepasst und importiert werden, da diese ebenfalls modifiziert werden musste.
+- Diverse andere Bugs behoben
 
 **0.45**
 
-- Links können nun an das GUI übermittelt werden (für den INet-Explorer muss die entsprechende reg-Datei angepasst und importiert und die Windows-Exe verwendet werden).
+- Links können nun an das GUI übermittelt werden (für den Internet Explorer muss die entsprechende `.reg`-Datei angepasst und importiert und die Windows-EXE verwendet werden).
 - Themes sind nun deaktivierbar
 
 **0.44**
 
 - Themes eingebaut (Danke an `LinuxDoc`)
- Passende Themes gibt?s auf https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks.
+  Passende Themes gibt es auf [GitHub](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks).
 - Automatischen Powerdownload eingebaut.
- Verschiedene Arten des autom. Pwdls können in Zukunft durch selbst implementierte Klassen per Combobox ausgewählt werden (nächste Version).
+  Verschiedene Arten des automatischen Powerdownloads können in Zukunft durch selbst implementierte Klassen per ComboBox ausgewählt werden (nächste Version).
 
 **0.43**
 
-- max.RAM-Anzeige in Memory-Monitor eingebaut (Anzeige oben links nun "reserviert / max allocated").
-- Soundicons optisch korrigiert.
-- Fehler bei der Soundausgabe bei fehlerhaften Sounddateien (z.B. falsches Format) oder fehlendem Sounddevice behoben.
+- Anzeige des maximalen RAM-Verbrauchs im Memory-Monitor eingebaut (Anzeige oben links nun „reserviert / max allocated“).
+- Sound-Icons optisch korrigiert.
+- Fehler bei der Soundausgabe bei fehlerhaften Audiodateien (z. B. falsches Format) oder fehlendem Audiogerät behoben.
 
 **0.42**
 
 - Memory-Monitor eingebaut (ja, die Anzeige geht richtig und zeigt den echten RAM-Verbrauch der Anwendung)
-- manuellen GarbageCollector bei jeder 30\
-- Aktualisierung eingebaut
+- Manuellen Garbage Collector bei jeder 30. Aktualisierung eingebaut
 
 **0.41**
 
@@ -685,6 +728,6 @@ Nur Frische Bugs beseitigt
 
 **0.39**
 
-- Standarduploadpriorität ist im Core noch nicht implementiert und deshalb erstmal wieder aus dem GUI geflogen (Danke an `xcalibur`)
+- Standarduploadpriorität ist im Core noch nicht implementiert und deshalb erst einmal wieder aus dem GUI geflogen (Danke an `xcalibur`)
 - Buttons zum Ändern der Pwdl-Werte entsprechend dem Standard vertauscht (Danke an `lova`)
-- Baum zur Auswahl des Temp- und Incomingordners korrigiert. Bug hat sich erst mit `v0.38` eingeschlichen (Danke an `lova` und `akku`)
+- Baum zur Auswahl des Temp- und Incoming-Ordners korrigiert. Bug hat sich erst mit `v0.38` eingeschlichen (Danke an `lova` und `akku`)

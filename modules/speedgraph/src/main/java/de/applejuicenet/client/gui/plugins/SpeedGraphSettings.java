@@ -345,10 +345,10 @@ public class SpeedGraphSettings extends JPanel {
                     Color col = null;
                     try {
                         col = JColorChooser.showDialog(getPanel(), "Hintergrund Beginn Farbe wählen",
-                                parent.getPropertyColor("GradientStart", Color.white));
+                                parent.getPropertyColor("GradientStart", UpDownChart.defaultBackground()));
                     } catch (NullPointerException er) {
                         col = JColorChooser.showDialog(getPanel(), "Hintergrund Beginn Farbe wählen",
-                                Color.white);
+                                UpDownChart.defaultBackground());
                     }
 
                     if (col != null) {
@@ -409,9 +409,9 @@ public class SpeedGraphSettings extends JPanel {
                 lblBGColorBegin.setText("Hintergrund Start");  // Generated
                 lblBGColorBegin.setOpaque(true);
                 try {
-                    lblBGColorBegin.setBackground(parent.getPropertyColor("GradientStart", Color.white));
+                    lblBGColorBegin.setBackground(parent.getPropertyColor("GradientStart", UpDownChart.defaultBackground()));
                 } catch (NullPointerException e) {
-                    lblBGColorBegin.setBackground(Color.white);
+                    lblBGColorBegin.setBackground(UpDownChart.defaultBackground());
                 }
             } catch (java.lang.Throwable e) {
                 // TODO: Something

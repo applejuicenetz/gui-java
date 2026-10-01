@@ -91,7 +91,7 @@ public class SpeedGraphPlugin extends PluginConnector implements FocusListener, 
             }
 
             ud.setGradientDirection(propGradientDir);
-            ud.setBGStart(getPropertyColor("GradientStart", Color.white));
+            ud.setBGStart(getPropertyColor("GradientStart", UpDownChart.defaultBackground()));
             ud.setBGEnd(getPropertyColor("GradientEnd", Color.green));
             ud.setUpdatePeriod(Long.parseLong(properties.getProperty("UpdateTime", "2000")));
         } else {

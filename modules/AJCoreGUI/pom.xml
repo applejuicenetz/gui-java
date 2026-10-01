@@ -84,9 +84,9 @@
             <version>2.7.0</version>
         </dependency>
         <dependency>
-            <groupId>org.freeplane.bulenkov</groupId>
-            <artifactId>darcula</artifactId>
-            <version>2021.7</version>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.7.2</version>
         </dependency>
     </dependencies>
 
