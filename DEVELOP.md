@@ -52,11 +52,14 @@ Architektur. Alle sechs Pakete plus `AJCoreGUI.zip` bleiben bei manueller Ausfü
 als Actions-Artefakt verfügbar; Tags veröffentlichen dieselben Dateien als Release.
 Tag (optional mit `v` davor) muss zur Maven-Version passen.
 
-Windows installiert pro Benutzer. WiX registriert `ajfsp` unter
-`HKCU\Software\Classes\ajfsp`; der Befehl lautet
-`"[INSTALLDIR]AJCoreGUI.exe" "%1"`. Deinstallation entfernt die vom Installer
-angelegten Registry-Werte. Das WiX-Template stammt direkt aus dem verwendeten
-JDK 25 und wird vor dem Installer-Build um diese Registrierung ergänzt.
+Windows installiert wie das NSIS-Setup nach `Program Files\appleJuiceNETZ\JavaGUI`
+mit Verzeichnisauswahl, Startmenügruppe `appleJuiceNETZ`, Desktop-Verknüpfung, Hilfe- und
+Info-Link sowie Copyright. WiX registriert `ajfsp` und `.ajl` unter `HKLM`: `ajfsp`,
+`appleJuiceNETZ.URI.JavaGUI`, `appleJuiceNETZ.EXT.JavaGUI`, `Capabilities` und
+`RegisteredApplications`; der Befehl lautet `"[INSTALLDIR]AJCoreGUI.exe" "%1"`.
+Deinstallation entfernt die vom Installer angelegten Registry-Werte. Das WiX-Template
+stammt direkt aus dem verwendeten JDK 25 und wird vor dem Installer-Build um diese
+Registrierung ergänzt.
 macOS registriert `ajfsp` über `CFBundleURLTypes`, Flatpak über Desktop-MIME-Typen.
 AJL-Dateizuordnungen bleiben erhalten. Laufende GUI nimmt weitere Links über den
 lokalen Listener an; Dateipfade und URLs werden als einzelne Argumente übergeben.

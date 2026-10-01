@@ -46,7 +46,7 @@ def windows_resources(jdk_home, directory):
   <Fragment>
     <DirectoryRef Id="INSTALLDIR">
       <Component Id="AjfspProtocol" Guid="*">
-        <RegistryKey Root="HKCU" Key="Software\\Classes\\ajfsp">
+        <RegistryKey Root="HKLM" Key="Software\\Classes\\ajfsp">
           <RegistryValue Type="string" Value="URL:appleJuice File Sharing Protocol"/>
           <RegistryValue Name="URL Protocol" Type="string" Value="" KeyPath="yes"/>
           <RegistryKey Key="DefaultIcon">
@@ -56,6 +56,38 @@ def windows_resources(jdk_home, directory):
             <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot; &quot;%1&quot;"/>
           </RegistryKey>
         </RegistryKey>
+        <RegistryKey Root="HKLM" Key="Software\\Classes\\appleJuiceNETZ.URI.JavaGUI">
+          <RegistryValue Type="string" Value="URL:ajfsp"/>
+          <RegistryValue Name="URL Protocol" Type="string" Value=""/>
+          <RegistryKey Key="DefaultIcon">
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot;,0"/>
+          </RegistryKey>
+          <RegistryKey Key="shell\\open\\command">
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot; &quot;%1&quot;"/>
+          </RegistryKey>
+        </RegistryKey>
+        <RegistryKey Root="HKLM" Key="Software\\Classes\\appleJuiceNETZ.EXT.JavaGUI">
+          <RegistryValue Type="string" Value="appleJuice Linkliste"/>
+          <RegistryKey Key="DefaultIcon">
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot;,0"/>
+          </RegistryKey>
+          <RegistryKey Key="shell\\open\\command">
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot; &quot;%1&quot;"/>
+          </RegistryKey>
+        </RegistryKey>
+        <RegistryKey Root="HKLM" Key="Software\\appleJuiceNETZ\\JavaGUI\\Capabilities">
+          <RegistryValue Name="ApplicationName" Type="string" Value="JavaGUI"/>
+          <RegistryValue Name="ApplicationIcon" Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot;,0"/>
+          <RegistryValue Name="ApplicationDescription" Type="string" Value="appleJuice GUI"/>
+          <RegistryKey Key="URLAssociations">
+            <RegistryValue Name="ajfsp" Type="string" Value="appleJuiceNETZ.URI.JavaGUI"/>
+          </RegistryKey>
+          <RegistryKey Key="FileAssociations">
+            <RegistryValue Name=".ajl" Type="string" Value="appleJuiceNETZ.EXT.JavaGUI"/>
+          </RegistryKey>
+        </RegistryKey>
+        <RegistryValue Root="HKLM" Key="Software\\RegisteredApplications" Name="JavaGUI" Type="string"
+                       Value="Software\\appleJuiceNETZ\\JavaGUI\\Capabilities"/>
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -125,8 +157,14 @@ def native(args):
         java_home = Path(os.environ['JAVA_HOME'])
         windows_resources(java_home, resources)
         options += ['--icon', str(ROOT / 'assets/windows/AJCoreGUI.ico'),
-                    '--resource-dir', str(resources), '--win-per-user-install',
-                    '--win-menu', '--win-shortcut', '--win-dir-chooser',
+                    '--resource-dir', str(resources),
+                    '--copyright', 'appleJuiceNETZ',
+                    '--about-url', 'https://applejuicenetz.github.io',
+                    '--win-help-url', 'https://applejuicenetz.github.io/faq/',
+                    '--install-dir', 'appleJuiceNETZ/JavaGUI',
+                    '--win-dir-chooser',
+                    '--win-menu', '--win-menu-group', 'appleJuiceNETZ',
+                    '--win-shortcut',
                     '--win-upgrade-uuid', 'c15e8267-840b-4c4c-8a24-28555bc08c27']
     elif args.platform == 'macos':
         mac_resources(Path(os.environ['JAVA_HOME']), resources, version)
