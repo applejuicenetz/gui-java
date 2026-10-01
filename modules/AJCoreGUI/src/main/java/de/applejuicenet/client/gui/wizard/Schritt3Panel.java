@@ -53,7 +53,6 @@ public class Schritt3Panel extends WizardPanel
    {
       erlaeuterung.setWrapStyleWord(true);
       erlaeuterung.setLineWrap(true);
-      erlaeuterung.setBackground(Color.WHITE);
       erlaeuterung.setEditable(false);
       nickname.setColumns(20);
 

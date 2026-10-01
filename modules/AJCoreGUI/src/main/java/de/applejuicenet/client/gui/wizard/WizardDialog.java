@@ -165,7 +165,6 @@ public class WizardDialog extends JDialog implements LanguageListener {
         buttons.add(zurueck);
         buttons.add(weiter);
         buttons.add(ende);
-        buttons.setBackground(Color.WHITE);
         zurueck.setEnabled(false);
 
         getContentPane().add(label1, BorderLayout.NORTH);

@@ -39,8 +39,6 @@ public class Schritt2Panel extends WizardPanel
       textArea1.setLineWrap(true);
       textArea1.setEditable(false);
       textArea2.setLineWrap(true);
-      textArea1.setBackground(Color.WHITE);
-      textArea2.setBackground(Color.WHITE);
       textArea2.setEditable(false);
       setLayout(new GridBagLayout());
       GridBagConstraints constraints = new GridBagConstraints();

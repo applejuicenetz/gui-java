@@ -111,7 +111,6 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         powerdownload.setBackground(BLUE_BACKGROUND);
         ratioFocusAdapter = new RatioFocusAdapter();
         ratio.addFocusListener(ratioFocusAdapter);
-        ratio.setBackground(Color.white);
         ratio.setMinimumSize(new Dimension(50, 21));
         ratio.setPreferredSize(new Dimension(50, 21));
         ratio.setHorizontalAlignment(SwingConstants.RIGHT);

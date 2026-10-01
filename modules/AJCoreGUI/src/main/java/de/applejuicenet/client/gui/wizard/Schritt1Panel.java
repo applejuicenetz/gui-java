@@ -40,7 +40,6 @@ public class Schritt1Panel extends WizardPanel
       erlaeuterung.setWrapStyleWord(true);
       erlaeuterung.setLineWrap(true);
       erlaeuterung.setEditable(false);
-      erlaeuterung.setBackground(Color.WHITE);
 
       String path         = System.getProperty("user.dir") + File.separator + "language" + File.separator;
       File   languagePath = new File(path);

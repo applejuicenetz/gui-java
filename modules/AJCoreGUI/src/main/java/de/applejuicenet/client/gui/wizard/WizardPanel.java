@@ -24,7 +24,6 @@ public abstract class WizardPanel
 
     public WizardPanel() {
         super();
-        setBackground(Color.WHITE);
         languageSelector = LanguageSelector.getInstance();
     }
 

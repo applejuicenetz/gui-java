@@ -34,11 +34,9 @@ public class Schritt5Panel extends WizardPanel
    {
       label1.setWrapStyleWord(true);
       label1.setLineWrap(true);
-      label1.setBackground(Color.WHITE);
       label1.setEditable(false);
       label2.setWrapStyleWord(true);
       label2.setLineWrap(true);
-      label2.setBackground(Color.WHITE);
       label2.setEditable(false);
 
       setLayout(new GridBagLayout());
