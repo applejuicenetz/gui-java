@@ -64,7 +64,7 @@ def windows_resources(jdk_home, directory):
     (directory / 'main.wxs').write_text(template, encoding='utf-8')
 
 
-def mac_resources(jdk_home, directory):
+def mac_resources(jdk_home, directory, display_version=None):
     with zipfile.ZipFile(jdk_home / 'jmods/jdk.jpackage.jmod') as jmod:
         template = jmod.read('classes/jdk/jpackage/internal/resources/Info-lite.plist.template').decode('utf-8')
     url_types = """
@@ -78,6 +78,8 @@ def mac_resources(jdk_home, directory):
         raise RuntimeError('Unsupported jpackage macOS plist template')
     index = template.rfind('</dict>')
     template = template[:index] + url_types + template[index:]
+    if display_version is not None:
+        template = template.replace('DEPLOY_BUNDLE_SHORT_VERSION', display_version)
     (directory / 'Info.plist').write_text(template, encoding='utf-8')
 
 
@@ -105,10 +107,12 @@ def native(args):
     version = args.version or ET.parse(ROOT / 'pom.xml').getroot().findtext('version')
     if not re.fullmatch(r'\d+\.\d+\.\d+', version):
         raise RuntimeError(f'Installer version must have three numeric parts: {version}')
+    # CFBundleVersion requires a positive first component; GUI version remains unchanged.
+    installer_version = '1' + version[1:] if args.platform == 'macos' and version.startswith('0.') else version
     associations = resources / 'ajl.properties'
     associations.write_text('extension=ajl\nmime-type=application/x-ajl\ndescription=appleJuice Link List\n', encoding='utf-8')
     options = [
-        '--name', NAME, '--app-version', version, '--vendor', 'appleJuiceNETZ',
+        '--name', NAME, '--app-version', installer_version, '--vendor', 'appleJuiceNETZ',
         '--description', 'appleJuice JavaGUI', '--input', str(INPUT),
         '--main-jar', f'{NAME}.jar', '--main-class', MAIN,
         '--add-modules', 'java.desktop,java.management,java.naming,java.sql,java.xml,jdk.crypto.ec,jdk.unsupported,jdk.localedata',
@@ -125,10 +129,11 @@ def native(args):
                     '--win-menu', '--win-shortcut', '--win-dir-chooser',
                     '--win-upgrade-uuid', 'c15e8267-840b-4c4c-8a24-28555bc08c27']
     elif args.platform == 'macos':
-        mac_resources(Path(os.environ['JAVA_HOME']), resources)
+        mac_resources(Path(os.environ['JAVA_HOME']), resources, version)
         options += ['--icon', str(ROOT / 'assets/mac/AJCoreGUI.icns'),
                     '--mac-package-identifier', MAIN, '--resource-dir', str(resources),
-                    '--java-options', '-Dapple.awt.application.appearance=system']
+                    '--java-options', '-Dapple.awt.application.appearance=system',
+                    '--java-options', f'-Djpackage.app-version={version}']
     else:
         options += ['--icon', str(ROOT / 'assets/linux/AJCoreGUI.png')]
     subprocess.run([jpackage, '--type', args.type, *options], check=True)

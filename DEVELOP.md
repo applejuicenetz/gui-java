@@ -78,3 +78,7 @@ Server `github` mit Benutzername und Token mit `read:packages`; GitHub Actions
 konfiguriert dies über `actions/setup-java` und `GITHUB_TOKEN`. Keine Tokens ins
 Repository schreiben. Test-Builds auf Branches `build/javagui-*` erzeugen alle
 Pakete als Artefakte, ohne Release zu veröffentlichen.
+
+macOS verlangt eine positive erste Zahl in `CFBundleVersion`. Für GUI-Versionen
+`0.x.y` nutzt jpackage deshalb intern Buildnummer `1.x.y`; sichtbare GUI-Version,
+`CFBundleShortVersionString`, Tag und JAR bleiben `0.x.y`.
