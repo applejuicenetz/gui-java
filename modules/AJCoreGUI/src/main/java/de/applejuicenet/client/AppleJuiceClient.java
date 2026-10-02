@@ -172,8 +172,8 @@ public class AppleJuiceClient {
                             System.out.println("appleJuice-JavaGUI nicht gestartet");
                             System.exit(1);
                         }
-                    } else if (curArg.startsWith("ajfsp://") || (curArg.contains("-link=") && curArg.length() > "-link=".length() + 1)) {
-                        link = curArg.startsWith("ajfsp://") ? curArg : curArg.substring(curArg.indexOf("-link=") + "-link=".length());
+                    } else if (curArg.startsWith("ajfsp://") || curArg.startsWith("web+ajfsp://") || (curArg.contains("-link=") && curArg.length() > "-link=".length() + 1)) {
+                        link = curArg.startsWith("ajfsp://") || curArg.startsWith("web+ajfsp://") ? curArg : curArg.substring(curArg.indexOf("-link=") + "-link=".length());
 
                         if (doubleInstance) {
                             LinkListener.forwardLink(link);

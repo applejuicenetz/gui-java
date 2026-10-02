@@ -24,6 +24,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class LinkListener extends Thread implements CoreStatusListener, AutoCloseable {
+    private static final String WEB_PREFIX = "web+ajfsp://";
     private static final Logger logger = LoggerFactory.getLogger(LinkListener.class);
     private final ServerSocket listen;
     private final Supplier<String> passwordSupplier;
@@ -86,7 +87,7 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
             processAjl(new File(path), "");
             return true;
         }
-        if (command.startsWith("-link=") || command.startsWith("ajfsp://")) {
+        if (command.startsWith("-link=") || command.startsWith("ajfsp://") || command.startsWith("web+ajfsp://")) {
             int start = command.indexOf("ajfsp://");
             if (start >= 0) {
                 processLink(command.substring(start), "");
@@ -147,6 +148,9 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
     }
 
     public void processLink(String link, String directory) {
+        if (link.regionMatches(true, 0, WEB_PREFIX, 0, WEB_PREFIX.length())) {
+            link = link.substring("web+".length());
+        }
         link = link.replace("%7C", "|").replace("%20", ".");
         queueLink(new Link(link, directory));
     }

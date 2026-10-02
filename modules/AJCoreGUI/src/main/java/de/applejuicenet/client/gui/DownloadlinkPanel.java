@@ -50,7 +50,12 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
 
       txtDownloadLink.addKeyListener(keyListener);
       InvalidRule downloadloadlinkRule = component -> {
-         String text = ((TKLTextField) component).getText().replace("%7C", "|").toLowerCase();
+         String text = ((TKLTextField) component).getText().replace("%7C", "|").trim().toLowerCase();
+
+         if(text.startsWith("web+ajfsp://"))
+         {
+            text = text.substring("web+".length());
+         }
 
          if(text.length() == 0)
          {

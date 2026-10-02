@@ -23,5 +23,5 @@ Ein aktuelles Changelog befindet sich [hier](CHANGELOG.md)
 Die Release-Pipeline baut mit Java 25 vier native `jpackage`-Installer (macOS DMG,
 Windows EXE jeweils für amd64/aarch64) und zwei Linux-Flatpaks. Alle sechs OS-Pakete
 enthalten die Laufzeit. `AJCoreGUI.zip` bleibt als plattformneutrales Paket verfügbar
-und benötigt installiertes Java 25. Installer registrieren `ajfsp`-Links und AJL-Dateien.
+und benötigt installiertes Java 25. Installer registrieren `ajfsp`-/`web+ajfsp`-Links und AJL-Dateien.
 Build-Anleitung: [DEVELOP.md](DEVELOP.md).

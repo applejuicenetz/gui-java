@@ -36,6 +36,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
     public static String separator;
 
     private static final int MAX_SUBDIR_DEPTH = 5;
+    private static final String WEB_LINK_PREFIX = "web+ajfsp://";
     private static HashSet<CoreStatusListener> coreListener = new HashSet<CoreStatusListener>();
     private final CoreConnectionSettingsHolder coreHolder;
     private Map<DATALISTENER_TYPE, DataUpdateInformer> informer = new HashMap<DATALISTENER_TYPE, DataUpdateInformer>();
@@ -744,10 +745,15 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
         return subdir;
     }
 
-    public synchronized String processLink(final String link, String subdir)
+    public synchronized String processLink(String link, String subdir)
             throws IllegalArgumentException {
         if (link == null || link.length() == 0) {
             throw new IllegalArgumentException("invalid link");
+        }
+
+        link = link.trim();
+        if (link.regionMatches(true, 0, WEB_LINK_PREFIX, 0, WEB_LINK_PREFIX.length())) {
+            link = link.substring("web+".length());
         }
 
         subdir = processSubdir(subdir);

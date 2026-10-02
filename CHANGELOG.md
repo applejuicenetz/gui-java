@@ -2,6 +2,7 @@
 
 **0.86.1**
 
+- [red171] `web+ajfsp://`-Links zusätzlich zu `ajfsp://` registriert (Windows, macOS, Flatpak) und im Link-Eingabefeld akzeptiert
 - [red171] Zielordner-Auswahl (F3) zeigt vorhandene Incoming-Unterordner auch ohne zugewiesene Downloads (#21)
 - [red171] Share-Größe mit passender binärer Einheit (MiB/GiB/TiB) statt festem MB angezeigt (#15)
 - [red171] Ungültige Fensterpositionen beim Start korrigiert; Tray-Klick stellt minimierte Fenster wieder her

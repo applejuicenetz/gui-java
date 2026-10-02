@@ -58,6 +58,16 @@ def windows_resources(jdk_home, directory):
             <RegistryValue Type="string" Value="&quot;[INSTALLDIR]appleJuice JavaGUI.exe&quot; &quot;%1&quot;"/>
           </RegistryKey>
         </RegistryKey>
+        <RegistryKey Root="HKLM" Key="Software\\Classes\\web+ajfsp">
+          <RegistryValue Type="string" Value="URL:appleJuice File Sharing Protocol"/>
+          <RegistryValue Name="URL Protocol" Type="string" Value=""/>
+          <RegistryKey Key="DefaultIcon">
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]appleJuice JavaGUI.exe&quot;,0"/>
+          </RegistryKey>
+          <RegistryKey Key="shell\\open\\command">
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]appleJuice JavaGUI.exe&quot; &quot;%1&quot;"/>
+          </RegistryKey>
+        </RegistryKey>
         <RegistryKey Root="HKLM" Key="Software\\Classes\\appleJuiceNETZ.URI.JavaGUI">
           <RegistryValue Type="string" Value="URL:ajfsp"/>
           <RegistryValue Name="URL Protocol" Type="string" Value=""/>
@@ -83,6 +93,7 @@ def windows_resources(jdk_home, directory):
           <RegistryValue Name="ApplicationDescription" Type="string" Value="appleJuice GUI"/>
           <RegistryKey Key="URLAssociations">
             <RegistryValue Name="ajfsp" Type="string" Value="appleJuiceNETZ.URI.JavaGUI"/>
+            <RegistryValue Name="web+ajfsp" Type="string" Value="appleJuiceNETZ.URI.JavaGUI"/>
           </RegistryKey>
           <RegistryKey Key="FileAssociations">
             <RegistryValue Name=".ajl" Type="string" Value="appleJuiceNETZ.EXT.JavaGUI"/>
@@ -106,7 +117,7 @@ def mac_resources(jdk_home, directory, display_version=None):
   <key>CFBundleURLTypes</key>
   <array><dict>
     <key>CFBundleURLName</key><string>appleJuice Links</string>
-    <key>CFBundleURLSchemes</key><array><string>ajfsp</string></array>
+    <key>CFBundleURLSchemes</key><array><string>ajfsp</string><string>web+ajfsp</string></array>
   </dict></array>
 """
     if template.count('</plist>') != 1:

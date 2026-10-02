@@ -500,7 +500,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             return;
         }
 
-        final String link = linkPane.getTxtDownloadLink().getText().replace("%7C", "|");
+        final String link = linkPane.getTxtDownloadLink().getText().trim().replace("%7C", "|");
         Object sel = linkPane.getCmbTargetDir().getSelectedItem();
         String tmp;
 

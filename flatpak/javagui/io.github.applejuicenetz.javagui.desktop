@@ -11,4 +11,4 @@ Type=Application
 Terminal=false
 Categories=Network;
 StartupWMClass=AJCoreGUI
-MimeType=x-scheme-handler/ajfsp;application/x-ajl;
+MimeType=x-scheme-handler/ajfsp;x-scheme-handler/web+ajfsp;application/x-ajl;
