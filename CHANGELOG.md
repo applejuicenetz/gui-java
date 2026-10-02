@@ -2,6 +2,7 @@
 
 **0.86.1**
 
+- [red171] Share-Größe mit passender binärer Einheit (MiB/GiB/TiB) statt festem MB angezeigt (#15)
 - [red171] Ungültige Fensterpositionen beim Start korrigiert; Tray-Klick stellt minimierte Fenster wieder her
 - [red171] Extras-Menü um „Beenden“ unter „Über“ ergänzt; GUI speichert Einstellungen und beendet sich
 - [red171] Spaltenbreiten und Reihenfolge pro View gespeichert; unbesuchte Tabs überschreiben keine Einstellungen, Suchergebnisse übernehmen ihr Layout (#6)

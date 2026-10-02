@@ -37,7 +37,6 @@ import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +70,6 @@ public class ShareController extends GuiController
    private static final int       OPEN_WITH_STANDARD_PROGRAM     = 12;
    private static final int       RELEASE_INFO                   = 13;
    private static ShareController instance                       = null;
-   private static DecimalFormat   formatter                      = new DecimalFormat("###,##0.00");
    private SharePanel             sharePanel;
    private String                 dateiGroesse;
    private String                 eintraege;
@@ -591,7 +589,7 @@ public class ShareController extends GuiController
                }
                sharePanel.getShareModel().setShares(shares);
                anzahlDateien = 0;
-               double size = 0;
+               long size = 0;
 
                prio = 0;
                for(Share curShare : shares)
@@ -605,9 +603,7 @@ public class ShareController extends GuiController
                   anzahlDateien++;
                }
 
-               size = size / 1048576;
-
-               dateiGroesse = formatter.format(size) + " MB";
+               dateiGroesse = ShareSizeFormatter.format(size);
                String temp = eintraege;
 
                temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
