@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.tray;
 
-import dev.hivens.libtray.TrayMenu;
+import io.github.red171.libtray.TrayMenu;
 import org.junit.Test;
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,7 +16,7 @@ public class SwingTrayMenuTest {
             item.addActionListener(event -> called.set(SwingUtilities.isEventDispatchThread()));
             popup.add(item);
             SwingTrayMenu menu = new SwingTrayMenu(popup, changed -> {});
-            menu.select(menu.snapshot().getItems().get(0).getId());
+            menu.select(menu.snapshot().items().get(0).id());
         });
         SwingUtilities.invokeAndWait(() -> {});
         assertTrue(called.get());
@@ -31,12 +31,12 @@ public class SwingTrayMenuTest {
             item.addActionListener(event -> called.set(true));
             popup.add(item);
             try (SwingTrayMenu menu = new SwingTrayMenu(popup, updated::set)) {
-                String id = menu.snapshot().getItems().get(0).getId();
+                String id = menu.snapshot().items().get(0).id();
                 item.setText("Show");
-                assertEquals("Show", updated.get().getItems().get(0).getLabel());
-                assertEquals(id, updated.get().getItems().get(0).getId());
+                assertEquals("Show", updated.get().items().get(0).label());
+                assertEquals(id, updated.get().items().get(0).id());
                 item.setEnabled(false);
-                assertFalse(updated.get().getItems().get(0).getEnabled());
+                assertFalse(updated.get().items().get(0).enabled());
                 menu.select(id);
             }
             assertFalse(called.get());
@@ -53,7 +53,7 @@ public class SwingTrayMenuTest {
             item.addActionListener(event -> called.set(true));
             popup.add(item);
             menu.set(new SwingTrayMenu(popup, changed -> {}));
-            menu.get().select(menu.get().snapshot().getItems().get(0).getId());
+            menu.get().select(menu.get().snapshot().items().get(0).id());
         });
         SwingUtilities.invokeAndWait(() -> {});
         try {

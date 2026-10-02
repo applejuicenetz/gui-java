@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.tray;
 
-import dev.hivens.libtray.TrayMenu;
-import dev.hivens.libtray.TrayMenuItem;
+import io.github.red171.libtray.TrayMenu;
+import io.github.red171.libtray.TrayMenuItem;
 
 import javax.swing.*;
 import java.awt.Component;

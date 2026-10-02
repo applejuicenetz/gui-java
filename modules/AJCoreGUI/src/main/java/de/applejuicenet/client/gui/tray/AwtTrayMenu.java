@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.tray;
 
-import dev.hivens.libtray.TrayMenu;
-import dev.hivens.libtray.TrayMenuItem;
+import io.github.red171.libtray.TrayMenu;
+import io.github.red171.libtray.TrayMenuItem;
 
 import javax.swing.JPopupMenu;
 import java.awt.MenuItem;
@@ -22,11 +22,11 @@ final class AwtTrayMenu implements AutoCloseable {
 
     private void update(TrayMenu menu) {
         popup.removeAll();
-        for (TrayMenuItem item : menu.getItems()) {
+        for (TrayMenuItem item : menu.items()) {
             if (item instanceof TrayMenuItem.Standard standard) {
-                MenuItem nativeItem = new MenuItem(standard.getLabel());
-                nativeItem.setEnabled(standard.getEnabled());
-                nativeItem.addActionListener(event -> actions.select(standard.getId()));
+                MenuItem nativeItem = new MenuItem(standard.label());
+                nativeItem.setEnabled(standard.enabled());
+                nativeItem.addActionListener(event -> actions.select(standard.id()));
                 popup.add(nativeItem);
             } else if (item instanceof TrayMenuItem.Separator) {
                 popup.addSeparator();

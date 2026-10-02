@@ -70,13 +70,13 @@ mit Leerzeichen/Umlauten im Pfad öffnen. macOS- und Windows-Installer sind unsi
 
 ## libtray
 
-Wie im Collector nutzt Linux `dev.hivens:libtray:0.1.3-flatpak.2` für
-StatusNotifierItem. macOS/Windows und fehlende Linux-Backends nutzen AWT.
+Wie im Collector nutzt Linux `io.github.red171:libtray-java:0.1.0-SNAPSHOT` für
+StatusNotifierItem, ohne Kotlin und SLF4J in der Tray-Lib. macOS/Windows und fehlende Linux-Backends nutzen AWT.
 macOS verwendet dabei ein natives AWT-Kontextmenü wie der Core.
 Das bestehende Swing-Menü liefert Aktionen und Übersetzungen. Flatpak erlaubt Zugriff auf
 `org.kde.StatusNotifierWatcher`.
 
-Die libtray-Version liegt in GitHub Packages (`red171/libtray`). Maven benötigt
+Die libtray-Version liegt in GitHub Packages (`red171/libtray-java`). Maven benötigt
 Server `github` mit Benutzername und Token mit `read:packages`; GitHub Actions
 konfiguriert dies über `actions/setup-java` und `GITHUB_TOKEN`. Keine Tokens ins
 Repository schreiben. Test-Builds auf Branches `build/javagui-*` erzeugen alle

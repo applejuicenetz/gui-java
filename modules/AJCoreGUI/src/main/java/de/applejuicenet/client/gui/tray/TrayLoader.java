@@ -5,10 +5,9 @@ package de.applejuicenet.client.gui.tray;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.IconManager;
-import dev.hivens.libtray.Tray;
-import dev.hivens.libtray.TrayBuilder;
-import dev.hivens.libtray.TrayEvent;
-import kotlin.Unit;
+import io.github.red171.libtray.Tray;
+import io.github.red171.libtray.TrayBuilder;
+import io.github.red171.libtray.TrayEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +96,7 @@ public class TrayLoader implements AutoCloseable {
             try { icon.paintIcon(null, graphics, 0, 0); }
             finally { graphics.dispose(); }
             ImageIO.write(image, "png", png);
-            nativeTray = Tray.Companion.create(new TrayBuilder(title, png.toByteArray(), title,
+            nativeTray = Tray.create(new TrayBuilder(title, png.toByteArray(), title,
                     nativeMenu.snapshot(), null, "io.github.applejuicenetz.javagui.StatusNotifierItem"));
             if (nativeTray == null) {
                 nativeMenu.close();
@@ -106,9 +105,8 @@ public class TrayLoader implements AutoCloseable {
             }
             SwingTrayMenu menu = nativeMenu;
             nativeTray.onEvent(event -> {
-                if (event instanceof TrayEvent.MenuItemSelected selected) menu.select(selected.getId());
+                if (event instanceof TrayEvent.MenuItemSelected selected) menu.select(selected.id());
                 else if (event instanceof TrayEvent.Activated) SwingUtilities.invokeLater(() -> showHideItem.doClick());
-                return Unit.INSTANCE;
             });
             logger.info("Linux-Tray mit libtray/StatusNotifierItem gestartet");
             return true;
