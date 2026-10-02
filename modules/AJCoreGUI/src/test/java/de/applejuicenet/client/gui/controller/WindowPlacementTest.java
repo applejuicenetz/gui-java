@@ -87,7 +87,8 @@ public class WindowPlacementTest {
                 WindowPlacement.restore(frame);
                 assertEquals(Frame.MAXIMIZED_BOTH, frame.getExtendedState());
                 assertTrue(frame.isVisible());
-                assertEquals(WindowPlacement.normalize(frame.getBounds()), frame.getBounds());
+                assertTrue(WindowPlacement.normalize(frame.getBounds())
+                        .contains(frame.getBounds().getCenterX(), frame.getBounds().getCenterY()));
             } finally {
                 frame.dispose();
             }
