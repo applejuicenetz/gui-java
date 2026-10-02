@@ -116,7 +116,7 @@ jobs:
       - name: Install Flatpak builder
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends flatpak flatpak-builder
+          sudo apt-get install -y --no-install-recommends flatpak flatpak-builder xvfb xauth
           flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
       - name: Build JAR and Flatpak bundle
         shell: bash
@@ -126,7 +126,7 @@ jobs:
           PACKAGE_ARCH: ${{ matrix.package-arch }}
         run: |
           set -euo pipefail
-          mvn -B clean package
+          xvfb-run -a mvn -B clean package
           python scripts/package.py prepare
           version="$(python -c "import xml.etree.ElementTree as E; print(E.parse('pom.xml').getroot().findtext('version'))")"
           if [[ "$GITHUB_REF_TYPE" == tag ]]; then
