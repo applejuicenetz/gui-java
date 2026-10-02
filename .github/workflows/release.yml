@@ -85,7 +85,7 @@ jobs:
       - name: Test Windows installer
         if: matrix.platform == 'windows'
         shell: pwsh
-        run: python scripts/test_windows_installer.py target/AJCoreGUI-windows-${{ matrix.arch }}.exe --folder JavaGUI
+        run: python scripts/test_windows_installer.py target/AJCoreGUI-windows-${{ matrix.arch }}.exe
 
       - uses: actions/upload-artifact@v7
         with:

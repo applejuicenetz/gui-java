@@ -95,7 +95,7 @@ def windows_resources(jdk_home, directory):
   </Fragment>
 '''
     template = template.replace('</Wix>', fragment + '</Wix>')
-    template = add_legacy_guard(template, 'JavaGUI')
+    template = add_legacy_guard(template)
     (directory / 'main.wxs').write_text(template, encoding='utf-8')
 
 
