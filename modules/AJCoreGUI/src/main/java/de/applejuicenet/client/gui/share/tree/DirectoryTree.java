@@ -26,6 +26,6 @@ public class DirectoryTree
 
     public void updateUI(){
         super.updateUI();
-        setRowHeight(DirectoryNode.getMaxHeight() + 3);
+        setRowHeight(0);
     }
 }

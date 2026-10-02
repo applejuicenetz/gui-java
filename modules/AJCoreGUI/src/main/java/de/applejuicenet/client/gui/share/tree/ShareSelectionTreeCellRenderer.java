@@ -4,6 +4,8 @@ import de.applejuicenet.client.gui.components.treetable.Node;
 
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import com.formdev.flatlaf.util.UIScale;
 import java.awt.*;
 
 /**
@@ -18,50 +20,55 @@ import java.awt.*;
  */
 
 public class ShareSelectionTreeCellRenderer
-    extends JPanel
+    extends DefaultTreeCellRenderer
     implements TreeCellRenderer {
-	private JLabel iconLabel1 = new JLabel();
-    private JLabel iconLabel2 = new JLabel();
-    private JLabel text = new JLabel();
-
-    public ShareSelectionTreeCellRenderer() {
-        iconLabel1.setOpaque(true);
-        iconLabel2.setOpaque(true);
-        setLayout(new FlowLayout(FlowLayout.LEFT));
-        text.setOpaque(true);
-        setOpaque(true);
-        add(iconLabel1);
-        add(iconLabel2);
-        add(text);
-    }
-
     public Component getTreeCellRendererComponent(JTree tree, Object value,
                                                   boolean sel, boolean expanded,
                                                   boolean leaf,
                                                   int row, boolean hasFocus) {
-        setBackground(UIManager.getColor("Tree.textBackground"));
-        iconLabel1.setBackground(UIManager.getColor("Tree.textBackground"));
-        iconLabel2.setBackground(UIManager.getColor("Tree.textBackground"));
-        String stringValue = tree.convertValueToText(value, sel,
-            expanded, leaf, row, hasFocus);
-        setEnabled(tree.isEnabled());
-        text.setFont(tree.getFont());
-        text.setText(stringValue);
-        if (sel) {
-            Color lineColor = UIManager.getColor("Tree.selectionBorderColor");
-            text.setBackground(UIManager.getColor("Tree.selectionBackground"));
-            text.setBorder(BorderFactory.createLineBorder(lineColor));
-        }
-        else {
-            text.setBackground(UIManager.getColor("Tree.textBackground"));
-            text.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        }
-        Icon icon = ( (Node) value).getConvenientIcon();
-        iconLabel2.setIcon(icon);
+        super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+        setFont(tree.getFont());
+        Icon icon = value instanceof Node ? ((Node) value).getConvenientIcon() : getIcon();
         if (value instanceof DirectoryNode) {
-            Icon icon1 = ( (DirectoryNode) value).getShareModeIcon();
-            iconLabel1.setIcon(icon1);
+            Icon shareIcon = ((DirectoryNode) value).getShareModeIcon();
+            setIcon(new ShareIcons(shareIcon, icon));
+        } else {
+            setIcon(icon);
         }
         return this;
+    }
+
+    private static class ShareIcons implements Icon {
+        private final Icon shareIcon;
+        private final Icon folderIcon;
+        private final int gap = UIScale.scale(4);
+
+        private ShareIcons(Icon shareIcon, Icon folderIcon) {
+            this.shareIcon = shareIcon;
+            this.folderIcon = folderIcon;
+        }
+
+        public int getIconWidth() {
+            return (shareIcon == null ? 0 : shareIcon.getIconWidth())
+                + (folderIcon == null ? 0 : folderIcon.getIconWidth())
+                + (shareIcon == null || folderIcon == null ? 0 : gap);
+        }
+
+        public int getIconHeight() {
+            return Math.max(shareIcon == null ? 0 : shareIcon.getIconHeight(),
+                folderIcon == null ? 0 : folderIcon.getIconHeight());
+        }
+
+        public void paintIcon(Component component, Graphics graphics, int x, int y) {
+            if (shareIcon != null) {
+                shareIcon.paintIcon(component, graphics, x,
+                    y + (getIconHeight() - shareIcon.getIconHeight()) / 2);
+            }
+            if (folderIcon != null) {
+                int offset = shareIcon == null ? 0 : shareIcon.getIconWidth() + gap;
+                folderIcon.paintIcon(component, graphics, x + offset,
+                    y + (getIconHeight() - folderIcon.getIconHeight()) / 2);
+            }
+        }
     }
 }

@@ -26,7 +26,6 @@ import de.applejuicenet.client.gui.share.tree.DirectoryNode;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
 import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.ReleaseInfo;
-import de.applejuicenet.client.shared.SwingWorker;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -415,7 +414,7 @@ public class ShareController extends GuiController
          entries.add(path);
          AppleJuiceClient.getAjFassade().addShareEntry(entries, SHAREMODE.SUBDIRECTORY);
          DirectoryNode.setShareDirs(AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs());
-         sharePanel.getDirectoryTree().updateUI();
+         sharePanel.getDirectoryTree().repaint();
       }
    }
 
@@ -431,7 +430,7 @@ public class ShareController extends GuiController
          entries.add(path);
          AppleJuiceClient.getAjFassade().addShareEntry(entries, SHAREMODE.SINGLEDIRECTORY);
          DirectoryNode.setShareDirs(AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs());
-         sharePanel.getDirectoryTree().updateUI();
+         sharePanel.getDirectoryTree().repaint();
       }
    }
 
@@ -448,91 +447,65 @@ public class ShareController extends GuiController
          entries.add(path);
          AppleJuiceClient.getAjFassade().removeShareEntry(entries);
          DirectoryNode.setShareDirs(AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs());
-         sharePanel.getDirectoryTree().updateUI();
+         sharePanel.getDirectoryTree().repaint();
       }
    }
 
    private void prioritaetAufheben()
    {
-      new Thread()
-         {
-            public void run()
-            {
-               try
-               {
-                  Object[] values = sharePanel.getShareTable().getSelectedItems();
-
-                  if(values != null)
-                  {
-                     sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
-                     sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
-                     sharePanel.getBtnNeuLaden().setEnabled(false);
-                     synchronized(values)
-                     {
-                        ShareNode shareNode = null;
-
-                        for(int i = 0; i < values.length; i++)
-                        {
-                           shareNode = (ShareNode) values[i];
-                           shareNode.setPriority(1);
-                        }
-                     }
-
-                     shareNeuLaden();
-                  }
-               }
-               catch(Exception e)
-               {
-                  logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-               }
-            }
-         }.start();
+      changePriority(1);
    }
 
    private void prioritaetSetzen()
    {
-      new Thread()
+      changePriority((Integer) sharePanel.getCmbPrioritaet().getSelectedItem());
+   }
+
+   private void changePriority(int priority)
+   {
+      Object[] values = sharePanel.getShareTable().getSelectedItems();
+      if(values == null)
+      {
+         return;
+      }
+      sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
+      sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
+      sharePanel.getBtnNeuLaden().setEnabled(false);
+      new javax.swing.SwingWorker<Void, Void>()
+      {
+         protected Void doInBackground()
          {
-            public void run()
+            for(Object value : values)
             {
-               try
-               {
-                  int      prio   = (Integer) sharePanel.getCmbPrioritaet().getSelectedItem();
-                  Object[] values = sharePanel.getShareTable().getSelectedItems();
-
-                  if(values != null)
-                  {
-                     sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
-                     sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
-                     sharePanel.getBtnNeuLaden().setEnabled(false);
-                     synchronized(values)
-                     {
-                        ShareNode shareNode = null;
-
-                        for(int i = 0; i < values.length; i++)
-                        {
-                           shareNode = (ShareNode) values[i];
-                           shareNode.setPriority(prio);
-                        }
-                     }
-
-                     shareNeuLaden();
-                  }
-               }
-               catch(Exception e)
-               {
-                  logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-               }
+               ((ShareNode) value).setPriority(priority);
             }
-         }.start();
+            return null;
+         }
+
+         protected void done()
+         {
+            try
+            {
+               get();
+            }
+            catch(Exception e)
+            {
+               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            }
+            finally
+            {
+               shareNeuLaden();
+            }
+         }
+      }.execute();
    }
 
    private void refresh()
    {
       sharePanel.getBtnRefresh().setEnabled(false);
-      final SwingWorker worker = new SwingWorker()
+      final javax.swing.SwingWorker<Void, Void> worker = new javax.swing.SwingWorker<Void, Void>()
       {
-         public Object construct()
+         protected Void doInBackground()
          {
             try
             {
@@ -548,23 +521,28 @@ public class ShareController extends GuiController
             return null;
          }
 
-         public void finished()
+         protected void done()
          {
             sharePanel.getBtnRefresh().setEnabled(true);
          }
       };
 
-      worker.start();
+      worker.execute();
    }
 
    private void shareNeuLaden()
    {
+      if(!SwingUtilities.isEventDispatchThread())
+      {
+         SwingUtilities.invokeLater(this::shareNeuLaden);
+         return;
+      }
       sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
       sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
       sharePanel.getBtnNeuLaden().setEnabled(false);
-      final SwingWorker worker = new SwingWorker()
+      final javax.swing.SwingWorker<List<Share>, Void> worker = new javax.swing.SwingWorker<List<Share>, Void>()
       {
-         public Object construct()
+         protected List<Share> doInBackground()
          {
             try
             {
@@ -577,12 +555,11 @@ public class ShareController extends GuiController
             }
          }
 
-         public void finished()
+         protected void done()
          {
             try
             {
-               @SuppressWarnings("unchecked")
-               List<Share> shares = (List<Share>) get();
+               List<Share> shares = get();
                if(shares == null)
                {
                   return;
@@ -628,11 +605,16 @@ public class ShareController extends GuiController
          }
       };
 
-      worker.start();
+      worker.execute();
    }
 
    public void componentSelected()
    {
+      if(!SwingUtilities.isEventDispatchThread())
+      {
+         SwingUtilities.invokeLater(this::componentSelected);
+         return;
+      }
       try
       {
          if(!initialized)
@@ -670,20 +652,31 @@ public class ShareController extends GuiController
          if(!treeInitialisiert)
          {
             treeInitialisiert = true;
-            new Thread()
-               {
-                  public void run()
+            new javax.swing.SwingWorker<AJSettings, Void>()
+            {
+                  protected AJSettings doInBackground()
                   {
-                     AJSettings ajSettings = AppleJuiceClient.getAjFassade().getAJSettings();
+                     return AppleJuiceClient.getAjFassade().getAJSettings();
+                  }
 
-                     DirectoryNode.setShareDirs(ajSettings.getShareDirs());
+                  protected void done()
+                  {
+                     try
+                     {
+                        DirectoryNode.setShareDirs(get().getShareDirs());
+                        initShareSelectionTree();
+                     }
+                     catch(Exception e)
+                     {
+                        treeInitialisiert = false;
+                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                     }
                      sharePanel.getBtnPrioritaetAufheben().setEnabled(true);
                      sharePanel.getBtnPrioritaetSetzen().setEnabled(true);
                      sharePanel.getBtnNeuLaden().setEnabled(true);
                      sharePanel.getBtnRefresh().setEnabled(true);
-                     SwingUtilities.invokeLater(() -> initShareSelectionTree());
                   }
-               }.start();
+            }.execute();
          }
       }
       catch(Exception e)
@@ -695,20 +688,30 @@ public class ShareController extends GuiController
    private void initShareSelectionTree()
    {
       sharePanel.getDirectoryTree().removeMouseListener(shareTreeMouseAdapter);
-      SwingWorker worker2 = new SwingWorker()
+      javax.swing.SwingWorker<ShareSelectionTreeModel, Void> worker2 = new javax.swing.SwingWorker<ShareSelectionTreeModel, Void>()
       {
-         public Object construct()
+         protected ShareSelectionTreeModel doInBackground()
          {
-            ShareSelectionTreeModel treeModel = new ShareSelectionTreeModel();
+            return new ShareSelectionTreeModel();
+         }
 
-            sharePanel.getDirectoryTree().setModel(treeModel);
-            sharePanel.getDirectoryTree().setRootVisible(false);
-            sharePanel.getDirectoryTree().addMouseListener(shareTreeMouseAdapter);
-            return null;
+         protected void done()
+         {
+            try
+            {
+               sharePanel.getDirectoryTree().setModel(get());
+               sharePanel.getDirectoryTree().setRootVisible(false);
+               sharePanel.getDirectoryTree().addMouseListener(shareTreeMouseAdapter);
+            }
+            catch(Exception e)
+            {
+               treeInitialisiert = false;
+               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            }
          }
       };
 
-      worker2.start();
+      worker2.execute();
    }
 
    public void componentLostSelection()

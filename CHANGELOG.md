@@ -1,5 +1,12 @@
 # Changelog
 
+**0.86.2**
+
+- [red171] Share-Bäume: Swing-UI-Änderungen auf dem EDT; Hintergrundarbeit mit `javax.swing.SwingWorker`
+- [red171] Share-Verzeichnisbaum mit Standard-Swing-Renderer und dynamischer Zeilenhöhe; Share-Icons bleiben erhalten
+- [red171] Baumtabelle: Font, Farben und Zeilenhöhe mit Look-and-Feel synchronisiert; Zeichenkontext beim Rendern geschützt
+- [red171] Baumtabelle mit Pfeiltasten navigierbar: rechts öffnet Ordner bzw. wählt erstes Kind, links schließt Ordner bzw. wählt Elternknoten
+
 **0.86.1**
 
 - [red171] `web+ajfsp://`-Links zusätzlich zu `ajfsp://` registriert (Windows, macOS, Flatpak) und im Link-Eingabefeld akzeptiert

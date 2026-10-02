@@ -8,6 +8,8 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import com.formdev.flatlaf.util.UIScale;
 import java.util.EventObject;
 
 
@@ -48,24 +50,84 @@ public class JTreeTable
 
         setIntercellSpacing(new Dimension(0, 0));
 
-        if (tree.getRowHeight() < 1) {
-            // Metal looks better like this.
-            setRowHeight(18);
-        }
+        synchronizeTreeAppearance();
+        installTreeNavigation();
     }
 
     public void updateUI() {
         super.updateUI();
         if (tree != null) {
             tree.updateUI();
+            synchronizeTreeAppearance();
+            installTreeNavigation();
         }
         /*LookAndFeel.installColorsAndFont(this, "Tree.background",
                                          "Tree.foreground", "Tree.font");*/
     }
 
     public int getEditingRow() {
-        return (getColumnClass(editingColumn) == TreeTableModel.class) ? -1 :
+        return (editingColumn < 0 || getColumnClass(editingColumn) == TreeTableModel.class) ? -1 :
             editingRow;
+    }
+
+    private void synchronizeTreeAppearance() {
+        tree.setFont(getFont());
+        tree.setForeground(getForeground());
+        tree.setBackground(getBackground());
+        int contentHeight = getFontMetrics(getFont()).getHeight();
+        for (String key : new String[] {"Tree.openIcon", "Tree.closedIcon", "Tree.leafIcon"}) {
+            Icon icon = UIManager.getIcon(key);
+            if (icon != null) {
+                contentHeight = Math.max(contentHeight, icon.getIconHeight());
+            }
+        }
+        setRowHeight(Math.max(getRowHeight(), contentHeight + UIScale.scale(4)));
+    }
+
+    private void installTreeNavigation() {
+        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("LEFT"), "collapseTreeNode");
+        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("RIGHT"), "expandTreeNode");
+        getActionMap().put("collapseTreeNode", new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+                navigateTree(false);
+            }
+        });
+        getActionMap().put("expandTreeNode", new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+                navigateTree(true);
+            }
+        });
+    }
+
+    private void navigateTree(boolean expand) {
+        int row = getSelectionModel().getLeadSelectionIndex();
+        if (row < 0 || !isRowSelected(row)) {
+            return;
+        }
+        TreePath path = tree.getPathForRow(row);
+        if (path == null) {
+            return;
+        }
+        TreePath target = path;
+        if (expand) {
+            if (tree.getModel().isLeaf(path.getLastPathComponent())) {
+                return;
+            }
+            if (!tree.isExpanded(path)) {
+                tree.expandPath(path);
+            } else if (tree.getModel().getChildCount(path.getLastPathComponent()) > 0) {
+                target = path.pathByAddingChild(tree.getModel().getChild(path.getLastPathComponent(), 0));
+            }
+        } else if (tree.isExpanded(path)) {
+            tree.collapsePath(path);
+        } else {
+            target = path.getParentPath();
+        }
+        int targetRow = target == null ? -1 : tree.getRowForPath(target);
+        if (targetRow >= 0) {
+            getSelectionModel().setSelectionInterval(targetRow, targetRow);
+            scrollRectToVisible(getCellRect(targetRow, 0, true));
+        }
     }
 
     public void setRowHeight(int rowHeight) {

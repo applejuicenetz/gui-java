@@ -52,12 +52,17 @@ public class DefaultTreeTableCellRenderer extends JTree implements
 	}
 
 	public void setBounds(int x, int y, int w, int h) {
-		super.setBounds(x, 0, w, treeTable.getHeight());
+		super.setBounds(x, 0, w, treeTable == null ? h : treeTable.getHeight());
 	}
 
 	public void paint(Graphics g) {
-		g.translate(0, -visibleRow * getRowHeight());
-		super.paint(g);
+		Graphics copy = g.create();
+		try {
+			copy.translate(0, -visibleRow * getRowHeight());
+			super.paint(copy);
+		} finally {
+			copy.dispose();
+		}
 	}
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
