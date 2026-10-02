@@ -34,6 +34,8 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
     public static final String MIN_NEEDED_CORE_VERSION = "0.31.149.112";
     public static final String ERROR_MESSAGE = "Unbehandelte Exception";
     public static String separator;
+
+    private static final int MAX_SUBDIR_DEPTH = 5;
     private static HashSet<CoreStatusListener> coreListener = new HashSet<CoreStatusListener>();
     private final CoreConnectionSettingsHolder coreHolder;
     private Map<DATALISTENER_TYPE, DataUpdateInformer> informer = new HashMap<DATALISTENER_TYPE, DataUpdateInformer>();
@@ -254,8 +256,66 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
             }
         }
 
+        addExistingIncomingSubDirs(incomingDirs);
         incomingDirs.add("");
         return incomingDirs.toArray(new String[incomingDirs.size()]);
+    }
+
+    private void addExistingIncomingSubDirs(List<String> incomingDirs) {
+        try {
+            AJSettings settings = getAJSettings();
+            String incomingDir = settings == null ? null : settings.getIncomingDir();
+
+            if (incomingDir == null || incomingDir.length() == 0) {
+                return;
+            }
+
+            collectSubDirs(incomingDir, incomingDir, incomingDirs, 0);
+        } catch (RuntimeException | IllegalArgumentException ex) {
+        }
+    }
+
+    private void collectSubDirs(String rootDir, String currentDir, List<String> incomingDirs, int depth)
+            throws IllegalArgumentException {
+        if (depth >= MAX_SUBDIR_DEPTH) {
+            return;
+        }
+
+        String dirSeparator = Directory.getSeparator();
+
+        if (dirSeparator == null || dirSeparator.length() == 0) {
+            dirSeparator = File.separator;
+        }
+
+        String rootPrefix = rootDir.endsWith(dirSeparator) ? rootDir : rootDir + dirSeparator;
+
+        for (Directory child : getDirectories(currentDir)) {
+            if (child.getType() != Directory.TYPE_ORDNER) {
+                continue;
+            }
+
+            String childPath = child.getPath();
+
+            if (childPath == null || childPath.length() <= rootPrefix.length() || !childPath.startsWith(rootPrefix)) {
+                continue;
+            }
+
+            String relativePath = childPath.substring(rootPrefix.length());
+            boolean found = false;
+
+            for (String known : incomingDirs) {
+                if (known.compareToIgnoreCase(relativePath) == 0) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                incomingDirs.add(relativePath);
+            }
+
+            collectSubDirs(rootDir, childPath, incomingDirs, depth + 1);
+        }
     }
 
     public Information getInformation() {

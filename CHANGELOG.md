@@ -2,6 +2,7 @@
 
 **0.86.1**
 
+- [red171] Zielordner-Auswahl (F3) zeigt vorhandene Incoming-Unterordner auch ohne zugewiesene Downloads (#21)
 - [red171] Share-Größe mit passender binärer Einheit (MiB/GiB/TiB) statt festem MB angezeigt (#15)
 - [red171] Ungültige Fensterpositionen beim Start korrigiert; Tray-Klick stellt minimierte Fenster wieder her
 - [red171] Extras-Menü um „Beenden“ unter „Über“ ergänzt; GUI speichert Einstellungen und beendet sich
