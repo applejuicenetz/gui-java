@@ -2,10 +2,11 @@
 
 **0.86.2**
 
-- [red171] Share-Bäume: Swing-UI-Änderungen auf dem EDT; Hintergrundarbeit mit `javax.swing.SwingWorker`
-- [red171] Share-Verzeichnisbaum mit Standard-Swing-Renderer und dynamischer Zeilenhöhe; Share-Icons bleiben erhalten
-- [red171] Baumtabelle: Font, Farben und Zeilenhöhe mit Look-and-Feel synchronisiert; Zeichenkontext beim Rendern geschützt
-- [red171] Baumtabelle mit Pfeiltasten navigierbar: rechts öffnet Ordner bzw. wählt erstes Kind, links schließt Ordner bzw. wählt Elternknoten
+- [red171] Share-Ansicht zeichnet Ordnerbaum und Dateiliste zuverlässig; Darstellung passt sich Schriftgröße und Theme an
+- [red171] Share-Dateiliste mit Pfeiltasten bedienbar (links/rechts öffnet und schließt Ordner)
+- [red171] Download-, Upload-, Server- und Suchlisten flackern weniger und zeichnen sich stabiler, Zeilen passen zu Schrift und Icons
+- [red171] Verzeichnis-Auswahldialog baut sich ohne Darstellungsfehler auf
+- [red171] Weniger Abstürze und Fehlanzeigen bei schnell wechselnden Daten
 
 **0.86.1**
 

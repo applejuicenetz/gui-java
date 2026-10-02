@@ -379,8 +379,10 @@ public class UploadController extends GuiController {
                 }
             }
 
-            uploadPanel.getUploadActiveTable().updateUI();
-            uploadPanel.getUploadWaitingTable().updateUI();
+            uploadPanel.getUploadActiveTable().revalidate();
+            uploadPanel.getUploadActiveTable().repaint();
+            uploadPanel.getUploadWaitingTable().revalidate();
+            uploadPanel.getUploadWaitingTable().repaint();
         } catch (Exception ex) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
         }
@@ -458,9 +460,11 @@ public class UploadController extends GuiController {
                         uploadPanel.getUploadListeLabel().setText(tmp);
                         if (componentSelected && change) {
                             uploadPanel.getUploadActiveTableModel().forceResort();
-                            uploadPanel.getUploadActiveTable().updateUI();
+                            uploadPanel.getUploadActiveTable().revalidate();
+                            uploadPanel.getUploadActiveTable().repaint();
                             uploadPanel.getUploadWaitingTableModel().forceResort();
-                            uploadPanel.getUploadWaitingTable().updateUI();
+                            uploadPanel.getUploadWaitingTable().revalidate();
+                            uploadPanel.getUploadWaitingTable().repaint();
                         }
                     } catch (Exception ex) {
                         logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);

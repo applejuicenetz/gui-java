@@ -11,6 +11,7 @@ import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.components.table.AutoRowHeightTable;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.upload.table.*;
@@ -58,9 +59,9 @@ public class UploadPanel extends TklPanel implements RegisterI {
     private JPopupMenu columnWaitingPopup = new JPopupMenu();
     private TableColumn[] columnsWaitingUploads = new TableColumn[7];
     private JCheckBoxMenuItem[] columnPopupItemsWaitingUploads = new JCheckBoxMenuItem[columnsActiveUploads.length];
-    private JTable uploadActiveTable;
+    private AutoRowHeightTable uploadActiveTable;
     private UploadActiveTableModel uploadActiveTableModel;
-    private JTable uploadWaitingTable;
+    private AutoRowHeightTable uploadWaitingTable;
     private UploadWaitingTableModel uploadWaitingTableModel;
 
     public UploadPanel(GuiController guiController) {
@@ -85,7 +86,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
 
         setLayout(tableLayout);
         uploadActiveTableModel = new UploadActiveTableModel();
-        uploadActiveTable = new JTable(uploadActiveTableModel);
+        uploadActiveTable = new AutoRowHeightTable(uploadActiveTableModel);
 
         uploadActiveTable.setDefaultRenderer(String.class, new StringTableCellRenderer());
         uploadActiveTable.getColumnModel().getColumn(0).setCellRenderer(new UploadTableFilenameCellRenderer());
@@ -162,7 +163,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
         });
 
         uploadWaitingTableModel = new UploadWaitingTableModel();
-        uploadWaitingTable = new JTable(uploadWaitingTableModel);
+        uploadWaitingTable = new AutoRowHeightTable(uploadWaitingTableModel);
 
         uploadWaitingTable.getColumnModel().getColumn(1).setCellRenderer(new UploadTableWaitingStatusCellRenderer());
         uploadWaitingTable.getColumnModel().getColumn(3).setCellRenderer(new ProgressTableCellRenderer());

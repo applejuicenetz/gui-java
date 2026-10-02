@@ -15,6 +15,7 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.components.table.AutoRowHeightTable;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -63,7 +64,7 @@ import java.util.Vector;
  */
 public class ServerPanel extends JPanel implements LanguageListener, DataUpdateListener, RegisterI {
     private static ServerPanel instance;
-    private JTable serverTable;
+    private AutoRowHeightTable serverTable;
     private JButton sucheServer = new JButton();
     private JPopupMenu popup = new JPopupMenu();
     private JPopupMenu popup2 = new JPopupMenu();
@@ -290,7 +291,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         constraints.weightx = 1;
         panel1.add(new JLabel(), constraints);
         add(panel1, BorderLayout.NORTH);
-        serverTable = new JTable();
+        serverTable = new AutoRowHeightTable();
         serverTable.setModel(new ServerTableModel());
         serverTable.setShowGrid(false);
         serverTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -437,13 +438,21 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
     @SuppressWarnings("unchecked")
     public void fireContentChanged(DATALISTENER_TYPE type, final Object content) {
-        if (type == DATALISTENER_TYPE.SERVER_CHANGED) {
-            boolean changed = ((ServerTableModel) serverTable.getModel()).setTable((HashMap<String, Server>) content);
+        if (type != DATALISTENER_TYPE.SERVER_CHANGED) {
+            return;
+        }
 
-            if (changed && tabSelected) {
-                ((SortableTableModel) serverTable.getModel()).forceResort();
-                SwingUtilities.invokeLater(() -> serverTable.updateUI());
-            }
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> fireContentChanged(type, content));
+            return;
+        }
+
+        boolean changed = ((ServerTableModel) serverTable.getModel()).setTable((HashMap<String, Server>) content);
+
+        if (changed && tabSelected) {
+            ((SortableTableModel) serverTable.getModel()).forceResort();
+            serverTable.revalidate();
+            serverTable.repaint();
         }
     }
 

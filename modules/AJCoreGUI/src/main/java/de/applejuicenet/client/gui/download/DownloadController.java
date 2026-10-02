@@ -874,9 +874,11 @@ public class DownloadController extends GuiController {
                 }
             }
 
-            downloadPanel.getDownloadTable().updateUI();
+            downloadPanel.getDownloadTable().revalidate();
+            downloadPanel.getDownloadTable().repaint();
             if (downloadPanel.getDownloadSourcesScrollPane().isVisible()) {
-                downloadPanel.getDownloadSourceTable().updateUI();
+                downloadPanel.getDownloadSourceTable().revalidate();
+                downloadPanel.getDownloadSourceTable().repaint();
             }
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
@@ -957,35 +959,36 @@ public class DownloadController extends GuiController {
 
     @SuppressWarnings("unchecked")
     protected void contentChanged(DATALISTENER_TYPE type, final Object content) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> contentChanged(type, content));
+            return;
+        }
+
         Map<Integer, Download> downloads = (Map<Integer, Download>) content;
 
         final boolean downloadChanged = downloadPanel.getDownloadTableModel().setDownloads(downloads);
         Download curDownload = downloadPanel.getDownloadSourcesTableModel().getDownload();
 
-        boolean sourcesChangedTmp = false;
+        boolean sourcesChanged = false;
 
         if (null != curDownload) {
             Download freshDownload = downloads.get(curDownload.getId());
 
-            sourcesChangedTmp = downloadPanel.getDownloadSourcesTableModel().setDownload(freshDownload);
+            sourcesChanged = downloadPanel.getDownloadSourcesTableModel().setDownload(freshDownload);
         }
 
-        final boolean sourcesChanged = sourcesChangedTmp;
-
         if (selected && (downloadChanged || sourcesChanged)) {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    if (downloadChanged) {
-                        downloadPanel.getDownloadTableModel().forceResort();
-                        downloadPanel.getDownloadTable().updateUI();
-                    }
+            if (downloadChanged) {
+                downloadPanel.getDownloadTableModel().forceResort();
+                downloadPanel.getDownloadTable().revalidate();
+                downloadPanel.getDownloadTable().repaint();
+            }
 
-                    if (sourcesChanged) {
-                        downloadPanel.getDownloadSourcesTableModel().forceResort();
-                        downloadPanel.getDownloadSourceTable().updateUI();
-                    }
-                }
-            });
+            if (sourcesChanged) {
+                downloadPanel.getDownloadSourcesTableModel().forceResort();
+                downloadPanel.getDownloadSourceTable().revalidate();
+                downloadPanel.getDownloadSourceTable().repaint();
+            }
         }
     }
 }

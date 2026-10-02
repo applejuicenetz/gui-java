@@ -9,6 +9,7 @@ import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.components.table.AutoRowHeightTable;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.download.table.*;
@@ -45,9 +46,9 @@ public class DownloadPanel extends TklPanel {
     private DownloadOverviewPanel downloadOverviewPanel;
     private PowerDownloadPanel powerDownloadPanel;
     private DownloadsTableModel downloadActiveTableModel;
-    private JTable downloadActiveTable;
+    private AutoRowHeightTable downloadActiveTable;
     private DownloadSourcesTableModel downloadSourceTableModel;
-    private JTable downloadSourceTable;
+    private AutoRowHeightTable downloadSourceTable;
     private JPopupMenu popup = new JPopupMenu();
     private JScrollPane aScrollPane;
     private JMenuItem abbrechen;
@@ -257,7 +258,7 @@ public class DownloadPanel extends TklPanel {
         constraints.weightx = 1;
 
         downloadActiveTableModel = new DownloadsTableModel();
-        downloadActiveTable = new JTable(downloadActiveTableModel);
+        downloadActiveTable = new AutoRowHeightTable(downloadActiveTableModel);
         downloadActiveTable.setDefaultRenderer(String.class, new StringTableCellRenderer());
         downloadActiveTable.getColumnModel().getColumn(0).setCellRenderer(new DownloadTableDownloadFilenameCellRenderer());
         downloadActiveTable.getColumnModel().getColumn(2).setCellRenderer(new SizeTableCellRenderer());
@@ -322,7 +323,7 @@ public class DownloadPanel extends TklPanel {
         topPanel.add(aScrollPane, constraints);
 
         downloadSourceTableModel = new DownloadSourcesTableModel();
-        downloadSourceTable = new JTable(downloadSourceTableModel);
+        downloadSourceTable = new AutoRowHeightTable(downloadSourceTableModel);
         downloadSourceTable.setDefaultRenderer(String.class, new StringTableCellRenderer());
         downloadSourceTable.getColumnModel().getColumn(0).setCellRenderer(new DownloadTableFilenameCellRenderer());
         downloadSourceTable.getColumnModel().getColumn(3).setCellRenderer(new SizeTableCellRenderer());

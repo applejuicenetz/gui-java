@@ -12,6 +12,7 @@ import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.FileType;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.components.table.AutoRowHeightTable;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
@@ -58,7 +59,7 @@ public class SearchResultPanel extends JPanel {
     private static String releaseInfo;
     private static String[] columns;
     private final Logger logger;
-    private JTable searchResultTable;
+    private AutoRowHeightTable searchResultTable;
     private SearchTableModel searchResultTableModel;
     private Search search;
     private JButton sucheAbbrechen = new JButton();
@@ -148,7 +149,7 @@ public class SearchResultPanel extends JPanel {
 
         add(buttonPanel, BorderLayout.NORTH);
         searchResultTableModel = new SearchTableModel(search);
-        searchResultTable = new JTable(searchResultTableModel);
+        searchResultTable = new AutoRowHeightTable(searchResultTableModel);
 
         searchResultTable.setDefaultRenderer(SearchEntry.class, new SearchEntryIconRenderer());
         searchResultTable.setDefaultRenderer(Long.class, new SearchEntrySizeRenderer());
@@ -306,7 +307,8 @@ public class SearchResultPanel extends JPanel {
 
         try {
             searchResultTableModel.forceResort();
-            searchResultTable.updateUI();
+            searchResultTable.revalidate();
+            searchResultTable.repaint();
             updateZahlen();
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);

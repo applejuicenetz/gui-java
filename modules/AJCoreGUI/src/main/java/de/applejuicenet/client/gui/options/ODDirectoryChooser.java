@@ -10,7 +10,6 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserNode;
 import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserTreeCellRenderer;
 import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserTreeModel;
-import de.applejuicenet.client.shared.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,18 +55,21 @@ public class ODDirectoryChooser extends JDialog {
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));
         folderTree.setCellRenderer(new DirectoryChooserTreeCellRenderer());
         uebernehmen.setEnabled(false);
-        final SwingWorker worker = new SwingWorker() {
-            public Object construct() {
-                DirectoryChooserTreeModel treeModel = new DirectoryChooserTreeModel();
-
-                folderTree.setModel(treeModel);
-                folderTree.setRootVisible(false);
-                uebernehmen.setEnabled(true);
-                return null;
+        new SwingWorker<DirectoryChooserTreeModel, Void>() {
+            protected DirectoryChooserTreeModel doInBackground() {
+                return new DirectoryChooserTreeModel();
             }
-        };
 
-        worker.start();
+            protected void done() {
+                try {
+                    folderTree.setModel(get());
+                    folderTree.setRootVisible(false);
+                    uebernehmen.setEnabled(true);
+                } catch (Exception e) {
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                }
+            }
+        }.execute();
         JPanel aPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         aPanel.add(uebernehmen);

@@ -22,7 +22,7 @@ public class DirectoryChooserTreeCellRenderer extends DefaultTreeCellRenderer
       boolean hasFocus)
    {
       super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-      Icon icon = ((Node) value).getConvenientIcon();
+      Icon icon = value instanceof Node ? ((Node) value).getConvenientIcon() : null;
 
       if(icon != null)
       {
