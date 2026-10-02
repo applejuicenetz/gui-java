@@ -15,7 +15,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 
@@ -98,12 +98,16 @@ public class LogViewerPlugin extends PluginConnector {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem deleteItem = new JMenuItem("Löschen");
 
+        deleteItem.setEnabled(!LogFileProtection.isActive(logFile));
         deleteItem.addActionListener(e -> deleteLogfile(logFile));
         popup.add(deleteItem);
         popup.show(list, event.getX(), event.getY());
     }
 
     private void deleteLogfile(File logFile) {
+        if (LogFileProtection.isActive(logFile)) {
+            return;
+        }
         logger.debug("LogViewer: Loeschen angeklickt fuer {}", logFile.getAbsolutePath());
         int answer = JOptionPane.showConfirmDialog(this, "Logdatei \"" + logFile.getName() + "\" wirklich löschen?",
                                                    "Logdatei löschen", JOptionPane.YES_NO_OPTION,
@@ -119,7 +123,10 @@ public class LogViewerPlugin extends PluginConnector {
             logger.debug("LogViewer: loesche {} (existiert={}, schreibbar={}, Ordner schreibbar={})",
                          logFile.getAbsolutePath(), logFile.exists(), logFile.canWrite(),
                          logFile.getParentFile() != null && logFile.getParentFile().canWrite());
-            Files.delete(logFile.toPath());
+            if (!LogFileProtection.deleteIfInactive(logFile)) {
+                logger.debug("LogViewer: laufendes Log bleibt erhalten: {}", logFile.getName());
+                return;
+            }
             logger.debug("LogViewer: geloescht, existiert noch={}", logFile.exists());
             listModel.remove(logFile);
             logPane.setText("");
@@ -131,7 +138,9 @@ public class LogViewerPlugin extends PluginConnector {
     }
 
     private void deleteAllLogfiles() {
-        File[] logFiles = listModel.getFiles();
+        File[] logFiles = Arrays.stream(listModel.getFiles())
+                .filter(logFile -> !LogFileProtection.isActive(logFile))
+                .toArray(File[]::new);
 
         logger.debug("LogViewer: Alle Logs loeschen angeklickt, {} Eintraege, Ordner {}", logFiles.length, path);
 
@@ -139,7 +148,7 @@ public class LogViewerPlugin extends PluginConnector {
             return;
         }
 
-        int answer = JOptionPane.showConfirmDialog(this, "Alle " + logFiles.length + " Logdateien wirklich löschen?",
+        int answer = JOptionPane.showConfirmDialog(this, "Alle " + logFiles.length + " inaktiven Logdateien wirklich löschen?\nDas laufende Log bleibt erhalten.",
                                                    "Alle Logs löschen", JOptionPane.YES_NO_OPTION,
                                                    JOptionPane.WARNING_MESSAGE);
 
@@ -153,7 +162,10 @@ public class LogViewerPlugin extends PluginConnector {
 
         for (File logFile : logFiles) {
             try {
-                Files.delete(logFile.toPath());
+                if (!LogFileProtection.deleteIfInactive(logFile)) {
+                    logger.debug("LogViewer: laufendes Log bleibt erhalten: {}", logFile.getName());
+                    continue;
+                }
                 logger.debug("LogViewer: geloescht {}", logFile.getName());
                 listModel.remove(logFile);
             } catch (Exception e) {

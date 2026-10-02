@@ -12,7 +12,7 @@
 - [red171] Verbindungs-Assistent übernimmt die Theme-Farben statt festem Weiß
 - [red171] Windows-Installer wie das NSIS-Setup: Program Files, Startmenügruppe, Desktop-Verknüpfung, Hilfe-/Info-Link und `ajfsp`-/`.ajl`-Registrierung
 - [red171] LogViewer: Rechtsklick auf eine Logdatei bietet Löschen mit Rückfrage
-- [red171] LogViewer: Button "Alle Logs löschen" unten links; DEBUG-Einträge für das Löschen
+- [red171] LogViewer: Button "Alle Logs löschen" unten links; laufendes Log bleibt erhalten, DEBUG-Einträge für das Löschen
 - [red171] Tray-Einzelklick schaltet Fenster um; macOS-Kontextmenü nutzt eigenen Fenster-Owner und unterstützt Control-Klick
 - [red171] Linux-Tray mit libtray wie im Collector integriert
 - [red171] AJL-Dateien an laufende GUI übergeben (#13)
