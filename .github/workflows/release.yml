@@ -176,11 +176,15 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.x'
+      - name: Install virtual display for GUI tests
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb xauth
       - name: Build portable ZIP
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          mvn -B clean package
+          xvfb-run -a mvn -B clean package
           python scripts/package.py prepare
       - uses: actions/download-artifact@v8
         with:
