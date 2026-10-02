@@ -82,6 +82,11 @@ jobs:
           python scripts/package.py native \
             --platform "$PACKAGE_PLATFORM" --arch "$PACKAGE_ARCH" --type "$PACKAGE_TYPE"
 
+      - name: Test Windows installer
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: python scripts/test_windows_installer.py target/AJCoreGUI-windows-${{ matrix.arch }}.exe
+
       - uses: actions/upload-artifact@v7
         with:
           name: native-${{ matrix.platform }}-${{ matrix.arch }}
