@@ -52,34 +52,34 @@ def windows_resources(jdk_home, directory):
           <RegistryValue Type="string" Value="URL:appleJuice File Sharing Protocol"/>
           <RegistryValue Name="URL Protocol" Type="string" Value="" KeyPath="yes"/>
           <RegistryKey Key="DefaultIcon">
-            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot;,0"/>
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]appleJuice JavaGUI.exe&quot;,0"/>
           </RegistryKey>
           <RegistryKey Key="shell\\open\\command">
-            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot; &quot;%1&quot;"/>
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]appleJuice JavaGUI.exe&quot; &quot;%1&quot;"/>
           </RegistryKey>
         </RegistryKey>
         <RegistryKey Root="HKLM" Key="Software\\Classes\\appleJuiceNETZ.URI.JavaGUI">
           <RegistryValue Type="string" Value="URL:ajfsp"/>
           <RegistryValue Name="URL Protocol" Type="string" Value=""/>
           <RegistryKey Key="DefaultIcon">
-            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot;,0"/>
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]appleJuice JavaGUI.exe&quot;,0"/>
           </RegistryKey>
           <RegistryKey Key="shell\\open\\command">
-            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot; &quot;%1&quot;"/>
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]appleJuice JavaGUI.exe&quot; &quot;%1&quot;"/>
           </RegistryKey>
         </RegistryKey>
         <RegistryKey Root="HKLM" Key="Software\\Classes\\appleJuiceNETZ.EXT.JavaGUI">
           <RegistryValue Type="string" Value="appleJuice Linkliste"/>
           <RegistryKey Key="DefaultIcon">
-            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot;,0"/>
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]appleJuice JavaGUI.exe&quot;,0"/>
           </RegistryKey>
           <RegistryKey Key="shell\\open\\command">
-            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot; &quot;%1&quot;"/>
+            <RegistryValue Type="string" Value="&quot;[INSTALLDIR]appleJuice JavaGUI.exe&quot; &quot;%1&quot;"/>
           </RegistryKey>
         </RegistryKey>
         <RegistryKey Root="HKLM" Key="Software\\appleJuiceNETZ\\JavaGUI\\Capabilities">
           <RegistryValue Name="ApplicationName" Type="string" Value="JavaGUI"/>
-          <RegistryValue Name="ApplicationIcon" Type="string" Value="&quot;[INSTALLDIR]AJCoreGUI.exe&quot;,0"/>
+          <RegistryValue Name="ApplicationIcon" Type="string" Value="&quot;[INSTALLDIR]appleJuice JavaGUI.exe&quot;,0"/>
           <RegistryValue Name="ApplicationDescription" Type="string" Value="appleJuice GUI"/>
           <RegistryKey Key="URLAssociations">
             <RegistryValue Name="ajfsp" Type="string" Value="appleJuiceNETZ.URI.JavaGUI"/>
@@ -147,7 +147,8 @@ def native(args):
     associations = resources / 'ajl.properties'
     associations.write_text('extension=ajl\nmime-type=application/x-ajl\ndescription=appleJuice Link List\n', encoding='utf-8')
     options = [
-        '--name', NAME, '--app-version', installer_version, '--vendor', 'appleJuiceNETZ',
+        '--name', 'appleJuice JavaGUI' if args.platform == 'windows' else NAME,
+        '--app-version', installer_version, '--vendor', 'appleJuiceNETZ',
         '--description', 'appleJuice JavaGUI', '--input', str(INPUT),
         '--main-jar', f'{NAME}.jar', '--main-class', MAIN,
         '--add-modules', 'java.desktop,java.management,java.naming,java.sql,java.xml,jdk.crypto.ec,jdk.unsupported,jdk.localedata',
