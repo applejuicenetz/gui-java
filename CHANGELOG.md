@@ -14,6 +14,7 @@
 - [red171] LogViewer: Rechtsklick auf eine Logdatei bietet Löschen mit Rückfrage
 - [red171] LogViewer: Button "Alle Logs löschen" unten links; laufendes Log bleibt erhalten, DEBUG-Einträge für das Löschen
 - [red171] Tray-Einzelklick schaltet Fenster um; macOS-Kontextmenü nutzt eigenen Fenster-Owner und unterstützt Control-Klick
+- [red171] Tray-Menü-Icons auf 16×16 begrenzt; „Zeigen“ bläht das Menü nicht mehr auf
 - [red171] Linux-Tray mit libtray wie im Collector integriert
 - [red171] AJL-Dateien an laufende GUI übergeben (#13)
 - [red171] GitHub Actions und Maven-Abhängigkeiten aktualisiert, CodeQL entfernt

@@ -45,8 +45,8 @@ public class TrayLoader implements AutoCloseable {
                             Icon zeigenIcon, Icon versteckenIcon, JPopupMenu popup) {
         this.dialog = dialog;
         this.showHideItem = showHideItem;
-        this.zeigenIcon = zeigenIcon;
-        this.versteckenIcon = versteckenIcon;
+        this.zeigenIcon = TrayMenuIcon.fit(zeigenIcon);
+        this.versteckenIcon = TrayMenuIcon.fit(versteckenIcon);
         updateVisibilityLabel();
         dialog.addComponentListener(visibilityListener);
         dialog.addWindowStateListener(windowStateListener);
