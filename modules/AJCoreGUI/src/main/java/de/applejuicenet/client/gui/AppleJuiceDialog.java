@@ -12,7 +12,6 @@ import de.applejuicenet.client.fassade.entity.Information;
 import de.applejuicenet.client.fassade.entity.Server;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
 import de.applejuicenet.client.gui.about.AboutDialog;
 import de.applejuicenet.client.gui.controller.*;
@@ -97,6 +96,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
     private JMenuItem menuItemAktivieren = new JMenuItem();
     private JMenuItem popupOptionenMenuItem = new JMenuItem();
     private JMenuItem popupAboutMenuItem = new JMenuItem();
+    private JMenuItem popupBeendenMenuItem = new JMenuItem();
     private JMenuItem popupShowHideMenuItem = new JMenuItem();
     private JMenuItem popupCheckUpdateMenuItem = new JMenuItem();
     private TKLButton sound = new TKLButton();
@@ -1019,6 +1019,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                 popupAboutMenuItem.setToolTipText(menuItemUeber.getToolTipText());
                 popupOptionenMenuItem.setText(menuItemOptionen.getText());
                 popupOptionenMenuItem.setToolTipText(menuItemOptionen.getToolTipText());
+                popupBeendenMenuItem.setText(menuItemBeenden.getText());
             }
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
@@ -1144,99 +1145,10 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         popupAboutMenuItem.addActionListener(ae -> showAboutDialog());
         popupAboutMenuItem.setText(menuItemUeber.getText());
         popup.add(popupAboutMenuItem);
-        new Thread() {
-            public void run() {
-                final AJSettings ajSettings = AppleJuiceClient.getAjFassade().getAJSettings();
-
-                if (ajSettings != null) {
-                    long maxUpload = 50;
-
-                    if (ajSettings.getMaxUploadInKB() > maxUpload) {
-                        maxUpload = ajSettings.getMaxUploadInKB() + 20;
-                    }
-
-                    final JSlider uploadSlider = new JSlider(JSlider.VERTICAL, 0, (int) maxUpload, (int) ajSettings.getMaxUploadInKB());
-                    long maxDownload = 300;
-
-                    if (ajSettings.getMaxDownloadInKB() > maxDownload) {
-                        maxDownload = ajSettings.getMaxDownloadInKB() + 20;
-                    }
-
-                    final JSlider downloadSlider = new JSlider(JSlider.VERTICAL, 0, (int) maxDownload,
-                            (int) ajSettings.getMaxDownloadInKB());
-
-                    uploadSlider.setPaintLabels(true);
-                    uploadSlider.setPaintTicks(true);
-                    uploadSlider.setPaintTrack(true);
-                    uploadSlider.setSnapToTicks(true);
-                    downloadSlider.setPaintLabels(true);
-                    downloadSlider.setPaintTicks(true);
-                    downloadSlider.setPaintTrack(true);
-                    downloadSlider.setSnapToTicks(true);
-                    final JMenu uploadMenu = new JMenu("Upload");
-                    final JMenu downloadMenu = new JMenu("Download");
-                    TKLPanel uploadPanel = new TKLPanel(new BorderLayout());
-                    TKLPanel downloadPanel = new TKLPanel(new BorderLayout());
-                    final TKLLabel label1 = new TKLLabel("50 kb/s");
-                    final TKLLabel label2 = new TKLLabel("50 kb/s");
-
-                    label1.setText(ajSettings.getMaxUploadInKB() + " kb/s");
-                    label2.setText(ajSettings.getMaxDownloadInKB() + " kb/s");
-                    uploadPanel.add(label1, BorderLayout.NORTH);
-                    uploadPanel.add(uploadSlider, BorderLayout.SOUTH);
-                    uploadMenu.add(uploadPanel);
-                    downloadPanel.add(label2, BorderLayout.NORTH);
-                    downloadPanel.add(downloadSlider, BorderLayout.SOUTH);
-                    downloadMenu.add(downloadPanel);
-                    uploadSlider.addChangeListener(e -> {
-                        JSlider slider = (JSlider) e.getSource();
-
-                        label1.setText(slider.getValue() + " kb/s");
-                    });
-                    downloadSlider.addChangeListener(e -> {
-                        JSlider slider = (JSlider) e.getSource();
-
-                        label2.setText(slider.getValue() + " kb/s");
-                    });
-                    uploadSlider.addMouseListener(new MouseAdapter() {
-                        public void mouseReleased(MouseEvent e) {
-                            if (uploadSlider.getValue() < uploadSlider.getMaximum() && uploadSlider.getValue() > 0) {
-                                Long down = (long) (downloadSlider.getValue() * 1024);
-                                Long up = (long) (uploadSlider.getValue() * 1024);
-
-                                try {
-                                    AppleJuiceClient.getAjFassade().setMaxUpAndDown(up, down);
-                                } catch (IllegalArgumentException e1) {
-                                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e1);
-                                }
-                            } else {
-                                uploadSlider.setValue((int) ajSettings.getMaxUploadInKB());
-                            }
-                        }
-                    });
-                    downloadSlider.addMouseListener(new MouseAdapter() {
-                        public void mouseReleased(MouseEvent e) {
-                            if (downloadSlider.getValue() < downloadSlider.getMaximum() && downloadSlider.getValue() > 0) {
-                                Long down = (long) (downloadSlider.getValue() * 1024);
-                                Long up = (long) (uploadSlider.getValue() * 1024);
-
-                                try {
-                                    AppleJuiceClient.getAjFassade().setMaxUpAndDown(up, down);
-                                } catch (IllegalArgumentException e1) {
-                                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e1);
-                                }
-                            } else {
-                                downloadSlider.setValue((int) ajSettings.getMaxDownloadInKB());
-                            }
-                        }
-                    });
-                    SwingUtilities.invokeLater(() -> {
-                        popup.add(uploadMenu);
-                        popup.add(downloadMenu);
-                    });
-                }
-            }
-        }.start();
+        popup.addSeparator();
+        popupBeendenMenuItem.setText(menuItemBeenden.getText());
+        popupBeendenMenuItem.addActionListener(ae -> closeDialog(null));
+        popup.add(popupBeendenMenuItem);
         return popup;
     }
 

@@ -15,7 +15,7 @@ public class SwingTrayMenuTest {
             JMenuItem item = new JMenuItem("Optionen");
             item.addActionListener(event -> called.set(SwingUtilities.isEventDispatchThread()));
             popup.add(item);
-            SwingTrayMenu menu = new SwingTrayMenu(popup, () -> {}, changed -> {});
+            SwingTrayMenu menu = new SwingTrayMenu(popup, changed -> {});
             menu.select(menu.snapshot().getItems().get(0).getId());
         });
         SwingUtilities.invokeAndWait(() -> {});
@@ -30,7 +30,7 @@ public class SwingTrayMenuTest {
             JMenuItem item = new JMenuItem("Anzeigen");
             item.addActionListener(event -> called.set(true));
             popup.add(item);
-            try (SwingTrayMenu menu = new SwingTrayMenu(popup, () -> {}, updated::set)) {
+            try (SwingTrayMenu menu = new SwingTrayMenu(popup, updated::set)) {
                 String id = menu.snapshot().getItems().get(0).getId();
                 item.setText("Show");
                 assertEquals("Show", updated.get().getItems().get(0).getLabel());
@@ -43,17 +43,23 @@ public class SwingTrayMenuTest {
         });
     }
 
-    @Test public void sliderSubmenuUsesExistingSwingPopup() throws Exception {
-        AtomicBoolean shown = new AtomicBoolean();
+    @Test public void disabledNativeSelectionDoesNotRunAction() throws Exception {
+        AtomicBoolean called = new AtomicBoolean();
+        AtomicReference<SwingTrayMenu> menu = new AtomicReference<>();
         SwingUtilities.invokeAndWait(() -> {
             JPopupMenu popup = new JPopupMenu();
-            JMenu upload = new JMenu("Upload");
-            upload.add(new JSlider());
-            popup.add(upload);
-            SwingTrayMenu menu = new SwingTrayMenu(popup, () -> shown.set(true), changed -> {});
-            menu.select(menu.snapshot().getItems().get(0).getId());
+            JMenuItem item = new JMenuItem("Optionen");
+            item.setEnabled(false);
+            item.addActionListener(event -> called.set(true));
+            popup.add(item);
+            menu.set(new SwingTrayMenu(popup, changed -> {}));
+            menu.get().select(menu.get().snapshot().getItems().get(0).getId());
         });
         SwingUtilities.invokeAndWait(() -> {});
-        assertTrue(shown.get());
+        try {
+            assertFalse(called.get());
+        } finally {
+            SwingUtilities.invokeAndWait(menu.get()::close);
+        }
     }
 }

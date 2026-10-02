@@ -72,8 +72,8 @@ mit Leerzeichen/Umlauten im Pfad öffnen. macOS- und Windows-Installer sind unsi
 
 Wie im Collector nutzt Linux `dev.hivens:libtray:0.1.3-flatpak.2` für
 StatusNotifierItem. macOS/Windows und fehlende Linux-Backends nutzen AWT.
-Das bestehende Swing-Menü liefert Aktionen und Übersetzungen. Upload-/Download-
-Regler bleiben über das Swing-Popup erreichbar. Flatpak erlaubt Zugriff auf
+macOS verwendet dabei ein natives AWT-Kontextmenü wie der Core.
+Das bestehende Swing-Menü liefert Aktionen und Übersetzungen. Flatpak erlaubt Zugriff auf
 `org.kde.StatusNotifierWatcher`.
 
 Die libtray-Version liegt in GitHub Packages (`red171/libtray`). Maven benötigt

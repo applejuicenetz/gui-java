@@ -30,6 +30,7 @@ public class TrayLoader implements AutoCloseable {
     private TrayIcon trayIcon;
     private Tray nativeTray;
     private SwingTrayMenu nativeMenu;
+    private AwtTrayMenu awtMenu;
     private SwingTrayPopup awtPopup;
     private AppleJuiceDialog dialog;
     private JMenuItem showHideItem;
@@ -51,7 +52,8 @@ public class TrayLoader implements AutoCloseable {
         dialog.addComponentListener(visibilityListener);
         dialog.addWindowStateListener(windowStateListener);
         ImageIcon icon = IconManager.getInstance().getIcon("applejuice");
-        if (System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("linux") &&
+        String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+        if (osName.contains("linux") &&
                 createNativeTray(title, icon, popup)) return true;
         if (!SystemTray.isSupported()) {
             close();
@@ -59,13 +61,19 @@ public class TrayLoader implements AutoCloseable {
         }
         trayIcon = new TrayIcon(icon.getImage(), title);
         trayIcon.setImageAutoSize(true);
-        awtPopup = new SwingTrayPopup(popup);
+        if (osName.startsWith("mac")) {
+            awtMenu = new AwtTrayMenu(popup);
+            trayIcon.setPopupMenu(awtMenu.getPopupMenu());
+        } else {
+            awtPopup = new SwingTrayPopup(popup);
+        }
         trayIcon.addMouseListener(new TrayMouseListener(() -> {
             updateVisibilityLabel();
             showHideItem.doClick();
         }, this::showTrayPopup));
         try {
             SystemTray.getSystemTray().add(trayIcon);
+            if (awtMenu != null) logger.info("macOS-Tray mit nativem AWT-Kontextmenue gestartet");
             return true;
         } catch (AWTException e) {
             logger.info("AWT-Tray nicht verfügbar", e);
@@ -81,10 +89,8 @@ public class TrayLoader implements AutoCloseable {
 
     private boolean createNativeTray(String title, ImageIcon icon, JPopupMenu popup) {
         try {
-            nativeMenu = new SwingTrayMenu(popup, () -> {
-                if (!dialog.isVisible() || (dialog.getExtendedState() & Frame.ICONIFIED) != 0) showHideItem.doClick();
-                popup.show(dialog, dialog.getWidth() / 2, dialog.getHeight() / 2);
-            }, menu -> { if (nativeTray != null) nativeTray.setMenu(menu); });
+            nativeMenu = new SwingTrayMenu(popup,
+                    menu -> { if (nativeTray != null) nativeTray.setMenu(menu); });
             ByteArrayOutputStream png = new ByteArrayOutputStream();
             BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics = image.createGraphics();
@@ -136,11 +142,14 @@ public class TrayLoader implements AutoCloseable {
         if (dialog != null) dialog.removeComponentListener(visibilityListener);
         if (dialog != null) dialog.removeWindowStateListener(windowStateListener);
         if (awtPopup != null) awtPopup.close();
+        if (trayIcon != null) trayIcon.setPopupMenu(null);
+        if (awtMenu != null) awtMenu.close();
         if (nativeMenu != null) nativeMenu.close();
         if (nativeTray != null) nativeTray.close();
         if (trayIcon != null && SystemTray.isSupported()) SystemTray.getSystemTray().remove(trayIcon);
         nativeMenu = null;
         awtPopup = null;
+        awtMenu = null;
         nativeTray = null;
         trayIcon = null;
     }

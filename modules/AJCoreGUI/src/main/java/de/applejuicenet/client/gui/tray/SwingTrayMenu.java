@@ -17,7 +17,6 @@ import java.util.function.Consumer;
 /** Keeps the native menu in sync with existing Swing actions and translations. */
 final class SwingTrayMenu implements AutoCloseable {
     private final JPopupMenu popup;
-    private final Runnable showSwingPopup;
     private final Consumer<TrayMenu> changed;
     private final Map<JMenuItem, String> ids = new IdentityHashMap<>();
     private final Map<String, JMenuItem> actions = new LinkedHashMap<>();
@@ -37,9 +36,8 @@ final class SwingTrayMenu implements AutoCloseable {
         }
     };
 
-    SwingTrayMenu(JPopupMenu popup, Runnable showSwingPopup, Consumer<TrayMenu> changed) {
+    SwingTrayMenu(JPopupMenu popup, Consumer<TrayMenu> changed) {
         this.popup = popup;
-        this.showSwingPopup = showSwingPopup;
         this.changed = changed;
         for (Component component : popup.getComponents()) watch(component);
         popup.addContainerListener(containerListener);
@@ -72,9 +70,7 @@ final class SwingTrayMenu implements AutoCloseable {
             if (closed) return;
             JMenuItem item = actions.get(id);
             if (item == null || !item.isEnabled()) return;
-            // Existing upload/download submenus contain Swing sliders.
-            if (item instanceof JMenu) showSwingPopup.run();
-            else item.doClick();
+            item.doClick();
         });
     }
 
