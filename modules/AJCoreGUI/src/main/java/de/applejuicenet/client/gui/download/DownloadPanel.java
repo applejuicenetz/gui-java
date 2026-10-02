@@ -259,6 +259,7 @@ public class DownloadPanel extends TklPanel {
 
         downloadActiveTableModel = new DownloadsTableModel();
         downloadActiveTable = new AutoRowHeightTable(downloadActiveTableModel);
+        downloadActiveTable.setFileTypeIcons();
         downloadActiveTable.setDefaultRenderer(String.class, new StringTableCellRenderer());
         downloadActiveTable.getColumnModel().getColumn(0).setCellRenderer(new DownloadTableDownloadFilenameCellRenderer());
         downloadActiveTable.getColumnModel().getColumn(2).setCellRenderer(new SizeTableCellRenderer());
@@ -324,6 +325,7 @@ public class DownloadPanel extends TklPanel {
 
         downloadSourceTableModel = new DownloadSourcesTableModel();
         downloadSourceTable = new AutoRowHeightTable(downloadSourceTableModel);
+        downloadSourceTable.setFileTypeIcons();
         downloadSourceTable.setDefaultRenderer(String.class, new StringTableCellRenderer());
         downloadSourceTable.getColumnModel().getColumn(0).setCellRenderer(new DownloadTableFilenameCellRenderer());
         downloadSourceTable.getColumnModel().getColumn(3).setCellRenderer(new SizeTableCellRenderer());

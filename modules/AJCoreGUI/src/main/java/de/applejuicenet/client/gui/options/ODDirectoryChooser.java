@@ -54,6 +54,7 @@ public class ODDirectoryChooser extends JDialog {
         getContentPane().add(new JScrollPane(folderTree), BorderLayout.CENTER);
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));
         folderTree.setCellRenderer(new DirectoryChooserTreeCellRenderer());
+        folderTree.setRowHeight(0);
         uebernehmen.setEnabled(false);
         new SwingWorker<DirectoryChooserTreeModel, Void>() {
             protected DirectoryChooserTreeModel doInBackground() {

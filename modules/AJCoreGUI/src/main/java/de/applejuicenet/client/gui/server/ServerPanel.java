@@ -41,6 +41,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Vector;
 
@@ -292,6 +293,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         panel1.add(new JLabel(), constraints);
         add(panel1, BorderLayout.NORTH);
         serverTable = new AutoRowHeightTable();
+        serverTable.setRowIcons(im.getIcon("serververbunden"), im.getIcon("serverversuche"),
+                im.getIcon("aelter24h"), im.getIcon("juenger24h"));
         serverTable.setModel(new ServerTableModel());
         serverTable.setShowGrid(false);
         serverTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -443,7 +446,9 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         }
 
         if (!SwingUtilities.isEventDispatchThread()) {
-            SwingUtilities.invokeLater(() -> fireContentChanged(type, content));
+            final HashMap<String, Server> snapshot = new HashMap<String, Server>((Map<String, Server>) content);
+
+            SwingUtilities.invokeLater(() -> fireContentChanged(type, snapshot));
             return;
         }
 

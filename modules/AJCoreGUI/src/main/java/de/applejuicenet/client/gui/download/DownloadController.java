@@ -39,6 +39,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -960,7 +961,9 @@ public class DownloadController extends GuiController {
     @SuppressWarnings("unchecked")
     protected void contentChanged(DATALISTENER_TYPE type, final Object content) {
         if (!SwingUtilities.isEventDispatchThread()) {
-            SwingUtilities.invokeLater(() -> contentChanged(type, content));
+            final Map<Integer, Download> snapshot = new HashMap<Integer, Download>((Map<Integer, Download>) content);
+
+            SwingUtilities.invokeLater(() -> contentChanged(type, snapshot));
             return;
         }
 

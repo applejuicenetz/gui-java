@@ -87,6 +87,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
         setLayout(tableLayout);
         uploadActiveTableModel = new UploadActiveTableModel();
         uploadActiveTable = new AutoRowHeightTable(uploadActiveTableModel);
+        uploadActiveTable.setRowIcons(IconManager.getInstance().getIcon("treeUebertrage"));
 
         uploadActiveTable.setDefaultRenderer(String.class, new StringTableCellRenderer());
         uploadActiveTable.getColumnModel().getColumn(0).setCellRenderer(new UploadTableFilenameCellRenderer());

@@ -150,6 +150,7 @@ public class SearchResultPanel extends JPanel {
         add(buttonPanel, BorderLayout.NORTH);
         searchResultTableModel = new SearchTableModel(search);
         searchResultTable = new AutoRowHeightTable(searchResultTableModel);
+        searchResultTable.setFileTypeIcons();
 
         searchResultTable.setDefaultRenderer(SearchEntry.class, new SearchEntryIconRenderer());
         searchResultTable.setDefaultRenderer(Long.class, new SearchEntrySizeRenderer());

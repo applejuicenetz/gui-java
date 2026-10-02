@@ -93,7 +93,7 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
     private void updatePanel() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                updateUI();
+                repaint();
             }
         });
     }

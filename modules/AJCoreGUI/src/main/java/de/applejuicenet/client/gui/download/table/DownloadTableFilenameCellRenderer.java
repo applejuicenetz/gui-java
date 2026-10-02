@@ -18,6 +18,7 @@ public class DownloadTableFilenameCellRenderer extends DefaultTableCellRenderer
                                                   int column)
    {
       JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+      label.setIcon(null);
 
       if(null != value)
       {

@@ -438,13 +438,16 @@ public class UploadController extends GuiController {
 
     protected void contentChanged(DATALISTENER_TYPE type, final Object content) {
         if (type == DATALISTENER_TYPE.UPLOAD_CHANGED) {
+            @SuppressWarnings("unchecked")
+            final Map<Integer, Upload> snapshot = new java.util.HashMap<Integer, Upload>((Map<Integer, Upload>) content);
+
             SwingUtilities.invokeLater(new Runnable() {
                 @SuppressWarnings("unchecked")
                 public void run() {
                     try {
-                        boolean change = uploadPanel.getUploadActiveTableModel().setUploads((Map<Integer, Upload>) content);
+                        boolean change = uploadPanel.getUploadActiveTableModel().setUploads(snapshot);
 
-                        if (uploadPanel.getUploadWaitingTableModel().setUploads((Map<Integer, Upload>) content)) {
+                        if (uploadPanel.getUploadWaitingTableModel().setUploads(snapshot)) {
                             change = true;
                         }
 

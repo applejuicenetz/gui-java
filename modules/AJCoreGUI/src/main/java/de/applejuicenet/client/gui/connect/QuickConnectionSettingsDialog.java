@@ -233,7 +233,8 @@ public class QuickConnectionSettingsDialog extends JDialog
 
       remotePanel.setHost(con.getHost());
       remotePanel.setXMLPort(Integer.toString(con.getXmlPort()));
-      remotePanel.updateUI();
+      remotePanel.revalidate();
+      remotePanel.repaint();
    }
 
    private void speichereEinstellungen()

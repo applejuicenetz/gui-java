@@ -2,11 +2,10 @@
 
 **0.86.2**
 
-- [red171] Share-Ansicht zeichnet Ordnerbaum und Dateiliste zuverlässig; Darstellung passt sich Schriftgröße und Theme an
-- [red171] Share-Dateiliste mit Pfeiltasten bedienbar (links/rechts öffnet und schließt Ordner)
-- [red171] Download-, Upload-, Server- und Suchlisten flackern weniger und zeichnen sich stabiler, Zeilen passen zu Schrift und Icons
-- [red171] Verzeichnis-Auswahldialog baut sich ohne Darstellungsfehler auf
-- [red171] Weniger Abstürze und Fehlanzeigen bei schnell wechselnden Daten
+- [red171] Darstellung von Ordnerbäumen und Listen verbessert, auch bei größeren Schriften und unterschiedlichen Themes
+- [red171] Share-Dateiliste mit Pfeiltasten bedienbar; Ordner lassen sich mit links/rechts schließen und öffnen
+- [red171] Download-, Upload-, Server- und Suchansicht aktualisieren sich ohne unnötigen Neuaufbau
+- [red171] Stabilere Aktualisierung von Listen und Verzeichnisauswahl während des Betriebs
 
 **0.86.1**
 
