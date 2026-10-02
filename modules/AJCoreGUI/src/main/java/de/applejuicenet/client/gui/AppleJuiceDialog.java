@@ -317,6 +317,9 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         desktopHeight = screenSize.height;
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
+                if ((getExtendedState() & Frame.ICONIFIED) != 0) {
+                    return;
+                }
                 int x = getWidth();
                 int y = getHeight();
 
@@ -327,7 +330,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                         maximize();
                     }
                 } else {
-                    if (!maximized) {
+                    if (canRememberWindowBounds()) {
                         lastFrameSize = getSize();
                         lastFrameLocation = getLocation();
                     }
@@ -337,7 +340,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             }
 
             public void componentMoved(ComponentEvent e) {
-                if (!maximized) {
+                if (canRememberWindowBounds()) {
                     lastFrameLocation = getLocation();
                 }
 
@@ -567,12 +570,11 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             String sprachText = LanguageSelector.getInstance().getFirstAttrbuteByTagName("Languageinfo.name");
 
             OptionsManagerImpl.getInstance().setSprache(sprachText);
-            Dimension dim = AppleJuiceDialog.getApp().getSize();
-            Point p = AppleJuiceDialog.getApp().getLocationOnScreen();
+            Rectangle bounds = AppleJuiceDialog.getApp().getNormalWindowBounds();
             PositionManager pm = PositionManagerImpl.getInstance();
 
-            pm.setMainXY(p);
-            pm.setMainDimension(dim);
+            pm.setMainXY(bounds.getLocation());
+            pm.setMainDimension(bounds.getSize());
             pm.save();
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
@@ -1089,15 +1091,35 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         }
     }
 
+    private boolean canRememberWindowBounds() {
+        return isVisible() && !maximized && getExtendedState() == Frame.NORMAL
+                && getWidth() >= 320 && getHeight() >= 240
+                && getBounds().equals(WindowPlacement.normalize(getBounds()));
+    }
+
+    private Rectangle getNormalWindowBounds() {
+        Rectangle bounds = !canRememberWindowBounds() && lastFrameSize != null && lastFrameLocation != null
+                ? new Rectangle(lastFrameLocation, lastFrameSize) : getBounds();
+        return WindowPlacement.normalize(bounds);
+    }
+
+    public void showMainWindow() {
+        if ((getExtendedState() & Frame.ICONIFIED) != 0) {
+            setBounds(getNormalWindowBounds());
+        }
+        WindowPlacement.restore(this);
+        if (canRememberWindowBounds()) {
+            lastFrameSize = getSize();
+            lastFrameLocation = getLocation();
+        }
+    }
+
     public JPopupMenu makeSwingPopup() {
         final JPopupMenu popup = new JPopupMenu();
 
         popupShowHideMenuItem.addActionListener(ae -> {
-            if (!isVisible()) {
-                setVisible(true);
-                setAlwaysOnTop(true);
-                setAlwaysOnTop(false);
-                requestFocus();
+            if (!isVisible() || (getExtendedState() & Frame.ICONIFIED) != 0) {
+                showMainWindow();
             } else {
                 if (popup.isVisible()) {
                     popup.setVisible(false);

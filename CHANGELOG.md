@@ -2,6 +2,7 @@
 
 **0.86.1**
 
+- [red171] Ungültige Fensterpositionen beim Start korrigiert; Tray-Klick stellt minimierte Fenster wieder her
 - [red171] Extras-Menü um „Beenden“ unter „Über“ ergänzt; GUI speichert Einstellungen und beendet sich
 - [red171] Spaltenbreiten und Reihenfolge pro View gespeichert; unbesuchte Tabs überschreiben keine Einstellungen, Suchergebnisse übernehmen ihr Layout (#6)
 - [red171] Darcula durch FlatLaf 3.7.2 ersetzt; Darkmode bleibt unter Java 25 ohne Zugriff auf interne Swing-Klassen nutzbar

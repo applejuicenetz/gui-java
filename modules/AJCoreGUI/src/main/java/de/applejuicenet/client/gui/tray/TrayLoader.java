@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowStateListener;
 import java.io.ByteArrayOutputStream;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
@@ -34,6 +35,7 @@ public class TrayLoader implements AutoCloseable {
     private JMenuItem showHideItem;
     private Icon zeigenIcon;
     private Icon versteckenIcon;
+    private final WindowStateListener windowStateListener = event -> updateVisibilityLabel();
     private final ComponentAdapter visibilityListener = new ComponentAdapter() {
         @Override public void componentShown(ComponentEvent event) { updateVisibilityLabel(); }
         @Override public void componentHidden(ComponentEvent event) { updateVisibilityLabel(); }
@@ -47,6 +49,7 @@ public class TrayLoader implements AutoCloseable {
         this.versteckenIcon = versteckenIcon;
         updateVisibilityLabel();
         dialog.addComponentListener(visibilityListener);
+        dialog.addWindowStateListener(windowStateListener);
         ImageIcon icon = IconManager.getInstance().getIcon("applejuice");
         if (System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("linux") &&
                 createNativeTray(title, icon, popup)) return true;
@@ -79,7 +82,7 @@ public class TrayLoader implements AutoCloseable {
     private boolean createNativeTray(String title, ImageIcon icon, JPopupMenu popup) {
         try {
             nativeMenu = new SwingTrayMenu(popup, () -> {
-                if (!dialog.isVisible()) showHideItem.doClick();
+                if (!dialog.isVisible() || (dialog.getExtendedState() & Frame.ICONIFIED) != 0) showHideItem.doClick();
                 popup.show(dialog, dialog.getWidth() / 2, dialog.getHeight() / 2);
             }, menu -> { if (nativeTray != null) nativeTray.setMenu(menu); });
             ByteArrayOutputStream png = new ByteArrayOutputStream();
@@ -115,8 +118,9 @@ public class TrayLoader implements AutoCloseable {
 
     private void updateVisibilityLabel() {
         if (showHideItem != null) {
-            showHideItem.setText(dialog.isVisible() ? verstecken : zeigen);
-            showHideItem.setIcon(dialog.isVisible() ? versteckenIcon : zeigenIcon);
+            boolean shown = dialog.isVisible() && (dialog.getExtendedState() & Frame.ICONIFIED) == 0;
+            showHideItem.setText(shown ? verstecken : zeigen);
+            showHideItem.setIcon(shown ? versteckenIcon : zeigenIcon);
         }
     }
 
@@ -130,6 +134,7 @@ public class TrayLoader implements AutoCloseable {
 
     @Override public void close() {
         if (dialog != null) dialog.removeComponentListener(visibilityListener);
+        if (dialog != null) dialog.removeWindowStateListener(windowStateListener);
         if (awtPopup != null) awtPopup.close();
         if (nativeMenu != null) nativeMenu.close();
         if (nativeTray != null) nativeTray.close();

@@ -348,29 +348,16 @@ public class AppleJuiceClient {
                 splash.setProgress(100, "GUI geladen...");
                 PositionManager lm = PositionManagerImpl.getInstance();
 
-                if (lm.isLegal()) {
-                    theApp.setLocation(lm.getMainXY());
-                    theApp.setSize(lm.getMainDimension());
-                } else {
-                    Toolkit tk = Toolkit.getDefaultToolkit();
-                    Dimension screenSize = tk.getScreenSize();
-                    Dimension appScreenSize = new Dimension(screenSize.width, screenSize.height);
-                    Insets insets = tk.getScreenInsets(theApp.getGraphicsConfiguration());
-
-                    appScreenSize.width -= (insets.left + insets.right);
-                    appScreenSize.width = appScreenSize.width / 5 * 4;
-                    appScreenSize.height -= (insets.top + insets.bottom);
-                    appScreenSize.height = appScreenSize.height / 5 * 4;
-                    Point location = new Point((screenSize.width - appScreenSize.width) / 2,
-                            (screenSize.height - appScreenSize.height) / 2);
-
-                    lm.setMainXY(location);
-                    lm.setMainDimension(appScreenSize);
-                    theApp.setSize(appScreenSize);
-                    theApp.setLocation(location);
+                Rectangle savedBounds = lm.isLegal() && lm.getMainXY() != null && lm.getMainDimension() != null
+                        ? new Rectangle(lm.getMainXY(), lm.getMainDimension()) : null;
+                Rectangle restoredBounds = WindowPlacement.normalize(savedBounds);
+                if (savedBounds != null && !savedBounds.equals(restoredBounds)) {
+                    logger.warn("Repairing saved main window bounds: {} to {}", savedBounds, restoredBounds);
                 }
-
-                theApp.setVisible(true);
+                lm.setMainXY(restoredBounds.getLocation());
+                lm.setMainDimension(restoredBounds.getSize());
+                theApp.setBounds(restoredBounds);
+                theApp.showMainWindow();
                 String nachricht1 = "appleJuice-GUI gestartet...";
 
                 logger.info(nachricht1);
