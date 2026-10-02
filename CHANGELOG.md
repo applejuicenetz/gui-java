@@ -6,6 +6,7 @@
 - [red171] Share-Dateiliste mit Pfeiltasten bedienbar; Ordner lassen sich mit links/rechts schließen und öffnen
 - [red171] Download-, Upload-, Server- und Suchansicht aktualisieren sich ohne unnötigen Neuaufbau
 - [red171] Stabilere Aktualisierung von Listen und Verzeichnisauswahl während des Betriebs
+- [red171] Fehlende Tray-Funktion in Installationspaketen behoben; enthaltene Bibliotheken werden beim Paketbau geprüft
 
 **0.86.1**
 

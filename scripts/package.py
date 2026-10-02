@@ -9,6 +9,7 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 import zipfile
+from urllib.parse import unquote
 
 from windows_installer import add_legacy_guard
 
@@ -19,6 +20,19 @@ NAME = 'AJCoreGUI'
 MAIN = 'de.applejuicenet.client.AppleJuiceClient'
 
 
+def validate_classpath(directory):
+    with zipfile.ZipFile(directory / f'{NAME}.jar') as archive:
+        manifest = archive.read('META-INF/MANIFEST.MF').decode('utf-8')
+    manifest = manifest.replace('\r\n', '\n').replace('\n ', '')
+    main_section = manifest.split('\n\n', 1)[0]
+    classpath = next((line[len('Class-Path: '):] for line in main_section.splitlines()
+                      if line.startswith('Class-Path: ')), None)
+    if not classpath:
+        raise RuntimeError(f'{NAME}.jar has no dependency Class-Path')
+    missing = [entry for entry in classpath.split() if not (directory / unquote(entry)).is_file()]
+    if missing:
+        raise RuntimeError(f'Missing Class-Path files: {", ".join(missing)}')
+
 def prepare():
     jar = ROOT / 'modules/AJCoreGUI/target/AJCoreGUI.jar'
     if not jar.is_file():
@@ -27,6 +41,7 @@ def prepare():
         shutil.rmtree(INPUT)
     shutil.copytree(ROOT / 'resources', INPUT)
     shutil.copy2(jar, INPUT / jar.name)
+    validate_classpath(INPUT)
     (INPUT / 'README.txt').write_text(
         'appleJuice JavaGUI\nRequires Java 25 for this portable ZIP.\n'
         'Start: java -jar AJCoreGUI.jar\n'

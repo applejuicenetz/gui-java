@@ -103,6 +103,7 @@
                         <configuration>
                             <outputDirectory>../../resources/lib/</outputDirectory>
                             <includeScope>runtime</includeScope>
+                            <useBaseVersion>true</useBaseVersion>
                         </configuration>
                     </execution>
                 </executions>
@@ -123,6 +124,7 @@
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>./lib/</classpathPrefix>
+                            <useUniqueVersions>false</useUniqueVersions>
                             <mainClass>de.applejuicenet.client.AppleJuiceClient</mainClass>
                         </manifest>
                     </archive>
