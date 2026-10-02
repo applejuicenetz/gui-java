@@ -10,7 +10,7 @@ import sys
 import xml.etree.ElementTree as ET
 import zipfile
 
-from windows_installer import add_legacy_guard, compile_guard
+from windows_installer import add_legacy_guard
 
 ROOT = Path(__file__).resolve().parent.parent
 TARGET = ROOT / 'target'
@@ -95,7 +95,7 @@ def windows_resources(jdk_home, directory):
   </Fragment>
 '''
     template = template.replace('</Wix>', fragment + '</Wix>')
-    template = add_legacy_guard(template, compile_guard(directory), 'JavaGUI', 'appleJuice JavaGUI')
+    template = add_legacy_guard(template, 'JavaGUI')
     (directory / 'main.wxs').write_text(template, encoding='utf-8')
 
 
