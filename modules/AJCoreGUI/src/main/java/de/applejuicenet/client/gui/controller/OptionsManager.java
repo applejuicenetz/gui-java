@@ -61,10 +61,6 @@ public interface OptionsManager
 
    void saveAJSettings(AJSettings ajSettings);
 
-   String getDefaultTheme();
-
-   void setDefaultTheme(String themeShortName);
-
    String getNewsURL();
 
    String getServerListURL();
@@ -78,10 +74,6 @@ public interface OptionsManager
    void setIconSetName(String name);
 
    void setSoundSetName(String name);
-
-   boolean isThemesSupported();
-
-   void enableThemeSupport(boolean enable);
 
    LookAFeel[] getLookAndFeels();
 

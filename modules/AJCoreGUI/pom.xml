@@ -69,11 +69,6 @@
             <version>1.6.5</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
-            <artifactId>skinlf</artifactId>
-            <version>6.7</version>
-        </dependency>
-        <dependency>
             <groupId>tablelayout</groupId>
             <artifactId>TableLayout</artifactId>
             <version>20050920</version>

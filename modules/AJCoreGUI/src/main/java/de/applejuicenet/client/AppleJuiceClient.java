@@ -30,9 +30,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.Socket;
-import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
@@ -252,22 +250,6 @@ public class AppleJuiceClient {
 
             splash.setProgress(10, "check system...");
 
-            try {
-                if (OptionsManagerImpl.getInstance().isThemesSupported()) {
-                    Method method = JFrame.class.getMethod("setDefaultLookAndFeelDecorated",
-                            new Class[]{boolean.class});
-
-                    method.invoke(null, new Object[]{Boolean.TRUE});
-
-                    method = JDialog.class.getMethod("setDefaultLookAndFeelDecorated", new Class[]{boolean.class});
-                    method.invoke(null, new Object[]{Boolean.TRUE});
-                }
-            } catch (Exception e) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("Programmabbruch", e);
-                }
-            }
-
             if (logger.isInfoEnabled()) {
                 logger.info(nachricht);
             }
@@ -285,8 +267,8 @@ public class AppleJuiceClient {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog;
 
-            splash.setProgress(25, "load themes...");
-            AppleJuiceDialog.initThemes();
+            splash.setProgress(25, "load look and feel...");
+            AppleJuiceDialog.initLookAndFeel();
 
             splash.setProgress(50, "test connection...");
             boolean showDialog = OptionsManagerImpl.getInstance().shouldShowConnectionDialogOnStartup();

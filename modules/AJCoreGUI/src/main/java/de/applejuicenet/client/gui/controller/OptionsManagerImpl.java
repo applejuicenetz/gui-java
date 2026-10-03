@@ -105,10 +105,6 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.saveAJSettings(ajSettings);
     }
 
-    public String getDefaultTheme() {
-        return propertiesManager.getDefaultTheme();
-    }
-
     public String getNewsURL() {
         return propertiesManager.getNewsURL();
     }
@@ -135,18 +131,6 @@ public class OptionsManagerImpl implements OptionsManager{
 
     public void setSoundSetName(String name) {
         propertiesManager.setSoundSetName(name);
-    }
-
-    public void setDefaultTheme(String themeShortName) {
-        propertiesManager.setDefaultTheme(themeShortName);
-    }
-
-    public boolean isThemesSupported() {
-        return propertiesManager.isThemesSupported();
-    }
-
-    public void enableThemeSupport(boolean enable) {
-        propertiesManager.enableThemeSupport(enable);
     }
 
     public LookAFeel[] getLookAndFeels() {

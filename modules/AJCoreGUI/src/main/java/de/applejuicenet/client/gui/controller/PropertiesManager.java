@@ -182,28 +182,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         }
     }
 
-    public String getDefaultTheme() {
-        try {
-            String temp = propertyHandler.get("options_defaulttheme", "toxicthemepack");
-
-            if (temp.length() == 0) {
-                throw new Exception("Kein Defaulttheme vorhanden.");
-            }
-
-            return temp;
-        } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-            return "";
-        }
-    }
-
-    public void setDefaultTheme(String themeShortName) {
-        propertyHandler.put("options_defaulttheme", themeShortName);
-    }
-
     public String getNewsURL() {
         return propertyHandler.get("options_news_url", "https://applejuicenetz.github.io/news/%s.html");
     }
@@ -353,22 +331,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     public void loadPluginsOnStartup(boolean loadPluginsOnStartup) {
         propertyHandler.put("options_loadplugins", loadPluginsOnStartup);
         shouldLoadPluginsOnStartup();
-    }
-
-    public boolean isThemesSupported() {
-        try {
-            return propertyHandler.getAsBoolean("options_themes", false);
-        } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-            return false;
-        }
-    }
-
-    public void enableThemeSupport(boolean enable) {
-        propertyHandler.put("options_themes", enable);
     }
 
     public boolean getUpdateInfo() {
@@ -582,8 +544,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             aPropertyHandler.put("options_firststart", true);
             aPropertyHandler.put("options_sound", true);
             aPropertyHandler.put("options_sprache", "deutsch");
-            aPropertyHandler.put("options_themes", false);
-            aPropertyHandler.put("options_defaulttheme", "toxicthemepack");
             aPropertyHandler.put("options_loadplugins", true);
             aPropertyHandler.put("options_enableToolTip", true);
             aPropertyHandler.put("options_linklistenerport", 8768);
