@@ -634,13 +634,6 @@ public class ShareController extends GuiController
                   headerModel.getColumn(i).setPreferredWidth(widths[i]);
                }
             }
-            else
-            {
-               for(int i = 0; i < columnCount; i++)
-               {
-                  headerModel.getColumn(i).setPreferredWidth(sharePanel.getShareTable().getWidth() / columnCount);
-               }
-            }
             TableColumn[] columns = new TableColumn[columnCount];
             for(int index = 0; index < columnCount; index++)
             {

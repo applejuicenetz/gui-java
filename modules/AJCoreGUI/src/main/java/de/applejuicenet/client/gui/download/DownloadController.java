@@ -840,14 +840,6 @@ public class DownloadController extends GuiController {
                             }
                         }
                     }
-                } else {
-                    for (int i = 0; i < columnsDownload.length; i++) {
-                        columnsDownload[i].setPreferredWidth(width / columnsDownload.length);
-                    }
-
-                    for (int i = 0; i < columnsDownloadSources.length; i++) {
-                        columnsDownloadSources[i].setPreferredWidth(width / columnsDownloadSources.length);
-                    }
                 }
 
                 downloadPanel.getDownloadTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

@@ -347,15 +347,6 @@ public class UploadController extends GuiController {
                             }
                         }
                     }
-                } else {
-                    for (int i = 0; i < columnCountActive; i++) {
-                        headerModelActive.getColumn(i).setPreferredWidth(uploadPanel.getUploadActiveTable().getWidth() / columnCountActive);
-                    }
-
-                    for (int i = 0; i < columnCountWaiting; i++) {
-                        headerModelWaiting.getColumn(i)
-                                .setPreferredWidth(uploadPanel.getUploadWaitingTable().getWidth() / columnCountWaiting);
-                    }
                 }
 
                 uploadPanel.getUploadActiveTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

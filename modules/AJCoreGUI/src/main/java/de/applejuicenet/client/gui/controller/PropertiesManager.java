@@ -604,10 +604,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             aPropertyHandler.put("options_location_width", "");
             aPropertyHandler.put("options_location_x", "");
             aPropertyHandler.put("options_location_y", "");
-            aPropertyHandler.put("options_columns_download_column0_width", DEFAULT_DOWNLOADS_TABLE_COLUMN_WIDTH);
             aPropertyHandler.put("options_columns_download_column0_index", 0);
             for (int i = 1; i < DownloadsTableModel.CLASS_TYPES.length; i++) {
-                aPropertyHandler.put("options_columns_download_column" + i + "_width", DEFAULT_DOWNLOADS_TABLE_COLUMN_WIDTH);
                 aPropertyHandler.put("options_columns_download_column" + i + "_visibility", true);
                 aPropertyHandler.put("options_columns_download_column" + i + "_index", i);
             }
@@ -630,50 +628,38 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             aPropertyHandler.put("options_server_sort_column", "0");
             aPropertyHandler.put("options_server_sort_order", "1");
 
-            aPropertyHandler.put("options_columns_downloadsources_column0_width", DEFAULT_DOWNLOADSOURCES_TABLE_COLUMN_WIDTH);
             aPropertyHandler.put("options_columns_downloadsources_column0_index", 0);
             for (int i = 1; i < DownloadSourcesTableModel.CLASS_TYPES.length; i++) {
-                aPropertyHandler.put("options_columns_downloadsources_column" + i + "_width", DEFAULT_DOWNLOADSOURCES_TABLE_COLUMN_WIDTH);
                 aPropertyHandler.put("options_columns_downloadsources_column" + i + "_visibility", true);
                 aPropertyHandler.put("options_columns_downloadsources_column" + i + "_index", i);
             }
 
-            aPropertyHandler.put("options_columns_upload_column0_width", DEFAULT_UPLOADS_ACTIVE_TABLE_COLUMN_WIDTH);
             aPropertyHandler.put("options_columns_upload_column0_index", 0);
             for (int i = 1; i < UploadActiveTableModel.CLASS_TYPES.length; i++) {
-                aPropertyHandler.put("options_columns_upload_column" + i + "_width", DEFAULT_UPLOADS_ACTIVE_TABLE_COLUMN_WIDTH);
                 aPropertyHandler.put("options_columns_upload_column" + i + "_visibility", true);
                 aPropertyHandler.put("options_columns_upload_column" + i + "_index", i);
             }
 
-            aPropertyHandler.put("options_columns_uploadwaiting_column0_width", DEFAULT_UPLOADS_WAITING_TABLE_COLUMN_WIDTH);
             aPropertyHandler.put("options_columns_uploadwaiting_column0_index", 0);
             for (int i = 1; i < UploadWaitingTableModel.CLASS_TYPES.length; i++) {
-                aPropertyHandler.put("options_columns_uploadwaiting_column" + i + "_width", DEFAULT_UPLOADS_WAITING_TABLE_COLUMN_WIDTH);
                 aPropertyHandler.put("options_columns_uploadwaiting_column" + i + "_visibility", true);
                 aPropertyHandler.put("options_columns_uploadwaiting_column" + i + "_index", i);
             }
 
-            aPropertyHandler.put("options_columns_server_column0_width", DEFAULT_SERVER_TABLE_COLUMN_WIDTH);
             aPropertyHandler.put("options_columns_server_column0_index", 0);
             for (int i = 1; i < ServerTableModel.CLASS_TYPES.length; i++) {
-                aPropertyHandler.put("options_columns_server_column" + i + "_width", DEFAULT_SERVER_TABLE_COLUMN_WIDTH);
                 aPropertyHandler.put("options_columns_server_column" + i + "_visibility", true);
                 aPropertyHandler.put("options_columns_server_column" + i + "_index", i);
             }
 
-            aPropertyHandler.put("options_columns_search_column0_width", DEFAULT_SEARCH_TABLE_COLUMN_WIDTH);
             aPropertyHandler.put("options_columns_search_column0_index", 0);
             for (int i = 1; i < SearchTableModel.CLASS_TYPES.length; i++) {
-                aPropertyHandler.put("options_columns_search_column" + i + "_width", DEFAULT_SEARCH_TABLE_COLUMN_WIDTH);
                 aPropertyHandler.put("options_columns_search_column" + i + "_visibility", true);
                 aPropertyHandler.put("options_columns_search_column" + i + "_index", i);
             }
 
-            aPropertyHandler.put("options_columns_share_column0_width", DEFAULT_SHARE_TABLE_COLUMN_WIDTH);
             aPropertyHandler.put("options_columns_share_column0_index", 0);
             for (int i = 1; i < ShareTableModel.CLASS_TYPES.length; i++) {
-                aPropertyHandler.put("options_columns_share_column" + i + "_width", DEFAULT_SHARE_TABLE_COLUMN_WIDTH);
                 aPropertyHandler.put("options_columns_share_column" + i + "_visibility", true);
                 aPropertyHandler.put("options_columns_share_column" + i + "_index", i);
             }

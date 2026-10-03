@@ -413,10 +413,6 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                     for (int i = 0; i < columnCount; i++) {
                         headerModel.getColumn(i).setPreferredWidth(widths[i]);
                     }
-                } else {
-                    for (int i = 0; i < columnCount; i++) {
-                        headerModel.getColumn(i).setPreferredWidth(serverTable.getWidth() / columnCount);
-                    }
                 }
 
                 if (null != sort) {

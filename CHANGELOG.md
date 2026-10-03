@@ -4,7 +4,7 @@
 
 - [red171] Core-Neustart bei laufender GUI: Download-Liste zeigt nicht mehr alles doppelt
 - [red171] „Mein Share“ lädt die Dateiliste beim ersten Öffnen automatisch; „Neu laden“ ist nicht mehr nötig
-
+- [red171] Tabellen passen Spaltenbreiten an den Inhalt an, solange keine Breite gespeichert ist; die Namensspalte nutzt den Restplatz (auch beim Ändern der Fenstergröße) statt Gleichverteilung; Standardbreiten werden nicht mehr in neue Einstellungsdateien geschrieben
 
 **0.86.2**
 
