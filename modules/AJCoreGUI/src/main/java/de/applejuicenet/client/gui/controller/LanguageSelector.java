@@ -6,7 +6,6 @@ package de.applejuicenet.client.gui.controller;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
-import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import org.slf4j.Logger;
@@ -14,9 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.CharArrayWriter;
 import java.io.File;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Properties;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.30 2009/01/12 09:02:56 maj0r Exp $
@@ -33,16 +36,13 @@ public class LanguageSelector extends XMLValueHolder {
     private Set<LanguageListener> languageListener = new HashSet<LanguageListener>();
     private CharArrayWriter contents = new CharArrayWriter();
     private StringBuffer key = new StringBuffer();
+    private final Properties englishValues = new Properties();
     @SuppressWarnings("unchecked")
     private Set pluginsToWatch = null;
 
-    private LanguageSelector(String path) {
+    LanguageSelector(String path) {
         super();
-        try {
-            parseProperties(new File(path));
-        } catch (Exception ex) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-        }
+        init(new File(path));
     }
 
     public static LanguageSelector getInstance() {
@@ -52,7 +52,7 @@ public class LanguageSelector extends XMLValueHolder {
             String datei = om.getSprache();
 
             if (null == datei || datei.length() == 0) {
-                datei = "deutsch";
+                datei = "english";
             }
 
             path += datei + ".properties";
@@ -70,12 +70,27 @@ public class LanguageSelector extends XMLValueHolder {
     }
 
     private void init(File languageFile) {
+        englishValues.clear();
+        values.clear();
         try {
             if (key.length() > 0) {
                 key.delete(0, key.length() - 1);
             }
 
-            parseProperties(languageFile);
+            File englishFile = new File(languageFile.getAbsoluteFile().getParentFile(), "english.properties");
+            try (Reader reader = Files.newBufferedReader(englishFile.toPath(), StandardCharsets.UTF_8)) {
+                englishValues.load(reader);
+            }
+            values.putAll(englishValues);
+            if (languageFile.isFile()) {
+                Properties selectedValues = new Properties();
+                try (Reader reader = Files.newBufferedReader(languageFile.toPath(), StandardCharsets.UTF_8)) {
+                    selectedValues.load(reader);
+                }
+                values.putAll(selectedValues);
+            } else {
+                logger.warn("Sprachdatei {} fehlt; Englisch wird verwendet.", languageFile);
+            }
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
@@ -86,11 +101,6 @@ public class LanguageSelector extends XMLValueHolder {
             instance = new LanguageSelector(path);
         } else {
             File sprachDatei = new File(path);
-
-            if (!sprachDatei.isFile()) {
-                logger.info("Die in der ajgui.properties hinterlegte Sprachdatei wurde nicht gefunden.");
-                AppleJuiceDialog.closeWithErrormessage("Die in der ajgui.properties hinterlegte Sprachdatei wurde nicht gefunden. appleJuice wird beendet.", false);
-            }
 
             instance.init(sprachDatei);
             instance.informLanguageListener();
@@ -129,11 +139,8 @@ public class LanguageSelector extends XMLValueHolder {
     }
 
     public String getFirstAttrbuteByTagName(String identifier) {
-        if (values.containsKey(identifier)) {
-            return values.getProperty(identifier);
-        } else {
-            return "";
-        }
+        String value = values.getProperty(identifier);
+        return value == null || value.isBlank() ? englishValues.getProperty(identifier, "") : value;
     }
 
     @SuppressWarnings("unchecked")

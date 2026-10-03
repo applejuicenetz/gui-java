@@ -227,7 +227,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         String sprache = OptionsManagerImpl.getInstance().getSprache();
 
         if (null == sprache || sprache.trim().length() == 0) {
-            sprache = "deutsch";
+            sprache = "english";
         }
 
         path += sprache + ".properties";

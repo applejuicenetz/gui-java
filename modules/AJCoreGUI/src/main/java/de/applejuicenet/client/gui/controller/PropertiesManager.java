@@ -172,7 +172,11 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
     public String getSprache() {
         try {
-            return propertyHandler.get("options_sprache", "deutsch");
+            String language = propertyHandler.get("options_sprache", "english");
+            if (language.isBlank() || "italiano".equalsIgnoreCase(language) || "tuerkce".equalsIgnoreCase(language)) {
+                return "english";
+            }
+            return language;
         } catch (Exception e) {
             AppleJuiceDialog.rewriteProperties = true;
             logger.error(PROPERTIES_ERROR_MESSAGE, e);
@@ -543,7 +547,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             aPropertyHandler.put("options_dialogzeigen", true);
             aPropertyHandler.put("options_firststart", true);
             aPropertyHandler.put("options_sound", true);
-            aPropertyHandler.put("options_sprache", "deutsch");
+            aPropertyHandler.put("options_sprache", "english");
             aPropertyHandler.put("options_loadplugins", true);
             aPropertyHandler.put("options_enableToolTip", true);
             aPropertyHandler.put("options_linklistenerport", 8768);

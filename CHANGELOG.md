@@ -7,6 +7,7 @@
 - [red171] Tabellen passen Spaltenbreiten an den Inhalt an, solange keine Breite gespeichert ist; die Namensspalte nutzt den Restplatz (auch beim Ändern der Fenstergröße) statt Gleichverteilung; Standardbreiten werden nicht mehr in neue Einstellungsdateien geschrieben
 - [red171] Cmd+A/C/V/X (macOS) bzw. Strg+A/C/V/X funktionieren in allen Textfeldern (auch Passwort, Textbereiche) und auch mit Theme-Packs
 - [red171] SkinLF und alle mitgelieferten Skin-Theme-Packs (`themes/`) entfernt
+- [red171] Italienisch und Türkisch als Sprachen entfernt (zu viele fehlende Übersetzungen)
 
 **0.86.2**
 
