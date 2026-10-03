@@ -13,6 +13,7 @@
 - [red171] SkinLF und alte Skin-Theme-Packs entfernt
 - [red171] Ungenutzte GUI-Komponenten entfernt
 - [red171] Zusätzliche XML-Bibliotheken durch Java-Bordmittel ersetzt
+- [red171] JSON-Bibliothek für die Update-Prüfung ausgetauscht
 
 **0.86.2**
 

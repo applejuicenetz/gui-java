@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import org.slf4j.Logger;
@@ -27,13 +27,13 @@ public class VersionChecker {
                     String downloadData = WebsiteContentLoader.getWebsiteContent(updateServer);
 
                     if (downloadData.length() > 0) {
-                        JsonObject jsonObject = JsonParser.parseString(downloadData).getAsJsonObject();
-                        String aktuellsteVersion = jsonObject.get("tag_name").getAsString();
+                        JsonObject jsonObject = Json.parse(downloadData).asObject();
+                        String aktuellsteVersion = jsonObject.get("tag_name").asString();
 
                         logger.info("aktuelle Version " + AppleJuiceDialog.getVersion() + " | letzte veröffentlichte Version: " + aktuellsteVersion);
 
                         if (AppleJuiceDialog.getVersion() != null && compareVersion(aktuellsteVersion, AppleJuiceDialog.getVersion()) == 1) {
-                            String releaseLink = jsonObject.get("html_url").getAsString();
+                            String releaseLink = jsonObject.get("html_url").asString();
                             SwingUtilities.invokeLater(() -> {
                                 UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(AppleJuiceDialog.getApp(), aktuellsteVersion, releaseLink);
                                 updateInformationDialog.setVisible(true);
