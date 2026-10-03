@@ -1,15 +1,16 @@
 # Changelog
 
-**0.86.3**
+**0.86.3** (unveröffentlicht)
 
-- [red171] Core-Neustart bei laufender GUI: Download-Liste zeigt nicht mehr alles doppelt
-- [red171] „Mein Share“ lädt die Dateiliste beim ersten Öffnen automatisch; „Neu laden“ ist nicht mehr nötig
-  - [red171] Tabellen passen Spaltenbreiten an den Inhalt an, solange keine Breite gespeichert ist
-- [red171] Cmd+A/C/V/X (macOS) bzw. Strg+A/C/V/X funktionieren in allen Textfeldern (auch Passwort, Textbereiche) und auch mit Theme-Packs
-- [red171] SkinLF und alle mitgelieferten Skin-Theme-Packs (`themes/`) entfernt
-- [red171] Italienisch und Türkisch als Sprachen entfernt (zu viele fehlende Übersetzungen)
-- [red171] Start: Sprachdateien werden für das Sprachmenü nur noch gelesen statt global umgeschaltet, Sprach-Singleton wird gecacht, Logger früh initialisiert
-- [red171] Soundpaket-Wechsel wirkt sofort, ohne Neustart der GUI; Hörprobe spielt den Gespeichert-Sound des gewählten Pakets, auch bei deaktivierter Soundausgabe
+- [red171] Keine doppelten Downloads nach einem Core-Neustart (ghosting)
+- [red171] „Mein Share“ lädt beim ersten Öffnen automatisch
+- [red171] Spaltenbreiten passen sich ohne gespeicherte Werte automatisch an
+- [red171] Cmd-/Strg+A/C/V/X funktionieren in allen Textfeldern
+- [red171] Sprachverwaltung beim GUI-Start verbessert
+- [red171] Soundpakete wechseln ohne GUI-Neustart
+- [red171] Soundpaket-Auswahl spielt eine Hörprobe, auch bei stummer GUI
+- [red171] Unvollständige Sprachen Italienisch und Türkisch entfernt
+- [red171] SkinLF und alte Skin-Theme-Packs entfernt
 
 **0.86.2**
 

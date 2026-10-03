@@ -1,5 +1,16 @@
 # development
 
+## Commits
+
+- Änderungen nach Themen in getrennte Commits aufteilen.
+- Unabhängige Änderungen nicht in einem Commit mischen.
+
+## Changelog
+
+- Einträge kurz fassen: ein Satz pro Änderung.
+- Zeilen nicht zu lang halten.
+- Technisch nicht zu tief gehen; beschreiben, was Nutzer merken.
+
 ### neues Release in dieser Reihenfolge erstellen
 
 ```bash
