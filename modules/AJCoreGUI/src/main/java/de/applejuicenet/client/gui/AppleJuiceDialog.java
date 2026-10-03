@@ -25,6 +25,7 @@ import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.StartupTiming;
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLFrame;
 import de.tklsoft.gui.controls.TKLLabel;
@@ -65,7 +66,7 @@ import java.util.*;
  */
 public class AppleJuiceDialog extends TKLFrame implements LanguageListener, DataUpdateListener {
 
-    private static Logger logger;
+    private static final Logger logger = LoggerFactory.getLogger(AppleJuiceDialog.class);
     public static boolean rewriteProperties = false;
     private static AppleJuiceDialog theApp;
     private static boolean lookAndFeelInitialized = false;
@@ -125,7 +126,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
     public AppleJuiceDialog() {
         super();
-        logger = LoggerFactory.getLogger(getClass());
         try {
             enableCloseWindowListener(false);
             theApp = this;
@@ -221,27 +221,19 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         menuItemDateiliste.setIcon(im.getIcon("speichern"));
         menuItemCheckUpdate.setIcon(im.getIcon("update"));
 
-        setJMenuBar(createMenuBar());
+        setJMenuBar(StartupTiming.measure(logger, "Menue", this::createMenuBar));
 
-        String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
-        String sprache = OptionsManagerImpl.getInstance().getSprache();
-
-        if (null == sprache || sprache.trim().length() == 0) {
-            sprache = "english";
-        }
-
-        path += sprache + ".properties";
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(25, "Initialisiere Sprache...");
         }
 
-        LanguageSelector languageSelector = LanguageSelector.getInstance(path);
+        LanguageSelector languageSelector = LanguageSelector.getInstance();
 
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(30, "Erstelle Register...");
         }
 
-        registerPane = new RegisterPanel(this);
+        registerPane = StartupTiming.measure(logger, "Register", () -> new RegisterPanel(this));
         languageSelector.fireLanguageChanged();
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(95, "Register erstellt..");
@@ -636,8 +628,16 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             ButtonGroup lafGroup = new ButtonGroup();
 
             for (String curSprachDatei : sprachDateien) {
-                String sprachText = LanguageSelector.getInstance(path + curSprachDatei)
-                        .getFirstAttrbuteByTagName("Languageinfo.name");
+                String sprachText;
+                try {
+                    sprachText = LanguageSelector.readLanguageName(new File(path, curSprachDatei));
+                } catch (IOException | java.lang.IllegalArgumentException e) {
+                    logger.warn("Sprachdatei {} nicht lesbar", curSprachDatei, e);
+                    continue;
+                }
+                if (sprachText.isBlank()) {
+                    continue;
+                }
                 JCheckBoxMenuItem rb = new JCheckBoxMenuItem(sprachText);
 
                 if (OptionsManagerImpl.getInstance().getSprache().equalsIgnoreCase(sprachText)) {

@@ -2,6 +2,7 @@ package de.applejuicenet.client.gui.controller;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
@@ -35,5 +36,11 @@ public class LanguageSelectorTest {
     @Test
     public void existingTranslationsKeepPriority() {
         assertEquals("Einfügen", language("deutsch").getFirstAttrbuteByTagName("javagui.downloadform.einfuegen"));
+    }
+
+    @Test
+    public void readsLanguageNameWithoutSwitchingLanguage() throws Exception {
+        File german = Paths.get("../../resources/language/deutsch.properties").toAbsolutePath().normalize().toFile();
+        assertEquals("Deutsch", LanguageSelector.readLanguageName(german));
     }
 }

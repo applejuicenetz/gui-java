@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.CharArrayWriter;
 import java.io.File;
+import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -57,11 +58,18 @@ public class LanguageSelector extends XMLValueHolder {
 
             path += datei + ".properties";
 
-            //zZ werden die Header der TableModel nicht aktualisiert, deshalb hier schon
-            return new LanguageSelector(path);
+            instance = new LanguageSelector(path);
         }
 
         return instance;
+    }
+
+    public static String readLanguageName(File languageFile) throws IOException {
+        Properties metadata = new Properties();
+        try (Reader reader = Files.newBufferedReader(languageFile.toPath(), StandardCharsets.UTF_8)) {
+            metadata.load(reader);
+        }
+        return metadata.getProperty("Languageinfo.name", "");
     }
 
     @SuppressWarnings("unchecked")
@@ -82,13 +90,13 @@ public class LanguageSelector extends XMLValueHolder {
                 englishValues.load(reader);
             }
             values.putAll(englishValues);
-            if (languageFile.isFile()) {
+            if (languageFile.isFile() && !languageFile.getAbsoluteFile().equals(englishFile.getAbsoluteFile())) {
                 Properties selectedValues = new Properties();
                 try (Reader reader = Files.newBufferedReader(languageFile.toPath(), StandardCharsets.UTF_8)) {
                     selectedValues.load(reader);
                 }
                 values.putAll(selectedValues);
-            } else {
+            } else if (!languageFile.isFile()) {
                 logger.warn("Sprachdatei {} fehlt; Englisch wird verwendet.", languageFile);
             }
         } catch (Exception e) {

@@ -8,6 +8,7 @@
 - [red171] Cmd+A/C/V/X (macOS) bzw. Strg+A/C/V/X funktionieren in allen Textfeldern (auch Passwort, Textbereiche) und auch mit Theme-Packs
 - [red171] SkinLF und alle mitgelieferten Skin-Theme-Packs (`themes/`) entfernt
 - [red171] Italienisch und Türkisch als Sprachen entfernt (zu viele fehlende Übersetzungen)
+- [red171] Start: Sprachdateien werden für das Sprachmenü nur noch gelesen statt global umgeschaltet, Sprach-Singleton wird gecacht, Logger früh initialisiert; Startphasen (Core-Verbindung, Menü, Register, Plugins) werden mit Dauer geloggt
 
 **0.86.2**
 
