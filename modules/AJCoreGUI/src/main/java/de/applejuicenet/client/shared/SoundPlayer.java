@@ -34,11 +34,8 @@ public class SoundPlayer {
     public static final int GESTARTET = 10;
     private static SoundPlayer instance = null;
     private static Logger logger;
-    private final String soundPath;
 
     private SoundPlayer() {
-        String soundPack = OptionsManagerImpl.getInstance().getSoundSetName();
-        soundPath = System.getProperty("user.dir") + File.separator + "sounds" + File.separator + soundPack + File.separator;
     }
 
     public static SoundPlayer getInstance() {
@@ -50,12 +47,22 @@ public class SoundPlayer {
         return instance;
     }
 
+    public void playPreview() {
+        playSound(GESPEICHERT, true);
+    }
+
     public void playSound(int sound) {
+        playSound(sound, false);
+    }
+
+    private void playSound(int sound, boolean preview) {
         try {
-            if (!OptionsManagerImpl.getInstance().isSoundEnabled()) {
+            if (!preview && !OptionsManagerImpl.getInstance().isSoundEnabled()) {
                 return;
             }
 
+            String soundPack = OptionsManagerImpl.getInstance().getSoundSetName();
+            String soundPath = System.getProperty("user.dir") + File.separator + "sounds" + File.separator + soundPack + File.separator;
             File soundFile = null;
 
             switch (sound) {

@@ -717,8 +717,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                         soundsetMenuItem.setSelected(soundSet.getName().equals(soundsetDefault));
                         soundsetMenu.add(soundsetMenuItem);
                         soundsetGroup.add(soundsetMenuItem);
-
-                        soundsetMenuItem.addActionListener(ce -> changeIconOrSoundSet());
                     }
                 }
             }
@@ -1141,10 +1139,11 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
     private static class soundsetFeelMenuItem extends JCheckBoxMenuItem {
         public soundsetFeelMenuItem(String name) {
             super(name);
-            addItemListener(ae -> {
+            addActionListener(ae -> {
                 if (isSelected()) {
                     try {
                         OptionsManagerImpl.getInstance().setSoundSetName(name);
+                        SoundPlayer.getInstance().playPreview();
                     } catch (Exception ex) {
                         logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
                     }

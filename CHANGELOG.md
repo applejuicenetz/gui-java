@@ -9,6 +9,7 @@
 - [red171] SkinLF und alle mitgelieferten Skin-Theme-Packs (`themes/`) entfernt
 - [red171] Italienisch und Türkisch als Sprachen entfernt (zu viele fehlende Übersetzungen)
 - [red171] Start: Sprachdateien werden für das Sprachmenü nur noch gelesen statt global umgeschaltet, Sprach-Singleton wird gecacht, Logger früh initialisiert
+- [red171] Soundpaket-Wechsel wirkt sofort, ohne Neustart der GUI; Hörprobe spielt den Gespeichert-Sound des gewählten Pakets, auch bei deaktivierter Soundausgabe
 
 **0.86.2**
 
