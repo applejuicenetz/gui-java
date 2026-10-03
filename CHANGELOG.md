@@ -11,6 +11,7 @@
 - [red171] Soundpaket-Auswahl spielt eine Hörprobe, auch bei stummer GUI
 - [red171] Unvollständige Sprachen Italienisch und Türkisch entfernt
 - [red171] SkinLF und alte Skin-Theme-Packs entfernt
+- [red171] Ungenutzte GUI-Komponenten entfernt
 
 **0.86.2**
 
