@@ -5,6 +5,7 @@
 - [red171] Core-Neustart bei laufender GUI: Download-Liste zeigt nicht mehr alles doppelt
 - [red171] „Mein Share“ lädt die Dateiliste beim ersten Öffnen automatisch; „Neu laden“ ist nicht mehr nötig
 - [red171] Tabellen passen Spaltenbreiten an den Inhalt an, solange keine Breite gespeichert ist; die Namensspalte nutzt den Restplatz (auch beim Ändern der Fenstergröße) statt Gleichverteilung; Standardbreiten werden nicht mehr in neue Einstellungsdateien geschrieben
+- [red171] Cmd+A/C/V/X (macOS) bzw. Strg+A/C/V/X funktionieren in allen Textfeldern (auch Passwort, Textbereiche) und auch mit Theme-Packs
 
 **0.86.2**
 

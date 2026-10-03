@@ -172,6 +172,26 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         }
     }
 
+    private static void installClipboardKeys() {
+        int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+        String[] inputMaps = {"TextField", "PasswordField", "TextArea", "TextPane", "EditorPane", "FormattedTextField"};
+
+        for (String name : inputMaps) {
+            InputMap im = (InputMap) UIManager.get(name + ".focusInputMap");
+
+            if (im == null) {
+                continue;
+            }
+
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, shortcutMask), DefaultEditorKit.selectAllAction);
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, shortcutMask), DefaultEditorKit.pasteAction);
+            if (!"PasswordField".equals(name)) {
+                im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, shortcutMask), DefaultEditorKit.copyAction);
+                im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, shortcutMask), DefaultEditorKit.cutAction);
+            }
+        }
+    }
+
     public static void initThemes() {
         try {
             themesInitialized = true;
@@ -232,20 +252,14 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
                 SkinLookAndFeel.setSkin(standardSkin);
                 SkinLookAndFeel.enable();
+                installClipboardKeys();
             } else {
                 LookAFeel defaultlookandfeel = OptionsManagerImpl.getInstance().getDefaultLookAndFeel();
 
                 if (defaultlookandfeel != null) {
                     UIManager.setLookAndFeel(defaultlookandfeel.getClassName());
 
-                    // https://stackoverflow.com/a/7253059
-                    if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
-                        InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
-                        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
-                        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
-                        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
-                        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
-                    }
+                    installClipboardKeys();
                 }
             }
         } catch (Exception e) {
@@ -1263,15 +1277,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                     try {
                         UIManager.setLookAndFeel(lookAFeel.getClassName());
                         SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
-
-                        // https://stackoverflow.com/a/7253059
-                        if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
-                            InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
-                            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
-                            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
-                            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
-                            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
-                        }
+                        installClipboardKeys();
                     } catch (Exception ex) {
                         logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
                     }
