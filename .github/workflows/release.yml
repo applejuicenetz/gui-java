@@ -239,3 +239,13 @@ jobs:
             target/AJCoreGUI-windows-aarch64.exe
             target/AJCoreGUI-linux-amd64.flatpak
             target/AJCoreGUI-linux-aarch64.flatpak
+
+  notify-flatpak:
+    needs: release
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger flatpak repository sync
+        env:
+          GH_TOKEN: ${{ secrets.FLATPAK_DISPATCH_TOKEN }}
+        run: gh api repos/applejuicenetz/flatpak/dispatches -f event_type=flatpak-release
