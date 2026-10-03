@@ -11,9 +11,11 @@ import de.tklsoft.gui.controls.InvalidRule;
 import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
 import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.controls.TKLTextField;
-import info.clearthought.layout.TableLayout;
 
 import javax.swing.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -29,14 +31,6 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
 
    public DownloadlinkPanel()
    {
-      double     p     = TableLayout.PREFERRED;
-      double     f     = TableLayout.FILL;
-      double[][] sizes =
-                         {
-                            {5, p, 5, f, 5, p, 5},
-                            {5, p}
-                         };
-
       KeyListener keyListener = new KeyAdapter()
       {
          public void keyPressed(KeyEvent ke)
@@ -120,12 +114,17 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
       };
 
       cmbTargetDir.addInvalidRule(targetDirRule);
-      setLayout(new TableLayout(sizes));
-      add(lblLink, "1, 1");
-      add(txtDownloadLink, "3, 1");
-//      add(lblTargetDir, "5, 1");
-//      add(cmbTargetDir, "7, 1");
-      add(btnStartDownload, "5, 1");
+      setLayout(new GridBagLayout());
+      GridBagConstraints constraints = new GridBagConstraints();
+
+      constraints.fill   = GridBagConstraints.BOTH;
+      constraints.insets = new Insets(5, 5, 0, 0);
+      add(lblLink, constraints);
+      constraints.weightx = 1;
+      add(txtDownloadLink, constraints);
+      constraints.weightx = 0;
+      constraints.insets  = new Insets(5, 5, 0, 5);
+      add(btnStartDownload, constraints);
       fireLanguageChanged();
    }
 

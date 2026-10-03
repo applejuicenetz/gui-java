@@ -20,12 +20,13 @@ import de.applejuicenet.client.shared.tablecellrenderer.ProgressTableCellRendere
 import de.applejuicenet.client.shared.tablecellrenderer.SpeedTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.StringTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.VersionTableCellRenderer;
-import info.clearthought.layout.TableLayout;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
@@ -74,17 +75,12 @@ public class UploadPanel extends TklPanel implements RegisterI {
     }
 
     private void init() throws Exception {
-        double p = TableLayout.PREFERRED;
-        double f = TableLayout.FILL;
-        double[][] sizes =
-                {
-                        {5, f, 5},
-                        {5, f, f, p}
-                };
+        JPanel tablePanel = new JPanel(new GridLayout(2, 1));
 
-        TableLayout tableLayout = new TableLayout(sizes);
-
-        setLayout(tableLayout);
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+        add(tablePanel, BorderLayout.CENTER);
+        add(uploadListeLabel, BorderLayout.SOUTH);
         uploadActiveTableModel = new UploadActiveTableModel();
         uploadActiveTable = new AutoRowHeightTable(uploadActiveTableModel);
         uploadActiveTable.setRowIcons(IconManager.getInstance().getIcon("treeUebertrage"));
@@ -230,7 +226,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
 
         aScrollPaneActive.setBackground(uploadActiveTable.getBackground());
         aScrollPaneActive.getViewport().setOpaque(false);
-        add(aScrollPaneActive, "1, 1");
+        tablePanel.add(aScrollPaneActive);
 
         JScrollPane aScrollPaneWaiting = new JScrollPane(uploadWaitingTable);
 
@@ -238,9 +234,8 @@ public class UploadPanel extends TklPanel implements RegisterI {
 
         aScrollPaneWaiting.setBackground(uploadWaitingTable.getBackground());
         aScrollPaneWaiting.getViewport().setOpaque(false);
-        add(aScrollPaneWaiting, "1, 2");
+        tablePanel.add(aScrollPaneWaiting);
 
-        add(uploadListeLabel, "1, 3, L, T");
         itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
         popupMenu.add(itemCopyToClipboard);
 
